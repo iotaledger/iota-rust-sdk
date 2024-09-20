@@ -1,5 +1,6 @@
 mod bls12381;
 mod ed25519;
+mod intent;
 mod multisig;
 mod passkey;
 mod secp256k1;
@@ -10,6 +11,7 @@ mod zklogin;
 
 pub use bls12381::{Bls12381PrivateKey, Bls12381PublicKey, Bls12381Signature};
 pub use ed25519::{Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature};
+pub use intent::{Intent, IntentAppId, IntentScope, IntentVersion};
 pub use multisig::{
     MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
     MultisigMemberSignature,

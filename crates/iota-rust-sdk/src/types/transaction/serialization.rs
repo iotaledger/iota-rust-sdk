@@ -912,37 +912,8 @@ mod signed_transaction {
         transaction::{SignedTransaction, Transaction},
     };
 
-    /// Intents are defined as:
-    ///
-    /// ```
-    /// struct Intent {
-    ///     scope: IntentScope,
-    ///     version: IntentVersion,
-    ///     app_id: AppId,
-    /// }
-    ///
-    /// enum IntentVersion {
-    ///     V0 = 0,
-    /// }
-    ///
-    /// enum AppId {
-    ///     Iota = 0,
-    ///     Narwhal = 1,
-    ///     Consensus = 2,
-    /// }
-    ///
-    /// enum IntentScope {
-    ///     TransactionData = 0,         // Used for a user signature on a transaction data.
-    ///     TransactionEffects = 1,      // Used for an authority signature on transaction effects.
-    ///     CheckpointSummary = 2,       // Used for an authority signature on a checkpoint summary.
-    ///     PersonalMessage = 3,         // Used for a user signature on a personal message.
-    ///     SenderSignedTransaction = 4, // Used for an authority signature on a user signed transaction.
-    ///     ProofOfPossession = 5, // Used as a signature representing an authority's proof of possession of its authority protocol key.
-    ///     HeaderDigest = 6,      // Used for narwhal authority signature on header digest.
-    ///     BridgeEventUnused = 7, // for bridge purposes but it's currently not included in messages.
-    ///     ConsensusBlock = 8,    // Used for consensus authority signature on block's digest
-    /// }
-    /// ```
+    /// Serde implementation that serializes a transaction prefixed with the
+    /// signing intent. See [struct Intent] for more info.
     ///
     /// So we need to serialize Transaction as (0, 0, 0, Transaction)
     struct IntentMessageWrappedTransaction;
