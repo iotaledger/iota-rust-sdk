@@ -4,7 +4,8 @@ all:: ci
 
 .PHONY: check-features
 check-features:
-	$(MAKE) -C crates/iota-rust-sdk check-features
+	$(MAKE) -C crates/iota-sdk check-features
+	$(MAKE) -C crates/iota-sdk-crypto check-features
 
 .PHONY: check-fmt
 check-fmt:
@@ -21,7 +22,8 @@ test:
 
 .PHONY: wasm
 wasm:
-	$(MAKE) -C crates/iota-rust-sdk wasm
+	$(MAKE) -C crates/iota-sdk wasm
+	$(MAKE) -C crates/iota-sdk-crypto wasm
 
 .PHONY: doc
 doc:
