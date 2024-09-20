@@ -9,16 +9,16 @@ mod signature;
 mod validator;
 mod zklogin;
 
-pub use bls12381::{Bls12381PrivateKey, Bls12381PublicKey, Bls12381Signature};
-pub use ed25519::{Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature};
+pub use bls12381::{Bls12381PublicKey, Bls12381Signature};
+pub use ed25519::{Ed25519PublicKey, Ed25519Signature};
 pub use intent::{Intent, IntentAppId, IntentScope, IntentVersion};
 pub use multisig::{
     MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
     MultisigMemberSignature,
 };
 pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
-pub use secp256k1::{Secp256k1PrivateKey, Secp256k1PublicKey, Secp256k1Signature};
-pub use secp256r1::{Secp256r1PrivateKey, Secp256r1PublicKey, Secp256r1Signature};
+pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
+pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
 pub use signature::{SignatureScheme, SimpleSignature, UserSignature};
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
