@@ -32,8 +32,8 @@ pub use crypto::{
 };
 pub use digest::{
     CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest, DigestParseError,
-    EffectsAuxiliaryDataDigest, ObjectDigest, TransactionDigest, TransactionEffectsDigest,
-    TransactionEventsDigest,
+    EffectsAuxiliaryDataDigest, ObjectDigest, SigningDigest, TransactionDigest,
+    TransactionEffectsDigest, TransactionEventsDigest,
 };
 pub use effects::{
     ChangedObject, EffectsObjectChange, IdOperation, ObjectIn, ObjectOut, TransactionEffects,

@@ -225,6 +225,49 @@ mod type_digest {
     }
 }
 
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+mod signing_message {
+    use crate::{
+        hash::Hasher,
+        types::{
+            Digest, Intent, IntentAppId, IntentScope, IntentVersion, PersonalMessage,
+            SigningDigest, Transaction,
+        },
+    };
+
+    impl Transaction {
+        pub fn signing_digest(&self) -> SigningDigest {
+            const INTENT: Intent = Intent {
+                scope: IntentScope::TransactionData,
+                version: IntentVersion::V0,
+                app_id: IntentAppId::Sui,
+            };
+            let digest = signing_digest(INTENT, self);
+            digest.into_inner()
+        }
+    }
+
+    fn signing_digest<T: serde::Serialize + ?Sized>(intent: Intent, ty: &T) -> Digest {
+        let mut hasher = Hasher::new();
+        hasher.update(intent.to_bytes());
+        bcs::serialize_into(&mut hasher, ty).unwrap();
+        hasher.finalize()
+    }
+
+    impl<'a> PersonalMessage<'a> {
+        pub fn signing_digest(&self) -> SigningDigest {
+            const INTENT: Intent = Intent {
+                scope: IntentScope::PersonalMessage,
+                version: IntentVersion::V0,
+                app_id: IntentAppId::Sui,
+            };
+            let digest = signing_digest(INTENT, &self.0);
+            digest.into_inner()
+        }
+    }
+}
+
 /// A 1-byte domain separator for hashing Object ID in IOTA. It is starting from
 /// 0xf0 to ensure no hashing collision for any ObjectId vs Address which is
 /// derived as the hash of `flag || pubkey`.
