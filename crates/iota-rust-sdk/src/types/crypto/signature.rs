@@ -146,6 +146,38 @@ mod serialization {
     use crate::types::crypto::SignatureFromBytesError;
 
     impl SimpleSignature {
+        fn to_bytes(&self) -> Vec<u8> {
+            let mut buf = Vec::new();
+            match self {
+                SimpleSignature::Ed25519 {
+                    signature,
+                    public_key,
+                } => {
+                    buf.push(SignatureScheme::Ed25519 as u8);
+                    buf.extend_from_slice(signature.as_ref());
+                    buf.extend_from_slice(public_key.as_ref());
+                }
+                SimpleSignature::Secp256k1 {
+                    signature,
+                    public_key,
+                } => {
+                    buf.push(SignatureScheme::Secp256k1 as u8);
+                    buf.extend_from_slice(signature.as_ref());
+                    buf.extend_from_slice(public_key.as_ref());
+                }
+                SimpleSignature::Secp256r1 {
+                    signature,
+                    public_key,
+                } => {
+                    buf.push(SignatureScheme::Secp256r1 as u8);
+                    buf.extend_from_slice(signature.as_ref());
+                    buf.extend_from_slice(public_key.as_ref());
+                }
+            }
+
+            buf
+        }
+
         pub fn from_serialized_bytes(
             bytes: impl AsRef<[u8]>,
         ) -> Result<Self, SignatureFromBytesError> {
@@ -373,6 +405,69 @@ mod serialization {
         }
     }
 
+    impl UserSignature {
+        pub fn to_bytes(&self) -> Vec<u8> {
+            match self {
+                UserSignature::Simple(s) => s.to_bytes(),
+                UserSignature::Multisig(m) => m.to_bytes(),
+                UserSignature::ZkLogin(z) => z.to_bytes(),
+                UserSignature::Passkey(p) => p.to_bytes(),
+            }
+        }
+
+        pub fn to_base64(&self) -> String {
+            use base64ct::Encoding;
+
+            base64ct::Base64::encode_string(&self.to_bytes())
+        }
+
+        fn from_serialized_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
+            let bytes = bytes.as_ref();
+
+            let flag = SignatureScheme::from_byte(
+                *bytes
+                    .first()
+                    .ok_or_else(|| serde::de::Error::custom("missing signature scheme flag"))?,
+            )
+            .map_err(serde::de::Error::custom)?;
+            match flag {
+                SignatureScheme::Ed25519
+                | SignatureScheme::Secp256k1
+                | SignatureScheme::Secp256r1 => {
+                    let simple = SimpleSignature::from_serialized_bytes(bytes)?;
+                    Ok(Self::Simple(simple))
+                }
+                SignatureScheme::Multisig => {
+                    let multisig = MultisigAggregatedSignature::from_serialized_bytes(bytes)?;
+                    Ok(Self::Multisig(multisig))
+                }
+                SignatureScheme::Bls12381 => Err(serde::de::Error::custom(
+                    "bls not supported for user signatures",
+                )),
+                SignatureScheme::ZkLogin => {
+                    let zklogin = ZkLoginAuthenticator::from_serialized_bytes(bytes)?;
+                    Ok(Self::ZkLogin(Box::new(zklogin)))
+                }
+                SignatureScheme::Passkey => {
+                    let passkey = PasskeyAuthenticator::from_serialized_bytes(bytes)?;
+                    Ok(Self::Passkey(passkey))
+                }
+            }
+        }
+
+        pub fn from_bytes(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            Self::from_serialized_bytes(bytes)
+        }
+
+        pub fn from_base64(s: &str) -> Result<Self, bcs::Error> {
+            use base64ct::Encoding;
+            use serde::de::Error;
+
+            let bytes = base64ct::Base64::decode_vec(s).map_err(bcs::Error::custom)?;
+            Self::from_bytes(&bytes)
+        }
+    }
+
     #[derive(serde_derive::Serialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     enum ReadableUserSignatureRef<'a> {
@@ -510,38 +605,7 @@ mod serialization {
 
                 let bytes: std::borrow::Cow<'de, [u8]> =
                     serde_with::Bytes::deserialize_as(deserializer)?;
-                let flag =
-                    SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
-                        serde::de::Error::custom("missing signature scheme flag")
-                    })?)
-                    .map_err(serde::de::Error::custom)?;
-                match flag {
-                    SignatureScheme::Ed25519
-                    | SignatureScheme::Secp256k1
-                    | SignatureScheme::Secp256r1 => {
-                        let simple = SimpleSignature::from_serialized_bytes(bytes)
-                            .map_err(serde::de::Error::custom)?;
-                        Ok(Self::Simple(simple))
-                    }
-                    SignatureScheme::Multisig => {
-                        let multisig = MultisigAggregatedSignature::from_serialized_bytes(bytes)
-                            .map_err(serde::de::Error::custom)?;
-                        Ok(Self::Multisig(multisig))
-                    }
-                    SignatureScheme::Bls12381 => Err(serde::de::Error::custom(
-                        "bls not supported for user signatures",
-                    )),
-                    SignatureScheme::ZkLogin => {
-                        let zklogin = ZkLoginAuthenticator::from_serialized_bytes(bytes)
-                            .map_err(serde::de::Error::custom)?;
-                        Ok(Self::ZkLogin(Box::new(zklogin)))
-                    }
-                    SignatureScheme::Passkey => {
-                        let passkey = PasskeyAuthenticator::from_serialized_bytes(bytes)
-                            .map_err(serde::de::Error::custom)?;
-                        Ok(Self::Passkey(passkey))
-                    }
-                }
+                Self::from_serialized_bytes(bytes)
             }
         }
     }
