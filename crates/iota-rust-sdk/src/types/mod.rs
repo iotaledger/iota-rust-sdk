@@ -67,3 +67,6 @@ pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
 
 #[cfg(test)]
 mod serialization_proptests;
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
