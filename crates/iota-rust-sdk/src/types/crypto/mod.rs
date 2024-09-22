@@ -24,8 +24,8 @@ pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
 };
 pub use zklogin::{
-    Bn254FieldElement, CircomG1, CircomG2, Claim, Jwk, JwkId, JwtDetails, ZkLoginAuthenticator,
-    ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
+    Bn254FieldElement, CircomG1, CircomG2, Claim, Jwk, JwkId, ZkLoginAuthenticator, ZkLoginInputs,
+    ZkLoginProof, ZkLoginPublicIdentifier,
 };
 
 #[cfg(feature = "serde")]
