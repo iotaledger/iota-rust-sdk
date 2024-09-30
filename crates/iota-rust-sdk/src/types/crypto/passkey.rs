@@ -2,7 +2,7 @@ use crate::types::Digest;
 
 use super::{Secp256r1PublicKey, Secp256r1Signature};
 
-/// An passkey authenticator with parsed fields. See field defition below. Can be initialized from [struct RawPasskeyAuthenticator].
+/// An passkey authenticator with parsed fields. See field definition below. Can be initialized from [struct RawPasskeyAuthenticator].
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PasskeyAuthenticator {
     /// Compact r1 public key upon passkey creation.

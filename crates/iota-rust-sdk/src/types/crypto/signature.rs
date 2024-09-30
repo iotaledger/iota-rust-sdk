@@ -48,7 +48,7 @@ impl SimpleSignature {
         let flag = SignatureScheme::from_byte(
             *bytes
                 .first()
-                .ok_or_else(|| serde::de::Error::custom("missing signature scheme falg"))?,
+                .ok_or_else(|| serde::de::Error::custom("missing signature scheme flag"))?,
         )
         .map_err(serde::de::Error::custom)?;
         match flag {
@@ -509,7 +509,7 @@ mod serialization {
                     serde_with::Bytes::deserialize_as(deserializer)?;
                 let flag =
                     SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
-                        serde::de::Error::custom("missing signature scheme falg")
+                        serde::de::Error::custom("missing signature scheme flag")
                     })?)
                     .map_err(serde::de::Error::custom)?;
                 match flag {

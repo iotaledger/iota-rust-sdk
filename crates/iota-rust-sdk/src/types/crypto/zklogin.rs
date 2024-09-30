@@ -43,7 +43,7 @@ pub struct Claim {
     index_mod_4: u8,
 }
 
-/// A structed of parsed JWT details, consists of kid, header, iss.
+/// A structured of parsed JWT details, consists of kid, header, iss.
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
@@ -401,7 +401,7 @@ mod serialization {
             let flag = SignatureScheme::from_byte(
                 *bytes
                     .first()
-                    .ok_or_else(|| serde::de::Error::custom("missing signature scheme falg"))?,
+                    .ok_or_else(|| serde::de::Error::custom("missing signature scheme flag"))?,
             )
             .map_err(serde::de::Error::custom)?;
             if flag != SignatureScheme::ZkLogin {

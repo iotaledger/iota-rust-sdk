@@ -50,7 +50,7 @@ pub use zklogin::ZkLoginPublicIdentifier;
 // Implement various base64 fixed-size array helpers
 //
 
-/// Utility for calculating base64 encoding lenghths.
+/// Utility for calculating base64 encoding lengths.
 ///
 /// In the Base64 encoding each character is used to represent 6 bits (log2(64) = 6). This means
 /// that 4 characters are used to represnet 4*6 = 24 bits = 3 bytes. So you need 4*(`n`/3)
