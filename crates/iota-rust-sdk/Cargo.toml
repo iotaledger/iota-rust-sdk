@@ -1,12 +1,12 @@
 [package]
-name = "sui-sdk"
+name = "iota-rust-sdk"
 version = "0.0.0"
-authors = ["Brandon Williams <brandon@mystenlabs.com>"]
+authors = ["IOTA Foundation <contact@iota.org>"]
 license = "Apache-2.0"
 edition = "2021"
 publish = false
 readme = "README.md"
-description = "Sdk for the Sui Blockchain"
+description = "Sdk for the Iota Blockchain"
 
 [package.metadata.docs.rs]
 # To build locally:

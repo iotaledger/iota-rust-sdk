@@ -72,8 +72,8 @@ pub enum ExecutionError {
     /// The modules in the package must have their self-addresses set to zero.
     PublishErrorNonZeroAddress,
 
-    /// Sui Move Bytecode Verification Error.
-    SuiMoveVerificationError,
+    /// Iota Move Bytecode Verification Error.
+    IotaMoveVerificationError,
 
     //
     // MoveVm Errors
@@ -160,8 +160,8 @@ pub enum ExecutionError {
     /// Certificate is on the deny list
     CertificateDenied,
 
-    /// Sui Move Bytecode verification timed out.
-    SuiMoveVerificationTimedout,
+    /// Iota Move Bytecode verification timed out.
+    IotaMoveVerificationTimedout,
 
     /// The requested shared object operation is not allowed
     SharedObjectOperationNotAllowed,
@@ -420,7 +420,7 @@ mod serialization {
         InsufficientCoinBalance,
         CoinBalanceOverflow,
         PublishErrorNonZeroAddress,
-        SuiMoveVerificationError,
+        IotaMoveVerificationError,
         MovePrimitiveRuntimeError {
             location: Option<MoveLocation>,
         },
@@ -469,7 +469,7 @@ mod serialization {
             max_object_size: u64,
         },
         CertificateDenied,
-        SuiMoveVerificationTimedout,
+        IotaMoveVerificationTimedout,
         SharedObjectOperationNotAllowed,
         InputObjectDeleted,
         ExecutionCancelledDueToSharedObjectCongestion {
@@ -508,7 +508,7 @@ mod serialization {
         InsufficientCoinBalance,
         CoinBalanceOverflow,
         PublishErrorNonZeroAddress,
-        SuiMoveVerificationError,
+        IotaMoveVerificationError,
         MovePrimitiveRuntimeError {
             location: Option<MoveLocation>,
         },
@@ -552,7 +552,7 @@ mod serialization {
             max_object_size: u64,
         },
         CertificateDenied,
-        SuiMoveVerificationTimedout,
+        IotaMoveVerificationTimedout,
         SharedObjectOperationNotAllowed,
         InputObjectDeleted,
         ExecutionCancelledDueToSharedObjectCongestion {
@@ -606,8 +606,8 @@ mod serialization {
                     Self::PublishErrorNonZeroAddress => {
                         ReadableExecutionError::PublishErrorNonZeroAddress
                     }
-                    Self::SuiMoveVerificationError => {
-                        ReadableExecutionError::SuiMoveVerificationError
+                    Self::IotaMoveVerificationError => {
+                        ReadableExecutionError::IotaMoveVerificationError
                     }
                     Self::MovePrimitiveRuntimeError { location } => {
                         ReadableExecutionError::MovePrimitiveRuntimeError { location }
@@ -666,8 +666,8 @@ mod serialization {
                         max_object_size,
                     },
                     Self::CertificateDenied => ReadableExecutionError::CertificateDenied,
-                    Self::SuiMoveVerificationTimedout => {
-                        ReadableExecutionError::SuiMoveVerificationTimedout
+                    Self::IotaMoveVerificationTimedout => {
+                        ReadableExecutionError::IotaMoveVerificationTimedout
                     }
                     Self::SharedObjectOperationNotAllowed => {
                         ReadableExecutionError::SharedObjectOperationNotAllowed
@@ -717,8 +717,8 @@ mod serialization {
                     Self::PublishErrorNonZeroAddress => {
                         BinaryExecutionError::PublishErrorNonZeroAddress
                     }
-                    Self::SuiMoveVerificationError => {
-                        BinaryExecutionError::SuiMoveVerificationError
+                    Self::IotaMoveVerificationError => {
+                        BinaryExecutionError::IotaMoveVerificationError
                     }
                     Self::MovePrimitiveRuntimeError { location } => {
                         BinaryExecutionError::MovePrimitiveRuntimeError { location }
@@ -775,8 +775,8 @@ mod serialization {
                         max_object_size,
                     },
                     Self::CertificateDenied => BinaryExecutionError::CertificateDenied,
-                    Self::SuiMoveVerificationTimedout => {
-                        BinaryExecutionError::SuiMoveVerificationTimedout
+                    Self::IotaMoveVerificationTimedout => {
+                        BinaryExecutionError::IotaMoveVerificationTimedout
                     }
                     Self::SharedObjectOperationNotAllowed => {
                         BinaryExecutionError::SharedObjectOperationNotAllowed
@@ -837,8 +837,8 @@ mod serialization {
                     ReadableExecutionError::PublishErrorNonZeroAddress => {
                         Self::PublishErrorNonZeroAddress
                     }
-                    ReadableExecutionError::SuiMoveVerificationError => {
-                        Self::SuiMoveVerificationError
+                    ReadableExecutionError::IotaMoveVerificationError => {
+                        Self::IotaMoveVerificationError
                     }
                     ReadableExecutionError::MovePrimitiveRuntimeError { location } => {
                         Self::MovePrimitiveRuntimeError { location }
@@ -897,8 +897,8 @@ mod serialization {
                         max_object_size,
                     },
                     ReadableExecutionError::CertificateDenied => Self::CertificateDenied,
-                    ReadableExecutionError::SuiMoveVerificationTimedout => {
-                        Self::SuiMoveVerificationTimedout
+                    ReadableExecutionError::IotaMoveVerificationTimedout => {
+                        Self::IotaMoveVerificationTimedout
                     }
                     ReadableExecutionError::SharedObjectOperationNotAllowed => {
                         Self::SharedObjectOperationNotAllowed
@@ -945,8 +945,8 @@ mod serialization {
                     BinaryExecutionError::PublishErrorNonZeroAddress => {
                         Self::PublishErrorNonZeroAddress
                     }
-                    BinaryExecutionError::SuiMoveVerificationError => {
-                        Self::SuiMoveVerificationError
+                    BinaryExecutionError::IotaMoveVerificationError => {
+                        Self::IotaMoveVerificationError
                     }
                     BinaryExecutionError::MovePrimitiveRuntimeError { location } => {
                         Self::MovePrimitiveRuntimeError { location }
@@ -1003,8 +1003,8 @@ mod serialization {
                         max_object_size,
                     },
                     BinaryExecutionError::CertificateDenied => Self::CertificateDenied,
-                    BinaryExecutionError::SuiMoveVerificationTimedout => {
-                        Self::SuiMoveVerificationTimedout
+                    BinaryExecutionError::IotaMoveVerificationTimedout => {
+                        Self::IotaMoveVerificationTimedout
                     }
                     BinaryExecutionError::SharedObjectOperationNotAllowed => {
                         Self::SharedObjectOperationNotAllowed

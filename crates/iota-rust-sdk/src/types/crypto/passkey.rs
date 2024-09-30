@@ -256,7 +256,7 @@ mod serialization {
     pub enum ClientDataType {
         /// Serializes to the string `"webauthn.get"`
         ///
-        /// Passkey's in Sui only support the value `"webauthn.get"`, other values will be rejected.
+        /// Passkey's in Iota only support the value `"webauthn.get"`, other values will be rejected.
         #[serde(rename = "webauthn.get")]
         Get,
         // /// Serializes to the string `"webauthn.create"`

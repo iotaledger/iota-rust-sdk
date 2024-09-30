@@ -1003,7 +1003,7 @@ mod signed_transaction {
     /// }
     ///
     /// enum AppId {
-    ///     Sui = 0,
+    ///     Iota = 0,
     ///     Narwhal = 1,
     ///     Consensus = 2,
     /// }

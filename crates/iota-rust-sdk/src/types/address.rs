@@ -210,7 +210,7 @@ impl schemars::JsonSchema for Address {
         SchemaObject {
             metadata: Some(Box::new(Metadata {
                 title: Some(Self::schema_name()),
-                description: Some("A 32-byte Sui address, encoded as a hex string.".to_owned()),
+                description: Some("A 32-byte Iota address, encoded as a hex string.".to_owned()),
                 examples: vec![serde_json::to_value(Address::TWO).unwrap()],
                 ..Default::default()
             })),

@@ -1,4 +1,4 @@
-//! Rust definitions of move/sui framework types.
+//! Rust definitions of move/iota framework types.
 
 use super::Object;
 use super::ObjectId;

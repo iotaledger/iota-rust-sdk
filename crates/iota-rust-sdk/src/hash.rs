@@ -226,7 +226,7 @@ mod type_digest {
     }
 }
 
-/// A 1-byte domain separator for hashing Object ID in Sui. It is starting from 0xf0
+/// A 1-byte domain separator for hashing Object ID in Iota. It is starting from 0xf0
 /// to ensure no hashing collision for any ObjectId vs Address which is derived
 /// as the hash of `flag || pubkey`.
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]

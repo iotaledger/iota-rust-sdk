@@ -266,7 +266,7 @@ mod json_schema {
                 metadata: Some(Box::new(Metadata {
                     title: Some(Self::schema_name()),
                     description: Some("A Move Identifier".to_owned()),
-                    examples: vec![serde_json::json!("sui")],
+                    examples: vec![serde_json::json!("iota")],
                     ..Default::default()
                 })),
                 instance_type: Some(InstanceType::String.into()),
@@ -310,7 +310,7 @@ mod json_schema {
                 metadata: Some(Box::new(Metadata {
                     title: Some(Self::schema_name()),
                     description: Some("A Move StructTag".to_owned()),
-                    examples: vec![serde_json::json!("0x2::coin::Coin<0x2::sui::SUI>")],
+                    examples: vec![serde_json::json!("0x2::coin::Coin<0x2::iota::IOTA>")],
                     ..Default::default()
                 })),
                 instance_type: Some(InstanceType::String.into()),
