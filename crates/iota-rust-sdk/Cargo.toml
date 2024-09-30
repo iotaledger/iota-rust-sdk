@@ -2,8 +2,8 @@
 name = "iota-rust-sdk"
 version = "0.0.0"
 authors = ["IOTA Foundation <contact@iota.org>"]
-license = "Apache-2.0"
 edition = "2021"
+license = "Apache-2.0"
 publish = false
 readme = "README.md"
 description = "Sdk for the Iota Blockchain"
@@ -13,35 +13,43 @@ description = "Sdk for the Iota Blockchain"
 # RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --all-features --no-deps --open
 all-features = true
 rustdoc-args = [
-    # Enable doc_cfg showing the required features.
-    "--cfg=doc_cfg",
+  # Enable doc_cfg showing the required features.
+  "--cfg=doc_cfg",
 
-    # Generate links to definition in rustdoc source code pages
-    # https://github.com/rust-lang/rust/pull/84176
-    "-Zunstable-options", "--generate-link-to-definition"
+  # Generate links to definition in rustdoc source code pages
+  # https://github.com/rust-lang/rust/pull/84176
+  "-Zunstable-options",
+  "--generate-link-to-definition",
 ]
 
 [features]
 default = []
-serde = ["dep:serde", "dep:serde_derive", "dep:serde_with", "dep:bcs", "dep:serde_json", "roaring/std"]
+serde = [
+  "dep:serde",
+  "dep:serde_derive",
+  "dep:serde_with",
+  "dep:bcs",
+  "dep:serde_json",
+  "roaring/std",
+]
 schemars = ["serde", "dep:schemars", "dep:serde_json"]
 rand = ["dep:rand_core"]
 hash = ["dep:blake2"]
 
 [dependencies]
 base64ct = { version = "1.6.0", features = ["alloc"] }
+bnum = "0.11.0"
 bs58 = "0.5.1"
 hex = "0.4.3"
 roaring = { version = "0.10.6", default-features = false }
-bnum = "0.11.0"
 winnow = "0.6.18"
 
 # Serialization and Deserialization support
+bcs = { version = "0.1.6", optional = true }
 serde = { version = "1.0.190", optional = true }
 serde_derive = { version = "1.0.190", optional = true }
-serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
-bcs = { version = "0.1.6", optional = true }
 serde_json = { version = "1.0.114", optional = true }
+serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
 
 # JsonSchema definitions for types, useful for generating an OpenAPI Specificaiton.
 schemars = { version = "0.8.21", optional = true }
@@ -54,10 +62,10 @@ blake2 = { version = "0.10.6", optional = true }
 
 [dev-dependencies]
 bcs = "0.1.6"
-serde_json = "1.0.114"
-num-bigint = "0.4.4"
 jsonschema = { version = "0.18", default-features = false }
+num-bigint = "0.4.4"
 paste = "1.0.15"
+serde_json = "1.0.114"
 
 # proptest support in tests
 #
