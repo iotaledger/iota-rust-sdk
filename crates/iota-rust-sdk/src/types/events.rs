@@ -1,8 +1,4 @@
-use super::Address;
-use super::Identifier;
-use super::ObjectId;
-use super::StructTag;
-use super::TypeTag;
+use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
 
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -49,7 +45,8 @@ pub struct BalanceChange {
     pub coin_type: TypeTag,
     /// The amount indicate the balance value changes.
     ///
-    /// A negative amount means spending coin value and positive means receiving coin value.
+    /// A negative amount means spending coin value and positive means receiving
+    /// coin value.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::I128"))]
     pub amount: i128,

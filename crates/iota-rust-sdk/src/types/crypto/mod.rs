@@ -8,54 +8,34 @@ mod signature;
 mod validator;
 mod zklogin;
 
-pub use bls12381::Bls12381PrivateKey;
-pub use bls12381::Bls12381PublicKey;
-pub use bls12381::Bls12381Signature;
-pub use ed25519::Ed25519PrivateKey;
-pub use ed25519::Ed25519PublicKey;
-pub use ed25519::Ed25519Signature;
-pub use multisig::MultisigAggregatedSignature;
-pub use multisig::MultisigCommittee;
-pub use multisig::MultisigMember;
-pub use multisig::MultisigMemberPublicKey;
-pub use multisig::MultisigMemberSignature;
-pub use passkey::PasskeyAuthenticator;
-pub use passkey::PasskeyPublicKey;
-pub use secp256k1::Secp256k1PrivateKey;
-pub use secp256k1::Secp256k1PublicKey;
-pub use secp256k1::Secp256k1Signature;
-pub use secp256r1::Secp256r1PrivateKey;
-pub use secp256r1::Secp256r1PublicKey;
-pub use secp256r1::Secp256r1Signature;
-pub use signature::SignatureScheme;
-pub use signature::SimpleSignature;
-pub use signature::UserSignature;
-pub use validator::ValidatorAggregatedSignature;
-pub use validator::ValidatorCommittee;
-pub use validator::ValidatorCommitteeMember;
-pub use validator::ValidatorSignature;
-pub use zklogin::Bn254FieldElement;
-pub use zklogin::CircomG1;
-pub use zklogin::CircomG2;
-pub use zklogin::Claim;
-pub use zklogin::Jwk;
-pub use zklogin::JwkId;
-pub use zklogin::JwtDetails;
-pub use zklogin::ZkLoginAuthenticator;
-pub use zklogin::ZkLoginInputs;
-pub use zklogin::ZkLoginProof;
-pub use zklogin::ZkLoginPublicIdentifier;
+pub use bls12381::{Bls12381PrivateKey, Bls12381PublicKey, Bls12381Signature};
+pub use ed25519::{Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature};
+pub use multisig::{
+    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
+    MultisigMemberSignature,
+};
+pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
+pub use secp256k1::{Secp256k1PrivateKey, Secp256k1PublicKey, Secp256k1Signature};
+pub use secp256r1::{Secp256r1PrivateKey, Secp256r1PublicKey, Secp256r1Signature};
+pub use signature::{SignatureScheme, SimpleSignature, UserSignature};
+pub use validator::{
+    ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
+};
+pub use zklogin::{
+    Bn254FieldElement, CircomG1, CircomG2, Claim, Jwk, JwkId, JwtDetails, ZkLoginAuthenticator,
+    ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
+};
 
-//
 // Implement various base64 fixed-size array helpers
 //
 
 /// Utility for calculating base64 encoding lengths.
 ///
-/// In the Base64 encoding each character is used to represent 6 bits (log2(64) = 6). This means
-/// that 4 characters are used to represnet 4*6 = 24 bits = 3 bytes. So you need 4*(`n`/3)
-/// characters in order to represent `n` bytes, and this needs to be rounded up to a multiple of 4.
-/// The number of unused padding characters resulting from the rounding will be 0, 1, 2, or 3.
+/// In the Base64 encoding each character is used to represent 6 bits (log2(64)
+/// = 6). This means that 4 characters are used to represnet 4*6 = 24 bits = 3
+/// bytes. So you need 4*(`n`/3) characters in order to represent `n` bytes, and
+/// this needs to be rounded up to a multiple of 4. The number of unused padding
+/// characters resulting from the rounding will be 0, 1, 2, or 3.
 const fn base64_encoded_length(len: usize) -> usize {
     ((4 * len / 3) + 3) & !3
 }
@@ -128,12 +108,11 @@ macro_rules! impl_base64_helper {
 
         #[cfg(test)]
         mod $test_module {
-            use super::$display;
-            use super::$fromstr;
             use test_strategy::proptest;
-
             #[cfg(target_arch = "wasm32")]
             use wasm_bindgen_test::wasm_bindgen_test as test;
+
+            use super::{$display, $fromstr};
 
             #[proptest]
             fn roundtrip_display_fromstr(array: $fromstr) {

@@ -1,8 +1,9 @@
-// Before we can expose this in the public interface it likely needs to be wrapped so that the type
-// from our dependency doesn't leak
+// Before we can expose this in the public interface it likely needs to be
+// wrapped so that the type from our dependency doesn't leak
 pub(crate) type U256 = bnum::BUintD8<32>;
 
-// This is a constant time assert to ensure that the backing storage for U256 is 32 bytes long
+// This is a constant time assert to ensure that the backing storage for U256 is
+// 32 bytes long
 #[allow(unused)]
 const ASSERT_32_BYTES: () = {
     let u256 = U256::ZERO;
@@ -10,7 +11,8 @@ const ASSERT_32_BYTES: () = {
     let _digits: &[u8; 32] = u256.digits();
 };
 
-// This is a constant time assert to ensure endianness of the underlying storage is as expected
+// This is a constant time assert to ensure endianness of the underlying storage
+// is as expected
 #[allow(unused)]
 const ASSERT_ENDIANNESS: () = {
     const fn const_bytes_equal(lhs: &[u8], rhs: &[u8]) -> bool {
@@ -63,14 +65,15 @@ const ASSERT_ENDIANNESS: () = {
 
 #[cfg(test)]
 mod test {
-    use super::*;
+    use std::str::FromStr;
+
     use num_bigint::BigUint;
     use proptest::prelude::*;
-    use std::str::FromStr;
     use test_strategy::proptest;
-
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
 
     #[test]
     fn endianness() {

@@ -73,7 +73,7 @@ impl Address {
             <[u8; Self::LENGTH] as hex::FromHex>::from_hex(hex)
         }
         .map(Self)
-        //TODO fix error to contain hex parse error
+        // TODO fix error to contain hex parse error
         .map_err(|_| AddressParseError)
     }
 
@@ -201,10 +201,7 @@ impl schemars::JsonSchema for Address {
     }
 
     fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        use schemars::schema::InstanceType;
-        use schemars::schema::Metadata;
-        use schemars::schema::SchemaObject;
-        use schemars::schema::StringValidation;
+        use schemars::schema::{InstanceType, Metadata, SchemaObject, StringValidation};
 
         let hex_length = Address::LENGTH * 2;
         SchemaObject {
@@ -229,11 +226,11 @@ impl schemars::JsonSchema for Address {
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use test_strategy::proptest;
-
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
 
     #[test]
     fn hex_parsing() {

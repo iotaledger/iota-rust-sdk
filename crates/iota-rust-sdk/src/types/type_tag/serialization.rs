@@ -1,11 +1,7 @@
+use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
+use serde_with::{DeserializeAs, SerializeAs};
+
 use super::*;
-use serde::de::Visitor;
-use serde::Deserialize;
-use serde::Deserializer;
-use serde::Serialize;
-use serde::Serializer;
-use serde_with::DeserializeAs;
-use serde_with::SerializeAs;
 
 impl Serialize for Identifier {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -246,12 +242,12 @@ impl<'de> Deserialize<'de> for StructTag {
 
 #[cfg(feature = "schemars")]
 mod json_schema {
+    use schemars::{
+        schema::{InstanceType, Metadata, SchemaObject, StringValidation},
+        JsonSchema,
+    };
+
     use super::*;
-    use schemars::schema::InstanceType;
-    use schemars::schema::Metadata;
-    use schemars::schema::SchemaObject;
-    use schemars::schema::StringValidation;
-    use schemars::JsonSchema;
 
     pub(crate) static ALLOWED_IDENTIFIERS: &str =
         r"(?:[a-zA-Z][a-zA-Z0-9_]{0,127})|(?:_[a-zA-Z0-9_]{0,127})";
@@ -323,12 +319,12 @@ mod json_schema {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-
     use std::str::FromStr;
 
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
 
     #[test]
     fn type_tag_fixture() {

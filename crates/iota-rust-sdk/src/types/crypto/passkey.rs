@@ -1,8 +1,8 @@
+use super::{Secp256r1PublicKey, Secp256r1Signature};
 use crate::types::Digest;
 
-use super::{Secp256r1PublicKey, Secp256r1Signature};
-
-/// An passkey authenticator with parsed fields. See field definition below. Can be initialized from [struct RawPasskeyAuthenticator].
+/// An passkey authenticator with parsed fields. See field definition below. Can
+/// be initialized from [struct RawPasskeyAuthenticator].
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PasskeyAuthenticator {
     /// Compact r1 public key upon passkey creation.
@@ -13,10 +13,12 @@ pub struct PasskeyAuthenticator {
     /// Initialized from `user_signature` in `RawPasskeyAuthenticator`.
     signature: Secp256r1Signature,
 
-    /// Valid intent parsed from the first 3 bytes of `client_data_json.challenge`.
+    /// Valid intent parsed from the first 3 bytes of
+    /// `client_data_json.challenge`.
     intent: [u8; 3],
 
-    /// Valid tx_digest parsed from the last 32 bytes of `client_data_json.challenge`.
+    /// Valid tx_digest parsed from the last 32 bytes of
+    /// `client_data_json.challenge`.
     digest: Digest,
 
     /// `authenticatorData` is a bytearray that encodes
@@ -45,17 +47,13 @@ impl PasskeyPublicKey {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use crate::types::SignatureScheme;
-    use crate::types::SimpleSignature;
+    use std::borrow::Cow;
+
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
-    use serde::Deserialize;
-    use serde::Deserializer;
-    use serde::Serialize;
-    use serde::Serializer;
-    use serde_with::Bytes;
-    use serde_with::DeserializeAs;
-    use std::borrow::Cow;
+    use crate::types::{SignatureScheme, SimpleSignature};
 
     #[derive(serde::Serialize)]
     struct AuthenticatorRef<'a> {
@@ -199,19 +197,21 @@ mod serialization {
         }
     }
 
-    /// The client data represents the contextual bindings of both the Relying Party and the client.
-    /// It is a key-value mapping whose keys are strings. Values can be any type that has a valid
-    /// encoding in JSON.
+    /// The client data represents the contextual bindings of both the Relying
+    /// Party and the client. It is a key-value mapping whose keys are
+    /// strings. Values can be any type that has a valid encoding in JSON.
     ///
-    /// > Note: The [`CollectedClientData`] may be extended in the future. Therefore it’s critical when
-    /// >       parsing to be tolerant of unknown keys and of any reordering of the keys
+    /// > Note: The [`CollectedClientData`] may be extended in the future.
+    /// > Therefore it’s critical when
+    /// > parsing to be tolerant of unknown keys and of any reordering of the
+    /// > keys
     ///
-    /// This struct conforms to the JSON byte serialization format expected of `CollectedClientData`,
-    /// detailed in section [5.8.1.1 Serialization] of the WebAuthn spec. Namely the following
-    /// requirements:
+    /// This struct conforms to the JSON byte serialization format expected of
+    /// `CollectedClientData`, detailed in section [5.8.1.1 Serialization]
+    /// of the WebAuthn spec. Namely the following requirements:
     ///
-    /// * `type`, `challenge`, `origin`, `crossOrigin` must always be present in the serialized format
-    ///   _in that order_.
+    /// * `type`, `challenge`, `origin`, `crossOrigin` must always be present in
+    ///   the serialized format _in that order_.
     ///
     /// <https://w3c.github.io/webauthn/#dictionary-client-data>
     ///
@@ -219,44 +219,51 @@ mod serialization {
     #[derive(Debug, Clone, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
     pub struct CollectedClientData {
-        /// This member contains the value [`ClientDataType::Create`] when creating new credentials, and
-        /// [`ClientDataType::Get`] when getting an assertion from an existing credential. The purpose
-        /// of this member is to prevent certain types of signature confusion attacks (where an attacker
-        ///  substitutes one legitimate signature for another).
+        /// This member contains the value [`ClientDataType::Create`] when
+        /// creating new credentials, and [`ClientDataType::Get`] when
+        /// getting an assertion from an existing credential. The purpose
+        /// of this member is to prevent certain types of signature confusion
+        /// attacks (where an attacker  substitutes one legitimate
+        /// signature for another).
         #[serde(rename = "type")]
         pub ty: ClientDataType,
 
-        /// This member contains the base64url encoding of the challenge provided by the Relying Party.
-        /// See the [Cryptographic Challenges] security consideration.
+        /// This member contains the base64url encoding of the challenge
+        /// provided by the Relying Party. See the [Cryptographic
+        /// Challenges] security consideration.
         ///
         /// [Cryptographic Challenges]: https://w3c.github.io/webauthn/#sctn-cryptographic-challenges
         ///
         /// https://w3c.github.io/webauthn/#base64url-encoding
         ///
-        /// The term Base64url Encoding refers to the base64 encoding using the URL- and filename-safe
-        /// character set defined in Section 5 of [RFC4648], with all trailing '=' characters omitted
-        /// (as permitted by Section 3.2) and without the inclusion of any line breaks, whitespace, or
-        /// other additional characters.
+        /// The term Base64url Encoding refers to the base64 encoding using the
+        /// URL- and filename-safe character set defined in Section 5 of
+        /// [RFC4648], with all trailing '=' characters omitted
+        /// (as permitted by Section 3.2) and without the inclusion of any line
+        /// breaks, whitespace, or other additional characters.
         pub challenge: String,
 
-        /// This member contains the fully qualified origin of the requester, as provided to the
-        /// authenticator by the client, in the syntax defined by [RFC6454].
+        /// This member contains the fully qualified origin of the requester, as
+        /// provided to the authenticator by the client, in the syntax
+        /// defined by [RFC6454].
         ///
         /// [RFC6454]: https://www.rfc-editor.org/rfc/rfc6454
         pub origin: String,
-        // /// This OPTIONAL member contains the inverse of the sameOriginWithAncestors argument value that
-        // /// was passed into the internal method
+        // /// This OPTIONAL member contains the inverse of the sameOriginWithAncestors argument
+        // value that /// was passed into the internal method
         // #[serde(default, serialize_with = "truthiness")]
         // #[serde(rename = "type")]
         // pub cross_origin: Option<bool>,
     }
 
-    /// Used to limit the values of [`CollectedClientData::ty`] and serializes to static strings.
+    /// Used to limit the values of [`CollectedClientData::ty`] and serializes
+    /// to static strings.
     #[derive(Debug, Deserialize, Serialize, Clone, Copy, PartialEq, Eq)]
     pub enum ClientDataType {
         /// Serializes to the string `"webauthn.get"`
         ///
-        /// Passkey's in Iota only support the value `"webauthn.get"`, other values will be rejected.
+        /// Passkey's in Iota only support the value `"webauthn.get"`, other
+        /// values will be rejected.
         #[serde(rename = "webauthn.get")]
         Get,
         // /// Serializes to the string `"webauthn.create"`
@@ -278,8 +285,7 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
 
     fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {
         use proptest::{collection::vec, prelude::*};
-        use serialization::ClientDataType;
-        use serialization::CollectedClientData;
+        use serialization::{ClientDataType, CollectedClientData};
 
         (
             any::<Secp256r1PublicKey>(),

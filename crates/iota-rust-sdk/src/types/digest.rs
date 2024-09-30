@@ -48,7 +48,7 @@ impl Digest {
 
         bs58::decode(base58)
             .onto(&mut buf)
-            //TODO fix error to contain bs58 parse error
+            // TODO fix error to contain bs58 parse error
             .map_err(|_| DigestParseError)?;
 
         Ok(Self(buf))
@@ -133,8 +133,9 @@ impl std::fmt::LowerHex for Digest {
     }
 }
 
-// Unfortunately iota's binary representation of digests is prefixed with its length meaning its
-// serialized binary form is 33 bytes long (in bcs) vs a more compact 32 bytes.
+// Unfortunately iota's binary representation of digests is prefixed with its
+// length meaning its serialized binary form is 33 bytes long (in bcs) vs a more
+// compact 32 bytes.
 #[cfg(feature = "serde")]
 type DigestSerialization =
     ::serde_with::As<::serde_with::IfIsHumanReadable<ReadableDigest, ::serde_with::Bytes>>;
@@ -182,7 +183,6 @@ impl std::fmt::Display for DigestParseError {
 
 impl std::error::Error for DigestParseError {}
 
-//
 // Implement Various Digest wrappers
 //
 
@@ -317,11 +317,11 @@ impl_digest!(EffectsAuxiliaryDataDigest);
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use test_strategy::proptest;
-
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
 
     #[proptest]
     fn roundtrip_display_fromstr(digest: Digest) {

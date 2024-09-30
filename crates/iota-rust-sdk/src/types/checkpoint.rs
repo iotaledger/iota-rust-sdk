@@ -1,16 +1,8 @@
-use super::CheckpointContentsDigest;
-use super::CheckpointDigest;
-use super::Digest;
-use super::GasCostSummary;
-use super::Object;
-use super::SignedTransaction;
-use super::TransactionDigest;
-use super::TransactionEffects;
-use super::TransactionEffectsDigest;
-use super::TransactionEvents;
-use super::UserSignature;
-use super::ValidatorAggregatedSignature;
-use super::ValidatorCommitteeMember;
+use super::{
+    CheckpointContentsDigest, CheckpointDigest, Digest, GasCostSummary, Object, SignedTransaction,
+    TransactionDigest, TransactionEffects, TransactionEffectsDigest, TransactionEvents,
+    UserSignature, ValidatorAggregatedSignature, ValidatorCommitteeMember,
+};
 
 pub type CheckpointSequenceNumber = u64;
 pub type CheckpointTimestamp = u64;
@@ -40,15 +32,16 @@ pub enum CheckpointCommitment {
 pub struct EndOfEpochData {
     /// next_epoch_committee is `Some` if and only if the current checkpoint is
     /// the last checkpoint of an epoch.
-    /// Therefore next_epoch_committee can be used to pick the last checkpoint of an epoch,
-    /// which is often useful to get epoch level summary stats like total gas cost of an epoch,
-    /// or the total number of transactions from genesis to the end of an epoch.
-    /// The committee is stored as a vector of validator pub key and stake pairs. The vector
+    /// Therefore next_epoch_committee can be used to pick the last checkpoint
+    /// of an epoch, which is often useful to get epoch level summary stats
+    /// like total gas cost of an epoch, or the total number of transactions
+    /// from genesis to the end of an epoch. The committee is stored as a
+    /// vector of validator pub key and stake pairs. The vector
     /// should be sorted based on the Committee data structure.
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
 
-    /// The protocol version that is in effect during the epoch that starts immediately after this
-    /// checkpoint.
+    /// The protocol version that is in effect during the epoch that starts
+    /// immediately after this checkpoint.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub next_epoch_protocol_version: ProtocolVersion,
@@ -65,24 +58,25 @@ pub struct CheckpointSummary {
     pub epoch: EpochId,
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub sequence_number: CheckpointSequenceNumber,
-    /// Total number of transactions committed since genesis, including those in this
-    /// checkpoint.
+    /// Total number of transactions committed since genesis, including those in
+    /// this checkpoint.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub network_total_transactions: u64,
     pub content_digest: CheckpointContentsDigest,
     pub previous_digest: Option<CheckpointDigest>,
-    /// The running total gas costs of all transactions included in the current epoch so far
-    /// until this checkpoint.
+    /// The running total gas costs of all transactions included in the current
+    /// epoch so far until this checkpoint.
     pub epoch_rolling_gas_cost_summary: GasCostSummary,
 
     /// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
-    /// Checkpoint timestamps are monotonic, but not strongly monotonic - subsequent
-    /// checkpoints can have same timestamp if they originate from the same underlining consensus commit
+    /// Checkpoint timestamps are monotonic, but not strongly monotonic -
+    /// subsequent checkpoints can have same timestamp if they originate
+    /// from the same underlining consensus commit
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub timestamp_ms: CheckpointTimestamp,
 
-    /// Commitments to checkpoint-specific state (e.g. txns in checkpoint, objects read/written in
-    /// checkpoint).
+    /// Commitments to checkpoint-specific state (e.g. txns in checkpoint,
+    /// objects read/written in checkpoint).
     #[cfg_attr(
         feature = "schemars",
         schemars(with = "Option<Vec<CheckpointCommitment>>")
@@ -92,9 +86,10 @@ pub struct CheckpointSummary {
     /// Present only on the final checkpoint of the epoch.
     pub end_of_epoch_data: Option<EndOfEpochData>,
 
-    /// CheckpointSummary is not an evolvable structure - it must be readable by any version of the
-    /// code. Therefore, in order to allow extensions to be added to CheckpointSummary, we allow
-    /// opaque data to be added to checkpoints which can be deserialized based on the current
+    /// CheckpointSummary is not an evolvable structure - it must be readable by
+    /// any version of the code. Therefore, in order to allow extensions to
+    /// be added to CheckpointSummary, we allow opaque data to be added to
+    /// checkpoints which can be deserialized based on the current
     /// protocol version.
     #[cfg_attr(
         feature = "schemars",
@@ -170,7 +165,8 @@ pub struct CheckpointTransaction {
     pub effects: TransactionEffects,
     /// The events, if any, emitted by this transaciton during execution
     pub events: Option<TransactionEvents>,
-    /// The state of all inputs to this transaction as they were prior to execution.
+    /// The state of all inputs to this transaction as they were prior to
+    /// execution.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
     pub input_objects: Vec<Object>,
     /// The state of all output objects created or mutated by this transaction.
@@ -181,12 +177,9 @@ pub struct CheckpointTransaction {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use super::*;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-    use serde::Deserialize;
-    use serde::Deserializer;
-    use serde::Serialize;
-    use serde::Serializer;
+    use super::*;
 
     #[derive(serde_derive::Serialize)]
     struct ReadableCheckpointSummaryRef<'a> {
@@ -376,8 +369,7 @@ mod serialization {
         where
             S: Serializer,
         {
-            use serde::ser::SerializeSeq;
-            use serde::ser::SerializeTupleVariant;
+            use serde::ser::{SerializeSeq, SerializeTupleVariant};
 
             if serializer.is_human_readable() {
                 serializer.serialize_newtype_struct("CheckpointContents", &self.0)
@@ -394,8 +386,8 @@ mod serialization {
                     where
                         S: Serializer,
                     {
-                        let mut seq = serializer.serialize_seq(Some(self.0 .0.len()))?;
-                        for txn in &self.0 .0 {
+                        let mut seq = serializer.serialize_seq(Some(self.0.0.len()))?;
+                        for txn in &self.0.0 {
                             let digests = Digests {
                                 transaction: &txn.transaction,
                                 effects: &txn.effects,
@@ -412,8 +404,8 @@ mod serialization {
                     where
                         S: Serializer,
                     {
-                        let mut seq = serializer.serialize_seq(Some(self.0 .0.len()))?;
-                        for txn in &self.0 .0 {
+                        let mut seq = serializer.serialize_seq(Some(self.0.0.len()))?;
+                        for txn in &self.0.0 {
                             seq.serialize_element(&txn.signatures)?;
                         }
                         seq.end()
@@ -546,12 +538,11 @@ mod serialization {
 
     #[cfg(test)]
     mod test {
-        use super::*;
-        use base64ct::Base64;
-        use base64ct::Encoding;
-
+        use base64ct::{Base64, Encoding};
         #[cfg(target_arch = "wasm32")]
         use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use super::*;
 
         #[test]
         fn signed_checkpoint_fixture() {
@@ -573,7 +564,7 @@ mod serialization {
 
         #[test]
         fn contents_fixture() {
-            let fixture ="AAEgp6oAB8Qadn8+FqtdqeDIp8ViQNOZpMKs44MN0N5y7zIgqn5dKR1+8poL0pLNwRo/2knMnodwMTEDhqYL03kdewQBAWEAgpORkfH6ewjfFQYZJhmjkYq0/B3Set4mLJX/G0wUPb/V4H41gJipYu4I6ToyixnEuPQWxHKLckhNn+0UmI+pAJ9GegzEh0q2HWABmFMpFoPw0229dCfzWNOhHW5bes4H";
+            let fixture = "AAEgp6oAB8Qadn8+FqtdqeDIp8ViQNOZpMKs44MN0N5y7zIgqn5dKR1+8poL0pLNwRo/2knMnodwMTEDhqYL03kdewQBAWEAgpORkfH6ewjfFQYZJhmjkYq0/B3Set4mLJX/G0wUPb/V4H41gJipYu4I6ToyixnEuPQWxHKLckhNn+0UmI+pAJ9GegzEh0q2HWABmFMpFoPw0229dCfzWNOhHW5bes4H";
 
             let bcs = Base64::decode_vec(fixture).unwrap();
 

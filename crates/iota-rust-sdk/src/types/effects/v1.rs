@@ -1,12 +1,8 @@
-use crate::types::execution_status::ExecutionStatus;
-use crate::types::object::Owner;
-use crate::types::object::Version;
-use crate::types::EpochId;
-use crate::types::GasCostSummary;
-use crate::types::ObjectId;
-use crate::types::ObjectReference;
-use crate::types::TransactionDigest;
-use crate::types::TransactionEventsDigest;
+use crate::types::{
+    execution_status::ExecutionStatus,
+    object::{Owner, Version},
+    EpochId, GasCostSummary, ObjectId, ObjectReference, TransactionDigest, TransactionEventsDigest,
+};
 
 /// The response from processing a transaction or a certified transaction
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -20,11 +16,12 @@ pub struct TransactionEffectsV1 {
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     epoch: EpochId,
     gas_used: GasCostSummary,
-    /// The version that every modified (mutated or deleted) object had before it was modified by
-    /// this transaction.
+    /// The version that every modified (mutated or deleted) object had before
+    /// it was modified by this transaction.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=5).lift()))]
     modified_at_versions: Vec<ModifiedAtVersion>,
-    /// The object references of the shared objects used in this transaction. Empty if no shared objects were used.
+    /// The object references of the shared objects used in this transaction.
+    /// Empty if no shared objects were used.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=5).lift()))]
     shared_objects: Vec<ObjectReference>,
     /// The transaction digest
@@ -36,22 +33,23 @@ pub struct TransactionEffectsV1 {
     /// ObjectReference and owner of mutated objects, including gas object.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=5).lift()))]
     mutated: Vec<ObjectReferenceWithOwner>,
-    /// ObjectReference and owner of objects that are unwrapped in this transaction.
-    /// Unwrapped objects are objects that were wrapped into other objects in the past,
-    /// and just got extracted out.
+    /// ObjectReference and owner of objects that are unwrapped in this
+    /// transaction. Unwrapped objects are objects that were wrapped into
+    /// other objects in the past, and just got extracted out.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=5).lift()))]
     unwrapped: Vec<ObjectReferenceWithOwner>,
     /// Object Refs of objects now deleted (the new refs).
     #[cfg_attr(test, any(proptest::collection::size_range(0..=5).lift()))]
     deleted: Vec<ObjectReference>,
-    /// Object refs of objects previously wrapped in other objects but now deleted.
+    /// Object refs of objects previously wrapped in other objects but now
+    /// deleted.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=5).lift()))]
     unwrapped_then_deleted: Vec<ObjectReference>,
     /// Object refs of objects now wrapped in other objects.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=5).lift()))]
     wrapped: Vec<ObjectReference>,
-    /// The updated gas object reference. Have a dedicated field for convenient access.
-    /// It's also included in mutated.
+    /// The updated gas object reference. Have a dedicated field for convenient
+    /// access. It's also included in mutated.
     gas_object: ObjectReferenceWithOwner,
     /// The digest of the events emitted during execution,
     /// can be None if the transaction does not emit any event.
@@ -90,10 +88,7 @@ pub struct ObjectReferenceWithOwner {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use serde::Deserialize;
-    use serde::Deserializer;
-    use serde::Serialize;
-    use serde::Serializer;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
     use super::*;
 

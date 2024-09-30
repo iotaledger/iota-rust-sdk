@@ -1,7 +1,5 @@
-use super::Bls12381PublicKey;
-use super::Bls12381Signature;
-use crate::types::checkpoint::EpochId;
-use crate::types::checkpoint::StakeUnit;
+use super::{Bls12381PublicKey, Bls12381Signature};
+use crate::types::checkpoint::{EpochId, StakeUnit};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
@@ -62,8 +60,8 @@ type RoaringBitMapSerialization = ::serde_with::As<
     >,
 >;
 
-// Similar to Digest...unfortunately validator's public key material is serialized with the length
-// (96) prefixed
+// Similar to Digest...unfortunately validator's public key material is
+// serialized with the length (96) prefixed
 #[cfg(feature = "serde")]
 type ValidatorPublicKeySerialization = ::serde_with::As<
     ::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr, BinaryValidatorPublicKey>,
@@ -113,16 +111,15 @@ pub struct ValidatorSignature {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
 
     #[cfg(feature = "serde")]
     #[test]
     fn aggregated_signature_fixture() {
-        use base64ct::Base64;
-        use base64ct::Encoding;
+        use base64ct::{Base64, Encoding};
 
         const FIXTURE: &str = "CgAAAAAAAACZrBcXiqa0ttztfwrBxKzQRzIRnZhbmsQV7tqNXwiZQrRC+dVDbdua1Ety9uy2pCUSOjAAAAEAAAAAAAAAEAAAAAAA";
         let bcs = Base64::decode_vec(FIXTURE).unwrap();

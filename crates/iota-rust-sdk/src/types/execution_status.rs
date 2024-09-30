@@ -1,7 +1,4 @@
-use super::Address;
-use super::Digest;
-use super::Identifier;
-use super::ObjectId;
+use super::{Address, Digest, Identifier, ObjectId};
 
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
@@ -17,8 +14,9 @@ pub enum ExecutionStatus {
     },
 }
 
-/// Type parameters are encoded as indices. This index can also be used to lookup the kind of a
-/// type parameter in the `FunctionHandle` and `StructHandle`.
+/// Type parameters are encoded as indices. This index can also be used to
+/// lookup the kind of a type parameter in the `FunctionHandle` and
+/// `StructHandle`.
 pub type TypeParameterIndex = u16;
 
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -29,9 +27,7 @@ pub type TypeParameterIndex = u16;
 )]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
 pub enum ExecutionError {
-    //
     // General transaction errors
-    //
     /// Insufficient Gas
     InsufficientGas,
     /// Invalid Gas Object.
@@ -57,17 +53,13 @@ pub enum ExecutionError {
     /// Circular Object Ownership
     CircularObjectOwnership { object: ObjectId },
 
-    //
     // Coin errors
-    //
     /// Insufficient coin balance for requested operation
     InsufficientCoinBalance,
     /// Coin balance overflowed an u64
     CoinBalanceOverflow,
 
-    //
     // Publish/Upgrade errors
-    //
     /// Publish Error, Non-zero Address.
     /// The modules in the package must have their self-addresses set to zero.
     PublishErrorNonZeroAddress,
@@ -75,9 +67,7 @@ pub enum ExecutionError {
     /// Iota Move Bytecode Verification Error.
     IotaMoveVerificationError,
 
-    //
     // MoveVm Errors
-    //
     /// Error from a non-abort instruction.
     /// Possible causes:
     ///     Arithmetic error, stack overflow, max value depth, etc."
@@ -93,9 +83,7 @@ pub enum ExecutionError {
     /// MoveVm invariant violation
     VmInvariantViolation,
 
-    //
     // Programmable Transaction Errors
-    //
     /// Function not found
     FunctionNotFound,
     /// Arity mismatch for Move function.
@@ -124,9 +112,7 @@ pub enum ExecutionError {
     /// Invalid Transfer Object, object does not have public transfer.
     InvalidTransferObject,
 
-    //
     // Post-execution errors
-    //
     /// Effects from the transaction are too large
     EffectsTooLarge {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -140,9 +126,9 @@ pub enum ExecutionError {
 
     /// Publish or Upgrade dependency downgrade.
     ///
-    /// Indirect (transitive) dependency of published or upgraded package has been assigned an
-    /// on-chain version that is less than the version required by one of the package's
-    /// transitive dependencies.
+    /// Indirect (transitive) dependency of published or upgraded package has
+    /// been assigned an on-chain version that is less than the version
+    /// required by one of the package's transitive dependencies.
     PublishUpgradeDependencyDowngrade,
 
     /// Invalid package upgrade
@@ -178,7 +164,8 @@ pub enum ExecutionError {
     /// Coin type is globally paused for use
     CoinTypeGlobalPause { coin_type: String },
 
-    /// Certificate is cancelled because randomness could not be generated this epoch
+    /// Certificate is cancelled because randomness could not be generated this
+    /// epoch
     ExecutionCancelledDueToRandomnessUnavailable,
 }
 
@@ -193,8 +180,8 @@ pub struct MoveLocation {
     pub package: ObjectId,
     pub module: Identifier,
     pub function: u16,
-    /// Index into the code stream for a jump. The offset is relative to the beginning of
-    /// the instruction stream.
+    /// Index into the code stream for a jump. The offset is relative to the
+    /// beginning of the instruction stream.
     pub instruction: u16,
     pub function_name: Option<Identifier>,
 }
@@ -235,8 +222,8 @@ pub enum CommandArgumentError {
     InvalidObjectByValue,
     /// Immutable objects cannot be passed by mutable reference, &mut.
     InvalidObjectByMutRef,
-    /// Shared object operations such a wrapping, freezing, or converting to owned are not
-    /// allowed.
+    /// Shared object operations such a wrapping, freezing, or converting to
+    /// owned are not allowed.
     SharedObjectOperationNotAllowed,
 }
 
@@ -287,12 +274,9 @@ pub enum TypeArgumentError {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use super::*;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-    use serde::Deserialize;
-    use serde::Deserializer;
-    use serde::Serialize;
-    use serde::Serializer;
+    use super::*;
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(rename = "ExecutionStatus")]

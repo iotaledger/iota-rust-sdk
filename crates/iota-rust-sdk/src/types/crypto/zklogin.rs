@@ -1,6 +1,5 @@
 use super::SimpleSignature;
-use crate::types::checkpoint::EpochId;
-use crate::types::u256::U256;
+use crate::types::{checkpoint::EpochId, u256::U256};
 
 /// An zk login authenticator with all the necessary fields.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -13,7 +12,8 @@ pub struct ZkLoginAuthenticator {
     signature: SimpleSignature,
 }
 
-/// All inputs required for the zk login proof verification and other public inputs.
+/// All inputs required for the zk login proof verification and other public
+/// inputs.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
@@ -71,16 +71,16 @@ pub struct ZkLoginProof {
     c: CircomG1,
 }
 
-/// A G1 point in BN254 serialized as a vector of three strings which is the canonical decimal
-/// representation of the projective coordinates in Fq.
+/// A G1 point in BN254 serialized as a vector of three strings which is the
+/// canonical decimal representation of the projective coordinates in Fq.
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
 pub struct CircomG1([Bn254FieldElement; 3]);
 
-/// A G2 point in BN254 serialized as a vector of three vectors each being a vector of two strings
-/// which are the canonical decimal representation of the coefficients of the projective coordinates
-/// in Fq2.
+/// A G2 point in BN254 serialized as a vector of three vectors each being a
+/// vector of two strings which are the canonical decimal representation of the
+/// coefficients of the projective coordinates in Fq2.
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
@@ -91,7 +91,7 @@ pub struct CircomG2([[Bn254FieldElement; 2]; 3]);
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
-//TODO ensure iss is less than 255 bytes long
+// TODO ensure iss is less than 255 bytes long
 pub struct ZkLoginPublicIdentifier {
     iss: String,
     address_seed: Bn254FieldElement,
@@ -159,11 +159,7 @@ impl Bn254FieldElement {
         }
 
         // If the value is '0' then just return a slice of length 1 of the final byte
-        if buf.is_empty() {
-            &self.0[31..]
-        } else {
-            buf
-        }
+        if buf.is_empty() { &self.0[31..] } else { buf }
     }
 
     pub fn padded(&self) -> &[u8] {
@@ -202,14 +198,15 @@ impl std::str::FromStr for Bn254FieldElement {
 
 #[cfg(test)]
 mod test {
-    use super::Bn254FieldElement;
+    use std::str::FromStr;
+
     use num_bigint::BigUint;
     use proptest::prelude::*;
-    use std::str::FromStr;
     use test_strategy::proptest;
-
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::Bn254FieldElement;
 
     #[test]
     fn unpadded_slice() {
@@ -250,19 +247,16 @@ mod test {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use crate::types::SignatureScheme;
-
-    use super::*;
-    use serde::Deserialize;
-    use serde::Deserializer;
-    use serde::Serialize;
-    use serde::Serializer;
-    use serde_with::Bytes;
-    use serde_with::DeserializeAs;
-    use serde_with::SerializeAs;
     use std::borrow::Cow;
 
-    // Serialized format is: iss_bytes_len || iss_bytes || padded_32_byte_address_seed.
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use serde_with::{Bytes, DeserializeAs, SerializeAs};
+
+    use super::*;
+    use crate::types::SignatureScheme;
+
+    // Serialized format is: iss_bytes_len || iss_bytes ||
+    // padded_32_byte_address_seed.
     impl Serialize for ZkLoginPublicIdentifier {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where

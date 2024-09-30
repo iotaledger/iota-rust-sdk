@@ -1,8 +1,6 @@
 //! Rust definitions of move/iota framework types.
 
-use super::Object;
-use super::ObjectId;
-use super::TypeTag;
+use super::{Object, ObjectId, TypeTag};
 
 #[derive(Debug, Clone)]
 pub struct Coin<'a> {

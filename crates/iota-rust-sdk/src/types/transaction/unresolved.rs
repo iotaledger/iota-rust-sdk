@@ -1,10 +1,5 @@
-use crate::types::object::Version;
-use crate::types::Address;
-use crate::types::ObjectDigest;
-use crate::types::ObjectId;
-
-use super::Command;
-use super::TransactionExpiration;
+use super::{Command, TransactionExpiration};
+use crate::types::{object::Version, Address, ObjectDigest, ObjectId};
 
 // A potentially Unresolved user transaction
 #[cfg_attr(
@@ -77,7 +72,8 @@ pub enum UnresolvedInputArgument {
     // A Move object, either immutable, or owned mutable.
     ImmutableOrOwned(UnresolvedObjectReference),
     // A Move object that's shared.
-    // SharedObject::mutable controls whether caller asks for a mutable reference to shared object.
+    // SharedObject::mutable controls whether caller asks for a mutable reference to shared
+    // object.
     Shared {
         object_id: ObjectId,
         #[cfg_attr(

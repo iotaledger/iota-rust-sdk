@@ -1,7 +1,6 @@
-use crate::types::Address;
-use crate::types::Digest;
-
 use blake2::Digest as DigestTrait;
+
+use crate::types::{Address, Digest};
 
 type Blake2b256 = blake2::Blake2b<blake2::digest::consts::U32>;
 
@@ -226,9 +225,9 @@ mod type_digest {
     }
 }
 
-/// A 1-byte domain separator for hashing Object ID in Iota. It is starting from 0xf0
-/// to ensure no hashing collision for any ObjectId vs Address which is derived
-/// as the hash of `flag || pubkey`.
+/// A 1-byte domain separator for hashing Object ID in Iota. It is starting from
+/// 0xf0 to ensure no hashing collision for any ObjectId vs Address which is
+/// derived as the hash of `flag || pubkey`.
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
 #[repr(u8)]
@@ -241,7 +240,8 @@ enum HashingIntent {
 impl crate::types::ObjectId {
     /// Create an ObjectId from `TransactionDigest` and `count`.
     ///
-    /// `count` is the number of objects that have been created during a transactions.
+    /// `count` is the number of objects that have been created during a
+    /// transactions.
     pub fn derive_id(digest: crate::types::TransactionDigest, count: u64) -> Self {
         let mut hasher = Hasher::new();
         hasher.update([HashingIntent::RegularObjectId as u8]);
@@ -280,12 +280,12 @@ impl crate::types::ObjectId {
 
 #[cfg(test)]
 mod test {
-    use super::HashingIntent;
-    use crate::types::SignatureScheme;
     use test_strategy::proptest;
-
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::HashingIntent;
+    use crate::types::SignatureScheme;
 
     impl HashingIntent {
         fn from_byte(byte: u8) -> Result<Self, u8> {

@@ -1,17 +1,11 @@
 mod v1;
 mod v2;
 
-pub use v1::ModifiedAtVersion;
-pub use v1::ObjectReferenceWithOwner;
-pub use v1::TransactionEffectsV1;
-pub use v2::ChangedObject;
-pub use v2::EffectsObjectChange;
-pub use v2::IdOperation;
-pub use v2::ObjectIn;
-pub use v2::ObjectOut;
-pub use v2::TransactionEffectsV2;
-pub use v2::UnchangedSharedKind;
-pub use v2::UnchangedSharedObject;
+pub use v1::{ModifiedAtVersion, ObjectReferenceWithOwner, TransactionEffectsV1};
+pub use v2::{
+    ChangedObject, EffectsObjectChange, IdOperation, ObjectIn, ObjectOut, TransactionEffectsV2,
+    UnchangedSharedKind, UnchangedSharedObject,
+};
 
 /// The response from processing a transaction or a certified transaction
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -31,14 +25,9 @@ pub enum TransactionEffects {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use super::TransactionEffects;
-    use super::TransactionEffectsV1;
-    use super::TransactionEffectsV2;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-    use serde::Deserialize;
-    use serde::Deserializer;
-    use serde::Serialize;
-    use serde::Serializer;
+    use super::{TransactionEffects, TransactionEffectsV1, TransactionEffectsV2};
 
     #[derive(serde_derive::Serialize)]
     #[serde(tag = "version")]
@@ -112,13 +101,11 @@ mod serialization {
 
     #[cfg(test)]
     mod tests {
-        use super::TransactionEffects;
-
-        use base64ct::Base64;
-        use base64ct::Encoding;
-
+        use base64ct::{Base64, Encoding};
         #[cfg(target_arch = "wasm32")]
         use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use super::TransactionEffects;
 
         #[test]
         fn effects_fixtures() {

@@ -1,18 +1,8 @@
-use super::Address;
-use super::CheckpointTimestamp;
-use super::ConsensusCommitDigest;
-use super::EpochId;
-use super::GenesisObject;
-use super::Identifier;
-use super::Jwk;
-use super::JwkId;
-use super::ObjectId;
-use super::ObjectReference;
-use super::ProtocolVersion;
-use super::TransactionDigest;
-use super::TypeTag;
-use super::UserSignature;
-use super::Version;
+use super::{
+    Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, GenesisObject, Identifier, Jwk,
+    JwkId, ObjectId, ObjectReference, ProtocolVersion, TransactionDigest, TypeTag, UserSignature,
+    Version,
+};
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -22,11 +12,10 @@ mod serialization;
 pub(crate) use serialization::SignedTransactionWithIntentMessage;
 
 mod unresolved;
-pub use unresolved::UnresolvedGasPayment;
-pub use unresolved::UnresolvedInputArgument;
-pub use unresolved::UnresolvedObjectReference;
-pub use unresolved::UnresolvedProgrammableTransaction;
-pub use unresolved::UnresolvedTransaction;
+pub use unresolved::{
+    UnresolvedGasPayment, UnresolvedInputArgument, UnresolvedObjectReference,
+    UnresolvedProgrammableTransaction, UnresolvedTransaction,
+};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
@@ -111,7 +100,8 @@ pub struct RandomnessStateUpdate {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
 pub enum TransactionKind {
-    /// A transaction that allows the interleaving of native commands and Move calls
+    /// A transaction that allows the interleaving of native commands and Move
+    /// calls
     ProgrammableTransaction(ProgrammableTransaction),
     /// A system transaction that will update epoch information on-chain.
     /// It will only ever be executed once in an epoch.
@@ -119,18 +109,18 @@ pub enum TransactionKind {
     /// because it ensures that this transaction has a unique digest.
     /// This will eventually be translated to a Move call during execution.
     /// It also doesn't require/use a gas object.
-    /// A validator will not sign a transaction of this kind from outside. It only
-    /// signs internally during epoch changes.
+    /// A validator will not sign a transaction of this kind from outside. It
+    /// only signs internally during epoch changes.
     ///
-    /// The ChangeEpoch enumerant is now deprecated (but the ChangeEpoch struct is still used by
-    /// EndOfEpochTransaction below).
+    /// The ChangeEpoch enumerant is now deprecated (but the ChangeEpoch struct
+    /// is still used by EndOfEpochTransaction below).
     ChangeEpoch(ChangeEpoch),
     Genesis(GenesisTransaction),
     ConsensusCommitPrologue(ConsensusCommitPrologue),
     AuthenticatorStateUpdate(AuthenticatorStateUpdate),
 
-    /// EndOfEpochTransaction replaces ChangeEpoch with a list of transactions that are allowed to
-    /// run at the end of the epoch.
+    /// EndOfEpochTransaction replaces ChangeEpoch with a list of transactions
+    /// that are allowed to run at the end of the epoch.
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
 
     RandomnessStateUpdate(RandomnessStateUpdate),
@@ -225,7 +215,8 @@ pub struct ActiveJwk {
 }
 
 /// Only commit_timestamp_ms is passed to the move call currently.
-/// However we include epoch and round to make sure each ConsensusCommitPrologue has a unique tx digest.
+/// However we include epoch and round to make sure each ConsensusCommitPrologue
+/// has a unique tx digest.
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
@@ -330,8 +321,8 @@ pub struct ConsensusCommitPrologueV3 {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub round: u64,
-    /// The sub DAG index of the consensus commit. This field will be populated if there
-    /// are multiple consensus commits per round.
+    /// The sub DAG index of the consensus commit. This field will be populated
+    /// if there are multiple consensus commits per round.
     #[cfg_attr(
         feature = "serde",
         serde(with = "crate::_serde::OptionReadableDisplay")
@@ -384,11 +375,12 @@ pub struct ChangeEpoch {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch_start_timestamp_ms: u64,
-    /// System packages (specifically framework and move stdlib) that are written before the new
-    /// epoch starts. This tracks framework upgrades on chain. When executing the ChangeEpoch txn,
-    /// the validator must write out the modules below.  Modules are provided with the version they
-    /// will be upgraded to, their modules in serialized form (which include their package ID), and
-    /// a list of their transitive dependencies.
+    /// System packages (specifically framework and move stdlib) that are
+    /// written before the new epoch starts. This tracks framework upgrades
+    /// on chain. When executing the ChangeEpoch txn, the validator must
+    /// write out the modules below.  Modules are provided with the version they
+    /// will be upgraded to, their modules in serialized form (which include
+    /// their package ID), and a list of their transitive dependencies.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
 }
@@ -463,7 +455,8 @@ pub enum InputArgument {
     // A Move object, either immutable, or owned mutable.
     ImmutableOrOwned(ObjectReference),
     // A Move object that's shared.
-    // SharedObject::mutable controls whether caller asks for a mutable reference to shared object.
+    // SharedObject::mutable controls whether caller asks for a mutable reference to shared
+    // object.
     Shared {
         object_id: ObjectId,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -486,9 +479,9 @@ pub enum Command {
     /// A call to either an entry or a public Move function
     MoveCall(MoveCall),
     /// `(Vec<forall T:key+store. T>, address)`
-    /// It sends n-objects to the specified address. These objects must have store
-    /// (public transfer) and either the previous owner must be an address or the object must
-    /// be newly created.
+    /// It sends n-objects to the specified address. These objects must have
+    /// store (public transfer) and either the previous owner must be an
+    /// address or the object must be newly created.
     TransferObjects(TransferObjects),
     /// `(&mut Coin<T>, Vec<u64>)` -> `Vec<Coin<T>>`
     /// It splits off some amounts into a new coins with those amounts
@@ -496,20 +489,21 @@ pub enum Command {
     /// `(&mut Coin<T>, Vec<Coin<T>>)`
     /// It merges n-coins into the first coin
     MergeCoins(MergeCoins),
-    /// Publishes a Move package. It takes the package bytes and a list of the package's transitive
-    /// dependencies to link against on-chain.
+    /// Publishes a Move package. It takes the package bytes and a list of the
+    /// package's transitive dependencies to link against on-chain.
     Publish(Publish),
     /// `forall T: Vec<T> -> vector<T>`
-    /// Given n-values of the same type, it constructs a vector. For non objects or an empty vector,
-    /// the type tag must be specified.
+    /// Given n-values of the same type, it constructs a vector. For non objects
+    /// or an empty vector, the type tag must be specified.
     MakeMoveVector(MakeMoveVector),
     /// Upgrades a Move package
     /// Takes (in order):
     /// 1. A vector of serialized modules for the package.
-    /// 2. A vector of object ids for the transitive dependencies of the new package.
+    /// 2. A vector of object ids for the transitive dependencies of the new
+    ///    package.
     /// 3. The object ID of the package being upgraded.
-    /// 4. An argument holding the `UpgradeTicket` that must have been produced from an earlier command in the same
-    ///    programmable transaction.
+    /// 4. An argument holding the `UpgradeTicket` that must have been produced
+    ///    from an earlier command in the same programmable transaction.
     Upgrade(Upgrade),
 }
 
@@ -618,14 +612,15 @@ pub enum Argument {
     Input(u16),
     /// The result of another command (from `ProgrammableTransaction` commands)
     Result(u16),
-    /// Like a `Result` but it accesses a nested result. Currently, the only usage
-    /// of this is to access a value from a Move call with multiple return values.
+    /// Like a `Result` but it accesses a nested result. Currently, the only
+    /// usage of this is to access a value from a Move call with multiple
+    /// return values.
     // (command index, subresult index)
     NestedResult(u16, u16),
 }
 
-/// The command for calling a Move function, either an entry function or a public
-/// function (which cannot return references).
+/// The command for calling a Move function, either an entry function or a
+/// public function (which cannot return references).
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",

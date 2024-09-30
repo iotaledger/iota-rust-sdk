@@ -1,21 +1,15 @@
-use super::Address;
-use super::Identifier;
-use super::StructTag;
-use super::TypeTag;
+use winnow::{
+    ascii::space0,
+    combinator::{alt, delimited, eof, opt, separated},
+    stream::AsChar,
+    token::{one_of, take_while},
+    PResult, Parser,
+};
 
-use winnow::ascii::space0;
-use winnow::combinator::alt;
-use winnow::combinator::delimited;
-use winnow::combinator::eof;
-use winnow::combinator::opt;
-use winnow::combinator::separated;
-use winnow::stream::AsChar;
-use winnow::token::one_of;
-use winnow::token::take_while;
-use winnow::PResult;
-use winnow::Parser;
+use super::{Address, Identifier, StructTag, TypeTag};
 
-// static ALLOWED_IDENTIFIERS: &str = r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
+// static ALLOWED_IDENTIFIERS: &str =
+// r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
 static MAX_IDENTIFIER_LENGTH: usize = 128;
 
 pub(super) fn parse_identifier(mut input: &str) -> PResult<&str> {
@@ -102,15 +96,15 @@ fn generics(input: &mut &str) -> PResult<Vec<TypeTag>> {
     separated(1.., delimited(space0, type_tag, space0), ",").parse_next(input)
 }
 
-//TODO add proptests
+// TODO add proptests
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     use std::str::FromStr;
 
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
 
     #[test]
     fn test_type_tag() {
@@ -159,33 +153,33 @@ mod tests {
     #[test]
     fn test_parse_valid_struct_type() {
         let valid = vec![
-        "0x1::Foo::Foo",
-        "0x1::Foo_Type::Foo",
-        "0x1::Foo_::Foo",
-        "0x1::X_123::X32_",
-        "0x1::Foo::Foo_Type",
-        "0x1::Foo::Foo<0x1::ABC::ABC>",
-        "0x1::Foo::Foo<0x1::ABC::ABC_Type>",
-        "0x1::Foo::Foo<u8>",
-        "0x1::Foo::Foo<u16>",
-        "0x1::Foo::Foo<u32>",
-        "0x1::Foo::Foo<u64>",
-        "0x1::Foo::Foo<u128>",
-        "0x1::Foo::Foo<u256>",
-        "0x1::Foo::Foo<bool>",
-        "0x1::Foo::Foo<address>",
-        "0x1::Foo::Foo<signer>",
-        "0x1::Foo::Foo<vector<0x1::ABC::ABC>>",
-        "0x1::Foo::Foo<u8,bool>",
-        "0x1::Foo::Foo<u8,   bool>",
-        "0x1::Foo::Foo<u8  ,bool>",
-        "0x1::Foo::Foo<u8 , bool  ,    vector<u8>,address,signer>",
-        "0x1::Foo::Foo<vector<0x1::Foo::Struct<0x1::XYZ::XYZ>>>",
-        "0x1::Foo::Foo<0x1::Foo::Struct<vector<0x1::XYZ::XYZ>, 0x1::Foo::Foo<vector<0x1::Foo::Struct<0x1::XYZ::XYZ>>>>>",
-        "0x1::_bar::_BAR",
-        "0x1::__::__",
-        "0x1::_bar::_BAR<0x2::_____::______fooo______>",
-        "0x1::__::__<0x2::_____::______fooo______, 0xff::Bar____::_______foo>",
+            "0x1::Foo::Foo",
+            "0x1::Foo_Type::Foo",
+            "0x1::Foo_::Foo",
+            "0x1::X_123::X32_",
+            "0x1::Foo::Foo_Type",
+            "0x1::Foo::Foo<0x1::ABC::ABC>",
+            "0x1::Foo::Foo<0x1::ABC::ABC_Type>",
+            "0x1::Foo::Foo<u8>",
+            "0x1::Foo::Foo<u16>",
+            "0x1::Foo::Foo<u32>",
+            "0x1::Foo::Foo<u64>",
+            "0x1::Foo::Foo<u128>",
+            "0x1::Foo::Foo<u256>",
+            "0x1::Foo::Foo<bool>",
+            "0x1::Foo::Foo<address>",
+            "0x1::Foo::Foo<signer>",
+            "0x1::Foo::Foo<vector<0x1::ABC::ABC>>",
+            "0x1::Foo::Foo<u8,bool>",
+            "0x1::Foo::Foo<u8,   bool>",
+            "0x1::Foo::Foo<u8  ,bool>",
+            "0x1::Foo::Foo<u8 , bool  ,    vector<u8>,address,signer>",
+            "0x1::Foo::Foo<vector<0x1::Foo::Struct<0x1::XYZ::XYZ>>>",
+            "0x1::Foo::Foo<0x1::Foo::Struct<vector<0x1::XYZ::XYZ>, 0x1::Foo::Foo<vector<0x1::Foo::Struct<0x1::XYZ::XYZ>>>>>",
+            "0x1::_bar::_BAR",
+            "0x1::__::__",
+            "0x1::_bar::_BAR<0x2::_____::______fooo______>",
+            "0x1::__::__<0x2::_____::______fooo______, 0xff::Bar____::_______foo>",
         ];
         for s in valid {
             let mut input = s;

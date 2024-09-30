@@ -1,12 +1,8 @@
-use super::zklogin::ZkLoginAuthenticator;
-use super::zklogin::ZkLoginPublicIdentifier;
-use super::Ed25519PublicKey;
-use super::Ed25519Signature;
-use super::Secp256k1PublicKey;
-use super::Secp256k1Signature;
-use super::Secp256r1PublicKey;
-use super::Secp256r1Signature;
-use super::SignatureScheme;
+use super::{
+    zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
+    Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
+    Secp256r1Signature, SignatureScheme,
+};
 
 pub type WeightUnit = u8;
 pub type ThresholdUnit = u16;
@@ -59,7 +55,8 @@ pub struct MultisigCommittee {
     /// A list of committee members and their corresponding weight.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=10).lift()))]
     members: Vec<MultisigMember>,
-    /// If the total weight of the public keys corresponding to verified signatures is larger than threshold, the Multisig is verified.
+    /// If the total weight of the public keys corresponding to verified
+    /// signatures is larger than threshold, the Multisig is verified.
     threshold: ThresholdUnit,
 }
 
@@ -77,7 +74,8 @@ impl MultisigCommittee {
     }
 }
 
-/// The struct that contains signatures and public keys necessary for authenticating a Multisig.
+/// The struct that contains signatures and public keys necessary for
+/// authenticating a Multisig.
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
@@ -85,10 +83,11 @@ pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=10).lift()))]
     signatures: Vec<MultisigMemberSignature>,
-    /// A bitmap that indicates the position of which public key the signature should be authenticated with.
+    /// A bitmap that indicates the position of which public key the signature
+    /// should be authenticated with.
     bitmap: BitmapUnit,
     /// Legacy encoding for the bitmap.
-    //TODO implement a strategy for legacy bitmap
+    // TODO implement a strategy for legacy bitmap
     #[cfg_attr(
         feature = "schemars",
         schemars(
@@ -98,7 +97,8 @@ pub struct MultisigAggregatedSignature {
     )]
     #[cfg_attr(test, strategy(proptest::strategy::Just(None)))]
     legacy_bitmap: Option<roaring::RoaringBitmap>,
-    /// The public key encoded with each public key with its signature scheme used along with the corresponding weight.
+    /// The public key encoded with each public key with its signature scheme
+    /// used along with the corresponding weight.
     committee: MultisigCommittee,
 }
 
@@ -122,7 +122,8 @@ impl MultisigAggregatedSignature {
 
 impl PartialEq for MultisigAggregatedSignature {
     fn eq(&self, other: &Self) -> bool {
-        // Skip comparing the legacy bitmap since we always convert to the new bitmap form
+        // Skip comparing the legacy bitmap since we always convert to the new bitmap
+        // form
         self.bitmap == other.bitmap
             && self.signatures == other.signatures
             && self.committee == other.committee
@@ -157,23 +158,17 @@ pub enum MultisigMemberSignature {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use super::*;
-    use crate::types::crypto::Base64Array33;
-    use crate::types::crypto::Base64Array34;
-    use crate::types::Ed25519PublicKey;
-    use crate::types::Secp256k1PublicKey;
-    use crate::types::Secp256r1PublicKey;
-    use crate::types::SignatureScheme;
-    use base64ct::Base64;
-    use base64ct::Encoding;
-    use serde::Deserialize;
-    use serde::Deserializer;
-    use serde::Serialize;
-    use serde::Serializer;
-    use serde_with::Bytes;
-    use serde_with::DeserializeAs;
-    use serde_with::SerializeAs;
     use std::borrow::Cow;
+
+    use base64ct::{Base64, Encoding};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use serde_with::{Bytes, DeserializeAs, SerializeAs};
+
+    use super::*;
+    use crate::types::{
+        crypto::{Base64Array33, Base64Array34},
+        Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
+    };
 
     pub struct Base64MultisigMemberPublicKey;
 
@@ -436,9 +431,9 @@ mod serialization {
             }
             let bcs_bytes = &bytes[1..];
 
-            // Unfortunately we have no information in the serialized form of a Multisig to be
-            // able to determine if its a Legacy format or the new standard format so we just
-            // need to try each.
+            // Unfortunately we have no information in the serialized form of a Multisig to
+            // be able to determine if its a Legacy format or the new standard
+            // format so we just need to try each.
             //
             // We'll start with the newer format as that should be more prevalent.
             if let Ok(multisig) = bcs::from_bytes::<Multisig>(bcs_bytes) {

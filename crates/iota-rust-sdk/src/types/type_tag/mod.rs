@@ -51,7 +51,7 @@ impl std::str::FromStr for TypeTag {
     }
 }
 
-//TODO flesh out this error type
+// TODO flesh out this error type
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct TypeParseError;
 

@@ -1,13 +1,9 @@
-use crate::types::digest::EffectsAuxiliaryDataDigest;
-use crate::types::execution_status::ExecutionStatus;
-use crate::types::object::Owner;
-use crate::types::object::Version;
-use crate::types::EpochId;
-use crate::types::GasCostSummary;
-use crate::types::ObjectDigest;
-use crate::types::ObjectId;
-use crate::types::TransactionDigest;
-use crate::types::TransactionEventsDigest;
+use crate::types::{
+    digest::EffectsAuxiliaryDataDigest,
+    execution_status::ExecutionStatus,
+    object::{Owner, Version},
+    EpochId, GasCostSummary, ObjectDigest, ObjectId, TransactionDigest, TransactionEventsDigest,
+};
 
 /// The response from processing a transaction or a certified transaction
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -23,8 +19,8 @@ pub struct TransactionEffectsV2 {
     pub gas_used: GasCostSummary,
     /// The transaction digest
     pub transaction_digest: TransactionDigest,
-    /// The updated gas object reference, as an index into the `changed_objects` vector.
-    /// Having a dedicated field for convenient access.
+    /// The updated gas object reference, as an index into the `changed_objects`
+    /// vector. Having a dedicated field for convenient access.
     /// System transaction that don't require gas will leave this as None.
     pub gas_object_index: Option<u32>,
     /// The digest of the events emitted during execution,
@@ -40,19 +36,21 @@ pub struct TransactionEffectsV2 {
     /// Objects whose state are changed in the object store.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
     pub changed_objects: Vec<ChangedObject>,
-    /// Shared objects that are not mutated in this transaction. Unlike owned objects,
-    /// read-only shared objects' version are not committed in the transaction,
-    /// and in order for a node to catch up and execute it without consensus sequencing,
-    /// the version needs to be committed in the effects.
+    /// Shared objects that are not mutated in this transaction. Unlike owned
+    /// objects, read-only shared objects' version are not committed in the
+    /// transaction, and in order for a node to catch up and execute it
+    /// without consensus sequencing, the version needs to be committed in
+    /// the effects.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
     pub unchanged_shared_objects: Vec<UnchangedSharedObject>,
-    /// Auxiliary data that are not protocol-critical, generated as part of the effects but are stored separately.
-    /// Storing it separately allows us to avoid bloating the effects with data that are not critical.
+    /// Auxiliary data that are not protocol-critical, generated as part of the
+    /// effects but are stored separately. Storing it separately allows us
+    /// to avoid bloating the effects with data that are not critical.
     /// It also provides more flexibility on the format and type of the data.
     pub auxiliary_data_digest: Option<EffectsAuxiliaryDataDigest>,
 }
 
-//XXX Do we maybe want to just fold "EffectsObjectChange" into this struct?
+// XXX Do we maybe want to just fold "EffectsObjectChange" into this struct?
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
@@ -82,8 +80,9 @@ pub struct UnchangedSharedObject {
 )]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
 pub enum UnchangedSharedKind {
-    /// Read-only shared objects from the input. We don't really need ObjectDigest
-    /// for protocol correctness, but it will make it easier to verify untrusted read.
+    /// Read-only shared objects from the input. We don't really need
+    /// ObjectDigest for protocol correctness, but it will make it easier to
+    /// verify untrusted read.
     ReadOnlyRoot {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
@@ -99,12 +98,14 @@ pub enum UnchangedSharedKind {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
     },
-    /// Shared objects in cancelled transaction. The sequence number embed cancellation reason.
+    /// Shared objects in cancelled transaction. The sequence number embed
+    /// cancellation reason.
     Cancelled {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
     },
-    /// Read of a per-epoch config object that should remain the same during an epoch.
+    /// Read of a per-epoch config object that should remain the same during an
+    /// epoch.
     PerEpochConfig,
 }
 
@@ -124,8 +125,8 @@ pub struct EffectsObjectChange {
     pub output_state: ObjectOut,
 
     /// Whether this object ID is created or deleted in this transaction.
-    /// This information isn't required by the protocol but is useful for providing more detailed
-    /// semantics on object changes.
+    /// This information isn't required by the protocol but is useful for
+    /// providing more detailed semantics on object changes.
     pub id_operation: IdOperation,
 }
 
@@ -188,10 +189,7 @@ pub enum IdOperation {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use serde::Deserialize;
-    use serde::Deserializer;
-    use serde::Serialize;
-    use serde::Serializer;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
     use super::*;
 

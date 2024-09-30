@@ -1,11 +1,6 @@
 use std::collections::BTreeMap;
 
-use super::Address;
-use super::Identifier;
-use super::ObjectDigest;
-use super::ObjectId;
-use super::StructTag;
-use super::TransactionDigest;
+use super::{Address, Identifier, ObjectDigest, ObjectId, StructTag, TransactionDigest};
 
 pub type Version = u64;
 
@@ -91,7 +86,7 @@ pub enum Owner {
 )]
 #[allow(clippy::large_enum_variant)]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
-//TODO think about hiding this type and not exposing it
+// TODO think about hiding this type and not exposing it
 pub enum ObjectData {
     /// An object whose governing logic lives in a published Move module
     Struct(MoveStruct),
@@ -100,8 +95,8 @@ pub enum ObjectData {
     // ... Iota "native" types go here
 }
 
-// serde_bytes::ByteBuf is an analog of Vec<u8> with built-in fast serialization.
-// #[serde_as]
+// serde_bytes::ByteBuf is an analog of Vec<u8> with built-in fast
+// serialization. #[serde_as]
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
 #[cfg_attr(
     feature = "serde",
@@ -110,16 +105,17 @@ pub enum ObjectData {
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
 pub struct MovePackage {
     id: ObjectId,
-    /// Most move packages are uniquely identified by their ID (i.e. there is only one version per
-    /// ID), but the version is still stored because one package may be an upgrade of another (at a
-    /// different ID), in which case its version will be one greater than the version of the
+    /// Most move packages are uniquely identified by their ID (i.e. there is
+    /// only one version per ID), but the version is still stored because
+    /// one package may be an upgrade of another (at a different ID), in
+    /// which case its version will be one greater than the version of the
     /// upgraded package.
     ///
-    /// Framework packages are an exception to this rule -- all versions of the framework packages
-    /// exist at the same ID, at increasing versions.
+    /// Framework packages are an exception to this rule -- all versions of the
+    /// framework packages exist at the same ID, at increasing versions.
     ///
-    /// In all cases, packages are referred to by move calls using just their ID, and they are
-    /// always loaded at their latest version.
+    /// In all cases, packages are referred to by move calls using just their
+    /// ID, and they are always loaded at their latest version.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     version: Version,
 
@@ -135,8 +131,8 @@ pub struct MovePackage {
     )]
     modules: BTreeMap<Identifier, Vec<u8>>,
 
-    /// Maps struct/module to a package version where it was first defined, stored as a vector for
-    /// simple serialization and deserialization.
+    /// Maps struct/module to a package version where it was first defined,
+    /// stored as a vector for simple serialization and deserialization.
     type_origin_table: Vec<TypeOrigin>,
 
     // For each dependency, maps original package ID to the info about the (upgraded) dependency
@@ -194,11 +190,13 @@ pub struct MoveStruct {
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
     pub(crate) type_: StructTag,
-    /// DEPRECATED this field is no longer used to determine whether a tx can transfer this
-    /// object. Instead, it is always calculated from the objects type when loaded in execution
+    /// DEPRECATED this field is no longer used to determine whether a tx can
+    /// transfer this object. Instead, it is always calculated from the
+    /// objects type when loaded in execution
     has_public_transfer: bool,
-    /// Number that increases each time a tx takes this object as a mutable input
-    /// This is a lamport timestamp, not a sequentially increasing version
+    /// Number that increases each time a tx takes this object as a mutable
+    /// input This is a lamport timestamp, not a sequentially increasing
+    /// version
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     version: Version,
     /// BCS bytes of a Move struct value
@@ -301,19 +299,14 @@ impl GenesisObject {
     }
 }
 
-//TODO improve ser/de to do borrowing to avoid clones where possible
+// TODO improve ser/de to do borrowing to avoid clones where possible
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
-    use std::borrow::Cow;
-    use std::str::FromStr;
+    use std::{borrow::Cow, str::FromStr};
 
-    use serde::Deserialize;
-    use serde::Deserializer;
-    use serde::Serialize;
-    use serde::Serializer;
-    use serde_with::DeserializeAs;
-    use serde_with::SerializeAs;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use serde_with::{DeserializeAs, SerializeAs};
 
     use super::*;
     use crate::types::TypeTag;
@@ -354,19 +347,23 @@ mod serialization {
         );
     }
 
-    /// Wrapper around StructTag with a space-efficient representation for common types like coins
-    /// The StructTag for a gas coin is 84 bytes, so using 1 byte instead is a win.
-    /// The inner representation is private to prevent incorrectly constructing an `Other` instead of
-    /// one of the specialized variants, e.g. `Other(GasCoin::type_())` instead of `GasCoin`
+    /// Wrapper around StructTag with a space-efficient representation for
+    /// common types like coins The StructTag for a gas coin is 84 bytes, so
+    /// using 1 byte instead is a win. The inner representation is private
+    /// to prevent incorrectly constructing an `Other` instead of one of the
+    /// specialized variants, e.g. `Other(GasCoin::type_())` instead of
+    /// `GasCoin`
     #[derive(serde_derive::Deserialize)]
     enum MoveStructType {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(StructTag),
         /// A IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
         GasCoin,
-        /// A record of a staked IOTA coin (i.e., `0x3::staking_pool::StakedIota`)
+        /// A record of a staked IOTA coin (i.e.,
+        /// `0x3::staking_pool::StakedIota`)
         StakedIota,
-        /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T != 0x2::iota::IOTA`)
+        /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
+        /// 0x2::iota::IOTA`)
         Coin(TypeTag),
         // NOTE: if adding a new type here, and there are existing on-chain objects of that
         // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
@@ -380,9 +377,11 @@ mod serialization {
         Other(&'a StructTag),
         /// A IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
         GasCoin,
-        /// A record of a staked IOTA coin (i.e., `0x3::staking_pool::StakedIota`)
+        /// A record of a staked IOTA coin (i.e.,
+        /// `0x3::staking_pool::StakedIota`)
         StakedIota,
-        /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T != 0x2::iota::IOTA`)
+        /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
+        /// 0x2::iota::IOTA`)
         Coin(&'a TypeTag),
         // NOTE: if adding a new type here, and there are existing on-chain objects of that
         // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
@@ -841,10 +840,10 @@ mod serialization {
 
     #[cfg(test)]
     mod test {
-        use crate::types::object::Object;
-
         #[cfg(target_arch = "wasm32")]
         use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use crate::types::object::Object;
 
         #[test]
         fn object_fixture() {

@@ -8,16 +8,11 @@ pub mod hash;
 
 #[cfg(feature = "serde")]
 mod _serde {
-    use base64ct::Base64;
-    use base64ct::Encoding;
-    use serde::Deserialize;
-    use serde::Deserializer;
-    use serde::Serialize;
-    use serde::Serializer;
-    use serde_with::Bytes;
-    use serde_with::DeserializeAs;
-    use serde_with::SerializeAs;
     use std::borrow::Cow;
+
+    use base64ct::{Base64, Encoding};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use serde_with::{Bytes, DeserializeAs, SerializeAs};
 
     pub(crate) type ReadableDisplay =
         ::serde_with::As<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>;
@@ -124,10 +119,10 @@ mod _serde {
 
 #[cfg(feature = "schemars")]
 mod _schemars {
-    use schemars::schema::InstanceType;
-    use schemars::schema::Metadata;
-    use schemars::schema::SchemaObject;
-    use schemars::JsonSchema;
+    use schemars::{
+        schema::{InstanceType, Metadata, SchemaObject},
+        JsonSchema,
+    };
 
     pub(crate) struct U64;
 
