@@ -6,7 +6,7 @@ edition = "2021"
 license = "Apache-2.0"
 publish = false
 readme = "README.md"
-description = "Sdk for the Iota Blockchain"
+description = "Sdk for the IOTA Blockchain"
 
 [package.metadata.docs.rs]
 # To build locally:
