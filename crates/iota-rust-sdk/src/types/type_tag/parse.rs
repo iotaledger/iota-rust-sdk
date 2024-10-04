@@ -1,9 +1,9 @@
 use winnow::{
+    PResult, Parser,
     ascii::space0,
     combinator::{alt, delimited, eof, opt, separated},
     stream::AsChar,
     token::{one_of, take_while},
-    PResult, Parser,
 };
 
 use super::{Address, Identifier, StructTag, TypeTag};

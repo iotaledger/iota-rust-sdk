@@ -1,7 +1,7 @@
 use super::{
-    zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
     Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
     Secp256r1Signature, SignatureScheme,
+    zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
 };
 
 pub type WeightUnit = u8;
@@ -166,8 +166,8 @@ mod serialization {
 
     use super::*;
     use crate::types::{
-        crypto::{Base64Array33, Base64Array34},
         Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
+        crypto::{Base64Array33, Base64Array34},
     };
 
     pub struct Base64MultisigMemberPublicKey;
