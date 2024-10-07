@@ -39,6 +39,9 @@ jobs:
 
       - uses: taiki-e/install-action@cargo-hack
 
+      - name: Install latest nightly
+        run: rustup toolchain install nightly --component rustfmt --allow-downgrade
+
       - name: feature compatibility
         run: make check-features
 
