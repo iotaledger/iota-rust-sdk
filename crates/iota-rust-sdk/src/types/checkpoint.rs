@@ -386,8 +386,8 @@ mod serialization {
                     where
                         S: Serializer,
                     {
-                        let mut seq = serializer.serialize_seq(Some(self.0 .0.len()))?;
-                        for txn in &self.0 .0 {
+                        let mut seq = serializer.serialize_seq(Some(self.0.0.len()))?;
+                        for txn in &self.0.0 {
                             let digests = Digests {
                                 transaction: &txn.transaction,
                                 effects: &txn.effects,
@@ -404,8 +404,8 @@ mod serialization {
                     where
                         S: Serializer,
                     {
-                        let mut seq = serializer.serialize_seq(Some(self.0 .0.len()))?;
-                        for txn in &self.0 .0 {
+                        let mut seq = serializer.serialize_seq(Some(self.0.0.len()))?;
+                        for txn in &self.0.0 {
                             seq.serialize_element(&txn.signatures)?;
                         }
                         seq.end()
