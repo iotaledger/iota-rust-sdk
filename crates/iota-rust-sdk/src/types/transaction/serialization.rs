@@ -7,8 +7,8 @@ use crate::types::{ObjectId, ObjectReference};
 mod transaction {
     use super::*;
     use crate::types::{
-        Address,
         transaction::{GasPayment, Transaction, TransactionExpiration, TransactionKind},
+        Address,
     };
 
     #[derive(serde_derive::Serialize)]
@@ -321,8 +321,8 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
     use crate::types::{
-        CheckpointDigest,
         transaction::{AuthenticatorStateExpire, ChangeEpoch, EndOfEpochTransactionKind},
+        CheckpointDigest,
     };
 
     #[derive(serde_derive::Serialize)]
@@ -967,8 +967,8 @@ mod signed_transaction {
 
     use super::*;
     use crate::types::{
-        UserSignature,
         transaction::{SignedTransaction, Transaction},
+        UserSignature,
     };
 
     /// Intents are defined as:
@@ -1235,8 +1235,8 @@ mod test {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use crate::types::{
-        ObjectDigest, ObjectId, ObjectReference,
         transaction::{Argument, InputArgument, Transaction},
+        ObjectDigest, ObjectId, ObjectReference,
     };
 
     #[test]

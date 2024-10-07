@@ -1,7 +1,7 @@
 use crate::types::{
-    EpochId, GasCostSummary, ObjectId, ObjectReference, TransactionDigest, TransactionEventsDigest,
     execution_status::ExecutionStatus,
     object::{Owner, Version},
+    EpochId, GasCostSummary, ObjectId, ObjectReference, TransactionDigest, TransactionEventsDigest,
 };
 
 /// The response from processing a transaction or a certified transaction

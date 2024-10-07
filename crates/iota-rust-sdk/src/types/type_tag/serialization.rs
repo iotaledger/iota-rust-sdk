@@ -1,4 +1,4 @@
-use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Visitor};
+use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
 use serde_with::{DeserializeAs, SerializeAs};
 
 use super::*;
@@ -243,8 +243,8 @@ impl<'de> Deserialize<'de> for StructTag {
 #[cfg(feature = "schemars")]
 mod json_schema {
     use schemars::{
-        JsonSchema,
         schema::{InstanceType, Metadata, SchemaObject, StringValidation},
+        JsonSchema,
     };
 
     use super::*;
