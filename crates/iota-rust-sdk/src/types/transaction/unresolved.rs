@@ -1,5 +1,5 @@
 use super::{Command, TransactionExpiration};
-use crate::types::{object::Version, Address, ObjectDigest, ObjectId};
+use crate::types::{Address, ObjectDigest, ObjectId, object::Version};
 
 // A potentially Unresolved user transaction
 #[cfg_attr(

@@ -25,20 +25,31 @@ jobs:
           rustc --version
           cargo --version
 
-      - uses: taiki-e/install-action@cargo-hack
       - uses: taiki-e/install-action@cargo-nextest
+
+      - name: Run tests
+        run: make test
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: taiki-e/install-action@cargo-hack
+
+      - name: Install latest nightly
+        run: rustup toolchain install nightly --component rustfmt --allow-downgrade
 
       - name: feature compatibility
         run: make check-features
 
       - name: rustfmt
-        run: cargo fmt -- --check
+        run: cargo +nightly fmt -- --check
 
       - name: clippy
         run: make clippy
-
-      - name: Run tests
-        run: make test
 
       - name: rustdoc
         run: make doc
