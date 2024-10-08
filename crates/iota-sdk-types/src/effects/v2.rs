@@ -1,8 +1,8 @@
 use crate::{
+    EpochId, GasCostSummary, ObjectDigest, ObjectId, TransactionDigest, TransactionEventsDigest,
     digest::EffectsAuxiliaryDataDigest,
     execution_status::ExecutionStatus,
     object::{Owner, Version},
-    EpochId, GasCostSummary, ObjectDigest, ObjectId, TransactionDigest, TransactionEventsDigest,
 };
 
 /// The response from processing a transaction or a certified transaction
@@ -108,12 +108,14 @@ pub enum UnchangedSharedKind {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
     },
-    /// Shared objects in cancelled transaction. The sequence number embed cancellation reason.
+    /// Shared objects in cancelled transaction. The sequence number embed
+    /// cancellation reason.
     Cancelled {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
     },
-    /// Read of a per-epoch config object that should remain the same during an epoch.
+    /// Read of a per-epoch config object that should remain the same during an
+    /// epoch.
     PerEpochConfig,
 }
 

@@ -1,7 +1,7 @@
 use super::{
-    zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
     Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
     Secp256r1Signature, SignatureScheme,
+    zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
 };
 
 pub type WeightUnit = u8;
@@ -126,7 +126,7 @@ pub struct MultisigAggregatedSignature {
     /// should be authenticated with.
     bitmap: BitmapUnit,
     /// Legacy encoding for the bitmap.
-    //TODO implement a strategy for legacy bitmap
+    // TODO implement a strategy for legacy bitmap
     #[cfg_attr(
         feature = "schemars",
         schemars(
@@ -221,8 +221,8 @@ mod serialization {
 
     use super::*;
     use crate::{
-        crypto::{Base64Array33, Base64Array34},
         Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
+        crypto::{Base64Array33, Base64Array34},
     };
 
     pub struct Base64MultisigMemberPublicKey;

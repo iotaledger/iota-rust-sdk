@@ -188,10 +188,10 @@ mod _serde {
 
 #[cfg(feature = "schemars")]
 mod _schemars {
-    use schemars::schema::InstanceType;
-    use schemars::schema::Metadata;
-    use schemars::schema::SchemaObject;
-    use schemars::JsonSchema;
+    use schemars::{
+        JsonSchema,
+        schema::{InstanceType, Metadata, SchemaObject},
+    };
 
     pub(crate) struct U64;
 

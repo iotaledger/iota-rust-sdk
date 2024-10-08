@@ -58,8 +58,8 @@ pub struct CheckpointSummary {
     pub epoch: EpochId,
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub sequence_number: CheckpointSequenceNumber,
-    /// Total number of transactions committed since genesis, including those in this
-    /// checkpoint.
+    /// Total number of transactions committed since genesis, including those in
+    /// this checkpoint.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub network_total_transactions: u64,
     pub content_digest: CheckpointContentsDigest,
@@ -69,13 +69,14 @@ pub struct CheckpointSummary {
     pub epoch_rolling_gas_cost_summary: GasCostSummary,
 
     /// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
-    /// Checkpoint timestamps are monotonic, but not strongly monotonic - subsequent
-    /// checkpoints can have same timestamp if they originate from the same underlining consensus commit
+    /// Checkpoint timestamps are monotonic, but not strongly monotonic -
+    /// subsequent checkpoints can have same timestamp if they originate
+    /// from the same underlining consensus commit
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub timestamp_ms: CheckpointTimestamp,
 
-    /// Commitments to checkpoint-specific state (e.g. txns in checkpoint, objects read/written in
-    /// checkpoint).
+    /// Commitments to checkpoint-specific state (e.g. txns in checkpoint,
+    /// objects read/written in checkpoint).
     #[cfg_attr(
         feature = "schemars",
         schemars(with = "Option<Vec<CheckpointCommitment>>")
@@ -399,8 +400,8 @@ mod serialization {
                     where
                         S: Serializer,
                     {
-                        let mut seq = serializer.serialize_seq(Some(self.0 .0.len()))?;
-                        for txn in &self.0 .0 {
+                        let mut seq = serializer.serialize_seq(Some(self.0.0.len()))?;
+                        for txn in &self.0.0 {
                             let digests = Digests {
                                 transaction: &txn.transaction,
                                 effects: &txn.effects,
@@ -417,8 +418,8 @@ mod serialization {
                     where
                         S: Serializer,
                     {
-                        let mut seq = serializer.serialize_seq(Some(self.0 .0.len()))?;
-                        for txn in &self.0 .0 {
+                        let mut seq = serializer.serialize_seq(Some(self.0.0.len()))?;
+                        for txn in &self.0.0 {
                             seq.serialize_element(&txn.signatures)?;
                         }
                         seq.end()

@@ -12,13 +12,13 @@ pub mod streams;
 use std::str::FromStr;
 
 use base64ct::Encoding;
-use cynic::{serde, GraphQlResponse, MutationBuilder, Operation, QueryBuilder};
+use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::Error;
 use futures::Stream;
 use iota_types::{
-    framework::Coin, Address, CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, Event,
-    MovePackage, Object, SignedTransaction, Transaction, TransactionDigest, TransactionEffects,
-    TransactionKind, TypeTag, UserSignature,
+    Address, CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, Event, MovePackage,
+    Object, SignedTransaction, Transaction, TransactionDigest, TransactionEffects, TransactionKind,
+    TypeTag, UserSignature, framework::Coin,
 };
 use query_types::{
     ActiveValidatorsArgs, ActiveValidatorsQuery, BalanceArgs, BalanceQuery, ChainIdentifierQuery,
@@ -39,7 +39,7 @@ use query_types::{
     Validator,
 };
 use reqwest::Url;
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{Serialize, de::DeserializeOwned};
 use streams::stream_paginated_query;
 
 use crate::{
@@ -692,7 +692,7 @@ impl Client {
     ///
     /// # Example
     /// ```rust,ignore
-    ///
+    /// 
     /// let client = iota_graphql_client::Client::new_devnet();
     /// let address = Address::from_str("0x5").unwrap();
     /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
@@ -1693,8 +1693,8 @@ mod tests {
     use tokio::time;
 
     use crate::{
-        faucet::FaucetClient, BcsName, Client, Direction, PaginationFilter, DEVNET_HOST,
-        LOCAL_HOST, MAINNET_HOST, TESTNET_HOST,
+        BcsName, Client, DEVNET_HOST, Direction, LOCAL_HOST, MAINNET_HOST, PaginationFilter,
+        TESTNET_HOST, faucet::FaucetClient,
     };
 
     const NUM_COINS_FROM_FAUCET: usize = 5;

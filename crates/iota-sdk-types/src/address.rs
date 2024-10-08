@@ -201,10 +201,7 @@ impl schemars::JsonSchema for Address {
     }
 
     fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        use schemars::schema::InstanceType;
-        use schemars::schema::Metadata;
-        use schemars::schema::SchemaObject;
-        use schemars::schema::StringValidation;
+        use schemars::schema::{InstanceType, Metadata, SchemaObject, StringValidation};
 
         let hex_length = Address::LENGTH * 2;
         SchemaObject {

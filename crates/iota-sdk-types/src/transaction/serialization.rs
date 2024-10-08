@@ -1171,8 +1171,7 @@ mod transaction_expiration {
         }
 
         fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            use schemars::schema::Schema;
-            use schemars::schema::SchemaObject;
+            use schemars::schema::{Schema, SchemaObject};
             schemars::schema::Schema::Object(schemars::schema::SchemaObject {
                 subschemas: Some(Box::new(schemars::schema::SubschemaValidation {
                     one_of: Some(vec![

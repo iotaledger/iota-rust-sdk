@@ -80,8 +80,9 @@ pub enum InputKind {
 /// fully resolved input using the provided constructors, but this struct is
 /// also useful when the input data is not complete.
 ///
-/// If used in the context of transaction builder, make sure to call `tx.resolve` function on the
-/// transaction builder to resolve all unresolved inputs.
+/// If used in the context of transaction builder, make sure to call
+/// `tx.resolve` function on the transaction builder to resolve all unresolved
+/// inputs.
 #[derive(Clone, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[serde(rename = "UnresolvedInput")]
@@ -339,10 +340,10 @@ pub(crate) type OptionReadableDisplay =
 
 #[cfg(feature = "schemars")]
 mod _schemars {
-    use schemars::schema::InstanceType;
-    use schemars::schema::Metadata;
-    use schemars::schema::SchemaObject;
-    use schemars::JsonSchema;
+    use schemars::{
+        JsonSchema,
+        schema::{InstanceType, Metadata, SchemaObject},
+    };
 
     pub(crate) struct U64;
 
