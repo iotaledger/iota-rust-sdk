@@ -13,8 +13,9 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 
 mod unresolved;
 pub use unresolved::{
-    UnresolvedGasPayment, UnresolvedInputArgument, UnresolvedObjectReference,
-    UnresolvedProgrammableTransaction, UnresolvedTransaction,
+    UnresolvedGasPayment, UnresolvedInputArgument, UnresolvedInputArgumentKind,
+    UnresolvedObjectReference, UnresolvedProgrammableTransaction, UnresolvedTransaction,
+    UnresolvedValue,
 };
 
 #[derive(Clone, Debug, PartialEq, Eq)]
