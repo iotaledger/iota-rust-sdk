@@ -48,6 +48,10 @@ pub struct EndOfEpochData {
 
     /// Commitments to epoch specific state (e.g. live object set)
     pub epoch_commitments: Vec<CheckpointCommitment>,
+
+    /// The number of tokens that were minted (if positive) or burnt (if
+    /// negative) in this epoch.
+    pub epoch_supply_change: i64,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
