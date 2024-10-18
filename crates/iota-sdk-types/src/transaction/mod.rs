@@ -106,12 +106,8 @@ pub enum TransactionKind {
     /// It also doesn't require/use a gas object.
     /// A validator will not sign a transaction of this kind from outside. It
     /// only signs internally during epoch changes.
-    ///
-    /// The ChangeEpoch enumerant is now deprecated (but the ChangeEpoch struct
-    /// is still used by EndOfEpochTransaction below).
-    ChangeEpoch(ChangeEpoch),
     Genesis(GenesisTransaction),
-    ConsensusCommitPrologue(ConsensusCommitPrologue),
+    ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
     AuthenticatorStateUpdate(AuthenticatorStateUpdate),
 
     /// EndOfEpochTransaction replaces ChangeEpoch with a list of transactions
@@ -119,10 +115,6 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
 
     RandomnessStateUpdate(RandomnessStateUpdate),
-    // V2 ConsensusCommitPrologue also includes the digest of the current consensus output.
-    ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
-
-    ConsensusCommitPrologueV3(ConsensusCommitPrologueV3),
     // .. more transaction types go here
 }
 
@@ -138,7 +130,6 @@ pub enum EndOfEpochTransactionKind {
     ChangeEpoch(ChangeEpoch),
     AuthenticatorStateCreate,
     AuthenticatorStateExpire(AuthenticatorStateExpire),
-    RandomnessStateCreate,
     DenyListStateCreate,
     BridgeStateCreate {
         chain_id: super::CheckpointDigest,
@@ -209,55 +200,6 @@ pub struct ActiveJwk {
     pub epoch: u64,
 }
 
-/// Only commit_timestamp_ms is passed to the move call currently.
-/// However we include epoch and round to make sure each ConsensusCommitPrologue
-/// has a unique tx digest.
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ConsensusCommitPrologue {
-    /// Epoch of the commit prologue transaction
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub epoch: u64,
-    /// Consensus round of the commit
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub round: u64,
-    /// Unix timestamp from consensus
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub commit_timestamp_ms: CheckpointTimestamp,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ConsensusCommitPrologueV2 {
-    /// Epoch of the commit prologue transaction
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub epoch: u64,
-    /// Consensus round of the commit
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub round: u64,
-    /// Unix timestamp from consensus
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub commit_timestamp_ms: CheckpointTimestamp,
-    /// Digest of consensus output
-    pub consensus_commit_digest: ConsensusCommitDigest,
-}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "schemars",
@@ -307,7 +249,7 @@ pub struct VersionAssignment {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ConsensusCommitPrologueV3 {
+pub struct ConsensusCommitPrologueV1 {
     /// Epoch of the commit prologue transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
