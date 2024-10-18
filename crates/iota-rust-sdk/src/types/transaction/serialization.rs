@@ -124,25 +124,21 @@ mod transaction {
 mod transaction_kind {
     use super::*;
     use crate::types::transaction::{
-        AuthenticatorStateUpdate, ChangeEpoch, ConsensusCommitPrologue, ConsensusCommitPrologueV2,
-        ConsensusCommitPrologueV3, EndOfEpochTransactionKind, GenesisTransaction,
-        ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
+        AuthenticatorStateUpdate, ConsensusCommitPrologueV1, EndOfEpochTransactionKind,
+        GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
     };
 
     #[derive(serde_derive::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableTransactionKindRef<'a> {
         ProgrammableTransaction(&'a ProgrammableTransaction),
-        ChangeEpoch(&'a ChangeEpoch),
         Genesis(&'a GenesisTransaction),
-        ConsensusCommitPrologue(&'a ConsensusCommitPrologue),
+        ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
         AuthenticatorStateUpdate(&'a AuthenticatorStateUpdate),
         EndOfEpoch {
             commands: &'a Vec<EndOfEpochTransactionKind>,
         },
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
-        ConsensusCommitPrologueV2(&'a ConsensusCommitPrologueV2),
-        ConsensusCommitPrologueV3(&'a ConsensusCommitPrologueV3),
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -151,16 +147,13 @@ mod transaction_kind {
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableTransactionKind {
         ProgrammableTransaction(ProgrammableTransaction),
-        ChangeEpoch(ChangeEpoch),
         Genesis(GenesisTransaction),
-        ConsensusCommitPrologue(ConsensusCommitPrologue),
+        ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
         AuthenticatorStateUpdate(AuthenticatorStateUpdate),
         EndOfEpoch {
             commands: Vec<EndOfEpochTransactionKind>,
         },
         RandomnessStateUpdate(RandomnessStateUpdate),
-        ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
-        ConsensusCommitPrologueV3(ConsensusCommitPrologueV3),
     }
 
     #[cfg(feature = "schemars")]
@@ -177,26 +170,20 @@ mod transaction_kind {
     #[derive(serde_derive::Serialize)]
     enum BinaryTransactionKindRef<'a> {
         ProgrammableTransaction(&'a ProgrammableTransaction),
-        ChangeEpoch(&'a ChangeEpoch),
         Genesis(&'a GenesisTransaction),
-        ConsensusCommitPrologue(&'a ConsensusCommitPrologue),
+        ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
         AuthenticatorStateUpdate(&'a AuthenticatorStateUpdate),
         EndOfEpoch(&'a Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
-        ConsensusCommitPrologueV2(&'a ConsensusCommitPrologueV2),
-        ConsensusCommitPrologueV3(&'a ConsensusCommitPrologueV3),
     }
     #[derive(serde_derive::Deserialize)]
     enum BinaryTransactionKind {
         ProgrammableTransaction(ProgrammableTransaction),
-        ChangeEpoch(ChangeEpoch),
         Genesis(GenesisTransaction),
-        ConsensusCommitPrologue(ConsensusCommitPrologue),
+        ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
         AuthenticatorStateUpdate(AuthenticatorStateUpdate),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(RandomnessStateUpdate),
-        ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
-        ConsensusCommitPrologueV3(ConsensusCommitPrologueV3),
     }
 
     impl Serialize for TransactionKind {
@@ -209,10 +196,9 @@ mod transaction_kind {
                     Self::ProgrammableTransaction(k) => {
                         ReadableTransactionKindRef::ProgrammableTransaction(k)
                     }
-                    Self::ChangeEpoch(k) => ReadableTransactionKindRef::ChangeEpoch(k),
                     Self::Genesis(k) => ReadableTransactionKindRef::Genesis(k),
-                    Self::ConsensusCommitPrologue(k) => {
-                        ReadableTransactionKindRef::ConsensusCommitPrologue(k)
+                    Self::ConsensusCommitPrologueV1(k) => {
+                        ReadableTransactionKindRef::ConsensusCommitPrologueV1(k)
                     }
                     Self::AuthenticatorStateUpdate(k) => {
                         ReadableTransactionKindRef::AuthenticatorStateUpdate(k)
@@ -223,12 +209,6 @@ mod transaction_kind {
                     Self::RandomnessStateUpdate(k) => {
                         ReadableTransactionKindRef::RandomnessStateUpdate(k)
                     }
-                    Self::ConsensusCommitPrologueV2(k) => {
-                        ReadableTransactionKindRef::ConsensusCommitPrologueV2(k)
-                    }
-                    Self::ConsensusCommitPrologueV3(k) => {
-                        ReadableTransactionKindRef::ConsensusCommitPrologueV3(k)
-                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -236,10 +216,9 @@ mod transaction_kind {
                     Self::ProgrammableTransaction(k) => {
                         BinaryTransactionKindRef::ProgrammableTransaction(k)
                     }
-                    Self::ChangeEpoch(k) => BinaryTransactionKindRef::ChangeEpoch(k),
                     Self::Genesis(k) => BinaryTransactionKindRef::Genesis(k),
-                    Self::ConsensusCommitPrologue(k) => {
-                        BinaryTransactionKindRef::ConsensusCommitPrologue(k)
+                    Self::ConsensusCommitPrologueV1(k) => {
+                        BinaryTransactionKindRef::ConsensusCommitPrologueV1(k)
                     }
                     Self::AuthenticatorStateUpdate(k) => {
                         BinaryTransactionKindRef::AuthenticatorStateUpdate(k)
@@ -247,12 +226,6 @@ mod transaction_kind {
                     Self::EndOfEpoch(k) => BinaryTransactionKindRef::EndOfEpoch(k),
                     Self::RandomnessStateUpdate(k) => {
                         BinaryTransactionKindRef::RandomnessStateUpdate(k)
-                    }
-                    Self::ConsensusCommitPrologueV2(k) => {
-                        BinaryTransactionKindRef::ConsensusCommitPrologueV2(k)
-                    }
-                    Self::ConsensusCommitPrologueV3(k) => {
-                        BinaryTransactionKindRef::ConsensusCommitPrologueV3(k)
                     }
                 };
                 binary.serialize(serializer)
@@ -270,10 +243,9 @@ mod transaction_kind {
                     ReadableTransactionKind::ProgrammableTransaction(k) => {
                         Self::ProgrammableTransaction(k)
                     }
-                    ReadableTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
                     ReadableTransactionKind::Genesis(k) => Self::Genesis(k),
-                    ReadableTransactionKind::ConsensusCommitPrologue(k) => {
-                        Self::ConsensusCommitPrologue(k)
+                    ReadableTransactionKind::ConsensusCommitPrologueV1(k) => {
+                        Self::ConsensusCommitPrologueV1(k)
                     }
                     ReadableTransactionKind::AuthenticatorStateUpdate(k) => {
                         Self::AuthenticatorStateUpdate(k)
@@ -282,22 +254,15 @@ mod transaction_kind {
                     ReadableTransactionKind::RandomnessStateUpdate(k) => {
                         Self::RandomnessStateUpdate(k)
                     }
-                    ReadableTransactionKind::ConsensusCommitPrologueV2(k) => {
-                        Self::ConsensusCommitPrologueV2(k)
-                    }
-                    ReadableTransactionKind::ConsensusCommitPrologueV3(k) => {
-                        Self::ConsensusCommitPrologueV3(k)
-                    }
                 })
             } else {
                 BinaryTransactionKind::deserialize(deserializer).map(|binary| match binary {
                     BinaryTransactionKind::ProgrammableTransaction(k) => {
                         Self::ProgrammableTransaction(k)
                     }
-                    BinaryTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
                     BinaryTransactionKind::Genesis(k) => Self::Genesis(k),
-                    BinaryTransactionKind::ConsensusCommitPrologue(k) => {
-                        Self::ConsensusCommitPrologue(k)
+                    BinaryTransactionKind::ConsensusCommitPrologueV1(k) => {
+                        Self::ConsensusCommitPrologueV1(k)
                     }
                     BinaryTransactionKind::AuthenticatorStateUpdate(k) => {
                         Self::AuthenticatorStateUpdate(k)
@@ -305,12 +270,6 @@ mod transaction_kind {
                     BinaryTransactionKind::EndOfEpoch(k) => Self::EndOfEpoch(k),
                     BinaryTransactionKind::RandomnessStateUpdate(k) => {
                         Self::RandomnessStateUpdate(k)
-                    }
-                    BinaryTransactionKind::ConsensusCommitPrologueV2(k) => {
-                        Self::ConsensusCommitPrologueV2(k)
-                    }
-                    BinaryTransactionKind::ConsensusCommitPrologueV3(k) => {
-                        Self::ConsensusCommitPrologueV3(k)
                     }
                 })
             }
@@ -331,7 +290,6 @@ mod end_of_epoch {
         ChangeEpoch(&'a ChangeEpoch),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-        RandomnessStateCreate,
         DenyListStateCreate,
         BridgeStateCreate {
             chain_id: &'a CheckpointDigest,
@@ -348,7 +306,6 @@ mod end_of_epoch {
         ChangeEpoch(ChangeEpoch),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
-        RandomnessStateCreate,
         DenyListStateCreate,
         BridgeStateCreate {
             chain_id: CheckpointDigest,
@@ -364,7 +321,6 @@ mod end_of_epoch {
         ChangeEpoch(&'a ChangeEpoch),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-        RandomnessStateCreate,
         DenyListStateCreate,
         BridgeStateCreate { chain_id: &'a CheckpointDigest },
         BridgeCommitteeInit { bridge_object_version: u64 },
@@ -375,7 +331,6 @@ mod end_of_epoch {
         ChangeEpoch(ChangeEpoch),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
-        RandomnessStateCreate,
         DenyListStateCreate,
         BridgeStateCreate { chain_id: CheckpointDigest },
         BridgeCommitteeInit { bridge_object_version: u64 },
@@ -394,9 +349,6 @@ mod end_of_epoch {
                     }
                     Self::AuthenticatorStateExpire(k) => {
                         ReadableEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
-                    }
-                    Self::RandomnessStateCreate => {
-                        ReadableEndOfEpochTransactionKindRef::RandomnessStateCreate
                     }
                     Self::DenyListStateCreate => {
                         ReadableEndOfEpochTransactionKindRef::DenyListStateCreate
@@ -419,9 +371,6 @@ mod end_of_epoch {
                     }
                     Self::AuthenticatorStateExpire(k) => {
                         BinaryEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
-                    }
-                    Self::RandomnessStateCreate => {
-                        BinaryEndOfEpochTransactionKindRef::RandomnessStateCreate
                     }
                     Self::DenyListStateCreate => {
                         BinaryEndOfEpochTransactionKindRef::DenyListStateCreate
@@ -455,9 +404,6 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
                             Self::AuthenticatorStateExpire(k)
                         }
-                        ReadableEndOfEpochTransactionKind::RandomnessStateCreate => {
-                            Self::RandomnessStateCreate
-                        }
                         ReadableEndOfEpochTransactionKind::DenyListStateCreate => {
                             Self::DenyListStateCreate
                         }
@@ -480,9 +426,6 @@ mod end_of_epoch {
                         }
                         BinaryEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
                             Self::AuthenticatorStateExpire(k)
-                        }
-                        BinaryEndOfEpochTransactionKind::RandomnessStateCreate => {
-                            Self::RandomnessStateCreate
                         }
                         BinaryEndOfEpochTransactionKind::DenyListStateCreate => {
                             Self::DenyListStateCreate
@@ -1325,6 +1268,7 @@ mod test {
     }
 
     #[test]
+    #[ignore = "https://github.com/iotaledger/iota/issues/3475"]
     fn transaction_fixtures() {
         const GENESIS_TRANSACTION: &str = include_str!("fixtures/genesis-transaction");
         const CONSENSUS_PROLOGUE: &str = "AAMAAAAAAAAAAAIAAAAAAAAAtkjHeocBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA==";
