@@ -135,7 +135,6 @@ pub enum EndOfEpochTransactionKind {
     ChangeEpoch(ChangeEpoch),
     AuthenticatorStateCreate,
     AuthenticatorStateExpire(AuthenticatorStateExpire),
-    DenyListStateCreate,
     BridgeStateCreate {
         chain_id: super::CheckpointDigest,
     },
