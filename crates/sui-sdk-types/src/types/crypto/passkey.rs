@@ -1,5 +1,4 @@
 use super::{Secp256r1PublicKey, Secp256r1Signature};
-use crate::types::Digest;
 
 /// An passkey authenticator with parsed fields. See field definition below. Can
 /// be initialized from [struct RawPasskeyAuthenticator].
@@ -13,13 +12,8 @@ pub struct PasskeyAuthenticator {
     /// Initialized from `user_signature` in `RawPasskeyAuthenticator`.
     signature: Secp256r1Signature,
 
-    /// Valid intent parsed from the first 3 bytes of
-    /// `client_data_json.challenge`.
-    intent: [u8; 3],
-
-    /// Valid tx_digest parsed from the last 32 bytes of
-    /// `client_data_json.challenge`.
-    digest: Digest,
+    /// Parsed challenge bytes from `client_data_json.challenge`.
+    challenge: Vec<u8>,
 
     /// `authenticatorData` is a bytearray that encodes
     /// [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data)
@@ -145,14 +139,10 @@ mod serialization {
                 origin: _,
             } = serde_json::from_str(&client_data_json).map_err(SignatureFromBytesError::new)?;
 
-            // challenge is 3 byte intent | 32 byte hash
-            let mut challenge_buf = [0; 3 + Digest::LENGTH];
-
             // decode unpadded url endoded base64 data per spec:
             // https://w3c.github.io/webauthn/#base64url-encoding
-            <base64ct::Base64UrlUnpadded as base64ct::Encoding>::decode(
-                challenge,
-                &mut challenge_buf,
+            let challenge = <base64ct::Base64UrlUnpadded as base64ct::Encoding>::decode_vec(
+                &challenge,
             )
             .map_err(|e| {
                 SignatureFromBytesError::new(format!(
@@ -160,14 +150,10 @@ mod serialization {
                 ))
             })?;
 
-            let intent = challenge_buf[..3].try_into().unwrap();
-            let digest = challenge_buf[3..].try_into().unwrap();
-
             Ok(Self {
                 public_key,
                 signature,
-                intent,
-                digest: Digest::new(digest),
+                challenge,
                 authenticator_data,
                 client_data_json,
             })
@@ -303,18 +289,14 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
         (
             any::<Secp256r1PublicKey>(),
             any::<Secp256r1Signature>(),
-            any::<Digest>(),
-            any::<[u8; 3]>(),
+            vec(any::<u8>(), 32),
             vec(any::<u8>(), 0..32),
         )
             .prop_map(
-                |(public_key, signature, digest, intent, authenticator_data)| {
-                    let mut challenge_buf = Vec::new();
-                    challenge_buf.extend_from_slice(&intent);
-                    challenge_buf.extend_from_slice(digest.inner());
+                |(public_key, signature, challenge_bytes, authenticator_data)| {
                     let challenge =
                         <base64ct::Base64UrlUnpadded as base64ct::Encoding>::encode_string(
-                            &challenge_buf,
+                            &challenge_bytes,
                         );
                     let client_data_json = serde_json::to_string(&CollectedClientData {
                         ty: ClientDataType::Get,
@@ -326,13 +308,25 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
                     Self {
                         public_key,
                         signature,
-                        intent,
-                        digest,
+                        challenge: challenge_bytes,
                         authenticator_data,
                         client_data_json,
                     }
                 },
             )
             .boxed()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::types::UserSignature;
+
+    #[test]
+    fn base64_encoded_passkey_user_signature() {
+        let b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
+
+        let sig = UserSignature::from_base64(b64).unwrap();
+        assert!(matches!(sig, UserSignature::Passkey(_)));
     }
 }
