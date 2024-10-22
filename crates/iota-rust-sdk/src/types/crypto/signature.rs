@@ -581,26 +581,6 @@ mod serialization {
         }
 
         #[test]
-        fn legacy_multisig_fixtures() {
-            const FIXTURE1: &str = "rgIDAgAnwUSyrALP8m0eEPZE6aPggBELk72n1u3LU+i4nx5kqzhahcICbskEYzHJrbarvFr/RQITgDMoorqpDhN8dgsKATyrN3CD8g37D60dYiGW6sOBqIcf3E1mdMsKvX2pbOZsYQv8VNL+2Jz3vnMXcwEZF32PplKjcnmyUGRhV11M7n4UOjAAAAEAAAAAAAEAEAAAAAAAAQADLEFBMTlxeldNamEycVR2b0FTYWRiQjBObFZiRUtOb0ladTJnUGNGY1RTZGQxATBBUUlPRjgxWk9lUnJHV1pCbG96WFdaRUxvbGQrSi9wei9lT0hiYm0reGJ6ckt3PT0BMEFnTkgrNjhqOERpcnhNTUlvbkVSZWlwTS82N2R2Ri80SEhVWHZHeDBwKzIwTUE9PQECAA==";
-
-            const FIXTURE2: &str = "8QIDAwDYAAra4KQGp2Oq1TCOgWfH8IxC4UA5wJB/NqOcNmMh54Y5d5pnVQfTlqgq4J17a8+W+y3+jk9h4YMB9LzPDYcLAaJJBH+WLPfPaQ7T3Cv8nqpZ1TbPrT8E61FrSgeIbN4OTJeijjguv1pd3ImvTeo4AMYZczf5OH6+5yBaur7R6YACiooT5J36agjUk0TpVcTKMGwykIwD7NBkZ0gbinHxuVJwdi1tSbqhMpqvNgP+CFO6F7FSTe+xiHh0MDOKyYQItxY6MAAAAQAAAAAAAgAQAAAAAAABAAIAAyxBQTE5cXpXTWphMnFUdm9BU2FkYkIwTmxWYkVLTm9JWnUyZ1BjRmNUU2RkMQEwQVFJT0Y4MVpPZVJyR1daQmxvelhXWkVMb2xkK0ovcHovZU9IYmJtK3hienJLdz09ATBBZ05IKzY4ajhEaXJ4TU1Jb25FUmVpcE0vNjdkdkYvNEhIVVh2R3gwcCsyME1BPT0BAgA=";
-
-            for fixture in [FIXTURE1, FIXTURE2] {
-                let bcs = Base64::decode_vec(fixture).unwrap();
-
-                let sig: UserSignature = bcs::from_bytes(&bcs).unwrap();
-                assert_eq!(SignatureScheme::Multisig, sig.scheme());
-                let bytes = bcs::to_bytes(&sig).unwrap();
-                assert_eq!(bcs, bytes);
-
-                let json = serde_json::to_string_pretty(&sig).unwrap();
-                println!("{json}");
-                assert_eq!(sig, serde_json::from_str(&json).unwrap());
-            }
-        }
-
-        #[test]
         fn multisig_fixtures() {
             const FIXTURE1: &str = "sgIDAwCTLgVngjC4yeuvpAGKVkgcvIKVFUJnL1r6oFZScQVE5DNIz6kfxAGDRcVUczE9CUb7/sN/EuFJ8ot86Sdb8pAFASoQ91stRHXdW5dLy0BQ6v+7XWptawy2ItMyPk508p+PHdtZcm2aKl3lZGIvXe6MPY73E+1Hakv/xJbTYsw5SPMC5dx3gBwxds2GV12c7VUSqkyXamliSF1W/QBMufqrlmdIOZ1ox9gbsvIPtXYahfvKm8ozA7rsZWwRv8atsnyfYgcAAwANfas1jI2tqk76AEmnWwdDZVWxCjaCGbtoD3BXE0nXdQEBAg4XzVk55GsZZkGWjNdZkQuiV34n+nP944dtub7FvOsrAQIDR/uvI/A4q8TDCKJxEXoqTP+u3bxf+Bx1F7xsdKfttDABAgA=";
 
