@@ -113,7 +113,7 @@ pub enum TransactionKind {
     /// only signs internally during epoch changes.
     Genesis(GenesisTransaction),
     ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-    AuthenticatorStateUpdate(AuthenticatorStateUpdate),
+    AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
 
     /// EndOfEpochTransaction replaces ChangeEpoch with a list of transactions
     /// that are allowed to run at the end of the epoch.
@@ -169,7 +169,7 @@ pub struct AuthenticatorStateExpire {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
-pub struct AuthenticatorStateUpdate {
+pub struct AuthenticatorStateUpdateV1 {
     /// Epoch of the authenticator state update transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -184,8 +184,8 @@ pub struct AuthenticatorStateUpdate {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub authenticator_obj_initial_shared_version: u64,
-    // to version this struct, do not add new fields. Instead, add a AuthenticatorStateUpdateV2 to
-    // TransactionKind.
+    // to version this struct, do not add new fields. Instead, add a AuthenticatorStateUpdateV2
+    // to TransactionKind.
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

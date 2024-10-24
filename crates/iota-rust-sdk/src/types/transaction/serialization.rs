@@ -124,7 +124,7 @@ mod transaction {
 mod transaction_kind {
     use super::*;
     use crate::types::transaction::{
-        AuthenticatorStateUpdate, ConsensusCommitPrologueV1, EndOfEpochTransactionKind,
+        AuthenticatorStateUpdateV1, ConsensusCommitPrologueV1, EndOfEpochTransactionKind,
         GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
     };
 
@@ -134,7 +134,7 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdate(&'a AuthenticatorStateUpdate),
+        AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
         EndOfEpoch {
             commands: &'a Vec<EndOfEpochTransactionKind>,
         },
@@ -149,7 +149,7 @@ mod transaction_kind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdate(AuthenticatorStateUpdate),
+        AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
         EndOfEpoch {
             commands: Vec<EndOfEpochTransactionKind>,
         },
@@ -172,7 +172,7 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdate(&'a AuthenticatorStateUpdate),
+        AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
         EndOfEpoch(&'a Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
     }
@@ -181,7 +181,7 @@ mod transaction_kind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdate(AuthenticatorStateUpdate),
+        AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(RandomnessStateUpdate),
     }
@@ -200,8 +200,8 @@ mod transaction_kind {
                     Self::ConsensusCommitPrologueV1(k) => {
                         ReadableTransactionKindRef::ConsensusCommitPrologueV1(k)
                     }
-                    Self::AuthenticatorStateUpdate(k) => {
-                        ReadableTransactionKindRef::AuthenticatorStateUpdate(k)
+                    Self::AuthenticatorStateUpdateV1(k) => {
+                        ReadableTransactionKindRef::AuthenticatorStateUpdateV1(k)
                     }
                     Self::EndOfEpoch(commands) => {
                         ReadableTransactionKindRef::EndOfEpoch { commands }
@@ -220,8 +220,8 @@ mod transaction_kind {
                     Self::ConsensusCommitPrologueV1(k) => {
                         BinaryTransactionKindRef::ConsensusCommitPrologueV1(k)
                     }
-                    Self::AuthenticatorStateUpdate(k) => {
-                        BinaryTransactionKindRef::AuthenticatorStateUpdate(k)
+                    Self::AuthenticatorStateUpdateV1(k) => {
+                        BinaryTransactionKindRef::AuthenticatorStateUpdateV1(k)
                     }
                     Self::EndOfEpoch(k) => BinaryTransactionKindRef::EndOfEpoch(k),
                     Self::RandomnessStateUpdate(k) => {
@@ -247,8 +247,8 @@ mod transaction_kind {
                     ReadableTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
                     }
-                    ReadableTransactionKind::AuthenticatorStateUpdate(k) => {
-                        Self::AuthenticatorStateUpdate(k)
+                    ReadableTransactionKind::AuthenticatorStateUpdateV1(k) => {
+                        Self::AuthenticatorStateUpdateV1(k)
                     }
                     ReadableTransactionKind::EndOfEpoch { commands } => Self::EndOfEpoch(commands),
                     ReadableTransactionKind::RandomnessStateUpdate(k) => {
@@ -264,8 +264,8 @@ mod transaction_kind {
                     BinaryTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
                     }
-                    BinaryTransactionKind::AuthenticatorStateUpdate(k) => {
-                        Self::AuthenticatorStateUpdate(k)
+                    BinaryTransactionKind::AuthenticatorStateUpdateV1(k) => {
+                        Self::AuthenticatorStateUpdateV1(k)
                     }
                     BinaryTransactionKind::EndOfEpoch(k) => Self::EndOfEpoch(k),
                     BinaryTransactionKind::RandomnessStateUpdate(k) => {
