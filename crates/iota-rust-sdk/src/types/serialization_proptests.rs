@@ -129,7 +129,6 @@ serialization_test!(ObjectOut);
 serialization_test!(ObjectReferenceWithOwner);
 serialization_test!(TransactionEffects);
 serialization_test!(TransactionEffectsV1);
-serialization_test!(TransactionEffectsV2);
 serialization_test!(UnchangedSharedKind);
 serialization_test!(UnchangedSharedObject);
 serialization_test!(BalanceChange);
