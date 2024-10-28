@@ -839,10 +839,10 @@ mod tests {
         let mut created_objs = vec![];
         if let Ok(Some(ref effects)) = effects {
             match effects {
-                TransactionEffects::V2(e) => {
+                TransactionEffects::V1(e) => {
                     for obj in e.changed_objects.clone() {
-                        if obj.id_operation == IdOperation::Created {
-                            let change = obj.output_state;
+                        if obj.change.id_operation == IdOperation::Created {
+                            let change = obj.change.output_state;
                             match change {
                                 iota_types::ObjectOut::PackageWrite { .. } => {
                                     package_id = Some(obj.object_id);
@@ -855,7 +855,6 @@ mod tests {
                         }
                     }
                 }
-                _ => panic!("Expected V2 effects"),
             }
         }
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
