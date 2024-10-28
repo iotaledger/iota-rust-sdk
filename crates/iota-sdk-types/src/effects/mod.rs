@@ -1,9 +1,7 @@
 mod v1;
-mod v2;
 
-pub use v1::{ModifiedAtVersion, ObjectReferenceWithOwner, TransactionEffectsV1};
-pub use v2::{
-    ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffectsV2, UnchangedSharedKind,
+pub use v1::{
+    ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffectsV1, UnchangedSharedKind,
     UnchangedSharedObject,
 };
 
@@ -14,7 +12,6 @@ use crate::execution_status::ExecutionStatus;
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum TransactionEffects {
     V1(Box<TransactionEffectsV1>),
-    V2(Box<TransactionEffectsV2>),
 }
 
 impl TransactionEffects {
@@ -22,7 +19,6 @@ impl TransactionEffects {
     pub fn status(&self) -> &ExecutionStatus {
         match self {
             TransactionEffects::V1(e) => e.status(),
-            TransactionEffects::V2(e) => e.status(),
         }
     }
 
@@ -30,7 +26,6 @@ impl TransactionEffects {
     pub fn epoch(&self) -> u64 {
         match self {
             TransactionEffects::V1(e) => e.epoch(),
-            TransactionEffects::V2(e) => e.epoch(),
         }
     }
 
@@ -38,7 +33,6 @@ impl TransactionEffects {
     pub fn gas_summary(&self) -> &crate::gas::GasCostSummary {
         match self {
             TransactionEffects::V1(e) => e.gas_summary(),
-            TransactionEffects::V2(e) => e.gas_summary(),
         }
     }
 }
@@ -48,15 +42,13 @@ impl TransactionEffects {
 mod serialization {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-    use super::{TransactionEffects, TransactionEffectsV1, TransactionEffectsV2};
+    use super::{TransactionEffects, TransactionEffectsV1};
 
     #[derive(serde_derive::Serialize)]
     #[serde(tag = "version")]
     enum ReadableEffectsRef<'a> {
         #[serde(rename = "1")]
         V1(&'a TransactionEffectsV1),
-        #[serde(rename = "2")]
-        V2(&'a TransactionEffectsV2),
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -64,20 +56,16 @@ mod serialization {
     pub enum ReadableEffects {
         #[serde(rename = "1")]
         V1(Box<TransactionEffectsV1>),
-        #[serde(rename = "2")]
-        V2(Box<TransactionEffectsV2>),
     }
 
     #[derive(serde_derive::Serialize)]
     enum BinaryEffectsRef<'a> {
         V1(&'a TransactionEffectsV1),
-        V2(&'a TransactionEffectsV2),
     }
 
     #[derive(serde_derive::Deserialize)]
     pub enum BinaryEffects {
         V1(Box<TransactionEffectsV1>),
-        V2(Box<TransactionEffectsV2>),
     }
 
     impl Serialize for TransactionEffects {
@@ -88,13 +76,11 @@ mod serialization {
             if serializer.is_human_readable() {
                 let readable = match self {
                     TransactionEffects::V1(fx) => ReadableEffectsRef::V1(fx),
-                    TransactionEffects::V2(fx) => ReadableEffectsRef::V2(fx),
                 };
                 readable.serialize(serializer)
             } else {
                 let binary = match self {
                     TransactionEffects::V1(fx) => BinaryEffectsRef::V1(fx),
-                    TransactionEffects::V2(fx) => BinaryEffectsRef::V2(fx),
                 };
                 binary.serialize(serializer)
             }
@@ -109,12 +95,10 @@ mod serialization {
             if deserializer.is_human_readable() {
                 ReadableEffects::deserialize(deserializer).map(|readable| match readable {
                     ReadableEffects::V1(fx) => Self::V1(fx),
-                    ReadableEffects::V2(fx) => Self::V2(fx),
                 })
             } else {
                 BinaryEffects::deserialize(deserializer).map(|binary| match binary {
                     BinaryEffects::V1(fx) => Self::V1(fx),
-                    BinaryEffects::V2(fx) => Self::V2(fx),
                 })
             }
         }

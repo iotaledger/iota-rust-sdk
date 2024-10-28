@@ -475,18 +475,18 @@ mod tests {
 
     use anyhow::Context;
     use base64ct::Encoding;
-    use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
+    use iota_crypto::{ed25519::Ed25519PrivateKey, IotaSigner};
     use iota_graphql_client::{
-        Client, PaginationFilter,
         faucet::{CoinInfo, FaucetClient},
+        Client, PaginationFilter,
     };
     use iota_types::{
         Address, ExecutionStatus, IdOperation, ObjectId, ObjectType, TransactionDigest,
         TransactionEffects, TypeTag,
     };
-    use serde::{Deserialize, Deserializer, de};
+    use serde::{de, Deserialize, Deserializer};
 
-    use crate::{Function, Serialized, TransactionBuilder, unresolved::Input};
+    use crate::{unresolved::Input, Function, Serialized, TransactionBuilder};
 
     /// Type corresponding to the output of `iota move build
     /// --dump-bytecode-as-base64`
@@ -839,7 +839,7 @@ mod tests {
         let mut created_objs = vec![];
         if let Ok(Some(ref effects)) = effects {
             match effects {
-                TransactionEffects::V2(e) => {
+                TransactionEffects::V1(e) => {
                     for obj in e.changed_objects.clone() {
                         if obj.id_operation == IdOperation::Created {
                             let change = obj.output_state;
@@ -855,7 +855,6 @@ mod tests {
                         }
                     }
                 }
-                _ => panic!("Expected V2 effects"),
             }
         }
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
