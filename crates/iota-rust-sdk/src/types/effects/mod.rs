@@ -95,10 +95,11 @@ mod serialization {
 
         #[test]
         fn effects_fixtures() {
+            // The files contain the bas64 encoded raw effects of transactions
             const GENESIS_EFFECTS: &str = include_str!("fixtures/genesis-transaction-effects");
-            const PYTH_WORMHOLE_V2: &str = include_str!("fixtures/pyth-wormhole-v2");
+            const SPONSOR_TX_EFFECTS: &str = include_str!("fixtures/sponsor-tx-effects");
 
-            for fixture in [GENESIS_EFFECTS, PYTH_WORMHOLE_V2] {
+            for fixture in [GENESIS_EFFECTS, SPONSOR_TX_EFFECTS] {
                 let fixture = Base64::decode_vec(fixture.trim()).unwrap();
                 let fx: TransactionEffects = bcs::from_bytes(&fixture).unwrap();
                 assert_eq!(bcs::to_bytes(&fx).unwrap(), fixture);
