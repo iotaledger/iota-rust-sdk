@@ -125,8 +125,6 @@ serialization_test!(AuthenticatorStateUpdate);
 serialization_test!(ChangeEpoch);
 serialization_test!(Command);
 serialization_test!(ConsensusCommitPrologue);
-serialization_test!(ConsensusCommitPrologueV2);
-serialization_test!(ConsensusCommitPrologueV3);
 serialization_test!(CancelledTransaction);
 serialization_test!(ConsensusDeterminedVersionAssignments);
 serialization_test!(VersionAssignment);

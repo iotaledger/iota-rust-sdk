@@ -110,10 +110,6 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
 
     RandomnessStateUpdate(RandomnessStateUpdate),
-    // V2 ConsensusCommitPrologue also includes the digest of the current consensus output.
-    ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
-
-    ConsensusCommitPrologueV3(ConsensusCommitPrologueV3),
     // .. more transaction types go here
 }
 
@@ -163,8 +159,8 @@ pub struct AuthenticatorStateUpdate {
     /// The initial version of the authenticator object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub authenticator_obj_initial_shared_version: u64,
-    // to version this struct, do not add new fields. Instead, add a AuthenticatorStateUpdateV2 to
-    // TransactionKind.
+    // to version this struct, do not add new fields. Instead, add an AuthenticatorStateUpdate
+    // to TransactionKind.
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -179,47 +175,6 @@ pub struct ActiveJwk {
     // the most recent epoch in which the jwk was validated
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub epoch: u64,
-}
-
-/// Only commit_timestamp_ms is passed to the move call currently.
-/// However we include epoch and round to make sure each ConsensusCommitPrologue
-/// has a unique tx digest.
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ConsensusCommitPrologue {
-    /// Epoch of the commit prologue transaction
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub epoch: u64,
-    /// Consensus round of the commit
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub round: u64,
-    /// Unix timestamp from consensus
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub commit_timestamp_ms: CheckpointTimestamp,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ConsensusCommitPrologueV2 {
-    /// Epoch of the commit prologue transaction
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub epoch: u64,
-    /// Consensus round of the commit
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub round: u64,
-    /// Unix timestamp from consensus
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub commit_timestamp_ms: CheckpointTimestamp,
-    /// Digest of consensus output
-    pub consensus_commit_digest: ConsensusCommitDigest,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -262,7 +217,7 @@ pub struct VersionAssignment {
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ConsensusCommitPrologueV3 {
+pub struct ConsensusCommitPrologue {
     /// Epoch of the commit prologue transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub epoch: u64,

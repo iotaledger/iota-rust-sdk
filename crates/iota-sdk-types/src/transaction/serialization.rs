@@ -7,8 +7,8 @@ use crate::{ObjectId, ObjectReference};
 mod transaction {
     use super::*;
     use crate::{
-        Address,
         transaction::{GasPayment, Transaction, TransactionExpiration, TransactionKind},
+        Address,
     };
 
     #[derive(serde_derive::Serialize)]
@@ -110,10 +110,12 @@ mod transaction {
 
 mod transaction_kind {
     use super::*;
-    use crate::transaction::{
-        AuthenticatorStateUpdate, ChangeEpoch, ConsensusCommitPrologue, ConsensusCommitPrologueV2,
-        ConsensusCommitPrologueV3, EndOfEpochTransactionKind, GenesisTransaction,
-        ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
+    use crate::{
+        transaction::{
+            AuthenticatorStateUpdate, ConsensusCommitPrologue, EndOfEpochTransactionKind,
+            GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
+        },
+        ChangeEpoch,
     };
 
     #[derive(serde_derive::Serialize)]
@@ -128,8 +130,6 @@ mod transaction_kind {
             commands: &'a Vec<EndOfEpochTransactionKind>,
         },
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
-        ConsensusCommitPrologueV2(&'a ConsensusCommitPrologueV2),
-        ConsensusCommitPrologueV3(&'a ConsensusCommitPrologueV3),
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -145,8 +145,6 @@ mod transaction_kind {
             commands: Vec<EndOfEpochTransactionKind>,
         },
         RandomnessStateUpdate(RandomnessStateUpdate),
-        ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
-        ConsensusCommitPrologueV3(ConsensusCommitPrologueV3),
     }
 
     #[derive(serde_derive::Serialize)]
@@ -158,8 +156,6 @@ mod transaction_kind {
         AuthenticatorStateUpdate(&'a AuthenticatorStateUpdate),
         EndOfEpoch(&'a Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
-        ConsensusCommitPrologueV2(&'a ConsensusCommitPrologueV2),
-        ConsensusCommitPrologueV3(&'a ConsensusCommitPrologueV3),
     }
     #[derive(serde_derive::Deserialize)]
     enum BinaryTransactionKind {
@@ -170,8 +166,6 @@ mod transaction_kind {
         AuthenticatorStateUpdate(AuthenticatorStateUpdate),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(RandomnessStateUpdate),
-        ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
-        ConsensusCommitPrologueV3(ConsensusCommitPrologueV3),
     }
 
     impl Serialize for TransactionKind {
@@ -198,12 +192,6 @@ mod transaction_kind {
                     Self::RandomnessStateUpdate(k) => {
                         ReadableTransactionKindRef::RandomnessStateUpdate(k)
                     }
-                    Self::ConsensusCommitPrologueV2(k) => {
-                        ReadableTransactionKindRef::ConsensusCommitPrologueV2(k)
-                    }
-                    Self::ConsensusCommitPrologueV3(k) => {
-                        ReadableTransactionKindRef::ConsensusCommitPrologueV3(k)
-                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -222,12 +210,6 @@ mod transaction_kind {
                     Self::EndOfEpoch(k) => BinaryTransactionKindRef::EndOfEpoch(k),
                     Self::RandomnessStateUpdate(k) => {
                         BinaryTransactionKindRef::RandomnessStateUpdate(k)
-                    }
-                    Self::ConsensusCommitPrologueV2(k) => {
-                        BinaryTransactionKindRef::ConsensusCommitPrologueV2(k)
-                    }
-                    Self::ConsensusCommitPrologueV3(k) => {
-                        BinaryTransactionKindRef::ConsensusCommitPrologueV3(k)
                     }
                 };
                 binary.serialize(serializer)
@@ -257,12 +239,6 @@ mod transaction_kind {
                     ReadableTransactionKind::RandomnessStateUpdate(k) => {
                         Self::RandomnessStateUpdate(k)
                     }
-                    ReadableTransactionKind::ConsensusCommitPrologueV2(k) => {
-                        Self::ConsensusCommitPrologueV2(k)
-                    }
-                    ReadableTransactionKind::ConsensusCommitPrologueV3(k) => {
-                        Self::ConsensusCommitPrologueV3(k)
-                    }
                 })
             } else {
                 BinaryTransactionKind::deserialize(deserializer).map(|binary| match binary {
@@ -281,12 +257,6 @@ mod transaction_kind {
                     BinaryTransactionKind::RandomnessStateUpdate(k) => {
                         Self::RandomnessStateUpdate(k)
                     }
-                    BinaryTransactionKind::ConsensusCommitPrologueV2(k) => {
-                        Self::ConsensusCommitPrologueV2(k)
-                    }
-                    BinaryTransactionKind::ConsensusCommitPrologueV3(k) => {
-                        Self::ConsensusCommitPrologueV3(k)
-                    }
                 })
             }
         }
@@ -296,8 +266,8 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
     use crate::{
-        CheckpointDigest,
         transaction::{AuthenticatorStateExpire, ChangeEpoch, EndOfEpochTransactionKind},
+        CheckpointDigest,
     };
 
     #[derive(serde_derive::Serialize)]
@@ -907,8 +877,8 @@ mod signed_transaction {
 
     use super::*;
     use crate::{
-        UserSignature,
         transaction::{SignedTransaction, Transaction},
+        UserSignature,
     };
 
     /// serde implementation that serializes a transaction prefixed with the
@@ -1116,8 +1086,8 @@ mod test {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use crate::{
-        ObjectDigest, ObjectId, ObjectReference,
         transaction::{Argument, Input, Transaction},
+        ObjectDigest, ObjectId, ObjectReference,
     };
 
     #[test]

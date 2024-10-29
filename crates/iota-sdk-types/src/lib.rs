@@ -60,12 +60,11 @@ pub use object_id::ObjectId;
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
     ActiveJwk, Argument, AuthenticatorStateExpire, AuthenticatorStateUpdate, CancelledTransaction,
-    ChangeEpoch, Command, ConsensusCommitPrologue, ConsensusCommitPrologueV2,
-    ConsensusCommitPrologueV3, ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind,
-    GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall,
-    ProgrammableTransaction, Publish, RandomnessStateUpdate, SignedTransaction, SplitCoins,
-    SystemPackage, Transaction, TransactionExpiration, TransactionKind, TransferObjects, Upgrade,
-    VersionAssignment,
+    ChangeEpoch, Command, ConsensusCommitPrologue, ConsensusDeterminedVersionAssignments,
+    EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
+    MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SignedTransaction,
+    SplitCoins, SystemPackage, Transaction, TransactionExpiration, TransactionKind,
+    TransferObjects, Upgrade, VersionAssignment,
 };
 pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
 
