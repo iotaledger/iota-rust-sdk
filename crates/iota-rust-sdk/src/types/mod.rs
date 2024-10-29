@@ -35,9 +35,8 @@ pub use digest::{
     TransactionEventsDigest,
 };
 pub use effects::{
-    ChangedObject, EffectsObjectChange, IdOperation, ModifiedAtVersion, ObjectIn, ObjectOut,
-    ObjectReferenceWithOwner, TransactionEffects, TransactionEffectsV1, TransactionEffectsV2,
-    UnchangedSharedKind, UnchangedSharedObject,
+    ChangedObject, EffectsObjectChange, IdOperation, ObjectIn, ObjectOut, TransactionEffects,
+    TransactionEffectsV1, UnchangedSharedKind, UnchangedSharedObject,
 };
 pub use events::{BalanceChange, Event, TransactionEvents};
 pub use execution_status::{
