@@ -152,7 +152,7 @@ serialization_test!(ObjectId);
 serialization_test!(ActiveJwk);
 serialization_test!(Argument);
 serialization_test!(AuthenticatorStateExpire);
-serialization_test!(AuthenticatorStateUpdate);
+serialization_test!(AuthenticatorStateUpdateV1);
 serialization_test!(ChangeEpoch);
 serialization_test!(Command);
 serialization_test!(ConsensusCommitPrologueV1);
