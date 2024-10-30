@@ -53,7 +53,7 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
-    use crate::types::{SignatureScheme, SimpleSignature};
+    use crate::types::{SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
 
     #[derive(serde::Serialize)]
     struct AuthenticatorRef<'a> {
@@ -121,23 +121,24 @@ mod serialization {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
                 Self::from_serialized_bytes(bytes)
             }
+            .map_err(serde::de::Error::custom)
         }
     }
 
     impl PasskeyAuthenticator {
-        fn try_from_raw<E: serde::de::Error>(
+        fn try_from_raw(
             Authenticator {
                 authenticator_data,
                 client_data_json,
                 signature,
             }: Authenticator,
-        ) -> Result<Self, E> {
+        ) -> Result<Self, SignatureFromBytesError> {
             let SimpleSignature::Secp256r1 {
                 signature,
                 public_key,
             } = signature
             else {
-                return Err(serde::de::Error::custom(
+                return Err(SignatureFromBytesError::new(
                     "expected passkey with secp256r1 signature",
                 ));
             };
@@ -146,7 +147,7 @@ mod serialization {
                 ty: _,
                 challenge,
                 origin: _,
-            } = serde_json::from_str(&client_data_json).map_err(serde::de::Error::custom)?;
+            } = serde_json::from_str(&client_data_json).map_err(SignatureFromBytesError::new)?;
 
             // challenge is 3 byte intent | 32 byte hash
             let mut challenge_buf = [0; 3 + Digest::LENGTH];
@@ -158,7 +159,7 @@ mod serialization {
                 &mut challenge_buf,
             )
             .map_err(|e| {
-                serde::de::Error::custom(format!(
+                SignatureFromBytesError::new(format!(
                     "unable to decode base64urlunpadded into 3-byte intent and 32-byte digest: {e}"
                 ))
             })?;
@@ -176,22 +177,21 @@ mod serialization {
             })
         }
 
-        pub(crate) fn from_serialized_bytes<T: AsRef<[u8]>, E: serde::de::Error>(
-            bytes: T,
-        ) -> Result<Self, E> {
+        pub fn from_serialized_bytes(
+            bytes: impl AsRef<[u8]>,
+        ) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
-            let flag = SignatureScheme::from_byte(
-                *bytes
-                    .first()
-                    .ok_or_else(|| serde::de::Error::custom("missing signature scheme flag"))?,
-            )
-            .map_err(serde::de::Error::custom)?;
+            let flag =
+                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
+                    SignatureFromBytesError::new("missing signature scheme flag")
+                })?)
+                .map_err(SignatureFromBytesError::new)?;
             if flag != SignatureScheme::Passkey {
-                return Err(serde::de::Error::custom("invalid passkey flag"));
+                return Err(SignatureFromBytesError::new("invalid passkey flag"));
             }
             let bcs_bytes = &bytes[1..];
 
-            let authenticator = bcs::from_bytes(bcs_bytes).map_err(serde::de::Error::custom)?;
+            let authenticator = bcs::from_bytes(bcs_bytes).map_err(SignatureFromBytesError::new)?;
 
             Self::try_from_raw(authenticator)
         }

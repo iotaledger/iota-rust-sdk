@@ -253,7 +253,7 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs, SerializeAs};
 
     use super::*;
-    use crate::types::SignatureScheme;
+    use crate::types::{SignatureScheme, crypto::SignatureFromBytesError};
 
     // Serialized format is: iss_bytes_len || iss_bytes ||
     // padded_32_byte_address_seed.
@@ -382,24 +382,23 @@ mod serialization {
                 })
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes)
+                Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
             }
         }
     }
 
     impl ZkLoginAuthenticator {
-        pub(crate) fn from_serialized_bytes<T: AsRef<[u8]>, E: serde::de::Error>(
-            bytes: T,
-        ) -> Result<Self, E> {
+        pub fn from_serialized_bytes(
+            bytes: impl AsRef<[u8]>,
+        ) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
-            let flag = SignatureScheme::from_byte(
-                *bytes
-                    .first()
-                    .ok_or_else(|| serde::de::Error::custom("missing signature scheme flag"))?,
-            )
-            .map_err(serde::de::Error::custom)?;
+            let flag =
+                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
+                    SignatureFromBytesError::new("missing signature scheme flag")
+                })?)
+                .map_err(SignatureFromBytesError::new)?;
             if flag != SignatureScheme::ZkLogin {
-                return Err(serde::de::Error::custom("invalid zklogin flag"));
+                return Err(SignatureFromBytesError::new("invalid zklogin flag"));
             }
             let bcs_bytes = &bytes[1..];
 
@@ -407,7 +406,7 @@ mod serialization {
                 inputs,
                 max_epoch,
                 signature,
-            } = bcs::from_bytes(bcs_bytes).map_err(serde::de::Error::custom)?;
+            } = bcs::from_bytes(bcs_bytes).map_err(SignatureFromBytesError::new)?;
             Ok(Self {
                 inputs,
                 max_epoch,

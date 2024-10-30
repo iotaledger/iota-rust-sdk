@@ -119,7 +119,7 @@ pub struct SignedCheckpointSummary {
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
 pub struct CheckpointContents(
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
-    Vec<CheckpointTransactionInfo>,
+    pub  Vec<CheckpointTransactionInfo>,
 );
 
 #[derive(Clone, Debug, PartialEq, Eq)]

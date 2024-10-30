@@ -77,7 +77,7 @@ pub struct Identifier(
 );
 
 impl Identifier {
-    pub fn new<T: AsRef<str>>(identifier: T) -> Result<Self, TypeParseError> {
+    pub fn new(identifier: impl AsRef<str>) -> Result<Self, TypeParseError> {
         parse::parse_identifier(identifier.as_ref())
             .map(|ident| Self(ident.into()))
             .map_err(|_| TypeParseError)
