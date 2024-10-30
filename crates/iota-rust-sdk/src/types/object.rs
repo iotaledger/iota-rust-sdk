@@ -104,7 +104,7 @@ pub enum ObjectData {
 )]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
 pub struct MovePackage {
-    id: ObjectId,
+    pub id: ObjectId,
     /// Most move packages are uniquely identified by their ID (i.e. there is
     /// only one version per ID), but the version is still stored because
     /// one package may be an upgrade of another (at a different ID), in
@@ -117,7 +117,7 @@ pub struct MovePackage {
     /// In all cases, packages are referred to by move calls using just their
     /// ID, and they are always loaded at their latest version.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    version: Version,
+    pub version: Version,
 
     #[cfg_attr(
         feature = "serde",
@@ -129,11 +129,11 @@ pub struct MovePackage {
             proptest::collection::btree_map(proptest::arbitrary::any::<Identifier>(), proptest::collection::vec(proptest::arbitrary::any::<u8>(), 0..=1024), 0..=5)
         )
     )]
-    modules: BTreeMap<Identifier, Vec<u8>>,
+    pub modules: BTreeMap<Identifier, Vec<u8>>,
 
     /// Maps struct/module to a package version where it was first defined,
     /// stored as a vector for simple serialization and deserialization.
-    type_origin_table: Vec<TypeOrigin>,
+    pub type_origin_table: Vec<TypeOrigin>,
 
     // For each dependency, maps original package ID to the info about the (upgraded) dependency
     // version that this package is using
@@ -143,7 +143,7 @@ pub struct MovePackage {
             proptest::collection::btree_map(proptest::arbitrary::any::<ObjectId>(), proptest::arbitrary::any::<UpgradeInfo>(), 0..=5)
         )
     )]
-    linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
+    pub linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
 }
 
 /// Identifies a struct and the module it was defined in
@@ -189,23 +189,23 @@ pub struct MoveStruct {
         feature = "serde",
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
-    pub(crate) type_: StructTag,
+    pub type_: StructTag,
     /// DEPRECATED this field is no longer used to determine whether a tx can
     /// transfer this object. Instead, it is always calculated from the
     /// objects type when loaded in execution
-    has_public_transfer: bool,
+    pub has_public_transfer: bool,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    version: Version,
+    pub version: Version,
     /// BCS bytes of a Move struct value
     #[cfg_attr(
         feature = "serde",
         serde(with = "::serde_with::As::<::serde_with::Bytes>")
     )]
     #[cfg_attr(test, any(proptest::collection::size_range(32..=1024).lift()))]
-    pub(crate) contents: Vec<u8>,
+    pub contents: Vec<u8>,
 }
 
 /// Type of a Iota object
@@ -221,15 +221,15 @@ pub enum ObjectType {
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
 pub struct Object {
     /// The meat of the object
-    pub(crate) data: ObjectData,
+    pub data: ObjectData,
     /// The owner that unlocks this object
-    owner: Owner,
+    pub owner: Owner,
     /// The digest of the transaction that created or last mutated this object
-    previous_transaction: TransactionDigest,
+    pub previous_transaction: TransactionDigest,
     /// The amount of IOTA we would rebate if this object gets deleted.
     /// This number is re-calculated each time the object is mutated based on
     /// the present storage gas price.
-    storage_rebate: u64,
+    pub storage_rebate: u64,
 }
 
 impl Object {
@@ -272,8 +272,8 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
 pub struct GenesisObject {
-    data: ObjectData,
-    owner: Owner,
+    pub data: ObjectData,
+    pub owner: Owner,
 }
 
 impl GenesisObject {
