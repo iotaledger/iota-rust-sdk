@@ -1252,24 +1252,32 @@ mod test {
     }
 
     #[test]
-    #[ignore = "https://github.com/iotaledger/iota/issues/3475"]
     fn transaction_fixtures() {
+        // To update the fixtures use the iota-sdk, request a corresponding transaction
+        // and convert it to base64 like the following:
+        //  let tx_response = client
+        //     .read_api()
+        //     .get_transaction_with_options(
+        //         checkpoint.transactions[0],
+        //         IotaTransactionBlockResponseOptions::new().with_raw_input(),
+        //     )
+        //     .await?;
+        // let sender_signed_data: iota_types::transaction::SenderSignedData =
+        //     bcs::from_bytes(&tx_response.raw_transaction).unwrap();
+        // let tx_data = sender_signed_data.transaction_data();
+        // println!(
+        //     "{}",
+        //     <fastcrypto::encoding::Base64 as
+        // fastcrypto::encoding::Encoding>::encode(bcs::to_bytes(
+        //         tx_data
+        //     )?)
+        // );
         const GENESIS_TRANSACTION: &str = include_str!("fixtures/genesis-transaction");
-        const CONSENSUS_PROLOGUE: &str = "AAMAAAAAAAAAAAIAAAAAAAAAtkjHeocBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA==";
-        const EPOCH_CHANGE: &str = "AAUCAmkBAAAAAAAAmSrgAQAAAAAAagEAAAAAAAApAAAAAAAAALAQCoNLLwAAnNn0sywGAABsVBEfSC0AAKQnlhd1AAAAzve+vo4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=";
-        const AUTHENTICATOR_STATE_UPDATE: &str =
-            include_str!("fixtures/authenticator_state_update");
-        const PTB: &str = "AAADAQFEBbUNeR/TNGdU6Bcaqra8LtJsLEbv3QM8FLMK5QesMyx96QEAAAAAAQAIVsakAAAAAAABALyyokbZ/8ynfWQer6UyP1DpeCnPU1NC7AyFNJSaTztnQF40BQAAAAAgffPXh5XuG6TWjHk6qC5w9k2a+41oTWfm0sC1FOYRqsEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN7pB2Nsb2JfdjIMY2FuY2VsX29yZGVyAgcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgNzdWkDU1VJAAddSzAlBmRcN/8TO5jEtQpa4UhBZZc41tcz1Z0NIXqTvwRjb2luBENPSU4AAwEAAAEBAAECAPgh00g/x3Jeuvqlo9Ejc9SZAb384UhPIZ2qcGajDfd9ASXQjpFOD6mfycbzwD1wc+IOkCXQ8rHQo/Vi5SDOGMR/Jl40BQAAAAAgV7P1E0IMKon5uI82R/0arWLt+dc1ng/4VwKDqpTCxHT4IdNIP8dyXrr6paPRI3PUmQG9/OFITyGdqnBmow33fe4CAAAAAAAAAMqaOwAAAAAA";
-        const WORMHOLE_PYTH_TRANSACTION: &str = include_str!("fixtures/wormhole-pyth-transaction");
+        const CONSENSUS_PROLOGUE: &str = "AAJDAAAAAAAAAI4CAAAAAAAAAFGk2N2SAQAAIOILX2b6jMcm6eMh2PLilUlPkMHHA70qjw5m6HUBU45+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA==";
+        const EPOCH_CHANGE: &str = "AAQBAEAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAML+1N2SAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAA";
+        const PTB: &str = "AAACAAgA0O2QLgAAAAAgERERERUE6TUOY11lzTjM0sApQ0xqOkgNiUepumoVshUCAgAFAQAAAQAAAQAAAQAAAQAAAQUDAAAAAAMAAAEAAwAAAgADAAADAAMAAAQAAQEA1dk1p8euO6O+qDrVqmJNGhat5thMVunhMP8bmDfnfiIBCOfaLD6XvxOgV5xdw7DDiE+wHdmBj3/e7d1XnRnMkj8BAAAAAAAAACBemVndc8ApfzVuUeaArMKKgsPMl8VFeGWYAzD8Hb5cfdXZNafHrjujvqg61apiTRoWrebYTFbp4TD/G5g3534i6AMAAAAAAAAA5AtUAgAAAAA=";
 
-        for fixture in [
-            GENESIS_TRANSACTION,
-            CONSENSUS_PROLOGUE,
-            EPOCH_CHANGE,
-            AUTHENTICATOR_STATE_UPDATE,
-            PTB,
-            WORMHOLE_PYTH_TRANSACTION,
-        ] {
+        for fixture in [GENESIS_TRANSACTION, CONSENSUS_PROLOGUE, EPOCH_CHANGE, PTB] {
             let fixture = Base64::decode_vec(fixture.trim()).unwrap();
             let tx: Transaction = bcs::from_bytes(&fixture).unwrap();
             assert_eq!(bcs::to_bytes(&tx).unwrap(), fixture);
