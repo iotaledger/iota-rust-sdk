@@ -359,7 +359,7 @@ pub struct SystemPackage {
 pub struct GenesisTransaction {
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
     pub objects: Vec<GenesisObject>,
-    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
+    #[cfg_attr(test, any(proptest::collection::size_range(0..=10).lift()))]
     pub events: Vec<Event>,
 }
 
