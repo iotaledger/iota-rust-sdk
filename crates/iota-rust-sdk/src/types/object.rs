@@ -208,22 +208,6 @@ pub struct MoveStruct {
     pub contents: Vec<u8>,
 }
 
-impl MoveStruct {
-    pub fn new(
-        type_: StructTag,
-        has_public_transfer: bool,
-        version: Version,
-        contents: Vec<u8>,
-    ) -> Self {
-        Self {
-            type_,
-            has_public_transfer,
-            version,
-            contents,
-        }
-    }
-}
-
 /// Type of a Iota object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ObjectType {
