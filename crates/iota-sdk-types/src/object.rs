@@ -183,23 +183,23 @@ pub struct MoveStruct {
         feature = "serde",
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
-    pub(crate) type_: StructTag,
+    pub type_: StructTag,
     /// DEPRECATED this field is no longer used to determine whether a tx can
     /// transfer this object. Instead, it is always calculated from the
     /// objects type when loaded in execution
-    has_public_transfer: bool,
+    pub has_public_transfer: bool,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    version: Version,
+    pub version: Version,
     /// BCS bytes of a Move struct value
     #[cfg_attr(
         feature = "serde",
         serde(with = "::serde_with::As::<::serde_with::Bytes>")
     )]
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(32..=1024).lift()))]
-    pub(crate) contents: Vec<u8>,
+    pub contents: Vec<u8>,
 }
 
 impl MoveStruct {
@@ -251,15 +251,15 @@ pub enum ObjectType {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Object {
     /// The meat of the object
-    pub(crate) data: ObjectData,
+    pub data: ObjectData,
     /// The owner that unlocks this object
-    owner: Owner,
+    pub owner: Owner,
     /// The digest of the transaction that created or last mutated this object
-    previous_transaction: TransactionDigest,
+    pub previous_transaction: TransactionDigest,
     /// The amount of IOTA we would rebate if this object gets deleted.
     /// This number is re-calculated each time the object is mutated based on
     /// the present storage gas price.
-    storage_rebate: u64,
+    pub storage_rebate: u64,
 }
 
 impl Object {
@@ -328,8 +328,8 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GenesisObject {
-    data: ObjectData,
-    owner: Owner,
+    pub data: ObjectData,
+    pub owner: Owner,
 }
 
 impl GenesisObject {

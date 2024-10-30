@@ -41,7 +41,7 @@ pub struct EndOfEpochData {
 
     /// Commitments to epoch specific state (e.g. live object set)
     pub epoch_commitments: Vec<CheckpointCommitment>,
-    
+
     /// The number of tokens that were minted (if positive) or burnt (if
     /// negative) in this epoch.
     pub epoch_supply_change: i64,
@@ -97,7 +97,7 @@ pub struct SignedCheckpointSummary {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointContents(
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
-    Vec<CheckpointTransactionInfo>,
+    pub  Vec<CheckpointTransactionInfo>,
 );
 
 impl CheckpointContents {
@@ -378,8 +378,8 @@ mod serialization {
                     where
                         S: Serializer,
                     {
-                        let mut seq = serializer.serialize_seq(Some(self.0.0.len()))?;
-                        for txn in &self.0.0 {
+                        let mut seq = serializer.serialize_seq(Some(self.0 .0.len()))?;
+                        for txn in &self.0 .0 {
                             let digests = Digests {
                                 transaction: &txn.transaction,
                                 effects: &txn.effects,
@@ -396,8 +396,8 @@ mod serialization {
                     where
                         S: Serializer,
                     {
-                        let mut seq = serializer.serialize_seq(Some(self.0.0.len()))?;
-                        for txn in &self.0.0 {
+                        let mut seq = serializer.serialize_seq(Some(self.0 .0.len()))?;
+                        for txn in &self.0 .0 {
                             seq.serialize_element(&txn.signatures)?;
                         }
                         seq.end()

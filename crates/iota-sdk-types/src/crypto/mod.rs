@@ -28,6 +28,23 @@ pub use zklogin::{
     ZkLoginProof, ZkLoginPublicIdentifier,
 };
 
+#[derive(Debug)]
+pub struct SignatureFromBytesError(String);
+
+impl SignatureFromBytesError {
+    fn new(msg: impl core::fmt::Display) -> Self {
+        Self(msg.to_string())
+    }
+}
+
+impl core::fmt::Display for SignatureFromBytesError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "error deserializing bytes: {}", self.0)
+    }
+}
+
+impl std::error::Error for SignatureFromBytesError {}
+
 // Implement various base64 fixed-size array helpers
 //
 

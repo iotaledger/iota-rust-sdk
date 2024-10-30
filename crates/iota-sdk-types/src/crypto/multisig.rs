@@ -181,7 +181,10 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
-    use crate::{Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme};
+    use crate::{
+        crypto::SignatureFromBytesError, Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey,
+        SignatureScheme,
+    };
 
     #[derive(serde_derive::Deserialize)]
     pub struct Multisig {
@@ -252,7 +255,7 @@ mod serialization {
                 })
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes)
+                Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
             }
         }
     }
@@ -271,18 +274,17 @@ mod serialization {
             buf
         }
 
-        pub(crate) fn from_serialized_bytes<T: AsRef<[u8]>, E: serde::de::Error>(
-            bytes: T,
-        ) -> Result<Self, E> {
+        pub fn from_serialized_bytes(
+            bytes: impl AsRef<[u8]>,
+        ) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
-            let flag = SignatureScheme::from_byte(
-                *bytes
-                    .first()
-                    .ok_or_else(|| serde::de::Error::custom("missing signature scheme falg"))?,
-            )
-            .map_err(serde::de::Error::custom)?;
+            let flag =
+                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
+                    SignatureFromBytesError::new("missing signature scheme flag")
+                })?)
+                .map_err(SignatureFromBytesError::new)?;
             if flag != SignatureScheme::Multisig {
-                return Err(serde::de::Error::custom("invalid multisig flag"));
+                return Err(SignatureFromBytesError::new("invalid multisig flag"));
             }
             let bcs_bytes = &bytes[1..];
 
@@ -293,7 +295,7 @@ mod serialization {
                     committee: multisig.committee,
                 })
             } else {
-                Err(serde::de::Error::custom("invalid multisig"))
+                Err(SignatureFromBytesError::new("invalid multisig"))
             }
         }
     }

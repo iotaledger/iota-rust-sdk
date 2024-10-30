@@ -126,7 +126,7 @@ pub enum ExecutionError {
     CertificateDenied,
 
     /// Iota Move Bytecode verification timed out.
-    IotaMoveVerificationTimedout,
+    IotaMoveVerificationTimeout,
 
     /// The requested shared object operation is not allowed
     SharedObjectOperationNotAllowed,
@@ -600,7 +600,7 @@ mod serialization {
                         max_object_size,
                     },
                     Self::CertificateDenied => ReadableExecutionError::CertificateDenied,
-                    Self::IotaMoveVerificationTimedout => {
+                    Self::IotaMoveVerificationTimeout => {
                         ReadableExecutionError::IotaMoveVerificationTimedout
                     }
                     Self::SharedObjectOperationNotAllowed => {
@@ -709,7 +709,7 @@ mod serialization {
                         max_object_size,
                     },
                     Self::CertificateDenied => BinaryExecutionError::CertificateDenied,
-                    Self::IotaMoveVerificationTimedout => {
+                    Self::IotaMoveVerificationTimeout => {
                         BinaryExecutionError::IotaMoveVerificationTimedout
                     }
                     Self::SharedObjectOperationNotAllowed => {
@@ -832,7 +832,7 @@ mod serialization {
                     },
                     ReadableExecutionError::CertificateDenied => Self::CertificateDenied,
                     ReadableExecutionError::IotaMoveVerificationTimedout => {
-                        Self::IotaMoveVerificationTimedout
+                        Self::IotaMoveVerificationTimeout
                     }
                     ReadableExecutionError::SharedObjectOperationNotAllowed => {
                         Self::SharedObjectOperationNotAllowed
@@ -938,7 +938,7 @@ mod serialization {
                     },
                     BinaryExecutionError::CertificateDenied => Self::CertificateDenied,
                     BinaryExecutionError::IotaMoveVerificationTimedout => {
-                        Self::IotaMoveVerificationTimedout
+                        Self::IotaMoveVerificationTimeout
                     }
                     BinaryExecutionError::SharedObjectOperationNotAllowed => {
                         Self::SharedObjectOperationNotAllowed
