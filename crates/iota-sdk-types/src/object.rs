@@ -202,42 +202,6 @@ pub struct MoveStruct {
     pub contents: Vec<u8>,
 }
 
-impl MoveStruct {
-    pub fn new(
-        type_: StructTag,
-        has_public_transfer: bool,
-        version: Version,
-        contents: Vec<u8>,
-    ) -> Option<Self> {
-        id_opt(&contents).map(|_| Self {
-            type_,
-            has_public_transfer,
-            version,
-            contents,
-        })
-    }
-
-    pub fn object_type(&self) -> &StructTag {
-        &self.type_
-    }
-
-    pub fn has_public_transfer(&self) -> bool {
-        self.has_public_transfer
-    }
-
-    pub fn version(&self) -> Version {
-        self.version
-    }
-
-    pub fn contents(&self) -> &[u8] {
-        &self.contents
-    }
-
-    pub fn object_id(&self) -> ObjectId {
-        id_opt(self.contents()).unwrap()
-    }
-}
-
 /// Type of a Iota object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ObjectType {
