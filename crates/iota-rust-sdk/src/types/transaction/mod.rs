@@ -1,7 +1,7 @@
 use super::{
-    Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, GenesisObject, Identifier, Jwk,
-    JwkId, ObjectId, ObjectReference, ProtocolVersion, TransactionDigest, TypeTag, UserSignature,
-    Version,
+    Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
+    Jwk, JwkId, ObjectId, ObjectReference, ProtocolVersion, TransactionDigest, TypeTag,
+    UserSignature, Version,
 };
 
 #[cfg(feature = "serde")]
@@ -359,6 +359,8 @@ pub struct SystemPackage {
 pub struct GenesisTransaction {
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
     pub objects: Vec<GenesisObject>,
+    #[cfg_attr(test, any(proptest::collection::size_range(0..=10).lift()))]
+    pub events: Vec<Event>,
 }
 
 /// A series of commands where the results of one command can be used in future
