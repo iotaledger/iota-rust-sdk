@@ -184,10 +184,6 @@ pub struct MoveStruct {
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
     pub type_: StructTag,
-    /// DEPRECATED this field is no longer used to determine whether a tx can
-    /// transfer this object. Instead, it is always calculated from the
-    /// objects type when loaded in execution
-    pub has_public_transfer: bool,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
@@ -353,7 +349,6 @@ mod serialization {
                     name: Identifier::new("foo").unwrap(),
                     type_params: Vec::new(),
                 },
-                has_public_transfer: true,
                 version: 12,
                 contents: ObjectId::ZERO.into(),
             }),
@@ -562,7 +557,6 @@ mod serialization {
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     struct ReadableMoveStruct {
-        has_public_transfer: bool,
         #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
         contents: Vec<u8>,
     }
@@ -571,7 +565,6 @@ mod serialization {
         fn readable_object_data(&self) -> ReadableObjectData {
             match &self.data {
                 ObjectData::Struct(struct_) => ReadableObjectData::Move(ReadableMoveStruct {
-                    has_public_transfer: struct_.has_public_transfer,
                     contents: struct_.contents.clone(),
                 }),
                 ObjectData::Package(package) => ReadableObjectData::Package(ReadablePackage {
@@ -647,7 +640,6 @@ mod serialization {
                     (
                         ObjectType::Struct(type_),
                         ReadableObjectData::Move(ReadableMoveStruct {
-                            has_public_transfer,
                             contents,
                         }),
                     ) => {
@@ -661,7 +653,6 @@ mod serialization {
 
                         ObjectData::Struct(MoveStruct {
                             type_,
-                            has_public_transfer,
                             version,
                             contents,
                         })
@@ -726,7 +717,6 @@ mod serialization {
         fn readable_object_data(&self) -> ReadableObjectData {
             match &self.data {
                 ObjectData::Struct(struct_) => ReadableObjectData::Move(ReadableMoveStruct {
-                    has_public_transfer: struct_.has_public_transfer,
                     contents: struct_.contents.clone(),
                 }),
                 ObjectData::Package(package) => ReadableObjectData::Package(ReadablePackage {
@@ -795,7 +785,6 @@ mod serialization {
                     (
                         ObjectType::Struct(type_),
                         ReadableObjectData::Move(ReadableMoveStruct {
-                            has_public_transfer,
                             contents,
                         }),
                     ) => {
@@ -809,7 +798,6 @@ mod serialization {
 
                         ObjectData::Struct(MoveStruct {
                             type_,
-                            has_public_transfer,
                             version,
                             contents,
                         })
