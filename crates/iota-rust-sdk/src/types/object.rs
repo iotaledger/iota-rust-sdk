@@ -642,9 +642,7 @@ mod serialization {
                     }),
                     (
                         ObjectType::Struct(type_),
-                        ReadableObjectData::Move(ReadableMoveStruct {
-                            contents,
-                        }),
+                        ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
                         if !id_opt(&contents).is_some_and(|id| id == object_id) {
@@ -798,9 +796,7 @@ mod serialization {
                     }),
                     (
                         ObjectType::Struct(type_),
-                        ReadableObjectData::Move(ReadableMoveStruct {
-                            contents,
-                        }),
+                        ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
                         if !id_opt(&contents).is_some_and(|id| id == object_id) {
