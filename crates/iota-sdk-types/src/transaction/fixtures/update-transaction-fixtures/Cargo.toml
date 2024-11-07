@@ -1,0 +1,18 @@
+[workspace]
+
+[package]
+name = "update_transaction_fixtures"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.71"
+bcs = "0.1.4"
+fastcrypto = { git = "https://github.com/MystenLabs/fastcrypto", rev = "5f2c63266a065996d53f98156f0412782b468597" }
+iota-json-rpc-types = { path = "../../../../../../../../iota/crates/iota-json-rpc-types" }
+iota-sdk = { path = "../../../../../../../../iota/crates/iota-sdk" }
+iota-keys = { path = "../../../../../../../../iota/crates/iota-keys" }
+iota-types = { path = "../../../../../../../../iota/crates/iota-types" }
+test-cluster = { path = "../../../../../../../../iota/crates/test-cluster" }
+tokio = "1.39.2"
+futures = "0.3.28"
