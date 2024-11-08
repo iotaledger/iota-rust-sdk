@@ -36,6 +36,11 @@ pub struct GasCostSummary {
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_cost: u64,
 
+    /// The burned component of the computation/execution costs
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub computation_cost_burned: u64,
+
     /// Storage cost, it's the sum of all storage cost for all objects created
     /// or mutated.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -58,12 +63,14 @@ pub struct GasCostSummary {
 impl GasCostSummary {
     pub fn new(
         computation_cost: u64,
+        computation_cost_burned: u64,
         storage_cost: u64,
         storage_rebate: u64,
         non_refundable_storage_fee: u64,
     ) -> GasCostSummary {
         GasCostSummary {
             computation_cost,
+            computation_cost_burned,
             storage_cost,
             storage_rebate,
             non_refundable_storage_fee,
@@ -106,6 +113,7 @@ mod test {
     fn formats() {
         let actual = GasCostSummary {
             computation_cost: 42,
+            computation_cost_burned: 24,
             storage_cost: u64::MAX,
             storage_rebate: 0,
             non_refundable_storage_fee: 9,
