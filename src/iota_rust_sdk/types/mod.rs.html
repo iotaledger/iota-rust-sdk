@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/iota-rust-sdk/src/types/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="iota_rust_sdk" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<a href="#2" id="2">2</a>
+<a href="#3" id="3">3</a>
+<a href="#4" id="4">4</a>
+<a href="#5" id="5">5</a>
+<a href="#6" id="6">6</a>
+<a href="#7" id="7">7</a>
+<a href="#8" id="8">8</a>
+<a href="#9" id="9">9</a>
+<a href="#10" id="10">10</a>
+<a href="#11" id="11">11</a>
+<a href="#12" id="12">12</a>
+<a href="#13" id="13">13</a>
+<a href="#14" id="14">14</a>
+<a href="#15" id="15">15</a>
+<a href="#16" id="16">16</a>
+<a href="#17" id="17">17</a>
+<a href="#18" id="18">18</a>
+<a href="#19" id="19">19</a>
+<a href="#20" id="20">20</a>
+<a href="#21" id="21">21</a>
+<a href="#22" id="22">22</a>
+<a href="#23" id="23">23</a>
+<a href="#24" id="24">24</a>
+<a href="#25" id="25">25</a>
+<a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
+<a href="#34" id="34">34</a>
+<a href="#35" id="35">35</a>
+<a href="#36" id="36">36</a>
+<a href="#37" id="37">37</a>
+<a href="#38" id="38">38</a>
+<a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a>
+<a href="#41" id="41">41</a>
+<a href="#42" id="42">42</a>
+<a href="#43" id="43">43</a>
+<a href="#44" id="44">44</a>
+<a href="#45" id="45">45</a>
+<a href="#46" id="46">46</a>
+<a href="#47" id="47">47</a>
+<a href="#48" id="48">48</a>
+<a href="#49" id="49">49</a>
+<a href="#50" id="50">50</a>
+<a href="#51" id="51">51</a>
+<a href="#52" id="52">52</a>
+<a href="#53" id="53">53</a>
+<a href="#54" id="54">54</a>
+<a href="#55" id="55">55</a>
+<a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+</pre></div><pre class="rust"><code><span class="kw">pub mod </span><a href="address.rs.html#1-260">address</a>;
+<span class="kw">pub mod </span><a href="checkpoint.rs.html#1-582">checkpoint</a>;
+<span class="kw">pub mod </span><a href="crypto/mod.rs.html#1-153">crypto</a>;
+<span class="kw">pub mod </span><a href="digest.rs.html#1-332">digest</a>;
+<span class="kw">pub mod </span><a href="effects/mod.rs.html#1-113">effects</a>;
+<span class="kw">pub mod </span><a href="events.rs.html#1-53">events</a>;
+<span class="kw">pub mod </span><a href="execution_status.rs.html#1-1353">execution_status</a>;
+<span class="kw">pub mod </span><a href="framework.rs.html#1-48">framework</a>;
+<span class="kw">pub mod </span><a href="gas.rs.html#1-117">gas</a>;
+<span class="kw">pub mod </span><a href="object.rs.html#1-944">object</a>;
+<span class="kw">pub mod </span><a href="object_id.rs.html#1-86">object_id</a>;
+<span class="kw">pub mod </span><a href="transaction/mod.rs.html#1-587">transaction</a>;
+<span class="kw">pub mod </span><a href="type_tag/mod.rs.html#1-197">type_tag</a>;
+<span class="kw">pub mod </span><a href="u256.rs.html#3-133">u256</a>;
+
+<span class="kw">pub use </span><a href="address.rs.html#7-13">address::Address</a>;
+<span class="kw">pub use </span>checkpoint::{
+    <a href="checkpoint.rs.html#20-23">CheckpointCommitment</a>, <a href="checkpoint.rs.html#120-123">CheckpointContents</a>, <a href="checkpoint.rs.html#146-151">CheckpointData</a>, <a href="checkpoint.rs.html#7">CheckpointSequenceNumber</a>,
+    <a href="checkpoint.rs.html#60-103">CheckpointSummary</a>, <a href="checkpoint.rs.html#8">CheckpointTimestamp</a>, <a href="checkpoint.rs.html#160-179">CheckpointTransaction</a>, <a href="checkpoint.rs.html#132-137">CheckpointTransactionInfo</a>,
+    <a href="checkpoint.rs.html#32-55">EndOfEpochData</a>, <a href="checkpoint.rs.html#9">EpochId</a>, <a href="checkpoint.rs.html#11">ProtocolVersion</a>, <a href="checkpoint.rs.html#112-115">SignedCheckpointSummary</a>, <a href="checkpoint.rs.html#10">StakeUnit</a>,
+};
+<span class="kw">pub use </span>crypto::{
+    <a href="crypto/bls12381.rs.html#8-14">Bls12381PrivateKey</a>, <a href="crypto/bls12381.rs.html#28-37">Bls12381PublicKey</a>, <a href="crypto/bls12381.rs.html#129-138">Bls12381Signature</a>, <a href="crypto/zklogin.rs.html#149-151">Bn254FieldElement</a>, <a href="crypto/zklogin.rs.html#79">CircomG1</a>,
+    <a href="crypto/zklogin.rs.html#87">CircomG2</a>, <a href="crypto/zklogin.rs.html#41-44">Claim</a>, <a href="crypto/ed25519.rs.html#8-14">Ed25519PrivateKey</a>, <a href="crypto/ed25519.rs.html#28-35">Ed25519PublicKey</a>, <a href="crypto/ed25519.rs.html#127-136">Ed25519Signature</a>, <a href="crypto/zklogin.rs.html#120-129">Jwk</a>, <a href="crypto/zklogin.rs.html#139-144">JwkId</a>, <a href="crypto/zklogin.rs.html#54-58">JwtDetails</a>,
+    <a href="crypto/multisig.rs.html#80-90">MultisigAggregatedSignature</a>, <a href="crypto/multisig.rs.html#52-59">MultisigCommittee</a>, <a href="crypto/multisig.rs.html#30-33">MultisigMember</a>, <a href="crypto/multisig.rs.html#16-21">MultisigMemberPublicKey</a>,
+    <a href="crypto/multisig.rs.html#119-124">MultisigMemberSignature</a>, <a href="crypto/passkey.rs.html#7-36">PasskeyAuthenticator</a>, <a href="crypto/passkey.rs.html#39">PasskeyPublicKey</a>, <a href="crypto/secp256k1.rs.html#8-14">Secp256k1PrivateKey</a>,
+    <a href="crypto/secp256k1.rs.html#28-37">Secp256k1PublicKey</a>, <a href="crypto/secp256k1.rs.html#129-138">Secp256k1Signature</a>, <a href="crypto/secp256r1.rs.html#8-14">Secp256r1PrivateKey</a>, <a href="crypto/secp256r1.rs.html#28-37">Secp256r1PublicKey</a>,
+    <a href="crypto/secp256r1.rs.html#129-138">Secp256r1Signature</a>, <a href="crypto/signature.rs.html#42-50">SignatureScheme</a>, <a href="crypto/signature.rs.html#14-27">SimpleSignature</a>, <a href="crypto/signature.rs.html#124-129">UserSignature</a>,
+    <a href="crypto/validator.rs.html#41-53">ValidatorAggregatedSignature</a>, <a href="crypto/validator.rs.html#11-16">ValidatorCommittee</a>, <a href="crypto/validator.rs.html#25-32">ValidatorCommitteeMember</a>, <a href="crypto/validator.rs.html#102-110">ValidatorSignature</a>,
+    <a href="crypto/zklogin.rs.html#8-13">ZkLoginAuthenticator</a>, <a href="crypto/zklogin.rs.html#24-31">ZkLoginInputs</a>, <a href="crypto/zklogin.rs.html#68-72">ZkLoginProof</a>, <a href="crypto/zklogin.rs.html#95-98">ZkLoginPublicIdentifier</a>,
+};
+<span class="kw">pub use </span>digest::{
+    <a href="digest.rs.html#310">CheckpointContentsDigest</a>, <a href="digest.rs.html#309">CheckpointDigest</a>, <a href="digest.rs.html#315">ConsensusCommitDigest</a>, <a href="digest.rs.html#9-13">Digest</a>, <a href="digest.rs.html#172">DigestParseError</a>,
+    <a href="digest.rs.html#316">EffectsAuxiliaryDataDigest</a>, <a href="digest.rs.html#314">ObjectDigest</a>, <a href="digest.rs.html#311">TransactionDigest</a>, <a href="digest.rs.html#312">TransactionEffectsDigest</a>,
+    <a href="digest.rs.html#313">TransactionEventsDigest</a>,
+};
+<span class="kw">pub use </span>effects::{
+    <a href="effects/v1.rs.html#57-61">ChangedObject</a>, <a href="effects/v1.rs.html#119-131">EffectsObjectChange</a>, <a href="effects/v1.rs.html#183-187">IdOperation</a>, <a href="effects/v1.rs.html#143-152">ObjectIn</a>, <a href="effects/v1.rs.html#161-173">ObjectOut</a>, <a href="effects/mod.rs.html#16-19">TransactionEffects</a>,
+    <a href="effects/v1.rs.html#12-51">TransactionEffectsV1</a>, <a href="effects/v1.rs.html#82-110">UnchangedSharedKind</a>, <a href="effects/v1.rs.html#70-73">UnchangedSharedObject</a>,
+};
+<span class="kw">pub use </span>events::{<a href="events.rs.html#41-53">BalanceChange</a>, <a href="events.rs.html#20-32">Event</a>, <a href="events.rs.html#10">TransactionEvents</a>};
+<span class="kw">pub use </span>execution_status::{
+    <a href="execution_status.rs.html#196-228">CommandArgumentError</a>, <a href="execution_status.rs.html#29-170">ExecutionError</a>, <a href="execution_status.rs.html#5-15">ExecutionStatus</a>, <a href="execution_status.rs.html#179-187">MoveLocation</a>, <a href="execution_status.rs.html#237-253">PackageUpgradeError</a>,
+    <a href="execution_status.rs.html#267-272">TypeArgumentError</a>,
+};
+<span class="kw">pub use </span><a href="gas.rs.html#33-56">gas::GasCostSummary</a>;
+<span class="kw">pub use </span>object::{
+    <a href="object.rs.html#270-273">GenesisObject</a>, <a href="object.rs.html#218-229">Object</a>, <a href="object.rs.html#90-96">ObjectData</a>, <a href="object.rs.html#14-20">ObjectReference</a>, <a href="object.rs.html#209-214">ObjectType</a>, <a href="object.rs.html#62-80">Owner</a>, <a href="object.rs.html#157-161">TypeOrigin</a>, <a href="object.rs.html#171-178">UpgradeInfo</a>,
+    <a href="object.rs.html#5">Version</a>,
+};
+<span class="kw">pub use </span><a href="object_id.rs.html#10">object_id::ObjectId</a>;
+<span class="attr">#[cfg(feature = <span class="string">"serde"</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">"serde"</span>)))]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span><a href="transaction/serialization.rs.html#972">transaction::SignedTransactionWithIntentMessage</a>;
+<span class="kw">pub use </span>transaction::{
+    <a href="transaction/mod.rs.html#198-205">ActiveJwk</a>, <a href="transaction/mod.rs.html#549-563">Argument</a>, <a href="transaction/mod.rs.html#154-163">AuthenticatorStateExpire</a>, <a href="transaction/mod.rs.html#172-189">AuthenticatorStateUpdateV1</a>,
+    <a href="transaction/mod.rs.html#229-233">CancelledTransaction</a>, <a href="transaction/mod.rs.html#290-327">ChangeEpoch</a>, <a href="transaction/mod.rs.html#421-451">Command</a>, <a href="transaction/mod.rs.html#256-281">ConsensusCommitPrologueV1</a>,
+    <a href="transaction/mod.rs.html#214-220">ConsensusDeterminedVersionAssignments</a>, <a href="transaction/mod.rs.html#134-145">EndOfEpochTransactionKind</a>, <a href="transaction/mod.rs.html#58-67">GasPayment</a>,
+    <a href="transaction/mod.rs.html#359-364">GenesisTransaction</a>, <a href="transaction/mod.rs.html#392-411">InputArgument</a>, <a href="transaction/mod.rs.html#518-523">MakeMoveVector</a>, <a href="transaction/mod.rs.html#486-490">MergeCoins</a>, <a href="transaction/mod.rs.html#574-587">MoveCall</a>,
+    <a href="transaction/mod.rs.html#375-383">ProgrammableTransaction</a>, <a href="transaction/mod.rs.html#499-509">Publish</a>, <a href="transaction/mod.rs.html#76-98">RandomnessStateUpdate</a>, <a href="transaction/mod.rs.html#36-39">SignedTransaction</a>, <a href="transaction/mod.rs.html#473-477">SplitCoins</a>,
+    <a href="transaction/mod.rs.html#336-350">SystemPackage</a>, <a href="transaction/mod.rs.html#22-27">Transaction</a>, <a href="transaction/mod.rs.html#43-49">TransactionExpiration</a>, <a href="transaction/mod.rs.html#102-124">TransactionKind</a>, <a href="transaction/mod.rs.html#460-464">TransferObjects</a>,
+    <a href="transaction/unresolved.rs.html#30-43">UnresolvedGasPayment</a>, <a href="transaction/unresolved.rs.html#63-88">UnresolvedInputArgument</a>, <a href="transaction/unresolved.rs.html#49-57">UnresolvedObjectReference</a>,
+    <a href="transaction/unresolved.rs.html#21-24">UnresolvedProgrammableTransaction</a>, <a href="transaction/unresolved.rs.html#9-15">UnresolvedTransaction</a>, <a href="transaction/mod.rs.html#532-544">Upgrade</a>, <a href="transaction/mod.rs.html#242-247">VersionAssignment</a>,
+};
+<span class="kw">pub use </span>type_tag::{<a href="type_tag/mod.rs.html#68-77">Identifier</a>, <a href="type_tag/mod.rs.html#119-125">StructTag</a>, <a href="type_tag/mod.rs.html#56">TypeParseError</a>, <a href="type_tag/mod.rs.html#11-24">TypeTag</a>};
+
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>serialization_proptests;
+</code></pre></div></section></main></body></html>

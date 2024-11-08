@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ObjectData","ObjectType","Owner"],"struct":["GenesisObject","MovePackage","MoveStruct","Object","ObjectReference","TypeOrigin","UpgradeInfo"],"type":["Version"]};

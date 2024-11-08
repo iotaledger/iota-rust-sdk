@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["TypeTag"],"struct":["Identifier","StructTag","TypeParseError"]};

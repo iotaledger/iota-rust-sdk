@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CheckpointCommitment"],"struct":["CheckpointContents","CheckpointData","CheckpointSummary","CheckpointTransaction","CheckpointTransactionInfo","EndOfEpochData","SignedCheckpointSummary"],"type":["CheckpointSequenceNumber","CheckpointTimestamp","EpochId","ProtocolVersion","StakeUnit"]};
