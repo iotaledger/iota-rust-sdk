@@ -1253,29 +1253,11 @@ mod test {
 
     #[test]
     fn transaction_fixtures() {
-        // To update the fixtures use the iota-sdk, request a corresponding transaction
-        // and convert it to base64 like the following:
-        //  let tx_response = client
-        //     .read_api()
-        //     .get_transaction_with_options(
-        //         checkpoint.transactions[0],
-        //         IotaTransactionBlockResponseOptions::new().with_raw_input(),
-        //     )
-        //     .await?;
-        // let sender_signed_data: iota_types::transaction::SenderSignedData =
-        //     bcs::from_bytes(&tx_response.raw_transaction).unwrap();
-        // let tx_data = sender_signed_data.transaction_data();
-        // println!(
-        //     "{}",
-        //     <fastcrypto::encoding::Base64 as
-        // fastcrypto::encoding::Encoding>::encode(bcs::to_bytes(
-        //         tx_data
-        //     )?)
-        // );
-        const GENESIS_TRANSACTION: &str = include_str!("fixtures/genesis-transaction");
-        const CONSENSUS_PROLOGUE: &str = "AAJDAAAAAAAAAI4CAAAAAAAAAFGk2N2SAQAAIOILX2b6jMcm6eMh2PLilUlPkMHHA70qjw5m6HUBU45+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA==";
-        const EPOCH_CHANGE: &str = "AAQBAEAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAML+1N2SAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAA";
-        const PTB: &str = "AAACAAgA0O2QLgAAAAAgERERERUE6TUOY11lzTjM0sApQ0xqOkgNiUepumoVshUCAgAFAQAAAQAAAQAAAQAAAQAAAQUDAAAAAAMAAAEAAwAAAgADAAADAAMAAAQAAQEA1dk1p8euO6O+qDrVqmJNGhat5thMVunhMP8bmDfnfiIBCOfaLD6XvxOgV5xdw7DDiE+wHdmBj3/e7d1XnRnMkj8BAAAAAAAAACBemVndc8ApfzVuUeaArMKKgsPMl8VFeGWYAzD8Hb5cfdXZNafHrjujvqg61apiTRoWrebYTFbp4TD/G5g3534i6AMAAAAAAAAA5AtUAgAAAAA=";
+        // Look in the fixtures folder to see how to update them
+        const GENESIS_TRANSACTION: &str = include_str!("fixtures/genesis");
+        const CONSENSUS_PROLOGUE: &str = include_str!("fixtures/consensus-commit-prologue-v1");
+        const EPOCH_CHANGE: &str = include_str!("fixtures/change-epoch");
+        const PTB: &str = include_str!("fixtures/ptb");
 
         for fixture in [GENESIS_TRANSACTION, CONSENSUS_PROLOGUE, EPOCH_CHANGE, PTB] {
             let fixture = Base64::decode_vec(fixture.trim()).unwrap();
