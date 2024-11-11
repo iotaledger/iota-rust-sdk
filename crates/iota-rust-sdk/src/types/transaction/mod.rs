@@ -304,6 +304,10 @@ pub struct ChangeEpoch {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge: u64,
+    /// The total amount of gas burned for computation during the epoch.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub computation_charge_burned: u64,
     /// The amount of storage rebate refunded to the txn senders.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
