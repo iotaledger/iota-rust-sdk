@@ -13,7 +13,7 @@ mod transaction;
 mod type_tag;
 mod u256;
 
-pub use address::Address;
+pub use address::{Address, AddressParseError};
 pub use checkpoint::{
     CheckpointCommitment, CheckpointContents, CheckpointData, CheckpointSequenceNumber,
     CheckpointSummary, CheckpointTimestamp, CheckpointTransaction, CheckpointTransactionInfo,
