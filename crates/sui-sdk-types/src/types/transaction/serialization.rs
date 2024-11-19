@@ -536,11 +536,11 @@ mod version_assignments {
 
 mod input_argument {
     use super::*;
-    use crate::types::transaction::InputArgument;
+    use crate::types::transaction::{Input, InputArgument};
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(tag = "type", rename_all = "snake_case")]
-    enum ReadableInputArgument {
+    enum ReadableInput {
         Pure {
             #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
             value: Vec<u8>,
@@ -572,38 +572,36 @@ mod input_argument {
         Receiving(ObjectReference),
     }
 
-    impl Serialize for InputArgument {
+    impl Serialize for Input {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
         {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
-                    InputArgument::Pure { value } => ReadableInputArgument::Pure { value },
-                    InputArgument::ImmutableOrOwned(object_ref) => {
-                        ReadableInputArgument::ImmutableOrOwned(object_ref)
+                    Input::Pure { value } => ReadableInput::Pure { value },
+                    Input::ImmutableOrOwned(object_ref) => {
+                        ReadableInput::ImmutableOrOwned(object_ref)
                     }
-                    InputArgument::Shared {
+                    Input::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => ReadableInputArgument::Shared {
+                    } => ReadableInput::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
                     },
-                    InputArgument::Receiving(object_ref) => {
-                        ReadableInputArgument::Receiving(object_ref)
-                    }
+                    Input::Receiving(object_ref) => ReadableInput::Receiving(object_ref),
                 };
                 readable.serialize(serializer)
             } else {
                 let binary = match self.clone() {
-                    InputArgument::Pure { value } => CallArg::Pure(value),
-                    InputArgument::ImmutableOrOwned(object_ref) => {
+                    Input::Pure { value } => CallArg::Pure(value),
+                    Input::ImmutableOrOwned(object_ref) => {
                         CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref))
                     }
-                    InputArgument::Shared {
+                    Input::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
@@ -612,7 +610,7 @@ mod input_argument {
                         initial_shared_version,
                         mutable,
                     }),
-                    InputArgument::Receiving(object_ref) => {
+                    Input::Receiving(object_ref) => {
                         CallArg::Object(ObjectArg::Receiving(object_ref))
                     }
                 };
@@ -621,47 +619,45 @@ mod input_argument {
         }
     }
 
-    impl<'de> Deserialize<'de> for InputArgument {
+    impl<'de> Deserialize<'de> for Input {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
             D: Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                ReadableInputArgument::deserialize(deserializer).map(|readable| match readable {
-                    ReadableInputArgument::Pure { value } => InputArgument::Pure { value },
-                    ReadableInputArgument::ImmutableOrOwned(object_ref) => {
-                        InputArgument::ImmutableOrOwned(object_ref)
+                ReadableInput::deserialize(deserializer).map(|readable| match readable {
+                    ReadableInput::Pure { value } => Input::Pure { value },
+                    ReadableInput::ImmutableOrOwned(object_ref) => {
+                        Input::ImmutableOrOwned(object_ref)
                     }
-                    ReadableInputArgument::Shared {
+                    ReadableInput::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => InputArgument::Shared {
+                    } => Input::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
                     },
-                    ReadableInputArgument::Receiving(object_ref) => {
-                        InputArgument::Receiving(object_ref)
-                    }
+                    ReadableInput::Receiving(object_ref) => Input::Receiving(object_ref),
                 })
             } else {
                 CallArg::deserialize(deserializer).map(|binary| match binary {
-                    CallArg::Pure(value) => InputArgument::Pure { value },
+                    CallArg::Pure(value) => Input::Pure { value },
                     CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref)) => {
-                        InputArgument::ImmutableOrOwned(object_ref)
+                        Input::ImmutableOrOwned(object_ref)
                     }
                     CallArg::Object(ObjectArg::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    }) => InputArgument::Shared {
+                    }) => Input::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
                     },
                     CallArg::Object(ObjectArg::Receiving(object_ref)) => {
-                        InputArgument::Receiving(object_ref)
+                        Input::Receiving(object_ref)
                     }
                 })
             }
@@ -1148,7 +1144,7 @@ mod test {
 
     use crate::types::{
         ObjectDigest, ObjectId, ObjectReference,
-        transaction::{Argument, InputArgument, Transaction},
+        transaction::{Argument, Input, InputArgument, Transaction},
     };
 
     #[test]
@@ -1177,7 +1173,7 @@ mod test {
     fn input_argument() {
         let test_cases = [
             (
-                InputArgument::Pure {
+                Input::Pure {
                     value: vec![1, 2, 3, 4],
                 },
                 serde_json::json!({
@@ -1186,7 +1182,7 @@ mod test {
                 }),
             ),
             (
-                InputArgument::ImmutableOrOwned(ObjectReference::new(
+                Input::ImmutableOrOwned(ObjectReference::new(
                     ObjectId::ZERO,
                     1,
                     ObjectDigest::ZERO,
@@ -1199,7 +1195,7 @@ mod test {
                 }),
             ),
             (
-                InputArgument::Shared {
+                Input::Shared {
                     object_id: ObjectId::ZERO,
                     initial_shared_version: 1,
                     mutable: true,
@@ -1212,11 +1208,7 @@ mod test {
                 }),
             ),
             (
-                InputArgument::Receiving(ObjectReference::new(
-                    ObjectId::ZERO,
-                    1,
-                    ObjectDigest::ZERO,
-                )),
+                Input::Receiving(ObjectReference::new(ObjectId::ZERO, 1, ObjectDigest::ZERO)),
                 serde_json::json!({
                   "type": "receiving",
                   "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",

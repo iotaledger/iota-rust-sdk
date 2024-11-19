@@ -57,12 +57,12 @@ pub use transaction::{
     AuthenticatorStateUpdateV1, CancelledTransaction, ChangeEpoch, Command,
     ConsensusCommitPrologue, ConsensusCommitPrologueV1, ConsensusCommitPrologueV2,
     ConsensusCommitPrologueV3, ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind,
-    GasPayment, GenesisTransaction, InputArgument, MakeMoveVector, MergeCoins, MoveCall,
+    GasPayment, GenesisTransaction, Input, InputArgument, MakeMoveVector, MergeCoins, MoveCall,
     ProgrammableTransaction, Publish, RandomnessStateUpdate, SignedTransaction, SplitCoins,
     SystemPackage, Transaction, TransactionExpiration, TransactionKind, TransferObjects,
     UnresolvedGasPayment, UnresolvedInputArgument, UnresolvedInputArgumentKind,
     UnresolvedObjectReference, UnresolvedProgrammableTransaction, UnresolvedTransaction,
-    UnresolvedValue, Upgrade, VersionAssignment,
+    UnresolvedValue, Upgrade, VersionAssignment, unresolved,
 };
 pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
 
