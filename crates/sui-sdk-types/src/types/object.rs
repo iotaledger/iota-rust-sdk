@@ -178,6 +178,7 @@ pub struct UpgradeInfo {
 }
 
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
+// TODO hand-roll a Deserialize impl to enforce that an objectid is present
 #[cfg_attr(
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
@@ -202,6 +203,42 @@ pub struct MoveStruct {
     )]
     #[cfg_attr(test, any(proptest::collection::size_range(32..=1024).lift()))]
     pub contents: Vec<u8>,
+}
+
+impl MoveStruct {
+    pub fn new(
+        type_: StructTag,
+        has_public_transfer: bool,
+        version: Version,
+        contents: Vec<u8>,
+    ) -> Option<Self> {
+        id_opt(&contents).map(|_| Self {
+            type_,
+            has_public_transfer,
+            version,
+            contents,
+        })
+    }
+
+    pub fn object_type(&self) -> &StructTag {
+        &self.type_
+    }
+
+    pub fn has_public_transfer(&self) -> bool {
+        self.has_public_transfer
+    }
+
+    pub fn version(&self) -> Version {
+        self.version
+    }
+
+    pub fn contents(&self) -> &[u8] {
+        &self.contents
+    }
+
+    pub fn object_id(&self) -> ObjectId {
+        id_opt(self.contents()).unwrap()
+    }
 }
 
 /// Type of an IOTA object
@@ -229,6 +266,20 @@ pub struct Object {
 }
 
 impl Object {
+    pub fn new(
+        data: ObjectData,
+        owner: Owner,
+        previous_transaction: TransactionDigest,
+        storage_rebate: u64,
+    ) -> Self {
+        Self {
+            data,
+            owner,
+            previous_transaction,
+            storage_rebate,
+        }
+    }
+
     pub fn object_id(&self) -> ObjectId {
         match &self.data {
             ObjectData::Struct(struct_) => id_opt(&struct_.contents).unwrap(),
@@ -253,6 +304,18 @@ impl Object {
     pub fn owner(&self) -> &Owner {
         &self.owner
     }
+
+    pub fn data(&self) -> &ObjectData {
+        &self.data
+    }
+
+    pub fn previous_transaction(&self) -> TransactionDigest {
+        self.previous_transaction
+    }
+
+    pub fn storage_rebate(&self) -> u64 {
+        self.storage_rebate
+    }
 }
 
 fn id_opt(contents: &[u8]) -> Option<ObjectId> {
@@ -273,6 +336,10 @@ pub struct GenesisObject {
 }
 
 impl GenesisObject {
+    pub fn new(data: ObjectData, owner: Owner) -> Self {
+        Self { data, owner }
+    }
+
     pub fn object_id(&self) -> ObjectId {
         match &self.data {
             ObjectData::Struct(struct_) => id_opt(&struct_.contents).unwrap(),
@@ -292,6 +359,14 @@ impl GenesisObject {
             ObjectData::Struct(struct_) => ObjectType::Struct(struct_.type_.clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
+    }
+
+    pub fn owner(&self) -> &Owner {
+        &self.owner
+    }
+
+    pub fn data(&self) -> &ObjectData {
+        &self.data
     }
 }
 

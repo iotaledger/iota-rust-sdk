@@ -34,6 +34,10 @@ pub struct MultisigMember {
 }
 
 impl MultisigMember {
+    pub fn new(public_key: MultisigMemberPublicKey, weight: WeightUnit) -> Self {
+        Self { public_key, weight }
+    }
+
     pub fn public_key(&self) -> &MultisigMemberPublicKey {
         &self.public_key
     }
@@ -60,6 +64,10 @@ pub struct MultisigCommittee {
 }
 
 impl MultisigCommittee {
+    pub fn new(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Self {
+        Self { members, threshold }
+    }
+
     pub fn members(&self) -> &[MultisigMember] {
         &self.members
     }
@@ -131,7 +139,6 @@ impl MultisigAggregatedSignature {
         Self {
             signatures,
             bitmap,
-            legacy_bitmap: None,
             committee,
         }
     }

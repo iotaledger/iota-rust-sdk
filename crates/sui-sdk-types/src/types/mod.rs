@@ -45,8 +45,8 @@ pub use execution_status::{
 };
 pub use gas::GasCostSummary;
 pub use object::{
-    GenesisObject, MovePackage, Object, ObjectData, ObjectReference, ObjectType, Owner, TypeOrigin,
-    UpgradeInfo, Version,
+    GenesisObject, MovePackage, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
+    TypeOrigin, UpgradeInfo, Version,
 };
 pub use object_id::ObjectId;
 #[cfg(feature = "serde")]
