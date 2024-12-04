@@ -10,7 +10,7 @@ use super::{
     derive(schemars::JsonSchema),
     schemars(tag = "scheme", rename_all = "lowercase")
 )]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum SimpleSignature {
     Ed25519 {
         signature: Ed25519Signature,
@@ -37,7 +37,7 @@ impl SimpleSignature {
 }
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
 pub enum SignatureScheme {
     Ed25519 = 0x00,
@@ -120,7 +120,7 @@ impl std::fmt::Display for InvalidSignatureScheme {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum UserSignature {
     Simple(SimpleSignature),
     Multisig(MultisigAggregatedSignature),

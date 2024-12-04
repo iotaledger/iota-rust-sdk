@@ -7,7 +7,7 @@ use crate::types::checkpoint::{EpochId, StakeUnit};
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ValidatorCommittee {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -21,7 +21,7 @@ pub struct ValidatorCommittee {
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ValidatorCommitteeMember {
     #[cfg_attr(feature = "serde", serde(with = "ValidatorPublicKeySerialization"))]
     #[cfg_attr(feature = "schemars", schemars(with = "Bls12381PublicKey"))]
@@ -37,7 +37,7 @@ pub struct ValidatorCommitteeMember {
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ValidatorAggregatedSignature {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -46,7 +46,7 @@ pub struct ValidatorAggregatedSignature {
     #[cfg_attr(feature = "serde", serde(with = "RoaringBitMapSerialization"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     #[cfg_attr(
-        test,
+        feature = "proptest",
         strategy(proptest::strategy::Just(roaring::RoaringBitmap::default()))
     )]
     pub bitmap: roaring::RoaringBitmap,
@@ -98,7 +98,7 @@ impl<'de> serde_with::DeserializeAs<'de, Bls12381PublicKey> for BinaryValidatorP
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ValidatorSignature {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]

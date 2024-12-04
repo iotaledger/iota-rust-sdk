@@ -6,7 +6,7 @@ use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TransactionEvents(pub Vec<Event>);
 
 /// Specific type of event
@@ -16,7 +16,7 @@ pub struct TransactionEvents(pub Vec<Event>);
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Event {
     pub package_id: ObjectId,
     pub module: Identifier,
@@ -37,7 +37,7 @@ pub struct Event {
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct BalanceChange {
     /// Owner of the balance change
     pub address: Address,
