@@ -263,7 +263,7 @@ mod signing_message {
         hasher.finalize()
     }
 
-    impl<'a> PersonalMessage<'a> {
+    impl PersonalMessage<'_> {
         pub fn signing_digest(&self) -> SigningDigest {
             const INTENT: Intent = Intent {
                 scope: IntentScope::PersonalMessage,
