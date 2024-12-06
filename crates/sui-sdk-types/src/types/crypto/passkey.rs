@@ -1,4 +1,4 @@
-use super::{Secp256r1PublicKey, Secp256r1Signature};
+use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 
 /// An passkey authenticator with parsed fields. See field definition below. Can
 /// be initialized from [struct RawPasskeyAuthenticator].
@@ -27,6 +27,23 @@ pub struct PasskeyAuthenticator {
     ///  the client during the authentication request
     /// (see [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata))
     client_data_json: String,
+}
+
+impl PasskeyAuthenticator {
+    pub fn authenticator_data(&self) -> &[u8] {
+        &self.authenticator_data
+    }
+
+    pub fn client_data_json(&self) -> &str {
+        &self.client_data_json
+    }
+
+    pub fn signature(&self) -> SimpleSignature {
+        SimpleSignature::Secp256r1 {
+            signature: self.signature,
+            public_key: self.public_key,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -116,6 +133,19 @@ mod serialization {
     }
 
     impl PasskeyAuthenticator {
+        pub fn new(
+            authenticator_data: Vec<u8>,
+            client_data_json: String,
+            signature: SimpleSignature,
+        ) -> Option<Self> {
+            Self::try_from_raw::<serde_json::Error>(Authenticator {
+                authenticator_data,
+                client_data_json,
+                signature,
+            })
+            .ok()
+        }
+
         fn try_from_raw(
             Authenticator {
                 authenticator_data,
