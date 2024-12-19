@@ -1,8 +1,8 @@
 mod v1;
 
 pub use v1::{
-    ChangedObject, EffectsObjectChange, IdOperation, ObjectIn, ObjectOut, TransactionEffectsV1,
-    UnchangedSharedKind, UnchangedSharedObject,
+    ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffectsV1, UnchangedSharedKind,
+    UnchangedSharedObject,
 };
 
 use crate::types::execution_status::ExecutionStatus;
