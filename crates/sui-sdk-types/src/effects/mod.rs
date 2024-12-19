@@ -5,7 +5,7 @@ pub use v1::{
     UnchangedSharedObject,
 };
 
-use crate::types::execution_status::ExecutionStatus;
+use crate::execution_status::ExecutionStatus;
 
 /// The response from processing a transaction or a certified transaction
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -38,7 +38,7 @@ impl TransactionEffects {
     }
 
     /// Return the gas cost summary of the transaction.
-    pub fn gas_summary(&self) -> &crate::types::gas::GasCostSummary {
+    pub fn gas_summary(&self) -> &crate::gas::GasCostSummary {
         match self {
             TransactionEffects::V1(e) => e.gas_summary(),
             TransactionEffects::V2(e) => e.gas_summary(),

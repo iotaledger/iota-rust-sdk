@@ -1,4 +1,4 @@
-use crate::types::{
+use crate::{
     EpochId, GasCostSummary, ObjectDigest, ObjectId, TransactionDigest, TransactionEventsDigest,
     digest::EffectsAuxiliaryDataDigest,
     execution_status::ExecutionStatus,

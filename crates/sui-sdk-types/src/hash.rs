@@ -1,6 +1,6 @@
 use blake2::Digest as DigestTrait;
 
-use crate::types::{Address, Digest};
+use crate::{Address, Digest};
 
 type Blake2b256 = blake2::Blake2b<blake2::digest::consts::U32>;
 
@@ -43,7 +43,7 @@ impl std::io::Write for Hasher {
     }
 }
 
-impl crate::types::Ed25519PublicKey {
+impl crate::Ed25519PublicKey {
     pub fn to_address(&self) -> Address {
         let mut hasher = Hasher::new();
         self.write_into_hasher(&mut hasher);
@@ -57,7 +57,7 @@ impl crate::types::Ed25519PublicKey {
     }
 }
 
-impl crate::types::Secp256k1PublicKey {
+impl crate::Secp256k1PublicKey {
     pub fn to_address(&self) -> Address {
         let mut hasher = Hasher::new();
         self.write_into_hasher(&mut hasher);
@@ -71,7 +71,7 @@ impl crate::types::Secp256k1PublicKey {
     }
 }
 
-impl crate::types::Secp256r1PublicKey {
+impl crate::Secp256r1PublicKey {
     pub fn to_address(&self) -> Address {
         let mut hasher = Hasher::new();
         self.write_into_hasher(&mut hasher);
@@ -85,7 +85,7 @@ impl crate::types::Secp256r1PublicKey {
     }
 }
 
-impl crate::types::ZkLoginPublicIdentifier {
+impl crate::ZkLoginPublicIdentifier {
     /// Define as iss_bytes_len || iss_bytes || padded_32_byte_address_seed.
     pub fn to_address_padded(&self) -> Address {
         let mut hasher = Hasher::new();
@@ -113,7 +113,7 @@ impl crate::types::ZkLoginPublicIdentifier {
     }
 }
 
-impl crate::types::PasskeyPublicKey {
+impl crate::PasskeyPublicKey {
     pub fn to_address(&self) -> Address {
         let mut hasher = Hasher::new();
         self.write_into_hasher(&mut hasher);
@@ -127,7 +127,7 @@ impl crate::types::PasskeyPublicKey {
     }
 }
 
-impl crate::types::MultisigCommittee {
+impl crate::MultisigCommittee {
     /// Derive an Address from a MultisigCommittee. A MultiSig address
     /// is defined as the 32-byte Blake2b hash of serializing the flag, the
     /// threshold, concatenation of all n flag, public keys and
@@ -137,7 +137,7 @@ impl crate::types::MultisigCommittee {
     /// When flag_i is ZkLogin, pk_i refers to [struct ZkLoginPublicIdentifier]
     /// derived from padded address seed in bytes and iss.
     pub fn to_address(&self) -> Address {
-        use crate::types::MultisigMemberPublicKey::*;
+        use crate::MultisigMemberPublicKey::*;
 
         let mut hasher = Hasher::new();
         hasher.update([self.scheme().to_u8()]);
@@ -163,19 +163,11 @@ impl crate::types::MultisigCommittee {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod type_digest {
     use super::Hasher;
-    use crate::types::CheckpointContents;
-    use crate::types::CheckpointContentsDigest;
-    use crate::types::CheckpointDigest;
-    use crate::types::CheckpointSummary;
-    use crate::types::Digest;
-    use crate::types::Object;
-    use crate::types::ObjectDigest;
-    use crate::types::Transaction;
-    use crate::types::TransactionDigest;
-    use crate::types::TransactionEffects;
-    use crate::types::TransactionEffectsDigest;
-    use crate::types::TransactionEvents;
-    use crate::types::TransactionEventsDigest;
+    use crate::{
+        CheckpointContents, CheckpointContentsDigest, CheckpointDigest, CheckpointSummary, Digest,
+        Object, ObjectDigest, Transaction, TransactionDigest, TransactionEffects,
+        TransactionEffectsDigest, TransactionEvents, TransactionEventsDigest,
+    };
 
     impl Object {
         pub fn digest(&self) -> ObjectDigest {
@@ -237,11 +229,8 @@ mod type_digest {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod signing_message {
     use crate::{
-        hash::Hasher,
-        types::{
-            Digest, Intent, IntentAppId, IntentScope, IntentVersion, PersonalMessage,
-            SigningDigest, Transaction,
-        },
+        Digest, Intent, IntentAppId, IntentScope, IntentVersion, PersonalMessage, SigningDigest,
+        Transaction, hash::Hasher,
     };
 
     impl Transaction {
@@ -288,12 +277,12 @@ enum HashingIntent {
     RegularObjectId = 0xf1,
 }
 
-impl crate::types::ObjectId {
+impl crate::ObjectId {
     /// Create an ObjectId from `TransactionDigest` and `count`.
     ///
     /// `count` is the number of objects that have been created during a
     /// transactions.
-    pub fn derive_id(digest: crate::types::TransactionDigest, count: u64) -> Self {
+    pub fn derive_id(digest: crate::TransactionDigest, count: u64) -> Self {
         let mut hasher = Hasher::new();
         hasher.update([HashingIntent::RegularObjectId as u8]);
         hasher.update(digest);
@@ -307,11 +296,7 @@ impl crate::types::ObjectId {
     /// hash(parent || len(key) || key || key_type_tag)
     #[cfg(feature = "serde")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
-    pub fn derive_dynamic_child_id(
-        &self,
-        key_type_tag: &crate::types::TypeTag,
-        key_bytes: &[u8],
-    ) -> Self {
+    pub fn derive_dynamic_child_id(&self, key_type_tag: &crate::TypeTag, key_bytes: &[u8]) -> Self {
         let mut hasher = Hasher::new();
         hasher.update([HashingIntent::ChildObjectId as u8]);
         hasher.update(self);
@@ -336,7 +321,7 @@ mod test {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use super::HashingIntent;
-    use crate::types::SignatureScheme;
+    use crate::SignatureScheme;
 
     impl HashingIntent {
         fn from_byte(byte: u8) -> Result<Self, u8> {

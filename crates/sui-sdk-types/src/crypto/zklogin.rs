@@ -1,5 +1,5 @@
 use super::SimpleSignature;
-use crate::types::{checkpoint::EpochId, u256::U256};
+use crate::{checkpoint::EpochId, u256::U256};
 
 /// An zk login authenticator with all the necessary fields.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -258,7 +258,7 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs, SerializeAs};
 
     use super::*;
-    use crate::types::{SignatureScheme, crypto::SignatureFromBytesError};
+    use crate::{SignatureScheme, crypto::SignatureFromBytesError};
 
     // Serialized format is: iss_bytes_len || iss_bytes ||
     // padded_32_byte_address_seed.

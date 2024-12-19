@@ -184,7 +184,7 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
-    use crate::types::{
+    use crate::{
         Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
         crypto::SignatureFromBytesError,
     };

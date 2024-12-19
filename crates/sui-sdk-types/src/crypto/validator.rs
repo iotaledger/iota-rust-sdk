@@ -1,5 +1,5 @@
 use super::{Bls12381PublicKey, Bls12381Signature};
-use crate::types::checkpoint::{EpochId, StakeUnit};
+use crate::checkpoint::{EpochId, StakeUnit};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(

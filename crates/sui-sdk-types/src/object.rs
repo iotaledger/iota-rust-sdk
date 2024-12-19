@@ -380,7 +380,7 @@ mod serialization {
     use serde_with::{DeserializeAs, SerializeAs};
 
     use super::*;
-    use crate::types::TypeTag;
+    use crate::TypeTag;
 
     #[test]
     fn obj() {
@@ -908,7 +908,7 @@ mod serialization {
         #[cfg(target_arch = "wasm32")]
         use wasm_bindgen_test::wasm_bindgen_test as test;
 
-        use crate::types::object::Object;
+        use crate::object::Object;
 
         #[test]
         fn object_fixture() {

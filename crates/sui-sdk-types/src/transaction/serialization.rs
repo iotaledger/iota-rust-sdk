@@ -2,11 +2,11 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_with::{DeserializeAs, SerializeAs};
 
 use super::Argument;
-use crate::types::{ObjectId, ObjectReference};
+use crate::{ObjectId, ObjectReference};
 
 mod transaction {
     use super::*;
-    use crate::types::{
+    use crate::{
         Address,
         transaction::{GasPayment, Transaction, TransactionExpiration, TransactionKind},
     };
@@ -123,7 +123,7 @@ mod transaction {
 
 mod transaction_kind {
     use super::*;
-    use crate::types::transaction::{
+    use crate::transaction::{
         AuthenticatorStateUpdateV1, ConsensusCommitPrologueV1, EndOfEpochTransactionKind,
         GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
     };
@@ -279,7 +279,7 @@ mod transaction_kind {
 
 mod end_of_epoch {
     use super::*;
-    use crate::types::{
+    use crate::{
         CheckpointDigest,
         transaction::{
             AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, EndOfEpochTransactionKind,
@@ -445,7 +445,7 @@ mod end_of_epoch {
 
 mod version_assignments {
     use super::*;
-    use crate::types::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
+    use crate::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
 
     #[derive(serde_derive::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
@@ -536,7 +536,7 @@ mod version_assignments {
 
 mod input_argument {
     use super::*;
-    use crate::types::transaction::{Input, InputArgument};
+    use crate::transaction::{Input, InputArgument};
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(tag = "type", rename_all = "snake_case")]
@@ -785,7 +785,7 @@ mod argument {
 
 mod command {
     use super::*;
-    use crate::types::transaction::{
+    use crate::transaction::{
         Command, MakeMoveVector, MergeCoins, MoveCall, Publish, SplitCoins, TransferObjects,
         Upgrade,
     };
@@ -903,7 +903,7 @@ mod signed_transaction {
     use serde::ser::SerializeSeq;
 
     use super::*;
-    use crate::types::{
+    use crate::{
         UserSignature,
         transaction::{SignedTransaction, Transaction},
     };
@@ -1041,7 +1041,7 @@ mod signed_transaction {
 mod transaction_expiration {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-    use crate::types::{EpochId, TransactionExpiration};
+    use crate::{EpochId, TransactionExpiration};
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(rename = "TransactionExpiration")]
@@ -1142,7 +1142,7 @@ mod test {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
-    use crate::types::{
+    use crate::{
         ObjectDigest, ObjectId, ObjectReference,
         transaction::{Argument, Input, InputArgument, Transaction},
     };

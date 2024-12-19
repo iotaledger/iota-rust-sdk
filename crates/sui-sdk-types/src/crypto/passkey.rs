@@ -68,7 +68,7 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
-    use crate::types::{SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
+    use crate::{SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
 
     #[derive(serde::Serialize)]
     struct AuthenticatorRef<'a> {
@@ -354,7 +354,7 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
 
 #[cfg(test)]
 mod tests {
-    use crate::types::UserSignature;
+    use crate::UserSignature;
 
     #[test]
     fn base64_encoded_passkey_user_signature() {
