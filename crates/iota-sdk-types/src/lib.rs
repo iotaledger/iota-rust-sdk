@@ -18,7 +18,6 @@
 //! enabled which allows one to enable a subset specifically for their use case.
 //! Below is a list of the available feature flags.
 //!
-//! - `schemars`: Enables JSON schema generation using the [schemars] library.
 //! - `serde`: Enables support for serializing and deserializing types to/from
 //!   BCS utilizing [serde] library.
 //! - `rand`: Enables support for generating random instances of a number of
@@ -32,7 +31,6 @@
 //! [serde]: https://docs.rs/serde
 //! [rand]: https://docs.rs/rand
 //! [proptest]: https://docs.rs/proptest
-//! [schemars]: https://docs.rs/schemars
 //! [proptest::arbitrary::Arbitrary]: https://docs.rs/proptest/latest/proptest/arbitrary/trait.Arbitrary.html
 //!
 //! # BCS
@@ -290,137 +288,4 @@ mod _serde {
     }
 
     pub(crate) use super::SignedTransactionWithIntentMessage;
-}
-
-#[cfg(feature = "schemars")]
-mod _schemars {
-    use schemars::{
-        JsonSchema,
-        schema::{InstanceType, Metadata, SchemaObject},
-    };
-
-    pub(crate) struct U64;
-
-    impl JsonSchema for U64 {
-        fn schema_name() -> String {
-            "u64".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 64-bit unsigned integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("u64".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    pub(crate) struct I128;
-
-    impl JsonSchema for I128 {
-        fn schema_name() -> String {
-            "i128".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 128-bit signed integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("i128".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    pub(crate) struct U256;
-
-    impl JsonSchema for U256 {
-        fn schema_name() -> String {
-            "u256".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 256-bit unsigned integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("u256".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    pub(crate) struct Base64;
-
-    impl JsonSchema for Base64 {
-        fn schema_name() -> String {
-            "Base64".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Base64 encoded data".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("base64".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    pub(crate) struct Base58;
-
-    impl JsonSchema for Base58 {
-        fn schema_name() -> String {
-            "Base58".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Base58 encoded data".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("base58".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
 }

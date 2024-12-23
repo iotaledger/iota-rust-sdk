@@ -18,7 +18,6 @@ use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TransactionEvents(pub Vec<Event>);
 
@@ -36,7 +35,6 @@ pub struct TransactionEvents(pub Vec<Event>);
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Event {
     /// Package id of the top-level function invoked by a MoveCall command which triggered this
@@ -59,7 +57,6 @@ pub struct Event {
         feature = "serde",
         serde(with = "crate::_serde::ReadableBase64Encoded")
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     pub contents: Vec<u8>,
 }
 
@@ -68,7 +65,6 @@ pub struct Event {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct BalanceChange {
     /// Owner of the balance change
@@ -82,6 +78,5 @@ pub struct BalanceChange {
     /// A negative amount means spending coin value and positive means receiving
     /// coin value.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::I128"))]
     pub amount: i128,
 }

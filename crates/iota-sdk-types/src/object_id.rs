@@ -27,7 +27,6 @@ use super::Address;
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ObjectId(Address);
 

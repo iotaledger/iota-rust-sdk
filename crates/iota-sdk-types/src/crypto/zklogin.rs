@@ -25,14 +25,12 @@ use crate::{checkpoint::EpochId, u256::U256};
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ZkLoginAuthenticator {
     /// Zklogin proof and inputs required to perform proof verification.
     pub inputs: ZkLoginInputs,
 
     /// Maximum epoch for which the proof is valid.
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub max_epoch: EpochId,
 
     /// User signature with the pubkey attested to by the provided proof.
@@ -57,7 +55,6 @@ pub struct ZkLoginAuthenticator {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ZkLoginInputs {
     pub proof_points: ZkLoginProof,
@@ -80,7 +77,6 @@ pub struct ZkLoginInputs {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ZkLoginClaim {
     pub value: String,
@@ -101,7 +97,6 @@ pub struct ZkLoginClaim {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ZkLoginProof {
     pub a: CircomG1,
@@ -122,7 +117,6 @@ pub struct ZkLoginProof {
 /// circom-g1 = %x03 3(bn254-field-element)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CircomG1(pub [Bn254FieldElement; 3]);
 
@@ -139,7 +133,6 @@ pub struct CircomG1(pub [Bn254FieldElement; 3]);
 /// circom-g2 = %x03 3(%x02 2(bn254-field-element))
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
 
@@ -196,7 +189,6 @@ pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
 ///
 /// [`Address`]: crate::Address
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ZkLoginPublicIdentifier {
     iss: String,
@@ -239,7 +231,6 @@ impl ZkLoginPublicIdentifier {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Jwk {
     /// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
@@ -269,7 +260,6 @@ pub struct Jwk {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct JwkId {
     /// The issuer or identity of the OIDC provider.
@@ -293,11 +283,8 @@ pub struct JwkId {
 /// bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
 /// ```
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct Bn254FieldElement(
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U256"))] [u8; 32],
-);
+pub struct Bn254FieldElement([u8; 32]);
 
 impl Bn254FieldElement {
     pub const fn new(bytes: [u8; 32]) -> Self {

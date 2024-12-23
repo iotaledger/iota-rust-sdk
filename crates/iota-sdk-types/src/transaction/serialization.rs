@@ -26,7 +26,6 @@ mod transaction {
     #[derive(serde_derive::Deserialize)]
     #[serde(tag = "version")]
     #[serde(rename = "Transaction")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum TransactionData {
         #[serde(rename = "1")]
         V1(TransactionV1),
@@ -57,7 +56,6 @@ mod transaction {
 
     #[derive(serde_derive::Deserialize)]
     #[serde(rename = "TransactionV1")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct TransactionV1 {
         kind: TransactionKind,
         sender: Address,
@@ -112,17 +110,6 @@ mod transaction {
             })
         }
     }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for Transaction {
-        fn schema_name() -> String {
-            TransactionData::schema_name()
-        }
-
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            TransactionData::json_schema(gen)
-        }
-    }
 }
 
 mod transaction_kind {
@@ -148,7 +135,6 @@ mod transaction_kind {
     #[derive(serde_derive::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     #[serde(rename = "TransactionKind")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableTransactionKind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
@@ -158,17 +144,6 @@ mod transaction_kind {
             commands: Vec<EndOfEpochTransactionKind>,
         },
         RandomnessStateUpdate(RandomnessStateUpdate),
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for TransactionKind {
-        fn schema_name() -> String {
-            ReadableTransactionKind::schema_name()
-        }
-
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableTransactionKind::json_schema(gen)
-        }
     }
 
     #[derive(serde_derive::Serialize)]
@@ -690,7 +665,6 @@ mod argument {
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(rename = "Argument", untagged, rename_all = "lowercase")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableArgument {
         /// # Gas
         Gas(Gas),
@@ -706,36 +680,6 @@ mod argument {
     #[serde(rename_all = "lowercase")]
     enum Gas {
         Gas,
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for Gas {
-        fn schema_name() -> std::string::String {
-            "GasArgument".to_owned()
-        }
-
-        fn json_schema(_gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            schemars::schema::Schema::Object(schemars::schema::SchemaObject {
-                instance_type: Some(schemars::schema::InstanceType::String.into()),
-                enum_values: Some(vec!["gas".into()]),
-                ..Default::default()
-            })
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for Argument {
-        fn schema_name() -> String {
-            ReadableArgument::schema_name()
-        }
-
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableArgument::json_schema(gen)
-        }
     }
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
@@ -1122,64 +1066,6 @@ mod transaction_expiration {
                     BinaryTransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
                 })
             }
-        }
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for TransactionExpiration {
-        fn schema_name() -> String {
-            "TransactionExpiration".into()
-        }
-
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            use schemars::{
-                Map, Set,
-                schema::{
-                    InstanceType, ObjectValidation, Schema, SchemaObject, SubschemaValidation,
-                },
-            };
-            let mut object = SchemaObject {
-                instance_type: Some(InstanceType::Object.into()),
-                object: Some(Box::new(ObjectValidation {
-                    properties: {
-                        let mut props = Map::new();
-                        props.insert(
-                            "epoch".to_owned(),
-                            gen.subschema_for::<crate::_schemars::U64>(),
-                        );
-                        props
-                    },
-                    required: {
-                        let mut required = Set::new();
-                        required.insert("epoch".to_owned());
-                        required
-                    },
-                    // Externally tagged variants must prohibit additional
-                    // properties irrespective of the disposition of
-                    // `deny_unknown_fields`. If additional properties were allowed
-                    // one could easily construct an object that validated against
-                    // multiple variants since here it's the properties rather than
-                    // the values of a property that distingish between variants.
-                    additional_properties: Some(Box::new(false.into())),
-                    ..Default::default()
-                })),
-                ..Default::default()
-            };
-            object.metadata().description = Some("Validators wont sign a transaction unless the expiration Epoch is greater than or equal to the current epoch".to_owned());
-            let schema = Schema::Object(object);
-            Schema::Object(SchemaObject {
-                subschemas: Some(Box::new(SubschemaValidation {
-                    one_of: Some(vec![
-                        schema,
-                        Schema::Object(SchemaObject {
-                            instance_type: Some(InstanceType::Null.into()),
-                            ..SchemaObject::default()
-                        }),
-                    ]),
-                    ..Default::default()
-                })),
-                ..Default::default()
-            })
         }
     }
 }
