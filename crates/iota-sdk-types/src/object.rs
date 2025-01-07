@@ -639,9 +639,7 @@ mod serialization {
                     }),
                     (
                         ObjectType::Struct(type_),
-                        ReadableObjectData::Move(ReadableMoveStruct {
-                            contents,
-                        }),
+                        ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
                         // switch to if id_opt(&contents).is_none_or(|id| id != object_id) when the
@@ -784,9 +782,7 @@ mod serialization {
                     }),
                     (
                         ObjectType::Struct(type_),
-                        ReadableObjectData::Move(ReadableMoveStruct {
-                            contents,
-                        }),
+                        ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
                         // switch to if id_opt(&contents).is_none_or(|id| id != object_id) when the

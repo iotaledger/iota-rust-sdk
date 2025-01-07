@@ -1,7 +1,7 @@
 use super::{
-    zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
     Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
     Secp256r1Signature, SignatureScheme,
+    zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
 };
 
 pub type WeightUnit = u8;
@@ -182,8 +182,8 @@ mod serialization {
 
     use super::*;
     use crate::{
-        crypto::SignatureFromBytesError, Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey,
-        SignatureScheme,
+        Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
+        crypto::SignatureFromBytesError,
     };
 
     #[derive(serde_derive::Deserialize)]

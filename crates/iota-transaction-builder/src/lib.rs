@@ -475,18 +475,18 @@ mod tests {
 
     use anyhow::Context;
     use base64ct::Encoding;
-    use iota_crypto::{ed25519::Ed25519PrivateKey, IotaSigner};
+    use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
     use iota_graphql_client::{
-        faucet::{CoinInfo, FaucetClient},
         Client, PaginationFilter,
+        faucet::{CoinInfo, FaucetClient},
     };
     use iota_types::{
         Address, ExecutionStatus, IdOperation, ObjectId, ObjectType, TransactionDigest,
         TransactionEffects, TypeTag,
     };
-    use serde::{de, Deserialize, Deserializer};
+    use serde::{Deserialize, Deserializer, de};
 
-    use crate::{unresolved::Input, Function, Serialized, TransactionBuilder};
+    use crate::{Function, Serialized, TransactionBuilder, unresolved::Input};
 
     /// Type corresponding to the output of `iota move build
     /// --dump-bytecode-as-base64`

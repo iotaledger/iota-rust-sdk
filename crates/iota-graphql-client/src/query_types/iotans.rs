@@ -6,7 +6,7 @@
 // IotaNS Queries
 // ===========================================================================
 
-use crate::query_types::{schema, Address as SdkAddress};
+use crate::query_types::{Address as SdkAddress, schema};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(

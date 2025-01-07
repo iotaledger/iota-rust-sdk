@@ -7,8 +7,8 @@ use crate::{ObjectId, ObjectReference};
 mod transaction {
     use super::*;
     use crate::{
-        transaction::{GasPayment, Transaction, TransactionExpiration, TransactionKind},
         Address,
+        transaction::{GasPayment, Transaction, TransactionExpiration, TransactionKind},
     };
 
     #[derive(serde_derive::Serialize)]
@@ -111,11 +111,11 @@ mod transaction {
 mod transaction_kind {
     use super::*;
     use crate::{
+        ChangeEpoch,
         transaction::{
             AuthenticatorStateUpdate, ConsensusCommitPrologue, EndOfEpochTransactionKind,
             GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
         },
-        ChangeEpoch,
     };
 
     #[derive(serde_derive::Serialize)]
@@ -266,8 +266,8 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
     use crate::{
-        transaction::{AuthenticatorStateExpire, ChangeEpoch, EndOfEpochTransactionKind},
         CheckpointDigest,
+        transaction::{AuthenticatorStateExpire, ChangeEpoch, EndOfEpochTransactionKind},
     };
 
     #[derive(serde_derive::Serialize)]
@@ -877,8 +877,8 @@ mod signed_transaction {
 
     use super::*;
     use crate::{
-        transaction::{SignedTransaction, Transaction},
         UserSignature,
+        transaction::{SignedTransaction, Transaction},
     };
 
     /// serde implementation that serializes a transaction prefixed with the
@@ -1086,8 +1086,8 @@ mod test {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use crate::{
-        transaction::{Argument, Input, Transaction},
         ObjectDigest, ObjectId, ObjectReference,
+        transaction::{Argument, Input, Transaction},
     };
 
     #[test]

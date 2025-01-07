@@ -68,7 +68,7 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
-    use crate::{crypto::SignatureFromBytesError, SignatureScheme, SimpleSignature};
+    use crate::{SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
 
     #[derive(serde::Serialize)]
     struct AuthenticatorRef<'a> {
@@ -163,13 +163,14 @@ mod serialization {
 
             // decode unpadded url endoded base64 data per spec:
             // https://w3c.github.io/webauthn/#base64url-encoding
-            let challenge =
-                <base64ct::Base64UrlUnpadded as base64ct::Encoding>::decode_vec(&challenge)
-                    .map_err(|e| {
-                        SignatureFromBytesError::new(format!(
+            let challenge = <base64ct::Base64UrlUnpadded as base64ct::Encoding>::decode_vec(
+                &challenge,
+            )
+            .map_err(|e| {
+                SignatureFromBytesError::new(format!(
                     "unable to decode base64urlunpadded into 3-byte intent and 32-byte digest: {e}"
                 ))
-                    })?;
+            })?;
 
             Ok(Self {
                 public_key,

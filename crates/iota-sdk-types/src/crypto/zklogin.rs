@@ -151,11 +151,7 @@ impl Bn254FieldElement {
         }
 
         // If the value is '0' then just return a slice of length 1 of the final byte
-        if buf.is_empty() {
-            &self.0[31..]
-        } else {
-            buf
-        }
+        if buf.is_empty() { &self.0[31..] } else { buf }
     }
 
     pub fn padded(&self) -> &[u8] {
@@ -249,7 +245,7 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs, SerializeAs};
 
     use super::*;
-    use crate::{crypto::SignatureFromBytesError, SignatureScheme};
+    use crate::{SignatureScheme, crypto::SignatureFromBytesError};
 
     // Serialized format is: iss_bytes_len || iss_bytes ||
     // padded_32_byte_address_seed.
