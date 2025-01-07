@@ -151,7 +151,8 @@ where
 
 /// Creates a new `PageStream` for a paginated query.
 ///
-/// Examples
+/// ## Example
+///
 /// ```rust,ignore
 /// use futures::StreamExt;
 /// use iota_graphql_client::streams::stream_paginated_query;
@@ -161,7 +162,7 @@ where
 ///
 /// let client = Client::new_testnet();
 /// let stream = stream_paginated_query(|pagination_filter, Direction::Forward| {
-///    client.coins(owner, coin_type, pagination_filter })
+///    client.coins(owner, coin_type, pagination_filter)
 /// });
 /// while let Some(result) = stream.next().await {
 ///    match result {

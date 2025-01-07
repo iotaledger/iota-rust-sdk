@@ -44,9 +44,6 @@ jobs:
       - name: Install latest nightly
         run: rustup toolchain install nightly --component rustfmt --allow-downgrade
 
-      - name: feature compatibility
-        run: make check-features
-
       - name: rustfmt
         run: make check-fmt
 
@@ -55,6 +52,9 @@ jobs:
 
       - name: rustdoc
         run: make doc
+
+      - name: feature compatibility
+        run: make check-features
 
   wasm:
     runs-on: ubuntu-latest

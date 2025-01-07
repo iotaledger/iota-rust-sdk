@@ -6,7 +6,7 @@ mod error;
 pub mod unresolved;
 
 use base64ct::Encoding;
-use error::Error;
+pub use error::Error;
 use iota_types::{
     Address, Argument, Command, GasPayment, Identifier, Input, MakeMoveVector, MergeCoins,
     MoveCall, ObjectId, ObjectReference, Publish, SplitCoins, Transaction, TransactionExpiration,
@@ -14,8 +14,8 @@ use iota_types::{
 };
 use serde::Serialize;
 
-/// A builder for creating transactions. Use [`resolve`] to finalize the
-/// transaction data.
+/// A builder for creating transactions. Use [`finish`](Self::finish) to
+/// finalize the transaction data.
 #[derive(Clone, Default, Debug)]
 pub struct TransactionBuilder {
     /// The inputs to the transaction.
@@ -25,7 +25,8 @@ pub struct TransactionBuilder {
     commands: Vec<Command>,
     /// The gas objects that will be used to pay for the transaction. The most
     /// common way is to use [`unresolved::Input::owned`] function to create
-    /// a gas object and use the [`add_gas`] method to set the gas objects.
+    /// a gas object and use the [`add_gas_objects`](Self::add_gas_objects)
+    /// method to set the gas objects.
     gas: Vec<unresolved::Input>,
     /// The gas budget for the transaction.
     gas_budget: Option<u64>,
@@ -86,8 +87,9 @@ impl TransactionBuilder {
     /// Add one or more gas objects to use to pay for the transaction.
     ///
     /// Most commonly the gas can be passed as a reference to an owned/immutable
-    /// [`Object`], or can created using one of the of the constructors of
-    /// the [`unresolved::Input`] enum, e.g., [`unresolved::Input::owned`].
+    /// [`Object`](iota_types::Object), or can created using one of the of
+    /// the constructors of the [`unresolved::Input`] enum, e.g.,
+    /// [`unresolved::Input::owned`].
     pub fn add_gas_objects<O, I>(&mut self, gas: I)
     where
         O: Into<unresolved::Input>,
@@ -213,6 +215,7 @@ impl TransactionBuilder {
     ///
     ///  Examples:
     ///  ### Upgrade a package with some pre-known data.
+    ///
     ///  ```rust,ignore
     ///  use iota_graphql_client::Client;
     ///  use iota_sdk_types::unresolved;
@@ -222,13 +225,14 @@ impl TransactionBuilder {
     ///  let mut tx = TransactionBuilder::new();
     ///  let package_id = "0x...".parse().unwrap();
     ///  let upgrade_cap =
-    /// tx.input(unresolved::Input::by_id("0x...".parse().unwrap());
+    ///  tx.input(unresolved::Input::by_id("0x...".parse().unwrap()));
     ///  let upgrade_policy = tx.input(Serialized(&0u8));
     ///  // the digest of the new package that was compiled
     ///  let package_digest: &[u8] = &[
     ///       68, 89, 156, 51, 190, 35, 155, 216, 248, 49, 135, 170, 106, 42,
-    /// 190, 4, 208, 59, 155,       89, 74, 63, 70, 95, 207, 78, 227, 22,
-    /// 136, 146, 57, 79,  ];
+    ///       190, 4, 208, 59, 155, 89, 74, 63, 70, 95, 207, 78, 227, 22,
+    ///       136, 146, 57, 79
+    ///  ];
     ///  let digest_arg = tx.input(Serialized(&package_digest));
     ///
     ///  // we need this ticket to authorize the upgrade
