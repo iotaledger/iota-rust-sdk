@@ -36,7 +36,6 @@ pub struct GasCostSummary {
 
     /// The burned component of the computation/execution costs
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_cost_burned: u64,
 
     /// Storage cost, it's the sum of all storage cost for all objects created
