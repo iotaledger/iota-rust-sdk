@@ -4,8 +4,8 @@ all:: ci ## Default target, runs the CI process
 
 .PHONY: check-features
 check-features: ## Check feature flags for crates
-	$(MAKE) -C crates/sui-sdk-types check-features
-	$(MAKE) -C crates/sui-crypto check-features
+	$(MAKE) -C crates/iota-sdk-types check-features
+	$(MAKE) -C crates/iota-crypto check-features
 
 .PHONY: check-fmt
 check-fmt: ## Check code formatting
@@ -21,20 +21,20 @@ clippy: ## Run Clippy linter
 
 .PHONY: test
 test: ## Run unit tests
-	cargo nextest run --all-features -p sui-sdk-types -p sui-crypto
+	cargo nextest run --all-features -p iota-sdk-types -p iota-crypto
 	cargo test --doc
 
-package_%.json: crates/sui-transaction-builder/tests/%/Move.toml crates/sui-transaction-builder/tests/%/sources/*.move ## Generate JSON files for tests
-	cd crates/sui-transaction-builder/tests/$(*F) && sui move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
+package_%.json: crates/iota-transaction-builder/tests/%/Move.toml crates/iota-transaction-builder/tests/%/sources/*.move ## Generate JSON files for tests
+	cd crates/iota-transaction-builder/tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
 
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
-	cargo nextest run -p sui-graphql-client -p sui-transaction-builder
+	cargo nextest run -p iota-graphql-client -p iota-transaction-builder
 
 .PHONY: wasm
 wasm: ## Build WASM modules
-	$(MAKE) -C crates/sui-sdk-types wasm
-	$(MAKE) -C crates/sui-crypto wasm
+	$(MAKE) -C crates/iota-sdk-types wasm
+	$(MAKE) -C crates/iota-crypto wasm
 
 .PHONY: doc
 doc: ## Generate documentation

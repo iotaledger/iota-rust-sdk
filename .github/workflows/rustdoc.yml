@@ -2,7 +2,7 @@ name: rustdoc
 
 on:
   push:
-    branches: [ master ]
+    branches: [develop]
   workflow_dispatch:
 
 env:

@@ -1,0 +1,73 @@
+[package]
+name = "iota-sdk-types"
+version = "0.0.2"
+authors = ["IOTA Foundation <info@iota.org>"]
+edition = "2021"
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/mystenlabs/sui-rust-sdk/"
+description = "Core types for the Iota Sdk"
+
+[package.metadata.docs.rs]
+# To build locally:
+# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --all-features --no-deps --open
+all-features = true
+rustdoc-args = [
+  # Enable doc_cfg showing the required features.
+  "--cfg=doc_cfg",
+
+  # Generate links to definition in rustdoc source code pages
+  # https://github.com/rust-lang/rust/pull/84176
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
+[features]
+default = []
+serde = ["dep:serde", "dep:serde_derive", "dep:serde_with", "dep:bcs", "dep:serde_json", "roaring/std"]
+schemars = ["serde", "dep:schemars", "dep:serde_json"]
+rand = ["dep:rand_core"]
+hash = ["dep:blake2"]
+proptest = ["dep:proptest", "dep:test-strategy", "serde"]
+
+[dependencies]
+base64ct = { version = "1.6.0", features = ["alloc"] }
+bnum = "0.12.0"
+bs58 = "0.5.1"
+hex = "0.4.3"
+roaring = { version = "0.10.9", default-features = false }
+winnow = "0.6.20"
+
+# Serialization and Deserialization support
+bcs = { version = "0.1.6", optional = true }
+serde = { version = "1.0.210", optional = true }
+serde_derive = { version = "1.0.210", optional = true }
+serde_json = { version = "1.0.128", optional = true }
+serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
+
+# JsonSchema definitions for types, useful for generating an OpenAPI Specificaiton.
+schemars = { version = "0.8.21", optional = true }
+
+# RNG support
+rand_core = { version = "0.6.4", optional = true }
+
+# Hash support
+blake2 = { version = "0.10.6", optional = true }
+
+# proptest support
+proptest = { version = "1.6.0", default-features = false, features = ["std"], optional = true }
+test-strategy = { version = "0.4", optional = true }
+
+[dev-dependencies]
+bcs = "0.1.6"
+jsonschema = { version = "0.20", default-features = false }
+num-bigint = "0.4.6"
+paste = "1.0.15"
+serde_json = "1.0.128"
+
+[target.wasm32-unknown-unknown.dev-dependencies]
+wasm-bindgen-test = "0.3"
+getrandom = { version = "0.2", features = ["js"] }
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(doc_cfg)'] }
