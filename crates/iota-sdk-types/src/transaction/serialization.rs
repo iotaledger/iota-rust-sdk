@@ -110,19 +110,15 @@ mod transaction {
 
 mod transaction_kind {
     use super::*;
-    use crate::{
-        ChangeEpoch,
-        transaction::{
-            AuthenticatorStateUpdate, ConsensusCommitPrologue, EndOfEpochTransactionKind,
-            GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
-        },
+    use crate::transaction::{
+        AuthenticatorStateUpdate, ConsensusCommitPrologue, EndOfEpochTransactionKind,
+        GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
     };
 
     #[derive(serde_derive::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableTransactionKindRef<'a> {
         ProgrammableTransaction(&'a ProgrammableTransaction),
-        ChangeEpoch(&'a ChangeEpoch),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologue(&'a ConsensusCommitPrologue),
         AuthenticatorStateUpdate(&'a AuthenticatorStateUpdate),
@@ -137,7 +133,6 @@ mod transaction_kind {
     #[serde(rename = "TransactionKind")]
     enum ReadableTransactionKind {
         ProgrammableTransaction(ProgrammableTransaction),
-        ChangeEpoch(ChangeEpoch),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologue(ConsensusCommitPrologue),
         AuthenticatorStateUpdate(AuthenticatorStateUpdate),
@@ -150,7 +145,6 @@ mod transaction_kind {
     #[derive(serde_derive::Serialize)]
     enum BinaryTransactionKindRef<'a> {
         ProgrammableTransaction(&'a ProgrammableTransaction),
-        ChangeEpoch(&'a ChangeEpoch),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologue(&'a ConsensusCommitPrologue),
         AuthenticatorStateUpdate(&'a AuthenticatorStateUpdate),
@@ -160,7 +154,6 @@ mod transaction_kind {
     #[derive(serde_derive::Deserialize)]
     enum BinaryTransactionKind {
         ProgrammableTransaction(ProgrammableTransaction),
-        ChangeEpoch(ChangeEpoch),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologue(ConsensusCommitPrologue),
         AuthenticatorStateUpdate(AuthenticatorStateUpdate),
@@ -178,7 +171,6 @@ mod transaction_kind {
                     Self::ProgrammableTransaction(k) => {
                         ReadableTransactionKindRef::ProgrammableTransaction(k)
                     }
-                    Self::ChangeEpoch(k) => ReadableTransactionKindRef::ChangeEpoch(k),
                     Self::Genesis(k) => ReadableTransactionKindRef::Genesis(k),
                     Self::ConsensusCommitPrologue(k) => {
                         ReadableTransactionKindRef::ConsensusCommitPrologue(k)
@@ -199,7 +191,6 @@ mod transaction_kind {
                     Self::ProgrammableTransaction(k) => {
                         BinaryTransactionKindRef::ProgrammableTransaction(k)
                     }
-                    Self::ChangeEpoch(k) => BinaryTransactionKindRef::ChangeEpoch(k),
                     Self::Genesis(k) => BinaryTransactionKindRef::Genesis(k),
                     Self::ConsensusCommitPrologue(k) => {
                         BinaryTransactionKindRef::ConsensusCommitPrologue(k)
@@ -227,7 +218,6 @@ mod transaction_kind {
                     ReadableTransactionKind::ProgrammableTransaction(k) => {
                         Self::ProgrammableTransaction(k)
                     }
-                    ReadableTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
                     ReadableTransactionKind::Genesis(k) => Self::Genesis(k),
                     ReadableTransactionKind::ConsensusCommitPrologue(k) => {
                         Self::ConsensusCommitPrologue(k)
@@ -245,7 +235,6 @@ mod transaction_kind {
                     BinaryTransactionKind::ProgrammableTransaction(k) => {
                         Self::ProgrammableTransaction(k)
                     }
-                    BinaryTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
                     BinaryTransactionKind::Genesis(k) => Self::Genesis(k),
                     BinaryTransactionKind::ConsensusCommitPrologue(k) => {
                         Self::ConsensusCommitPrologue(k)
