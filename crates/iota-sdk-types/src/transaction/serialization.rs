@@ -265,8 +265,6 @@ mod end_of_epoch {
         ChangeEpoch(&'a ChangeEpoch),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-        RandomnessStateCreate,
-        DenyListStateCreate,
         BridgeStateCreate {
             chain_id: &'a CheckpointDigest,
         },
@@ -282,8 +280,6 @@ mod end_of_epoch {
         ChangeEpoch(ChangeEpoch),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
-        RandomnessStateCreate,
-        DenyListStateCreate,
         BridgeStateCreate {
             chain_id: CheckpointDigest,
         },
@@ -298,8 +294,6 @@ mod end_of_epoch {
         ChangeEpoch(&'a ChangeEpoch),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-        RandomnessStateCreate,
-        DenyListStateCreate,
         BridgeStateCreate { chain_id: &'a CheckpointDigest },
         BridgeCommitteeInit { bridge_object_version: u64 },
     }
@@ -309,8 +303,6 @@ mod end_of_epoch {
         ChangeEpoch(ChangeEpoch),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
-        RandomnessStateCreate,
-        DenyListStateCreate,
         BridgeStateCreate { chain_id: CheckpointDigest },
         BridgeCommitteeInit { bridge_object_version: u64 },
     }
@@ -328,12 +320,6 @@ mod end_of_epoch {
                     }
                     Self::AuthenticatorStateExpire(k) => {
                         ReadableEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
-                    }
-                    Self::RandomnessStateCreate => {
-                        ReadableEndOfEpochTransactionKindRef::RandomnessStateCreate
-                    }
-                    Self::DenyListStateCreate => {
-                        ReadableEndOfEpochTransactionKindRef::DenyListStateCreate
                     }
                     Self::BridgeStateCreate { chain_id } => {
                         ReadableEndOfEpochTransactionKindRef::BridgeStateCreate { chain_id }
@@ -353,12 +339,6 @@ mod end_of_epoch {
                     }
                     Self::AuthenticatorStateExpire(k) => {
                         BinaryEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
-                    }
-                    Self::RandomnessStateCreate => {
-                        BinaryEndOfEpochTransactionKindRef::RandomnessStateCreate
-                    }
-                    Self::DenyListStateCreate => {
-                        BinaryEndOfEpochTransactionKindRef::DenyListStateCreate
                     }
                     Self::BridgeStateCreate { chain_id } => {
                         BinaryEndOfEpochTransactionKindRef::BridgeStateCreate { chain_id }
@@ -389,12 +369,6 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
                             Self::AuthenticatorStateExpire(k)
                         }
-                        ReadableEndOfEpochTransactionKind::RandomnessStateCreate => {
-                            Self::RandomnessStateCreate
-                        }
-                        ReadableEndOfEpochTransactionKind::DenyListStateCreate => {
-                            Self::DenyListStateCreate
-                        }
                         ReadableEndOfEpochTransactionKind::BridgeStateCreate { chain_id } => {
                             Self::BridgeStateCreate { chain_id }
                         }
@@ -414,12 +388,6 @@ mod end_of_epoch {
                         }
                         BinaryEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
                             Self::AuthenticatorStateExpire(k)
-                        }
-                        BinaryEndOfEpochTransactionKind::RandomnessStateCreate => {
-                            Self::RandomnessStateCreate
-                        }
-                        BinaryEndOfEpochTransactionKind::DenyListStateCreate => {
-                            Self::DenyListStateCreate
                         }
                         BinaryEndOfEpochTransactionKind::BridgeStateCreate { chain_id } => {
                             Self::BridgeStateCreate { chain_id }
