@@ -295,7 +295,7 @@ mod serialization {
     pub enum ClientDataType {
         /// Serializes to the string `"webauthn.get"`
         ///
-        /// Passkey's in Iota only support the value `"webauthn.get"`, other
+        /// Passkey's in IOTA only support the value `"webauthn.get"`, other
         /// values will be rejected.
         #[serde(rename = "webauthn.get")]
         Get,

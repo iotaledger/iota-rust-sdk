@@ -92,7 +92,7 @@ pub enum ObjectData {
     Struct(MoveStruct),
     /// Map from each module name to raw serialized Move module bytes
     Package(MovePackage),
-    // ... Iota "native" types go here
+    // ... IOTA "native" types go here
 }
 
 // serde_bytes::ByteBuf is an analog of Vec<u8> with built-in fast
@@ -231,7 +231,7 @@ impl MoveStruct {
     }
 }
 
-/// Type of a Iota object
+/// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
@@ -417,7 +417,7 @@ mod serialization {
     enum MoveStructType {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(StructTag),
-        /// A IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
+        /// An IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
         GasCoin,
         /// A record of a staked IOTA coin (i.e.,
         /// `0x3::staking_pool::StakedIota`)
@@ -435,7 +435,7 @@ mod serialization {
     enum MoveStructTypeRef<'a> {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(&'a StructTag),
-        /// A IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
+        /// An IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
         GasCoin,
         /// A record of a staked IOTA coin (i.e.,
         /// `0x3::staking_pool::StakedIota`)
