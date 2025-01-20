@@ -22,7 +22,7 @@ clippy: ## Run Clippy linter
 .PHONY: test
 test: ## Run unit tests
 	cargo nextest run --all-features -p iota-sdk-types -p iota-crypto
-	cargo test --doc
+	cargo test --all-features --doc
 
 package_%.json: crates/iota-transaction-builder/tests/%/Move.toml crates/iota-transaction-builder/tests/%/sources/*.move ## Generate JSON files for tests
 	cd crates/iota-transaction-builder/tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
