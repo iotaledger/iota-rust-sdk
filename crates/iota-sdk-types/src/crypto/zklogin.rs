@@ -79,7 +79,6 @@ pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-// TODO ensure iss is less than 255 bytes long
 pub struct ZkLoginPublicIdentifier {
     iss: String,
     address_seed: Bn254FieldElement,
@@ -308,7 +307,8 @@ mod serialization {
                 }
 
                 let Readable { iss, address_seed } = Deserialize::deserialize(deserializer)?;
-                Ok(Self { iss, address_seed })
+                Self::new(iss, address_seed)
+                    .ok_or_else(|| serde::de::Error::custom("invalid zklogin public identifier"))
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
                 let iss_len = *bytes
@@ -326,10 +326,8 @@ mod serialization {
                     .map_err(serde::de::Error::custom)
                     .map(Bn254FieldElement)?;
 
-                Ok(Self {
-                    iss: iss.into(),
-                    address_seed,
-                })
+                Self::new(iss.into(), address_seed)
+                    .ok_or_else(|| serde::de::Error::custom("invalid zklogin public identifier"))
             }
         }
     }
