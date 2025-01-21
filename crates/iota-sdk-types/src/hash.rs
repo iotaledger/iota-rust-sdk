@@ -48,7 +48,7 @@ impl std::io::Write for Hasher {
 }
 
 impl crate::Ed25519PublicKey {
-    pub fn to_address(&self) -> Address {
+    pub fn derive_address(&self) -> Address {
         let mut hasher = Hasher::new();
         self.write_into_hasher(&mut hasher);
         let digest = hasher.finalize();
@@ -62,7 +62,7 @@ impl crate::Ed25519PublicKey {
 }
 
 impl crate::Secp256k1PublicKey {
-    pub fn to_address(&self) -> Address {
+    pub fn derive_address(&self) -> Address {
         let mut hasher = Hasher::new();
         self.write_into_hasher(&mut hasher);
         let digest = hasher.finalize();
@@ -76,7 +76,7 @@ impl crate::Secp256k1PublicKey {
 }
 
 impl crate::Secp256r1PublicKey {
-    pub fn to_address(&self) -> Address {
+    pub fn derive_address(&self) -> Address {
         let mut hasher = Hasher::new();
         self.write_into_hasher(&mut hasher);
         let digest = hasher.finalize();
@@ -91,7 +91,7 @@ impl crate::Secp256r1PublicKey {
 
 impl crate::ZkLoginPublicIdentifier {
     /// Define as iss_bytes_len || iss_bytes || padded_32_byte_address_seed.
-    pub fn to_address_padded(&self) -> Address {
+    pub fn derive_address_padded(&self) -> Address {
         let mut hasher = Hasher::new();
         self.write_into_hasher_padded(&mut hasher);
         let digest = hasher.finalize();
@@ -106,7 +106,7 @@ impl crate::ZkLoginPublicIdentifier {
     }
 
     /// Define as iss_bytes_len || iss_bytes || unpadded_32_byte_address_seed.
-    pub fn to_address_unpadded(&self) -> Address {
+    pub fn derive_address_unpadded(&self) -> Address {
         let mut hasher = Hasher::new();
         hasher.update([self.scheme().to_u8()]);
         hasher.update([self.iss().len() as u8]); // TODO enforce iss is less than 255 bytes
@@ -118,7 +118,7 @@ impl crate::ZkLoginPublicIdentifier {
 }
 
 impl crate::PasskeyPublicKey {
-    pub fn to_address(&self) -> Address {
+    pub fn derive_address(&self) -> Address {
         let mut hasher = Hasher::new();
         self.write_into_hasher(&mut hasher);
         let digest = hasher.finalize();
@@ -140,7 +140,7 @@ impl crate::MultisigCommittee {
     ///
     /// When flag_i is ZkLogin, pk_i refers to [struct ZkLoginPublicIdentifier]
     /// derived from padded address seed in bytes and iss.
-    pub fn to_address(&self) -> Address {
+    pub fn derive_address(&self) -> Address {
         use crate::MultisigMemberPublicKey::*;
 
         let mut hasher = Hasher::new();
