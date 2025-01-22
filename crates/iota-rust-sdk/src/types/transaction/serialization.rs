@@ -281,7 +281,9 @@ mod end_of_epoch {
     use super::*;
     use crate::types::{
         CheckpointDigest,
-        transaction::{AuthenticatorStateExpire, ChangeEpoch, EndOfEpochTransactionKind},
+        transaction::{
+            AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, EndOfEpochTransactionKind,
+        },
     };
 
     #[derive(serde_derive::Serialize)]
