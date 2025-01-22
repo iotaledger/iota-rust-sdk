@@ -225,7 +225,7 @@ impl TransactionBuilder {
     ///  let mut tx = TransactionBuilder::new();
     ///  let package_id = "0x...".parse().unwrap();
     ///  let upgrade_cap =
-    ///  tx.input(unresolved::Input::by_id("0x...".parse().unwrap()));
+    /// tx.input(unresolved::Input::by_id("0x...".parse().unwrap()));
     ///  let upgrade_policy = tx.input(Serialized(&0u8));
     ///  // the digest of the new package that was compiled
     ///  let package_digest: &[u8] = &[
@@ -285,8 +285,8 @@ impl TransactionBuilder {
     }
 
     /// Assuming everything is resolved, convert this transaction into the
-    /// resolved form. Returns a [`Transaction`] if successful, or an [`Error`]
-    /// if not.
+    /// resolved form. Returns a [`Transaction`] if successful, or an `Error` if
+    /// not.
     pub fn finish(self) -> Result<Transaction, Error> {
         let Some(sender) = self.sender else {
             return Err(Error::MissingSender);

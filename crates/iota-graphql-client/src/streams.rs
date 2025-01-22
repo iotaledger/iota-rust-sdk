@@ -164,6 +164,7 @@ where
 /// let stream = stream_paginated_query(|pagination_filter, Direction::Forward| {
 ///    client.coins(owner, coin_type, pagination_filter)
 /// });
+///
 /// while let Some(result) = stream.next().await {
 ///    match result {
 ///        Ok(coin) => println!("Got coin: {:?}", coin),
