@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use winnow::{
-    ModalResult, Parser,
+    ModalParser, ModalResult, Parser,
     ascii::space0,
     combinator::{alt, delimited, eof, opt, separated},
     stream::AsChar,
@@ -31,7 +31,7 @@ fn identifier<'s>(input: &mut &'s str) -> ModalResult<&'s str> {
 
 fn valid_remainder<'a>(
     minimum: usize,
-) -> impl Parser<&'a str, &'a str, winnow::error::ContextError> {
+) -> impl ModalParser<&'a str, &'a str, winnow::error::ContextError> {
     move |input: &mut &'a str| {
         take_while(
             // Use .. instead of ..= since we've already processed a single character
