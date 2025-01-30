@@ -27,6 +27,17 @@
 /// rebate then is reduced by the "nonrefundable rate" such that:
 /// `potential_rebate(storage cost of deleted/mutated objects) =
 /// storage_rebate + non_refundable_storage_fee`
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// gas-cost-summary = u64 ; computation-cost
+///                    u64 ; storage-cost
+///                    u64 ; storage-rebate
+///                    u64 ; non-refundable-storage-fee
+/// ```
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",

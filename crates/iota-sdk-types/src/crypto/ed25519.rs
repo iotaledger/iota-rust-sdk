@@ -4,6 +4,15 @@
 
 //! Implementation of ed25519 public-key cryptogrophy.
 
+/// An ed25519 public key.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// ed25519-public-key = 32OCTECT
+/// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(
     feature = "serde",
@@ -103,6 +112,15 @@ impl std::fmt::Debug for Ed25519PublicKey {
     }
 }
 
+/// An ed25519 signature.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// ed25519-signature = 64OCTECT
+/// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(
     feature = "serde",

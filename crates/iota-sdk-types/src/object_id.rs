@@ -4,15 +4,24 @@
 
 use super::Address;
 
-/// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on the Sui
-/// blockchain.
+/// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
+/// the IOTA blockchain.
 ///
 /// ## Relationship to Address
 ///
-/// [`Address`]es and `ObjectId`s share the same 32-byte addressable space but are derived
-/// leveraging different domain-separator values to ensure, cryptographically, that there won't be
-/// any overlap, e.g. there can't be a valid `Object` whose `ObjectId` is equal to that of the
-/// `Address` of a user account.
+/// [`Address`]es and `ObjectId`s share the same 32-byte addressable space but
+/// are derived leveraging different domain-separator values to ensure,
+/// cryptographically, that there won't be any overlap, e.g. there can't be a
+/// valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
+/// account.
+///
+/// # BCS
+///
+/// An `ObjectId`'s BCS serialized form is defined by the following:
+///
+/// ```text
+/// object-id = 32*OCTET
+/// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(
     feature = "serde",

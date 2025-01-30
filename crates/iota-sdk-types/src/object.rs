@@ -8,7 +8,17 @@ use super::{Address, Identifier, ObjectDigest, ObjectId, StructTag, TransactionD
 
 pub type Version = u64;
 
-/// A reference to an object, which contains the object's id, version, and digest.
+/// Reference to an object
+///
+/// Contains sufficient information to uniquely identify a specific object.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-ref = object-id u64 digest
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
@@ -28,7 +38,8 @@ pub struct ObjectReference {
 }
 
 impl ObjectReference {
-    /// Creates a new object reference from the object's id, version, and digest.
+    /// Creates a new object reference from the object's id, version, and
+    /// digest.
     pub fn new(object_id: ObjectId, version: Version, digest: ObjectDigest) -> Self {
         Self {
             object_id,
@@ -37,17 +48,20 @@ impl ObjectReference {
         }
     }
 
-    /// Returns a reference to the object id that this ObjectReference is referring to.
+    /// Returns a reference to the object id that this ObjectReference is
+    /// referring to.
     pub fn object_id(&self) -> &ObjectId {
         &self.object_id
     }
 
-    /// Returns the version of the object that this ObjectReference is referring to.
+    /// Returns the version of the object that this ObjectReference is referring
+    /// to.
     pub fn version(&self) -> Version {
         self.version
     }
 
-    /// Returns the digest of the object that this ObjectReference is referring to.
+    /// Returns the digest of the object that this ObjectReference is referring
+    /// to.
     pub fn digest(&self) -> &ObjectDigest {
         &self.digest
     }
@@ -64,7 +78,20 @@ impl ObjectReference {
     }
 }
 
-/// An enum representing the different types of owners for an object.
+/// Enum of different types of ownership for an object.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// owner = owner-address / owner-object / owner-shared / owner-immutable
+///
+/// owner-address   = %x00 address
+/// owner-object    = %x01 object-id
+/// owner-shared    = %x02 u64
+/// owner-immutable = %x03
+/// ```
 #[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(
     feature = "serde",
@@ -74,13 +101,10 @@ impl ObjectReference {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum Owner {
-    /// # Address Owned
     /// Object is exclusively owned by a single address, and is mutable.
     Address(Address),
-    /// # Object Owned
     /// Object is exclusively owned by a single object, and is mutable.
     Object(ObjectId),
-    /// # Shared Object
     /// Object is shared, can be used by any address, and is mutable.
     Shared(
         /// The version at which the object became shared
@@ -88,11 +112,22 @@ pub enum Owner {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         Version,
     ),
-    /// # Immutable
     /// Object is immutable, and hence ownership doesn't matter.
     Immutable,
 }
 
+/// Object data, either a package or struct
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-data = object-data-struct / object-data-package
+///
+/// object-data-struct  = %x00 object-move-struct
+/// object-data-package = %x01 object-move-package
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
@@ -109,8 +144,19 @@ pub enum ObjectData {
     // ... IOTA "native" types go here
 }
 
-// serde_bytes::ByteBuf is an analog of Vec<u8> with built-in fast
-// serialization. #[serde_as]
+/// A move package
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-move-package = object-id u64 move-modules type-origin-table linkage-table
+///
+/// move-modules = map (identifier bytes)
+/// type-origin-table = vector type-origin
+/// linkage-table = map (object-id upgrade-info)
+/// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
 #[cfg_attr(
     feature = "serde",
@@ -118,7 +164,9 @@ pub enum ObjectData {
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MovePackage {
+    /// Address or Id of this package
     pub id: ObjectId,
+
     /// Most move packages are uniquely identified by their ID (i.e. there is
     /// only one version per ID), but the version is still stored because
     /// one package may be an upgrade of another (at a different ID), in
@@ -133,6 +181,7 @@ pub struct MovePackage {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
 
+    /// Set of modules defined by this package
     #[cfg_attr(
         feature = "serde",
         serde(with = "::serde_with::As::<BTreeMap<::serde_with::Same, ::serde_with::Bytes>>")
@@ -149,8 +198,8 @@ pub struct MovePackage {
     /// stored as a vector for simple serialization and deserialization.
     pub type_origin_table: Vec<TypeOrigin>,
 
-    // For each dependency, maps original package ID to the info about the (upgraded) dependency
-    // version that this package is using
+    /// For each dependency, maps original package ID to the info about the
+    /// (upgraded) dependency version that this package is using
     #[cfg_attr(
         feature = "proptest",
         strategy(
@@ -161,6 +210,14 @@ pub struct MovePackage {
 }
 
 /// Identifies a struct and the module it was defined in
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// type-origin = identifier identifier object-id
+/// ```
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[cfg_attr(
     feature = "serde",
@@ -175,6 +232,14 @@ pub struct TypeOrigin {
 }
 
 /// Upgraded package info for the linkage table
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// upgrade-info = object-id u64
+/// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
 #[cfg_attr(
     feature = "serde",
@@ -191,6 +256,24 @@ pub struct UpgradeInfo {
     pub upgraded_version: Version,
 }
 
+/// A move struct
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-move-struct = compressed-struct-tag bool u64 object-contents
+///
+/// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
+/// other-struct-type     = %x00 struct-tag
+/// gas-coin-type         = %x01
+/// staked-iota-type      = %x02
+/// coin-type             = %x03 type-tag
+///
+/// ; first 32 bytes of the contents are the object's object-id
+/// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+/// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
 // TODO hand-roll a Deserialize impl to enforce that an objectid is present
 #[cfg_attr(
@@ -199,7 +282,7 @@ pub struct UpgradeInfo {
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveStruct {
-    /// The type of this object. Immutable
+    /// The type of this object
     #[cfg_attr(
         feature = "serde",
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
@@ -228,6 +311,15 @@ pub enum ObjectType {
     Struct(StructTag),
 }
 
+/// An object on the IOTA blockchain
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object = object-data owner digest u64
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Object {
@@ -244,6 +336,7 @@ pub struct Object {
 }
 
 impl Object {
+    /// Build an object
     pub fn new(
         data: ObjectData,
         owner: Owner,
@@ -258,6 +351,7 @@ impl Object {
         }
     }
 
+    /// Return this object's id
     pub fn object_id(&self) -> ObjectId {
         match &self.data {
             ObjectData::Struct(struct_) => id_opt(&struct_.contents).unwrap(),
@@ -265,6 +359,7 @@ impl Object {
         }
     }
 
+    /// Return this object's version
     pub fn version(&self) -> Version {
         match &self.data {
             ObjectData::Struct(struct_) => struct_.version,
@@ -272,6 +367,7 @@ impl Object {
         }
     }
 
+    /// Return this object's type
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
             ObjectData::Struct(struct_) => ObjectType::Struct(struct_.type_.clone()),
@@ -279,6 +375,7 @@ impl Object {
         }
     }
 
+    /// Try to interpret this object as a move struct
     pub fn as_struct(&self) -> Option<&MoveStruct> {
         match &self.data {
             ObjectData::Struct(struct_) => Some(struct_),
@@ -286,18 +383,25 @@ impl Object {
         }
     }
 
+    /// Return this object's owner
     pub fn owner(&self) -> &Owner {
         &self.owner
     }
 
+    /// Return this object's data
     pub fn data(&self) -> &ObjectData {
         &self.data
     }
 
+    /// Return the digest of the transaction that last modified this object
     pub fn previous_transaction(&self) -> TransactionDigest {
         self.previous_transaction
     }
 
+    /// Return the storage rebate locked in this object
+    ///
+    /// Storage rebates are credited to the gas coin used in a transaction that
+    /// deletes this object.
     pub fn storage_rebate(&self) -> u64 {
         self.storage_rebate
     }
@@ -313,6 +417,18 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
     ))
 }
 
+/// An object part of the initial chain state
+///
+/// `GenesisObject`'s are included as a part of genesis, the initial
+/// checkpoint/transaction, that initializes the state of the blockchain.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// genesis-object = object-data owner
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GenesisObject {

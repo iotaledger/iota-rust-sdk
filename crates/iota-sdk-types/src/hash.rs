@@ -63,7 +63,7 @@ impl crate::Ed25519PublicKey {
     /// `hash( 0x00 || 32-byte ed25519 public key)`
     ///
     /// ```
-    /// use sui_sdk_types::{Address, Ed25519PublicKey, hash::Hasher};
+    /// use iota_sdk_types::{Address, Ed25519PublicKey, hash::Hasher};
     ///
     /// let public_key_bytes = [0; 32];
     /// let mut hasher = Hasher::new();
@@ -98,7 +98,7 @@ impl crate::Secp256k1PublicKey {
     /// `hash( 0x01 || 33-byte secp256k1 public key)`
     ///
     /// ```
-    /// use sui_sdk_types::{Address, Secp256k1PublicKey, hash::Hasher};
+    /// use iota_sdk_types::{Address, Secp256k1PublicKey, hash::Hasher};
     ///
     /// let public_key_bytes = [0; 33];
     /// let mut hasher = Hasher::new();
@@ -133,7 +133,7 @@ impl crate::Secp256r1PublicKey {
     /// `hash( 0x02 || 33-byte secp256r1 public key)`
     ///
     /// ```
-    /// use sui_sdk_types::{Address, Secp256r1PublicKey, hash::Hasher};
+    /// use iota_sdk_types::{Address, Secp256r1PublicKey, hash::Hasher};
     ///
     /// let public_key_bytes = [0; 33];
     /// let mut hasher = Hasher::new();
