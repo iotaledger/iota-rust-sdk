@@ -10,6 +10,12 @@ macro_rules! serialization_test {
             #[cfg_attr(target_arch = "wasm32", proptest(cases = 50))]
             #[cfg_attr(not(target_arch = "wasm32"), proptest)]
             #[allow(non_snake_case)]
+            fn [< test_valid_json_schema_ $type >] (instance: $type) {
+                assert_valid_json_schema(&instance);
+            }
+            #[cfg_attr(target_arch = "wasm32", proptest(cases = 50))]
+            #[cfg_attr(not(target_arch = "wasm32"), proptest)]
+            #[allow(non_snake_case)]
             fn [< test_roundtrip_ $type >] (instance: $type) {
                 assert_roundtrip(&instance);
             }
@@ -24,6 +30,28 @@ macro_rules! serialization_test {
             }
         }
     };
+}
+
+fn assert_valid_json_schema<T>(instance: &T)
+where
+    T: serde::Serialize + schemars::JsonSchema,
+{
+    let root_schema = schemars::gen::SchemaGenerator::default().into_root_schema_for::<T>();
+    let schema = serde_json::json!(root_schema);
+    let compiled = jsonschema::Validator::new(&schema).unwrap();
+    let instance = serde_json::json!(instance);
+
+    let result = compiled.validate(&instance);
+    let r = result.is_ok();
+    if let Err(errors) = result {
+        for error in errors {
+            println!("Validation error: {}", error);
+            println!("Instance path: {}", error.instance_path);
+        }
+    }
+
+    // assert!(compiled.is_valid(&instance));
+    assert!(r);
 }
 
 fn assert_roundtrip<T>(instance: &T)

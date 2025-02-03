@@ -9,10 +9,12 @@ pub type Version = u64;
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ObjectReference {
     object_id: ObjectId,
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     version: Version,
     digest: ObjectDigest,
 }
@@ -55,6 +57,7 @@ impl ObjectReference {
     derive(serde_derive::Serialize, serde_derive::Deserialize),
     serde(rename_all = "lowercase")
 )]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum Owner {
     /// # Address Owned
@@ -68,6 +71,7 @@ pub enum Owner {
     Shared(
         /// The version at which the object became shared
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         Version,
     ),
     /// # Immutable
@@ -148,6 +152,7 @@ pub struct MovePackage {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TypeOrigin {
     pub module_name: Identifier,
@@ -161,12 +166,14 @@ pub struct TypeOrigin {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct UpgradeInfo {
     /// Id of the upgraded packages
     pub upgraded_id: ObjectId,
     /// Version of the upgraded package
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub upgraded_version: Version,
 }
 
@@ -520,14 +527,17 @@ mod serialization {
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(rename = "Object")]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct ReadableObject {
         object_id: ObjectId,
         #[serde(with = "crate::_serde::ReadableDisplay")]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         owner: Owner,
 
         #[serde(with = "::serde_with::As::<ReadableObjectType>")]
         #[serde(rename = "type")]
+        #[cfg_attr(feature = "schemars", schemars(with = "String"))]
         type_: ObjectType,
 
         #[serde(flatten)]
@@ -535,20 +545,46 @@ mod serialization {
 
         previous_transaction: TransactionDigest,
         #[serde(with = "crate::_serde::ReadableDisplay")]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         storage_rebate: u64,
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for Object {
+        fn schema_name() -> String {
+            ReadableObject::schema_name()
+        }
+
+        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+            ReadableObject::json_schema(gen)
+        }
     }
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(untagged)]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "ObjectData")
+    )]
     enum ReadableObjectData {
         Move(ReadableMoveStruct),
         Package(ReadablePackage),
     }
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "Package")
+    )]
     struct ReadablePackage {
         #[serde(
             with = "::serde_with::As::<BTreeMap<::serde_with::Same, crate::_serde::Base64Encoded>>"
+        )]
+        #[cfg_attr(
+            feature = "schemars",
+            schemars(with = "BTreeMap<Identifier, crate::_schemars::Base64>")
         )]
         modules: BTreeMap<Identifier, Vec<u8>>,
         type_origin_table: Vec<TypeOrigin>,
@@ -556,8 +592,14 @@ mod serialization {
     }
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "MoveStruct")
+    )]
     struct ReadableMoveStruct {
         #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
         contents: Vec<u8>,
     }
 
@@ -692,18 +734,32 @@ mod serialization {
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(rename = "GenesisObject")]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct ReadableGenesisObject {
         object_id: ObjectId,
         #[serde(with = "crate::_serde::ReadableDisplay")]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         owner: Owner,
 
         #[serde(with = "::serde_with::As::<ReadableObjectType>")]
         #[serde(rename = "type")]
+        #[cfg_attr(feature = "schemars", schemars(with = "String"))]
         type_: ObjectType,
 
         #[serde(flatten)]
         data: ReadableObjectData,
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for GenesisObject {
+        fn schema_name() -> String {
+            ReadableGenesisObject::schema_name()
+        }
+
+        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+            ReadableGenesisObject::json_schema(gen)
+        }
     }
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]

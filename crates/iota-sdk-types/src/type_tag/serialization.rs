@@ -240,6 +240,83 @@ impl<'de> Deserialize<'de> for StructTag {
     }
 }
 
+#[cfg(feature = "schemars")]
+mod json_schema {
+    use schemars::{
+        JsonSchema,
+        schema::{InstanceType, Metadata, SchemaObject, StringValidation},
+    };
+
+    use super::*;
+
+    pub(crate) static ALLOWED_IDENTIFIERS: &str =
+        r"(?:[a-zA-Z][a-zA-Z0-9_]{0,127})|(?:_[a-zA-Z0-9_]{0,127})";
+
+    impl JsonSchema for Identifier {
+        fn schema_name() -> String {
+            "Identifier".to_owned()
+        }
+
+        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+            SchemaObject {
+                metadata: Some(Box::new(Metadata {
+                    title: Some(Self::schema_name()),
+                    description: Some("A Move Identifier".to_owned()),
+                    examples: vec![serde_json::json!("iota")],
+                    ..Default::default()
+                })),
+                instance_type: Some(InstanceType::String.into()),
+                string: Some(Box::new(StringValidation {
+                    pattern: Some(ALLOWED_IDENTIFIERS.to_owned()),
+                    ..Default::default()
+                })),
+                ..Default::default()
+            }
+            .into()
+        }
+    }
+
+    impl JsonSchema for TypeTag {
+        fn schema_name() -> String {
+            "TypeTag".to_owned()
+        }
+
+        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+            SchemaObject {
+                metadata: Some(Box::new(Metadata {
+                    title: Some(Self::schema_name()),
+                    description: Some("A Move TypeTag".to_owned()),
+                    examples: vec![serde_json::json!("vector<u8>")],
+                    ..Default::default()
+                })),
+                instance_type: Some(InstanceType::String.into()),
+                ..Default::default()
+            }
+            .into()
+        }
+    }
+
+    impl JsonSchema for StructTag {
+        fn schema_name() -> String {
+            "StructTag".to_owned()
+        }
+
+        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+            SchemaObject {
+                metadata: Some(Box::new(Metadata {
+                    title: Some(Self::schema_name()),
+                    description: Some("A Move StructTag".to_owned()),
+                    examples: vec![serde_json::json!("0x2::coin::Coin<0x2::iota::IOTA>")],
+                    ..Default::default()
+                })),
+                instance_type: Some(InstanceType::String.into()),
+                ..Default::default()
+            }
+            .into()
+        }
+    }
+}
+
 #[cfg(test)]
 mod test {
     use std::str::FromStr;
