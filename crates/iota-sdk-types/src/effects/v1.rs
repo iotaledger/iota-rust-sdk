@@ -94,6 +94,7 @@ pub enum UnchangedSharedKind {
     /// ObjectDigest for protocol correctness, but it will make it easier to
     /// verify untrusted read.
     ReadOnlyRoot {
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         digest: ObjectDigest,
     },
