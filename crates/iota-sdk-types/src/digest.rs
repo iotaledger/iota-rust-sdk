@@ -133,7 +133,7 @@ impl std::fmt::LowerHex for Digest {
     }
 }
 
-// Unfortunately iota's binary representation of digests is prefixed with its
+// Unfortunately IOTA's binary representation of digests is prefixed with its
 // length meaning its serialized binary form is 33 bytes long (in bcs) vs a more
 // compact 32 bytes.
 #[cfg(feature = "serde")]

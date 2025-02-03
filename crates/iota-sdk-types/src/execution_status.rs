@@ -64,7 +64,7 @@ pub enum ExecutionError {
     /// The modules in the package must have their self-addresses set to zero.
     PublishErrorNonZeroAddress,
 
-    /// Iota Move Bytecode Verification Error.
+    /// IOTA Move Bytecode Verification Error.
     IotaMoveVerificationError,
 
     // MoveVm Errors
@@ -146,7 +146,7 @@ pub enum ExecutionError {
     /// Certificate is on the deny list
     CertificateDenied,
 
-    /// Iota Move Bytecode verification timed out.
+    /// IOTA Move Bytecode verification timed out.
     IotaMoveVerificationTimeout,
 
     /// The requested shared object operation is not allowed
