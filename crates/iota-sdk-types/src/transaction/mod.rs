@@ -99,8 +99,8 @@ pub enum TransactionKind {
     /// calls
     ProgrammableTransaction(ProgrammableTransaction),
     Genesis(GenesisTransaction),
-    ConsensusCommitPrologue(ConsensusCommitPrologue),
-    AuthenticatorStateUpdate(AuthenticatorStateUpdate),
+    ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
+    AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
 
     /// A list of transactions that are allowed to run at the end of the epoch.
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
@@ -155,7 +155,7 @@ pub struct AuthenticatorStateExpire {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct AuthenticatorStateUpdate {
+pub struct AuthenticatorStateUpdateV1 {
     /// Epoch of the authenticator state update transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -239,7 +239,7 @@ pub struct VersionAssignment {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ConsensusCommitPrologue {
+pub struct ConsensusCommitPrologueV1 {
     /// Epoch of the commit prologue transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
