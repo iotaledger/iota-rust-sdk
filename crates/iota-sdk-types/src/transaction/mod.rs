@@ -145,7 +145,7 @@ pub struct AuthenticatorStateExpire {
     /// The initial version of the authenticator object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub authenticator_object_initial_shared_version: u64,
+    pub authenticator_obj_initial_shared_version: u64,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
