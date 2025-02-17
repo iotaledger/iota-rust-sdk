@@ -1,5 +1,9 @@
 use super::{Bls12381PublicKey, Bls12381Signature};
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/validator.rs
 use crate::checkpoint::{EpochId, StakeUnit};
+========
+use crate::types::checkpoint::{EpochId, StakeUnit};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/validator.rs
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(

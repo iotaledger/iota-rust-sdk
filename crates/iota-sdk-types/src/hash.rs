@@ -1,6 +1,10 @@
 use blake2::Digest as DigestTrait;
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
 use crate::{Address, Digest};
+========
+use crate::types::{Address, Digest};
+>>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
 
 type Blake2b256 = blake2::Blake2b<blake2::digest::consts::U32>;
 
@@ -225,6 +229,49 @@ mod type_digest {
     }
 }
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+mod signing_message {
+    use crate::{
+        Digest, Intent, IntentAppId, IntentScope, IntentVersion, PersonalMessage, SigningDigest,
+        Transaction, hash::Hasher,
+    };
+
+    impl Transaction {
+        pub fn signing_digest(&self) -> SigningDigest {
+            const INTENT: Intent = Intent {
+                scope: IntentScope::TransactionData,
+                version: IntentVersion::V0,
+                app_id: IntentAppId::Iota,
+            };
+            let digest = signing_digest(INTENT, self);
+            digest.into_inner()
+        }
+    }
+
+    fn signing_digest<T: serde::Serialize + ?Sized>(intent: Intent, ty: &T) -> Digest {
+        let mut hasher = Hasher::new();
+        hasher.update(intent.to_bytes());
+        bcs::serialize_into(&mut hasher, ty).unwrap();
+        hasher.finalize()
+    }
+
+    impl<'a> PersonalMessage<'a> {
+        pub fn signing_digest(&self) -> SigningDigest {
+            const INTENT: Intent = Intent {
+                scope: IntentScope::PersonalMessage,
+                version: IntentVersion::V0,
+                app_id: IntentAppId::Iota,
+            };
+            let digest = signing_digest(INTENT, &self.0);
+            digest.into_inner()
+        }
+    }
+}
+
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
 /// A 1-byte domain separator for hashing Object ID in IOTA. It is starting from
 /// 0xf0 to ensure no hashing collision for any ObjectId vs Address which is
 /// derived as the hash of `flag || pubkey`.
@@ -242,7 +289,11 @@ impl crate::ObjectId {
     ///
     /// `count` is the number of objects that have been created during a
     /// transactions.
+<<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
     pub fn derive_id(digest: crate::TransactionDigest, count: u64) -> Self {
+========
+    pub fn derive_id(digest: crate::types::TransactionDigest, count: u64) -> Self {
+>>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
         let mut hasher = Hasher::new();
         hasher.update([HashingIntent::RegularObjectId as u8]);
         hasher.update(digest);
@@ -281,7 +332,11 @@ mod test {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use super::HashingIntent;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
     use crate::SignatureScheme;
+========
+    use crate::types::SignatureScheme;
+>>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
 
     impl HashingIntent {
         fn from_byte(byte: u8) -> Result<Self, u8> {

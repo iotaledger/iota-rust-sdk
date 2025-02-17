@@ -1,5 +1,9 @@
 use super::SimpleSignature;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
 use crate::{checkpoint::EpochId, u256::U256};
+========
+use crate::types::{checkpoint::EpochId, u256::U256};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
 
 /// An zk login authenticator with all the necessary fields.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -37,8 +41,27 @@ pub struct ZkLoginInputs {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Claim {
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
     pub value: String,
     pub index_mod_4: u8,
+========
+    value: String,
+    index_mod_4: u8,
+}
+
+/// A structured of parsed JWT details, consists of kid, header, iss.
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_derive::Serialize, serde_derive::Deserialize)
+)]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+pub struct JwtDetails {
+    kid: String,
+    header: String,
+    iss: String,
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
 }
 
 /// The struct for zk login proof.
@@ -74,7 +97,11 @@ pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
 /// Useful to construct [struct MultiSigPublicKey].
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+========
+#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
 // TODO ensure iss is less than 255 bytes long
 pub struct ZkLoginPublicIdentifier {
     iss: String,
@@ -258,7 +285,11 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs, SerializeAs};
 
     use super::*;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
     use crate::SignatureScheme;
+========
+    use crate::types::{SignatureScheme, crypto::SignatureFromBytesError};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
 
     // Serialized format is: iss_bytes_len || iss_bytes ||
     // padded_32_byte_address_seed.
@@ -384,12 +415,13 @@ mod serialization {
                 })
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes)
+                Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
             }
         }
     }
 
     impl ZkLoginAuthenticator {
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
         pub(crate) fn to_bytes(&self) -> Vec<u8> {
             let authenticator_ref = AuthenticatorRef {
                 inputs: &self.inputs,
@@ -407,15 +439,19 @@ mod serialization {
         pub(crate) fn from_serialized_bytes<T: AsRef<[u8]>, E: serde::de::Error>(
             bytes: T,
         ) -> Result<Self, E> {
+========
+        pub fn from_serialized_bytes(
+            bytes: impl AsRef<[u8]>,
+        ) -> Result<Self, SignatureFromBytesError> {
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
             let bytes = bytes.as_ref();
-            let flag = SignatureScheme::from_byte(
-                *bytes
-                    .first()
-                    .ok_or_else(|| serde::de::Error::custom("missing signature scheme falg"))?,
-            )
-            .map_err(serde::de::Error::custom)?;
+            let flag =
+                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
+                    SignatureFromBytesError::new("missing signature scheme flag")
+                })?)
+                .map_err(SignatureFromBytesError::new)?;
             if flag != SignatureScheme::ZkLogin {
-                return Err(serde::de::Error::custom("invalid zklogin flag"));
+                return Err(SignatureFromBytesError::new("invalid zklogin flag"));
             }
             let bcs_bytes = &bytes[1..];
 
@@ -423,7 +459,7 @@ mod serialization {
                 inputs,
                 max_epoch,
                 signature,
-            } = bcs::from_bytes(bcs_bytes).map_err(serde::de::Error::custom)?;
+            } = bcs::from_bytes(bcs_bytes).map_err(SignatureFromBytesError::new)?;
             Ok(Self {
                 inputs,
                 max_epoch,

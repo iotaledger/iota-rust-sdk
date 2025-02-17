@@ -6,7 +6,11 @@ use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/events.rs
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+========
+#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/events.rs
 pub struct TransactionEvents(pub Vec<Event>);
 
 /// Specific type of event

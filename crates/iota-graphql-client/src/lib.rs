@@ -48,9 +48,9 @@ use crate::{
 };
 
 const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
-const MAINNET_HOST: &str = "https://iota-mainnet.iota.org/graphql";
-const TESTNET_HOST: &str = "https://iota-testnet.iota.org/graphql";
-const DEVNET_HOST: &str = "https://iota-devnet.iota.org/graphql";
+const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
+const TESTNET_HOST: &str = "https://graphql.testnet.iota.cafe";
+const DEVNET_HOST: &str = "https://graphql.devnet.iota.cafe";
 const LOCAL_HOST: &str = "http://localhost:9125/graphql";
 static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 

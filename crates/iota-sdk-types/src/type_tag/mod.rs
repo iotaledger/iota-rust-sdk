@@ -57,6 +57,10 @@ impl From<StructTag> for TypeTag {
     }
 }
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/type_tag/mod.rs
+========
+// TODO flesh out this error type
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/type_tag/mod.rs
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct TypeParseError {
     source: String,
@@ -84,7 +88,7 @@ pub struct Identifier(
 );
 
 impl Identifier {
-    pub fn new<T: AsRef<str>>(identifier: T) -> Result<Self, TypeParseError> {
+    pub fn new(identifier: impl AsRef<str>) -> Result<Self, TypeParseError> {
         parse::parse_identifier(identifier.as_ref())
             .map(|ident| Self(ident.into()))
             .map_err(|_| TypeParseError {

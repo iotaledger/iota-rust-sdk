@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:crates/iota-sdk-types/src/effects/v1.rs
 use crate::{
+========
+use crate::types::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/v1.rs
     EpochId, GasCostSummary, ObjectDigest, ObjectId, TransactionDigest, TransactionEventsDigest,
     digest::EffectsAuxiliaryDataDigest,
     execution_status::ExecutionStatus,
@@ -8,7 +12,11 @@ use crate::{
 /// The response from processing a transaction or a certified transaction
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/effects/v1.rs
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+========
+#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/v1.rs
 pub struct TransactionEffectsV1 {
     /// The status of the execution
     #[cfg_attr(feature = "schemars", schemars(flatten))]
@@ -41,7 +49,11 @@ pub struct TransactionEffectsV1 {
     /// transaction, and in order for a node to catch up and execute it
     /// without consensus sequencing, the version needs to be committed in
     /// the effects.
+<<<<<<<< HEAD:crates/iota-sdk-types/src/effects/v1.rs
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
+========
+    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/v1.rs
     pub unchanged_shared_objects: Vec<UnchangedSharedObject>,
     /// Auxiliary data that are not protocol-critical, generated as part of the
     /// effects but are stored separately. Storing it separately allows us

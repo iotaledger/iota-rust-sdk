@@ -2,11 +2,19 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_with::{DeserializeAs, SerializeAs};
 
 use super::Argument;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
 use crate::{ObjectId, ObjectReference};
 
 mod transaction {
     use super::*;
     use crate::{
+========
+use crate::types::{ObjectId, ObjectReference};
+
+mod transaction {
+    use super::*;
+    use crate::types::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
         Address,
         transaction::{GasPayment, Transaction, TransactionExpiration, TransactionKind},
     };
@@ -123,7 +131,11 @@ mod transaction {
 
 mod transaction_kind {
     use super::*;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::transaction::{
+========
+    use crate::types::transaction::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
         AuthenticatorStateUpdateV1, ConsensusCommitPrologueV1, EndOfEpochTransactionKind,
         GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
     };
@@ -279,7 +291,11 @@ mod transaction_kind {
 
 mod end_of_epoch {
     use super::*;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::{
+========
+    use crate::types::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
         CheckpointDigest,
         transaction::{AuthenticatorStateExpire, ChangeEpoch, EndOfEpochTransactionKind},
     };
@@ -431,7 +447,11 @@ mod end_of_epoch {
 
 mod version_assignments {
     use super::*;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
+========
+    use crate::types::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 
     #[derive(serde_derive::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
@@ -522,7 +542,11 @@ mod version_assignments {
 
 mod input_argument {
     use super::*;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::transaction::Input;
+========
+    use crate::types::transaction::InputArgument;
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(tag = "type", rename_all = "snake_case")]
@@ -771,7 +795,11 @@ mod argument {
 
 mod command {
     use super::*;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::transaction::{
+========
+    use crate::types::transaction::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
         Command, MakeMoveVector, MergeCoins, MoveCall, Publish, SplitCoins, TransferObjects,
         Upgrade,
     };
@@ -889,13 +917,51 @@ mod signed_transaction {
     use serde::ser::SerializeSeq;
 
     use super::*;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::{
+========
+    use crate::types::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
         UserSignature,
         transaction::{SignedTransaction, Transaction},
     };
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     /// serde implementation that serializes a transaction prefixed with the
     /// signing intent. See [struct Intent] for more info.
+========
+    /// Intents are defined as:
+    ///
+    /// ```
+    /// struct Intent {
+    ///     scope: IntentScope,
+    ///     version: IntentVersion,
+    ///     app_id: AppId,
+    /// }
+    ///
+    /// enum IntentVersion {
+    ///     V0 = 0,
+    /// }
+    ///
+    /// enum AppId {
+    ///     Iota = 0,
+    ///     Narwhal = 1,
+    ///     Consensus = 2,
+    /// }
+    ///
+    /// enum IntentScope {
+    ///     TransactionData = 0,         // Used for a user signature on a transaction data.
+    ///     TransactionEffects = 1,      // Used for an authority signature on transaction effects.
+    ///     CheckpointSummary = 2,       // Used for an authority signature on a checkpoint summary.
+    ///     PersonalMessage = 3,         // Used for a user signature on a personal message.
+    ///     SenderSignedTransaction = 4, // Used for an authority signature on a user signed transaction.
+    ///     ProofOfPossession = 5, // Used as a signature representing an authority's proof of possession of its authority protocol key.
+    ///     HeaderDigest = 6,      // Used for narwhal authority signature on header digest.
+    ///     BridgeEventUnused = 7, // for bridge purposes but it's currently not included in messages.
+    ///     ConsensusBlock = 8,    // Used for consensus authority signature on block's digest
+    /// }
+    /// ```
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
     ///
     /// So we need to serialize Transaction as (0, 0, 0, Transaction)
     struct IntentMessageWrappedTransaction;
@@ -1027,7 +1093,11 @@ mod signed_transaction {
 mod transaction_expiration {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::{EpochId, TransactionExpiration};
+========
+    use crate::types::{EpochId, TransactionExpiration};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(rename = "TransactionExpiration")]
@@ -1128,9 +1198,15 @@ mod test {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::{
         ObjectDigest, ObjectId, ObjectReference,
         transaction::{Argument, Input, Transaction},
+========
+    use crate::types::{
+        ObjectDigest, ObjectId, ObjectReference,
+        transaction::{Argument, InputArgument, Transaction},
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
     };
 
     #[test]

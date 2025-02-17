@@ -77,7 +77,7 @@ async fn main() -> Result<(), anyhow::Error> {
                     got_genesis = true;
                 }
             }
-            IotaTransactionBlockKind::ConsensusCommitPrologueV1(_consensus_commit_prologue) => {
+            IotaTransactionBlockKind::ConsensusCommitPrologueV1(_consensus_commit_prologue_v1) => {
                 if !got_consensus_commit_prologue_v1 {
                     write_bs64_tx_to_file(
                         &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,

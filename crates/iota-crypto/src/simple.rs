@@ -67,7 +67,7 @@ impl Verifier<UserSignature> for SimpleVerifier {
     doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 #[rustfmt::skip]
-pub use keypair::{SimpleKeypair, SimpleVerifiyingKey};
+pub use keypair::{SimpleKeypair, SimpleVerifyingKey};
 
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
@@ -107,7 +107,7 @@ mod keypair {
             }
         }
 
-        pub fn verifying_key(&self) -> SimpleVerifiyingKey {
+        pub fn verifying_key(&self) -> SimpleVerifyingKey {
             let verifying_key = match &self.inner {
                 #[cfg(feature = "ed25519")]
                 InnerKeypair::Ed25519(private_key) => {
@@ -123,7 +123,7 @@ mod keypair {
                 }
             };
 
-            SimpleVerifiyingKey {
+            SimpleVerifyingKey {
                 inner: verifying_key,
             }
         }
@@ -270,7 +270,7 @@ mod keypair {
         }
     }
 
-    pub struct SimpleVerifiyingKey {
+    pub struct SimpleVerifyingKey {
         inner: InnerVerifyingKey,
     }
 
@@ -283,7 +283,7 @@ mod keypair {
         Secp256r1(crate::secp256r1::Secp256r1VerifyingKey),
     }
 
-    impl SimpleVerifiyingKey {
+    impl SimpleVerifyingKey {
         pub fn scheme(&self) -> SignatureScheme {
             match &self.inner {
                 #[cfg(feature = "ed25519")]
@@ -399,7 +399,7 @@ mod keypair {
         }
     }
 
-    impl Verifier<SimpleSignature> for SimpleVerifiyingKey {
+    impl Verifier<SimpleSignature> for SimpleVerifyingKey {
         fn verify(
             &self,
             message: &[u8],
@@ -422,7 +422,7 @@ mod keypair {
         }
     }
 
-    impl Verifier<UserSignature> for SimpleVerifiyingKey {
+    impl Verifier<UserSignature> for SimpleVerifyingKey {
         fn verify(&self, message: &[u8], signature: &UserSignature) -> Result<(), SignatureError> {
             let UserSignature::Simple(signature) = signature else {
                 return Err(SignatureError::from_source("not a simple signature"));
@@ -434,7 +434,7 @@ mod keypair {
 
     #[cfg(feature = "ed25519")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
-    impl From<crate::ed25519::Ed25519VerifyingKey> for SimpleVerifiyingKey {
+    impl From<crate::ed25519::Ed25519VerifyingKey> for SimpleVerifyingKey {
         fn from(verifying_key: crate::ed25519::Ed25519VerifyingKey) -> Self {
             Self {
                 inner: InnerVerifyingKey::Ed25519(verifying_key),
@@ -444,7 +444,7 @@ mod keypair {
 
     #[cfg(feature = "secp256r1")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
-    impl From<crate::secp256r1::Secp256r1VerifyingKey> for SimpleVerifiyingKey {
+    impl From<crate::secp256r1::Secp256r1VerifyingKey> for SimpleVerifyingKey {
         fn from(verifying_key: crate::secp256r1::Secp256r1VerifyingKey) -> Self {
             Self {
                 inner: InnerVerifyingKey::Secp256r1(verifying_key),
@@ -454,7 +454,7 @@ mod keypair {
 
     #[cfg(feature = "secp256k1")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
-    impl From<crate::secp256k1::Secp256k1VerifyingKey> for SimpleVerifiyingKey {
+    impl From<crate::secp256k1::Secp256k1VerifyingKey> for SimpleVerifyingKey {
         fn from(verifying_key: crate::secp256k1::Secp256k1VerifyingKey) -> Self {
             Self {
                 inner: InnerVerifyingKey::Secp256k1(verifying_key),
@@ -521,9 +521,9 @@ mod test {
         Secp256k1VerifyingKey::from_pem(&pem).unwrap_err();
 
         // SimpleKeypair parses
-        let from_der = SimpleVerifiyingKey::from_der(&der).unwrap();
+        let from_der = SimpleVerifyingKey::from_der(&der).unwrap();
         assert_eq!(der, from_der.to_der().unwrap());
-        let from_pem = SimpleVerifiyingKey::from_pem(&pem).unwrap();
+        let from_pem = SimpleVerifyingKey::from_pem(&pem).unwrap();
         assert_eq!(pem, from_pem.to_pem().unwrap());
     }
 
@@ -572,9 +572,9 @@ mod test {
         Secp256k1VerifyingKey::from_pem(&pem).unwrap_err();
 
         // SimpleKeypair parses
-        let from_der = SimpleVerifiyingKey::from_der(&der).unwrap();
+        let from_der = SimpleVerifyingKey::from_der(&der).unwrap();
         assert_eq!(der, from_der.to_der().unwrap());
-        let from_pem = SimpleVerifiyingKey::from_pem(&pem).unwrap();
+        let from_pem = SimpleVerifyingKey::from_pem(&pem).unwrap();
         assert_eq!(pem, from_pem.to_pem().unwrap());
     }
 
@@ -623,9 +623,9 @@ mod test {
         Secp256r1VerifyingKey::from_pem(&pem).unwrap_err();
 
         // SimpleKeypair parses
-        let from_der = SimpleVerifiyingKey::from_der(&der).unwrap();
+        let from_der = SimpleVerifyingKey::from_der(&der).unwrap();
         assert_eq!(der, from_der.to_der().unwrap());
-        let from_pem = SimpleVerifiyingKey::from_pem(&pem).unwrap();
+        let from_pem = SimpleVerifyingKey::from_pem(&pem).unwrap();
         assert_eq!(pem, from_pem.to_pem().unwrap());
     }
 }

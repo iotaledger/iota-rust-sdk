@@ -11,6 +11,15 @@ mod serialization;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use serialization::SignedTransactionWithIntentMessage;
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/mod.rs
+========
+mod unresolved;
+pub use unresolved::{
+    UnresolvedGasPayment, UnresolvedInputArgument, UnresolvedObjectReference,
+    UnresolvedProgrammableTransaction, UnresolvedTransaction,
+};
+
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/mod.rs
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Transaction {
@@ -98,6 +107,8 @@ pub enum TransactionKind {
     /// A transaction that allows the interleaving of native commands and Move
     /// calls
     ProgrammableTransaction(ProgrammableTransaction),
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/mod.rs
+========
     /// A system transaction that will update epoch information on-chain.
     /// It will only ever be executed once in an epoch.
     /// The argument is the next epoch number, which is critical
@@ -106,12 +117,17 @@ pub enum TransactionKind {
     /// It also doesn't require/use a gas object.
     /// A validator will not sign a transaction of this kind from outside. It
     /// only signs internally during epoch changes.
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/mod.rs
     Genesis(GenesisTransaction),
     ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
     AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/mod.rs
+    /// A list of transactions that are allowed to run at the end of the epoch.
+========
     /// EndOfEpochTransaction replaces ChangeEpoch with a list of transactions
     /// that are allowed to run at the end of the epoch.
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/mod.rs
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
 
     RandomnessStateUpdate(RandomnessStateUpdate),
@@ -154,7 +170,7 @@ pub struct AuthenticatorStateExpire {
     /// The initial version of the authenticator object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub authenticator_object_initial_shared_version: u64,
+    pub authenticator_obj_initial_shared_version: u64,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -163,7 +179,11 @@ pub struct AuthenticatorStateExpire {
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/mod.rs
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+========
+#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/mod.rs
 pub struct AuthenticatorStateUpdateV1 {
     /// Epoch of the authenticator state update transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -223,7 +243,11 @@ pub enum ConsensusDeterminedVersionAssignments {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CancelledTransaction {
     pub digest: TransactionDigest,
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/mod.rs
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
+========
+    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/mod.rs
     pub version_assignments: Vec<VersionAssignment>,
 }
 
@@ -247,7 +271,11 @@ pub struct VersionAssignment {
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/mod.rs
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+========
+#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/mod.rs
 pub struct ConsensusCommitPrologueV1 {
     /// Epoch of the commit prologue transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -317,7 +345,11 @@ pub struct ChangeEpoch {
     /// write out the modules below.  Modules are provided with the version they
     /// will be upgraded to, their modules in serialized form (which include
     /// their package ID), and a list of their transitive dependencies.
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/mod.rs
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
+========
+    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/mod.rs
     pub system_packages: Vec<SystemPackage>,
 }
 
@@ -339,7 +371,11 @@ pub struct SystemPackage {
         )
     )]
     #[cfg_attr(feature = "schemars", schemars(with = "Vec<crate::_schemars::Base64>"))]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/mod.rs
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
+========
+    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/mod.rs
     pub modules: Vec<Vec<u8>>,
     pub dependencies: Vec<ObjectId>,
 }
@@ -557,6 +593,7 @@ pub enum Argument {
     NestedResult(u16, u16),
 }
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/mod.rs
 impl Argument {
     /// Turn a Result into a NestedResult. If the argument is not a Result,
     /// returns None.
@@ -568,6 +605,8 @@ impl Argument {
     }
 }
 
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/mod.rs
 /// The command for calling a Move function, either an entry function or a
 /// public function (which cannot return references).
 #[derive(Clone, Debug, PartialEq, Eq)]

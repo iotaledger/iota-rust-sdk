@@ -85,7 +85,11 @@ pub enum Owner {
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[allow(clippy::large_enum_variant)]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+========
+#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
 // TODO think about hiding this type and not exposing it
 pub enum ObjectData {
     /// An object whose governing logic lives in a published Move module
@@ -190,17 +194,22 @@ pub struct MoveStruct {
         feature = "serde",
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
     pub(crate) type_: StructTag,
+========
+    pub type_: StructTag,
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    version: Version,
+    pub version: Version,
     /// BCS bytes of a Move struct value
     #[cfg_attr(
         feature = "serde",
         serde(with = "::serde_with::As::<::serde_with::Bytes>")
     )]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(32..=1024).lift()))]
     pub(crate) contents: Vec<u8>,
 }
@@ -231,6 +240,12 @@ impl MoveStruct {
     }
 }
 
+========
+    #[cfg_attr(test, any(proptest::collection::size_range(32..=1024).lift()))]
+    pub contents: Vec<u8>,
+}
+
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
 /// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ObjectType {
@@ -244,15 +259,19 @@ pub enum ObjectType {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Object {
     /// The meat of the object
-    pub(crate) data: ObjectData,
+    pub data: ObjectData,
     /// The owner that unlocks this object
-    owner: Owner,
+    pub owner: Owner,
     /// The digest of the transaction that created or last mutated this object
+<<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
     previous_transaction: TransactionDigest,
+========
+    pub previous_transaction: TransactionDigest,
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
     /// The amount of IOTA we would rebate if this object gets deleted.
     /// This number is re-calculated each time the object is mutated based on
     /// the present storage gas price.
-    storage_rebate: u64,
+    pub storage_rebate: u64,
 }
 
 impl Object {
@@ -321,8 +340,8 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GenesisObject {
-    data: ObjectData,
-    owner: Owner,
+    pub data: ObjectData,
+    pub owner: Owner,
 }
 
 impl GenesisObject {
@@ -898,7 +917,11 @@ mod serialization {
         #[cfg(target_arch = "wasm32")]
         use wasm_bindgen_test::wasm_bindgen_test as test;
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
         use crate::object::Object;
+========
+        use crate::types::object::Object;
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
 
         #[test]
         fn object_fixture() {

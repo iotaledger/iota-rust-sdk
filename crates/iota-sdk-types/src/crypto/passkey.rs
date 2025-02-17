@@ -1,6 +1,13 @@
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
 use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 
 /// An passkey authenticator with parsed fields. See field defition below. Can
+========
+use super::{Secp256r1PublicKey, Secp256r1Signature};
+use crate::types::Digest;
+
+/// An passkey authenticator with parsed fields. See field definition below. Can
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
 /// be initialized from [struct RawPasskeyAuthenticator].
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PasskeyAuthenticator {
@@ -12,8 +19,18 @@ pub struct PasskeyAuthenticator {
     /// Initialized from `user_signature` in `RawPasskeyAuthenticator`.
     signature: Secp256r1Signature,
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
     /// Parsed challenge bytes from `client_data_json.challenge`.
     challenge: Vec<u8>,
+========
+    /// Valid intent parsed from the first 3 bytes of
+    /// `client_data_json.challenge`.
+    intent: [u8; 3],
+
+    /// Valid tx_digest parsed from the last 32 bytes of
+    /// `client_data_json.challenge`.
+    digest: Digest,
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
 
     /// `authenticatorData` is a bytearray that encodes
     /// [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data)
@@ -68,7 +85,11 @@ mod serialization {
     use serde_with::{Bytes, DeserializeAs};
 
     use super::*;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
     use crate::{SignatureScheme, SimpleSignature};
+========
+    use crate::types::{SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
 
     #[derive(serde::Serialize)]
     struct AuthenticatorRef<'a> {
@@ -132,10 +153,12 @@ mod serialization {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
                 Self::from_serialized_bytes(bytes)
             }
+            .map_err(serde::de::Error::custom)
         }
     }
 
     impl PasskeyAuthenticator {
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
         pub fn new(
             authenticator_data: Vec<u8>,
             client_data_json: String,
@@ -150,18 +173,21 @@ mod serialization {
         }
 
         fn try_from_raw<E: serde::de::Error>(
+========
+        fn try_from_raw(
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
             Authenticator {
                 authenticator_data,
                 client_data_json,
                 signature,
             }: Authenticator,
-        ) -> Result<Self, E> {
+        ) -> Result<Self, SignatureFromBytesError> {
             let SimpleSignature::Secp256r1 {
                 signature,
                 public_key,
             } = signature
             else {
-                return Err(serde::de::Error::custom(
+                return Err(SignatureFromBytesError::new(
                     "expected passkey with secp256r1 signature",
                 ));
             };
@@ -170,7 +196,7 @@ mod serialization {
                 ty: _,
                 challenge,
                 origin: _,
-            } = serde_json::from_str(&client_data_json).map_err(serde::de::Error::custom)?;
+            } = serde_json::from_str(&client_data_json).map_err(SignatureFromBytesError::new)?;
 
             // decode unpadded url endoded base64 data per spec:
             // https://w3c.github.io/webauthn/#base64url-encoding
@@ -178,7 +204,7 @@ mod serialization {
                 &challenge,
             )
             .map_err(|e| {
-                serde::de::Error::custom(format!(
+                SignatureFromBytesError::new(format!(
                     "unable to decode base64urlunpadded into 3-byte intent and 32-byte digest: {e}"
                 ))
             })?;
@@ -192,22 +218,21 @@ mod serialization {
             })
         }
 
-        pub(crate) fn from_serialized_bytes<T: AsRef<[u8]>, E: serde::de::Error>(
-            bytes: T,
-        ) -> Result<Self, E> {
+        pub fn from_serialized_bytes(
+            bytes: impl AsRef<[u8]>,
+        ) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
-            let flag = SignatureScheme::from_byte(
-                *bytes
-                    .first()
-                    .ok_or_else(|| serde::de::Error::custom("missing signature scheme flag"))?,
-            )
-            .map_err(serde::de::Error::custom)?;
+            let flag =
+                SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
+                    SignatureFromBytesError::new("missing signature scheme flag")
+                })?)
+                .map_err(SignatureFromBytesError::new)?;
             if flag != SignatureScheme::Passkey {
-                return Err(serde::de::Error::custom("invalid passkey flag"));
+                return Err(SignatureFromBytesError::new("invalid passkey flag"));
             }
             let bcs_bytes = &bytes[1..];
 
-            let authenticator = bcs::from_bytes(bcs_bytes).map_err(serde::de::Error::custom)?;
+            let authenticator = bcs::from_bytes(bcs_bytes).map_err(SignatureFromBytesError::new)?;
 
             Self::try_from_raw(authenticator)
         }

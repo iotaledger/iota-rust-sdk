@@ -4,6 +4,7 @@ on:
   push:
     branches: [develop]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
   schedule: [cron: "40 1 * * *"]
 
@@ -43,17 +44,17 @@ jobs:
       - name: Install latest nightly
         run: rustup toolchain install nightly --component rustfmt --allow-downgrade
 
-      - name: feature compatibility
-        run: make check-features
-
       - name: rustfmt
-        run: cargo +nightly fmt -- --check
+        run: make check-fmt
 
       - name: clippy
         run: make clippy
 
       - name: rustdoc
         run: make doc
+
+      - name: feature compatibility
+        run: make check-features
 
   wasm:
     runs-on: ubuntu-latest
