@@ -10,6 +10,9 @@ use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 ========
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/events.rs
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/events.rs
+========
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/events.rs
 pub struct TransactionEvents(pub Vec<Event>);
 

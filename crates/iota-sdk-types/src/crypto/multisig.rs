@@ -183,12 +183,18 @@ mod serialization {
 
     use super::*;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/multisig.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/multisig.rs
     use crate::{Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme};
 ========
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/multisig.rs
     use crate::types::{
         Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
         crypto::SignatureFromBytesError,
     };
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/multisig.rs
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/multisig.rs
+========
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/multisig.rs
 
     #[derive(serde_derive::Deserialize)]
@@ -267,6 +273,7 @@ mod serialization {
 
     impl MultisigAggregatedSignature {
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/multisig.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/multisig.rs
         pub(crate) fn to_bytes(&self) -> Vec<u8> {
             let mut buf = Vec::new();
             buf.push(SignatureScheme::Multisig as u8);
@@ -283,6 +290,11 @@ mod serialization {
         pub(crate) fn from_serialized_bytes<T: AsRef<[u8]>, E: serde::de::Error>(
             bytes: T,
         ) -> Result<Self, E> {
+========
+        pub fn from_serialized_bytes(
+            bytes: impl AsRef<[u8]>,
+        ) -> Result<Self, SignatureFromBytesError> {
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/multisig.rs
 ========
         pub fn from_serialized_bytes(
             bytes: impl AsRef<[u8]>,

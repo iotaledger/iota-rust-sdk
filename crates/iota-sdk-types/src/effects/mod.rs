@@ -2,11 +2,17 @@ mod v1;
 
 pub use v1::{
 <<<<<<<< HEAD:crates/iota-sdk-types/src/effects/mod.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/effects/mod.rs
     ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffectsV1, UnchangedSharedKind,
     UnchangedSharedObject,
 };
 
 use crate::execution_status::ExecutionStatus;
+========
+    ChangedObject, EffectsObjectChange, IdOperation, ObjectIn, ObjectOut, TransactionEffectsV1,
+    UnchangedSharedKind, UnchangedSharedObject,
+};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/mod.rs
 ========
     ChangedObject, EffectsObjectChange, IdOperation, ObjectIn, ObjectOut, TransactionEffectsV1,
     UnchangedSharedKind, UnchangedSharedObject,
@@ -24,6 +30,7 @@ use crate::execution_status::ExecutionStatus;
 pub enum TransactionEffects {
     #[cfg_attr(feature = "schemars", schemars(rename = "1"))]
     V1(Box<TransactionEffectsV1>),
+<<<<<<<< HEAD:crates/iota-sdk-types/src/effects/mod.rs
 <<<<<<<< HEAD:crates/iota-sdk-types/src/effects/mod.rs
 }
 
@@ -48,6 +55,8 @@ impl TransactionEffects {
             TransactionEffects::V1(e) => e.gas_summary(),
         }
     }
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/mod.rs
 ========
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/mod.rs
 }

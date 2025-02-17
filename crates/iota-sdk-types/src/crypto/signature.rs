@@ -37,6 +37,7 @@ impl SimpleSignature {
 }
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/signature.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/signature.rs
 impl SimpleSignature {
     #[cfg(feature = "serde")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -293,6 +294,8 @@ impl<'de> serde::Deserialize<'de> for SimpleSignature {
     }
 }
 
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/signature.rs
 ========
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/signature.rs
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
@@ -631,6 +634,7 @@ mod serialization {
             }
         }
     }
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/signature.rs
 
     impl UserSignature {
         pub fn to_bytes(&self) -> Vec<u8> {
@@ -694,6 +698,8 @@ mod serialization {
             Self::from_bytes(&bytes)
         }
     }
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/signature.rs
 
     #[derive(serde_derive::Serialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]

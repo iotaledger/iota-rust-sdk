@@ -119,8 +119,13 @@ pub struct SignedCheckpointSummary {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointContents(
 <<<<<<<< HEAD:crates/iota-sdk-types/src/checkpoint.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/checkpoint.rs
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     Vec<CheckpointTransactionInfo>,
+========
+    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
+    pub  Vec<CheckpointTransactionInfo>,
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/checkpoint.rs
 ========
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
     pub  Vec<CheckpointTransactionInfo>,
@@ -191,8 +196,11 @@ pub struct CheckpointTransaction {
     /// The state of all inputs to this transaction as they were prior to
     /// execution.
 <<<<<<<< HEAD:crates/iota-sdk-types/src/checkpoint.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/checkpoint.rs
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
 ========
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/checkpoint.rs
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/checkpoint.rs
     pub input_objects: Vec<Object>,

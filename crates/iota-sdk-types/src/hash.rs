@@ -1,7 +1,11 @@
 use blake2::Digest as DigestTrait;
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
 use crate::{Address, Digest};
+========
+use crate::types::{Address, Digest};
+>>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
 ========
 use crate::types::{Address, Digest};
 >>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
@@ -230,6 +234,7 @@ mod type_digest {
 }
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod signing_message {
@@ -272,6 +277,8 @@ mod signing_message {
 
 ========
 >>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
 /// A 1-byte domain separator for hashing Object ID in IOTA. It is starting from
 /// 0xf0 to ensure no hashing collision for any ObjectId vs Address which is
 /// derived as the hash of `flag || pubkey`.
@@ -290,8 +297,11 @@ impl crate::ObjectId {
     /// `count` is the number of objects that have been created during a
     /// transactions.
 <<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
     pub fn derive_id(digest: crate::TransactionDigest, count: u64) -> Self {
 ========
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
     pub fn derive_id(digest: crate::types::TransactionDigest, count: u64) -> Self {
 >>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
         let mut hasher = Hasher::new();
@@ -333,7 +343,11 @@ mod test {
 
     use super::HashingIntent;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/hash.rs
     use crate::SignatureScheme;
+========
+    use crate::types::SignatureScheme;
+>>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs
 ========
     use crate::types::SignatureScheme;
 >>>>>>>> develop:crates/iota-rust-sdk/src/hash.rs

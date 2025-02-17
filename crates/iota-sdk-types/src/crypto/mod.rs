@@ -10,9 +10,14 @@ mod validator;
 mod zklogin;
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/mod.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/mod.rs
 pub use bls12381::{Bls12381PublicKey, Bls12381Signature};
 pub use ed25519::{Ed25519PublicKey, Ed25519Signature};
 pub use intent::{Intent, IntentAppId, IntentScope, IntentVersion};
+========
+pub use bls12381::{Bls12381PrivateKey, Bls12381PublicKey, Bls12381Signature};
+pub use ed25519::{Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/mod.rs
 ========
 pub use bls12381::{Bls12381PrivateKey, Bls12381PublicKey, Bls12381Signature};
 pub use ed25519::{Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature};
@@ -23,8 +28,13 @@ pub use multisig::{
 };
 pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/mod.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/mod.rs
 pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
+========
+pub use secp256k1::{Secp256k1PrivateKey, Secp256k1PublicKey, Secp256k1Signature};
+pub use secp256r1::{Secp256r1PrivateKey, Secp256r1PublicKey, Secp256r1Signature};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/mod.rs
 ========
 pub use secp256k1::{Secp256k1PrivateKey, Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PrivateKey, Secp256r1PublicKey, Secp256r1Signature};
@@ -35,10 +45,13 @@ pub use validator::{
 };
 pub use zklogin::{
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/mod.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/mod.rs
     Bn254FieldElement, CircomG1, CircomG2, Claim, Jwk, JwkId, ZkLoginAuthenticator, ZkLoginInputs,
     ZkLoginProof, ZkLoginPublicIdentifier,
 };
 ========
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/mod.rs
     Bn254FieldElement, CircomG1, CircomG2, Claim, Jwk, JwkId, JwtDetails, ZkLoginAuthenticator,
     ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
 };
@@ -63,6 +76,9 @@ impl core::fmt::Display for SignatureFromBytesError {
 
 #[cfg(feature = "serde")]
 impl std::error::Error for SignatureFromBytesError {}
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/mod.rs
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/mod.rs
+========
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/mod.rs
 
 // Implement various base64 fixed-size array helpers

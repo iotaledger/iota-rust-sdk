@@ -3,11 +3,19 @@ use serde_with::{DeserializeAs, SerializeAs};
 
 use super::Argument;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
 use crate::{ObjectId, ObjectReference};
 
 mod transaction {
     use super::*;
     use crate::{
+========
+use crate::types::{ObjectId, ObjectReference};
+
+mod transaction {
+    use super::*;
+    use crate::types::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 ========
 use crate::types::{ObjectId, ObjectReference};
 
@@ -132,7 +140,11 @@ mod transaction {
 mod transaction_kind {
     use super::*;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::transaction::{
+========
+    use crate::types::transaction::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 ========
     use crate::types::transaction::{
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
@@ -292,7 +304,11 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::{
+========
+    use crate::types::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 ========
     use crate::types::{
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
@@ -448,7 +464,11 @@ mod end_of_epoch {
 mod version_assignments {
     use super::*;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
+========
+    use crate::types::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 ========
     use crate::types::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
@@ -543,7 +563,11 @@ mod version_assignments {
 mod input_argument {
     use super::*;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::transaction::Input;
+========
+    use crate::types::transaction::InputArgument;
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 ========
     use crate::types::transaction::InputArgument;
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
@@ -796,7 +820,11 @@ mod argument {
 mod command {
     use super::*;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::transaction::{
+========
+    use crate::types::transaction::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 ========
     use crate::types::transaction::{
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
@@ -918,7 +946,11 @@ mod signed_transaction {
 
     use super::*;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::{
+========
+    use crate::types::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 ========
     use crate::types::{
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
@@ -1094,7 +1126,11 @@ mod transaction_expiration {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::{EpochId, TransactionExpiration};
+========
+    use crate::types::{EpochId, TransactionExpiration};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 ========
     use crate::types::{EpochId, TransactionExpiration};
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
@@ -1199,9 +1235,15 @@ mod test {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/transaction/serialization.rs
     use crate::{
         ObjectDigest, ObjectId, ObjectReference,
         transaction::{Argument, Input, Transaction},
+========
+    use crate::types::{
+        ObjectDigest, ObjectId, ObjectReference,
+        transaction::{Argument, InputArgument, Transaction},
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/transaction/serialization.rs
 ========
     use crate::types::{
         ObjectDigest, ObjectId, ObjectReference,

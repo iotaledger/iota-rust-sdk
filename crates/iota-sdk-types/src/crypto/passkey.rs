@@ -1,12 +1,18 @@
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
 use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 
 /// An passkey authenticator with parsed fields. See field defition below. Can
 ========
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
 use super::{Secp256r1PublicKey, Secp256r1Signature};
 use crate::types::Digest;
 
 /// An passkey authenticator with parsed fields. See field definition below. Can
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
+========
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
 /// be initialized from [struct RawPasskeyAuthenticator].
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -20,9 +26,12 @@ pub struct PasskeyAuthenticator {
     signature: Secp256r1Signature,
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
     /// Parsed challenge bytes from `client_data_json.challenge`.
     challenge: Vec<u8>,
 ========
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
     /// Valid intent parsed from the first 3 bytes of
     /// `client_data_json.challenge`.
     intent: [u8; 3],
@@ -86,7 +95,11 @@ mod serialization {
 
     use super::*;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
     use crate::{SignatureScheme, SimpleSignature};
+========
+    use crate::types::{SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
 ========
     use crate::types::{SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
@@ -159,6 +172,7 @@ mod serialization {
 
     impl PasskeyAuthenticator {
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
         pub fn new(
             authenticator_data: Vec<u8>,
             client_data_json: String,
@@ -173,6 +187,9 @@ mod serialization {
         }
 
         fn try_from_raw<E: serde::de::Error>(
+========
+        fn try_from_raw(
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
 ========
         fn try_from_raw(
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
@@ -197,6 +214,12 @@ mod serialization {
                 challenge,
                 origin: _,
             } = serde_json::from_str(&client_data_json).map_err(SignatureFromBytesError::new)?;
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/passkey.rs
+========
+
+            // challenge is 3 byte intent | 32 byte hash
+            let mut challenge_buf = [0; 3 + Digest::LENGTH];
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/passkey.rs
 
             // decode unpadded url endoded base64 data per spec:
             // https://w3c.github.io/webauthn/#base64url-encoding

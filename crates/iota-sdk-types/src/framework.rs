@@ -1,8 +1,11 @@
 //! Rust definitions of move/iota framework types.
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/framework.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/framework.rs
 use std::borrow::Cow;
 
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/framework.rs
 ========
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/framework.rs
 use super::{Object, ObjectId, TypeTag};

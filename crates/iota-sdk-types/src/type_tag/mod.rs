@@ -51,6 +51,7 @@ impl std::str::FromStr for TypeTag {
     }
 }
 
+<<<<<<<< HEAD:crates/iota-sdk-types/src/type_tag/mod.rs
 impl From<StructTag> for TypeTag {
     fn from(value: StructTag) -> Self {
         Self::Struct(Box::new(value))
@@ -58,6 +59,9 @@ impl From<StructTag> for TypeTag {
 }
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/type_tag/mod.rs
+========
+// TODO flesh out this error type
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/type_tag/mod.rs
 ========
 // TODO flesh out this error type
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/type_tag/mod.rs

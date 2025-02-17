@@ -1,5 +1,9 @@
 <<<<<<<< HEAD:crates/iota-sdk-types/src/effects/v1.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/effects/v1.rs
 use crate::{
+========
+use crate::types::{
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/v1.rs
 ========
 use crate::types::{
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/v1.rs
@@ -16,6 +20,9 @@ use crate::types::{
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 ========
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/effects/v1.rs
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/v1.rs
+========
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/v1.rs
 pub struct TransactionEffectsV1 {
     /// The status of the execution
@@ -50,8 +57,11 @@ pub struct TransactionEffectsV1 {
     /// without consensus sequencing, the version needs to be committed in
     /// the effects.
 <<<<<<<< HEAD:crates/iota-sdk-types/src/effects/v1.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/effects/v1.rs
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
 ========
+========
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/v1.rs
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/effects/v1.rs
     pub unchanged_shared_objects: Vec<UnchangedSharedObject>,

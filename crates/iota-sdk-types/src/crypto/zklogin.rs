@@ -1,6 +1,10 @@
 use super::SimpleSignature;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
 use crate::{checkpoint::EpochId, u256::U256};
+========
+use crate::types::{checkpoint::EpochId, u256::U256};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
 ========
 use crate::types::{checkpoint::EpochId, u256::U256};
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
@@ -101,6 +105,9 @@ pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 ========
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
+========
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
 // TODO ensure iss is less than 255 bytes long
 pub struct ZkLoginPublicIdentifier {
@@ -286,7 +293,11 @@ mod serialization {
 
     use super::*;
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
     use crate::SignatureScheme;
+========
+    use crate::types::{SignatureScheme, crypto::SignatureFromBytesError};
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
 ========
     use crate::types::{SignatureScheme, crypto::SignatureFromBytesError};
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
@@ -422,6 +433,7 @@ mod serialization {
 
     impl ZkLoginAuthenticator {
 <<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/crypto/zklogin.rs
         pub(crate) fn to_bytes(&self) -> Vec<u8> {
             let authenticator_ref = AuthenticatorRef {
                 inputs: &self.inputs,
@@ -439,6 +451,11 @@ mod serialization {
         pub(crate) fn from_serialized_bytes<T: AsRef<[u8]>, E: serde::de::Error>(
             bytes: T,
         ) -> Result<Self, E> {
+========
+        pub fn from_serialized_bytes(
+            bytes: impl AsRef<[u8]>,
+        ) -> Result<Self, SignatureFromBytesError> {
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/crypto/zklogin.rs
 ========
         pub fn from_serialized_bytes(
             bytes: impl AsRef<[u8]>,

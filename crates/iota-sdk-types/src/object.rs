@@ -89,6 +89,9 @@ pub enum Owner {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 ========
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
+========
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
 // TODO think about hiding this type and not exposing it
 pub enum ObjectData {
@@ -195,7 +198,11 @@ pub struct MoveStruct {
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
 <<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
     pub(crate) type_: StructTag,
+========
+    pub type_: StructTag,
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
 ========
     pub type_: StructTag,
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
@@ -209,6 +216,7 @@ pub struct MoveStruct {
         feature = "serde",
         serde(with = "::serde_with::As::<::serde_with::Bytes>")
     )]
+<<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
 <<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(32..=1024).lift()))]
     pub(crate) contents: Vec<u8>,
@@ -246,6 +254,12 @@ impl MoveStruct {
 }
 
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
+========
+    #[cfg_attr(test, any(proptest::collection::size_range(32..=1024).lift()))]
+    pub contents: Vec<u8>,
+}
+
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
 /// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ObjectType {
@@ -264,7 +278,11 @@ pub struct Object {
     pub owner: Owner,
     /// The digest of the transaction that created or last mutated this object
 <<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
     previous_transaction: TransactionDigest,
+========
+    pub previous_transaction: TransactionDigest,
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
 ========
     pub previous_transaction: TransactionDigest,
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
@@ -918,7 +936,11 @@ mod serialization {
         use wasm_bindgen_test::wasm_bindgen_test as test;
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/object.rs
         use crate::object::Object;
+========
+        use crate::types::object::Object;
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs
 ========
         use crate::types::object::Object;
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/object.rs

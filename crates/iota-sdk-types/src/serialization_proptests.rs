@@ -3,7 +3,11 @@ use test_strategy::proptest;
 use wasm_bindgen_test::wasm_bindgen_test as test;
 
 <<<<<<<< HEAD:crates/iota-sdk-types/src/serialization_proptests.rs
+<<<<<<<< HEAD:crates/iota-sdk-types/src/serialization_proptests.rs
 use crate::*;
+========
+use crate::types::*;
+>>>>>>>> develop:crates/iota-rust-sdk/src/types/serialization_proptests.rs
 ========
 use crate::types::*;
 >>>>>>>> develop:crates/iota-rust-sdk/src/types/serialization_proptests.rs
