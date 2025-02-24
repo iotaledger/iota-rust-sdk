@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
   schedule: [cron: "40 1 * * *"]
 
@@ -43,9 +44,6 @@ jobs:
       - name: Install latest nightly
         run: rustup toolchain install nightly --component rustfmt --allow-downgrade
 
-      - name: feature compatibility
-        run: make check-features
-
       - name: rustfmt
         run: make check-fmt
 
@@ -54,6 +52,9 @@ jobs:
 
       - name: rustdoc
         run: make doc
+
+      - name: feature compatibility
+        run: make check-features
 
   wasm:
     runs-on: ubuntu-latest
@@ -86,7 +87,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgrespw
-          POSTGRES_DB: sui_indexer_v2
+          POSTGRES_DB: iota_indexer_v2
           POSTGRES_HOST_AUTH_METHOD: trust
         options: >-
           --health-cmd pg_isready
@@ -106,22 +107,22 @@ jobs:
 
       - uses: taiki-e/install-action@cargo-nextest
 
-      - name: Get the Sui testnet binary and start a local network
+      - name: Get the IOTA testnet binary and start a local network
         shell: bash
         env:
-          SUI_BINARY_VERSION: "1.39.3" # used for downloading a specific Sui binary versions that matches the GraphQL schema for local network tests
-          SUI_NETWORK_RELEASE: "testnet" # which release to use
+          IOTA_BINARY_VERSION: "1.39.3" # used for downloading a specific IOTA binary versions that matches the GraphQL schema for local network tests
+          IOTA_NETWORK_RELEASE: "testnet" # which release to use
         run: |
-          ASSET_NAME="sui-$SUI_NETWORK_RELEASE-v$SUI_BINARY_VERSION-ubuntu-x86_64.tgz"
-          download_url="https://github.com/mystenlabs/sui/releases/download/$SUI_NETWORK_RELEASE-v$SUI_BINARY_VERSION/$ASSET_NAME"
+          ASSET_NAME="iota-$IOTA_NETWORK_RELEASE-v$IOTA_BINARY_VERSION-ubuntu-x86_64.tgz"
+          download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_NETWORK_RELEASE-v$IOTA_BINARY_VERSION/$ASSET_NAME"
 
           echo "Downloading testnet binary from $download_url"
-          wget -q $download_url -O sui.tgz
-          tar -zxvf sui.tgz ./sui
-          chmod +x ./sui
+          wget -q $download_url -O iota.tgz
+          tar -zxvf iota.tgz ./iota
+          chmod +x ./iota
           echo "Starting local network with a faucet, an indexer (port 5432) and GraphQL. Epoch duration is set to $EPOCH_DURATION_MS ms"
-          echo "$(pwd)" >> $GITHUB_PATH # we need it on the path for calling sui move build for some tests
-          ./sui start --force-regenesis --with-faucet --with-indexer --with-graphql --pg-port 5432 --pg-db-name sui_indexer_v2 --epoch-duration-ms $EPOCH_DURATION_MS &
+          echo "$(pwd)" >> $GITHUB_PATH # we need it on the path for calling iota move build for some tests
+          ./iota start --force-regenesis --with-faucet --with-indexer --with-graphql --pg-port 5432 --pg-db-name iota_indexer_v2 --epoch-duration-ms $EPOCH_DURATION_MS &
 
       - name: Run tests that require local network (GraphQL Client and Tx Builder)
         env:
