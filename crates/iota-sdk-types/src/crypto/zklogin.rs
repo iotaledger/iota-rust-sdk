@@ -61,7 +61,7 @@ pub struct ZkLoginAuthenticator {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ZkLoginInputs {
     pub proof_points: ZkLoginProof,
-    pub iss_base64_details: ZkloginClaim,
+    pub iss_base64_details: ZkLoginClaim,
     pub header_base64: String,
     pub address_seed: Bn254FieldElement,
 }
@@ -82,7 +82,7 @@ pub struct ZkLoginInputs {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ZkloginClaim {
+pub struct ZkLoginClaim {
     pub value: String,
     pub index_mod_4: u8,
 }

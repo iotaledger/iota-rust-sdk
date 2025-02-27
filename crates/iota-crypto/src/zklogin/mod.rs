@@ -5,7 +5,7 @@
 use std::collections::HashMap;
 
 use iota_sdk_types::{
-    Jwk, JwkId, UserSignature, ZkLoginAuthenticator, ZkLoginInputs, ZkloginClaim,
+    Jwk, JwkId, UserSignature, ZkLoginAuthenticator, ZkLoginClaim, ZkLoginInputs,
 };
 use poseidon::POSEIDON;
 use signature::Verifier;
@@ -141,7 +141,7 @@ impl JwtHeader {
 /// Parse the extended claim json value to its claim value, using the expected
 /// claim key.
 fn verify_extended_claim(
-    claim: &ZkloginClaim,
+    claim: &ZkLoginClaim,
     expected_key: &str,
 ) -> Result<String, SignatureError> {
     /// Map a base64 string to a bit array by taking each char's index and
