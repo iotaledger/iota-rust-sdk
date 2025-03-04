@@ -88,13 +88,24 @@ async fn main() -> Result<(), anyhow::Error> {
             }
             IotaTransactionBlockKind::EndOfEpochTransaction(end_of_epoch_tx) => {
                 for tx_kind in &end_of_epoch_tx.transactions {
-                    if let IotaEndOfEpochTransactionKind::ChangeEpoch(_change_epoch) = tx_kind {
-                        if !got_epoch_change {
-                            write_bs64_tx_to_file(
-                                &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
-                                "change-epoch",
-                            )?;
-                            got_epoch_change = true;
+                    match tx_kind {
+                        IotaEndOfEpochTransactionKind::ChangeEpoch(_change_epoch) => {
+                            if !got_epoch_change {
+                                write_bs64_tx_to_file(
+                                    &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
+                                    "change-epoch",
+                                )?;
+                                got_epoch_change = true;
+                            }
+                        }
+                        IotaEndOfEpochTransactionKind::ChangeEpochV2(_change_epoch_v2) => {
+                            if !got_epoch_change {
+                                write_bs64_tx_to_file(
+                                    &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
+                                    "change-epoch-v2",
+                                )?;
+                                got_epoch_change = true;
+                            }
                         }
                     }
                 }

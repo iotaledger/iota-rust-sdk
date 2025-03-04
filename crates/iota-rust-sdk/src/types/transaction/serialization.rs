@@ -281,13 +281,16 @@ mod end_of_epoch {
     use super::*;
     use crate::types::{
         CheckpointDigest,
-        transaction::{AuthenticatorStateExpire, ChangeEpoch, EndOfEpochTransactionKind},
+        transaction::{
+            AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, EndOfEpochTransactionKind,
+        },
     };
 
     #[derive(serde_derive::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
+        ChangeEpochV2(&'a ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
         BridgeStateCreate {
@@ -303,6 +306,7 @@ mod end_of_epoch {
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
+        ChangeEpochV2(ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
         BridgeStateCreate {
@@ -317,6 +321,7 @@ mod end_of_epoch {
     #[derive(serde_derive::Serialize)]
     enum BinaryEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
+        ChangeEpochV2(&'a ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
         BridgeStateCreate { chain_id: &'a CheckpointDigest },
@@ -326,6 +331,7 @@ mod end_of_epoch {
     #[derive(serde_derive::Deserialize)]
     enum BinaryEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
+        ChangeEpochV2(ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
         BridgeStateCreate { chain_id: CheckpointDigest },
@@ -340,6 +346,9 @@ mod end_of_epoch {
             if serializer.is_human_readable() {
                 let readable = match self {
                     Self::ChangeEpoch(k) => ReadableEndOfEpochTransactionKindRef::ChangeEpoch(k),
+                    Self::ChangeEpochV2(k) => {
+                        ReadableEndOfEpochTransactionKindRef::ChangeEpochV2(k)
+                    }
                     Self::AuthenticatorStateCreate => {
                         ReadableEndOfEpochTransactionKindRef::AuthenticatorStateCreate
                     }
@@ -359,6 +368,7 @@ mod end_of_epoch {
             } else {
                 let binary = match self {
                     Self::ChangeEpoch(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpoch(k),
+                    Self::ChangeEpochV2(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV2(k),
                     Self::AuthenticatorStateCreate => {
                         BinaryEndOfEpochTransactionKindRef::AuthenticatorStateCreate
                     }
@@ -388,6 +398,9 @@ mod end_of_epoch {
                 ReadableEndOfEpochTransactionKind::deserialize(deserializer).map(|readable| {
                     match readable {
                         ReadableEndOfEpochTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
+                        ReadableEndOfEpochTransactionKind::ChangeEpochV2(k) => {
+                            Self::ChangeEpochV2(k)
+                        }
                         ReadableEndOfEpochTransactionKind::AuthenticatorStateCreate => {
                             Self::AuthenticatorStateCreate
                         }
@@ -408,6 +421,7 @@ mod end_of_epoch {
                 BinaryEndOfEpochTransactionKind::deserialize(deserializer).map(
                     |binary| match binary {
                         BinaryEndOfEpochTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
+                        BinaryEndOfEpochTransactionKind::ChangeEpochV2(k) => Self::ChangeEpochV2(k),
                         BinaryEndOfEpochTransactionKind::AuthenticatorStateCreate => {
                             Self::AuthenticatorStateCreate
                         }
