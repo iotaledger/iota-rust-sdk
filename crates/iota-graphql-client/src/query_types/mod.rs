@@ -58,7 +58,8 @@ use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
 pub use transaction::{
     TransactionBlock, TransactionBlockArgs, TransactionBlockEffectsQuery, TransactionBlockQuery,
-    TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
+    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
     TransactionsFilter,
 };
 
