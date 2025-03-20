@@ -5,4 +5,4 @@ authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 
 [dependencies]
-cynic-codegen = "3.8.0"
+cynic-codegen = "3.7.3"
