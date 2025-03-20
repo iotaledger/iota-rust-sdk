@@ -1,6 +1,6 @@
 [package]
 name = "iota-crypto"
-version = "0.0.0"
+version = "0.0.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
@@ -54,7 +54,7 @@ pem = [
 ]
 
 [dependencies]
-iota-sdk-types = { version = "0.0.0", path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
+iota-sdk-types = { version = "0.0.1", path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
 signature = "2.2"
 
 # RNG support

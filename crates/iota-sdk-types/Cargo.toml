@@ -1,11 +1,12 @@
 [package]
 name = "iota-sdk-types"
-version = "0.0.0"
+version = "0.0.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
 publish = false
 readme = "README.md"
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Core types for the IOTA SDK"
 
 [package.metadata.docs.rs]

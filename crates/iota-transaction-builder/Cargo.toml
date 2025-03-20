@@ -1,11 +1,9 @@
 [package]
 name = "iota-transaction-builder"
-version = "0.0.0"
+version = "0.0.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
-publish = false
-readme = "README.md"
 description = "Transaction API for the IOTA Blockchain Rust SDK"
 
 [features]
@@ -15,7 +13,7 @@ schemars = ["dep:schemars", "iota-types/schemars"]
 [dependencies]
 base64ct = { version = "1.6", features = ["std"] }
 bcs = "0.1.6"
-iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde", "hash"] }
+iota-types = { package = "iota-sdk-types", version = "0.0.1", path = "../iota-sdk-types", features = ["serde", "hash"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0.128" }
 serde_with = { version = "3.9", default-features = false, features = ["alloc"] }
