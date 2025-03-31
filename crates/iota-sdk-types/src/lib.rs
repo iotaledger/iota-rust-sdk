@@ -167,10 +167,11 @@ pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
     ActiveJwk, Argument, AuthenticatorStateExpire, AuthenticatorStateUpdateV1,
     CancelledTransaction, ChangeEpoch, Command, ConsensusCommitPrologueV1,
-    ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind, GasPayment,
-    GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction,
-    Publish, RandomnessStateUpdate, SignedTransaction, SplitCoins, SystemPackage, Transaction,
-    TransactionExpiration, TransactionKind, TransferObjects, Upgrade, VersionAssignment,
+    ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind, ExecutionTimeObservationKey,
+    ExecutionTimeObservations, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
+    MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SignedTransaction,
+    SplitCoins, SystemPackage, Transaction, TransactionExpiration, TransactionKind,
+    TransferObjects, Upgrade, ValidatorExecutionTimeObservation, VersionAssignment,
 };
 pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
 

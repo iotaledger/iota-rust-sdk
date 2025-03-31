@@ -304,7 +304,7 @@ mod end_of_epoch {
             #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
             bridge_object_version: u64,
         },
-        StoreExecutionTimeObservations(&'a crate::transaction::StoredExecutionTimeObservations),
+        StoreExecutionTimeObservations(&'a crate::transaction::ExecutionTimeObservations),
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -321,7 +321,7 @@ mod end_of_epoch {
             #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
             bridge_object_version: u64,
         },
-        StoreExecutionTimeObservations(crate::transaction::StoredExecutionTimeObservations),
+        StoreExecutionTimeObservations(crate::transaction::ExecutionTimeObservations),
     }
 
     #[derive(serde_derive::Serialize)]
@@ -332,7 +332,7 @@ mod end_of_epoch {
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
         BridgeStateCreate { chain_id: &'a CheckpointDigest },
         BridgeCommitteeInit { bridge_object_version: u64 },
-        StoreExecutionTimeObservations(&'a crate::transaction::StoredExecutionTimeObservations),
+        StoreExecutionTimeObservations(&'a crate::transaction::ExecutionTimeObservations),
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -343,7 +343,7 @@ mod end_of_epoch {
         AuthenticatorStateExpire(AuthenticatorStateExpire),
         BridgeStateCreate { chain_id: CheckpointDigest },
         BridgeCommitteeInit { bridge_object_version: u64 },
-        StoreExecutionTimeObservations(crate::transaction::StoredExecutionTimeObservations),
+        StoreExecutionTimeObservations(crate::transaction::ExecutionTimeObservations),
     }
 
     impl Serialize for EndOfEpochTransactionKind {
