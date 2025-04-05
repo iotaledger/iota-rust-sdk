@@ -156,10 +156,10 @@ pub enum ExecutionError {
     InputObjectDeleted,
 
     /// Certificate is cancelled due to congestion on shared objects
-    ExecutionCancelledDueToSharedObjectCongestion {
-        congested_objects: Vec<ObjectId>,
-        suggested_gas_price: u64,
-    },
+    // NOTE: this error is obsolete but kept for backward compatibility;
+    // instead, use `ExecutionCancelledDueToSharedObjectCongestionV1`, which
+    // includes gas price feedback for transactions cancelled due to congestion
+    ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
 
     /// Address is denied for this coin type
     AddressDeniedForCoin { address: Address, coin_type: String },
@@ -170,6 +170,16 @@ pub enum ExecutionError {
     /// Certificate is cancelled because randomness could not be generated this
     /// epoch
     ExecutionCancelledDueToRandomnessUnavailable,
+
+    /// Certificate is cancelled due to congestion on shared objects.
+    /// Except congested shared objects, this error also contains gas
+    /// price feedback: the lowest gas price of a non-cancelled transaction
+    /// (that operates on at least one of these congested objects)
+    /// in the same consensus commit round
+    ExecutionCancelledDueToSharedObjectCongestionV1 {
+        congested_objects: Vec<ObjectId>,
+        lowest_gas_price_of_non_cancelled_transaction: u64,
+    },
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -461,7 +471,6 @@ mod serialization {
         InputObjectDeleted,
         ExecutionCancelledDueToSharedObjectCongestion {
             congested_objects: Vec<ObjectId>,
-            suggested_gas_price: u64,
         },
 
         AddressDeniedForCoin {
@@ -474,6 +483,11 @@ mod serialization {
         },
 
         ExecutionCancelledDueToRandomnessUnavailable,
+
+        ExecutionCancelledDueToSharedObjectCongestionV1 {
+            congested_objects: Vec<ObjectId>,
+            lowest_gas_price_of_non_cancelled_transaction: u64,
+        },
     }
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
@@ -545,7 +559,6 @@ mod serialization {
         InputObjectDeleted,
         ExecutionCancelledDueToSharedObjectCongestion {
             congested_objects: Vec<ObjectId>,
-            suggested_gas_price: u64,
         },
 
         AddressDeniedForCoin {
@@ -558,6 +571,11 @@ mod serialization {
         },
 
         ExecutionCancelledDueToRandomnessUnavailable,
+
+        ExecutionCancelledDueToSharedObjectCongestionV1 {
+            congested_objects: Vec<ObjectId>,
+            lowest_gas_price_of_non_cancelled_transaction: u64,
+        },
     }
 
     impl Serialize for ExecutionError {
@@ -662,13 +680,11 @@ mod serialization {
                         ReadableExecutionError::SharedObjectOperationNotAllowed
                     }
                     Self::InputObjectDeleted => ReadableExecutionError::InputObjectDeleted,
-                    Self::ExecutionCancelledDueToSharedObjectCongestion {
-                        congested_objects,
-                        suggested_gas_price,
-                    } => ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
-                        congested_objects,
-                        suggested_gas_price,
-                    },
+                    Self::ExecutionCancelledDueToSharedObjectCongestion { congested_objects } => {
+                        ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
+                            congested_objects,
+                        }
+                    }
                     Self::AddressDeniedForCoin { address, coin_type } => {
                         ReadableExecutionError::AddressDeniedForCoin { address, coin_type }
                     }
@@ -678,6 +694,13 @@ mod serialization {
                     Self::ExecutionCancelledDueToRandomnessUnavailable => {
                         ReadableExecutionError::ExecutionCancelledDueToRandomnessUnavailable
                     }
+                    Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                        congested_objects,
+                        lowest_gas_price_of_non_cancelled_transaction,
+                    } => ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                        congested_objects,
+                        lowest_gas_price_of_non_cancelled_transaction,
+                    },
                 };
                 readable.serialize(serializer)
             } else {
@@ -773,13 +796,11 @@ mod serialization {
                         BinaryExecutionError::SharedObjectOperationNotAllowed
                     }
                     Self::InputObjectDeleted => BinaryExecutionError::InputObjectDeleted,
-                    Self::ExecutionCancelledDueToSharedObjectCongestion {
-                        congested_objects,
-                        suggested_gas_price,
-                    } => BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
-                        congested_objects,
-                        suggested_gas_price,
-                    },
+                    Self::ExecutionCancelledDueToSharedObjectCongestion { congested_objects } => {
+                        BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
+                            congested_objects,
+                        }
+                    }
                     Self::AddressDeniedForCoin { address, coin_type } => {
                         BinaryExecutionError::AddressDeniedForCoin { address, coin_type }
                     }
@@ -789,6 +810,13 @@ mod serialization {
                     Self::ExecutionCancelledDueToRandomnessUnavailable => {
                         BinaryExecutionError::ExecutionCancelledDueToRandomnessUnavailable
                     }
+                    Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                        congested_objects,
+                        lowest_gas_price_of_non_cancelled_transaction,
+                    } => BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                        congested_objects,
+                        lowest_gas_price_of_non_cancelled_transaction,
+                    },
                 };
                 binary.serialize(serializer)
             }
@@ -899,11 +927,7 @@ mod serialization {
                     ReadableExecutionError::InputObjectDeleted => Self::InputObjectDeleted,
                     ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
                         congested_objects,
-                        suggested_gas_price,
-                    } => Self::ExecutionCancelledDueToSharedObjectCongestion {
-                        congested_objects,
-                        suggested_gas_price,
-                    },
+                    } => Self::ExecutionCancelledDueToSharedObjectCongestion { congested_objects },
                     ReadableExecutionError::AddressDeniedForCoin { address, coin_type } => {
                         Self::AddressDeniedForCoin { address, coin_type }
                     }
@@ -913,6 +937,13 @@ mod serialization {
                     ReadableExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
                         Self::ExecutionCancelledDueToRandomnessUnavailable
                     }
+                    ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                        congested_objects,
+                        lowest_gas_price_of_non_cancelled_transaction,
+                    } => Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                        congested_objects,
+                        lowest_gas_price_of_non_cancelled_transaction,
+                    },
                 })
             } else {
                 BinaryExecutionError::deserialize(deserializer).map(|binary| match binary {
@@ -1009,11 +1040,7 @@ mod serialization {
                     BinaryExecutionError::InputObjectDeleted => Self::InputObjectDeleted,
                     BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
                         congested_objects,
-                        suggested_gas_price,
-                    } => Self::ExecutionCancelledDueToSharedObjectCongestion {
-                        congested_objects,
-                        suggested_gas_price,
-                    },
+                    } => Self::ExecutionCancelledDueToSharedObjectCongestion { congested_objects },
                     BinaryExecutionError::AddressDeniedForCoin { address, coin_type } => {
                         Self::AddressDeniedForCoin { address, coin_type }
                     }
@@ -1023,6 +1050,13 @@ mod serialization {
                     BinaryExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
                         Self::ExecutionCancelledDueToRandomnessUnavailable
                     }
+                    BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                        congested_objects,
+                        lowest_gas_price_of_non_cancelled_transaction,
+                    } => Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                        congested_objects,
+                        lowest_gas_price_of_non_cancelled_transaction,
+                    },
                 })
             }
         }
