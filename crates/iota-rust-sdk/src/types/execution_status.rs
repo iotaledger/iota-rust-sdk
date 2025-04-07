@@ -171,11 +171,11 @@ pub enum ExecutionError {
     /// epoch
     ExecutionCancelledDueToRandomnessUnavailable,
 
+    // Except congested shared objects, this error also contains gas
+    // price feedback: the lowest gas price of a non-cancelled transaction
+    // (that operates on at least one of these congested objects)
+    // in the same consensus commit round
     /// Certificate is cancelled due to congestion on shared objects.
-    /// Except congested shared objects, this error also contains gas
-    /// price feedback: the lowest gas price of a non-cancelled transaction
-    /// (that operates on at least one of these congested objects)
-    /// in the same consensus commit round
     ExecutionCancelledDueToSharedObjectCongestionV1 {
         congested_objects: Vec<ObjectId>,
         lowest_gas_price_of_non_cancelled_transaction: u64,
