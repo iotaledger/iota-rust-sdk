@@ -171,14 +171,11 @@ pub enum ExecutionError {
     /// epoch
     ExecutionCancelledDueToRandomnessUnavailable,
 
-    // Except congested shared objects, this error also contains gas
-    // price feedback: the lowest gas price of a non-cancelled transaction
-    // (that operates on at least one of these congested objects)
-    // in the same consensus commit round
-    /// Certificate is cancelled due to congestion on shared objects.
+    /// Certificate is cancelled due to congestion on shared objects;
+    /// suggested gas price can be used to give this certificate more priority.
     ExecutionCancelledDueToSharedObjectCongestionV1 {
         congested_objects: Vec<ObjectId>,
-        lowest_gas_price_of_non_cancelled_transaction: u64,
+        suggested_gas_price: u64,
     },
 }
 
@@ -486,7 +483,7 @@ mod serialization {
 
         ExecutionCancelledDueToSharedObjectCongestionV1 {
             congested_objects: Vec<ObjectId>,
-            lowest_gas_price_of_non_cancelled_transaction: u64,
+            suggested_gas_price: u64,
         },
     }
 
@@ -574,7 +571,7 @@ mod serialization {
 
         ExecutionCancelledDueToSharedObjectCongestionV1 {
             congested_objects: Vec<ObjectId>,
-            lowest_gas_price_of_non_cancelled_transaction: u64,
+            suggested_gas_price: u64,
         },
     }
 
@@ -696,10 +693,10 @@ mod serialization {
                     }
                     Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
                         congested_objects,
-                        lowest_gas_price_of_non_cancelled_transaction,
+                        suggested_gas_price,
                     } => ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
                         congested_objects,
-                        lowest_gas_price_of_non_cancelled_transaction,
+                        suggested_gas_price,
                     },
                 };
                 readable.serialize(serializer)
@@ -812,10 +809,10 @@ mod serialization {
                     }
                     Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
                         congested_objects,
-                        lowest_gas_price_of_non_cancelled_transaction,
+                        suggested_gas_price,
                     } => BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
                         congested_objects,
-                        lowest_gas_price_of_non_cancelled_transaction,
+                        suggested_gas_price,
                     },
                 };
                 binary.serialize(serializer)
@@ -939,10 +936,10 @@ mod serialization {
                     }
                     ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
                         congested_objects,
-                        lowest_gas_price_of_non_cancelled_transaction,
+                        suggested_gas_price,
                     } => Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
                         congested_objects,
-                        lowest_gas_price_of_non_cancelled_transaction,
+                        suggested_gas_price,
                     },
                 })
             } else {
@@ -1052,10 +1049,10 @@ mod serialization {
                     }
                     BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
                         congested_objects,
-                        lowest_gas_price_of_non_cancelled_transaction,
+                        suggested_gas_price,
                     } => Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
                         congested_objects,
-                        lowest_gas_price_of_non_cancelled_transaction,
+                        suggested_gas_price,
                     },
                 })
             }
