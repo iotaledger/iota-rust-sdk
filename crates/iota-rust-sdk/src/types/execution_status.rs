@@ -156,9 +156,6 @@ pub enum ExecutionError {
     InputObjectDeleted,
 
     /// Certificate is cancelled due to congestion on shared objects
-    // NOTE: this error is obsolete but kept for backward compatibility;
-    // instead, use `ExecutionCancelledDueToSharedObjectCongestionV1`, which
-    // includes gas price feedback for transactions cancelled due to congestion
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
 
     /// Address is denied for this coin type
@@ -173,7 +170,7 @@ pub enum ExecutionError {
 
     /// Certificate is cancelled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
-    ExecutionCancelledDueToSharedObjectCongestionV1 {
+    ExecutionCancelledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<ObjectId>,
         suggested_gas_price: u64,
     },
@@ -481,7 +478,7 @@ mod serialization {
 
         ExecutionCancelledDueToRandomnessUnavailable,
 
-        ExecutionCancelledDueToSharedObjectCongestionV1 {
+        ExecutionCancelledDueToSharedObjectCongestionV2 {
             congested_objects: Vec<ObjectId>,
             suggested_gas_price: u64,
         },
@@ -569,7 +566,7 @@ mod serialization {
 
         ExecutionCancelledDueToRandomnessUnavailable,
 
-        ExecutionCancelledDueToSharedObjectCongestionV1 {
+        ExecutionCancelledDueToSharedObjectCongestionV2 {
             congested_objects: Vec<ObjectId>,
             suggested_gas_price: u64,
         },
@@ -691,10 +688,10 @@ mod serialization {
                     Self::ExecutionCancelledDueToRandomnessUnavailable => {
                         ReadableExecutionError::ExecutionCancelledDueToRandomnessUnavailable
                     }
-                    Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                    Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
                         congested_objects,
                         suggested_gas_price,
-                    } => ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                    } => ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
                         congested_objects,
                         suggested_gas_price,
                     },
@@ -807,10 +804,10 @@ mod serialization {
                     Self::ExecutionCancelledDueToRandomnessUnavailable => {
                         BinaryExecutionError::ExecutionCancelledDueToRandomnessUnavailable
                     }
-                    Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                    Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
                         congested_objects,
                         suggested_gas_price,
-                    } => BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                    } => BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
                         congested_objects,
                         suggested_gas_price,
                     },
@@ -934,10 +931,10 @@ mod serialization {
                     ReadableExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
                         Self::ExecutionCancelledDueToRandomnessUnavailable
                     }
-                    ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                    ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
                         congested_objects,
                         suggested_gas_price,
-                    } => Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                    } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
                         congested_objects,
                         suggested_gas_price,
                     },
@@ -1047,10 +1044,10 @@ mod serialization {
                     BinaryExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
                         Self::ExecutionCancelledDueToRandomnessUnavailable
                     }
-                    BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                    BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
                         congested_objects,
                         suggested_gas_price,
-                    } => Self::ExecutionCancelledDueToSharedObjectCongestionV1 {
+                    } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
                         congested_objects,
                         suggested_gas_price,
                     },
