@@ -158,6 +158,13 @@ pub enum ExecutionError {
     /// Certificate is cancelled due to congestion on shared objects
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
 
+    /// Certificate is cancelled due to congestion on shared objects;
+    /// suggested gas price can be used to give this certificate more priority.
+    ExecutionCancelledDueToSharedObjectCongestionV2 {
+        congested_objects: Vec<ObjectId>,
+        suggested_gas_price: u64,
+    },
+
     /// Address is denied for this coin type
     AddressDeniedForCoin { address: Address, coin_type: String },
 
@@ -167,13 +174,6 @@ pub enum ExecutionError {
     /// Certificate is cancelled because randomness could not be generated this
     /// epoch
     ExecutionCancelledDueToRandomnessUnavailable,
-
-    /// Certificate is cancelled due to congestion on shared objects;
-    /// suggested gas price can be used to give this certificate more priority.
-    ExecutionCancelledDueToSharedObjectCongestionV2 {
-        congested_objects: Vec<ObjectId>,
-        suggested_gas_price: u64,
-    },
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
