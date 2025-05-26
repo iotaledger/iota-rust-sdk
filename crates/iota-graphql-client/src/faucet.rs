@@ -11,8 +11,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tracing::{error, info};
 
-pub const FAUCET_DEVNET_HOST: &str = "https://faucet.devnet.iota.io";
-pub const FAUCET_TESTNET_HOST: &str = "https://faucet.testnet.iota.io";
+pub const FAUCET_DEVNET_HOST: &str = "https://faucet.devnet.iota.cafe";
+pub const FAUCET_TESTNET_HOST: &str = "https://faucet.testnet.iota.cafe";
 pub const FAUCET_LOCAL_HOST: &str = "http://localhost:9123";
 
 const FAUCET_REQUEST_TIMEOUT: Duration = Duration::from_secs(120);

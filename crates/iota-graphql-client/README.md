@@ -2,7 +2,7 @@
 
 [![iota-graphql-client on crates.io](https://img.shields.io/crates/v/iota-graphql-client)](https://crates.io/crates/iota-graphql-client)
 [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-graphql-client)
-[![Documentation (master)](https://img.shields.io/badge/docs-master-59f)](https://github.com/iotaledger/iota-rust-sdk/iota-graphql-client/)
+[![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota-graphql-client/)
 
 The IOTA GraphQL client is a client for interacting with the IOTA blockchain via GraphQL.
 It provides a set of APIs for querying the blockchain for information such as chain identifier,
@@ -71,7 +71,7 @@ async fn main() -> Result<()> {
 
 ### Example for custom faucet service.
 
-Note that this `FaucetClient` is explicitly designed to work with two endpoints: `v1/gas`, and `v1/status`. When passing in the custom faucet URL, skip the final endpoint and only pass in the top-level url (e.g., `https://faucet.devnet.iota.io`).
+Note that this `FaucetClient` is explicitly designed to work with two endpoints: `v1/gas`, and `v1/status`. When passing in the custom faucet URL, skip the final endpoint and only pass in the top-level url (e.g., `https://faucet.devnet.iota.cafe`).
 
 ```rust, no_run
 use iota_graphql_client::faucet::FaucetClient;
@@ -123,7 +123,7 @@ query CustomQuery($id: UInt53) {
 }
 ```
 
-When using `cynic` and `iota-graphql-client`, you will need to register the schema by calling `iota-graphql-client-build::register_schema` in a `build.rs` file. See [iota-graphql-client-build](https://github.com/iotaledger/iota-rust-sdk/tree/master/crates/iota-graphql-client-build) for more information.
+When using `cynic` and `iota-graphql-client`, you will need to register the schema by calling `iota-graphql-client-build::register_schema` in a `build.rs` file. See [iota-graphql-client-build](https://github.com/iotaledger/iota-rust-sdk/tree/develop/crates/iota-graphql-client-build) for more information.
 
 The generated query types are defined below. Note that the `id` variable is optional (to make it mandatory change the schema to $id: Uint53! -- note the ! character which indicates a mandatory field). That means that if the `id` variable is not provided, the query will return the data for the last known epoch.
 Note that instead of using `Uint53`, the scalar is mapped to `u64` in the library using `impl_scalar(u64, schema::Uint53)`, thus all references to `Uint53` in the schema are replaced with `u64` in the code below.

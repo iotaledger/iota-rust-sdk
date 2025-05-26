@@ -110,11 +110,10 @@ jobs:
       - name: Get the IOTA testnet binary and start a local network
         shell: bash
         env:
-          IOTA_BINARY_VERSION: "1.39.3" # used for downloading a specific IOTA binary versions that matches the GraphQL schema for local network tests
-          IOTA_NETWORK_RELEASE: "testnet" # which release to use
+          IOTA_BINARY_VERSION: "v0.12.0-rc" # used for downloading a specific IOTA binary versions that matches the GraphQL schema for local network tests
         run: |
-          ASSET_NAME="iota-$IOTA_NETWORK_RELEASE-v$IOTA_BINARY_VERSION-ubuntu-x86_64.tgz"
-          download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_NETWORK_RELEASE-v$IOTA_BINARY_VERSION/$ASSET_NAME"
+          ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
+          download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
 
           echo "Downloading testnet binary from $download_url"
           wget -q $download_url -O iota.tgz

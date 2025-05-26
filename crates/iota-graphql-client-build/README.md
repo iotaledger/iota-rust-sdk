@@ -9,7 +9,7 @@ this function in a `build.rs` file in your crate if you need to build custom que
 
 ```toml
 [build-dependencies]
-iota-graphql-client-build = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-graphql-client-build", branch = "master" }
+iota-graphql-client-build = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-graphql-client-build", branch = "develop" }
 ```
 
 2. Add a `build.rs` file in your crate root directory and call the `register_schema` function in it.
@@ -29,10 +29,10 @@ fn main() {
 # ...
 [dependencies]
 cynic = "3.8.0"
-iota-graphql-client = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-graphql-client", branch = "master" }
+iota-graphql-client = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-graphql-client", branch = "develop" }
 
 [build-dependencies]
-iota-graphql-client-build = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-graphql-client-build", branch = "master" }
+iota-graphql-client-build = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-graphql-client-build", branch = "develop" }
 ```
 
 4. If using `cynic`, use the cynic generator to generate the Rust types from the GraphQL schema.\

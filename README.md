@@ -24,15 +24,15 @@ In an effort to be modular, functionality is split between a number of crates.
 - [`iota-sdk-types`](crates/iota-sdk-types)
   [![iota-sdk-types on crates.io](https://img.shields.io/crates/v/iota-sdk-types)](https://crates.io/crates/iota-sdk-types)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-types)
-  [![Documentation (master)](https://img.shields.io/badge/docs-master-59f)](https://github.com/iotaledger/iota-rust-sdk/iota_sdk_types/)
+  [![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota_sdk_types/)
 - [`iota-crypto`](crates/iota-crypto)
   [![iota-crypto on crates.io](https://img.shields.io/crates/v/iota-crypto)](https://crates.io/crates/iota-crypto)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-crypto)
-  [![Documentation (master)](https://img.shields.io/badge/docs-master-59f)](https://github.com/iotaledger/iota-rust-sdk/iota_crypto/)
+  [![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota_crypto/)
 - [`iota-graphql-client`](crates/iota-crypto)
   [![iota-graphql-client on crates.io](https://img.shields.io/crates/v/iota-graphql-client)](https://crates.io/crates/iota-graphql-client)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-graphql-client)
-  [![Documentation (master)](https://img.shields.io/badge/docs-master-59f)](https://github.com/iotaledger/iota-rust-sdk/iota-graphql-client/)
+  [![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota-graphql-client/)
 
 ## License
 
