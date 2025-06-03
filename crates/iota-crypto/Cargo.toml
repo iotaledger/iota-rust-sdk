@@ -6,7 +6,7 @@ edition = "2021"
 license = "Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
-description = "Defines the interface for signing and verying messages in the IOTA ecosystem"
+description = "Defines the interface for signing and verifying messages in the IOTA ecosystem"
 
 [package.metadata.docs.rs]
 # To build locally:
