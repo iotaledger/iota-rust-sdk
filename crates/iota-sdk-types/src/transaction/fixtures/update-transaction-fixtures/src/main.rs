@@ -107,6 +107,7 @@ async fn main() -> Result<(), anyhow::Error> {
                                 got_epoch_change = true;
                             }
                         }
+                        _ => (),
                     }
                 }
             }

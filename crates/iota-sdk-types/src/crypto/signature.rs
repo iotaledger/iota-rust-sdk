@@ -147,7 +147,7 @@ impl UserSignature {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
     use super::*;
-    use crate::types::crypto::SignatureFromBytesError;
+    use crate::crypto::SignatureFromBytesError;
 
     impl SimpleSignature {
         fn to_bytes(&self) -> Vec<u8> {
@@ -444,7 +444,7 @@ mod serialization {
                     let multisig = MultisigAggregatedSignature::from_serialized_bytes(bytes)?;
                     Ok(Self::Multisig(multisig))
                 }
-                SignatureScheme::Bls12381 => Err(serde::de::Error::custom(
+                SignatureScheme::Bls12381 => Err(SignatureFromBytesError::new(
                     "bls not supported for user signatures",
                 )),
                 SignatureScheme::ZkLogin => {
@@ -459,7 +459,7 @@ mod serialization {
         }
 
         pub fn from_bytes(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            Self::from_serialized_bytes(bytes)
+            Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
         }
 
         pub fn from_base64(s: &str) -> Result<Self, bcs::Error> {
@@ -608,7 +608,7 @@ mod serialization {
 
                 let bytes: std::borrow::Cow<'de, [u8]> =
                     serde_with::Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes)
+                Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
             }
         }
     }

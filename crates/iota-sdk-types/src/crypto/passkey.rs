@@ -146,7 +146,7 @@ mod serialization {
             client_data_json: String,
             signature: SimpleSignature,
         ) -> Option<Self> {
-            Self::try_from_raw::<serde_json::Error>(Authenticator {
+            Self::try_from_raw(Authenticator {
                 authenticator_data,
                 client_data_json,
                 signature,

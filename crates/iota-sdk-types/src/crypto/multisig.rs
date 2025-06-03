@@ -264,25 +264,12 @@ mod serialization {
             let mut buf = Vec::new();
             buf.push(SignatureScheme::Multisig as u8);
 
-            if let Some(bitmap) = &self.legacy_bitmap {
-                let legacy = LegacyMultisigRef {
-                    signatures: &self.signatures,
-                    bitmap,
-                    committee: LegacyMultisigCommitteeRef {
-                        members: &self.committee.members,
-                        threshold: self.committee.threshold,
-                    },
-                };
-
-                bcs::serialize_into(&mut buf, &legacy).expect("serialization cannot fail");
-            } else {
-                let multisig = MultisigRef {
-                    signatures: &self.signatures,
-                    bitmap: self.bitmap,
-                    committee: &self.committee,
-                };
-                bcs::serialize_into(&mut buf, &multisig).expect("serialization cannot fail");
-            }
+            let multisig = MultisigRef {
+                signatures: &self.signatures,
+                bitmap: self.bitmap,
+                committee: &self.committee,
+            };
+            bcs::serialize_into(&mut buf, &multisig).expect("serialization cannot fail");
             buf
         }
 

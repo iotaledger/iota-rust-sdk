@@ -1116,19 +1116,47 @@ mod transaction_expiration {
         }
 
         fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            use schemars::schema::{Schema, SchemaObject};
-            schemars::schema::Schema::Object(schemars::schema::SchemaObject {
-                subschemas: Some(Box::new(schemars::schema::SubschemaValidation {
+            use schemars::{
+                Map, Set,
+                schema::{
+                    InstanceType, ObjectValidation, Schema, SchemaObject, SubschemaValidation,
+                },
+            };
+            let mut object = SchemaObject {
+                instance_type: Some(InstanceType::Object.into()),
+                object: Some(Box::new(ObjectValidation {
+                    properties: {
+                        let mut props = Map::new();
+                        props.insert(
+                            "epoch".to_owned(),
+                            gen.subschema_for::<crate::_schemars::U64>(),
+                        );
+                        props
+                    },
+                    required: {
+                        let mut required = Set::new();
+                        required.insert("epoch".to_owned());
+                        required
+                    },
+                    // Externally tagged variants must prohibit additional
+                    // properties irrespective of the disposition of
+                    // `deny_unknown_fields`. If additional properties were allowed
+                    // one could easily construct an object that validated against
+                    // multiple variants since here it's the properties rather than
+                    // the values of a property that distingish between variants.
+                    additional_properties: Some(Box::new(false.into())),
+                    ..Default::default()
+                })),
+                ..Default::default()
+            };
+            object.metadata().description = Some("Validators wont sign a transaction unless the expiration Epoch is greater than or equal to the current epoch".to_owned());
+            let schema = Schema::Object(object);
+            Schema::Object(SchemaObject {
+                subschemas: Some(Box::new(SubschemaValidation {
                     one_of: Some(vec![
-                        schemars::_private::metadata::add_description(
-                            schemars::_private::new_externally_tagged_enum(
-                                "epoch",
-                                gen.subschema_for::<crate::_schemars::U64>(),
-                            ),
-                            "Validators wont sign a transaction unless the expiration Epoch is greater than or equal to the current epoch",
-                        ),
+                        schema,
                         Schema::Object(SchemaObject {
-                            instance_type: Some(schemars::schema::InstanceType::Null.into()),
+                            instance_type: Some(InstanceType::Null.into()),
                             ..SchemaObject::default()
                         }),
                     ]),
@@ -1148,7 +1176,7 @@ mod test {
 
     use crate::{
         ObjectDigest, ObjectId, ObjectReference,
-        transaction::{Argument, Input, InputArgument, Transaction},
+        transaction::{Argument, Input, Transaction},
     };
 
     #[test]
@@ -1237,7 +1265,7 @@ mod test {
         // Look in the fixtures folder to see how to update them
         const GENESIS_TRANSACTION: &str = include_str!("fixtures/genesis");
         const CONSENSUS_PROLOGUE: &str = include_str!("fixtures/consensus-commit-prologue-v1");
-        const EPOCH_CHANGE: &str = include_str!("fixtures/change-epoch");
+        const EPOCH_CHANGE: &str = include_str!("fixtures/change-epoch-v2");
         const PTB: &str = include_str!("fixtures/ptb");
 
         for fixture in [GENESIS_TRANSACTION, CONSENSUS_PROLOGUE, EPOCH_CHANGE, PTB] {
