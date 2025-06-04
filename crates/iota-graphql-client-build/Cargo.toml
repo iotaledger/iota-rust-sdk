@@ -1,0 +1,8 @@
+[package]
+name = "iota-graphql-client-build"
+version = "0.0.0"
+authors = ["IOTA Foundation <info@iota.org>"]
+edition = "2021"
+
+[dependencies]
+cynic-codegen = "3.8.0"
