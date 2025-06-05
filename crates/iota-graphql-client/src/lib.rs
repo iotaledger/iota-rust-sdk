@@ -271,14 +271,6 @@ impl Client {
         Self::new(LOCAL_HOST).expect("Invalid localhost URL")
     }
 
-    /// Set the server address for the GraphQL GraphQL client. It should be a
-    /// valid URL with a host and optionally a port number.
-    pub fn set_rpc_server(&mut self, server: &str) -> Result<()> {
-        let rpc = reqwest::Url::parse(server)?;
-        self.rpc = rpc;
-        Ok(())
-    }
-
     /// Get the chain identifier.
     pub async fn chain_id(&self) -> Result<String> {
         let operation = ChainIdentifierQuery::build(());
@@ -299,6 +291,14 @@ impl Client {
     /// Return the URL for the GraphQL server.
     fn rpc_server(&self) -> &str {
         self.rpc.as_str()
+    }
+
+    /// Set the server address for the GraphQL GraphQL client. It should be a
+    /// valid URL with a host and optionally a port number.
+    pub fn set_rpc_server(&mut self, server: &str) -> Result<()> {
+        let rpc = reqwest::Url::parse(server)?;
+        self.rpc = rpc;
+        Ok(())
     }
 
     /// Handle pagination filters and return the appropriate values (after,

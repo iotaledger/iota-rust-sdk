@@ -1,7 +1,5 @@
-from lib.client import Client, uniffi_set_event_loop
+from lib.iota_graphql_client import Client, uniffi_set_event_loop
 import asyncio
-
-uniffi_set_event_loop(asyncio.get_running_loop())
 
 async def main():
     client = Client.new_devnet()

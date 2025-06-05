@@ -461,17 +461,17 @@ def _uniffi_check_contract_api_version(lib):
         raise InternalError("UniFFI contract version mismatch: try cleaning and rebuilding your project")
 
 def _uniffi_check_api_checksums(lib):
-    if lib.uniffi_iota_graphql_client_checksum_method_client_chain_id() != 57821:
+    if lib.uniffi_iota_graphql_client_checksum_method_client_chain_id() != 24918:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_graphql_client_checksum_constructor_client_new() != 25309:
+    if lib.uniffi_iota_graphql_client_checksum_constructor_client_new() != 30926:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_graphql_client_checksum_constructor_client_new_devnet() != 15665:
+    if lib.uniffi_iota_graphql_client_checksum_constructor_client_new_devnet() != 1714:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_graphql_client_checksum_constructor_client_new_localhost() != 36848:
+    if lib.uniffi_iota_graphql_client_checksum_constructor_client_new_localhost() != 60569:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_graphql_client_checksum_constructor_client_new_mainnet() != 60992:
+    if lib.uniffi_iota_graphql_client_checksum_constructor_client_new_mainnet() != 51011:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_graphql_client_checksum_constructor_client_new_testnet() != 2558:
+    if lib.uniffi_iota_graphql_client_checksum_constructor_client_new_testnet() != 42249:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
 
 # A ctypes library to expose the extern-C FFI definitions.
@@ -920,6 +920,53 @@ _uniffi_check_contract_api_version(_UniffiLib)
 # Public interface members begin here.
 
 
+class _UniffiConverterInt32(_UniffiConverterPrimitiveInt):
+    CLASS_NAME = "i32"
+    VALUE_MIN = -2**31
+    VALUE_MAX = 2**31
+
+    @staticmethod
+    def read(buf):
+        return buf.read_i32()
+
+    @staticmethod
+    def write(value, buf):
+        buf.write_i32(value)
+
+class _UniffiConverterUInt64(_UniffiConverterPrimitiveInt):
+    CLASS_NAME = "u64"
+    VALUE_MIN = 0
+    VALUE_MAX = 2**64
+
+    @staticmethod
+    def read(buf):
+        return buf.read_u64()
+
+    @staticmethod
+    def write(value, buf):
+        buf.write_u64(value)
+
+class _UniffiConverterBool:
+    @classmethod
+    def check_lower(cls, value):
+        return not not value
+
+    @classmethod
+    def lower(cls, value):
+        return 1 if value else 0
+
+    @staticmethod
+    def lift(value):
+        return value != 0
+
+    @classmethod
+    def read(cls, buf):
+        return cls.lift(buf.read_u8())
+
+    @classmethod
+    def write(cls, value, buf):
+        buf.write_u8(value)
+
 class _UniffiConverterString:
     @staticmethod
     def check_lower(value):
@@ -956,14 +1003,550 @@ class _UniffiConverterString:
 
 
 
+
+class ProtocolConfigAttr:
+    """
+    A key-value protocol configuration attribute.
+    """
+
+    key: "str"
+    value: "typing.Optional[str]"
+    def __init__(self, *, key: "str", value: "typing.Optional[str]"):
+        self.key = key
+        self.value = value
+
+    def __str__(self):
+        return "ProtocolConfigAttr(key={}, value={})".format(self.key, self.value)
+
+    def __eq__(self, other):
+        if self.key != other.key:
+            return False
+        if self.value != other.value:
+            return False
+        return True
+
+class _UniffiConverterTypeProtocolConfigAttr(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ProtocolConfigAttr(
+            key=_UniffiConverterString.read(buf),
+            value=_UniffiConverterOptionalString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.key)
+        _UniffiConverterOptionalString.check_lower(value.value)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.key, buf)
+        _UniffiConverterOptionalString.write(value.value, buf)
+
+
+class ProtocolConfigFeatureFlag:
+    """
+    Feature flags are a form of boolean configuration that are usually used to
+    gate features while they are in development. Once a lag has been enabled, it
+    is rare for it to be disabled.
+    """
+
+    key: "str"
+    value: "bool"
+    def __init__(self, *, key: "str", value: "bool"):
+        self.key = key
+        self.value = value
+
+    def __str__(self):
+        return "ProtocolConfigFeatureFlag(key={}, value={})".format(self.key, self.value)
+
+    def __eq__(self, other):
+        if self.key != other.key:
+            return False
+        if self.value != other.value:
+            return False
+        return True
+
+class _UniffiConverterTypeProtocolConfigFeatureFlag(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ProtocolConfigFeatureFlag(
+            key=_UniffiConverterString.read(buf),
+            value=_UniffiConverterBool.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.key)
+        _UniffiConverterBool.check_lower(value.value)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.key, buf)
+        _UniffiConverterBool.write(value.value, buf)
+
+
+class ProtocolConfigs:
+    """
+    Information about the configuration of the protocol.
+    Constants that control how the chain operates.
+    These can only change during protocol upgrades which happen on epoch
+    boundaries.
+    """
+
+    protocol_version: "int"
+    """
+    The protocol is not required to change on every epoch boundary, so the
+    protocol version tracks which change to the protocol these configs
+    are from.
+    """
+
+    feature_flags: "typing.List[ProtocolConfigFeatureFlag]"
+    """
+    List all available feature flags and their values. Feature flags are a
+    form of boolean configuration that are usually used to gate features
+    while they are in development. Once a flag has been enabled, it is
+    rare for it to be disabled.
+    """
+
+    configs: "typing.List[ProtocolConfigAttr]"
+    """
+    List all available configurations and their values. These configurations
+    can take any value (but they will all be represented in string
+    form), and do not include feature flags.
+    """
+
+    def __init__(self, *, protocol_version: "int", feature_flags: "typing.List[ProtocolConfigFeatureFlag]", configs: "typing.List[ProtocolConfigAttr]"):
+        self.protocol_version = protocol_version
+        self.feature_flags = feature_flags
+        self.configs = configs
+
+    def __str__(self):
+        return "ProtocolConfigs(protocol_version={}, feature_flags={}, configs={})".format(self.protocol_version, self.feature_flags, self.configs)
+
+    def __eq__(self, other):
+        if self.protocol_version != other.protocol_version:
+            return False
+        if self.feature_flags != other.feature_flags:
+            return False
+        if self.configs != other.configs:
+            return False
+        return True
+
+class _UniffiConverterTypeProtocolConfigs(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ProtocolConfigs(
+            protocol_version=_UniffiConverterUInt64.read(buf),
+            feature_flags=_UniffiConverterSequenceTypeProtocolConfigFeatureFlag.read(buf),
+            configs=_UniffiConverterSequenceTypeProtocolConfigAttr.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterUInt64.check_lower(value.protocol_version)
+        _UniffiConverterSequenceTypeProtocolConfigFeatureFlag.check_lower(value.feature_flags)
+        _UniffiConverterSequenceTypeProtocolConfigAttr.check_lower(value.configs)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterUInt64.write(value.protocol_version, buf)
+        _UniffiConverterSequenceTypeProtocolConfigFeatureFlag.write(value.feature_flags, buf)
+        _UniffiConverterSequenceTypeProtocolConfigAttr.write(value.configs, buf)
+
+
+class ServiceConfig:
+    default_page_size: "int"
+    """
+    Default number of elements allowed on a single page of a connection.
+    """
+
+    enabled_features: "typing.List[Feature]"
+    """
+    List of all features that are enabled on this RPC service.
+    """
+
+    max_move_value_depth: "int"
+    """
+    Maximum estimated cost of a database query used to serve a GraphQL
+    request.  This is measured in the same units that the database uses
+    in EXPLAIN queries.
+    Maximum nesting allowed in struct fields when calculating the layout of
+    a single Move Type.
+    """
+
+    max_output_nodes: "int"
+    """
+    The maximum number of output nodes in a GraphQL response.
+    Non-connection nodes have a count of 1, while connection nodes are
+    counted as the specified 'first' or 'last' number of items, or the
+    default_page_size as set by the server if those arguments are not
+    set. Counts accumulate multiplicatively down the query tree. For
+    example, if a query starts with a connection of first: 10 and has a
+    field to a connection with last: 20, the count at the second level
+    would be 200 nodes. This is then summed to the count of 10 nodes
+    at the first level, for a total of 210 nodes.
+    """
+
+    max_page_size: "int"
+    """
+    Maximum number of elements allowed on a single page of a connection.
+    """
+
+    max_query_depth: "int"
+    """
+    The maximum depth a GraphQL query can be to be accepted by this service.
+    """
+
+    max_query_nodes: "int"
+    """
+    The maximum number of nodes (field names) the service will accept in a
+    single query.
+    """
+
+    max_query_payload_size: "int"
+    """
+    Maximum length of a query payload string.
+    """
+
+    max_type_argument_depth: "int"
+    """
+    Maximum nesting allowed in type arguments in Move Types resolved by this
+    service.
+    """
+
+    max_type_argument_width: "int"
+    """
+    Maximum number of type arguments passed into a generic instantiation of
+    a Move Type resolved by this service.
+    """
+
+    max_type_nodes: "int"
+    """
+    Maximum number of structs that need to be processed when calculating the
+    layout of a single Move Type.
+    """
+
+    mutation_timeout_ms: "int"
+    """
+    Maximum time in milliseconds spent waiting for a response from fullnode
+    after issuing a a transaction to execute. Note that the transaction
+    may still succeed even in the case of a timeout. Transactions are
+    idempotent, so a transaction that times out should be resubmitted
+    until the network returns a definite response (success or failure, not
+    timeout).
+    """
+
+    request_timeout_ms: "int"
+    """
+    Maximum time in milliseconds that will be spent to serve one query
+    request.
+    """
+
+    def __init__(self, *, default_page_size: "int", enabled_features: "typing.List[Feature]", max_move_value_depth: "int", max_output_nodes: "int", max_page_size: "int", max_query_depth: "int", max_query_nodes: "int", max_query_payload_size: "int", max_type_argument_depth: "int", max_type_argument_width: "int", max_type_nodes: "int", mutation_timeout_ms: "int", request_timeout_ms: "int"):
+        self.default_page_size = default_page_size
+        self.enabled_features = enabled_features
+        self.max_move_value_depth = max_move_value_depth
+        self.max_output_nodes = max_output_nodes
+        self.max_page_size = max_page_size
+        self.max_query_depth = max_query_depth
+        self.max_query_nodes = max_query_nodes
+        self.max_query_payload_size = max_query_payload_size
+        self.max_type_argument_depth = max_type_argument_depth
+        self.max_type_argument_width = max_type_argument_width
+        self.max_type_nodes = max_type_nodes
+        self.mutation_timeout_ms = mutation_timeout_ms
+        self.request_timeout_ms = request_timeout_ms
+
+    def __str__(self):
+        return "ServiceConfig(default_page_size={}, enabled_features={}, max_move_value_depth={}, max_output_nodes={}, max_page_size={}, max_query_depth={}, max_query_nodes={}, max_query_payload_size={}, max_type_argument_depth={}, max_type_argument_width={}, max_type_nodes={}, mutation_timeout_ms={}, request_timeout_ms={})".format(self.default_page_size, self.enabled_features, self.max_move_value_depth, self.max_output_nodes, self.max_page_size, self.max_query_depth, self.max_query_nodes, self.max_query_payload_size, self.max_type_argument_depth, self.max_type_argument_width, self.max_type_nodes, self.mutation_timeout_ms, self.request_timeout_ms)
+
+    def __eq__(self, other):
+        if self.default_page_size != other.default_page_size:
+            return False
+        if self.enabled_features != other.enabled_features:
+            return False
+        if self.max_move_value_depth != other.max_move_value_depth:
+            return False
+        if self.max_output_nodes != other.max_output_nodes:
+            return False
+        if self.max_page_size != other.max_page_size:
+            return False
+        if self.max_query_depth != other.max_query_depth:
+            return False
+        if self.max_query_nodes != other.max_query_nodes:
+            return False
+        if self.max_query_payload_size != other.max_query_payload_size:
+            return False
+        if self.max_type_argument_depth != other.max_type_argument_depth:
+            return False
+        if self.max_type_argument_width != other.max_type_argument_width:
+            return False
+        if self.max_type_nodes != other.max_type_nodes:
+            return False
+        if self.mutation_timeout_ms != other.mutation_timeout_ms:
+            return False
+        if self.request_timeout_ms != other.request_timeout_ms:
+            return False
+        return True
+
+class _UniffiConverterTypeServiceConfig(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ServiceConfig(
+            default_page_size=_UniffiConverterInt32.read(buf),
+            enabled_features=_UniffiConverterSequenceTypeFeature.read(buf),
+            max_move_value_depth=_UniffiConverterInt32.read(buf),
+            max_output_nodes=_UniffiConverterInt32.read(buf),
+            max_page_size=_UniffiConverterInt32.read(buf),
+            max_query_depth=_UniffiConverterInt32.read(buf),
+            max_query_nodes=_UniffiConverterInt32.read(buf),
+            max_query_payload_size=_UniffiConverterInt32.read(buf),
+            max_type_argument_depth=_UniffiConverterInt32.read(buf),
+            max_type_argument_width=_UniffiConverterInt32.read(buf),
+            max_type_nodes=_UniffiConverterInt32.read(buf),
+            mutation_timeout_ms=_UniffiConverterInt32.read(buf),
+            request_timeout_ms=_UniffiConverterInt32.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterInt32.check_lower(value.default_page_size)
+        _UniffiConverterSequenceTypeFeature.check_lower(value.enabled_features)
+        _UniffiConverterInt32.check_lower(value.max_move_value_depth)
+        _UniffiConverterInt32.check_lower(value.max_output_nodes)
+        _UniffiConverterInt32.check_lower(value.max_page_size)
+        _UniffiConverterInt32.check_lower(value.max_query_depth)
+        _UniffiConverterInt32.check_lower(value.max_query_nodes)
+        _UniffiConverterInt32.check_lower(value.max_query_payload_size)
+        _UniffiConverterInt32.check_lower(value.max_type_argument_depth)
+        _UniffiConverterInt32.check_lower(value.max_type_argument_width)
+        _UniffiConverterInt32.check_lower(value.max_type_nodes)
+        _UniffiConverterInt32.check_lower(value.mutation_timeout_ms)
+        _UniffiConverterInt32.check_lower(value.request_timeout_ms)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterInt32.write(value.default_page_size, buf)
+        _UniffiConverterSequenceTypeFeature.write(value.enabled_features, buf)
+        _UniffiConverterInt32.write(value.max_move_value_depth, buf)
+        _UniffiConverterInt32.write(value.max_output_nodes, buf)
+        _UniffiConverterInt32.write(value.max_page_size, buf)
+        _UniffiConverterInt32.write(value.max_query_depth, buf)
+        _UniffiConverterInt32.write(value.max_query_nodes, buf)
+        _UniffiConverterInt32.write(value.max_query_payload_size, buf)
+        _UniffiConverterInt32.write(value.max_type_argument_depth, buf)
+        _UniffiConverterInt32.write(value.max_type_argument_width, buf)
+        _UniffiConverterInt32.write(value.max_type_nodes, buf)
+        _UniffiConverterInt32.write(value.mutation_timeout_ms, buf)
+        _UniffiConverterInt32.write(value.request_timeout_ms, buf)
+
+
+
+
+
+class Feature(enum.Enum):
+    ANALYTICS = 0
+    
+    COINS = 1
+    
+    DYNAMIC_FIELDS = 2
+    
+    NAME_SERVICE = 3
+    
+    SUBSCRIPTIONS = 4
+    
+    SYSTEM_STATE = 5
+    
+    MOVE_REGISTRY = 6
+    
+
+
+class _UniffiConverterTypeFeature(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return Feature.ANALYTICS
+        if variant == 2:
+            return Feature.COINS
+        if variant == 3:
+            return Feature.DYNAMIC_FIELDS
+        if variant == 4:
+            return Feature.NAME_SERVICE
+        if variant == 5:
+            return Feature.SUBSCRIPTIONS
+        if variant == 6:
+            return Feature.SYSTEM_STATE
+        if variant == 7:
+            return Feature.MOVE_REGISTRY
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == Feature.ANALYTICS:
+            return
+        if value == Feature.COINS:
+            return
+        if value == Feature.DYNAMIC_FIELDS:
+            return
+        if value == Feature.NAME_SERVICE:
+            return
+        if value == Feature.SUBSCRIPTIONS:
+            return
+        if value == Feature.SYSTEM_STATE:
+            return
+        if value == Feature.MOVE_REGISTRY:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == Feature.ANALYTICS:
+            buf.write_i32(1)
+        if value == Feature.COINS:
+            buf.write_i32(2)
+        if value == Feature.DYNAMIC_FIELDS:
+            buf.write_i32(3)
+        if value == Feature.NAME_SERVICE:
+            buf.write_i32(4)
+        if value == Feature.SUBSCRIPTIONS:
+            buf.write_i32(5)
+        if value == Feature.SYSTEM_STATE:
+            buf.write_i32(6)
+        if value == Feature.MOVE_REGISTRY:
+            buf.write_i32(7)
+
+
+
+
+
+class _UniffiConverterOptionalString(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterString.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterString.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterString.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterSequenceTypeProtocolConfigAttr(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeProtocolConfigAttr.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeProtocolConfigAttr.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeProtocolConfigAttr.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeProtocolConfigFeatureFlag(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeProtocolConfigFeatureFlag.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeProtocolConfigFeatureFlag.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeProtocolConfigFeatureFlag.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeFeature(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeFeature.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeFeature.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeFeature.read(buf) for i in range(count)
+        ]
+
 # objects.
 class ClientProtocol(typing.Protocol):
+    """
+    The GraphQL client for interacting with the IOTA blockchain.
+    By default, it uses the `reqwest` crate as the HTTP client.
+    """
+
     def chain_id(self, ):
+        """
+        Get the chain identifier.
+        """
+
         raise NotImplementedError
 # Client is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Client():
+    """
+    The GraphQL client for interacting with the IOTA blockchain.
+    By default, it uses the `reqwest` crate as the HTTP client.
+    """
+
     _pointer: ctypes.c_void_p
     def __init__(self, server: "str"):
+        """
+        Create a new GraphQL client with the provided server address.
+        """
+
         _UniffiConverterString.check_lower(server)
         
         self._pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeError__as_error,_UniffiLib.uniffi_iota_graphql_client_fn_constructor_client_new,
@@ -988,30 +1571,54 @@ class Client():
         return inst
     @classmethod
     def new_devnet(cls, ):
+        """
+        Create a new GraphQL client connected to the `devnet` GraphQL server:
+        {DEVNET_HOST}.
+        """
+
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_graphql_client_fn_constructor_client_new_devnet,)
         return cls._make_instance_(pointer)
 
     @classmethod
     def new_localhost(cls, ):
+        """
+        Create a new GraphQL client connected to the `localhost` GraphQL server:
+        {DEFAULT_LOCAL_HOST}.
+        """
+
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_graphql_client_fn_constructor_client_new_localhost,)
         return cls._make_instance_(pointer)
 
     @classmethod
     def new_mainnet(cls, ):
+        """
+        Create a new GraphQL client connected to the `mainnet` GraphQL server:
+        {MAINNET_HOST}.
+        """
+
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_graphql_client_fn_constructor_client_new_mainnet,)
         return cls._make_instance_(pointer)
 
     @classmethod
     def new_testnet(cls, ):
+        """
+        Create a new GraphQL client connected to the `testnet` GraphQL server:
+        {TESTNET_HOST}.
+        """
+
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_graphql_client_fn_constructor_client_new_testnet,)
         return cls._make_instance_(pointer)
 
 
     async def chain_id(self, ) -> "str":
+        """
+        Get the chain identifier.
+        """
+
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_graphql_client_fn_method_client_chain_id(
                 self._uniffi_clone_pointer(), 
@@ -1059,9 +1666,19 @@ class _UniffiConverterTypeClient:
     def write(cls, value: ClientProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ErrorProtocol(typing.Protocol):
+    """
+    General error type for the client. It is used to wrap all the possible
+    errors that can occur.
+    """
+
     pass
 # Error is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Error(Exception):
+    """
+    General error type for the client. It is used to wrap all the possible
+    errors that can occur.
+    """
+
     _pointer: ctypes.c_void_p
     
     def __init__(self, *args, **kwargs):
@@ -1200,6 +1817,12 @@ async def _uniffi_rust_call_async(rust_future, ffi_poll, ffi_complete, ffi_free,
 
 __all__ = [
     "InternalError",
+    "Feature",
+    "ProtocolConfigAttr",
+    "ProtocolConfigFeatureFlag",
+    "ProtocolConfigs",
+    "ServiceConfig",
     "Client",
     "Error",
 ]
+
