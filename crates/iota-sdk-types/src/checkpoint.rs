@@ -14,6 +14,17 @@ pub type EpochId = u64;
 pub type StakeUnit = u64;
 pub type ProtocolVersion = u64;
 
+/// A commitment made by a checkpoint.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// ; CheckpointCommitment is an enum and each variant is prefixed with its index
+/// checkpoint-commitment = ecmh-live-object-set
+/// ecmh-live-object-set = %x00 digest
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "schemars",
@@ -22,10 +33,24 @@ pub type ProtocolVersion = u64;
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum CheckpointCommitment {
+    /// An Elliptic Curve Multiset Hash attesting to the set of Objects that
+    /// comprise the live state of the IOTA blockchain.
     EcmhLiveObjectSet { digest: Digest },
     // Other commitment types (e.g. merkle roots) go here.
 }
 
+/// Data, which when included in a [`CheckpointSummary`], signals the end of an
+/// `Epoch`.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
+///                     u64                                 ; next_epoch_protocol_version
+///                     (vector checkpoint-commitment)      ; epoch_commitments
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
@@ -34,18 +59,11 @@ pub enum CheckpointCommitment {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct EndOfEpochData {
-    /// next_epoch_committee is `Some` if and only if the current checkpoint is
-    /// the last checkpoint of an epoch.
-    /// Therefore next_epoch_committee can be used to pick the last checkpoint
-    /// of an epoch, which is often useful to get epoch level summary stats
-    /// like total gas cost of an epoch, or the total number of transactions
-    /// from genesis to the end of an epoch. The committee is stored as a
-    /// vector of validator pub key and stake pairs. The vector
-    /// should be sorted based on the Committee data structure.
+    /// The set of Validators that will be in the ValidatorCommittee for the
+    /// next epoch.
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
 
-    /// The protocol version that is in effect during the epoch that starts
-    /// immediately after this checkpoint.
+    /// The protocol version that is in effect during the next epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub next_epoch_protocol_version: ProtocolVersion,
@@ -58,20 +76,70 @@ pub struct EndOfEpochData {
     pub epoch_supply_change: i64,
 }
 
+/// A header for a Checkpoint on the IOTA blockchain.
+///
+/// On the IOTA network, checkpoints define the history of the blockchain. They
+/// are quite similar to the concept of blocks used by other blockchains like
+/// Bitcoin or Ethereum. The IOTA blockchain, however, forms checkpoints after
+/// transaction execution has already happened to provide a certified history of
+/// the chain, instead of being formed before execution.
+///
+/// Checkpoints commit to a variety of state including but not limited to:
+/// - The hash of the previous checkpoint.
+/// - The set of transaction digests, their corresponding effects digests, as
+///   well as the set of user signatures which authorized its execution.
+/// - The object's produced by a transaction.
+/// - The set of live objects that make up the current state of the chain.
+/// - On epoch transitions, the next validator committee.
+///
+/// `CheckpointSummary`s themselves don't directly include all of the above
+/// information but they are the top-level type by which all the above are
+/// committed to transitively via cryptographic hashes included in the summary.
+/// `CheckpointSummary`s are signed and certified by a quorum of the validator
+/// committee in a given epoch in order to allow verification of the chain's
+/// state.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// checkpoint-summary = u64                            ; epoch
+///                      u64                            ; sequence_number
+///                      u64                            ; network_total_transactions
+///                      digest                         ; content_digest
+///                      (option digest)                ; previous_digest
+///                      gas-cost-summary               ; epoch_rolling_gas_cost_summary
+///                      u64                            ; timestamp_ms
+///                      (vector checkpoint-commitment) ; checkpoint_commitments
+///                      (option end-of-epoch-data)     ; end_of_epoch_data
+///                      bytes                          ; version_specific_data
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointSummary {
+    /// Epoch that this checkpoint belongs to.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: EpochId,
+
+    /// The height of this checkpoint.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub sequence_number: CheckpointSequenceNumber,
+
     /// Total number of transactions committed since genesis, including those in
     /// this checkpoint.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub network_total_transactions: u64,
+
+    /// The hash of the [`CheckpointContents`] for this checkpoint.
     pub content_digest: CheckpointContentsDigest,
+
+    /// The hash of the previous `CheckpointSummary`.
+    ///
+    /// This will be only be `None` for the first, or genesis checkpoint.
     pub previous_digest: Option<CheckpointDigest>,
+
     /// The running total gas costs of all transactions included in the current
     /// epoch so far until this checkpoint.
     pub epoch_rolling_gas_cost_summary: GasCostSummary,
@@ -83,15 +151,14 @@ pub struct CheckpointSummary {
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub timestamp_ms: CheckpointTimestamp,
 
-    /// Commitments to checkpoint-specific state (e.g. txns in checkpoint,
-    /// objects read/written in checkpoint).
+    /// Commitments to checkpoint-specific state.
     #[cfg_attr(
         feature = "schemars",
         schemars(with = "Option<Vec<CheckpointCommitment>>")
     )]
     pub checkpoint_commitments: Vec<CheckpointCommitment>,
 
-    /// Present only on the final checkpoint of the epoch.
+    /// Extra data only present in the final checkpoint of an epoch.
     pub end_of_epoch_data: Option<EndOfEpochData>,
 
     /// CheckpointSummary is not an evolvable structure - it must be readable by
@@ -118,6 +185,24 @@ pub struct SignedCheckpointSummary {
     pub signature: ValidatorAggregatedSignature,
 }
 
+/// The committed to contents of a checkpoint.
+///
+/// `CheckpointContents` contains a list of digests of Transactions, their
+/// effects, and the user signatures that authorized their execution included in
+/// a checkpoint.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+///
+/// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
+///                          (vector (vector bcs-user-signature)) ; set of user signatures for each
+///                                                               ; transaction. MUST be the same
+///                                                               ; length as the vector of digests
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -140,6 +225,7 @@ impl CheckpointContents {
     }
 }
 
+/// Transaction information committed to in a checkpoint
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",

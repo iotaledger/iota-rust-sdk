@@ -36,7 +36,7 @@ pub use dynamic_fields::{
     DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
     DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
 };
-pub use epoch::{Epoch, EpochSummaryArgs, EpochSummaryQuery};
+pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, EpochsArgs, EpochsQuery};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
 pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
 use iota_types::Address;
@@ -49,16 +49,17 @@ pub use object::{
     ObjectFilter, ObjectKey, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs,
 };
 pub use packages::{
-    LatestPackageQuery, MovePackage, MovePackageVersionFilter, PackageArgs, PackageByNameArgs,
-    PackageByNameQuery, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs,
-    PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
+    LatestPackageQuery, MovePackage, MovePackageConnection, MovePackageVersionFilter, PackageArgs,
+    PackageByNameArgs, PackageByNameQuery, PackageCheckpointFilter, PackageQuery,
+    PackageVersionsArgs, PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
 };
 pub use protocol_config::{ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionArgs};
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
 pub use transaction::{
     TransactionBlock, TransactionBlockArgs, TransactionBlockEffectsQuery, TransactionBlockQuery,
-    TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
+    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
     TransactionsFilter,
 };
 

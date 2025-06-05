@@ -87,7 +87,7 @@ serialization_test!(SignedCheckpointSummary);
 serialization_test!(Bls12381PublicKey);
 serialization_test!(Bls12381Signature);
 serialization_test!(Bn254FieldElement);
-serialization_test!(Claim);
+serialization_test!(ZkLoginClaim);
 serialization_test!(Ed25519PublicKey);
 serialization_test!(Ed25519Signature);
 serialization_test!(Jwk);

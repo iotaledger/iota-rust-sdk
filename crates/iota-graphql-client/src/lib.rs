@@ -25,17 +25,18 @@ use query_types::{
     CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointsArgs, CheckpointsQuery, CoinMetadata,
     CoinMetadataArgs, CoinMetadataQuery, DryRunArgs, DryRunQuery, DynamicFieldArgs,
     DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
-    DynamicObjectFieldQuery, EpochSummaryArgs, EpochSummaryQuery, EventFilter, EventsQuery,
-    EventsQueryArgs, ExecuteTransactionArgs, ExecuteTransactionQuery, LatestPackageQuery,
-    MoveFunction, MoveModule, MovePackageVersionFilter, NormalizedMoveFunctionQuery,
-    NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs,
-    ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs, PackageArgs,
-    PackageByNameArgs, PackageByNameQuery, PackageCheckpointFilter, PackageQuery,
-    PackageVersionsArgs, PackageVersionsQuery, PackagesQuery, PackagesQueryArgs, PageInfo,
-    ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery,
-    TransactionBlockArgs, TransactionBlockEffectsQuery, TransactionBlockQuery,
-    TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-    TransactionMetadata, TransactionsFilter, Validator,
+    DynamicObjectFieldQuery, Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, EpochsArgs,
+    EpochsQuery, EventFilter, EventsQuery, EventsQueryArgs, ExecuteTransactionArgs,
+    ExecuteTransactionQuery, LatestPackageQuery, MoveFunction, MoveModule,
+    MovePackageVersionFilter, NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs,
+    NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, ObjectFilter, ObjectQuery,
+    ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs, PackageArgs, PackageByNameArgs,
+    PackageByNameQuery, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs,
+    PackageVersionsQuery, PackagesQuery, PackagesQueryArgs, PageInfo, ProtocolConfigQuery,
+    ProtocolConfigs, ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery, TransactionBlockArgs,
+    TransactionBlockEffectsQuery, TransactionBlockQuery, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionMetadata, TransactionsFilter,
+    Validator,
 };
 use reqwest::Url;
 use serde::{Serialize, de::DeserializeOwned};
@@ -43,7 +44,9 @@ use streams::stream_paginated_query;
 
 use crate::{
     error::{Kind, Result},
-    query_types::CheckpointTotalTxQuery,
+    query_types::{
+        CheckpointTotalTxQuery, TransactionBlockWithEffectsQuery, TransactionBlocksWithEffectsQuery,
+    },
 };
 
 const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
@@ -63,6 +66,11 @@ static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_V
 pub struct DryRunResult {
     pub effects: Option<TransactionEffects>,
     pub error: Option<String>,
+}
+
+pub struct TransactionDataEffects {
+    pub tx: SignedTransaction,
+    pub effects: TransactionEffects,
 }
 
 /// The name part of a dynamic field, including its type, bcs, and json
@@ -116,9 +124,8 @@ impl<T> Page<T> {
         &self.data
     }
 
-    /// Internal function to create a new page with the provided data and page
-    /// information.
-    fn new(page_info: PageInfo, data: Vec<T>) -> Self {
+    /// Create a new page with the provided data and page information.
+    pub fn new(page_info: PageInfo, data: Vec<T>) -> Self {
         Self { page_info, data }
     }
 
@@ -127,11 +134,12 @@ impl<T> Page<T> {
         self.data.is_empty()
     }
 
-    /// Internal function to create a page with no data.
-    fn new_empty() -> Self {
+    /// Create a page with no data.
+    pub fn new_empty() -> Self {
         Self::new(PageInfo::default(), vec![])
     }
 
+    /// Return a tuple of page info and the data.
     pub fn into_parts(self) -> (PageInfo, Vec<T>) {
         (self.page_info, self.data)
     }
@@ -267,10 +275,10 @@ impl Client {
         self.rpc.as_str()
     }
 
-    /// Internal function to handle pagination filters and return the
-    /// appropriate values. If limit is omitted, it will use the max page
+    /// Handle pagination filters and return the appropriate values (after,
+    /// before, first, last). If limit is omitted, it will use the max page
     /// size from the service config.
-    async fn pagination_filter(
+    pub async fn pagination_filter(
         &self,
         pagination_filter: PaginationFilter,
     ) -> (Option<String>, Option<String>, Option<i32>, Option<i32>) {
@@ -334,7 +342,7 @@ impl Client {
     /// This will return `Ok(None)` if the epoch requested is not available in
     /// the GraphQL service (e.g., due to pruning).
     pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        let operation = EpochSummaryQuery::build(EpochSummaryArgs { id: epoch });
+        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
         let response = self.run_query(&operation).await?;
 
         if let Some(errors) = response.errors {
@@ -528,7 +536,6 @@ impl Client {
                     type_: Some(coin_type.unwrap_or("0x2::coin::Coin")),
                     owner: Some(owner),
                     object_ids: None,
-                    object_keys: None,
                 }),
                 pagination_filter,
             )
@@ -763,7 +770,7 @@ impl Client {
 
         let result: Option<DynamicFieldOutput> = response
             .data
-            .and_then(|d| d.object)
+            .and_then(|d| d.owner)
             .and_then(|o| o.dynamic_object_field)
             .map(|df| df.try_into())
             .transpose()?;
@@ -824,6 +831,52 @@ impl Client {
     // Epoch API
     // ===========================================================================
 
+    /// Return the epoch information for the provided epoch. If no epoch is
+    /// provided, it will return the last known epoch.
+    pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<Epoch>> {
+        let operation = EpochQuery::build(EpochArgs { id: epoch });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        Ok(response.data.and_then(|d| d.epoch))
+    }
+
+    /// Return a page of epochs.
+    pub async fn epochs(&self, pagination_filter: PaginationFilter) -> Result<Page<Epoch>> {
+        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let operation = EpochsQuery::build(EpochsArgs {
+            after: after.as_deref(),
+            before: before.as_deref(),
+            first,
+            last,
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        if let Some(epochs) = response.data {
+            Ok(Page::new(epochs.epochs.page_info, epochs.epochs.nodes))
+        } else {
+            Ok(Page::new_empty())
+        }
+    }
+
+    /// Return a stream of epochs based on the (optional) object filter.
+    pub async fn epochs_stream(
+        &self,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<Epoch>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.epochs(pag_filter),
+            streaming_direction,
+        )
+    }
+
     /// Return the number of checkpoints in this epoch. This will return
     /// `Ok(None)` if the epoch requested is not available in the GraphQL
     /// service (e.g., due to pruning).
@@ -862,7 +915,7 @@ impl Client {
         &self,
         epoch: Option<u64>,
     ) -> Result<GraphQlResponse<EpochSummaryQuery>> {
-        let operation = EpochSummaryQuery::build(EpochSummaryArgs { id: epoch });
+        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
         self.run_query(&operation).await
     }
 
@@ -986,7 +1039,6 @@ impl Client {
     ///     type_: None,
     ///     owner: Some(Address::from_str("test").unwrap().into()),
     ///     object_ids: None,
-    ///     object_keys: None,
     /// };
     ///
     /// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
@@ -1251,7 +1303,6 @@ impl Client {
         let response = self.run_query(&operation).await?;
 
         if let Some(errors) = response.errors {
-            println!("{:?}", errors);
             return Err(Error::graphql_error(errors));
         }
 
@@ -1439,6 +1490,41 @@ impl Client {
             .transpose()
     }
 
+    /// Get a transaction's data and effects by its digest.
+    pub async fn transaction_data_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionDataEffects>> {
+        let operation = TransactionBlockWithEffectsQuery::build(TransactionBlockArgs {
+            digest: digest.to_string(),
+        });
+        let response = self.run_query(&operation).await?;
+
+        let tx = response
+            .data
+            .and_then(|d| d.transaction_block)
+            .map(|tx| (tx.bcs, tx.effects, tx.signatures));
+
+        match tx {
+            Some((Some(bcs), Some(effects), Some(sigs))) => {
+                let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
+                let effects = base64ct::Base64::decode_vec(effects.bcs.unwrap().0.as_str())?;
+                let signatures = sigs
+                    .iter()
+                    .map(|s| UserSignature::from_base64(&s.0))
+                    .collect::<Result<Vec<_>, _>>()?;
+                let transaction: Transaction = bcs::from_bytes(&bcs)?;
+                let tx = SignedTransaction {
+                    transaction,
+                    signatures,
+                };
+                let effects: TransactionEffects = bcs::from_bytes(&effects)?;
+                Ok(Some(TransactionDataEffects { tx, effects }))
+            }
+            _ => Ok(None),
+        }
+    }
+
     /// Get a page of transactions based on the provided filters.
     pub async fn transactions(
         &self,
@@ -1504,6 +1590,73 @@ impl Client {
                 .into_iter()
                 .map(|n| n.try_into())
                 .collect::<Result<Vec<_>>>()?;
+            let page = Page::new(page_info, transactions);
+            Ok(page)
+        } else {
+            Ok(Page::new_empty())
+        }
+    }
+
+    /// Get a page of transactions' data and effects based on the provided
+    /// filters.
+    pub async fn transactions_data_effects(
+        &self,
+        filter: Option<TransactionsFilter<'_>>,
+        pagination_filter: PaginationFilter,
+    ) -> Result<Page<TransactionDataEffects>> {
+        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+
+        let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksQueryArgs {
+            after: after.as_deref(),
+            before: before.as_deref(),
+            filter,
+            first,
+            last,
+        });
+
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        if let Some(txb) = response.data {
+            let txc = txb.transaction_blocks;
+            let page_info = txc.page_info;
+
+            let transactions = {
+                txc.nodes
+                    .iter()
+                    .map(|node| {
+                        match (
+                            node.bcs.as_ref(),
+                            node.effects.as_ref(),
+                            node.signatures.as_ref(),
+                        ) {
+                            (Some(bcs), Some(effects), Some(sigs)) => {
+                                let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
+                                let effects = base64ct::Base64::decode_vec(
+                                    effects.bcs.as_ref().unwrap().0.as_str(),
+                                )?;
+
+                                let sigs = sigs
+                                    .iter()
+                                    .map(|s| UserSignature::from_base64(&s.0))
+                                    .collect::<Result<Vec<_>, _>>()?;
+                                let tx: Transaction = bcs::from_bytes(&bcs)?;
+                                let tx = SignedTransaction {
+                                    transaction: tx,
+                                    signatures: sigs,
+                                };
+                                let effects: TransactionEffects = bcs::from_bytes(&effects)?;
+                                Ok(TransactionDataEffects { tx, effects })
+                            }
+                            (_, _, _) => Err(Error::empty_response_error()),
+                        }
+                    })
+                    .collect::<Result<Vec<_>>>()?
+            };
+
             let page = Page::new(page_info, transactions);
             Ok(page)
         } else {
@@ -1818,6 +1971,24 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_epoch_query() {
+        let client = test_client();
+        let e = client.epoch(None).await;
+        assert!(
+            e.is_ok(),
+            "Epoch query failed for {} network. Error: {}",
+            client.rpc_server(),
+            e.unwrap_err()
+        );
+
+        assert!(
+            e.unwrap().is_some(),
+            "Epoch query returned None for {} network",
+            client.rpc_server()
+        );
+    }
+
+    #[tokio::test]
     async fn test_epoch_total_checkpoints_query() {
         let client = test_client();
         let e = client.epoch_total_checkpoints(None).await;
@@ -1930,7 +2101,7 @@ mod tests {
             _ => return,
         };
         let key = Ed25519PublicKey::generate(rand::thread_rng());
-        let address = key.to_address();
+        let address = key.derive_address();
         faucet.request_and_wait(address).await.unwrap();
 
         const MAX_RETRIES: u32 = 10;

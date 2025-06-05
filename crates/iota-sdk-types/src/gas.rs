@@ -27,6 +27,17 @@
 /// rebate then is reduced by the "nonrefundable rate" such that:
 /// `potential_rebate(storage cost of deleted/mutated objects) =
 /// storage_rebate + non_refundable_storage_fee`
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// gas-cost-summary = u64 ; computation-cost
+///                    u64 ; storage-cost
+///                    u64 ; storage-rebate
+///                    u64 ; non-refundable-storage-fee
+/// ```
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
@@ -65,6 +76,16 @@ pub struct GasCostSummary {
 }
 
 impl GasCostSummary {
+    /// Create a new gas cost summary.
+    ///
+    /// # Arguments
+    /// * `computation_cost` - Cost of computation cost/execution.
+    /// * `storage_cost` - Storage cost, it's the sum of all storage cost for
+    ///   all objects created or mutated.
+    /// * `storage_rebate` - The amount of storage cost refunded to the user for
+    ///   all objects deleted or mutated in the transaction.
+    /// * `non_refundable_storage_fee` - The fee for the rebate. The portion of
+    ///   the storage rebate kept by the system.
     pub fn new(
         computation_cost: u64,
         computation_cost_burned: u64,
@@ -81,12 +102,13 @@ impl GasCostSummary {
         }
     }
 
+    /// The total gas used, which is the sum of computation and storage costs.
     pub fn gas_used(&self) -> u64 {
         self.computation_cost + self.storage_cost
     }
 
-    /// Get net gas usage, positive number means used gas; negative number means
-    /// refund.
+    /// The net gas usage, which is the total gas used minus the storage rebate.
+    /// A positive number means used gas; negative number means refund.
     pub fn net_gas_usage(&self) -> i64 {
         self.gas_used() as i64 - self.storage_rebate as i64
     }

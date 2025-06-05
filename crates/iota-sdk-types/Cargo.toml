@@ -1,11 +1,12 @@
 [package]
 name = "iota-sdk-types"
-version = "0.0.0"
+version = "0.0.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
 publish = false
 readme = "README.md"
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Core types for the IOTA SDK"
 
 [package.metadata.docs.rs]
@@ -43,7 +44,7 @@ bnum = "0.12.0"
 bs58 = "0.5.1"
 hex = "0.4.3"
 roaring = { version = "0.10.9", default-features = false }
-winnow = "0.6.20"
+winnow = "0.7"
 
 # Serialization and Deserialization support
 bcs = { version = "0.1.6", optional = true }
