@@ -13,7 +13,8 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 
 /// General error type for the client. It is used to wrap all the possible
 /// errors that can occur.
-#[derive(Debug, uniffi::Object)]
+#[derive(Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Object))]
 pub struct Error {
     inner: Box<InnerError>,
 }
@@ -31,7 +32,8 @@ struct InnerError {
     source: Option<BoxError>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 #[non_exhaustive]
 pub enum Kind {
     Deserialization,
@@ -46,20 +48,19 @@ impl std::error::Error for Error {
     }
 }
 
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 impl Error {
-    // Public accessors
-
     /// Returns the kind of error.
-    pub fn kind(&self) -> &Kind {
-        &self.inner.kind
+    pub fn kind(&self) -> Kind {
+        self.inner.kind
     }
+}
 
+impl Error {
     /// Original GraphQL query errors.
     pub fn graphql_errors(&self) -> Option<&[GraphQlError]> {
         self.inner.query_errors.as_deref()
     }
-
-    // Private constructors
 
     /// Convert the given error into a generic error.
     pub fn from_error<E: Into<BoxError>>(kind: Kind, error: E) -> Self {

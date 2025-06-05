@@ -2,5 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 fn main() {
-    uniffi::uniffi_bindgen_main()
+    #[cfg(feature = "uniffi")]
+    {
+        uniffi::uniffi_bindgen_main()
+    }
+    #[cfg(not(feature = "uniffi"))]
+    {
+        println!("enable the `uniffi` feature to generate bindings");
+    }
 }

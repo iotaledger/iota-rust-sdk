@@ -36,6 +36,12 @@ pub struct Bls12381PublicKey(
     [u8; Self::LENGTH],
 );
 
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(Bls12381PublicKey, Vec<u8>, {
+    lower: |key| key.as_bytes().to_vec(),
+    try_lift: |s| Ok(Bls12381PublicKey::from_bytes(s)?),
+});
+
 impl Bls12381PublicKey {
     /// The length of an bls12381 public key in bytes.
     pub const LENGTH: usize = 96;

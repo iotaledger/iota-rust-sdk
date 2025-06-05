@@ -12,6 +12,7 @@ use crate::query_types::schema;
 
 #[derive(cynic::Enum, Clone, Copy, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveAbility")]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum MoveAbility {
     Copy,
     Drop,
@@ -21,6 +22,7 @@ pub enum MoveAbility {
 
 #[derive(cynic::Enum, Clone, Copy, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveVisibility")]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum MoveVisibility {
     Public,
     Private,
@@ -29,6 +31,7 @@ pub enum MoveVisibility {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveFunction")]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveFunction {
     pub is_entry: Option<bool>,
     pub name: String,
@@ -41,12 +44,14 @@ pub struct MoveFunction {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveFunctionTypeParameter")]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveFunctionTypeParameter {
     pub constraints: Vec<MoveAbility>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "OpenMoveType")]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct OpenMoveType {
     pub repr: String,
 }

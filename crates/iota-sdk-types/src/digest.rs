@@ -29,6 +29,12 @@ pub struct Digest(
     [u8; Self::LENGTH],
 );
 
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(Digest, Vec<u8>, {
+    lower: |digest| digest.as_bytes().to_vec(),
+    try_lift: |s| Ok(Digest::from_bytes(s)?),
+});
+
 impl Digest {
     /// A constant representing the length of a digest in bytes.
     pub const LENGTH: usize = 32;
@@ -224,6 +230,9 @@ macro_rules! impl_digest {
         #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
         #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
         pub struct $t(Digest);
+
+        #[cfg(feature = "uniffi")]
+        uniffi::custom_type!($t, Digest);
 
         impl $t {
             pub const LENGTH: usize = Digest::LENGTH;

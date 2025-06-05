@@ -29,6 +29,48 @@ import traceback
 import typing
 import asyncio
 import platform
+from .iota_sdk_types import Address
+from .iota_sdk_types import CheckpointDigest
+from .iota_sdk_types import CheckpointSummary
+from .iota_sdk_types import Coin
+from .iota_sdk_types import Digest
+from .iota_sdk_types import Event
+from .iota_sdk_types import MovePackage
+from .iota_sdk_types import Object
+from .iota_sdk_types import SignedTransaction
+from .iota_sdk_types import Transaction
+from .iota_sdk_types import TransactionDigest
+from .iota_sdk_types import TransactionEffects
+from .iota_sdk_types import UniffiMovePackage
+from .iota_sdk_types import UserSignature
+from .iota_sdk_types import _UniffiConverterTypeAddress
+from .iota_sdk_types import _UniffiConverterTypeCheckpointDigest
+from .iota_sdk_types import _UniffiConverterTypeCheckpointSummary
+from .iota_sdk_types import _UniffiConverterTypeCoin
+from .iota_sdk_types import _UniffiConverterTypeDigest
+from .iota_sdk_types import _UniffiConverterTypeEvent
+from .iota_sdk_types import _UniffiConverterTypeMovePackage
+from .iota_sdk_types import _UniffiConverterTypeObject
+from .iota_sdk_types import _UniffiConverterTypeSignedTransaction
+from .iota_sdk_types import _UniffiConverterTypeTransaction
+from .iota_sdk_types import _UniffiConverterTypeTransactionDigest
+from .iota_sdk_types import _UniffiConverterTypeTransactionEffects
+from .iota_sdk_types import _UniffiConverterTypeUniffiMovePackage
+from .iota_sdk_types import _UniffiConverterTypeUserSignature
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferAddress
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferCheckpointDigest
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferCheckpointSummary
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferCoin
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferDigest
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferEvent
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferMovePackage
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferObject
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferSignedTransaction
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferTransaction
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferTransactionDigest
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferTransactionEffects
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferUniffiMovePackage
+from .iota_sdk_types import _UniffiRustBuffer as _UniffiRustBufferUserSignature
 
 # Used for default argument values
 _DEFAULT = object() # type: typing.Any
@@ -461,7 +503,85 @@ def _uniffi_check_contract_api_version(lib):
         raise InternalError("UniFFI contract version mismatch: try cleaning and rebuilding your project")
 
 def _uniffi_check_api_checksums(lib):
+    if lib.uniffi_iota_graphql_client_checksum_method_client_active_validators() != 56747:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_graphql_client_checksum_method_client_chain_id() != 24918:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_checkpoint() != 38759:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_checkpoints() != 47040:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_coin_metadata() != 43443:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_coins() != 46549:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_epoch() != 12920:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_epoch_total_checkpoints() != 18303:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_epoch_total_transaction_blocks() != 43068:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_epochs() != 31348:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_events() != 5353:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_execute_tx() != 53961:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_internal_total_transaction_blocks() != 49810:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_latest_checkpoint_sequence_number() != 47272:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_max_page_size() != 14967:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_move_object_contents_bcs() != 38373:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_normalized_move_function() != 38463:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_normalized_move_module() != 47271:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_object() != 49802:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_object_bcs() != 33024:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_objects() != 48130:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_package() != 40442:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_package_by_name() != 16102:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_package_latest() != 41132:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_package_versions() != 9606:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_packages() != 54249:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_pagination_filter() != 48068:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_protocol_config() != 31000:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_reference_gas_price() != 53704:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_total_supply() != 47653:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_total_transaction_blocks() != 35998:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_total_transaction_blocks_by_digest() != 52201:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_total_transaction_blocks_by_seq_num() != 47800:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_transaction() != 32100:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_transaction_data_effects() != 52013:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_transaction_effects() != 5195:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_transactions() != 8436:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_transactions_data_effects() != 40448:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_client_transactions_effects() != 41232:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_graphql_client_checksum_method_error_kind() != 44566:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_graphql_client_checksum_constructor_client_new() != 30926:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -610,10 +730,225 @@ _UniffiLib.uniffi_iota_graphql_client_fn_constructor_client_new_testnet.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_graphql_client_fn_constructor_client_new_testnet.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_active_validators.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_active_validators.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_graphql_client_fn_method_client_chain_id.argtypes = (
     ctypes.c_void_p,
 )
 _UniffiLib.uniffi_iota_graphql_client_fn_method_client_chain_id.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_checkpoint.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_checkpoint.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_checkpoints.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_checkpoints.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_coin_metadata.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_coin_metadata.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_coins.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferAddress,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_coins.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_epoch.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_epoch.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_epoch_total_checkpoints.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_epoch_total_checkpoints.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_epoch_total_transaction_blocks.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_epoch_total_transaction_blocks.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_epochs.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_epochs.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_events.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_events.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_execute_tx.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBufferTransaction,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_execute_tx.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_internal_total_transaction_blocks.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_internal_total_transaction_blocks.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_latest_checkpoint_sequence_number.argtypes = (
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_latest_checkpoint_sequence_number.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_max_page_size.argtypes = (
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_max_page_size.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_move_object_contents_bcs.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferAddress,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_move_object_contents_bcs.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_normalized_move_function.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_normalized_move_function.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_normalized_move_module.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_normalized_move_module.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_object.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferAddress,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_object.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_object_bcs.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferAddress,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_object_bcs.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_objects.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_objects.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_package.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferAddress,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_package.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_package_by_name.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_package_by_name.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_package_latest.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferAddress,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_package_latest.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_package_versions.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferAddress,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_package_versions.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_packages.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_packages.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_pagination_filter.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_pagination_filter.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_protocol_config.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_protocol_config.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_reference_gas_price.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_reference_gas_price.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_supply.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_supply.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_transaction_blocks.argtypes = (
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_transaction_blocks.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_transaction_blocks_by_digest.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferDigest,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_transaction_blocks_by_digest.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_transaction_blocks_by_seq_num.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_uint64,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_transaction_blocks_by_seq_num.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transaction.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferDigest,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transaction.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transaction_data_effects.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferDigest,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transaction_data_effects.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transaction_effects.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBufferDigest,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transaction_effects.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transactions.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transactions.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transactions_data_effects.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transactions_data_effects.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transactions_effects.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_client_transactions_effects.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_graphql_client_fn_clone_error.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -624,6 +959,11 @@ _UniffiLib.uniffi_iota_graphql_client_fn_free_error.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_graphql_client_fn_free_error.restype = None
+_UniffiLib.uniffi_iota_graphql_client_fn_method_error_kind.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_graphql_client_fn_method_error_kind.restype = _UniffiRustBuffer
 _UniffiLib.ffi_iota_graphql_client_rustbuffer_alloc.argtypes = (
     ctypes.c_uint64,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -892,9 +1232,126 @@ _UniffiLib.ffi_iota_graphql_client_rust_future_complete_void.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.ffi_iota_graphql_client_rust_future_complete_void.restype = None
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_active_validators.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_active_validators.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_graphql_client_checksum_method_client_chain_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_graphql_client_checksum_method_client_chain_id.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_checkpoint.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_checkpoint.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_checkpoints.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_checkpoints.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_coin_metadata.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_coin_metadata.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_coins.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_coins.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_epoch.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_epoch.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_epoch_total_checkpoints.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_epoch_total_checkpoints.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_epoch_total_transaction_blocks.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_epoch_total_transaction_blocks.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_epochs.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_epochs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_events.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_events.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_execute_tx.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_execute_tx.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_internal_total_transaction_blocks.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_internal_total_transaction_blocks.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_latest_checkpoint_sequence_number.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_latest_checkpoint_sequence_number.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_max_page_size.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_max_page_size.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_move_object_contents_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_move_object_contents_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_normalized_move_function.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_normalized_move_function.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_normalized_move_module.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_normalized_move_module.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_object.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_object.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_object_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_object_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_objects.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_objects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_package.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_package.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_package_by_name.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_package_by_name.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_package_latest.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_package_latest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_package_versions.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_package_versions.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_packages.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_packages.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_pagination_filter.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_pagination_filter.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_protocol_config.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_protocol_config.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_reference_gas_price.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_reference_gas_price.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_total_supply.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_total_supply.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_total_transaction_blocks.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_total_transaction_blocks.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_total_transaction_blocks_by_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_total_transaction_blocks_by_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_total_transaction_blocks_by_seq_num.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_total_transaction_blocks_by_seq_num.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transaction.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transaction.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transaction_data_effects.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transaction_data_effects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transaction_effects.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transaction_effects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transactions.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transactions.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transactions_data_effects.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transactions_data_effects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transactions_effects.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_client_transactions_effects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_error_kind.argtypes = (
+)
+_UniffiLib.uniffi_iota_graphql_client_checksum_method_error_kind.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_graphql_client_checksum_constructor_client_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_graphql_client_checksum_constructor_client_new.restype = ctypes.c_uint16
@@ -999,9 +1456,1456 @@ class _UniffiConverterString:
             builder.write(value.encode("utf-8"))
             return builder.finalize()
 
+class _UniffiConverterBytes(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        size = buf.read_i32()
+        if size < 0:
+            raise InternalError("Unexpected negative byte string length")
+        return buf.read(size)
+
+    @staticmethod
+    def check_lower(value):
+        try:
+            memoryview(value)
+        except TypeError:
+            raise TypeError("a bytes-like object is required, not {!r}".format(type(value).__name__))
+
+    @staticmethod
+    def write(value, buf):
+        buf.write_i32(len(value))
+        buf.write(value)
 
 
 
+
+
+
+class CheckpointSummaryPage:
+    page_info: "PageInfo"
+    data: "typing.List[CheckpointSummary]"
+    def __init__(self, *, page_info: "PageInfo", data: "typing.List[CheckpointSummary]"):
+        self.page_info = page_info
+        self.data = data
+
+    def __str__(self):
+        return "CheckpointSummaryPage(page_info={}, data={})".format(self.page_info, self.data)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.data != other.data:
+            return False
+        return True
+
+class _UniffiConverterTypeCheckpointSummaryPage(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return CheckpointSummaryPage(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            data=_UniffiConverterSequenceTypeCheckpointSummary.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeCheckpointSummary.check_lower(value.data)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeCheckpointSummary.write(value.data, buf)
+
+
+class CoinMetadata:
+    """
+    The coin metadata associated with the given coin type.
+    """
+
+    decimals: "typing.Optional[int]"
+    """
+    The number of decimal places used to represent the token.
+    """
+
+    description: "typing.Optional[str]"
+    """
+    Optional description of the token, provided by the creator of the token.
+    """
+
+    icon_url: "typing.Optional[str]"
+    """
+    Icon URL of the coin.
+    """
+
+    name: "typing.Optional[str]"
+    """
+    Full, official name of the token.
+    """
+
+    symbol: "typing.Optional[str]"
+    """
+    The token's identifying abbreviation.
+    """
+
+    supply: "typing.Optional[BigInt]"
+    """
+    The overall quantity of tokens that will be issued.
+    """
+
+    version: "int"
+    """
+    Version of the token.
+    """
+
+    def __init__(self, *, decimals: "typing.Optional[int]", description: "typing.Optional[str]", icon_url: "typing.Optional[str]", name: "typing.Optional[str]", symbol: "typing.Optional[str]", supply: "typing.Optional[BigInt]", version: "int"):
+        self.decimals = decimals
+        self.description = description
+        self.icon_url = icon_url
+        self.name = name
+        self.symbol = symbol
+        self.supply = supply
+        self.version = version
+
+    def __str__(self):
+        return "CoinMetadata(decimals={}, description={}, icon_url={}, name={}, symbol={}, supply={}, version={})".format(self.decimals, self.description, self.icon_url, self.name, self.symbol, self.supply, self.version)
+
+    def __eq__(self, other):
+        if self.decimals != other.decimals:
+            return False
+        if self.description != other.description:
+            return False
+        if self.icon_url != other.icon_url:
+            return False
+        if self.name != other.name:
+            return False
+        if self.symbol != other.symbol:
+            return False
+        if self.supply != other.supply:
+            return False
+        if self.version != other.version:
+            return False
+        return True
+
+class _UniffiConverterTypeCoinMetadata(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return CoinMetadata(
+            decimals=_UniffiConverterOptionalInt32.read(buf),
+            description=_UniffiConverterOptionalString.read(buf),
+            icon_url=_UniffiConverterOptionalString.read(buf),
+            name=_UniffiConverterOptionalString.read(buf),
+            symbol=_UniffiConverterOptionalString.read(buf),
+            supply=_UniffiConverterOptionalTypeBigInt.read(buf),
+            version=_UniffiConverterUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalInt32.check_lower(value.decimals)
+        _UniffiConverterOptionalString.check_lower(value.description)
+        _UniffiConverterOptionalString.check_lower(value.icon_url)
+        _UniffiConverterOptionalString.check_lower(value.name)
+        _UniffiConverterOptionalString.check_lower(value.symbol)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.supply)
+        _UniffiConverterUInt64.check_lower(value.version)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalInt32.write(value.decimals, buf)
+        _UniffiConverterOptionalString.write(value.description, buf)
+        _UniffiConverterOptionalString.write(value.icon_url, buf)
+        _UniffiConverterOptionalString.write(value.name, buf)
+        _UniffiConverterOptionalString.write(value.symbol, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.supply, buf)
+        _UniffiConverterUInt64.write(value.version, buf)
+
+
+class CoinPage:
+    page_info: "PageInfo"
+    data: "typing.List[Coin]"
+    def __init__(self, *, page_info: "PageInfo", data: "typing.List[Coin]"):
+        self.page_info = page_info
+        self.data = data
+
+    def __str__(self):
+        return "CoinPage(page_info={}, data={})".format(self.page_info, self.data)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.data != other.data:
+            return False
+        return True
+
+class _UniffiConverterTypeCoinPage(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return CoinPage(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            data=_UniffiConverterSequenceTypeCoin.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeCoin.check_lower(value.data)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeCoin.write(value.data, buf)
+
+
+class Epoch:
+    epoch_id: "int"
+    """
+    The epoch's id as a sequence number that starts at 0 and is incremented
+    by one at every epoch change.
+    """
+
+    fund_inflow: "typing.Optional[BigInt]"
+    """
+    The storage fees paid for transactions executed during the epoch.
+    """
+
+    fund_outflow: "typing.Optional[BigInt]"
+    """
+    The storage fee rebates paid to users who deleted the data associated
+    with past transactions.
+    """
+
+    fund_size: "typing.Optional[BigInt]"
+    """
+    The storage fund available in this epoch.
+    This fund is used to redistribute storage fees from past transactions
+    to future validators.
+    """
+
+    live_object_set_digest: "typing.Optional[str]"
+    """
+    A commitment by the committee at the end of epoch on the contents of the
+    live object set at that time. This can be used to verify state
+    snapshots.
+    """
+
+    net_inflow: "typing.Optional[BigInt]"
+    """
+    The difference between the fund inflow and outflow, representing
+    the net amount of storage fees accumulated in this epoch.
+    """
+
+    protocol_configs: "typing.Optional[ProtocolConfigs]"
+    """
+    The epoch's corresponding protocol configuration, including the feature
+    flags and the configuration options.
+    """
+
+    reference_gas_price: "typing.Optional[BigInt]"
+    """
+    The minimum gas price that a quorum of validators are guaranteed to sign
+    a transaction for.
+    """
+
+    start_timestamp: "DateTime"
+    """
+    The epoch's starting timestamp.
+    """
+
+    end_timestamp: "typing.Optional[DateTime]"
+    """
+    The epoch's ending timestamp. Note that this is available only on epochs
+    that have ended.
+    """
+
+    system_state_version: "typing.Optional[int]"
+    """
+    The value of the `version` field of `0x5`, the
+    `0x3::iota::IotaSystemState` object.  This version changes whenever
+    the fields contained in the system state object (held in a dynamic
+    field attached to `0x5`) change.
+    """
+
+    total_checkpoints: "typing.Optional[int]"
+    """
+    The total number of checkpoints in this epoch.
+    """
+
+    total_gas_fees: "typing.Optional[BigInt]"
+    """
+    The total amount of gas fees (in MIST) that were paid in this epoch.
+    """
+
+    total_stake_rewards: "typing.Optional[BigInt]"
+    """
+    The total MIST rewarded as stake.
+    """
+
+    total_stake_subsidies: "typing.Optional[BigInt]"
+    """
+    The amount added to total gas fees to make up the total stake rewards.
+    """
+
+    total_transactions: "typing.Optional[int]"
+    """
+    The total number of transaction in this epoch.
+    """
+
+    validator_set: "typing.Optional[ValidatorSet]"
+    """
+    Validator related properties. For active validators, see
+    `active_validators` API.
+    """
+
+    def __init__(self, *, epoch_id: "int", fund_inflow: "typing.Optional[BigInt]", fund_outflow: "typing.Optional[BigInt]", fund_size: "typing.Optional[BigInt]", live_object_set_digest: "typing.Optional[str]", net_inflow: "typing.Optional[BigInt]", protocol_configs: "typing.Optional[ProtocolConfigs]", reference_gas_price: "typing.Optional[BigInt]", start_timestamp: "DateTime", end_timestamp: "typing.Optional[DateTime]", system_state_version: "typing.Optional[int]", total_checkpoints: "typing.Optional[int]", total_gas_fees: "typing.Optional[BigInt]", total_stake_rewards: "typing.Optional[BigInt]", total_stake_subsidies: "typing.Optional[BigInt]", total_transactions: "typing.Optional[int]", validator_set: "typing.Optional[ValidatorSet]"):
+        self.epoch_id = epoch_id
+        self.fund_inflow = fund_inflow
+        self.fund_outflow = fund_outflow
+        self.fund_size = fund_size
+        self.live_object_set_digest = live_object_set_digest
+        self.net_inflow = net_inflow
+        self.protocol_configs = protocol_configs
+        self.reference_gas_price = reference_gas_price
+        self.start_timestamp = start_timestamp
+        self.end_timestamp = end_timestamp
+        self.system_state_version = system_state_version
+        self.total_checkpoints = total_checkpoints
+        self.total_gas_fees = total_gas_fees
+        self.total_stake_rewards = total_stake_rewards
+        self.total_stake_subsidies = total_stake_subsidies
+        self.total_transactions = total_transactions
+        self.validator_set = validator_set
+
+    def __str__(self):
+        return "Epoch(epoch_id={}, fund_inflow={}, fund_outflow={}, fund_size={}, live_object_set_digest={}, net_inflow={}, protocol_configs={}, reference_gas_price={}, start_timestamp={}, end_timestamp={}, system_state_version={}, total_checkpoints={}, total_gas_fees={}, total_stake_rewards={}, total_stake_subsidies={}, total_transactions={}, validator_set={})".format(self.epoch_id, self.fund_inflow, self.fund_outflow, self.fund_size, self.live_object_set_digest, self.net_inflow, self.protocol_configs, self.reference_gas_price, self.start_timestamp, self.end_timestamp, self.system_state_version, self.total_checkpoints, self.total_gas_fees, self.total_stake_rewards, self.total_stake_subsidies, self.total_transactions, self.validator_set)
+
+    def __eq__(self, other):
+        if self.epoch_id != other.epoch_id:
+            return False
+        if self.fund_inflow != other.fund_inflow:
+            return False
+        if self.fund_outflow != other.fund_outflow:
+            return False
+        if self.fund_size != other.fund_size:
+            return False
+        if self.live_object_set_digest != other.live_object_set_digest:
+            return False
+        if self.net_inflow != other.net_inflow:
+            return False
+        if self.protocol_configs != other.protocol_configs:
+            return False
+        if self.reference_gas_price != other.reference_gas_price:
+            return False
+        if self.start_timestamp != other.start_timestamp:
+            return False
+        if self.end_timestamp != other.end_timestamp:
+            return False
+        if self.system_state_version != other.system_state_version:
+            return False
+        if self.total_checkpoints != other.total_checkpoints:
+            return False
+        if self.total_gas_fees != other.total_gas_fees:
+            return False
+        if self.total_stake_rewards != other.total_stake_rewards:
+            return False
+        if self.total_stake_subsidies != other.total_stake_subsidies:
+            return False
+        if self.total_transactions != other.total_transactions:
+            return False
+        if self.validator_set != other.validator_set:
+            return False
+        return True
+
+class _UniffiConverterTypeEpoch(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return Epoch(
+            epoch_id=_UniffiConverterUInt64.read(buf),
+            fund_inflow=_UniffiConverterOptionalTypeBigInt.read(buf),
+            fund_outflow=_UniffiConverterOptionalTypeBigInt.read(buf),
+            fund_size=_UniffiConverterOptionalTypeBigInt.read(buf),
+            live_object_set_digest=_UniffiConverterOptionalString.read(buf),
+            net_inflow=_UniffiConverterOptionalTypeBigInt.read(buf),
+            protocol_configs=_UniffiConverterOptionalTypeProtocolConfigs.read(buf),
+            reference_gas_price=_UniffiConverterOptionalTypeBigInt.read(buf),
+            start_timestamp=_UniffiConverterTypeDateTime.read(buf),
+            end_timestamp=_UniffiConverterOptionalTypeDateTime.read(buf),
+            system_state_version=_UniffiConverterOptionalUInt64.read(buf),
+            total_checkpoints=_UniffiConverterOptionalUInt64.read(buf),
+            total_gas_fees=_UniffiConverterOptionalTypeBigInt.read(buf),
+            total_stake_rewards=_UniffiConverterOptionalTypeBigInt.read(buf),
+            total_stake_subsidies=_UniffiConverterOptionalTypeBigInt.read(buf),
+            total_transactions=_UniffiConverterOptionalUInt64.read(buf),
+            validator_set=_UniffiConverterOptionalTypeValidatorSet.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterUInt64.check_lower(value.epoch_id)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.fund_inflow)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.fund_outflow)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.fund_size)
+        _UniffiConverterOptionalString.check_lower(value.live_object_set_digest)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.net_inflow)
+        _UniffiConverterOptionalTypeProtocolConfigs.check_lower(value.protocol_configs)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.reference_gas_price)
+        _UniffiConverterTypeDateTime.check_lower(value.start_timestamp)
+        _UniffiConverterOptionalTypeDateTime.check_lower(value.end_timestamp)
+        _UniffiConverterOptionalUInt64.check_lower(value.system_state_version)
+        _UniffiConverterOptionalUInt64.check_lower(value.total_checkpoints)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.total_gas_fees)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.total_stake_rewards)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.total_stake_subsidies)
+        _UniffiConverterOptionalUInt64.check_lower(value.total_transactions)
+        _UniffiConverterOptionalTypeValidatorSet.check_lower(value.validator_set)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterUInt64.write(value.epoch_id, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.fund_inflow, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.fund_outflow, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.fund_size, buf)
+        _UniffiConverterOptionalString.write(value.live_object_set_digest, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.net_inflow, buf)
+        _UniffiConverterOptionalTypeProtocolConfigs.write(value.protocol_configs, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.reference_gas_price, buf)
+        _UniffiConverterTypeDateTime.write(value.start_timestamp, buf)
+        _UniffiConverterOptionalTypeDateTime.write(value.end_timestamp, buf)
+        _UniffiConverterOptionalUInt64.write(value.system_state_version, buf)
+        _UniffiConverterOptionalUInt64.write(value.total_checkpoints, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.total_gas_fees, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.total_stake_rewards, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.total_stake_subsidies, buf)
+        _UniffiConverterOptionalUInt64.write(value.total_transactions, buf)
+        _UniffiConverterOptionalTypeValidatorSet.write(value.validator_set, buf)
+
+
+class EpochPage:
+    page_info: "PageInfo"
+    data: "typing.List[Epoch]"
+    def __init__(self, *, page_info: "PageInfo", data: "typing.List[Epoch]"):
+        self.page_info = page_info
+        self.data = data
+
+    def __str__(self):
+        return "EpochPage(page_info={}, data={})".format(self.page_info, self.data)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.data != other.data:
+            return False
+        return True
+
+class _UniffiConverterTypeEpochPage(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return EpochPage(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            data=_UniffiConverterSequenceTypeEpoch.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeEpoch.check_lower(value.data)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeEpoch.write(value.data, buf)
+
+
+class EventFilter:
+    emitting_module: "typing.Optional[str]"
+    event_type: "typing.Optional[str]"
+    sender: "typing.Optional[Address]"
+    transaction_digest: "typing.Optional[str]"
+    def __init__(self, *, emitting_module: "typing.Optional[str]", event_type: "typing.Optional[str]", sender: "typing.Optional[Address]", transaction_digest: "typing.Optional[str]"):
+        self.emitting_module = emitting_module
+        self.event_type = event_type
+        self.sender = sender
+        self.transaction_digest = transaction_digest
+
+    def __str__(self):
+        return "EventFilter(emitting_module={}, event_type={}, sender={}, transaction_digest={})".format(self.emitting_module, self.event_type, self.sender, self.transaction_digest)
+
+    def __eq__(self, other):
+        if self.emitting_module != other.emitting_module:
+            return False
+        if self.event_type != other.event_type:
+            return False
+        if self.sender != other.sender:
+            return False
+        if self.transaction_digest != other.transaction_digest:
+            return False
+        return True
+
+class _UniffiConverterTypeEventFilter(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return EventFilter(
+            emitting_module=_UniffiConverterOptionalString.read(buf),
+            event_type=_UniffiConverterOptionalString.read(buf),
+            sender=_UniffiConverterOptionalTypeAddress.read(buf),
+            transaction_digest=_UniffiConverterOptionalString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.emitting_module)
+        _UniffiConverterOptionalString.check_lower(value.event_type)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.sender)
+        _UniffiConverterOptionalString.check_lower(value.transaction_digest)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.emitting_module, buf)
+        _UniffiConverterOptionalString.write(value.event_type, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.sender, buf)
+        _UniffiConverterOptionalString.write(value.transaction_digest, buf)
+
+
+class GqlAddress:
+    address: "Address"
+    def __init__(self, *, address: "Address"):
+        self.address = address
+
+    def __str__(self):
+        return "GqlAddress(address={})".format(self.address)
+
+    def __eq__(self, other):
+        if self.address != other.address:
+            return False
+        return True
+
+class _UniffiConverterTypeGqlAddress(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return GqlAddress(
+            address=_UniffiConverterTypeAddress.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeAddress.check_lower(value.address)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeAddress.write(value.address, buf)
+
+
+class MoveEnum:
+    abilities: "typing.Optional[typing.List[MoveAbility]]"
+    name: "str"
+    type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]"
+    variants: "typing.Optional[typing.List[MoveEnumVariant]]"
+    def __init__(self, *, abilities: "typing.Optional[typing.List[MoveAbility]]", name: "str", type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]", variants: "typing.Optional[typing.List[MoveEnumVariant]]"):
+        self.abilities = abilities
+        self.name = name
+        self.type_parameters = type_parameters
+        self.variants = variants
+
+    def __str__(self):
+        return "MoveEnum(abilities={}, name={}, type_parameters={}, variants={})".format(self.abilities, self.name, self.type_parameters, self.variants)
+
+    def __eq__(self, other):
+        if self.abilities != other.abilities:
+            return False
+        if self.name != other.name:
+            return False
+        if self.type_parameters != other.type_parameters:
+            return False
+        if self.variants != other.variants:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveEnum(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveEnum(
+            abilities=_UniffiConverterOptionalSequenceTypeMoveAbility.read(buf),
+            name=_UniffiConverterString.read(buf),
+            type_parameters=_UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.read(buf),
+            variants=_UniffiConverterOptionalSequenceTypeMoveEnumVariant.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalSequenceTypeMoveAbility.check_lower(value.abilities)
+        _UniffiConverterString.check_lower(value.name)
+        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.check_lower(value.type_parameters)
+        _UniffiConverterOptionalSequenceTypeMoveEnumVariant.check_lower(value.variants)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalSequenceTypeMoveAbility.write(value.abilities, buf)
+        _UniffiConverterString.write(value.name, buf)
+        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.write(value.type_parameters, buf)
+        _UniffiConverterOptionalSequenceTypeMoveEnumVariant.write(value.variants, buf)
+
+
+class MoveEnumConnection:
+    nodes: "typing.List[MoveEnum]"
+    page_info: "PageInfo"
+    def __init__(self, *, nodes: "typing.List[MoveEnum]", page_info: "PageInfo"):
+        self.nodes = nodes
+        self.page_info = page_info
+
+    def __str__(self):
+        return "MoveEnumConnection(nodes={}, page_info={})".format(self.nodes, self.page_info)
+
+    def __eq__(self, other):
+        if self.nodes != other.nodes:
+            return False
+        if self.page_info != other.page_info:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveEnumConnection(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveEnumConnection(
+            nodes=_UniffiConverterSequenceTypeMoveEnum.read(buf),
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeMoveEnum.check_lower(value.nodes)
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeMoveEnum.write(value.nodes, buf)
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+
+
+class MoveEnumVariant:
+    fields: "typing.Optional[typing.List[MoveField]]"
+    name: "str"
+    def __init__(self, *, fields: "typing.Optional[typing.List[MoveField]]", name: "str"):
+        self.fields = fields
+        self.name = name
+
+    def __str__(self):
+        return "MoveEnumVariant(fields={}, name={})".format(self.fields, self.name)
+
+    def __eq__(self, other):
+        if self.fields != other.fields:
+            return False
+        if self.name != other.name:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveEnumVariant(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveEnumVariant(
+            fields=_UniffiConverterOptionalSequenceTypeMoveField.read(buf),
+            name=_UniffiConverterString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalSequenceTypeMoveField.check_lower(value.fields)
+        _UniffiConverterString.check_lower(value.name)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalSequenceTypeMoveField.write(value.fields, buf)
+        _UniffiConverterString.write(value.name, buf)
+
+
+class MoveField:
+    name: "str"
+    type: "typing.Optional[OpenMoveType]"
+    def __init__(self, *, name: "str", type: "typing.Optional[OpenMoveType]"):
+        self.name = name
+        self.type = type
+
+    def __str__(self):
+        return "MoveField(name={}, type={})".format(self.name, self.type)
+
+    def __eq__(self, other):
+        if self.name != other.name:
+            return False
+        if self.type != other.type:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveField(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveField(
+            name=_UniffiConverterString.read(buf),
+            type=_UniffiConverterOptionalTypeOpenMoveType.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.name)
+        _UniffiConverterOptionalTypeOpenMoveType.check_lower(value.type)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.name, buf)
+        _UniffiConverterOptionalTypeOpenMoveType.write(value.type, buf)
+
+
+class MoveFunction:
+    is_entry: "typing.Optional[bool]"
+    name: "str"
+    parameters: "typing.Optional[typing.List[OpenMoveType]]"
+    _return: "typing.Optional[typing.List[OpenMoveType]]"
+    type_parameters: "typing.Optional[typing.List[MoveFunctionTypeParameter]]"
+    visibility: "typing.Optional[MoveVisibility]"
+    def __init__(self, *, is_entry: "typing.Optional[bool]", name: "str", parameters: "typing.Optional[typing.List[OpenMoveType]]", _return: "typing.Optional[typing.List[OpenMoveType]]", type_parameters: "typing.Optional[typing.List[MoveFunctionTypeParameter]]", visibility: "typing.Optional[MoveVisibility]"):
+        self.is_entry = is_entry
+        self.name = name
+        self.parameters = parameters
+        self._return = _return
+        self.type_parameters = type_parameters
+        self.visibility = visibility
+
+    def __str__(self):
+        return "MoveFunction(is_entry={}, name={}, parameters={}, _return={}, type_parameters={}, visibility={})".format(self.is_entry, self.name, self.parameters, self._return, self.type_parameters, self.visibility)
+
+    def __eq__(self, other):
+        if self.is_entry != other.is_entry:
+            return False
+        if self.name != other.name:
+            return False
+        if self.parameters != other.parameters:
+            return False
+        if self._return != other._return:
+            return False
+        if self.type_parameters != other.type_parameters:
+            return False
+        if self.visibility != other.visibility:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveFunction(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveFunction(
+            is_entry=_UniffiConverterOptionalBool.read(buf),
+            name=_UniffiConverterString.read(buf),
+            parameters=_UniffiConverterOptionalSequenceTypeOpenMoveType.read(buf),
+            _return=_UniffiConverterOptionalSequenceTypeOpenMoveType.read(buf),
+            type_parameters=_UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter.read(buf),
+            visibility=_UniffiConverterOptionalTypeMoveVisibility.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalBool.check_lower(value.is_entry)
+        _UniffiConverterString.check_lower(value.name)
+        _UniffiConverterOptionalSequenceTypeOpenMoveType.check_lower(value.parameters)
+        _UniffiConverterOptionalSequenceTypeOpenMoveType.check_lower(value._return)
+        _UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter.check_lower(value.type_parameters)
+        _UniffiConverterOptionalTypeMoveVisibility.check_lower(value.visibility)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalBool.write(value.is_entry, buf)
+        _UniffiConverterString.write(value.name, buf)
+        _UniffiConverterOptionalSequenceTypeOpenMoveType.write(value.parameters, buf)
+        _UniffiConverterOptionalSequenceTypeOpenMoveType.write(value._return, buf)
+        _UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter.write(value.type_parameters, buf)
+        _UniffiConverterOptionalTypeMoveVisibility.write(value.visibility, buf)
+
+
+class MoveFunctionConnection:
+    nodes: "typing.List[MoveFunction]"
+    page_info: "PageInfo"
+    def __init__(self, *, nodes: "typing.List[MoveFunction]", page_info: "PageInfo"):
+        self.nodes = nodes
+        self.page_info = page_info
+
+    def __str__(self):
+        return "MoveFunctionConnection(nodes={}, page_info={})".format(self.nodes, self.page_info)
+
+    def __eq__(self, other):
+        if self.nodes != other.nodes:
+            return False
+        if self.page_info != other.page_info:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveFunctionConnection(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveFunctionConnection(
+            nodes=_UniffiConverterSequenceTypeMoveFunction.read(buf),
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeMoveFunction.check_lower(value.nodes)
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeMoveFunction.write(value.nodes, buf)
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+
+
+class MoveFunctionTypeParameter:
+    constraints: "typing.List[MoveAbility]"
+    def __init__(self, *, constraints: "typing.List[MoveAbility]"):
+        self.constraints = constraints
+
+    def __str__(self):
+        return "MoveFunctionTypeParameter(constraints={})".format(self.constraints)
+
+    def __eq__(self, other):
+        if self.constraints != other.constraints:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveFunctionTypeParameter(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveFunctionTypeParameter(
+            constraints=_UniffiConverterSequenceTypeMoveAbility.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeMoveAbility.check_lower(value.constraints)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeMoveAbility.write(value.constraints, buf)
+
+
+class MoveModule:
+    file_format_version: "int"
+    enums: "typing.Optional[MoveEnumConnection]"
+    friends: "MoveModuleConnection"
+    functions: "typing.Optional[MoveFunctionConnection]"
+    structs: "typing.Optional[MoveStructConnection]"
+    def __init__(self, *, file_format_version: "int", enums: "typing.Optional[MoveEnumConnection]", friends: "MoveModuleConnection", functions: "typing.Optional[MoveFunctionConnection]", structs: "typing.Optional[MoveStructConnection]"):
+        self.file_format_version = file_format_version
+        self.enums = enums
+        self.friends = friends
+        self.functions = functions
+        self.structs = structs
+
+    def __str__(self):
+        return "MoveModule(file_format_version={}, enums={}, friends={}, functions={}, structs={})".format(self.file_format_version, self.enums, self.friends, self.functions, self.structs)
+
+    def __eq__(self, other):
+        if self.file_format_version != other.file_format_version:
+            return False
+        if self.enums != other.enums:
+            return False
+        if self.friends != other.friends:
+            return False
+        if self.functions != other.functions:
+            return False
+        if self.structs != other.structs:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveModule(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveModule(
+            file_format_version=_UniffiConverterInt32.read(buf),
+            enums=_UniffiConverterOptionalTypeMoveEnumConnection.read(buf),
+            friends=_UniffiConverterTypeMoveModuleConnection.read(buf),
+            functions=_UniffiConverterOptionalTypeMoveFunctionConnection.read(buf),
+            structs=_UniffiConverterOptionalTypeMoveStructConnection.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterInt32.check_lower(value.file_format_version)
+        _UniffiConverterOptionalTypeMoveEnumConnection.check_lower(value.enums)
+        _UniffiConverterTypeMoveModuleConnection.check_lower(value.friends)
+        _UniffiConverterOptionalTypeMoveFunctionConnection.check_lower(value.functions)
+        _UniffiConverterOptionalTypeMoveStructConnection.check_lower(value.structs)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterInt32.write(value.file_format_version, buf)
+        _UniffiConverterOptionalTypeMoveEnumConnection.write(value.enums, buf)
+        _UniffiConverterTypeMoveModuleConnection.write(value.friends, buf)
+        _UniffiConverterOptionalTypeMoveFunctionConnection.write(value.functions, buf)
+        _UniffiConverterOptionalTypeMoveStructConnection.write(value.structs, buf)
+
+
+class MoveModule2:
+    name: "str"
+    def __init__(self, *, name: "str"):
+        self.name = name
+
+    def __str__(self):
+        return "MoveModule2(name={})".format(self.name)
+
+    def __eq__(self, other):
+        if self.name != other.name:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveModule2(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveModule2(
+            name=_UniffiConverterString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.name)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.name, buf)
+
+
+class MoveModuleConnection:
+    nodes: "typing.List[MoveModule2]"
+    page_info: "PageInfo"
+    def __init__(self, *, nodes: "typing.List[MoveModule2]", page_info: "PageInfo"):
+        self.nodes = nodes
+        self.page_info = page_info
+
+    def __str__(self):
+        return "MoveModuleConnection(nodes={}, page_info={})".format(self.nodes, self.page_info)
+
+    def __eq__(self, other):
+        if self.nodes != other.nodes:
+            return False
+        if self.page_info != other.page_info:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveModuleConnection(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveModuleConnection(
+            nodes=_UniffiConverterSequenceTypeMoveModule2.read(buf),
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeMoveModule2.check_lower(value.nodes)
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeMoveModule2.write(value.nodes, buf)
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+
+
+class MoveObject:
+    bcs: "typing.Optional[Base64]"
+    def __init__(self, *, bcs: "typing.Optional[Base64]"):
+        self.bcs = bcs
+
+    def __str__(self):
+        return "MoveObject(bcs={})".format(self.bcs)
+
+    def __eq__(self, other):
+        if self.bcs != other.bcs:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveObject(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveObject(
+            bcs=_UniffiConverterOptionalTypeBase64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalTypeBase64.check_lower(value.bcs)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalTypeBase64.write(value.bcs, buf)
+
+
+class MovePackagePage:
+    page_info: "PageInfo"
+    data: "typing.List[MovePackage]"
+    def __init__(self, *, page_info: "PageInfo", data: "typing.List[MovePackage]"):
+        self.page_info = page_info
+        self.data = data
+
+    def __str__(self):
+        return "MovePackagePage(page_info={}, data={})".format(self.page_info, self.data)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.data != other.data:
+            return False
+        return True
+
+class _UniffiConverterTypeMovePackagePage(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MovePackagePage(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            data=_UniffiConverterSequenceTypeMovePackage.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeMovePackage.check_lower(value.data)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeMovePackage.write(value.data, buf)
+
+
+class MovePackageQuery:
+    package_bcs: "typing.Optional[Base64]"
+    def __init__(self, *, package_bcs: "typing.Optional[Base64]"):
+        self.package_bcs = package_bcs
+
+    def __str__(self):
+        return "MovePackageQuery(package_bcs={})".format(self.package_bcs)
+
+    def __eq__(self, other):
+        if self.package_bcs != other.package_bcs:
+            return False
+        return True
+
+class _UniffiConverterTypeMovePackageQuery(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MovePackageQuery(
+            package_bcs=_UniffiConverterOptionalTypeBase64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalTypeBase64.check_lower(value.package_bcs)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalTypeBase64.write(value.package_bcs, buf)
+
+
+class MoveStruct:
+    abilities: "typing.Optional[typing.List[MoveAbility]]"
+    name: "str"
+    fields: "typing.Optional[typing.List[MoveField]]"
+    type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]"
+    def __init__(self, *, abilities: "typing.Optional[typing.List[MoveAbility]]", name: "str", fields: "typing.Optional[typing.List[MoveField]]", type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]"):
+        self.abilities = abilities
+        self.name = name
+        self.fields = fields
+        self.type_parameters = type_parameters
+
+    def __str__(self):
+        return "MoveStruct(abilities={}, name={}, fields={}, type_parameters={})".format(self.abilities, self.name, self.fields, self.type_parameters)
+
+    def __eq__(self, other):
+        if self.abilities != other.abilities:
+            return False
+        if self.name != other.name:
+            return False
+        if self.fields != other.fields:
+            return False
+        if self.type_parameters != other.type_parameters:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveStruct(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveStruct(
+            abilities=_UniffiConverterOptionalSequenceTypeMoveAbility.read(buf),
+            name=_UniffiConverterString.read(buf),
+            fields=_UniffiConverterOptionalSequenceTypeMoveField.read(buf),
+            type_parameters=_UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalSequenceTypeMoveAbility.check_lower(value.abilities)
+        _UniffiConverterString.check_lower(value.name)
+        _UniffiConverterOptionalSequenceTypeMoveField.check_lower(value.fields)
+        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.check_lower(value.type_parameters)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalSequenceTypeMoveAbility.write(value.abilities, buf)
+        _UniffiConverterString.write(value.name, buf)
+        _UniffiConverterOptionalSequenceTypeMoveField.write(value.fields, buf)
+        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.write(value.type_parameters, buf)
+
+
+class MoveStructConnection:
+    page_info: "PageInfo"
+    nodes: "typing.List[MoveStruct]"
+    def __init__(self, *, page_info: "PageInfo", nodes: "typing.List[MoveStruct]"):
+        self.page_info = page_info
+        self.nodes = nodes
+
+    def __str__(self):
+        return "MoveStructConnection(page_info={}, nodes={})".format(self.page_info, self.nodes)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.nodes != other.nodes:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveStructConnection(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveStructConnection(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            nodes=_UniffiConverterSequenceTypeMoveStruct.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeMoveStruct.check_lower(value.nodes)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeMoveStruct.write(value.nodes, buf)
+
+
+class MoveStructTypeParameter:
+    constraints: "typing.List[MoveAbility]"
+    is_phantom: "bool"
+    def __init__(self, *, constraints: "typing.List[MoveAbility]", is_phantom: "bool"):
+        self.constraints = constraints
+        self.is_phantom = is_phantom
+
+    def __str__(self):
+        return "MoveStructTypeParameter(constraints={}, is_phantom={})".format(self.constraints, self.is_phantom)
+
+    def __eq__(self, other):
+        if self.constraints != other.constraints:
+            return False
+        if self.is_phantom != other.is_phantom:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveStructTypeParameter(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveStructTypeParameter(
+            constraints=_UniffiConverterSequenceTypeMoveAbility.read(buf),
+            is_phantom=_UniffiConverterBool.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeMoveAbility.check_lower(value.constraints)
+        _UniffiConverterBool.check_lower(value.is_phantom)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeMoveAbility.write(value.constraints, buf)
+        _UniffiConverterBool.write(value.is_phantom, buf)
+
+
+class ObjectFilter:
+    type: "typing.Optional[str]"
+    owner: "typing.Optional[Address]"
+    object_ids: "typing.Optional[typing.List[Address]]"
+    def __init__(self, *, type: "typing.Optional[str]", owner: "typing.Optional[Address]", object_ids: "typing.Optional[typing.List[Address]]"):
+        self.type = type
+        self.owner = owner
+        self.object_ids = object_ids
+
+    def __str__(self):
+        return "ObjectFilter(type={}, owner={}, object_ids={})".format(self.type, self.owner, self.object_ids)
+
+    def __eq__(self, other):
+        if self.type != other.type:
+            return False
+        if self.owner != other.owner:
+            return False
+        if self.object_ids != other.object_ids:
+            return False
+        return True
+
+class _UniffiConverterTypeObjectFilter(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ObjectFilter(
+            type=_UniffiConverterOptionalString.read(buf),
+            owner=_UniffiConverterOptionalTypeAddress.read(buf),
+            object_ids=_UniffiConverterOptionalSequenceTypeAddress.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.type)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.owner)
+        _UniffiConverterOptionalSequenceTypeAddress.check_lower(value.object_ids)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.type, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.owner, buf)
+        _UniffiConverterOptionalSequenceTypeAddress.write(value.object_ids, buf)
+
+
+class ObjectPage:
+    page_info: "PageInfo"
+    data: "typing.List[Object]"
+    def __init__(self, *, page_info: "PageInfo", data: "typing.List[Object]"):
+        self.page_info = page_info
+        self.data = data
+
+    def __str__(self):
+        return "ObjectPage(page_info={}, data={})".format(self.page_info, self.data)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.data != other.data:
+            return False
+        return True
+
+class _UniffiConverterTypeObjectPage(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ObjectPage(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            data=_UniffiConverterSequenceTypeObject.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeObject.check_lower(value.data)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeObject.write(value.data, buf)
+
+
+class OpenMoveType:
+    repr: "str"
+    def __init__(self, *, repr: "str"):
+        self.repr = repr
+
+    def __str__(self):
+        return "OpenMoveType(repr={})".format(self.repr)
+
+    def __eq__(self, other):
+        if self.repr != other.repr:
+            return False
+        return True
+
+class _UniffiConverterTypeOpenMoveType(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return OpenMoveType(
+            repr=_UniffiConverterString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.repr)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.repr, buf)
+
+
+class PageInfo:
+    """
+    Information about pagination in a connection.
+    """
+
+    has_previous_page: "bool"
+    """
+    When paginating backwards, are there more items?
+    """
+
+    has_next_page: "bool"
+    """
+    Are there more items when paginating forwards?
+    """
+
+    start_cursor: "typing.Optional[str]"
+    """
+    When paginating backwards, the cursor to continue.
+    """
+
+    end_cursor: "typing.Optional[str]"
+    """
+    When paginating forwards, the cursor to continue.
+    """
+
+    def __init__(self, *, has_previous_page: "bool", has_next_page: "bool", start_cursor: "typing.Optional[str]", end_cursor: "typing.Optional[str]"):
+        self.has_previous_page = has_previous_page
+        self.has_next_page = has_next_page
+        self.start_cursor = start_cursor
+        self.end_cursor = end_cursor
+
+    def __str__(self):
+        return "PageInfo(has_previous_page={}, has_next_page={}, start_cursor={}, end_cursor={})".format(self.has_previous_page, self.has_next_page, self.start_cursor, self.end_cursor)
+
+    def __eq__(self, other):
+        if self.has_previous_page != other.has_previous_page:
+            return False
+        if self.has_next_page != other.has_next_page:
+            return False
+        if self.start_cursor != other.start_cursor:
+            return False
+        if self.end_cursor != other.end_cursor:
+            return False
+        return True
+
+class _UniffiConverterTypePageInfo(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return PageInfo(
+            has_previous_page=_UniffiConverterBool.read(buf),
+            has_next_page=_UniffiConverterBool.read(buf),
+            start_cursor=_UniffiConverterOptionalString.read(buf),
+            end_cursor=_UniffiConverterOptionalString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterBool.check_lower(value.has_previous_page)
+        _UniffiConverterBool.check_lower(value.has_next_page)
+        _UniffiConverterOptionalString.check_lower(value.start_cursor)
+        _UniffiConverterOptionalString.check_lower(value.end_cursor)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterBool.write(value.has_previous_page, buf)
+        _UniffiConverterBool.write(value.has_next_page, buf)
+        _UniffiConverterOptionalString.write(value.start_cursor, buf)
+        _UniffiConverterOptionalString.write(value.end_cursor, buf)
+
+
+class PaginationFilter:
+    """
+    Pagination options for querying the GraphQL server. It defaults to forward
+    pagination with the GraphQL server's max page size.
+    """
+
+    direction: "Direction"
+    """
+    The direction of pagination.
+    """
+
+    cursor: "typing.Optional[str]"
+    """
+    An opaque cursor used for pagination.
+    """
+
+    limit: "typing.Optional[int]"
+    """
+    The maximum number of items to return. If this is ommitted, it will
+    lazily query the service configuration for the max page size.
+    """
+
+    def __init__(self, *, direction: "Direction", cursor: "typing.Optional[str]", limit: "typing.Optional[int]"):
+        self.direction = direction
+        self.cursor = cursor
+        self.limit = limit
+
+    def __str__(self):
+        return "PaginationFilter(direction={}, cursor={}, limit={})".format(self.direction, self.cursor, self.limit)
+
+    def __eq__(self, other):
+        if self.direction != other.direction:
+            return False
+        if self.cursor != other.cursor:
+            return False
+        if self.limit != other.limit:
+            return False
+        return True
+
+class _UniffiConverterTypePaginationFilter(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return PaginationFilter(
+            direction=_UniffiConverterTypeDirection.read(buf),
+            cursor=_UniffiConverterOptionalString.read(buf),
+            limit=_UniffiConverterOptionalInt32.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeDirection.check_lower(value.direction)
+        _UniffiConverterOptionalString.check_lower(value.cursor)
+        _UniffiConverterOptionalInt32.check_lower(value.limit)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeDirection.write(value.direction, buf)
+        _UniffiConverterOptionalString.write(value.cursor, buf)
+        _UniffiConverterOptionalInt32.write(value.limit, buf)
+
+
+class PaginationFilterResponse:
+    after: "typing.Optional[str]"
+    before: "typing.Optional[str]"
+    first: "typing.Optional[int]"
+    last: "typing.Optional[int]"
+    def __init__(self, *, after: "typing.Optional[str]", before: "typing.Optional[str]", first: "typing.Optional[int]", last: "typing.Optional[int]"):
+        self.after = after
+        self.before = before
+        self.first = first
+        self.last = last
+
+    def __str__(self):
+        return "PaginationFilterResponse(after={}, before={}, first={}, last={})".format(self.after, self.before, self.first, self.last)
+
+    def __eq__(self, other):
+        if self.after != other.after:
+            return False
+        if self.before != other.before:
+            return False
+        if self.first != other.first:
+            return False
+        if self.last != other.last:
+            return False
+        return True
+
+class _UniffiConverterTypePaginationFilterResponse(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return PaginationFilterResponse(
+            after=_UniffiConverterOptionalString.read(buf),
+            before=_UniffiConverterOptionalString.read(buf),
+            first=_UniffiConverterOptionalInt32.read(buf),
+            last=_UniffiConverterOptionalInt32.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.after)
+        _UniffiConverterOptionalString.check_lower(value.before)
+        _UniffiConverterOptionalInt32.check_lower(value.first)
+        _UniffiConverterOptionalInt32.check_lower(value.last)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.after, buf)
+        _UniffiConverterOptionalString.write(value.before, buf)
+        _UniffiConverterOptionalInt32.write(value.first, buf)
+        _UniffiConverterOptionalInt32.write(value.last, buf)
 
 
 class ProtocolConfigAttr:
@@ -1342,6 +3246,903 @@ class _UniffiConverterTypeServiceConfig(_UniffiConverterRustBuffer):
         _UniffiConverterInt32.write(value.request_timeout_ms, buf)
 
 
+class SignedTransactionPage:
+    page_info: "PageInfo"
+    data: "typing.List[SignedTransaction]"
+    def __init__(self, *, page_info: "PageInfo", data: "typing.List[SignedTransaction]"):
+        self.page_info = page_info
+        self.data = data
+
+    def __str__(self):
+        return "SignedTransactionPage(page_info={}, data={})".format(self.page_info, self.data)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.data != other.data:
+            return False
+        return True
+
+class _UniffiConverterTypeSignedTransactionPage(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return SignedTransactionPage(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            data=_UniffiConverterSequenceTypeSignedTransaction.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeSignedTransaction.check_lower(value.data)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeSignedTransaction.write(value.data, buf)
+
+
+class TransactionDataEffects:
+    tx: "SignedTransaction"
+    effects: "TransactionEffects"
+    def __init__(self, *, tx: "SignedTransaction", effects: "TransactionEffects"):
+        self.tx = tx
+        self.effects = effects
+
+    def __str__(self):
+        return "TransactionDataEffects(tx={}, effects={})".format(self.tx, self.effects)
+
+    def __eq__(self, other):
+        if self.tx != other.tx:
+            return False
+        if self.effects != other.effects:
+            return False
+        return True
+
+class _UniffiConverterTypeTransactionDataEffects(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TransactionDataEffects(
+            tx=_UniffiConverterTypeSignedTransaction.read(buf),
+            effects=_UniffiConverterTypeTransactionEffects.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeSignedTransaction.check_lower(value.tx)
+        _UniffiConverterTypeTransactionEffects.check_lower(value.effects)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeSignedTransaction.write(value.tx, buf)
+        _UniffiConverterTypeTransactionEffects.write(value.effects, buf)
+
+
+class TransactionDataEffectsPage:
+    page_info: "PageInfo"
+    data: "typing.List[TransactionDataEffects]"
+    def __init__(self, *, page_info: "PageInfo", data: "typing.List[TransactionDataEffects]"):
+        self.page_info = page_info
+        self.data = data
+
+    def __str__(self):
+        return "TransactionDataEffectsPage(page_info={}, data={})".format(self.page_info, self.data)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.data != other.data:
+            return False
+        return True
+
+class _UniffiConverterTypeTransactionDataEffectsPage(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TransactionDataEffectsPage(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            data=_UniffiConverterSequenceTypeTransactionDataEffects.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeTransactionDataEffects.check_lower(value.data)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeTransactionDataEffects.write(value.data, buf)
+
+
+class TransactionEffectsPage:
+    page_info: "PageInfo"
+    data: "typing.List[TransactionEffects]"
+    def __init__(self, *, page_info: "PageInfo", data: "typing.List[TransactionEffects]"):
+        self.page_info = page_info
+        self.data = data
+
+    def __str__(self):
+        return "TransactionEffectsPage(page_info={}, data={})".format(self.page_info, self.data)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.data != other.data:
+            return False
+        return True
+
+class _UniffiConverterTypeTransactionEffectsPage(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TransactionEffectsPage(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            data=_UniffiConverterSequenceTypeTransactionEffects.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeTransactionEffects.check_lower(value.data)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeTransactionEffects.write(value.data, buf)
+
+
+class TransactionEvent:
+    event: "Event"
+    digest: "TransactionDigest"
+    def __init__(self, *, event: "Event", digest: "TransactionDigest"):
+        self.event = event
+        self.digest = digest
+
+    def __str__(self):
+        return "TransactionEvent(event={}, digest={})".format(self.event, self.digest)
+
+    def __eq__(self, other):
+        if self.event != other.event:
+            return False
+        if self.digest != other.digest:
+            return False
+        return True
+
+class _UniffiConverterTypeTransactionEvent(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TransactionEvent(
+            event=_UniffiConverterTypeEvent.read(buf),
+            digest=_UniffiConverterTypeTransactionDigest.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeEvent.check_lower(value.event)
+        _UniffiConverterTypeTransactionDigest.check_lower(value.digest)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeEvent.write(value.event, buf)
+        _UniffiConverterTypeTransactionDigest.write(value.digest, buf)
+
+
+class TransactionEventPage:
+    page_info: "PageInfo"
+    data: "typing.List[TransactionEvent]"
+    def __init__(self, *, page_info: "PageInfo", data: "typing.List[TransactionEvent]"):
+        self.page_info = page_info
+        self.data = data
+
+    def __str__(self):
+        return "TransactionEventPage(page_info={}, data={})".format(self.page_info, self.data)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.data != other.data:
+            return False
+        return True
+
+class _UniffiConverterTypeTransactionEventPage(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TransactionEventPage(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            data=_UniffiConverterSequenceTypeTransactionEvent.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeTransactionEvent.check_lower(value.data)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeTransactionEvent.write(value.data, buf)
+
+
+class TransactionsFilter:
+    function: "typing.Optional[str]"
+    kind: "typing.Optional[TransactionBlockKindInput]"
+    after_checkpoint: "typing.Optional[int]"
+    at_checkpoint: "typing.Optional[int]"
+    before_checkpoint: "typing.Optional[int]"
+    affected_address: "typing.Optional[Address]"
+    sent_address: "typing.Optional[Address]"
+    input_object: "typing.Optional[Address]"
+    changed_object: "typing.Optional[Address]"
+    transaction_ids: "typing.Optional[typing.List[str]]"
+    def __init__(self, *, function: "typing.Optional[str]", kind: "typing.Optional[TransactionBlockKindInput]", after_checkpoint: "typing.Optional[int]", at_checkpoint: "typing.Optional[int]", before_checkpoint: "typing.Optional[int]", affected_address: "typing.Optional[Address]", sent_address: "typing.Optional[Address]", input_object: "typing.Optional[Address]", changed_object: "typing.Optional[Address]", transaction_ids: "typing.Optional[typing.List[str]]"):
+        self.function = function
+        self.kind = kind
+        self.after_checkpoint = after_checkpoint
+        self.at_checkpoint = at_checkpoint
+        self.before_checkpoint = before_checkpoint
+        self.affected_address = affected_address
+        self.sent_address = sent_address
+        self.input_object = input_object
+        self.changed_object = changed_object
+        self.transaction_ids = transaction_ids
+
+    def __str__(self):
+        return "TransactionsFilter(function={}, kind={}, after_checkpoint={}, at_checkpoint={}, before_checkpoint={}, affected_address={}, sent_address={}, input_object={}, changed_object={}, transaction_ids={})".format(self.function, self.kind, self.after_checkpoint, self.at_checkpoint, self.before_checkpoint, self.affected_address, self.sent_address, self.input_object, self.changed_object, self.transaction_ids)
+
+    def __eq__(self, other):
+        if self.function != other.function:
+            return False
+        if self.kind != other.kind:
+            return False
+        if self.after_checkpoint != other.after_checkpoint:
+            return False
+        if self.at_checkpoint != other.at_checkpoint:
+            return False
+        if self.before_checkpoint != other.before_checkpoint:
+            return False
+        if self.affected_address != other.affected_address:
+            return False
+        if self.sent_address != other.sent_address:
+            return False
+        if self.input_object != other.input_object:
+            return False
+        if self.changed_object != other.changed_object:
+            return False
+        if self.transaction_ids != other.transaction_ids:
+            return False
+        return True
+
+class _UniffiConverterTypeTransactionsFilter(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TransactionsFilter(
+            function=_UniffiConverterOptionalString.read(buf),
+            kind=_UniffiConverterOptionalTypeTransactionBlockKindInput.read(buf),
+            after_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
+            at_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
+            before_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
+            affected_address=_UniffiConverterOptionalTypeAddress.read(buf),
+            sent_address=_UniffiConverterOptionalTypeAddress.read(buf),
+            input_object=_UniffiConverterOptionalTypeAddress.read(buf),
+            changed_object=_UniffiConverterOptionalTypeAddress.read(buf),
+            transaction_ids=_UniffiConverterOptionalSequenceString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.function)
+        _UniffiConverterOptionalTypeTransactionBlockKindInput.check_lower(value.kind)
+        _UniffiConverterOptionalUInt64.check_lower(value.after_checkpoint)
+        _UniffiConverterOptionalUInt64.check_lower(value.at_checkpoint)
+        _UniffiConverterOptionalUInt64.check_lower(value.before_checkpoint)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.affected_address)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.sent_address)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.input_object)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.changed_object)
+        _UniffiConverterOptionalSequenceString.check_lower(value.transaction_ids)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.function, buf)
+        _UniffiConverterOptionalTypeTransactionBlockKindInput.write(value.kind, buf)
+        _UniffiConverterOptionalUInt64.write(value.after_checkpoint, buf)
+        _UniffiConverterOptionalUInt64.write(value.at_checkpoint, buf)
+        _UniffiConverterOptionalUInt64.write(value.before_checkpoint, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.affected_address, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.sent_address, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.input_object, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.changed_object, buf)
+        _UniffiConverterOptionalSequenceString.write(value.transaction_ids, buf)
+
+
+class Validator:
+    """
+    Represents a validator in the system.
+    """
+
+    apy: "typing.Optional[int]"
+    """
+    The APY of this validator in basis points.
+    To get the APY in percentage, divide by 100.
+    """
+
+    address: "GqlAddress"
+    """
+    The validator's address.
+    """
+
+    commission_rate: "typing.Optional[int]"
+    """
+    The fee charged by the validator for staking services.
+    """
+
+    credentials: "typing.Optional[ValidatorCredentials]"
+    """
+    Validator's credentials.
+    """
+
+    description: "typing.Optional[str]"
+    """
+    Validator's description.
+    """
+
+    exchange_rates_size: "typing.Optional[int]"
+    """
+    Number of exchange rates in the table.
+    """
+
+    gas_price: "typing.Optional[BigInt]"
+    """
+    The reference gas price for this epoch.
+    """
+
+    name: "typing.Optional[str]"
+    """
+    Validator's name.
+    """
+
+    image_url: "typing.Optional[str]"
+    """
+    Validator's url containing their custom image.
+    """
+
+    next_epoch_commission_rate: "typing.Optional[int]"
+    """
+    The proposed next epoch fee for the validator's staking services.
+    """
+
+    next_epoch_credentials: "typing.Optional[ValidatorCredentials]"
+    """
+    Validator's credentials for the next epoch.
+    """
+
+    next_epoch_gas_price: "typing.Optional[BigInt]"
+    """
+    The validator's gas price quote for the next epoch.
+    """
+
+    next_epoch_stake: "typing.Optional[BigInt]"
+    """
+    The total number of IOTA tokens in this pool plus
+    the pending stake amount for this epoch.
+    """
+
+    operation_cap: "typing.Optional[MoveObject]"
+    """
+    The validator's current valid `Cap` object. Validators can delegate
+    the operation ability to another address. The address holding this `Cap`
+    object can then update the reference gas price and tallying rule on
+    behalf of the validator.
+    """
+
+    pending_pool_token_withdraw: "typing.Optional[BigInt]"
+    """
+    Pending pool token withdrawn during the current epoch, emptied at epoch
+    boundaries.
+    """
+
+    pending_stake: "typing.Optional[BigInt]"
+    """
+    Pending stake amount for this epoch.
+    """
+
+    pending_total_iota_withdraw: "typing.Optional[BigInt]"
+    """
+    Pending stake withdrawn during the current epoch, emptied at epoch
+    boundaries.
+    """
+
+    pool_token_balance: "typing.Optional[BigInt]"
+    """
+    Total number of pool tokens issued by the pool.
+    """
+
+    project_url: "typing.Optional[str]"
+    """
+    Validator's homepage URL.
+    """
+
+    rewards_pool: "typing.Optional[BigInt]"
+    """
+    The epoch stake rewards will be added here at the end of each epoch.
+    """
+
+    staking_pool_activation_epoch: "typing.Optional[int]"
+    """
+    The epoch at which this pool became active.
+    """
+
+    staking_pool_id: "Address"
+    """
+    The ID of this validator's `0x3::staking_pool::StakingPool`.
+    """
+
+    staking_pool_iota_balance: "typing.Optional[BigInt]"
+    """
+    The total number of IOTA tokens in this pool.
+    """
+
+    voting_power: "typing.Optional[int]"
+    """
+    The voting power of this validator in basis points (e.g., 100 = 1%
+    voting power).
+    """
+
+    def __init__(self, *, apy: "typing.Optional[int]", address: "GqlAddress", commission_rate: "typing.Optional[int]", credentials: "typing.Optional[ValidatorCredentials]", description: "typing.Optional[str]", exchange_rates_size: "typing.Optional[int]", gas_price: "typing.Optional[BigInt]", name: "typing.Optional[str]", image_url: "typing.Optional[str]", next_epoch_commission_rate: "typing.Optional[int]", next_epoch_credentials: "typing.Optional[ValidatorCredentials]", next_epoch_gas_price: "typing.Optional[BigInt]", next_epoch_stake: "typing.Optional[BigInt]", operation_cap: "typing.Optional[MoveObject]", pending_pool_token_withdraw: "typing.Optional[BigInt]", pending_stake: "typing.Optional[BigInt]", pending_total_iota_withdraw: "typing.Optional[BigInt]", pool_token_balance: "typing.Optional[BigInt]", project_url: "typing.Optional[str]", rewards_pool: "typing.Optional[BigInt]", staking_pool_activation_epoch: "typing.Optional[int]", staking_pool_id: "Address", staking_pool_iota_balance: "typing.Optional[BigInt]", voting_power: "typing.Optional[int]"):
+        self.apy = apy
+        self.address = address
+        self.commission_rate = commission_rate
+        self.credentials = credentials
+        self.description = description
+        self.exchange_rates_size = exchange_rates_size
+        self.gas_price = gas_price
+        self.name = name
+        self.image_url = image_url
+        self.next_epoch_commission_rate = next_epoch_commission_rate
+        self.next_epoch_credentials = next_epoch_credentials
+        self.next_epoch_gas_price = next_epoch_gas_price
+        self.next_epoch_stake = next_epoch_stake
+        self.operation_cap = operation_cap
+        self.pending_pool_token_withdraw = pending_pool_token_withdraw
+        self.pending_stake = pending_stake
+        self.pending_total_iota_withdraw = pending_total_iota_withdraw
+        self.pool_token_balance = pool_token_balance
+        self.project_url = project_url
+        self.rewards_pool = rewards_pool
+        self.staking_pool_activation_epoch = staking_pool_activation_epoch
+        self.staking_pool_id = staking_pool_id
+        self.staking_pool_iota_balance = staking_pool_iota_balance
+        self.voting_power = voting_power
+
+    def __str__(self):
+        return "Validator(apy={}, address={}, commission_rate={}, credentials={}, description={}, exchange_rates_size={}, gas_price={}, name={}, image_url={}, next_epoch_commission_rate={}, next_epoch_credentials={}, next_epoch_gas_price={}, next_epoch_stake={}, operation_cap={}, pending_pool_token_withdraw={}, pending_stake={}, pending_total_iota_withdraw={}, pool_token_balance={}, project_url={}, rewards_pool={}, staking_pool_activation_epoch={}, staking_pool_id={}, staking_pool_iota_balance={}, voting_power={})".format(self.apy, self.address, self.commission_rate, self.credentials, self.description, self.exchange_rates_size, self.gas_price, self.name, self.image_url, self.next_epoch_commission_rate, self.next_epoch_credentials, self.next_epoch_gas_price, self.next_epoch_stake, self.operation_cap, self.pending_pool_token_withdraw, self.pending_stake, self.pending_total_iota_withdraw, self.pool_token_balance, self.project_url, self.rewards_pool, self.staking_pool_activation_epoch, self.staking_pool_id, self.staking_pool_iota_balance, self.voting_power)
+
+    def __eq__(self, other):
+        if self.apy != other.apy:
+            return False
+        if self.address != other.address:
+            return False
+        if self.commission_rate != other.commission_rate:
+            return False
+        if self.credentials != other.credentials:
+            return False
+        if self.description != other.description:
+            return False
+        if self.exchange_rates_size != other.exchange_rates_size:
+            return False
+        if self.gas_price != other.gas_price:
+            return False
+        if self.name != other.name:
+            return False
+        if self.image_url != other.image_url:
+            return False
+        if self.next_epoch_commission_rate != other.next_epoch_commission_rate:
+            return False
+        if self.next_epoch_credentials != other.next_epoch_credentials:
+            return False
+        if self.next_epoch_gas_price != other.next_epoch_gas_price:
+            return False
+        if self.next_epoch_stake != other.next_epoch_stake:
+            return False
+        if self.operation_cap != other.operation_cap:
+            return False
+        if self.pending_pool_token_withdraw != other.pending_pool_token_withdraw:
+            return False
+        if self.pending_stake != other.pending_stake:
+            return False
+        if self.pending_total_iota_withdraw != other.pending_total_iota_withdraw:
+            return False
+        if self.pool_token_balance != other.pool_token_balance:
+            return False
+        if self.project_url != other.project_url:
+            return False
+        if self.rewards_pool != other.rewards_pool:
+            return False
+        if self.staking_pool_activation_epoch != other.staking_pool_activation_epoch:
+            return False
+        if self.staking_pool_id != other.staking_pool_id:
+            return False
+        if self.staking_pool_iota_balance != other.staking_pool_iota_balance:
+            return False
+        if self.voting_power != other.voting_power:
+            return False
+        return True
+
+class _UniffiConverterTypeValidator(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return Validator(
+            apy=_UniffiConverterOptionalInt32.read(buf),
+            address=_UniffiConverterTypeGqlAddress.read(buf),
+            commission_rate=_UniffiConverterOptionalInt32.read(buf),
+            credentials=_UniffiConverterOptionalTypeValidatorCredentials.read(buf),
+            description=_UniffiConverterOptionalString.read(buf),
+            exchange_rates_size=_UniffiConverterOptionalUInt64.read(buf),
+            gas_price=_UniffiConverterOptionalTypeBigInt.read(buf),
+            name=_UniffiConverterOptionalString.read(buf),
+            image_url=_UniffiConverterOptionalString.read(buf),
+            next_epoch_commission_rate=_UniffiConverterOptionalInt32.read(buf),
+            next_epoch_credentials=_UniffiConverterOptionalTypeValidatorCredentials.read(buf),
+            next_epoch_gas_price=_UniffiConverterOptionalTypeBigInt.read(buf),
+            next_epoch_stake=_UniffiConverterOptionalTypeBigInt.read(buf),
+            operation_cap=_UniffiConverterOptionalTypeMoveObject.read(buf),
+            pending_pool_token_withdraw=_UniffiConverterOptionalTypeBigInt.read(buf),
+            pending_stake=_UniffiConverterOptionalTypeBigInt.read(buf),
+            pending_total_iota_withdraw=_UniffiConverterOptionalTypeBigInt.read(buf),
+            pool_token_balance=_UniffiConverterOptionalTypeBigInt.read(buf),
+            project_url=_UniffiConverterOptionalString.read(buf),
+            rewards_pool=_UniffiConverterOptionalTypeBigInt.read(buf),
+            staking_pool_activation_epoch=_UniffiConverterOptionalUInt64.read(buf),
+            staking_pool_id=_UniffiConverterTypeAddress.read(buf),
+            staking_pool_iota_balance=_UniffiConverterOptionalTypeBigInt.read(buf),
+            voting_power=_UniffiConverterOptionalInt32.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalInt32.check_lower(value.apy)
+        _UniffiConverterTypeGqlAddress.check_lower(value.address)
+        _UniffiConverterOptionalInt32.check_lower(value.commission_rate)
+        _UniffiConverterOptionalTypeValidatorCredentials.check_lower(value.credentials)
+        _UniffiConverterOptionalString.check_lower(value.description)
+        _UniffiConverterOptionalUInt64.check_lower(value.exchange_rates_size)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.gas_price)
+        _UniffiConverterOptionalString.check_lower(value.name)
+        _UniffiConverterOptionalString.check_lower(value.image_url)
+        _UniffiConverterOptionalInt32.check_lower(value.next_epoch_commission_rate)
+        _UniffiConverterOptionalTypeValidatorCredentials.check_lower(value.next_epoch_credentials)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.next_epoch_gas_price)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.next_epoch_stake)
+        _UniffiConverterOptionalTypeMoveObject.check_lower(value.operation_cap)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.pending_pool_token_withdraw)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.pending_stake)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.pending_total_iota_withdraw)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.pool_token_balance)
+        _UniffiConverterOptionalString.check_lower(value.project_url)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.rewards_pool)
+        _UniffiConverterOptionalUInt64.check_lower(value.staking_pool_activation_epoch)
+        _UniffiConverterTypeAddress.check_lower(value.staking_pool_id)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.staking_pool_iota_balance)
+        _UniffiConverterOptionalInt32.check_lower(value.voting_power)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalInt32.write(value.apy, buf)
+        _UniffiConverterTypeGqlAddress.write(value.address, buf)
+        _UniffiConverterOptionalInt32.write(value.commission_rate, buf)
+        _UniffiConverterOptionalTypeValidatorCredentials.write(value.credentials, buf)
+        _UniffiConverterOptionalString.write(value.description, buf)
+        _UniffiConverterOptionalUInt64.write(value.exchange_rates_size, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.gas_price, buf)
+        _UniffiConverterOptionalString.write(value.name, buf)
+        _UniffiConverterOptionalString.write(value.image_url, buf)
+        _UniffiConverterOptionalInt32.write(value.next_epoch_commission_rate, buf)
+        _UniffiConverterOptionalTypeValidatorCredentials.write(value.next_epoch_credentials, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.next_epoch_gas_price, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.next_epoch_stake, buf)
+        _UniffiConverterOptionalTypeMoveObject.write(value.operation_cap, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.pending_pool_token_withdraw, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.pending_stake, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.pending_total_iota_withdraw, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.pool_token_balance, buf)
+        _UniffiConverterOptionalString.write(value.project_url, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.rewards_pool, buf)
+        _UniffiConverterOptionalUInt64.write(value.staking_pool_activation_epoch, buf)
+        _UniffiConverterTypeAddress.write(value.staking_pool_id, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.staking_pool_iota_balance, buf)
+        _UniffiConverterOptionalInt32.write(value.voting_power, buf)
+
+
+class ValidatorCredentials:
+    """
+    The credentials related fields associated with a validator.
+    """
+
+    protocol_pub_key: "typing.Optional[Base64]"
+    network_pub_key: "typing.Optional[Base64]"
+    worker_pub_key: "typing.Optional[Base64]"
+    proof_of_possession: "typing.Optional[Base64]"
+    net_address: "typing.Optional[str]"
+    primary_address: "typing.Optional[str]"
+    worker_address: "typing.Optional[str]"
+    def __init__(self, *, protocol_pub_key: "typing.Optional[Base64]", network_pub_key: "typing.Optional[Base64]", worker_pub_key: "typing.Optional[Base64]", proof_of_possession: "typing.Optional[Base64]", net_address: "typing.Optional[str]", primary_address: "typing.Optional[str]", worker_address: "typing.Optional[str]"):
+        self.protocol_pub_key = protocol_pub_key
+        self.network_pub_key = network_pub_key
+        self.worker_pub_key = worker_pub_key
+        self.proof_of_possession = proof_of_possession
+        self.net_address = net_address
+        self.primary_address = primary_address
+        self.worker_address = worker_address
+
+    def __str__(self):
+        return "ValidatorCredentials(protocol_pub_key={}, network_pub_key={}, worker_pub_key={}, proof_of_possession={}, net_address={}, primary_address={}, worker_address={})".format(self.protocol_pub_key, self.network_pub_key, self.worker_pub_key, self.proof_of_possession, self.net_address, self.primary_address, self.worker_address)
+
+    def __eq__(self, other):
+        if self.protocol_pub_key != other.protocol_pub_key:
+            return False
+        if self.network_pub_key != other.network_pub_key:
+            return False
+        if self.worker_pub_key != other.worker_pub_key:
+            return False
+        if self.proof_of_possession != other.proof_of_possession:
+            return False
+        if self.net_address != other.net_address:
+            return False
+        if self.primary_address != other.primary_address:
+            return False
+        if self.worker_address != other.worker_address:
+            return False
+        return True
+
+class _UniffiConverterTypeValidatorCredentials(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ValidatorCredentials(
+            protocol_pub_key=_UniffiConverterOptionalTypeBase64.read(buf),
+            network_pub_key=_UniffiConverterOptionalTypeBase64.read(buf),
+            worker_pub_key=_UniffiConverterOptionalTypeBase64.read(buf),
+            proof_of_possession=_UniffiConverterOptionalTypeBase64.read(buf),
+            net_address=_UniffiConverterOptionalString.read(buf),
+            primary_address=_UniffiConverterOptionalString.read(buf),
+            worker_address=_UniffiConverterOptionalString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalTypeBase64.check_lower(value.protocol_pub_key)
+        _UniffiConverterOptionalTypeBase64.check_lower(value.network_pub_key)
+        _UniffiConverterOptionalTypeBase64.check_lower(value.worker_pub_key)
+        _UniffiConverterOptionalTypeBase64.check_lower(value.proof_of_possession)
+        _UniffiConverterOptionalString.check_lower(value.net_address)
+        _UniffiConverterOptionalString.check_lower(value.primary_address)
+        _UniffiConverterOptionalString.check_lower(value.worker_address)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalTypeBase64.write(value.protocol_pub_key, buf)
+        _UniffiConverterOptionalTypeBase64.write(value.network_pub_key, buf)
+        _UniffiConverterOptionalTypeBase64.write(value.worker_pub_key, buf)
+        _UniffiConverterOptionalTypeBase64.write(value.proof_of_possession, buf)
+        _UniffiConverterOptionalString.write(value.net_address, buf)
+        _UniffiConverterOptionalString.write(value.primary_address, buf)
+        _UniffiConverterOptionalString.write(value.worker_address, buf)
+
+
+class ValidatorPage:
+    page_info: "PageInfo"
+    data: "typing.List[Validator]"
+    def __init__(self, *, page_info: "PageInfo", data: "typing.List[Validator]"):
+        self.page_info = page_info
+        self.data = data
+
+    def __str__(self):
+        return "ValidatorPage(page_info={}, data={})".format(self.page_info, self.data)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.data != other.data:
+            return False
+        return True
+
+class _UniffiConverterTypeValidatorPage(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ValidatorPage(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            data=_UniffiConverterSequenceTypeValidator.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeValidator.check_lower(value.data)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeValidator.write(value.data, buf)
+
+
+class ValidatorSet:
+    inactive_pools_id: "typing.Optional[Address]"
+    """
+    Object ID of the `Table` storing the inactive staking pools.
+    """
+
+    inactive_pools_size: "typing.Optional[int]"
+    """
+    Size of the inactive pools `Table`.
+    """
+
+    pending_active_validators_id: "typing.Optional[Address]"
+    """
+    Object ID of the wrapped object `TableVec` storing the pending active
+    validators.
+    """
+
+    pending_active_validators_size: "typing.Optional[int]"
+    """
+    Size of the pending active validators table.
+    """
+
+    pending_removals: "typing.Optional[typing.List[int]]"
+    """
+    Validators that are pending removal from the active validator set,
+    expressed as indices in to `activeValidators`.
+    """
+
+    staking_pool_mappings_id: "typing.Optional[Address]"
+    """
+    Object ID of the `Table` storing the mapping from staking pool ids to
+    the addresses of the corresponding validators. This is needed
+    because a validator's address can potentially change but the object
+    ID of its pool will not.
+    """
+
+    staking_pool_mappings_size: "typing.Optional[int]"
+    """
+    Size of the stake pool mappings `Table`.
+    """
+
+    total_stake: "typing.Optional[BigInt]"
+    """
+    Total amount of stake for all active validators at the beginning of the
+    epoch.
+    """
+
+    validator_candidates_size: "typing.Optional[int]"
+    """
+    Size of the validator candidates `Table`.
+    """
+
+    validator_candidates_id: "typing.Optional[Address]"
+    """
+    Object ID of the `Table` storing the validator candidates.
+    """
+
+    def __init__(self, *, inactive_pools_id: "typing.Optional[Address]", inactive_pools_size: "typing.Optional[int]", pending_active_validators_id: "typing.Optional[Address]", pending_active_validators_size: "typing.Optional[int]", pending_removals: "typing.Optional[typing.List[int]]", staking_pool_mappings_id: "typing.Optional[Address]", staking_pool_mappings_size: "typing.Optional[int]", total_stake: "typing.Optional[BigInt]", validator_candidates_size: "typing.Optional[int]", validator_candidates_id: "typing.Optional[Address]"):
+        self.inactive_pools_id = inactive_pools_id
+        self.inactive_pools_size = inactive_pools_size
+        self.pending_active_validators_id = pending_active_validators_id
+        self.pending_active_validators_size = pending_active_validators_size
+        self.pending_removals = pending_removals
+        self.staking_pool_mappings_id = staking_pool_mappings_id
+        self.staking_pool_mappings_size = staking_pool_mappings_size
+        self.total_stake = total_stake
+        self.validator_candidates_size = validator_candidates_size
+        self.validator_candidates_id = validator_candidates_id
+
+    def __str__(self):
+        return "ValidatorSet(inactive_pools_id={}, inactive_pools_size={}, pending_active_validators_id={}, pending_active_validators_size={}, pending_removals={}, staking_pool_mappings_id={}, staking_pool_mappings_size={}, total_stake={}, validator_candidates_size={}, validator_candidates_id={})".format(self.inactive_pools_id, self.inactive_pools_size, self.pending_active_validators_id, self.pending_active_validators_size, self.pending_removals, self.staking_pool_mappings_id, self.staking_pool_mappings_size, self.total_stake, self.validator_candidates_size, self.validator_candidates_id)
+
+    def __eq__(self, other):
+        if self.inactive_pools_id != other.inactive_pools_id:
+            return False
+        if self.inactive_pools_size != other.inactive_pools_size:
+            return False
+        if self.pending_active_validators_id != other.pending_active_validators_id:
+            return False
+        if self.pending_active_validators_size != other.pending_active_validators_size:
+            return False
+        if self.pending_removals != other.pending_removals:
+            return False
+        if self.staking_pool_mappings_id != other.staking_pool_mappings_id:
+            return False
+        if self.staking_pool_mappings_size != other.staking_pool_mappings_size:
+            return False
+        if self.total_stake != other.total_stake:
+            return False
+        if self.validator_candidates_size != other.validator_candidates_size:
+            return False
+        if self.validator_candidates_id != other.validator_candidates_id:
+            return False
+        return True
+
+class _UniffiConverterTypeValidatorSet(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ValidatorSet(
+            inactive_pools_id=_UniffiConverterOptionalTypeAddress.read(buf),
+            inactive_pools_size=_UniffiConverterOptionalInt32.read(buf),
+            pending_active_validators_id=_UniffiConverterOptionalTypeAddress.read(buf),
+            pending_active_validators_size=_UniffiConverterOptionalInt32.read(buf),
+            pending_removals=_UniffiConverterOptionalSequenceInt32.read(buf),
+            staking_pool_mappings_id=_UniffiConverterOptionalTypeAddress.read(buf),
+            staking_pool_mappings_size=_UniffiConverterOptionalInt32.read(buf),
+            total_stake=_UniffiConverterOptionalTypeBigInt.read(buf),
+            validator_candidates_size=_UniffiConverterOptionalInt32.read(buf),
+            validator_candidates_id=_UniffiConverterOptionalTypeAddress.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalTypeAddress.check_lower(value.inactive_pools_id)
+        _UniffiConverterOptionalInt32.check_lower(value.inactive_pools_size)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.pending_active_validators_id)
+        _UniffiConverterOptionalInt32.check_lower(value.pending_active_validators_size)
+        _UniffiConverterOptionalSequenceInt32.check_lower(value.pending_removals)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.staking_pool_mappings_id)
+        _UniffiConverterOptionalInt32.check_lower(value.staking_pool_mappings_size)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.total_stake)
+        _UniffiConverterOptionalInt32.check_lower(value.validator_candidates_size)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.validator_candidates_id)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalTypeAddress.write(value.inactive_pools_id, buf)
+        _UniffiConverterOptionalInt32.write(value.inactive_pools_size, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.pending_active_validators_id, buf)
+        _UniffiConverterOptionalInt32.write(value.pending_active_validators_size, buf)
+        _UniffiConverterOptionalSequenceInt32.write(value.pending_removals, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.staking_pool_mappings_id, buf)
+        _UniffiConverterOptionalInt32.write(value.staking_pool_mappings_size, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.total_stake, buf)
+        _UniffiConverterOptionalInt32.write(value.validator_candidates_size, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.validator_candidates_id, buf)
+
+
+
+
+
+class Direction(enum.Enum):
+    """
+    Pagination direction.
+    """
+
+    FORWARD = 0
+    
+    BACKWARD = 1
+    
+
+
+class _UniffiConverterTypeDirection(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return Direction.FORWARD
+        if variant == 2:
+            return Direction.BACKWARD
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == Direction.FORWARD:
+            return
+        if value == Direction.BACKWARD:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == Direction.FORWARD:
+            buf.write_i32(1)
+        if value == Direction.BACKWARD:
+            buf.write_i32(2)
+
+
+
+
 
 
 
@@ -1421,6 +4222,279 @@ class _UniffiConverterTypeFeature(_UniffiConverterRustBuffer):
 
 
 
+
+
+class Kind(enum.Enum):
+    DESERIALIZATION = 0
+    
+    PARSE = 1
+    
+    QUERY = 2
+    
+    OTHER = 3
+    
+
+
+class _UniffiConverterTypeKind(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return Kind.DESERIALIZATION
+        if variant == 2:
+            return Kind.PARSE
+        if variant == 3:
+            return Kind.QUERY
+        if variant == 4:
+            return Kind.OTHER
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == Kind.DESERIALIZATION:
+            return
+        if value == Kind.PARSE:
+            return
+        if value == Kind.QUERY:
+            return
+        if value == Kind.OTHER:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == Kind.DESERIALIZATION:
+            buf.write_i32(1)
+        if value == Kind.PARSE:
+            buf.write_i32(2)
+        if value == Kind.QUERY:
+            buf.write_i32(3)
+        if value == Kind.OTHER:
+            buf.write_i32(4)
+
+
+
+
+
+
+
+class MoveAbility(enum.Enum):
+    COPY = 0
+    
+    DROP = 1
+    
+    KEY = 2
+    
+    STORE = 3
+    
+
+
+class _UniffiConverterTypeMoveAbility(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return MoveAbility.COPY
+        if variant == 2:
+            return MoveAbility.DROP
+        if variant == 3:
+            return MoveAbility.KEY
+        if variant == 4:
+            return MoveAbility.STORE
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == MoveAbility.COPY:
+            return
+        if value == MoveAbility.DROP:
+            return
+        if value == MoveAbility.KEY:
+            return
+        if value == MoveAbility.STORE:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == MoveAbility.COPY:
+            buf.write_i32(1)
+        if value == MoveAbility.DROP:
+            buf.write_i32(2)
+        if value == MoveAbility.KEY:
+            buf.write_i32(3)
+        if value == MoveAbility.STORE:
+            buf.write_i32(4)
+
+
+
+
+
+
+
+class MoveVisibility(enum.Enum):
+    PUBLIC = 0
+    
+    PRIVATE = 1
+    
+    FRIEND = 2
+    
+
+
+class _UniffiConverterTypeMoveVisibility(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return MoveVisibility.PUBLIC
+        if variant == 2:
+            return MoveVisibility.PRIVATE
+        if variant == 3:
+            return MoveVisibility.FRIEND
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == MoveVisibility.PUBLIC:
+            return
+        if value == MoveVisibility.PRIVATE:
+            return
+        if value == MoveVisibility.FRIEND:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == MoveVisibility.PUBLIC:
+            buf.write_i32(1)
+        if value == MoveVisibility.PRIVATE:
+            buf.write_i32(2)
+        if value == MoveVisibility.FRIEND:
+            buf.write_i32(3)
+
+
+
+
+
+
+
+class TransactionBlockKindInput(enum.Enum):
+    SYSTEM_TX = 0
+    
+    PROGRAMMABLE_TX = 1
+    
+
+
+class _UniffiConverterTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return TransactionBlockKindInput.SYSTEM_TX
+        if variant == 2:
+            return TransactionBlockKindInput.PROGRAMMABLE_TX
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == TransactionBlockKindInput.SYSTEM_TX:
+            return
+        if value == TransactionBlockKindInput.PROGRAMMABLE_TX:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == TransactionBlockKindInput.SYSTEM_TX:
+            buf.write_i32(1)
+        if value == TransactionBlockKindInput.PROGRAMMABLE_TX:
+            buf.write_i32(2)
+
+
+
+
+
+class _UniffiConverterOptionalInt32(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterInt32.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterInt32.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterInt32.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalUInt64(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterUInt64.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterUInt64.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterUInt64.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalBool(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterBool.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterBool.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterBool.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalString(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -1445,6 +4519,1332 @@ class _UniffiConverterOptionalString(_UniffiConverterRustBuffer):
             return _UniffiConverterString.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalBytes(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterBytes.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterBytes.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterBytes.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeCoinMetadata(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeCoinMetadata.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeCoinMetadata.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeCoinMetadata.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeEpoch(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeEpoch.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeEpoch.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeEpoch.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeEventFilter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeEventFilter.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeEventFilter.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeEventFilter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveEnumConnection(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveEnumConnection.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveEnumConnection.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveEnumConnection.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveFunction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveFunction.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveFunction.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveFunction.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveFunctionConnection(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveFunctionConnection.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveFunctionConnection.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveFunctionConnection.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveModule(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveModule.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveModule.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveModule.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveObject(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveObject.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveObject.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveObject.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveStructConnection(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveStructConnection.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveStructConnection.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveStructConnection.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeObjectFilter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeObjectFilter.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeObjectFilter.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeObjectFilter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeOpenMoveType(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeOpenMoveType.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeOpenMoveType.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeOpenMoveType.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeProtocolConfigs(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeProtocolConfigs.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeProtocolConfigs.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeProtocolConfigs.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeTransactionDataEffects(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeTransactionDataEffects.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeTransactionDataEffects.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeTransactionDataEffects.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeTransactionsFilter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeTransactionsFilter.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeTransactionsFilter.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeTransactionsFilter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeValidatorCredentials(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeValidatorCredentials.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeValidatorCredentials.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeValidatorCredentials.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeValidatorSet(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeValidatorSet.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeValidatorSet.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeValidatorSet.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeCheckpointSummary(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeCheckpointSummary.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeCheckpointSummary.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeCheckpointSummary.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeObject(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeObject.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeObject.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeObject.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeSignedTransaction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeSignedTransaction.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeSignedTransaction.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeSignedTransaction.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveVisibility(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveVisibility.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveVisibility.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveVisibility.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeTransactionBlockKindInput.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeTransactionBlockKindInput.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeTransactionBlockKindInput.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeTransactionEffects(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeTransactionEffects.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeTransactionEffects.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeTransactionEffects.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceInt32(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceInt32.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceInt32.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceInt32.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceString(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceString.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceString.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceString.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeMoveEnumVariant(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveEnumVariant.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveEnumVariant.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveEnumVariant.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeMoveField(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveField.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveField.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveField.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveFunctionTypeParameter.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveFunctionTypeParameter.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveFunctionTypeParameter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveStructTypeParameter.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveStructTypeParameter.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveStructTypeParameter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeOpenMoveType(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeOpenMoveType.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeOpenMoveType.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeOpenMoveType.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveAbility.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveAbility.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveAbility.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeAddress(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeAddress.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeAddress.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeAddress.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeBase64(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeBase64.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeBase64.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeBase64.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeBigInt(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeBigInt.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeBigInt.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeBigInt.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeDateTime(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeDateTime.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeDateTime.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeDateTime.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeAddress(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeAddress.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeAddress.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeAddress.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeCheckpointDigest(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeCheckpointDigest.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeCheckpointDigest.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeCheckpointDigest.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMovePackage(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMovePackage.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMovePackage.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMovePackage.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterSequenceInt32(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterInt32.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterInt32.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterInt32.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceString(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterString.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterString.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterString.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeEpoch(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeEpoch.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeEpoch.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeEpoch.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveEnum(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveEnum.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveEnum.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveEnum.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveEnumVariant(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveEnumVariant.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveEnumVariant.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveEnumVariant.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveField(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveField.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveField.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveField.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveFunction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveFunction.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveFunction.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveFunction.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveFunctionTypeParameter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveFunctionTypeParameter.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveFunctionTypeParameter.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveFunctionTypeParameter.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveModule2(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveModule2.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveModule2.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveModule2.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveStruct(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveStruct.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveStruct.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveStruct.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveStructTypeParameter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveStructTypeParameter.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveStructTypeParameter.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveStructTypeParameter.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeOpenMoveType(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeOpenMoveType.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeOpenMoveType.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeOpenMoveType.read(buf) for i in range(count)
+        ]
 
 
 
@@ -1498,6 +5898,181 @@ class _UniffiConverterSequenceTypeProtocolConfigFeatureFlag(_UniffiConverterRust
 
 
 
+class _UniffiConverterSequenceTypeTransactionDataEffects(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeTransactionDataEffects.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeTransactionDataEffects.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeTransactionDataEffects.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeTransactionEvent(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeTransactionEvent.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeTransactionEvent.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeTransactionEvent.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeValidator(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeValidator.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeValidator.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeValidator.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeCheckpointSummary(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeCheckpointSummary.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeCheckpointSummary.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeCheckpointSummary.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeCoin(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeCoin.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeCoin.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeCoin.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeObject(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeObject.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeObject.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeObject.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeSignedTransaction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeSignedTransaction.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeSignedTransaction.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeSignedTransaction.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeFeature(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -1521,6 +6096,241 @@ class _UniffiConverterSequenceTypeFeature(_UniffiConverterRustBuffer):
             _UniffiConverterTypeFeature.read(buf) for i in range(count)
         ]
 
+
+
+class _UniffiConverterSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveAbility.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveAbility.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveAbility.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeTransactionEffects(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeTransactionEffects.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeTransactionEffects.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeTransactionEffects.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeUserSignature(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeUserSignature.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeUserSignature.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeUserSignature.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeAddress(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeAddress.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeAddress.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeAddress.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMovePackage(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMovePackage.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMovePackage.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMovePackage.read(buf) for i in range(count)
+        ]
+
+
+class _UniffiConverterTypeBase64:
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value, buf)
+
+    @staticmethod
+    def read(buf):
+        return _UniffiConverterString.read(buf)
+
+    @staticmethod
+    def lift(value):
+        return _UniffiConverterString.lift(value)
+
+    @staticmethod
+    def check_lower(value):
+        return _UniffiConverterString.check_lower(value)
+
+    @staticmethod
+    def lower(value):
+        return _UniffiConverterString.lower(value)
+
+
+class _UniffiConverterTypeBcsName:
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterBytes.write(value, buf)
+
+    @staticmethod
+    def read(buf):
+        return _UniffiConverterBytes.read(buf)
+
+    @staticmethod
+    def lift(value):
+        return _UniffiConverterBytes.lift(value)
+
+    @staticmethod
+    def check_lower(value):
+        return _UniffiConverterBytes.check_lower(value)
+
+    @staticmethod
+    def lower(value):
+        return _UniffiConverterBytes.lower(value)
+
+
+class _UniffiConverterTypeBigInt:
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value, buf)
+
+    @staticmethod
+    def read(buf):
+        return _UniffiConverterString.read(buf)
+
+    @staticmethod
+    def lift(value):
+        return _UniffiConverterString.lift(value)
+
+    @staticmethod
+    def check_lower(value):
+        return _UniffiConverterString.check_lower(value)
+
+    @staticmethod
+    def lower(value):
+        return _UniffiConverterString.lower(value)
+
+
+class _UniffiConverterTypeDateTime:
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value, buf)
+
+    @staticmethod
+    def read(buf):
+        return _UniffiConverterString.read(buf)
+
+    @staticmethod
+    def lift(value):
+        return _UniffiConverterString.lift(value)
+
+    @staticmethod
+    def check_lower(value):
+        return _UniffiConverterString.check_lower(value)
+
+    @staticmethod
+    def lower(value):
+        return _UniffiConverterString.lower(value)
+
+
+class _UniffiConverterTypeNameValue:
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterBytes.write(value, buf)
+
+    @staticmethod
+    def read(buf):
+        return _UniffiConverterBytes.read(buf)
+
+    @staticmethod
+    def lift(value):
+        return _UniffiConverterBytes.lift(value)
+
+    @staticmethod
+    def check_lower(value):
+        return _UniffiConverterBytes.check_lower(value)
+
+    @staticmethod
+    def lower(value):
+        return _UniffiConverterBytes.lower(value)
+
 # objects.
 class ClientProtocol(typing.Protocol):
     """
@@ -1528,9 +6338,307 @@ class ClientProtocol(typing.Protocol):
     By default, it uses the `reqwest` crate as the HTTP client.
     """
 
+    def active_validators(self, epoch: "typing.Optional[int]",pagination_filter: "PaginationFilter"):
+        """
+        Get the list of active validators for the provided epoch, including
+        related metadata. If no epoch is provided, it will return the active
+        validators for the current epoch.
+        """
+
+        raise NotImplementedError
     def chain_id(self, ):
         """
         Get the chain identifier.
+        """
+
+        raise NotImplementedError
+    def checkpoint(self, digest: "typing.Optional[CheckpointDigest]",seq_num: "typing.Optional[int]"):
+        """
+        Get the [`CheckpointSummary`] for a given checkpoint digest or
+        checkpoint id. If none is provided, it will use the last known
+        checkpoint id.
+        """
+
+        raise NotImplementedError
+    def checkpoints(self, pagination_filter: "PaginationFilter"):
+        """
+        Get a page of [`CheckpointSummary`] for the provided parameters.
+        """
+
+        raise NotImplementedError
+    def coin_metadata(self, coin_type: "str"):
+        """
+        Get the coin metadata for the coin type.
+        """
+
+        raise NotImplementedError
+    def coins(self, owner: "Address",coin_type: "typing.Optional[str]",pagination_filter: "PaginationFilter"):
+        """
+        Get the list of coins for the specified address.
+
+        If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
+        which will return all coins. For IOTA coin, pass in the coin type:
+        `0x2::coin::Coin<0x2::iota::IOTA>`.
+        """
+
+        raise NotImplementedError
+    def epoch(self, epoch: "typing.Optional[int]"):
+        """
+        Return the epoch information for the provided epoch. If no epoch is
+        provided, it will return the last known epoch.
+        """
+
+        raise NotImplementedError
+    def epoch_total_checkpoints(self, epoch: "typing.Optional[int]"):
+        """
+        Return the number of checkpoints in this epoch. This will return
+        `Ok(None)` if the epoch requested is not available in the GraphQL
+        service (e.g., due to pruning).
+        """
+
+        raise NotImplementedError
+    def epoch_total_transaction_blocks(self, epoch: "typing.Optional[int]"):
+        """
+        Return the number of transaction blocks in this epoch. This will return
+        `Ok(None)` if the epoch requested is not available in the GraphQL
+        service (e.g., due to pruning).
+        """
+
+        raise NotImplementedError
+    def epochs(self, pagination_filter: "PaginationFilter"):
+        """
+        Return a page of epochs.
+        """
+
+        raise NotImplementedError
+    def events(self, filter: "typing.Optional[EventFilter]",pagination_filter: "PaginationFilter"):
+        """
+        Return a page of tuple (event, transaction digest) based on the
+        (optional) event filter.
+        """
+
+        raise NotImplementedError
+    def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction"):
+        """
+        Execute a transaction.
+        """
+
+        raise NotImplementedError
+    def internal_total_transaction_blocks(self, digest: "typing.Optional[str]",seq_num: "typing.Optional[int]"):
+        """
+        Internal function to get the total number of transaction blocks based on
+        the provided checkpoint digest or sequence number.
+        """
+
+        raise NotImplementedError
+    def latest_checkpoint_sequence_number(self, ):
+        """
+        Return the sequence number of the latest checkpoint that has been
+        executed.
+        """
+
+        raise NotImplementedError
+    def max_page_size(self, ):
+        """
+        Lazily fetch the max page size
+        """
+
+        raise NotImplementedError
+    def move_object_contents_bcs(self, address: "Address",version: "typing.Optional[int]"):
+        """
+        Return the BCS of an object that is a Move object.
+
+        If the object does not exist (e.g., due to pruning), this will return
+        `Ok(None)`. Similarly, if this is not an object but an address, it
+        will return `Ok(None)`.
+        """
+
+        raise NotImplementedError
+    def normalized_move_function(self, package: "str",module: "str",function: "str",version: "typing.Optional[int]"):
+        """
+        Return the normalized Move function data for the provided package,
+        module, and function.
+        """
+
+        raise NotImplementedError
+    def normalized_move_module(self, package: "str",module: "str",version: "typing.Optional[int]",pagination_filter_enums: "PaginationFilter",pagination_filter_friends: "PaginationFilter",pagination_filter_functions: "PaginationFilter",pagination_filter_structs: "PaginationFilter"):
+        """
+        Return the normalized Move module data for the provided module.
+        """
+
+        raise NotImplementedError
+    def object(self, address: "Address",version: "typing.Optional[int]"):
+        """
+        Return an object based on the provided [`Address`].
+
+        If the object does not exist (e.g., due to pruning), this will return
+        `Ok(None)`. Similarly, if this is not an object but an address, it
+        will return `Ok(None)`.
+        """
+
+        raise NotImplementedError
+    def object_bcs(self, object_id: "Address"):
+        """
+        Return the object's bcs content [`Vec<u8>`] based on the provided
+        [`Address`].
+        """
+
+        raise NotImplementedError
+    def objects(self, filter: "typing.Optional[ObjectFilter]",pagination_filter: "PaginationFilter"):
+        """
+        Return a page of objects based on the provided parameters.
+
+        Use this function together with the [`ObjectFilter::owner`] to get the
+        objects owned by an address.
+
+        # Example
+
+        ```rust,ignore
+        let filter = ObjectFilter {
+        type_: None,
+        owner: Some(Address::from_str("test").unwrap().into()),
+        object_ids: None,
+        };
+
+        let owned_objects = client.objects(None, None, Some(filter), None, None).await;
+        ```
+        """
+
+        raise NotImplementedError
+    def package(self, address: "Address",version: "typing.Optional[int]"):
+        """
+        The package corresponding to the given address (at the optionally given
+        version). When no version is given, the package is loaded directly
+        from the address given. Otherwise, the address is translated before
+        loading to point to the package whose original ID matches
+        the package at address, but whose version is version. For non-system
+        packages, this might result in a different address than address
+        because different versions of a package, introduced by upgrades,
+        exist at distinct addresses.
+
+        Note that this interpretation of version is different from a historical
+        object read (the interpretation of version for the object query).
+        """
+
+        raise NotImplementedError
+    def package_by_name(self, name: "str"):
+        """
+        Fetch a package by its name (using Move Registry Service)
+        """
+
+        raise NotImplementedError
+    def package_latest(self, address: "Address"):
+        """
+        Fetch the latest version of the package at address.
+        This corresponds to the package with the highest version that shares its
+        original ID with the package at address.
+        """
+
+        raise NotImplementedError
+    def package_versions(self, address: "Address",pagination_filter: "PaginationFilter",after_version: "typing.Optional[int]",before_version: "typing.Optional[int]"):
+        """
+        Fetch all versions of package at address (packages that share this
+        package's original ID), optionally bounding the versions exclusively
+        from below with afterVersion, or from above with beforeVersion.
+        """
+
+        raise NotImplementedError
+    def packages(self, pagination_filter: "PaginationFilter",after_checkpoint: "typing.Optional[int]",before_checkpoint: "typing.Optional[int]"):
+        """
+        The Move packages that exist in the network, optionally filtered to be
+        strictly before beforeCheckpoint and/or strictly after
+        afterCheckpoint.
+
+        This query returns all versions of a given user package that appear
+        between the specified checkpoints, but only records the latest
+        versions of system packages.
+        """
+
+        raise NotImplementedError
+    def pagination_filter(self, pagination_filter: "PaginationFilter"):
+        """
+        Handle pagination filters and return the appropriate values. If limit is
+        omitted, it will use the max page size from the service config.
+        """
+
+        raise NotImplementedError
+    def protocol_config(self, version: "typing.Optional[int]"):
+        """
+        Get the protocol configuration.
+        """
+
+        raise NotImplementedError
+    def reference_gas_price(self, epoch: "typing.Optional[int]"):
+        """
+        Get the reference gas price for the provided epoch or the last known one
+        if no epoch is provided.
+
+        This will return `Ok(None)` if the epoch requested is not available in
+        the GraphQL service (e.g., due to pruning).
+        """
+
+        raise NotImplementedError
+    def total_supply(self, coin_type: "str"):
+        """
+        Get total supply for the coin type.
+        """
+
+        raise NotImplementedError
+    def total_transaction_blocks(self, ):
+        """
+        The total number of transaction blocks in the network by the end of the
+        last known checkpoint.
+        """
+
+        raise NotImplementedError
+    def total_transaction_blocks_by_digest(self, digest: "CheckpointDigest"):
+        """
+        The total number of transaction blocks in the network by the end of the
+        provided checkpoint digest.
+        """
+
+        raise NotImplementedError
+    def total_transaction_blocks_by_seq_num(self, seq_num: "int"):
+        """
+        The total number of transaction blocks in the network by the end of the
+        provided checkpoint sequence number.
+        """
+
+        raise NotImplementedError
+    def transaction(self, digest: "TransactionDigest"):
+        """
+        Get a transaction by its digest.
+        """
+
+        raise NotImplementedError
+    def transaction_data_effects(self, digest: "TransactionDigest"):
+        """
+        Get a transaction's data and effects by its digest.
+        """
+
+        raise NotImplementedError
+    def transaction_effects(self, digest: "TransactionDigest"):
+        """
+        Get a transaction's effects by its digest.
+        """
+
+        raise NotImplementedError
+    def transactions(self, filter: "typing.Optional[TransactionsFilter]",pagination_filter: "PaginationFilter"):
+        """
+        Get a page of transactions based on the provided filters.
+        """
+
+        raise NotImplementedError
+    def transactions_data_effects(self, filter: "typing.Optional[TransactionsFilter]",pagination_filter: "PaginationFilter"):
+        """
+        Get a page of transactions' data and effects based on the provided
+        filters.
+        """
+
+        raise NotImplementedError
+    def transactions_effects(self, filter: "typing.Optional[TransactionsFilter]",pagination_filter: "PaginationFilter"):
+        """
+        Get a page of transactions' effects based on the provided filters.
         """
 
         raise NotImplementedError
@@ -1614,6 +6722,36 @@ class Client():
         return cls._make_instance_(pointer)
 
 
+    async def active_validators(self, epoch: "typing.Optional[int]",pagination_filter: "PaginationFilter") -> "ValidatorPage":
+        """
+        Get the list of active validators for the provided epoch, including
+        related metadata. If no epoch is provided, it will return the active
+        validators for the current epoch.
+        """
+
+        _UniffiConverterOptionalUInt64.check_lower(epoch)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_active_validators(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalUInt64.lower(epoch),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeValidatorPage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
     async def chain_id(self, ) -> "str":
         """
         Get the chain identifier.
@@ -1628,6 +6766,1072 @@ class Client():
             _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
             # lift function
             _UniffiConverterString.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def checkpoint(self, digest: "typing.Optional[CheckpointDigest]",seq_num: "typing.Optional[int]") -> "typing.Optional[CheckpointSummary]":
+        """
+        Get the [`CheckpointSummary`] for a given checkpoint digest or
+        checkpoint id. If none is provided, it will use the last known
+        checkpoint id.
+        """
+
+        _UniffiConverterOptionalTypeCheckpointDigest.check_lower(digest)
+        
+        _UniffiConverterOptionalUInt64.check_lower(seq_num)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_checkpoint(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalTypeCheckpointDigest.lower(digest),
+        _UniffiConverterOptionalUInt64.lower(seq_num)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeCheckpointSummary.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def checkpoints(self, pagination_filter: "PaginationFilter") -> "CheckpointSummaryPage":
+        """
+        Get a page of [`CheckpointSummary`] for the provided parameters.
+        """
+
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_checkpoints(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeCheckpointSummaryPage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def coin_metadata(self, coin_type: "str") -> "typing.Optional[CoinMetadata]":
+        """
+        Get the coin metadata for the coin type.
+        """
+
+        _UniffiConverterString.check_lower(coin_type)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_coin_metadata(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterString.lower(coin_type)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeCoinMetadata.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def coins(self, owner: "Address",coin_type: "typing.Optional[str]",pagination_filter: "PaginationFilter") -> "CoinPage":
+        """
+        Get the list of coins for the specified address.
+
+        If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
+        which will return all coins. For IOTA coin, pass in the coin type:
+        `0x2::coin::Coin<0x2::iota::IOTA>`.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(owner)
+        
+        _UniffiConverterOptionalString.check_lower(coin_type)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_coins(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(owner),
+        _UniffiConverterOptionalString.lower(coin_type),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeCoinPage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def epoch(self, epoch: "typing.Optional[int]") -> "typing.Optional[Epoch]":
+        """
+        Return the epoch information for the provided epoch. If no epoch is
+        provided, it will return the last known epoch.
+        """
+
+        _UniffiConverterOptionalUInt64.check_lower(epoch)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_epoch(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalUInt64.lower(epoch)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeEpoch.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def epoch_total_checkpoints(self, epoch: "typing.Optional[int]") -> "typing.Optional[int]":
+        """
+        Return the number of checkpoints in this epoch. This will return
+        `Ok(None)` if the epoch requested is not available in the GraphQL
+        service (e.g., due to pruning).
+        """
+
+        _UniffiConverterOptionalUInt64.check_lower(epoch)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_epoch_total_checkpoints(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalUInt64.lower(epoch)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def epoch_total_transaction_blocks(self, epoch: "typing.Optional[int]") -> "typing.Optional[int]":
+        """
+        Return the number of transaction blocks in this epoch. This will return
+        `Ok(None)` if the epoch requested is not available in the GraphQL
+        service (e.g., due to pruning).
+        """
+
+        _UniffiConverterOptionalUInt64.check_lower(epoch)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_epoch_total_transaction_blocks(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalUInt64.lower(epoch)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def epochs(self, pagination_filter: "PaginationFilter") -> "EpochPage":
+        """
+        Return a page of epochs.
+        """
+
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_epochs(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeEpochPage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def events(self, filter: "typing.Optional[EventFilter]",pagination_filter: "PaginationFilter") -> "TransactionEventPage":
+        """
+        Return a page of tuple (event, transaction digest) based on the
+        (optional) event filter.
+        """
+
+        _UniffiConverterOptionalTypeEventFilter.check_lower(filter)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_events(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalTypeEventFilter.lower(filter),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeTransactionEventPage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction") -> "typing.Optional[TransactionEffects]":
+        """
+        Execute a transaction.
+        """
+
+        _UniffiConverterSequenceTypeUserSignature.check_lower(signatures)
+        
+        _UniffiConverterTypeTransaction.check_lower(tx)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_execute_tx(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterSequenceTypeUserSignature.lower(signatures),
+        _UniffiConverterTypeTransaction.lower(tx)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeTransactionEffects.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def internal_total_transaction_blocks(self, digest: "typing.Optional[str]",seq_num: "typing.Optional[int]") -> "typing.Optional[int]":
+        """
+        Internal function to get the total number of transaction blocks based on
+        the provided checkpoint digest or sequence number.
+        """
+
+        _UniffiConverterOptionalString.check_lower(digest)
+        
+        _UniffiConverterOptionalUInt64.check_lower(seq_num)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_internal_total_transaction_blocks(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalString.lower(digest),
+        _UniffiConverterOptionalUInt64.lower(seq_num)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def latest_checkpoint_sequence_number(self, ) -> "typing.Optional[int]":
+        """
+        Return the sequence number of the latest checkpoint that has been
+        executed.
+        """
+
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_latest_checkpoint_sequence_number(
+                self._uniffi_clone_pointer(), 
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def max_page_size(self, ) -> "int":
+        """
+        Lazily fetch the max page size
+        """
+
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_max_page_size(
+                self._uniffi_clone_pointer(), 
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_i32,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_i32,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_i32,
+            # lift function
+            _UniffiConverterInt32.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def move_object_contents_bcs(self, address: "Address",version: "typing.Optional[int]") -> "typing.Optional[bytes]":
+        """
+        Return the BCS of an object that is a Move object.
+
+        If the object does not exist (e.g., due to pruning), this will return
+        `Ok(None)`. Similarly, if this is not an object but an address, it
+        will return `Ok(None)`.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(address)
+        
+        _UniffiConverterOptionalUInt64.check_lower(version)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_move_object_contents_bcs(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(address),
+        _UniffiConverterOptionalUInt64.lower(version)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalBytes.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def normalized_move_function(self, package: "str",module: "str",function: "str",version: "typing.Optional[int]") -> "typing.Optional[MoveFunction]":
+        """
+        Return the normalized Move function data for the provided package,
+        module, and function.
+        """
+
+        _UniffiConverterString.check_lower(package)
+        
+        _UniffiConverterString.check_lower(module)
+        
+        _UniffiConverterString.check_lower(function)
+        
+        _UniffiConverterOptionalUInt64.check_lower(version)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_normalized_move_function(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterString.lower(package),
+        _UniffiConverterString.lower(module),
+        _UniffiConverterString.lower(function),
+        _UniffiConverterOptionalUInt64.lower(version)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeMoveFunction.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def normalized_move_module(self, package: "str",module: "str",version: "typing.Optional[int]",pagination_filter_enums: "PaginationFilter",pagination_filter_friends: "PaginationFilter",pagination_filter_functions: "PaginationFilter",pagination_filter_structs: "PaginationFilter") -> "typing.Optional[MoveModule]":
+        """
+        Return the normalized Move module data for the provided module.
+        """
+
+        _UniffiConverterString.check_lower(package)
+        
+        _UniffiConverterString.check_lower(module)
+        
+        _UniffiConverterOptionalUInt64.check_lower(version)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter_enums)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter_friends)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter_functions)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter_structs)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_normalized_move_module(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterString.lower(package),
+        _UniffiConverterString.lower(module),
+        _UniffiConverterOptionalUInt64.lower(version),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter_enums),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter_friends),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter_functions),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter_structs)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeMoveModule.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def object(self, address: "Address",version: "typing.Optional[int]") -> "typing.Optional[Object]":
+        """
+        Return an object based on the provided [`Address`].
+
+        If the object does not exist (e.g., due to pruning), this will return
+        `Ok(None)`. Similarly, if this is not an object but an address, it
+        will return `Ok(None)`.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(address)
+        
+        _UniffiConverterOptionalUInt64.check_lower(version)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_object(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(address),
+        _UniffiConverterOptionalUInt64.lower(version)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeObject.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def object_bcs(self, object_id: "Address") -> "typing.Optional[bytes]":
+        """
+        Return the object's bcs content [`Vec<u8>`] based on the provided
+        [`Address`].
+        """
+
+        _UniffiConverterTypeAddress.check_lower(object_id)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_object_bcs(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(object_id)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalBytes.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def objects(self, filter: "typing.Optional[ObjectFilter]",pagination_filter: "PaginationFilter") -> "ObjectPage":
+        """
+        Return a page of objects based on the provided parameters.
+
+        Use this function together with the [`ObjectFilter::owner`] to get the
+        objects owned by an address.
+
+        # Example
+
+        ```rust,ignore
+        let filter = ObjectFilter {
+        type_: None,
+        owner: Some(Address::from_str("test").unwrap().into()),
+        object_ids: None,
+        };
+
+        let owned_objects = client.objects(None, None, Some(filter), None, None).await;
+        ```
+        """
+
+        _UniffiConverterOptionalTypeObjectFilter.check_lower(filter)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_objects(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalTypeObjectFilter.lower(filter),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeObjectPage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def package(self, address: "Address",version: "typing.Optional[int]") -> "typing.Optional[MovePackage]":
+        """
+        The package corresponding to the given address (at the optionally given
+        version). When no version is given, the package is loaded directly
+        from the address given. Otherwise, the address is translated before
+        loading to point to the package whose original ID matches
+        the package at address, but whose version is version. For non-system
+        packages, this might result in a different address than address
+        because different versions of a package, introduced by upgrades,
+        exist at distinct addresses.
+
+        Note that this interpretation of version is different from a historical
+        object read (the interpretation of version for the object query).
+        """
+
+        _UniffiConverterTypeAddress.check_lower(address)
+        
+        _UniffiConverterOptionalUInt64.check_lower(version)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_package(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(address),
+        _UniffiConverterOptionalUInt64.lower(version)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeMovePackage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def package_by_name(self, name: "str") -> "typing.Optional[MovePackage]":
+        """
+        Fetch a package by its name (using Move Registry Service)
+        """
+
+        _UniffiConverterString.check_lower(name)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_package_by_name(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterString.lower(name)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeMovePackage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def package_latest(self, address: "Address") -> "typing.Optional[MovePackage]":
+        """
+        Fetch the latest version of the package at address.
+        This corresponds to the package with the highest version that shares its
+        original ID with the package at address.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(address)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_package_latest(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(address)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeMovePackage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def package_versions(self, address: "Address",pagination_filter: "PaginationFilter",after_version: "typing.Optional[int]",before_version: "typing.Optional[int]") -> "MovePackagePage":
+        """
+        Fetch all versions of package at address (packages that share this
+        package's original ID), optionally bounding the versions exclusively
+        from below with afterVersion, or from above with beforeVersion.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(address)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        _UniffiConverterOptionalUInt64.check_lower(after_version)
+        
+        _UniffiConverterOptionalUInt64.check_lower(before_version)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_package_versions(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(address),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter),
+        _UniffiConverterOptionalUInt64.lower(after_version),
+        _UniffiConverterOptionalUInt64.lower(before_version)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeMovePackagePage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def packages(self, pagination_filter: "PaginationFilter",after_checkpoint: "typing.Optional[int]",before_checkpoint: "typing.Optional[int]") -> "MovePackagePage":
+        """
+        The Move packages that exist in the network, optionally filtered to be
+        strictly before beforeCheckpoint and/or strictly after
+        afterCheckpoint.
+
+        This query returns all versions of a given user package that appear
+        between the specified checkpoints, but only records the latest
+        versions of system packages.
+        """
+
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        _UniffiConverterOptionalUInt64.check_lower(after_checkpoint)
+        
+        _UniffiConverterOptionalUInt64.check_lower(before_checkpoint)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_packages(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter),
+        _UniffiConverterOptionalUInt64.lower(after_checkpoint),
+        _UniffiConverterOptionalUInt64.lower(before_checkpoint)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeMovePackagePage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def pagination_filter(self, pagination_filter: "PaginationFilter") -> "PaginationFilterResponse":
+        """
+        Handle pagination filters and return the appropriate values. If limit is
+        omitted, it will use the max page size from the service config.
+        """
+
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_pagination_filter(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypePaginationFilterResponse.lift,
+            
+    # Error FFI converter
+
+    None,
+
+        )
+
+
+
+    async def protocol_config(self, version: "typing.Optional[int]") -> "typing.Optional[ProtocolConfigs]":
+        """
+        Get the protocol configuration.
+        """
+
+        _UniffiConverterOptionalUInt64.check_lower(version)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_protocol_config(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalUInt64.lower(version)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeProtocolConfigs.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def reference_gas_price(self, epoch: "typing.Optional[int]") -> "typing.Optional[int]":
+        """
+        Get the reference gas price for the provided epoch or the last known one
+        if no epoch is provided.
+
+        This will return `Ok(None)` if the epoch requested is not available in
+        the GraphQL service (e.g., due to pruning).
+        """
+
+        _UniffiConverterOptionalUInt64.check_lower(epoch)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_reference_gas_price(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalUInt64.lower(epoch)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def total_supply(self, coin_type: "str") -> "typing.Optional[int]":
+        """
+        Get total supply for the coin type.
+        """
+
+        _UniffiConverterString.check_lower(coin_type)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_supply(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterString.lower(coin_type)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def total_transaction_blocks(self, ) -> "typing.Optional[int]":
+        """
+        The total number of transaction blocks in the network by the end of the
+        last known checkpoint.
+        """
+
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_transaction_blocks(
+                self._uniffi_clone_pointer(), 
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def total_transaction_blocks_by_digest(self, digest: "CheckpointDigest") -> "typing.Optional[int]":
+        """
+        The total number of transaction blocks in the network by the end of the
+        provided checkpoint digest.
+        """
+
+        _UniffiConverterTypeCheckpointDigest.check_lower(digest)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_transaction_blocks_by_digest(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeCheckpointDigest.lower(digest)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def total_transaction_blocks_by_seq_num(self, seq_num: "int") -> "typing.Optional[int]":
+        """
+        The total number of transaction blocks in the network by the end of the
+        provided checkpoint sequence number.
+        """
+
+        _UniffiConverterUInt64.check_lower(seq_num)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_total_transaction_blocks_by_seq_num(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterUInt64.lower(seq_num)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def transaction(self, digest: "TransactionDigest") -> "typing.Optional[SignedTransaction]":
+        """
+        Get a transaction by its digest.
+        """
+
+        _UniffiConverterTypeTransactionDigest.check_lower(digest)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_transaction(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeTransactionDigest.lower(digest)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeSignedTransaction.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def transaction_data_effects(self, digest: "TransactionDigest") -> "typing.Optional[TransactionDataEffects]":
+        """
+        Get a transaction's data and effects by its digest.
+        """
+
+        _UniffiConverterTypeTransactionDigest.check_lower(digest)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_transaction_data_effects(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeTransactionDigest.lower(digest)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeTransactionDataEffects.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def transaction_effects(self, digest: "TransactionDigest") -> "typing.Optional[TransactionEffects]":
+        """
+        Get a transaction's effects by its digest.
+        """
+
+        _UniffiConverterTypeTransactionDigest.check_lower(digest)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_transaction_effects(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeTransactionDigest.lower(digest)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeTransactionEffects.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def transactions(self, filter: "typing.Optional[TransactionsFilter]",pagination_filter: "PaginationFilter") -> "SignedTransactionPage":
+        """
+        Get a page of transactions based on the provided filters.
+        """
+
+        _UniffiConverterOptionalTypeTransactionsFilter.check_lower(filter)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_transactions(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalTypeTransactionsFilter.lower(filter),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeSignedTransactionPage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def transactions_data_effects(self, filter: "typing.Optional[TransactionsFilter]",pagination_filter: "PaginationFilter") -> "TransactionDataEffectsPage":
+        """
+        Get a page of transactions' data and effects based on the provided
+        filters.
+        """
+
+        _UniffiConverterOptionalTypeTransactionsFilter.check_lower(filter)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_transactions_data_effects(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalTypeTransactionsFilter.lower(filter),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeTransactionDataEffectsPage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeError__as_error,
+
+        )
+
+
+
+    async def transactions_effects(self, filter: "typing.Optional[TransactionsFilter]",pagination_filter: "PaginationFilter") -> "TransactionEffectsPage":
+        """
+        Get a page of transactions' effects based on the provided filters.
+        """
+
+        _UniffiConverterOptionalTypeTransactionsFilter.check_lower(filter)
+        
+        _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_graphql_client_fn_method_client_transactions_effects(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterOptionalTypeTransactionsFilter.lower(filter),
+        _UniffiConverterTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_graphql_client_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_graphql_client_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeTransactionEffectsPage.lift,
             
     # Error FFI converter
 _UniffiConverterTypeError__as_error,
@@ -1671,7 +7875,12 @@ class ErrorProtocol(typing.Protocol):
     errors that can occur.
     """
 
-    pass
+    def kind(self, ):
+        """
+        Returns the kind of error.
+        """
+
+        raise NotImplementedError
 # Error is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Error(Exception):
     """
@@ -1701,6 +7910,19 @@ class Error(Exception):
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def kind(self, ) -> "Kind":
+        """
+        Returns the kind of error.
+        """
+
+        return _UniffiConverterTypeKind.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_graphql_client_fn_method_error_kind,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -1750,6 +7972,39 @@ class _UniffiConverterTypeError:
     @classmethod
     def write(cls, value: ErrorProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+
+# External type CheckpointSummary: `from .iota_sdk_types import CheckpointSummary`
+
+# External type Coin: `from .iota_sdk_types import Coin`
+
+# External type Event: `from .iota_sdk_types import Event`
+
+# External type Object: `from .iota_sdk_types import Object`
+
+# External type SignedTransaction: `from .iota_sdk_types import SignedTransaction`
+
+# External type Transaction: `from .iota_sdk_types import Transaction`
+
+# External type UniffiMovePackage: `from .iota_sdk_types import UniffiMovePackage`
+
+# External type TransactionEffects: `from .iota_sdk_types import TransactionEffects`
+
+# External type UserSignature: `from .iota_sdk_types import UserSignature`
+
+# External type Address: `from .iota_sdk_types import Address`
+
+# External type CheckpointDigest: `from .iota_sdk_types import CheckpointDigest`
+
+# External type Digest: `from .iota_sdk_types import Digest`
+
+# External type MovePackage: `from .iota_sdk_types import MovePackage`
+
+# External type TransactionDigest: `from .iota_sdk_types import TransactionDigest`
+Base64 = str
+BcsName = bytes
+BigInt = str
+DateTime = str
+NameValue = bytes
 
 # Async support# RustFuturePoll values
 _UNIFFI_RUST_FUTURE_POLL_READY = 0
@@ -1817,11 +8072,56 @@ async def _uniffi_rust_call_async(rust_future, ffi_poll, ffi_complete, ffi_free,
 
 __all__ = [
     "InternalError",
+    "Direction",
     "Feature",
+    "Kind",
+    "MoveAbility",
+    "MoveVisibility",
+    "TransactionBlockKindInput",
+    "CheckpointSummaryPage",
+    "CoinMetadata",
+    "CoinPage",
+    "Epoch",
+    "EpochPage",
+    "EventFilter",
+    "GqlAddress",
+    "MoveEnum",
+    "MoveEnumConnection",
+    "MoveEnumVariant",
+    "MoveField",
+    "MoveFunction",
+    "MoveFunctionConnection",
+    "MoveFunctionTypeParameter",
+    "MoveModule",
+    "MoveModule2",
+    "MoveModuleConnection",
+    "MoveObject",
+    "MovePackagePage",
+    "MovePackageQuery",
+    "MoveStruct",
+    "MoveStructConnection",
+    "MoveStructTypeParameter",
+    "ObjectFilter",
+    "ObjectPage",
+    "OpenMoveType",
+    "PageInfo",
+    "PaginationFilter",
+    "PaginationFilterResponse",
     "ProtocolConfigAttr",
     "ProtocolConfigFeatureFlag",
     "ProtocolConfigs",
     "ServiceConfig",
+    "SignedTransactionPage",
+    "TransactionDataEffects",
+    "TransactionDataEffectsPage",
+    "TransactionEffectsPage",
+    "TransactionEvent",
+    "TransactionEventPage",
+    "TransactionsFilter",
+    "Validator",
+    "ValidatorCredentials",
+    "ValidatorPage",
+    "ValidatorSet",
     "Client",
     "Error",
 ]

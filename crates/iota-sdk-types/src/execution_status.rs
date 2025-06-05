@@ -17,6 +17,7 @@ use super::{Address, Digest, Identifier, ObjectId};
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
     Success,
@@ -127,6 +128,7 @@ pub enum ExecutionStatus {
     schemars(tag = "error", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ExecutionError {
     // General transaction errors
     /// Insufficient Gas
@@ -287,6 +289,7 @@ pub enum ExecutionError {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveLocation {
     /// The package id
     pub package: ObjectId,
@@ -345,6 +348,7 @@ pub struct MoveLocation {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
     TypeMismatch,
@@ -418,6 +422,7 @@ pub enum CommandArgumentError {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
     UnableToFetchPackage { package_id: ObjectId },
@@ -464,6 +469,7 @@ pub enum PackageUpgradeError {
     schemars(rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
     TypeNotFound,

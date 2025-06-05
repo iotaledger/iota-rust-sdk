@@ -30,6 +30,7 @@ use crate::query_types::{BigInt, schema};
 
 /// The coin metadata associated with the given coin type.
 #[derive(cynic::QueryFragment, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "CoinMetadata")]
 pub struct CoinMetadata {
     /// The number of decimal places used to represent the token.

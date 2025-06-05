@@ -8,6 +8,8 @@ pub mod error;
 pub mod faucet;
 pub mod query_types;
 pub mod streams;
+#[cfg(feature = "uniffi")]
+mod uniffi_helpers;
 
 use std::str::FromStr;
 
@@ -49,6 +51,7 @@ use crate::{
     },
 };
 
+#[cfg(feature = "uniffi")]
 uniffi::setup_scaffolding!();
 
 const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
@@ -70,6 +73,7 @@ pub struct DryRunResult {
     pub error: Option<String>,
 }
 
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TransactionDataEffects {
     pub tx: SignedTransaction,
     pub effects: TransactionEffects,
@@ -102,8 +106,29 @@ pub struct DynamicFieldOutput {
 /// Helper struct for passing a value that has a type that implements Serialize,
 /// for the dynamic fields API.
 pub struct NameValue(Vec<u8>);
+
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(NameValue, Vec<u8>, {
+    lower: |kv| kv.0,
+    try_lift: |s| Ok(NameValue::from(s)),
+});
+
 /// Helper struct for passing a raw bcs value.
+#[derive(derive_more::From)]
 pub struct BcsName(pub Vec<u8>);
+
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(BcsName, Vec<u8>, {
+    lower: |kv| kv.0,
+    try_lift: |s| Ok(BcsName::from(s)),
+});
+
+#[derive(Clone, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+pub struct TransactionEvent {
+    pub event: Event,
+    pub digest: TransactionDigest,
+}
 
 #[derive(Clone, Debug)]
 /// A page of items returned by the GraphQL server.
@@ -149,6 +174,7 @@ impl<T> Page<T> {
 
 /// Pagination direction.
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Direction {
     #[default]
     Forward,
@@ -158,6 +184,7 @@ pub enum Direction {
 /// Pagination options for querying the GraphQL server. It defaults to forward
 /// pagination with the GraphQL server's max page size.
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct PaginationFilter {
     /// The direction of pagination.
     pub direction: Direction,
@@ -178,6 +205,15 @@ impl From<BcsName> for NameValue {
     fn from(value: BcsName) -> Self {
         NameValue(value.0)
     }
+}
+
+#[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+pub struct PaginationFilterResponse {
+    after: Option<String>,
+    before: Option<String>,
+    first: Option<i32>,
+    last: Option<i32>,
 }
 
 impl DynamicFieldOutput {
@@ -214,7 +250,7 @@ impl DynamicFieldOutput {
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
-#[derive(uniffi::Object)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Object))]
 pub struct Client {
     /// The URL of the GraphQL server.
     rpc: Url,
@@ -222,69 +258,6 @@ pub struct Client {
     inner: reqwest::Client,
 
     service_config: std::sync::OnceLock<ServiceConfig>,
-}
-
-#[uniffi::export(async_runtime = "tokio")]
-impl Client {
-    // ===========================================================================
-    // Client Misc API
-    // ===========================================================================
-
-    /// Create a new GraphQL client with the provided server address.
-    #[uniffi::constructor]
-    pub fn new(server: &str) -> Result<Self> {
-        let rpc = reqwest::Url::parse(server)?;
-
-        let client = Client {
-            rpc,
-            inner: reqwest::Client::builder().user_agent(USER_AGENT).build()?,
-            service_config: Default::default(),
-        };
-        Ok(client)
-    }
-
-    /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
-    /// {MAINNET_HOST}.
-    #[uniffi::constructor]
-    pub fn new_mainnet() -> Self {
-        Self::new(MAINNET_HOST).expect("Invalid mainnet URL")
-    }
-
-    /// Create a new GraphQL client connected to the `testnet` GraphQL server:
-    /// {TESTNET_HOST}.
-    #[uniffi::constructor]
-    pub fn new_testnet() -> Self {
-        Self::new(TESTNET_HOST).expect("Invalid testnet URL")
-    }
-
-    /// Create a new GraphQL client connected to the `devnet` GraphQL server:
-    /// {DEVNET_HOST}.
-    #[uniffi::constructor]
-    pub fn new_devnet() -> Self {
-        Self::new(DEVNET_HOST).expect("Invalid devnet URL")
-    }
-
-    /// Create a new GraphQL client connected to the `localhost` GraphQL server:
-    /// {DEFAULT_LOCAL_HOST}.
-    #[uniffi::constructor]
-    pub fn new_localhost() -> Self {
-        Self::new(LOCAL_HOST).expect("Invalid localhost URL")
-    }
-
-    /// Get the chain identifier.
-    pub async fn chain_id(&self) -> Result<String> {
-        let operation = ChainIdentifierQuery::build(());
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        response
-            .data
-            .map(|e| e.chain_identifier)
-            .ok_or_else(Error::empty_response_error)
-    }
 }
 
 impl Client {
@@ -299,80 +272,6 @@ impl Client {
         let rpc = reqwest::Url::parse(server)?;
         self.rpc = rpc;
         Ok(())
-    }
-
-    /// Handle pagination filters and return the appropriate values (after,
-    /// before, first, last). If limit is omitted, it will use the max page
-    /// size from the service config.
-    pub async fn pagination_filter(
-        &self,
-        pagination_filter: PaginationFilter,
-    ) -> (Option<String>, Option<String>, Option<i32>, Option<i32>) {
-        let limit = pagination_filter
-            .limit
-            .unwrap_or(self.max_page_size().await.unwrap_or(DEFAULT_ITEMS_PER_PAGE));
-
-        let (after, before, first, last) = match pagination_filter.direction {
-            Direction::Forward => (pagination_filter.cursor, None, Some(limit), None),
-            Direction::Backward => (None, pagination_filter.cursor, None, Some(limit)),
-        };
-        (after, before, first, last)
-    }
-
-    /// Lazily fetch the max page size
-    pub async fn max_page_size(&self) -> Result<i32> {
-        self.service_config().await.map(|cfg| cfg.max_page_size)
-    }
-
-    /// Run a query on the GraphQL server and return the response.
-    /// This method returns [`cynic::GraphQlResponse`]  over the query type `T`,
-    /// and it is intended to be used with custom queries.
-    pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> Result<GraphQlResponse<T>>
-    where
-        T: serde::de::DeserializeOwned,
-        V: serde::Serialize,
-    {
-        let res = self
-            .inner
-            .post(self.rpc_server())
-            .json(&operation)
-            .send()
-            .await?
-            .json::<GraphQlResponse<T>>()
-            .await?;
-        Ok(res)
-    }
-
-    // ===========================================================================
-    // Network info API
-    // ===========================================================================
-
-    /// Get the reference gas price for the provided epoch or the last known one
-    /// if no epoch is provided.
-    ///
-    /// This will return `Ok(None)` if the epoch requested is not available in
-    /// the GraphQL service (e.g., due to pruning).
-    pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        response
-            .data
-            .and_then(|e| e.epoch)
-            .and_then(|e| e.reference_gas_price)
-            .map(|x| x.try_into())
-            .transpose()
-    }
-
-    /// Get the protocol configuration.
-    pub async fn protocol_config(&self, version: Option<u64>) -> Result<Option<ProtocolConfigs>> {
-        let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version });
-        let response = self.run_query(&operation).await?;
-        Ok(response.data.map(|p| p.protocol_config))
     }
 
     /// Get the GraphQL service configuration, including complexity limits, read
@@ -403,274 +302,21 @@ impl Client {
         Ok(service_config)
     }
 
-    /// Get the list of active validators for the provided epoch, including
-    /// related metadata. If no epoch is provided, it will return the active
-    /// validators for the current epoch.
-    pub async fn active_validators(
-        &self,
-        epoch: Option<u64>,
-        pagination_filter: PaginationFilter,
-    ) -> Result<Page<Validator>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
-
-        let operation = ActiveValidatorsQuery::build(ActiveValidatorsArgs {
-            id: epoch,
-            after: after.as_deref(),
-            before: before.as_deref(),
-            first,
-            last,
-        });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        if let Some(validators) = response
-            .data
-            .and_then(|d| d.epoch)
-            .and_then(|v| v.validator_set)
-        {
-            let page_info = validators.active_validators.page_info;
-            let nodes = validators
-                .active_validators
-                .nodes
-                .into_iter()
-                .collect::<Vec<_>>();
-            Ok(Page::new(page_info, nodes))
-        } else {
-            Ok(Page::new_empty())
-        }
-    }
-
-    /// The total number of transaction blocks in the network by the end of the
-    /// provided checkpoint digest.
-    pub async fn total_transaction_blocks_by_digest(
-        &self,
-        digest: CheckpointDigest,
-    ) -> Result<Option<u64>> {
-        self.internal_total_transaction_blocks(Some(digest.to_string()), None)
-            .await
-    }
-
-    /// The total number of transaction blocks in the network by the end of the
-    /// provided checkpoint sequence number.
-    pub async fn total_transaction_blocks_by_seq_num(&self, seq_num: u64) -> Result<Option<u64>> {
-        self.internal_total_transaction_blocks(None, Some(seq_num))
-            .await
-    }
-
-    /// The total number of transaction blocks in the network by the end of the
-    /// last known checkpoint.
-    pub async fn total_transaction_blocks(&self) -> Result<Option<u64>> {
-        self.internal_total_transaction_blocks(None, None).await
-    }
-
-    /// Internal function to get the total number of transaction blocks based on
-    /// the provided checkpoint digest or sequence number.
-    async fn internal_total_transaction_blocks(
-        &self,
-        digest: Option<String>,
-        seq_num: Option<u64>,
-    ) -> Result<Option<u64>> {
-        if digest.is_some() && seq_num.is_some() {
-            return Err(Error::from_error(
-                Kind::Other,
-                "Conflicting arguments: either digest or seq_num can be provided, but not both.",
-            ));
-        }
-
-        let operation = CheckpointTotalTxQuery::build(CheckpointArgs {
-            id: CheckpointId {
-                digest,
-                sequence_number: seq_num,
-            },
-        });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        Ok(response
-            .data
-            .and_then(|x| x.checkpoint)
-            .and_then(|c| c.network_total_transactions))
-    }
-
-    // ===========================================================================
-    // Balance API
-    // ===========================================================================
-
-    /// Get the balance of all the coins owned by address for the provided coin
-    /// type. Coin type will default to `0x2::coin::Coin<0x2::iota::IOTA>`
-    /// if not provided.
-    pub async fn balance(&self, address: Address, coin_type: Option<&str>) -> Result<Option<u128>> {
-        let operation = BalanceQuery::build(BalanceArgs {
-            address,
-            coin_type: coin_type.map(|x| x.to_string()),
-        });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        let total_balance = response
-            .data
-            .map(|b| b.owner.and_then(|o| o.balance.map(|b| b.total_balance)))
-            .ok_or_else(Error::empty_response_error)?
-            .flatten()
-            .map(|x| x.0.parse::<u128>())
-            .transpose()?;
-        Ok(total_balance)
-    }
-
-    // ===========================================================================
-    // Coin API
-    // ===========================================================================
-
-    /// Get the list of coins for the specified address.
-    ///
-    /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-    /// which will return all coins. For IOTA coin, pass in the coin type:
-    /// `0x2::coin::Coin<0x2::iota::IOTA>`.
-    pub async fn coins(
-        &self,
-        owner: Address,
-        coin_type: Option<&str>,
-        pagination_filter: PaginationFilter,
-    ) -> Result<Page<Coin>> {
-        let response = self
-            .objects(
-                Some(ObjectFilter {
-                    type_: Some(coin_type.unwrap_or("0x2::coin::Coin")),
-                    owner: Some(owner),
-                    object_ids: None,
-                }),
-                pagination_filter,
-            )
-            .await?;
-
-        Ok(Page::new(
-            response.page_info,
-            response
-                .data
-                .iter()
-                .flat_map(Coin::try_from_object)
-                .map(|c| c.into_owned())
-                .collect::<Vec<_>>(),
-        ))
-    }
-
     /// Get the list of coins for the specified address as a stream.
     ///
     /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
     /// which will return all coins. For IOTA coin, pass in the coin type:
     /// `0x2::coin::Coin<0x2::iota::IOTA>`.
-    pub async fn coins_stream(
-        &self,
+    pub async fn coins_stream<'a>(
+        &'a self,
         address: Address,
-        coin_type: Option<&'static str>,
+        coin_type: Option<String>,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Coin>> {
+    ) -> impl Stream<Item = Result<Coin>> + 'a {
         stream_paginated_query(
-            move |filter| self.coins(address, coin_type, filter),
+            move |filter| self.coins(address, coin_type.clone(), filter),
             streaming_direction,
         )
-    }
-
-    /// Get the coin metadata for the coin type.
-    pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
-        let operation = CoinMetadataQuery::build(CoinMetadataArgs { coin_type });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        Ok(response.data.and_then(|x| x.coin_metadata))
-    }
-
-    /// Get total supply for the coin type.
-    pub async fn total_supply(&self, coin_type: &str) -> Result<Option<u64>> {
-        let coin_metadata = self.coin_metadata(coin_type).await?;
-
-        coin_metadata
-            .and_then(|c| c.supply)
-            .map(|c| c.try_into())
-            .transpose()
-    }
-
-    // ===========================================================================
-    // Checkpoints API
-    // ===========================================================================
-
-    /// Get the [`CheckpointSummary`] for a given checkpoint digest or
-    /// checkpoint id. If none is provided, it will use the last known
-    /// checkpoint id.
-    pub async fn checkpoint(
-        &self,
-        digest: Option<CheckpointDigest>,
-        seq_num: Option<u64>,
-    ) -> Result<Option<CheckpointSummary>> {
-        if digest.is_some() && seq_num.is_some() {
-            return Err(Error::from_error(
-                Kind::Other,
-                "either digest or seq_num must be provided",
-            ));
-        }
-
-        let operation = CheckpointQuery::build(CheckpointArgs {
-            id: CheckpointId {
-                digest: digest.map(|d| d.to_string()),
-                sequence_number: seq_num,
-            },
-        });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        response
-            .data
-            .map(|c| c.checkpoint.map(|c| c.try_into()).transpose())
-            .ok_or(Error::empty_response_error())?
-    }
-
-    /// Get a page of [`CheckpointSummary`] for the provided parameters.
-    pub async fn checkpoints(
-        &self,
-        pagination_filter: PaginationFilter,
-    ) -> Result<Page<CheckpointSummary>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
-
-        let operation = CheckpointsQuery::build(CheckpointsArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
-            first,
-            last,
-        });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        if let Some(checkpoints) = response.data {
-            let cc = checkpoints.checkpoints;
-            let page_info = cc.page_info;
-            let nodes = cc
-                .nodes
-                .into_iter()
-                .map(|c| c.try_into())
-                .collect::<Result<Vec<CheckpointSummary>, _>>()?;
-
-            Ok(Page::new(page_info, nodes))
-        } else {
-            Ok(Page::new_empty())
-        }
     }
 
     /// Get a stream of [`CheckpointSummary`]. Note that this will fetch all
@@ -680,17 +326,6 @@ impl Client {
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<CheckpointSummary>> + '_ {
         stream_paginated_query(move |filter| self.checkpoints(filter), streaming_direction)
-    }
-
-    /// Return the sequence number of the latest checkpoint that has been
-    /// executed.
-    pub async fn latest_checkpoint_sequence_number(
-        &self,
-    ) -> Result<Option<CheckpointSequenceNumber>> {
-        Ok(self
-            .checkpoint(None, None)
-            .await?
-            .map(|c| c.sequence_number))
     }
 
     // ===========================================================================
@@ -797,7 +432,12 @@ impl Client {
         address: Address,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<DynamicFieldOutput>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
         let operation = DynamicFieldsOwnerQuery::build(DynamicFieldConnectionArgs {
             address,
             after: after.as_deref(),
@@ -838,6 +478,602 @@ impl Client {
         )
     }
 
+    /// Return a stream of epochs based on the (optional) object filter.
+    pub async fn epochs_stream(
+        &self,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<Epoch>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.epochs(pag_filter),
+            streaming_direction,
+        )
+    }
+
+    /// Internal method for getting the epoch summary that is called in a few
+    /// other APIs for convenience.
+    async fn epoch_summary(
+        &self,
+        epoch: Option<u64>,
+    ) -> Result<GraphQlResponse<EpochSummaryQuery>> {
+        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
+        self.run_query(&operation).await
+    }
+
+    /// Return a stream of events based on the (optional) event filter.
+    pub async fn events_stream(
+        &self,
+        filter: Option<EventFilter>,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<TransactionEvent>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.events(filter.clone(), pag_filter),
+            streaming_direction,
+        )
+    }
+
+    /// Return a stream of objects based on the (optional) object filter.
+    pub async fn objects_stream(
+        &self,
+        filter: Option<ObjectFilter>,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<Object>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.objects(filter.clone(), pag_filter),
+            streaming_direction,
+        )
+    }
+
+    // ===========================================================================
+    // Dry Run API
+    // ===========================================================================
+
+    /// Dry run a [`Transaction`] and return the transaction effects and dry run
+    /// error (if any).
+    ///
+    /// `skipChecks` optional flag disables the usual verification checks that
+    /// prevent access to objects that are owned by addresses other than the
+    /// sender, and calling non-public, non-entry functions, and some other
+    /// checks. Defaults to false.
+    pub async fn dry_run_tx(
+        &self,
+        tx: &Transaction,
+        skip_checks: Option<bool>,
+    ) -> Result<DryRunResult> {
+        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx)?);
+        self.dry_run(tx_bytes, skip_checks, None).await
+    }
+
+    /// Dry run a [`TransactionKind`] and return the transaction effects and dry
+    /// run error (if any).
+    ///
+    /// `skipChecks` optional flag disables the usual verification checks that
+    /// prevent access to objects that are owned by addresses other than the
+    /// sender, and calling non-public, non-entry functions, and some other
+    /// checks. Defaults to false.
+    ///
+    /// `tx_meta` is the transaction metadata.
+    pub async fn dry_run_tx_kind(
+        &self,
+        tx_kind: &TransactionKind,
+        skip_checks: Option<bool>,
+        tx_meta: TransactionMetadata,
+    ) -> Result<DryRunResult> {
+        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx_kind)?);
+        self.dry_run(tx_bytes, skip_checks, Some(tx_meta)).await
+    }
+
+    /// Internal implementation of the dry run API.
+    async fn dry_run(
+        &self,
+        tx_bytes: String,
+        skip_checks: Option<bool>,
+        tx_meta: Option<TransactionMetadata>,
+    ) -> Result<DryRunResult> {
+        let skip_checks = skip_checks.unwrap_or(false);
+        let operation = DryRunQuery::build(DryRunArgs {
+            tx_bytes,
+            skip_checks,
+            tx_meta,
+        });
+        let response = self.run_query(&operation).await?;
+
+        // Query errors
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        // Dry Run errors
+        let error = response
+            .data
+            .as_ref()
+            .and_then(|tx| tx.dry_run_transaction_block.error.clone());
+
+        let effects = response
+            .data
+            .map(|tx| tx.dry_run_transaction_block)
+            .and_then(|tx| tx.transaction)
+            .and_then(|tx| tx.effects)
+            .and_then(|bcs| bcs.bcs)
+            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .transpose()?
+            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
+            .transpose()?;
+
+        Ok(DryRunResult { effects, error })
+    }
+
+    /// Get a stream of transactions based on the (optional) transaction filter.
+    pub async fn transactions_stream(
+        &self,
+        filter: Option<TransactionsFilter>,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<SignedTransaction>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.transactions(filter.clone(), pag_filter),
+            streaming_direction,
+        )
+    }
+
+    /// Get a stream of transactions' effects based on the (optional)
+    /// transaction filter.
+    pub async fn transactions_effects_stream(
+        &self,
+        filter: Option<TransactionsFilter>,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<TransactionEffects>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.transactions_effects(filter.clone(), pag_filter),
+            streaming_direction,
+        )
+    }
+
+    /// Run a query on the GraphQL server and return the response.
+    /// This method returns [`cynic::GraphQlResponse`]  over the query type `T`,
+    /// and it is intended to be used with custom queries.
+    pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> Result<GraphQlResponse<T>>
+    where
+        T: serde::de::DeserializeOwned,
+        V: serde::Serialize,
+    {
+        let res = self
+            .inner
+            .post(self.rpc_server())
+            .json(&operation)
+            .send()
+            .await?
+            .json::<GraphQlResponse<T>>()
+            .await?;
+        Ok(res)
+    }
+
+    /// Return the contents' JSON of an object that is a Move object.
+    ///
+    /// If the object does not exist (e.g., due to pruning), this will return
+    /// `Ok(None)`. Similarly, if this is not an object but an address, it
+    /// will return `Ok(None)`.
+    pub async fn move_object_contents(
+        &self,
+        address: Address,
+        version: Option<u64>,
+    ) -> Result<Option<serde_json::Value>> {
+        let operation = ObjectQuery::build(ObjectQueryArgs { address, version });
+
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        if let Some(object) = response.data {
+            Ok(object
+                .object
+                .and_then(|o| o.as_move_object)
+                .and_then(|o| o.contents)
+                .and_then(|mv| mv.json))
+        } else {
+            Ok(None)
+        }
+    }
+
+    // ===========================================================================
+    // Balance API
+    // ===========================================================================
+
+    /// Get the balance of all the coins owned by address for the provided coin
+    /// type. Coin type will default to `0x2::coin::Coin<0x2::iota::IOTA>`
+    /// if not provided.
+    pub async fn balance(
+        &self,
+        address: Address,
+        coin_type: Option<String>,
+    ) -> Result<Option<u128>> {
+        let operation = BalanceQuery::build(BalanceArgs {
+            address,
+            coin_type: coin_type.map(|x| x.to_string()),
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        let total_balance = response
+            .data
+            .map(|b| b.owner.and_then(|o| o.balance.map(|b| b.total_balance)))
+            .ok_or_else(Error::empty_response_error)?
+            .flatten()
+            .map(|x| x.0.parse::<u128>())
+            .transpose()?;
+        Ok(total_balance)
+    }
+}
+
+#[cfg_attr(feature = "uniffi", uniffi::export(async_runtime = "tokio"))]
+impl Client {
+    // ===========================================================================
+    // Client Misc API
+    // ===========================================================================
+
+    /// Create a new GraphQL client with the provided server address.
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
+    pub fn new(server: &str) -> Result<Self> {
+        let rpc = reqwest::Url::parse(server)?;
+
+        let client = Client {
+            rpc,
+            inner: reqwest::Client::builder().user_agent(USER_AGENT).build()?,
+            service_config: Default::default(),
+        };
+        Ok(client)
+    }
+
+    /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
+    /// {MAINNET_HOST}.
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
+    pub fn new_mainnet() -> Self {
+        Self::new(MAINNET_HOST).expect("Invalid mainnet URL")
+    }
+
+    /// Create a new GraphQL client connected to the `testnet` GraphQL server:
+    /// {TESTNET_HOST}.
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
+    pub fn new_testnet() -> Self {
+        Self::new(TESTNET_HOST).expect("Invalid testnet URL")
+    }
+
+    /// Create a new GraphQL client connected to the `devnet` GraphQL server:
+    /// {DEVNET_HOST}.
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
+    pub fn new_devnet() -> Self {
+        Self::new(DEVNET_HOST).expect("Invalid devnet URL")
+    }
+
+    /// Create a new GraphQL client connected to the `localhost` GraphQL server:
+    /// {DEFAULT_LOCAL_HOST}.
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
+    pub fn new_localhost() -> Self {
+        Self::new(LOCAL_HOST).expect("Invalid localhost URL")
+    }
+
+    /// Get the chain identifier.
+    pub async fn chain_id(&self) -> Result<String> {
+        let operation = ChainIdentifierQuery::build(());
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        response
+            .data
+            .map(|e| e.chain_identifier)
+            .ok_or_else(Error::empty_response_error)
+    }
+
+    /// Handle pagination filters and return the appropriate values. If limit is
+    /// omitted, it will use the max page size from the service config.
+    pub async fn pagination_filter(
+        &self,
+        pagination_filter: PaginationFilter,
+    ) -> PaginationFilterResponse {
+        let limit = pagination_filter
+            .limit
+            .unwrap_or(self.max_page_size().await.unwrap_or(DEFAULT_ITEMS_PER_PAGE));
+
+        let (after, before, first, last) = match pagination_filter.direction {
+            Direction::Forward => (pagination_filter.cursor, None, Some(limit), None),
+            Direction::Backward => (None, pagination_filter.cursor, None, Some(limit)),
+        };
+        PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        }
+    }
+
+    /// Lazily fetch the max page size
+    pub async fn max_page_size(&self) -> Result<i32> {
+        self.service_config().await.map(|cfg| cfg.max_page_size)
+    }
+
+    // ===========================================================================
+    // Network info API
+    // ===========================================================================
+
+    /// Get the reference gas price for the provided epoch or the last known one
+    /// if no epoch is provided.
+    ///
+    /// This will return `Ok(None)` if the epoch requested is not available in
+    /// the GraphQL service (e.g., due to pruning).
+    pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
+        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        response
+            .data
+            .and_then(|e| e.epoch)
+            .and_then(|e| e.reference_gas_price)
+            .map(|x| x.try_into())
+            .transpose()
+    }
+
+    /// Get the protocol configuration.
+    pub async fn protocol_config(&self, version: Option<u64>) -> Result<Option<ProtocolConfigs>> {
+        let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version });
+        let response = self.run_query(&operation).await?;
+        Ok(response.data.map(|p| p.protocol_config))
+    }
+
+    /// Get the list of active validators for the provided epoch, including
+    /// related metadata. If no epoch is provided, it will return the active
+    /// validators for the current epoch.
+    pub async fn active_validators(
+        &self,
+        epoch: Option<u64>,
+        pagination_filter: PaginationFilter,
+    ) -> Result<Page<Validator>> {
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
+
+        let operation = ActiveValidatorsQuery::build(ActiveValidatorsArgs {
+            id: epoch,
+            after: after.as_deref(),
+            before: before.as_deref(),
+            first,
+            last,
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        if let Some(validators) = response
+            .data
+            .and_then(|d| d.epoch)
+            .and_then(|v| v.validator_set)
+        {
+            let page_info = validators.active_validators.page_info;
+            let nodes = validators
+                .active_validators
+                .nodes
+                .into_iter()
+                .collect::<Vec<_>>();
+            Ok(Page::new(page_info, nodes))
+        } else {
+            Ok(Page::new_empty())
+        }
+    }
+
+    /// The total number of transaction blocks in the network by the end of the
+    /// provided checkpoint digest.
+    pub async fn total_transaction_blocks_by_digest(
+        &self,
+        digest: CheckpointDigest,
+    ) -> Result<Option<u64>> {
+        self.internal_total_transaction_blocks(Some(digest.to_string()), None)
+            .await
+    }
+
+    /// The total number of transaction blocks in the network by the end of the
+    /// provided checkpoint sequence number.
+    pub async fn total_transaction_blocks_by_seq_num(&self, seq_num: u64) -> Result<Option<u64>> {
+        self.internal_total_transaction_blocks(None, Some(seq_num))
+            .await
+    }
+
+    /// The total number of transaction blocks in the network by the end of the
+    /// last known checkpoint.
+    pub async fn total_transaction_blocks(&self) -> Result<Option<u64>> {
+        self.internal_total_transaction_blocks(None, None).await
+    }
+
+    /// Internal function to get the total number of transaction blocks based on
+    /// the provided checkpoint digest or sequence number.
+    async fn internal_total_transaction_blocks(
+        &self,
+        digest: Option<String>,
+        seq_num: Option<u64>,
+    ) -> Result<Option<u64>> {
+        if digest.is_some() && seq_num.is_some() {
+            return Err(Error::from_error(
+                Kind::Other,
+                "Conflicting arguments: either digest or seq_num can be provided, but not both.",
+            ));
+        }
+
+        let operation = CheckpointTotalTxQuery::build(CheckpointArgs {
+            id: CheckpointId {
+                digest,
+                sequence_number: seq_num,
+            },
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        Ok(response
+            .data
+            .and_then(|x| x.checkpoint)
+            .and_then(|c| c.network_total_transactions))
+    }
+
+    // ===========================================================================
+    // Coin API
+    // ===========================================================================
+
+    /// Get the list of coins for the specified address.
+    ///
+    /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
+    /// which will return all coins. For IOTA coin, pass in the coin type:
+    /// `0x2::coin::Coin<0x2::iota::IOTA>`.
+    pub async fn coins(
+        &self,
+        owner: Address,
+        coin_type: Option<String>,
+        pagination_filter: PaginationFilter,
+    ) -> Result<Page<Coin>> {
+        let response = self
+            .objects(
+                Some(ObjectFilter {
+                    type_: Some(coin_type.unwrap_or_else(|| "0x2::coin::Coin".to_owned())),
+                    owner: Some(owner),
+                    object_ids: None,
+                }),
+                pagination_filter,
+            )
+            .await?;
+
+        Ok(Page::new(
+            response.page_info,
+            response
+                .data
+                .iter()
+                .flat_map(Coin::try_from_object)
+                .collect::<Vec<_>>(),
+        ))
+    }
+
+    /// Get the coin metadata for the coin type.
+    pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
+        let operation = CoinMetadataQuery::build(CoinMetadataArgs { coin_type });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        Ok(response.data.and_then(|x| x.coin_metadata))
+    }
+
+    /// Get total supply for the coin type.
+    pub async fn total_supply(&self, coin_type: &str) -> Result<Option<u64>> {
+        let coin_metadata = self.coin_metadata(coin_type).await?;
+
+        coin_metadata
+            .and_then(|c| c.supply)
+            .map(|c| c.try_into())
+            .transpose()
+    }
+
+    // ===========================================================================
+    // Checkpoints API
+    // ===========================================================================
+
+    /// Get the [`CheckpointSummary`] for a given checkpoint digest or
+    /// checkpoint id. If none is provided, it will use the last known
+    /// checkpoint id.
+    pub async fn checkpoint(
+        &self,
+        digest: Option<CheckpointDigest>,
+        seq_num: Option<u64>,
+    ) -> Result<Option<CheckpointSummary>> {
+        if digest.is_some() && seq_num.is_some() {
+            return Err(Error::from_error(
+                Kind::Other,
+                "either digest or seq_num must be provided",
+            ));
+        }
+
+        let operation = CheckpointQuery::build(CheckpointArgs {
+            id: CheckpointId {
+                digest: digest.map(|d| d.to_string()),
+                sequence_number: seq_num,
+            },
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        response
+            .data
+            .map(|c| c.checkpoint.map(|c| c.try_into()).transpose())
+            .ok_or(Error::empty_response_error())?
+    }
+
+    /// Get a page of [`CheckpointSummary`] for the provided parameters.
+    pub async fn checkpoints(
+        &self,
+        pagination_filter: PaginationFilter,
+    ) -> Result<Page<CheckpointSummary>> {
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
+
+        let operation = CheckpointsQuery::build(CheckpointsArgs {
+            after: after.as_deref(),
+            before: before.as_deref(),
+            first,
+            last,
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        if let Some(checkpoints) = response.data {
+            let cc = checkpoints.checkpoints;
+            let page_info = cc.page_info;
+            let nodes = cc
+                .nodes
+                .into_iter()
+                .map(|c| c.try_into())
+                .collect::<Result<Vec<CheckpointSummary>, _>>()?;
+
+            Ok(Page::new(page_info, nodes))
+        } else {
+            Ok(Page::new_empty())
+        }
+    }
+
+    /// Return the sequence number of the latest checkpoint that has been
+    /// executed.
+    pub async fn latest_checkpoint_sequence_number(
+        &self,
+    ) -> Result<Option<CheckpointSequenceNumber>> {
+        Ok(self
+            .checkpoint(None, None)
+            .await?
+            .map(|c| c.sequence_number))
+    }
+
     // ===========================================================================
     // Epoch API
     // ===========================================================================
@@ -857,7 +1093,12 @@ impl Client {
 
     /// Return a page of epochs.
     pub async fn epochs(&self, pagination_filter: PaginationFilter) -> Result<Page<Epoch>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
         let operation = EpochsQuery::build(EpochsArgs {
             after: after.as_deref(),
             before: before.as_deref(),
@@ -875,17 +1116,6 @@ impl Client {
         } else {
             Ok(Page::new_empty())
         }
-    }
-
-    /// Return a stream of epochs based on the (optional) object filter.
-    pub async fn epochs_stream(
-        &self,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Epoch>> + '_ {
-        stream_paginated_query(
-            move |pag_filter| self.epochs(pag_filter),
-            streaming_direction,
-        )
     }
 
     /// Return the number of checkpoints in this epoch. This will return
@@ -920,16 +1150,6 @@ impl Client {
             .and_then(|e| e.total_transactions))
     }
 
-    /// Internal method for getting the epoch summary that is called in a few
-    /// other APIs for convenience.
-    async fn epoch_summary(
-        &self,
-        epoch: Option<u64>,
-    ) -> Result<GraphQlResponse<EpochSummaryQuery>> {
-        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
-        self.run_query(&operation).await
-    }
-
     // ===========================================================================
     // Events API
     // ===========================================================================
@@ -940,8 +1160,13 @@ impl Client {
         &self,
         filter: Option<EventFilter>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<(Event, TransactionDigest)>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+    ) -> Result<Page<TransactionEvent>> {
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = EventsQuery::build(EventsQueryArgs {
             filter,
@@ -964,7 +1189,7 @@ impl Client {
             let events_with_digests = ec
                 .nodes
                 .into_iter()
-                .map(|node| -> Result<(Event, TransactionDigest)> {
+                .map(|node| {
                     let event =
                         bcs::from_bytes::<Event>(&base64ct::Base64::decode_vec(&node.bcs.0)?)?;
 
@@ -981,7 +1206,10 @@ impl Client {
 
                     let tx_digest = TransactionDigest::from_base58(&tx_digest)?;
 
-                    Ok((event, tx_digest))
+                    Ok(TransactionEvent {
+                        event,
+                        digest: tx_digest,
+                    })
                 })
                 .collect::<Result<Vec<_>>>()?;
 
@@ -989,18 +1217,6 @@ impl Client {
         } else {
             Ok(Page::new_empty())
         }
-    }
-
-    /// Return a stream of events based on the (optional) event filter.
-    pub async fn events_stream(
-        &self,
-        filter: Option<EventFilter>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<(Event, TransactionDigest)>> + '_ {
-        stream_paginated_query(
-            move |pag_filter| self.events(filter.clone(), pag_filter),
-            streaming_direction,
-        )
     }
 
     // ===========================================================================
@@ -1056,13 +1272,18 @@ impl Client {
     /// ```
     pub async fn objects(
         &self,
-        filter: Option<ObjectFilter<'_>>,
+        filter: Option<ObjectFilter>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Object>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
         let operation = ObjectsQuery::build(ObjectsQueryArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
+            after,
+            before,
             filter,
             first,
             last,
@@ -1096,18 +1317,6 @@ impl Client {
         }
     }
 
-    /// Return a stream of objects based on the (optional) object filter.
-    pub async fn objects_stream<'a>(
-        &'a self,
-        filter: Option<ObjectFilter<'a>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Object>> + 'a {
-        stream_paginated_query(
-            move |pag_filter| self.objects(filter.clone(), pag_filter),
-            streaming_direction,
-        )
-    }
-
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`].
     pub async fn object_bcs(&self, object_id: Address) -> Result<Option<Vec<u8>>> {
@@ -1132,34 +1341,6 @@ impl Client {
         }
     }
 
-    /// Return the contents' JSON of an object that is a Move object.
-    ///
-    /// If the object does not exist (e.g., due to pruning), this will return
-    /// `Ok(None)`. Similarly, if this is not an object but an address, it
-    /// will return `Ok(None)`.
-    pub async fn move_object_contents(
-        &self,
-        address: Address,
-        version: Option<u64>,
-    ) -> Result<Option<serde_json::Value>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs { address, version });
-
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        if let Some(object) = response.data {
-            Ok(object
-                .object
-                .and_then(|o| o.as_move_object)
-                .and_then(|o| o.contents)
-                .and_then(|mv| mv.json))
-        } else {
-            Ok(None)
-        }
-    }
     /// Return the BCS of an object that is a Move object.
     ///
     /// If the object does not exist (e.g., due to pruning), this will return
@@ -1238,7 +1419,12 @@ impl Client {
         after_version: Option<u64>,
         before_version: Option<u64>,
     ) -> Result<Page<MovePackage>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
         let operation = PackageVersionsQuery::build(PackageVersionsArgs {
             address,
             after: after.as_deref(),
@@ -1338,7 +1524,12 @@ impl Client {
         after_checkpoint: Option<u64>,
         before_checkpoint: Option<u64>,
     ) -> Result<Page<MovePackage>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = PackagesQuery::build(PackagesQueryArgs {
             after: after.as_deref(),
@@ -1378,85 +1569,6 @@ impl Client {
         } else {
             Ok(Page::new_empty())
         }
-    }
-
-    // ===========================================================================
-    // Dry Run API
-    // ===========================================================================
-
-    /// Dry run a [`Transaction`] and return the transaction effects and dry run
-    /// error (if any).
-    ///
-    /// `skipChecks` optional flag disables the usual verification checks that
-    /// prevent access to objects that are owned by addresses other than the
-    /// sender, and calling non-public, non-entry functions, and some other
-    /// checks. Defaults to false.
-    pub async fn dry_run_tx(
-        &self,
-        tx: &Transaction,
-        skip_checks: Option<bool>,
-    ) -> Result<DryRunResult> {
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx)?);
-        self.dry_run(tx_bytes, skip_checks, None).await
-    }
-
-    /// Dry run a [`TransactionKind`] and return the transaction effects and dry
-    /// run error (if any).
-    ///
-    /// `skipChecks` optional flag disables the usual verification checks that
-    /// prevent access to objects that are owned by addresses other than the
-    /// sender, and calling non-public, non-entry functions, and some other
-    /// checks. Defaults to false.
-    ///
-    /// `tx_meta` is the transaction metadata.
-    pub async fn dry_run_tx_kind(
-        &self,
-        tx_kind: &TransactionKind,
-        skip_checks: Option<bool>,
-        tx_meta: TransactionMetadata,
-    ) -> Result<DryRunResult> {
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx_kind)?);
-        self.dry_run(tx_bytes, skip_checks, Some(tx_meta)).await
-    }
-
-    /// Internal implementation of the dry run API.
-    async fn dry_run(
-        &self,
-        tx_bytes: String,
-        skip_checks: Option<bool>,
-        tx_meta: Option<TransactionMetadata>,
-    ) -> Result<DryRunResult> {
-        let skip_checks = skip_checks.unwrap_or(false);
-        let operation = DryRunQuery::build(DryRunArgs {
-            tx_bytes,
-            skip_checks,
-            tx_meta,
-        });
-        let response = self.run_query(&operation).await?;
-
-        // Query errors
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        // Dry Run errors
-        let error = response
-            .data
-            .as_ref()
-            .and_then(|tx| tx.dry_run_transaction_block.error.clone());
-
-        let effects = response
-            .data
-            .map(|tx| tx.dry_run_transaction_block)
-            .and_then(|tx| tx.transaction)
-            .and_then(|tx| tx.effects)
-            .and_then(|bcs| bcs.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
-            .transpose()?
-            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
-            .transpose()?;
-
-        Ok(DryRunResult { effects, error })
     }
 
     // ===========================================================================
@@ -1539,14 +1651,19 @@ impl Client {
     /// Get a page of transactions based on the provided filters.
     pub async fn transactions(
         &self,
-        filter: Option<TransactionsFilter<'_>>,
+        filter: Option<TransactionsFilter>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<SignedTransaction>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
+            after,
+            before,
             filter,
             first,
             last,
@@ -1577,14 +1694,19 @@ impl Client {
     /// Get a page of transactions' effects based on the provided filters.
     pub async fn transactions_effects(
         &self,
-        filter: Option<TransactionsFilter<'_>>,
+        filter: Option<TransactionsFilter>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<TransactionEffects>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksEffectsQuery::build(TransactionBlocksQueryArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
+            after,
+            before,
             filter,
             first,
             last,
@@ -1612,14 +1734,19 @@ impl Client {
     /// filters.
     pub async fn transactions_data_effects(
         &self,
-        filter: Option<TransactionsFilter<'_>>,
+        filter: Option<TransactionsFilter>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<TransactionDataEffects>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksQueryArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
+            after,
+            before,
             filter,
             first,
             last,
@@ -1673,31 +1800,6 @@ impl Client {
         } else {
             Ok(Page::new_empty())
         }
-    }
-
-    /// Get a stream of transactions based on the (optional) transaction filter.
-    pub async fn transactions_stream<'a>(
-        &'a self,
-        filter: Option<TransactionsFilter<'a>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<SignedTransaction>> + 'a {
-        stream_paginated_query(
-            move |pag_filter| self.transactions(filter.clone(), pag_filter),
-            streaming_direction,
-        )
-    }
-
-    /// Get a stream of transactions' effects based on the (optional)
-    /// transaction filter.
-    pub async fn transactions_effects_stream<'a>(
-        &'a self,
-        filter: Option<TransactionsFilter<'a>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<TransactionEffects>> + 'a {
-        stream_paginated_query(
-            move |pag_filter| self.transactions_effects(filter.clone(), pag_filter),
-            streaming_direction,
-        )
     }
 
     /// Execute a transaction.
@@ -1773,34 +1875,30 @@ impl Client {
         pagination_filter_functions: PaginationFilter,
         pagination_filter_structs: PaginationFilter,
     ) -> Result<Option<MoveModule>> {
-        let (after_enums, before_enums, first_enums, last_enums) =
-            self.pagination_filter(pagination_filter_enums).await;
-        let (after_friends, before_friends, first_friends, last_friends) =
-            self.pagination_filter(pagination_filter_friends).await;
-        let (after_functions, before_functions, first_functions, last_functions) =
-            self.pagination_filter(pagination_filter_functions).await;
-        let (after_structs, before_structs, first_structs, last_structs) =
-            self.pagination_filter(pagination_filter_structs).await;
+        let enums = self.pagination_filter(pagination_filter_enums).await;
+        let friends = self.pagination_filter(pagination_filter_friends).await;
+        let functions = self.pagination_filter(pagination_filter_functions).await;
+        let structs = self.pagination_filter(pagination_filter_structs).await;
         let operation = NormalizedMoveModuleQuery::build(NormalizedMoveModuleQueryArgs {
             package: Address::from_str(package)?,
             module,
             version,
-            after_enums: after_enums.as_deref(),
-            after_functions: after_functions.as_deref(),
-            after_structs: after_structs.as_deref(),
-            after_friends: after_friends.as_deref(),
-            before_enums: before_enums.as_deref(),
-            before_functions: before_functions.as_deref(),
-            before_structs: before_structs.as_deref(),
-            before_friends: before_friends.as_deref(),
-            first_enums,
-            first_functions,
-            first_structs,
-            first_friends,
-            last_enums,
-            last_functions,
-            last_structs,
-            last_friends,
+            after_enums: enums.after.as_deref(),
+            after_functions: functions.after.as_deref(),
+            after_structs: structs.after.as_deref(),
+            after_friends: friends.after.as_deref(),
+            before_enums: enums.after.as_deref(),
+            before_functions: functions.before.as_deref(),
+            before_structs: structs.before.as_deref(),
+            before_friends: friends.before.as_deref(),
+            first_enums: enums.first,
+            first_functions: functions.first,
+            first_structs: structs.first,
+            first_friends: friends.first,
+            last_enums: enums.last,
+            last_functions: functions.last,
+            last_structs: structs.last,
+            last_friends: friends.last,
         });
         let response = self.run_query(&operation).await?;
 

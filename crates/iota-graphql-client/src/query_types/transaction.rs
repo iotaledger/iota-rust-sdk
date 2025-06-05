@@ -90,12 +90,12 @@ pub struct TransactionBlockArgs {
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct TransactionBlocksQueryArgs<'a> {
+pub struct TransactionBlocksQueryArgs {
     pub first: Option<i32>,
-    pub after: Option<&'a str>,
+    pub after: Option<String>,
     pub last: Option<i32>,
-    pub before: Option<&'a str>,
-    pub filter: Option<TransactionsFilter<'a>>,
+    pub before: Option<String>,
+    pub filter: Option<TransactionsFilter>,
 }
 
 // ===========================================================================
@@ -142,6 +142,7 @@ pub struct TransactionBlockEffects {
     graphql_type = "TransactionBlockKindInput",
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,
@@ -149,7 +150,8 @@ pub enum TransactionBlockKindInput {
 
 #[derive(Clone, cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
-pub struct TransactionsFilter<'a> {
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+pub struct TransactionsFilter {
     pub function: Option<String>,
     pub kind: Option<TransactionBlockKindInput>,
     pub after_checkpoint: Option<u64>,
@@ -159,7 +161,7 @@ pub struct TransactionsFilter<'a> {
     pub sent_address: Option<Address>,
     pub input_object: Option<Address>,
     pub changed_object: Option<Address>,
-    pub transaction_ids: Option<Vec<&'a str>>,
+    pub transaction_ids: Option<Vec<String>>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]

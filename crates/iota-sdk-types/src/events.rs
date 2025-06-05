@@ -38,16 +38,18 @@ pub struct TransactionEvents(pub Vec<Event>);
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Event {
-    /// Package id of the top-level function invoked by a MoveCall command which triggered this
-    /// event to be emitted.
+    /// Package id of the top-level function invoked by a MoveCall command which
+    /// triggered this event to be emitted.
     pub package_id: ObjectId,
 
-    /// Module name of the top-level function invoked by a MoveCall command which triggered this
-    /// event to be emitted.
+    /// Module name of the top-level function invoked by a MoveCall command
+    /// which triggered this event to be emitted.
     pub module: Identifier,
 
-    /// Address of the account that sent the transaction where this event was emitted.
+    /// Address of the account that sent the transaction where this event was
+    /// emitted.
     pub sender: Address,
 
     /// The type of the event emitted

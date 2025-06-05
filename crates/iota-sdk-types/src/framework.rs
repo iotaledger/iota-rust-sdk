@@ -4,18 +4,17 @@
 
 //! Rust definitions of move/iota framework types.
 
-use std::borrow::Cow;
-
 use super::{Object, ObjectId, TypeTag};
 
 #[derive(Debug, Clone)]
-pub struct Coin<'a> {
-    coin_type: Cow<'a, TypeTag>,
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+pub struct Coin {
+    coin_type: TypeTag,
     id: ObjectId,
     balance: u64,
 }
 
-impl<'a> Coin<'a> {
+impl Coin {
     pub fn coin_type(&self) -> &TypeTag {
         &self.coin_type
     }
@@ -28,7 +27,7 @@ impl<'a> Coin<'a> {
         self.balance
     }
 
-    pub fn try_from_object(object: &'a Object) -> Option<Self> {
+    pub fn try_from_object(object: &Object) -> Option<Self> {
         match &object.data {
             super::ObjectData::Struct(move_struct) => {
                 let coin_type = move_struct.type_.is_coin()?;
@@ -43,20 +42,12 @@ impl<'a> Coin<'a> {
                     u64::from_le_bytes((&contents[ObjectId::LENGTH..]).try_into().unwrap());
 
                 Some(Self {
-                    coin_type: Cow::Borrowed(coin_type),
+                    coin_type: coin_type.clone(),
                     id,
                     balance,
                 })
             }
             _ => None, // package
-        }
-    }
-
-    pub fn into_owned(self) -> Coin<'static> {
-        Coin {
-            coin_type: Cow::Owned(self.coin_type.into_owned()),
-            id: self.id,
-            balance: self.balance,
         }
     }
 }

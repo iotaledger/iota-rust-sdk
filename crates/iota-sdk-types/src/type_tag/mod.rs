@@ -42,6 +42,7 @@ use super::Address;
 /// type-tag-struct = %x07 struct-tag
 /// ```
 #[derive(Eq, PartialEq, PartialOrd, Ord, Debug, Clone, Hash)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum TypeTag {
     U8,
@@ -57,6 +58,24 @@ pub enum TypeTag {
     Vector(Box<TypeTag>),
     Struct(Box<StructTag>),
 }
+
+#[cfg(feature = "uniffi")]
+pub type BoxedTypeTag = Box<TypeTag>;
+
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(BoxedTypeTag, TypeTag, {
+    lower: |btt| *btt,
+    try_lift: |tt| Ok(Box::new(tt)),
+});
+
+#[cfg(feature = "uniffi")]
+pub type BoxedStructTag = Box<StructTag>;
+
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(BoxedStructTag, StructTag, {
+    lower: |btt| *btt,
+    try_lift: |tt| Ok(Box::new(tt)),
+});
 
 impl std::fmt::Display for TypeTag {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -131,6 +150,12 @@ pub struct Identifier(
     Box<str>,
 );
 
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(Identifier, String, {
+    lower: |id| id.0.into(),
+    try_lift: |s| Ok(Identifier::new(s)?),
+});
+
 impl Identifier {
     pub fn new(identifier: impl AsRef<str>) -> Result<Self, TypeParseError> {
         parse::parse_identifier(identifier.as_ref())
@@ -184,6 +209,7 @@ impl PartialEq<str> for Identifier {
 ///              (vector type-tag)  ; type parameters
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct StructTag {
     pub address: Address,

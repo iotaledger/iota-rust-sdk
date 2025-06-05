@@ -45,6 +45,7 @@
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct GasCostSummary {
     /// Cost of computation/execution
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]

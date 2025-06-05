@@ -31,6 +31,12 @@ pub struct Secp256k1PublicKey(
     [u8; Self::LENGTH],
 );
 
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(Secp256k1PublicKey, Vec<u8>, {
+    lower: |key| key.as_bytes().to_vec(),
+    try_lift: |s| Ok(Secp256k1PublicKey::from_bytes(s)?),
+});
+
 impl Secp256k1PublicKey {
     /// The length of an secp256k1 public key in bytes.
     pub const LENGTH: usize = 33;
@@ -140,6 +146,12 @@ pub struct Secp256k1Signature(
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     [u8; Self::LENGTH],
 );
+
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(Secp256k1Signature, Vec<u8>, {
+    lower: |key| key.as_bytes().to_vec(),
+    try_lift: |s| Ok(Secp256k1Signature::from_bytes(s)?),
+});
 
 impl Secp256k1Signature {
     /// The length of an secp256k1 signature key in bytes.

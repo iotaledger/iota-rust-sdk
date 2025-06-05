@@ -31,6 +31,9 @@ use super::Address;
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ObjectId(Address);
 
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(ObjectId, Address);
+
 impl ObjectId {
     pub const LENGTH: usize = Address::LENGTH;
     pub const ZERO: Self = Self(Address::ZERO);

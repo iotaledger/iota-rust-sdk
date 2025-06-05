@@ -175,6 +175,9 @@ pub use transaction::{
 };
 pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
 
+#[cfg(feature = "uniffi")]
+uniffi::setup_scaffolding!();
+
 #[cfg(test)]
 mod serialization_proptests;
 

@@ -69,6 +69,12 @@ pub struct Address(
     [u8; Self::LENGTH],
 );
 
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(Address, Vec<u8>, {
+    lower: |address| address.as_bytes().to_vec(),
+    try_lift: |s| Ok(Address::from_bytes(s)?),
+});
+
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
