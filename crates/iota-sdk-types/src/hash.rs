@@ -57,17 +57,15 @@ impl crate::Ed25519PublicKey {
     /// Derive an `Address` from this Public Key
     ///
     /// An `Address` can be derived from an `Ed25519PublicKey` by hashing the
-    /// bytes of the public key prefixed with the Ed25519 `SignatureScheme`
-    /// flag (`0x00`).
+    /// bytes of the public key with no prefix flag.
     ///
-    /// `hash( 0x00 || 32-byte ed25519 public key)`
+    /// `hash(32-byte ed25519 public key)`
     ///
     /// ```
     /// use iota_sdk_types::{Address, Ed25519PublicKey, hash::Hasher};
     ///
     /// let public_key_bytes = [0; 32];
     /// let mut hasher = Hasher::new();
-    /// hasher.update([0x00]); // The SignatureScheme flag for Ed25519 is `0`
     /// hasher.update(public_key_bytes);
     /// let address = Address::new(hasher.finalize().into_inner());
     /// println!("Address: {}", address);
@@ -83,7 +81,6 @@ impl crate::Ed25519PublicKey {
     }
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
-        hasher.update([self.scheme().to_u8()]);
         hasher.update(self.inner());
     }
 }

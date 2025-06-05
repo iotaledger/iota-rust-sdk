@@ -26,13 +26,14 @@
 /// [`Ed25519PublicKey`](crate::Ed25519PublicKey).
 ///
 /// Deriving an address consists of the Blake2b256 hash of the sequence of bytes
-/// of its corresponding authenticator, prefixed with a domain-separator. For
-/// each authenticator, this domain-separator is the single byte-value of its
+/// of its corresponding authenticator, prefixed with a domain-separator (except
+/// ed25519, for compatability reasons). For each other authenticator, this
+/// domain-separator is the single byte-value of its
 /// [`SignatureScheme`](crate::SignatureScheme) flag. E.g. `hash(signature
 /// schema flag || authenticator bytes)`.
 ///
-/// Each authenticator includes a convince method for deriving its `Address` as
-/// well as documentation for the specifics of how the derivation is done. See
+/// Each authenticator has a method for deriving its `Address` as well as
+/// documentation for the specifics of how the derivation is done. See
 /// [`Ed25519PublicKey::derive_address`] for an example.
 ///
 /// [`Ed25519PublicKey::derive_address`]: crate::Ed25519PublicKey::derive_address
