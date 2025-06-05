@@ -104,7 +104,7 @@ pub struct Epoch {
     /// that have ended.
     pub end_timestamp: Option<DateTime>,
     /// The value of the `version` field of `0x5`, the
-    /// `0x3::sui::SuiSystemState` object.  This version changes whenever
+    /// `0x3::iota::IotaSystemState` object.  This version changes whenever
     /// the fields contained in the system state object (held in a dynamic
     /// field attached to `0x5`) change.
     pub system_state_version: Option<u64>,
