@@ -49,6 +49,8 @@ use crate::{
     },
 };
 
+uniffi::setup_scaffolding!();
+
 const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
 const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
 const TESTNET_HOST: &str = "https://graphql.testnet.iota.cafe";
@@ -212,6 +214,7 @@ impl DynamicFieldOutput {
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
+#[derive(uniffi::Object)]
 pub struct Client {
     /// The URL of the GraphQL server.
     rpc: Url,
@@ -221,12 +224,14 @@ pub struct Client {
     service_config: std::sync::OnceLock<ServiceConfig>,
 }
 
+#[uniffi::export(async_runtime = "tokio")]
 impl Client {
     // ===========================================================================
     // Client Misc API
     // ===========================================================================
 
     /// Create a new GraphQL client with the provided server address.
+    #[uniffi::constructor]
     pub fn new(server: &str) -> Result<Self> {
         let rpc = reqwest::Url::parse(server)?;
 
@@ -240,24 +245,28 @@ impl Client {
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
     /// {MAINNET_HOST}.
+    #[uniffi::constructor]
     pub fn new_mainnet() -> Self {
         Self::new(MAINNET_HOST).expect("Invalid mainnet URL")
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
+    #[uniffi::constructor]
     pub fn new_testnet() -> Self {
         Self::new(TESTNET_HOST).expect("Invalid testnet URL")
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
+    #[uniffi::constructor]
     pub fn new_devnet() -> Self {
         Self::new(DEVNET_HOST).expect("Invalid devnet URL")
     }
 
     /// Create a new GraphQL client connected to the `localhost` GraphQL server:
     /// {DEFAULT_LOCAL_HOST}.
+    #[uniffi::constructor]
     pub fn new_localhost() -> Self {
         Self::new(LOCAL_HOST).expect("Invalid localhost URL")
     }
@@ -270,6 +279,23 @@ impl Client {
         Ok(())
     }
 
+    /// Get the chain identifier.
+    pub async fn chain_id(&self) -> Result<String> {
+        let operation = ChainIdentifierQuery::build(());
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        response
+            .data
+            .map(|e| e.chain_identifier)
+            .ok_or_else(Error::empty_response_error)
+    }
+}
+
+impl Client {
     /// Return the URL for the GraphQL server.
     fn rpc_server(&self) -> &str {
         self.rpc.as_str()
@@ -320,21 +346,6 @@ impl Client {
     // ===========================================================================
     // Network info API
     // ===========================================================================
-
-    /// Get the chain identifier.
-    pub async fn chain_id(&self) -> Result<String> {
-        let operation = ChainIdentifierQuery::build(());
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        response
-            .data
-            .map(|e| e.chain_identifier)
-            .ok_or_else(Error::empty_response_error)
-    }
 
     /// Get the reference gas price for the provided epoch or the last known one
     /// if no epoch is provided.

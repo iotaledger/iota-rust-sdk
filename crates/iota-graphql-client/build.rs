@@ -5,4 +5,5 @@
 /// Register IOTA RPC schema for creating structs for queries
 fn main() {
     iota_graphql_client_build::register_schema("rpc");
+    // uniffi::generate_scaffolding().unwrap();
 }
