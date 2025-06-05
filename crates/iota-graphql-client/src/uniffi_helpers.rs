@@ -6,7 +6,7 @@ use iota_types::{
 };
 
 use crate::{
-    Page, TransactionDataEffects, TransactionEvent,
+    DynamicFieldOutput, Page, TransactionDataEffects, TransactionEvent,
     query_types::{Epoch, PageInfo, Validator},
 };
 
@@ -32,3 +32,12 @@ define_paged!(ObjectPage, Object);
 define_paged!(SignedTransactionPage, SignedTransaction);
 define_paged!(TransactionEffectsPage, TransactionEffects);
 define_paged!(TransactionDataEffectsPage, TransactionDataEffects);
+define_paged!(DynamicFieldOutputPage, DynamicFieldOutput);
+
+use serde_json::Value as SerdeJsonValue;
+
+uniffi::custom_type!(SerdeJsonValue, String, {
+    remote,
+    lower: |val| val.to_string(),
+    try_lift: |s| Ok(serde_json::from_str(&s)?),
+});

@@ -8,10 +8,11 @@ async def main():
 
     coins = await client.coins(
         Address.fromhex("da06e01d11c8d3ef8f8e238c2f144076fdc6832378fb48b153d57027ae868b39"), 
-        "0x2::iota::IOTA", 
+        None, 
         PaginationFilter(direction=Direction.FORWARD, cursor=None, limit=None)
     )
-    print(coins)
+    for coin in coins.data:
+        print(f'ID = 0x{coin.id.hex()} Balance = {coin.balance}')
 
 if __name__ == '__main__':
     asyncio.run(main())
