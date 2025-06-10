@@ -279,11 +279,8 @@ mod transaction_kind {
 
 mod end_of_epoch {
     use super::*;
-    use crate::types::{
-        CheckpointDigest,
-        transaction::{
-            AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, EndOfEpochTransactionKind,
-        },
+    use crate::types::transaction::{
+        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, EndOfEpochTransactionKind,
     };
 
     #[derive(serde_derive::Serialize)]
@@ -293,13 +290,6 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-        BridgeStateCreate {
-            chain_id: &'a CheckpointDigest,
-        },
-        BridgeCommitteeInit {
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-            bridge_object_version: u64,
-        },
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -309,13 +299,6 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
-        BridgeStateCreate {
-            chain_id: CheckpointDigest,
-        },
-        BridgeCommitteeInit {
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-            bridge_object_version: u64,
-        },
     }
 
     #[derive(serde_derive::Serialize)]
@@ -324,8 +307,6 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-        BridgeStateCreate { chain_id: &'a CheckpointDigest },
-        BridgeCommitteeInit { bridge_object_version: u64 },
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -334,8 +315,6 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
-        BridgeStateCreate { chain_id: CheckpointDigest },
-        BridgeCommitteeInit { bridge_object_version: u64 },
     }
 
     impl Serialize for EndOfEpochTransactionKind {
@@ -355,14 +334,6 @@ mod end_of_epoch {
                     Self::AuthenticatorStateExpire(k) => {
                         ReadableEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
                     }
-                    Self::BridgeStateCreate { chain_id } => {
-                        ReadableEndOfEpochTransactionKindRef::BridgeStateCreate { chain_id }
-                    }
-                    Self::BridgeCommitteeInit {
-                        bridge_object_version,
-                    } => ReadableEndOfEpochTransactionKindRef::BridgeCommitteeInit {
-                        bridge_object_version: *bridge_object_version,
-                    },
                 };
                 readable.serialize(serializer)
             } else {
@@ -375,14 +346,6 @@ mod end_of_epoch {
                     Self::AuthenticatorStateExpire(k) => {
                         BinaryEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
                     }
-                    Self::BridgeStateCreate { chain_id } => {
-                        BinaryEndOfEpochTransactionKindRef::BridgeStateCreate { chain_id }
-                    }
-                    Self::BridgeCommitteeInit {
-                        bridge_object_version,
-                    } => BinaryEndOfEpochTransactionKindRef::BridgeCommitteeInit {
-                        bridge_object_version: *bridge_object_version,
-                    },
                 };
                 binary.serialize(serializer)
             }
@@ -407,14 +370,6 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
                             Self::AuthenticatorStateExpire(k)
                         }
-                        ReadableEndOfEpochTransactionKind::BridgeStateCreate { chain_id } => {
-                            Self::BridgeStateCreate { chain_id }
-                        }
-                        ReadableEndOfEpochTransactionKind::BridgeCommitteeInit {
-                            bridge_object_version,
-                        } => Self::BridgeCommitteeInit {
-                            bridge_object_version,
-                        },
                     }
                 })
             } else {
@@ -428,14 +383,6 @@ mod end_of_epoch {
                         BinaryEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
                             Self::AuthenticatorStateExpire(k)
                         }
-                        BinaryEndOfEpochTransactionKind::BridgeStateCreate { chain_id } => {
-                            Self::BridgeStateCreate { chain_id }
-                        }
-                        BinaryEndOfEpochTransactionKind::BridgeCommitteeInit {
-                            bridge_object_version,
-                        } => Self::BridgeCommitteeInit {
-                            bridge_object_version,
-                        },
                     },
                 )
             }
