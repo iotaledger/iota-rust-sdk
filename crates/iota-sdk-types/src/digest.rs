@@ -29,11 +29,7 @@ pub struct Digest(
     [u8; Self::LENGTH],
 );
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(Digest, Vec<u8>, {
-    lower: |digest| digest.as_bytes().to_vec(),
-    try_lift: |s| Ok(Digest::from_bytes(s)?),
-});
+crate::impl_uniffi_byte_vec_wrapper!(Digest);
 
 impl Digest {
     /// A constant representing the length of a digest in bytes.

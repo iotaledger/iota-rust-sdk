@@ -29,11 +29,7 @@ pub struct Ed25519PublicKey(
     [u8; Self::LENGTH],
 );
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(Ed25519PublicKey, Vec<u8>, {
-    lower: |key| key.as_bytes().to_vec(),
-    try_lift: |s| Ok(Ed25519PublicKey::from_bytes(s)?),
-});
+crate::impl_uniffi_byte_vec_wrapper!(Ed25519PublicKey);
 
 impl Ed25519PublicKey {
     /// The length of an ed25519 public key in bytes.
@@ -145,11 +141,7 @@ pub struct Ed25519Signature(
     [u8; Self::LENGTH],
 );
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(Ed25519Signature, Vec<u8>, {
-    lower: |key| key.as_bytes().to_vec(),
-    try_lift: |s| Ok(Ed25519Signature::from_bytes(s)?),
-});
+crate::impl_uniffi_byte_vec_wrapper!(Ed25519Signature);
 
 impl Ed25519Signature {
     /// The length of an ed25519 signature key in bytes.

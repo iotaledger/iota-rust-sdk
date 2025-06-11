@@ -31,11 +31,7 @@ pub struct Secp256r1PublicKey(
     [u8; Self::LENGTH],
 );
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(Secp256r1PublicKey, Vec<u8>, {
-    lower: |key| key.as_bytes().to_vec(),
-    try_lift: |s| Ok(Secp256r1PublicKey::from_bytes(s)?),
-});
+crate::impl_uniffi_byte_vec_wrapper!(Secp256r1PublicKey);
 
 impl Secp256r1PublicKey {
     /// The length of an secp256r1 public key in bytes.
@@ -147,11 +143,7 @@ pub struct Secp256r1Signature(
     [u8; Self::LENGTH],
 );
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(Secp256r1Signature, Vec<u8>, {
-    lower: |key| key.as_bytes().to_vec(),
-    try_lift: |s| Ok(Secp256r1Signature::from_bytes(s)?),
-});
+crate::impl_uniffi_byte_vec_wrapper!(Secp256r1Signature);
 
 impl Secp256r1Signature {
     /// The length of an secp256r1 signature key in bytes.

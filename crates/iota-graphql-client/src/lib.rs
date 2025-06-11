@@ -120,7 +120,6 @@ pub struct NameValue(Vec<u8>);
 #[cfg(feature = "uniffi")]
 uniffi::custom_type!(NameValue, Vec<u8>, {
     lower: |kv| kv.0,
-    try_lift: |s| Ok(NameValue::from(s)),
 });
 
 /// Helper struct for passing a raw bcs value.
@@ -130,7 +129,6 @@ pub struct BcsName(pub Vec<u8>);
 #[cfg(feature = "uniffi")]
 uniffi::custom_type!(BcsName, Vec<u8>, {
     lower: |kv| kv.0,
-    try_lift: |s| Ok(BcsName::from(s)),
 });
 
 #[derive(Clone, Debug)]
