@@ -446,7 +446,7 @@ def _uniffi_load_indirect():
         # Anything else must be an ELF platform - Linux, *BSD, Solaris/illumos
         libname = "lib{}.so"
 
-    libname = libname.format("iota_graphql_client")
+    libname = libname.format("iota_sdk_ffi")
     path = os.path.join(os.path.dirname(__file__), libname)
     lib = ctypes.cdll.LoadLibrary(path)
     return lib
@@ -460,7 +460,14 @@ def _uniffi_check_contract_api_version(lib):
         raise InternalError("UniFFI contract version mismatch: try cleaning and rebuilding your project")
 
 def _uniffi_check_api_checksums(lib):
-    pass
+    if lib.uniffi_iota_sdk_types_checksum_func_address_from_hex() != 50231:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_types_checksum_func_digest_from_base58() != 7368:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_types_checksum_func_object_id_from_hex() != 56022:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_types_checksum_func_try_coin_from_object() != 56499:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
 
 # A ctypes library to expose the extern-C FFI definitions.
 # This is an implementation detail which will be called internally by the public API.
@@ -567,6 +574,86 @@ class _UniffiForeignFutureStructVoid(ctypes.Structure):
     ]
 _UNIFFI_FOREIGN_FUTURE_COMPLETE_VOID = ctypes.CFUNCTYPE(None,ctypes.c_uint64,_UniffiForeignFutureStructVoid,
 )
+_UniffiLib.uniffi_iota_sdk_types_fn_clone_addressparseerror.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_clone_addressparseerror.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_types_fn_free_addressparseerror.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_free_addressparseerror.restype = None
+_UniffiLib.uniffi_iota_sdk_types_fn_method_addressparseerror_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_method_addressparseerror_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_types_fn_clone_digestparseerror.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_clone_digestparseerror.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_types_fn_free_digestparseerror.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_free_digestparseerror.restype = None
+_UniffiLib.uniffi_iota_sdk_types_fn_method_digestparseerror_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_method_digestparseerror_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_types_fn_clone_invalidsignaturescheme.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_clone_invalidsignaturescheme.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_types_fn_free_invalidsignaturescheme.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_free_invalidsignaturescheme.restype = None
+_UniffiLib.uniffi_iota_sdk_types_fn_method_invalidsignaturescheme_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_method_invalidsignaturescheme_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_types_fn_clone_typeparseerror.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_clone_typeparseerror.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_types_fn_free_typeparseerror.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_free_typeparseerror.restype = None
+_UniffiLib.uniffi_iota_sdk_types_fn_method_typeparseerror_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_method_typeparseerror_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_types_fn_func_address_from_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_func_address_from_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_types_fn_func_digest_from_base58.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_func_digest_from_base58.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_types_fn_func_object_id_from_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_func_object_id_from_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_types_fn_func_try_coin_from_object.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_types_fn_func_try_coin_from_object.restype = _UniffiRustBuffer
 _UniffiLib.ffi_iota_sdk_types_rustbuffer_alloc.argtypes = (
     ctypes.c_uint64,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -835,6 +922,18 @@ _UniffiLib.ffi_iota_sdk_types_rust_future_complete_void.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.ffi_iota_sdk_types_rust_future_complete_void.restype = None
+_UniffiLib.uniffi_iota_sdk_types_checksum_func_address_from_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_types_checksum_func_address_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_types_checksum_func_digest_from_base58.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_types_checksum_func_digest_from_base58.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_types_checksum_func_object_id_from_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_types_checksum_func_object_id_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_types_checksum_func_try_coin_from_object.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_types_checksum_func_try_coin_from_object.restype = ctypes.c_uint16
 _UniffiLib.ffi_iota_sdk_types_uniffi_contract_version.argtypes = (
 )
 _UniffiLib.ffi_iota_sdk_types_uniffi_contract_version.restype = ctypes.c_uint32
@@ -1008,6 +1107,14 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
+
+
+
+
+
+
 
 
 class ActiveJwk:
@@ -2119,6 +2226,42 @@ class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
         _UniffiConverterTypeAddress.write(value.sender, buf)
         _UniffiConverterTypeStructTag.write(value.type, buf)
         _UniffiConverterBytes.write(value.contents, buf)
+
+
+class ExecutionTimeObservation:
+    key: "ExecutionTimeObservationKey"
+    observations: "typing.List[ValidatorExecutionTimeObservation]"
+    def __init__(self, *, key: "ExecutionTimeObservationKey", observations: "typing.List[ValidatorExecutionTimeObservation]"):
+        self.key = key
+        self.observations = observations
+
+    def __str__(self):
+        return "ExecutionTimeObservation(key={}, observations={})".format(self.key, self.observations)
+
+    def __eq__(self, other):
+        if self.key != other.key:
+            return False
+        if self.observations != other.observations:
+            return False
+        return True
+
+class _UniffiConverterTypeExecutionTimeObservation(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ExecutionTimeObservation(
+            key=_UniffiConverterTypeExecutionTimeObservationKey.read(buf),
+            observations=_UniffiConverterSequenceTypeValidatorExecutionTimeObservation.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeExecutionTimeObservationKey.check_lower(value.key)
+        _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.check_lower(value.observations)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeExecutionTimeObservationKey.write(value.key, buf)
+        _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.write(value.observations, buf)
 
 
 class GasCostSummary:
@@ -3723,11 +3866,14 @@ class StructTag:
     module: "Identifier"
     name: "Identifier"
     type_params: "typing.List[TypeTag]"
-    def __init__(self, *, address: "Address", module: "Identifier", name: "Identifier", type_params: "typing.List[TypeTag]"):
+    def __init__(self, *, address: "Address", module: "Identifier", name: "Identifier", type_params: "typing.List[TypeTag]" = _DEFAULT):
         self.address = address
         self.module = module
         self.name = name
-        self.type_params = type_params
+        if type_params is _DEFAULT:
+            self.type_params = []
+        else:
+            self.type_params = type_params
 
     def __str__(self):
         return "StructTag(address={}, module={}, name={}, type_params={})".format(self.address, self.module, self.name, self.type_params)
@@ -4207,42 +4353,6 @@ class _UniffiConverterTypeUnchangedSharedObject(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypeObjectId.write(value.object_id, buf)
         _UniffiConverterTypeUnchangedSharedKind.write(value.kind, buf)
-
-
-class UniffiExecutionTimeObservation:
-    key: "ExecutionTimeObservationKey"
-    observations: "typing.List[ValidatorExecutionTimeObservation]"
-    def __init__(self, *, key: "ExecutionTimeObservationKey", observations: "typing.List[ValidatorExecutionTimeObservation]"):
-        self.key = key
-        self.observations = observations
-
-    def __str__(self):
-        return "UniffiExecutionTimeObservation(key={}, observations={})".format(self.key, self.observations)
-
-    def __eq__(self, other):
-        if self.key != other.key:
-            return False
-        if self.observations != other.observations:
-            return False
-        return True
-
-class _UniffiConverterTypeUniffiExecutionTimeObservation(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return UniffiExecutionTimeObservation(
-            key=_UniffiConverterTypeExecutionTimeObservationKey.read(buf),
-            observations=_UniffiConverterSequenceTypeValidatorExecutionTimeObservation.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterTypeExecutionTimeObservationKey.check_lower(value.key)
-        _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.check_lower(value.observations)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterTypeExecutionTimeObservationKey.write(value.key, buf)
-        _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.write(value.observations, buf)
 
 
 class UniffiMovePackage:
@@ -5206,6 +5316,64 @@ class _UniffiConverterTypeCheckpointCommitment(_UniffiConverterRustBuffer):
             _UniffiConverterTypeDigest.write(value.digest, buf)
 
 
+
+
+# CoinFromObjectError
+# We want to define each variant as a nested class that's also a subclass,
+# which is tricky in Python.  To accomplish this we're going to create each
+# class separately, then manually add the child classes to the base class's
+# __dict__.  All of this happens in dummy class to avoid polluting the module
+# namespace.
+class CoinFromObjectError(Exception):
+    pass
+
+_UniffiTempCoinFromObjectError = CoinFromObjectError
+
+class CoinFromObjectError:  # type: ignore
+    class NotACoin(_UniffiTempCoinFromObjectError):
+        def __init__(self):
+            pass
+
+        def __repr__(self):
+            return "CoinFromObjectError.NotACoin({})".format(str(self))
+    _UniffiTempCoinFromObjectError.NotACoin = NotACoin # type: ignore
+    class InvalidContentLength(_UniffiTempCoinFromObjectError):
+        def __init__(self):
+            pass
+
+        def __repr__(self):
+            return "CoinFromObjectError.InvalidContentLength({})".format(str(self))
+    _UniffiTempCoinFromObjectError.InvalidContentLength = InvalidContentLength # type: ignore
+
+CoinFromObjectError = _UniffiTempCoinFromObjectError # type: ignore
+del _UniffiTempCoinFromObjectError
+
+
+class _UniffiConverterTypeCoinFromObjectError(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return CoinFromObjectError.NotACoin(
+            )
+        if variant == 2:
+            return CoinFromObjectError.InvalidContentLength(
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if isinstance(value, CoinFromObjectError.NotACoin):
+            return
+        if isinstance(value, CoinFromObjectError.InvalidContentLength):
+            return
+
+    @staticmethod
+    def write(value, buf):
+        if isinstance(value, CoinFromObjectError.NotACoin):
+            buf.write_i32(1)
+        if isinstance(value, CoinFromObjectError.InvalidContentLength):
+            buf.write_i32(2)
 
 
 
@@ -8136,6 +8304,91 @@ class _UniffiConverterTypeExecutionTimeObservationKey(_UniffiConverterRustBuffer
 
 
 
+class ExecutionTimeObservations:
+    """
+    Set of Execution Time Observations from the committee.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
+
+    v1-stored-execution-time-observations = (vec
+    execution-time-observation-key
+    (vec execution-time-observation)
+    )
+    ```
+    """
+
+    def __init__(self):
+        raise RuntimeError("ExecutionTimeObservations cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class V1:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"ExecutionTimeObservations.V1{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_V1():
+                return False
+            return self._values == other._values
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_V1(self) -> bool:
+        return isinstance(self, ExecutionTimeObservations.V1)
+    def is_v1(self) -> bool:
+        return isinstance(self, ExecutionTimeObservations.V1)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+ExecutionTimeObservations.V1 = type("ExecutionTimeObservations.V1", (ExecutionTimeObservations.V1, ExecutionTimeObservations,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeExecutionTimeObservations(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return ExecutionTimeObservations.V1(
+                _UniffiConverterSequenceTypeExecutionTimeObservation.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_V1():
+            _UniffiConverterSequenceTypeExecutionTimeObservation.check_lower(value._values[0])
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_V1():
+            buf.write_i32(1)
+            _UniffiConverterSequenceTypeExecutionTimeObservation.write(value._values[0], buf)
+
+
+
+
+
+
+
 class IdOperation(enum.Enum):
     """
     Defines what happened to an ObjectId during execution
@@ -9204,6 +9457,111 @@ class _UniffiConverterTypeObjectOut(_UniffiConverterRustBuffer):
             buf.write_i32(3)
             _UniffiConverterUInt64.write(value.version, buf)
             _UniffiConverterTypeObjectDigest.write(value.digest, buf)
+
+
+
+
+
+
+
+class ObjectType:
+    """
+    Type of an IOTA object
+    """
+
+    def __init__(self):
+        raise RuntimeError("ObjectType cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class PACKAGE:
+        """
+        Move package containing one or more bytecode modules
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ObjectType.PACKAGE()".format()
+
+        def __eq__(self, other):
+            if not other.is_PACKAGE():
+                return False
+            return True
+    
+    class STRUCT:
+        """
+        A Move struct of the given type
+        """
+
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"ObjectType.STRUCT{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_STRUCT():
+                return False
+            return self._values == other._values
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_PACKAGE(self) -> bool:
+        return isinstance(self, ObjectType.PACKAGE)
+    def is_package(self) -> bool:
+        return isinstance(self, ObjectType.PACKAGE)
+    def is_STRUCT(self) -> bool:
+        return isinstance(self, ObjectType.STRUCT)
+    def is_struct(self) -> bool:
+        return isinstance(self, ObjectType.STRUCT)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+ObjectType.PACKAGE = type("ObjectType.PACKAGE", (ObjectType.PACKAGE, ObjectType,), {})  # type: ignore
+ObjectType.STRUCT = type("ObjectType.STRUCT", (ObjectType.STRUCT, ObjectType,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeObjectType(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return ObjectType.PACKAGE(
+            )
+        if variant == 2:
+            return ObjectType.STRUCT(
+                _UniffiConverterTypeStructTag.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_PACKAGE():
+            return
+        if value.is_STRUCT():
+            _UniffiConverterTypeStructTag.check_lower(value._values[0])
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_PACKAGE():
+            buf.write_i32(1)
+        if value.is_STRUCT():
+            buf.write_i32(2)
+            _UniffiConverterTypeStructTag.write(value._values[0], buf)
 
 
 
@@ -10971,74 +11329,6 @@ class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
 
 
 
-class UniffiExecutionTimeObservations:
-    def __init__(self):
-        raise RuntimeError("UniffiExecutionTimeObservations cannot be instantiated directly")
-
-    # Each enum variant is a nested class of the enum itself.
-    class V1:
-        def __init__(self, *values):
-            if len(values) != 1:
-                raise TypeError(f"Expected 1 arguments, found {len(values)}")
-            self._values = values
-
-        def __getitem__(self, index):
-            return self._values[index]
-
-        def __str__(self):
-            return f"UniffiExecutionTimeObservations.V1{self._values!r}"
-
-        def __eq__(self, other):
-            if not other.is_V1():
-                return False
-            return self._values == other._values
-    
-
-    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
-    # whether an instance is that variant.
-    def is_V1(self) -> bool:
-        return isinstance(self, UniffiExecutionTimeObservations.V1)
-    def is_v1(self) -> bool:
-        return isinstance(self, UniffiExecutionTimeObservations.V1)
-    
-
-# Now, a little trick - we make each nested variant class be a subclass of the main
-# enum class, so that method calls and instance checks etc will work intuitively.
-# We might be able to do this a little more neatly with a metaclass, but this'll do.
-UniffiExecutionTimeObservations.V1 = type("UniffiExecutionTimeObservations.V1", (UniffiExecutionTimeObservations.V1, UniffiExecutionTimeObservations,), {})  # type: ignore
-
-
-
-
-class _UniffiConverterTypeUniffiExecutionTimeObservations(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        variant = buf.read_i32()
-        if variant == 1:
-            return UniffiExecutionTimeObservations.V1(
-                _UniffiConverterSequenceTypeUniffiExecutionTimeObservation.read(buf),
-            )
-        raise InternalError("Raw enum value doesn't match any cases")
-
-    @staticmethod
-    def check_lower(value):
-        if value.is_V1():
-            _UniffiConverterSequenceTypeUniffiExecutionTimeObservation.check_lower(value._values[0])
-            return
-        raise ValueError(value)
-
-    @staticmethod
-    def write(value, buf):
-        if value.is_V1():
-            buf.write_i32(1)
-            _UniffiConverterSequenceTypeUniffiExecutionTimeObservation.write(value._values[0], buf)
-
-
-
-
-
-
-
 class UserSignature:
     """
     A signature from a user
@@ -11588,6 +11878,31 @@ class _UniffiConverterSequenceTypeEvent(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeExecutionTimeObservation(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeExecutionTimeObservation.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeExecutionTimeObservation.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeExecutionTimeObservation.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeGenesisObject(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -11734,31 +12049,6 @@ class _UniffiConverterSequenceTypeUnchangedSharedObject(_UniffiConverterRustBuff
 
         return [
             _UniffiConverterTypeUnchangedSharedObject.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceTypeUniffiExecutionTimeObservation(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeUniffiExecutionTimeObservation.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeUniffiExecutionTimeObservation.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeUniffiExecutionTimeObservation.read(buf) for i in range(count)
         ]
 
 
@@ -12555,28 +12845,6 @@ class _UniffiConverterTypeEffectsAuxiliaryDataDigest:
         return _UniffiConverterTypeDigest.lower(value)
 
 
-class _UniffiConverterTypeExecutionTimeObservations:
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterTypeUniffiExecutionTimeObservations.write(value, buf)
-
-    @staticmethod
-    def read(buf):
-        return _UniffiConverterTypeUniffiExecutionTimeObservations.read(buf)
-
-    @staticmethod
-    def lift(value):
-        return _UniffiConverterTypeUniffiExecutionTimeObservations.lift(value)
-
-    @staticmethod
-    def check_lower(value):
-        return _UniffiConverterTypeUniffiExecutionTimeObservations.check_lower(value)
-
-    @staticmethod
-    def lower(value):
-        return _UniffiConverterTypeUniffiExecutionTimeObservations.lower(value)
-
-
 class _UniffiConverterTypeIdentifier:
     @staticmethod
     def write(value, buf):
@@ -12819,6 +13087,304 @@ class _UniffiConverterTypeTransactionEventsDigest:
         return _UniffiConverterTypeDigest.lower(value)
 
 # objects.
+class AddressParseErrorProtocol(typing.Protocol):
+    pass
+# AddressParseError is a Rust-only trait - it's a wrapper around a Rust implementation.
+class AddressParseError(Exception):
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_free_addressparseerror, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_clone_addressparseerror, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_method_addressparseerror_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeAddressParseError__as_error(_UniffiConverterRustBuffer):
+    @classmethod
+    def read(cls, buf):
+        raise NotImplementedError()
+
+    @classmethod
+    def write(cls, value, buf):
+        raise NotImplementedError()
+
+    @staticmethod
+    def lift(value):
+        # Errors are always a rust buffer holding a pointer - which is a "read"
+        with value.consume_with_stream() as stream:
+            return _UniffiConverterTypeAddressParseError.read(stream)
+
+    @staticmethod
+    def lower(value):
+        raise NotImplementedError()
+
+class _UniffiConverterTypeAddressParseError:
+
+    @staticmethod
+    def lift(value: int):
+        return AddressParseError._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: AddressParseError):
+        if not isinstance(value, AddressParseError):
+            raise TypeError("Expected AddressParseError instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: AddressParseErrorProtocol):
+        if not isinstance(value, AddressParseError):
+            raise TypeError("Expected AddressParseError instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: AddressParseErrorProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class DigestParseErrorProtocol(typing.Protocol):
+    pass
+# DigestParseError is a Rust-only trait - it's a wrapper around a Rust implementation.
+class DigestParseError(Exception):
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_free_digestparseerror, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_clone_digestparseerror, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_method_digestparseerror_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeDigestParseError__as_error(_UniffiConverterRustBuffer):
+    @classmethod
+    def read(cls, buf):
+        raise NotImplementedError()
+
+    @classmethod
+    def write(cls, value, buf):
+        raise NotImplementedError()
+
+    @staticmethod
+    def lift(value):
+        # Errors are always a rust buffer holding a pointer - which is a "read"
+        with value.consume_with_stream() as stream:
+            return _UniffiConverterTypeDigestParseError.read(stream)
+
+    @staticmethod
+    def lower(value):
+        raise NotImplementedError()
+
+class _UniffiConverterTypeDigestParseError:
+
+    @staticmethod
+    def lift(value: int):
+        return DigestParseError._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: DigestParseError):
+        if not isinstance(value, DigestParseError):
+            raise TypeError("Expected DigestParseError instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: DigestParseErrorProtocol):
+        if not isinstance(value, DigestParseError):
+            raise TypeError("Expected DigestParseError instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: DigestParseErrorProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class InvalidSignatureSchemeProtocol(typing.Protocol):
+    pass
+# InvalidSignatureScheme is a Rust-only trait - it's a wrapper around a Rust implementation.
+class InvalidSignatureScheme():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_free_invalidsignaturescheme, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_clone_invalidsignaturescheme, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_method_invalidsignaturescheme_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeInvalidSignatureScheme:
+
+    @staticmethod
+    def lift(value: int):
+        return InvalidSignatureScheme._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: InvalidSignatureScheme):
+        if not isinstance(value, InvalidSignatureScheme):
+            raise TypeError("Expected InvalidSignatureScheme instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: InvalidSignatureSchemeProtocol):
+        if not isinstance(value, InvalidSignatureScheme):
+            raise TypeError("Expected InvalidSignatureScheme instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: InvalidSignatureSchemeProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class TypeParseErrorProtocol(typing.Protocol):
+    pass
+# TypeParseError is a Rust-only trait - it's a wrapper around a Rust implementation.
+class TypeParseError():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_free_typeparseerror, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_clone_typeparseerror, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_types_fn_method_typeparseerror_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeTypeParseError:
+
+    @staticmethod
+    def lift(value: int):
+        return TypeParseError._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: TypeParseError):
+        if not isinstance(value, TypeParseError):
+            raise TypeError("Expected TypeParseError instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: TypeParseErrorProtocol):
+        if not isinstance(value, TypeParseError):
+            raise TypeError("Expected TypeParseError instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: TypeParseErrorProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 Address = bytes
 Bls12381PublicKey = bytes
 Bn254FieldElement = str
@@ -12835,7 +13401,6 @@ ConsensusCommitDigest = Digest
 Ed25519PublicKey = bytes
 Ed25519Signature = bytes
 EffectsAuxiliaryDataDigest = Digest
-ExecutionTimeObservations = UniffiExecutionTimeObservations
 Identifier = str
 MovePackage = UniffiMovePackage
 ObjectDigest = Digest
@@ -12850,10 +13415,39 @@ TransactionEventsDigest = Digest
 
 # Async support
 
+def address_from_hex(hex: "str") -> "Address":
+    _UniffiConverterString.check_lower(hex)
+    
+    return _UniffiConverterTypeAddress.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeAddressParseError__as_error,_UniffiLib.uniffi_iota_sdk_types_fn_func_address_from_hex,
+        _UniffiConverterString.lower(hex)))
+
+
+def digest_from_base58(base58: "str") -> "Digest":
+    _UniffiConverterString.check_lower(base58)
+    
+    return _UniffiConverterTypeDigest.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeDigestParseError__as_error,_UniffiLib.uniffi_iota_sdk_types_fn_func_digest_from_base58,
+        _UniffiConverterString.lower(base58)))
+
+
+def object_id_from_hex(hex: "str") -> "ObjectId":
+    _UniffiConverterString.check_lower(hex)
+    
+    return _UniffiConverterTypeObjectId.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeAddressParseError__as_error,_UniffiLib.uniffi_iota_sdk_types_fn_func_object_id_from_hex,
+        _UniffiConverterString.lower(hex)))
+
+
+def try_coin_from_object(object: "Object") -> "Coin":
+    _UniffiConverterTypeObject.check_lower(object)
+    
+    return _UniffiConverterTypeCoin.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeCoinFromObjectError,_UniffiLib.uniffi_iota_sdk_types_fn_func_try_coin_from_object,
+        _UniffiConverterTypeObject.lower(object)))
+
+
 __all__ = [
     "InternalError",
     "Argument",
     "CheckpointCommitment",
+    "CoinFromObjectError",
     "Command",
     "CommandArgumentError",
     "ConsensusDeterminedVersionAssignments",
@@ -12861,6 +13455,7 @@ __all__ = [
     "ExecutionError",
     "ExecutionStatus",
     "ExecutionTimeObservationKey",
+    "ExecutionTimeObservations",
     "IdOperation",
     "Input",
     "MultisigMemberPublicKey",
@@ -12868,6 +13463,7 @@ __all__ = [
     "ObjectData",
     "ObjectIn",
     "ObjectOut",
+    "ObjectType",
     "Owner",
     "PackageUpgradeError",
     "SimpleSignature",
@@ -12877,7 +13473,6 @@ __all__ = [
     "TypeArgumentError",
     "TypeTag",
     "UnchangedSharedKind",
-    "UniffiExecutionTimeObservations",
     "UserSignature",
     "ActiveJwk",
     "AuthenticatorStateExpire",
@@ -12891,6 +13486,7 @@ __all__ = [
     "ConsensusCommitPrologueV1",
     "EndOfEpochData",
     "Event",
+    "ExecutionTimeObservation",
     "GasCostSummary",
     "GasPayment",
     "GenesisObject",
@@ -12920,7 +13516,6 @@ __all__ = [
     "TransferObjects",
     "TypeOrigin",
     "UnchangedSharedObject",
-    "UniffiExecutionTimeObservation",
     "UniffiMovePackage",
     "Upgrade",
     "UpgradeInfo",
@@ -12932,5 +13527,13 @@ __all__ = [
     "ZkLoginInputs",
     "ZkLoginProof",
     "ZkLoginPublicIdentifier",
+    "address_from_hex",
+    "digest_from_base58",
+    "object_id_from_hex",
+    "try_coin_from_object",
+    "AddressParseError",
+    "DigestParseError",
+    "InvalidSignatureScheme",
+    "TypeParseError",
 ]
 

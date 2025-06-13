@@ -667,7 +667,7 @@ mod tests {
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
 
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
 
         // check that recipient has 1 coin
@@ -697,7 +697,7 @@ mod tests {
 
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
     }
 
@@ -717,7 +717,7 @@ mod tests {
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
 
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
 
         // check that recipient has 1 coin
@@ -745,7 +745,7 @@ mod tests {
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
 
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         assert!(effects.is_ok());
 
         // wait for the transaction to be finalized
@@ -783,7 +783,7 @@ mod tests {
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
 
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
 
         // check that there are two coins
@@ -806,7 +806,7 @@ mod tests {
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
 
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
     }
 
@@ -822,7 +822,7 @@ mod tests {
         tx.transfer_objects(vec![upgrade_cap], sender);
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
     }
 
@@ -838,7 +838,7 @@ mod tests {
         tx.transfer_objects(vec![upgrade_cap], sender);
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         let mut package_id: Option<ObjectId> = None;
         let mut created_objs = vec![];
         if let Ok(Some(ref effects)) = effects {
@@ -932,7 +932,7 @@ mod tests {
         tx.set_sender(address);
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
     }
 }

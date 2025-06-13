@@ -11,11 +11,11 @@ cargo build -p iota-sdk-ffi --lib --release
 Next, run the binary to generate the bindings for the desired language.
 
 ```sh
-cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi.dylib" --language python --out-dir bindings/python/lib
+cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi.dylib" --language python --out-dir bindings/python/lib --no-format
 ```
 
-Finally, copy the dylib files to the output directory.
+Finally, copy the dylib file to the output directory.
 
 ```sh
-cp target/release/libiota_sdk_ffi.* bindings/python/lib/
+cp target/release/libiota_sdk_ffi.dylib bindings/python/lib/
 ```

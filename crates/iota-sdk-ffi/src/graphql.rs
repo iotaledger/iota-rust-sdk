@@ -13,7 +13,7 @@ use iota_graphql_client::{
 use iota_types::{
     Address, CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, MovePackage, Object,
     SignedTransaction, Transaction, TransactionDigest, TransactionEffects, TransactionKind,
-    TypeTag,
+    TypeTag, UserSignature,
 };
 use tokio::sync::RwLock;
 
@@ -90,11 +90,13 @@ impl GraphQLClient {
     ///
     /// This will return `Ok(None)` if the epoch requested is not available in
     /// the GraphQL service (e.g., due to pruning).
+    #[uniffi::method(default(epoch = None))]
     pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
         Ok(self.0.read().await.reference_gas_price(epoch).await?)
     }
 
     /// Get the protocol configuration.
+    #[uniffi::method(default(version = None))]
     pub async fn protocol_config(&self, version: Option<u64>) -> Result<Option<ProtocolConfigs>> {
         Ok(self.0.read().await.protocol_config(version).await?)
     }
@@ -102,10 +104,11 @@ impl GraphQLClient {
     /// Get the list of active validators for the provided epoch, including
     /// related metadata. If no epoch is provided, it will return the active
     /// validators for the current epoch.
+    #[uniffi::method(default(epoch = None))]
     pub async fn active_validators(
         &self,
-        epoch: Option<u64>,
         pagination_filter: PaginationFilter,
+        epoch: Option<u64>,
     ) -> Result<ValidatorPage> {
         Ok(self
             .0
@@ -156,11 +159,12 @@ impl GraphQLClient {
     /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
     /// which will return all coins. For IOTA coin, pass in the coin type:
     /// `0x2::coin::Coin<0x2::iota::IOTA>`.
+    #[uniffi::method(default(coin_type = None))]
     pub async fn coins(
         &self,
         owner: Address,
-        coin_type: Option<String>,
         pagination_filter: PaginationFilter,
+        coin_type: Option<String>,
     ) -> Result<CoinPage> {
         Ok(self
             .0
@@ -188,9 +192,10 @@ impl GraphQLClient {
     /// Get the [`CheckpointSummary`] for a given checkpoint digest or
     /// checkpoint id. If none is provided, it will use the last known
     /// checkpoint id.
+    #[uniffi::method(default(digest = None, seq_num = None))]
     pub async fn checkpoint(
         &self,
-        digest: Option<iota_types::CheckpointDigest>,
+        digest: Option<CheckpointDigest>,
         seq_num: Option<u64>,
     ) -> Result<Option<CheckpointSummary>> {
         Ok(self.0.read().await.checkpoint(digest, seq_num).await?)
@@ -229,6 +234,7 @@ impl GraphQLClient {
 
     /// Return the epoch information for the provided epoch. If no epoch is
     /// provided, it will return the last known epoch.
+    #[uniffi::method(default(epoch = None))]
     pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<Epoch>> {
         Ok(self.0.read().await.epoch(epoch).await?)
     }
@@ -241,6 +247,7 @@ impl GraphQLClient {
     /// Return the number of checkpoints in this epoch. This will return
     /// `Ok(None)` if the epoch requested is not available in the GraphQL
     /// service (e.g., due to pruning).
+    #[uniffi::method(default(epoch = None))]
     pub async fn epoch_total_checkpoints(&self, epoch: Option<u64>) -> Result<Option<u64>> {
         Ok(self.0.read().await.epoch_total_checkpoints(epoch).await?)
     }
@@ -248,6 +255,7 @@ impl GraphQLClient {
     /// Return the number of transaction blocks in this epoch. This will return
     /// `Ok(None)` if the epoch requested is not available in the GraphQL
     /// service (e.g., due to pruning).
+    #[uniffi::method(default(epoch = None))]
     pub async fn epoch_total_transaction_blocks(&self, epoch: Option<u64>) -> Result<Option<u64>> {
         Ok(self
             .0
@@ -263,10 +271,11 @@ impl GraphQLClient {
 
     /// Return a page of tuple (event, transaction digest) based on the
     /// (optional) event filter.
+    #[uniffi::method(default(filter = None))]
     pub async fn events(
         &self,
-        filter: Option<EventFilter>,
         pagination_filter: PaginationFilter,
+        filter: Option<EventFilter>,
     ) -> Result<TransactionEventPage> {
         Ok(self
             .0
@@ -286,6 +295,7 @@ impl GraphQLClient {
     /// If the object does not exist (e.g., due to pruning), this will return
     /// `Ok(None)`. Similarly, if this is not an object but an address, it
     /// will return `Ok(None)`.
+    #[uniffi::method(default(version = None))]
     pub async fn object(&self, address: Address, version: Option<u64>) -> Result<Option<Object>> {
         Ok(self.0.read().await.object(address, version).await?)
     }
@@ -306,10 +316,11 @@ impl GraphQLClient {
     ///
     /// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
     /// ```
+    #[uniffi::method(default(filter = None))]
     pub async fn objects(
         &self,
-        filter: Option<ObjectFilter>,
         pagination_filter: PaginationFilter,
+        filter: Option<ObjectFilter>,
     ) -> Result<ObjectPage> {
         Ok(self
             .0
@@ -331,6 +342,7 @@ impl GraphQLClient {
     /// If the object does not exist (e.g., due to pruning), this will return
     /// `Ok(None)`. Similarly, if this is not an object but an address, it
     /// will return `Ok(None)`.
+    #[uniffi::method(default(version = None))]
     pub async fn move_object_contents_bcs(
         &self,
         address: Address,
@@ -359,6 +371,7 @@ impl GraphQLClient {
     ///
     /// Note that this interpretation of version is different from a historical
     /// object read (the interpretation of version for the object query).
+    #[uniffi::method(default(version = None))]
     pub async fn package(
         &self,
         address: Address,
@@ -370,6 +383,7 @@ impl GraphQLClient {
     /// Fetch all versions of package at address (packages that share this
     /// package's original ID), optionally bounding the versions exclusively
     /// from below with afterVersion, or from above with beforeVersion.
+    #[uniffi::method(default(after_version = None, before_version = None))]
     pub async fn package_versions(
         &self,
         address: Address,
@@ -405,6 +419,7 @@ impl GraphQLClient {
     /// This query returns all versions of a given user package that appear
     /// between the specified checkpoints, but only records the latest
     /// versions of system packages.
+    #[uniffi::method(default(after_checkpoint = None, before_checkpoint = None))]
     pub async fn packages(
         &self,
         pagination_filter: PaginationFilter,
@@ -449,10 +464,11 @@ impl GraphQLClient {
     }
 
     /// Get a page of transactions based on the provided filters.
+    #[uniffi::method(default(filter = None))]
     pub async fn transactions(
         &self,
-        filter: Option<TransactionsFilter>,
         pagination_filter: PaginationFilter,
+        filter: Option<TransactionsFilter>,
     ) -> Result<SignedTransactionPage> {
         Ok(self
             .0
@@ -464,10 +480,11 @@ impl GraphQLClient {
     }
 
     /// Get a page of transactions' effects based on the provided filters.
+    #[uniffi::method(default(filter = None))]
     pub async fn transactions_effects(
         &self,
-        filter: Option<TransactionsFilter>,
         pagination_filter: PaginationFilter,
+        filter: Option<TransactionsFilter>,
     ) -> Result<TransactionEffectsPage> {
         Ok(self
             .0
@@ -480,10 +497,11 @@ impl GraphQLClient {
 
     /// Get a page of transactions' data and effects based on the provided
     /// filters.
+    #[uniffi::method(default(filter = None))]
     pub async fn transactions_data_effects(
         &self,
-        filter: Option<TransactionsFilter>,
         pagination_filter: PaginationFilter,
+        filter: Option<TransactionsFilter>,
     ) -> Result<TransactionDataEffectsPage> {
         Ok(self
             .0
@@ -497,7 +515,7 @@ impl GraphQLClient {
     /// Execute a transaction.
     pub async fn execute_tx(
         &self,
-        signatures: Vec<iota_types::UserSignature>,
+        signatures: &[UserSignature],
         tx: &Transaction,
     ) -> Result<Option<TransactionEffects>> {
         Ok(self.0.read().await.execute_tx(signatures, &tx).await?)
@@ -508,6 +526,7 @@ impl GraphQLClient {
     // ===========================================================================
     /// Return the normalized Move function data for the provided package,
     /// module, and function.
+    #[uniffi::method(default(version = None))]
     pub async fn normalized_move_function(
         &self,
         package: &str,
@@ -528,6 +547,7 @@ impl GraphQLClient {
     /// If the object does not exist (e.g., due to pruning), this will return
     /// `Ok(None)`. Similarly, if this is not an object but an address, it
     /// will return `Ok(None)`.
+    #[uniffi::method(default(version = None))]
     pub async fn move_object_contents(
         &self,
         address: Address,
@@ -545,15 +565,16 @@ impl GraphQLClient {
     // TODO: do we want to self paginate everything and return all the data, or keep pagination
     // options?
     #[allow(clippy::too_many_arguments)]
+    #[uniffi::method(default(version = None))]
     pub async fn normalized_move_module(
         &self,
         package: &str,
         module: &str,
-        version: Option<u64>,
         pagination_filter_enums: PaginationFilter,
         pagination_filter_friends: PaginationFilter,
         pagination_filter_functions: PaginationFilter,
         pagination_filter_structs: PaginationFilter,
+        version: Option<u64>,
     ) -> Result<Option<MoveModule>> {
         Ok(self
             .0
@@ -599,7 +620,7 @@ impl GraphQLClient {
     pub async fn dynamic_field(
         &self,
         address: Address,
-        type_: &TypeTag,
+        type_: TypeTag,
         name: NameValue,
     ) -> Result<Option<DynamicFieldOutput>> {
         Ok(self
@@ -622,7 +643,7 @@ impl GraphQLClient {
     pub async fn dynamic_object_field(
         &self,
         address: Address,
-        type_: &TypeTag,
+        type_: TypeTag,
         name: NameValue,
     ) -> Result<Option<DynamicFieldOutput>> {
         Ok(self
@@ -674,6 +695,7 @@ impl GraphQLClient {
     /// prevent access to objects that are owned by addresses other than the
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks. Defaults to false.
+    #[uniffi::method(default(skip_checks = None))]
     pub async fn dry_run_tx(
         &self,
         tx: &Transaction,
@@ -691,11 +713,12 @@ impl GraphQLClient {
     /// checks. Defaults to false.
     ///
     /// `tx_meta` is the transaction metadata.
+    #[uniffi::method(default(skip_checks = None))]
     pub async fn dry_run_tx_kind(
         &self,
         tx_kind: &TransactionKind,
-        skip_checks: Option<bool>,
         tx_meta: TransactionMetadata,
+        skip_checks: Option<bool>,
     ) -> Result<DryRunResult> {
         Ok(self
             .0
@@ -712,6 +735,7 @@ impl GraphQLClient {
     /// Get the balance of all the coins owned by address for the provided coin
     /// type. Coin type will default to `0x2::coin::Coin<0x2::iota::IOTA>`
     /// if not provided.
+    #[uniffi::method(default(coin_type = None))]
     pub async fn balance(
         &self,
         address: Address,

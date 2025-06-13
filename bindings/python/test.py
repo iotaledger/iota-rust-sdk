@@ -1,6 +1,6 @@
 from lib.iota_graphql_client import Direction
-from lib.iota_sdk_ffi import GraphQlClient, Address, PaginationFilter, Coin, TypeTag
-from lib.iota_sdk_types import StructTag, ObjectId
+from lib.iota_sdk_ffi import GraphQlClient, PaginationFilter
+from lib.iota_sdk_types import address_from_hex, ObjectReference
 import asyncio
 
 async def main():
@@ -8,19 +8,20 @@ async def main():
     chain_id = await client.chain_id()
     print(chain_id)
 
+    my_address=address_from_hex("0xda06e01d11c8d3ef8f8e238c2f144076fdc6832378fb48b153d57027ae868b39")
+
     coins = await client.coins(
-        Address.fromhex("da06e01d11c8d3ef8f8e238c2f144076fdc6832378fb48b153d57027ae868b39"), 
-        None, 
+        my_address, 
         PaginationFilter(direction=Direction.FORWARD, cursor=None, limit=None)
     )
+    my_coins = []
     for coin in coins.data():
         print(f'ID = 0x{coin.id.hex()} Balance = {coin.balance}')
-    
-    print(Coin(
-        coin_type=TypeTag.STRUCT(StructTag(address=Address.fromhex("0000000000000000000000000000000000000000000000000000000000000002"), module="iota", name="IOTA")),
-        id=ObjectId.fromhex("fe017be0c7b037fc81333d18dc408512bd1904377e24bb91648cdc268040e739"),
-        balance=10000000000
-    ))
+
+    balance = await client.balance(my_address)
+
+    print(f'Total Balance = {balance}')
+
 
 if __name__ == '__main__':
     asyncio.run(main())

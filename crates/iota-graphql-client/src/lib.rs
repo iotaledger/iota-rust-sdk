@@ -1652,7 +1652,7 @@ impl Client {
     /// Execute a transaction.
     pub async fn execute_tx(
         &self,
-        signatures: Vec<UserSignature>,
+        signatures: &[UserSignature],
         tx: &Transaction,
     ) -> Result<Option<TransactionEffects>> {
         let operation = ExecuteTransactionQuery::build(ExecuteTransactionArgs {

@@ -329,6 +329,7 @@ pub struct StructTag {
     pub module: Identifier,
     pub name: Identifier,
     #[cfg_attr(feature = "proptest", strategy(proptest::strategy::Just(Vec::new())))]
+    #[cfg_attr(feature = "uniffi", uniffi(default = []))]
     pub type_params: Vec<TypeTag>,
 }
 
