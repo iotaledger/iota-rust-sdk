@@ -136,13 +136,6 @@ pub enum EndOfEpochTransactionKind {
     ChangeEpochV2(ChangeEpochV2),
     AuthenticatorStateCreate,
     AuthenticatorStateExpire(AuthenticatorStateExpire),
-    BridgeStateCreate {
-        chain_id: super::CheckpointDigest,
-    },
-    BridgeCommitteeInit {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        bridge_object_version: u64,
-    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
