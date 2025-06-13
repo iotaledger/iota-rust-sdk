@@ -529,46 +529,6 @@ mod serialization {
     use super::*;
     use crate::TypeTag;
 
-    #[cfg(test)]
-    mod test {
-        use super::*;
-
-        #[test]
-        fn obj() {
-            let o = Object {
-                data: ObjectData::Struct(MoveStruct {
-                    type_: StructTag {
-                        address: Address::TWO,
-                        module: Identifier::new("bar").unwrap(),
-                        name: Identifier::new("foo").unwrap(),
-                        type_params: Vec::new(),
-                    },
-                    version: 12,
-                    contents: ObjectId::ZERO.into(),
-                }),
-                // owner: Owner::Address(Address::ZERO),
-                owner: Owner::Object(ObjectId::ZERO),
-                // owner: Owner::Immutable,
-                // owner: Owner::Shared {
-                //     initial_shared_version: 14,
-                // },
-                previous_transaction: TransactionDigest::ZERO,
-                storage_rebate: 100,
-            };
-
-            println!("{}", serde_json::to_string_pretty(&o).unwrap());
-            println!(
-                "{}",
-                serde_json::to_string_pretty(&ObjectReference {
-                    object_id: ObjectId::ZERO,
-                    version: 1,
-                    digest: ObjectDigest::ZERO,
-                })
-                .unwrap()
-            );
-        }
-    }
-
     /// Wrapper around StructTag with a space-efficient representation for
     /// common types like coins The StructTag for a gas coin is 84 bytes, so
     /// using 1 byte instead is a win. The inner representation is private
@@ -1060,7 +1020,43 @@ mod serialization {
         #[cfg(target_arch = "wasm32")]
         use wasm_bindgen_test::wasm_bindgen_test as test;
 
+        use super::*;
         use crate::object::Object;
+
+        #[test]
+        fn obj() {
+            let o = Object {
+                data: ObjectData::Struct(MoveStruct {
+                    type_: StructTag {
+                        address: Address::TWO,
+                        module: Identifier::new("bar").unwrap(),
+                        name: Identifier::new("foo").unwrap(),
+                        type_params: Vec::new(),
+                    },
+                    version: 12,
+                    contents: ObjectId::ZERO.into(),
+                }),
+                // owner: Owner::Address(Address::ZERO),
+                owner: Owner::Object(ObjectId::ZERO),
+                // owner: Owner::Immutable,
+                // owner: Owner::Shared {
+                //     initial_shared_version: 14,
+                // },
+                previous_transaction: TransactionDigest::ZERO,
+                storage_rebate: 100,
+            };
+
+            println!("{}", serde_json::to_string_pretty(&o).unwrap());
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ObjectReference {
+                    object_id: ObjectId::ZERO,
+                    version: 1,
+                    digest: ObjectDigest::ZERO,
+                })
+                .unwrap()
+            );
+        }
 
         #[test]
         fn object_fixture() {
