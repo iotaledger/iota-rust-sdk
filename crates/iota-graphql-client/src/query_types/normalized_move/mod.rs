@@ -33,12 +33,17 @@ pub enum MoveVisibility {
 #[cynic(schema = "rpc", graphql_type = "MoveFunction")]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveFunction {
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub is_entry: Option<bool>,
     pub name: String,
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub parameters: Option<Vec<OpenMoveType>>,
     #[cynic(rename = "return")]
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub return_: Option<Vec<OpenMoveType>>,
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub type_parameters: Option<Vec<MoveFunctionTypeParameter>>,
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub visibility: Option<MoveVisibility>,
 }
 

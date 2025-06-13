@@ -133,8 +133,8 @@ pub use checkpoint::{
 };
 pub use crypto::{
     Bls12381PublicKey, Bls12381Signature, Bn254FieldElement, CircomG1, CircomG2, Ed25519PublicKey,
-    Ed25519Signature, Intent, IntentAppId, IntentScope, IntentVersion, Jwk, JwkId,
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
+    Ed25519Signature, Intent, IntentAppId, IntentScope, IntentVersion, InvalidSignatureScheme, Jwk,
+    JwkId, MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
     MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, Secp256k1PublicKey,
     Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature, SignatureScheme, SimpleSignature,
     UserSignature, ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember,
@@ -155,6 +155,7 @@ pub use execution_status::{
     CommandArgumentError, ExecutionError, ExecutionStatus, MoveLocation, PackageUpgradeError,
     TypeArgumentError,
 };
+pub use framework::Coin;
 pub use gas::GasCostSummary;
 pub use object::{
     GenesisObject, MovePackage, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
@@ -178,7 +179,7 @@ pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
 #[cfg(feature = "uniffi")]
 uniffi::setup_scaffolding!();
 
-#[cfg(test)]
+#[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -199,6 +200,50 @@ macro_rules! impl_uniffi_byte_vec_wrapper {
 #[macro_export]
 macro_rules! impl_uniffi_byte_vec_wrapper {
     ($id:ident) => {};
+}
+
+#[macro_export]
+macro_rules! def_is {
+    ($($variant:ident),* $(,)?) => {
+        paste::paste! {$(
+        #[inline]
+        pub fn [< is_ $variant:snake >](&self) -> bool {
+            matches!(self, Self::$variant)
+        }
+        )*}
+    };
+}
+
+#[macro_export]
+macro_rules! def_is_as_opt {
+    ($($variant:ident => $inner:ty),* $(,)?) => {
+        paste::paste! {$(
+        #[inline]
+        pub fn [< is_ $variant:snake >](&self) -> bool {
+            matches!(self, Self::$variant(_))
+        }
+
+        #[inline]
+        pub fn [< as_ $variant:snake >](&self) -> &$inner {
+            let Self::$variant(inner) = self else {
+                panic!("not a {}", stringify!($variant));
+            };
+            inner
+        }
+
+        #[inline]
+        pub fn [< as_ $variant:snake _opt >](&self) -> Option<&$inner> {
+            if let Self::$variant(inner) = self {
+                Some(inner)
+            } else {
+                None
+            }
+        }
+        )*}
+    };
+    ($($variant:ident),* $(,)?) => {
+        crate::def_is_as_opt!{$($variant => $variant,)*}
+    };
 }
 
 #[cfg(feature = "serde")]

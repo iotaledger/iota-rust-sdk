@@ -72,5 +72,6 @@ pub struct ProtocolConfigFeatureFlag {
 #[cynic(schema = "rpc", graphql_type = "ProtocolConfigAttr")]
 pub struct ProtocolConfigAttr {
     pub key: String,
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub value: Option<String>,
 }

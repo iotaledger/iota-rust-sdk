@@ -77,6 +77,118 @@ uniffi::custom_type!(BoxedStructTag, StructTag, {
     try_lift: |tt| Ok(Box::new(tt)),
 });
 
+impl TypeTag {
+    pub fn vector_type_opt(&self) -> Option<&TypeTag> {
+        if let Self::Vector(inner) = self {
+            Some(inner)
+        } else {
+            None
+        }
+    }
+
+    pub fn vector_type(&self) -> &TypeTag {
+        let Self::Vector(inner) = self else {
+            panic!("not a Vector");
+        };
+        inner
+    }
+
+    pub fn struct_tag_opt(&self) -> Option<&StructTag> {
+        if let Self::Struct(inner) = self {
+            Some(inner)
+        } else {
+            None
+        }
+    }
+
+    pub fn struct_tag(&self) -> &StructTag {
+        let Self::Struct(inner) = self else {
+            panic!("not a Struct");
+        };
+        inner
+    }
+
+    pub fn u8() -> Self {
+        Self::U8
+    }
+
+    pub fn u16() -> Self {
+        Self::U16
+    }
+
+    pub fn u32() -> Self {
+        Self::U32
+    }
+
+    pub fn u64() -> Self {
+        Self::U64
+    }
+
+    pub fn u128() -> Self {
+        Self::U128
+    }
+
+    pub fn u256() -> Self {
+        Self::U256
+    }
+
+    pub fn bool() -> Self {
+        Self::Bool
+    }
+
+    pub fn address() -> Self {
+        Self::Address
+    }
+
+    pub fn signer() -> Self {
+        Self::Signer
+    }
+
+    pub fn is_u8(&self) -> bool {
+        matches!(self, Self::U8)
+    }
+
+    pub fn is_u16(&self) -> bool {
+        matches!(self, Self::U16)
+    }
+
+    pub fn is_u32(&self) -> bool {
+        matches!(self, Self::U32)
+    }
+
+    pub fn is_u64(&self) -> bool {
+        matches!(self, Self::U64)
+    }
+
+    pub fn is_u128(&self) -> bool {
+        matches!(self, Self::U128)
+    }
+
+    pub fn is_u256(&self) -> bool {
+        matches!(self, Self::U256)
+    }
+
+    pub fn is_bool(&self) -> bool {
+        matches!(self, Self::Bool)
+    }
+
+    pub fn is_address(&self) -> bool {
+        matches!(self, Self::Address)
+    }
+
+    pub fn is_signer(&self) -> bool {
+        matches!(self, Self::Signer)
+    }
+
+    pub fn is_vector(&self) -> bool {
+        matches!(self, Self::Vector(_))
+    }
+
+    pub fn is_struct(&self) -> bool {
+        matches!(self, Self::Struct(_))
+    }
+}
+
 impl std::fmt::Display for TypeTag {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -112,6 +224,7 @@ impl From<StructTag> for TypeTag {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Object), uniffi::export(Display))]
 pub struct TypeParseError {
     source: String,
 }
@@ -220,17 +333,6 @@ pub struct StructTag {
 }
 
 impl StructTag {
-    pub fn gas_coin() -> Self {
-        let iota = Self {
-            address: Address::TWO,
-            module: Identifier::new("iota").unwrap(),
-            name: Identifier::new("IOTA").unwrap(),
-            type_params: vec![],
-        };
-
-        Self::coin(TypeTag::Struct(Box::new(iota)))
-    }
-
     pub fn coin(type_tag: TypeTag) -> Self {
         Self {
             address: Address::TWO,
@@ -240,17 +342,8 @@ impl StructTag {
         }
     }
 
-    pub fn staked_iota() -> Self {
-        Self {
-            address: Address::THREE,
-            module: Identifier::new("staking_pool").unwrap(),
-            name: Identifier::new("StakedIota").unwrap(),
-            type_params: vec![],
-        }
-    }
-
     /// Checks if this is a Coin type
-    pub fn is_coin(&self) -> Option<&TypeTag> {
+    pub fn coin_type_opt(&self) -> Option<&crate::TypeTag> {
         let Self {
             address,
             module,
@@ -264,6 +357,35 @@ impl StructTag {
         } else {
             None
         }
+    }
+
+    /// Checks if this is a Coin type
+    pub fn coin_type(&self) -> &TypeTag {
+        self.coin_type_opt().expect("not a coin")
+    }
+
+    pub fn gas_coin() -> Self {
+        let iota = Self {
+            address: Address::TWO,
+            module: Identifier::new("iota").unwrap(),
+            name: Identifier::new("IOTA").unwrap(),
+            type_params: vec![],
+        };
+
+        Self::coin(TypeTag::Struct(Box::new(iota)))
+    }
+
+    pub fn staked_iota() -> Self {
+        Self {
+            address: Address::THREE,
+            module: Identifier::new("staking_pool").unwrap(),
+            name: Identifier::new("StakedIota").unwrap(),
+            type_params: vec![],
+        }
+    }
+
+    pub fn address(&self) -> Address {
+        self.address
     }
 }
 

@@ -147,6 +147,10 @@ pub enum ObjectData {
     // ... IOTA "native" types go here
 }
 
+impl ObjectData {
+    crate::def_is_as_opt!(Struct => MoveStruct, Package => MovePackage);
+}
+
 /// A move package
 ///
 /// # BCS
@@ -322,6 +326,7 @@ pub struct MoveStruct {
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
     pub type_: StructTag,
+
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
@@ -338,11 +343,16 @@ pub struct MoveStruct {
 
 /// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
     Package,
     /// A Move struct of the given type
     Struct(StructTag),
+}
+
+impl ObjectType {
+    crate::def_is_as_opt!(Struct => StructTag);
 }
 
 /// An object on the IOTA blockchain
@@ -519,39 +529,44 @@ mod serialization {
     use super::*;
     use crate::TypeTag;
 
-    #[test]
-    fn obj() {
-        let o = Object {
-            data: ObjectData::Struct(MoveStruct {
-                type_: StructTag {
-                    address: Address::TWO,
-                    module: Identifier::new("bar").unwrap(),
-                    name: Identifier::new("foo").unwrap(),
-                    type_params: Vec::new(),
-                },
-                version: 12,
-                contents: ObjectId::ZERO.into(),
-            }),
-            // owner: Owner::Address(Address::ZERO),
-            owner: Owner::Object(ObjectId::ZERO),
-            // owner: Owner::Immutable,
-            // owner: Owner::Shared {
-            //     initial_shared_version: 14,
-            // },
-            previous_transaction: TransactionDigest::ZERO,
-            storage_rebate: 100,
-        };
+    #[cfg(test)]
+    mod test {
+        use super::*;
 
-        println!("{}", serde_json::to_string_pretty(&o).unwrap());
-        println!(
-            "{}",
-            serde_json::to_string_pretty(&ObjectReference {
-                object_id: ObjectId::ZERO,
-                version: 1,
-                digest: ObjectDigest::ZERO,
-            })
-            .unwrap()
-        );
+        #[test]
+        fn obj() {
+            let o = Object {
+                data: ObjectData::Struct(MoveStruct {
+                    type_: StructTag {
+                        address: Address::TWO,
+                        module: Identifier::new("bar").unwrap(),
+                        name: Identifier::new("foo").unwrap(),
+                        type_params: Vec::new(),
+                    },
+                    version: 12,
+                    contents: ObjectId::ZERO.into(),
+                }),
+                // owner: Owner::Address(Address::ZERO),
+                owner: Owner::Object(ObjectId::ZERO),
+                // owner: Owner::Immutable,
+                // owner: Owner::Shared {
+                //     initial_shared_version: 14,
+                // },
+                previous_transaction: TransactionDigest::ZERO,
+                storage_rebate: 100,
+            };
+
+            println!("{}", serde_json::to_string_pretty(&o).unwrap());
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&ObjectReference {
+                    object_id: ObjectId::ZERO,
+                    version: 1,
+                    digest: ObjectDigest::ZERO,
+                })
+                .unwrap()
+            );
+        }
     }
 
     /// Wrapper around StructTag with a space-efficient representation for
@@ -615,7 +630,7 @@ mod serialization {
                 type_params,
             } = s;
 
-            if let Some(coin_type) = s.is_coin() {
+            if let Some(coin_type) = s.coin_type_opt() {
                 if let TypeTag::Struct(s_inner) = coin_type {
                     let StructTag {
                         address,

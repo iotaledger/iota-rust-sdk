@@ -14,7 +14,7 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 /// General error type for the client. It is used to wrap all the possible
 /// errors that can occur.
 #[derive(Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Object))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Object), uniffi::export(Display))]
 pub struct Error {
     inner: Box<InnerError>,
 }

@@ -8,8 +8,6 @@ pub mod error;
 pub mod faucet;
 pub mod query_types;
 pub mod streams;
-#[cfg(feature = "uniffi")]
-mod uniffi_helpers;
 
 use std::str::FromStr;
 
@@ -54,6 +52,17 @@ use crate::{
 #[cfg(feature = "uniffi")]
 uniffi::setup_scaffolding!();
 
+#[cfg(feature = "uniffi")]
+mod _uniffi {
+    use serde_json::Value;
+
+    uniffi::custom_type!(Value, String, {
+        remote,
+        lower: |val| val.to_string(),
+        try_lift: |s| Ok(serde_json::from_str(&s)?),
+    });
+}
+
 const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
 const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
 const TESTNET_HOST: &str = "https://graphql.testnet.iota.cafe";
@@ -68,11 +77,13 @@ static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_V
 /// The result of a dry run, which includes the effects of the transaction and
 /// any errors that may have occurred.
 #[derive(Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DryRunResult {
     pub effects: Option<TransactionEffects>,
     pub error: Option<String>,
 }
 
+#[derive(Clone)]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TransactionDataEffects {
     pub tx: SignedTransaction,
@@ -197,9 +208,11 @@ pub struct PaginationFilter {
     /// The direction of pagination.
     pub direction: Direction,
     /// An opaque cursor used for pagination.
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub cursor: Option<String>,
     /// The maximum number of items to return. If this is ommitted, it will
     /// lazily query the service configuration for the max page size.
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub limit: Option<i32>,
 }
 
@@ -528,7 +541,7 @@ impl Client {
         &self,
         address: Address,
         coin_type: Option<String>,
-    ) -> Result<Option<u128>> {
+    ) -> Result<Option<u64>> {
         let operation = BalanceQuery::build(BalanceArgs {
             address,
             coin_type: coin_type.map(|x| x.to_string()),
@@ -544,20 +557,16 @@ impl Client {
             .map(|b| b.owner.and_then(|o| o.balance.map(|b| b.total_balance)))
             .ok_or_else(Error::empty_response_error)?
             .flatten()
-            .map(|x| x.0.parse::<u128>())
+            .map(|x| x.0.parse::<u64>())
             .transpose()?;
         Ok(total_balance)
     }
-}
 
-#[cfg_attr(feature = "uniffi", uniffi::export(async_runtime = "tokio"))]
-impl Client {
     // ===========================================================================
     // Client Misc API
     // ===========================================================================
 
     /// Create a new GraphQL client with the provided server address.
-    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new(server: &str) -> Result<Self> {
         let rpc = reqwest::Url::parse(server)?;
 
@@ -571,28 +580,24 @@ impl Client {
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
     /// {MAINNET_HOST}.
-    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new_mainnet() -> Self {
         Self::new(MAINNET_HOST).expect("Invalid mainnet URL")
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
-    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new_testnet() -> Self {
         Self::new(TESTNET_HOST).expect("Invalid testnet URL")
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
-    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new_devnet() -> Self {
         Self::new(DEVNET_HOST).expect("Invalid devnet URL")
     }
 
     /// Create a new GraphQL client connected to the `localhost` GraphQL server:
     /// {DEFAULT_LOCAL_HOST}.
-    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new_localhost() -> Self {
         Self::new(LOCAL_HOST).expect("Invalid localhost URL")
     }
@@ -1161,9 +1166,9 @@ impl Client {
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`].
-    pub async fn object_bcs(&self, object_id: Address) -> Result<Option<Vec<u8>>> {
+    pub async fn object_bcs(&self, address: Address) -> Result<Option<Vec<u8>>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
-            address: object_id,
+            address,
             version: None,
         });
 

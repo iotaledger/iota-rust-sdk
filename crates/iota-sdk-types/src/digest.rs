@@ -31,6 +31,12 @@ pub struct Digest(
 
 crate::impl_uniffi_byte_vec_wrapper!(Digest);
 
+#[cfg(feature = "uniffi")]
+#[uniffi::export]
+pub fn digest_from_base58(base58: &str) -> Result<Digest, DigestParseError> {
+    Digest::from_base58(base58)
+}
+
 impl Digest {
     /// A constant representing the length of a digest in bytes.
     pub const LENGTH: usize = 32;
@@ -199,6 +205,7 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Object), uniffi::export(Display))]
 pub struct DigestParseError;
 
 impl std::fmt::Display for DigestParseError {

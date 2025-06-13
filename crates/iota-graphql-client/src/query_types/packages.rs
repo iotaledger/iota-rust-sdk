@@ -55,7 +55,6 @@ pub struct PackageByNameArgs<'a> {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
 pub struct MovePackageQuery {
     pub package_bcs: Option<Base64>,

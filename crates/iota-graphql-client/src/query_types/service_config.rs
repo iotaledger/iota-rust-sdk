@@ -19,7 +19,7 @@ pub struct ServiceConfigQuery {
 // ===========================================================================
 
 // Information about the configuration of the GraphQL service.
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ServiceConfig")]
 pub struct ServiceConfig {

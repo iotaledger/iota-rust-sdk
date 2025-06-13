@@ -43,9 +43,13 @@ pub struct EventConnection {
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "EventFilter")]
 pub struct EventFilter {
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub emitting_module: Option<String>,
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub event_type: Option<String>,
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub sender: Option<Address>,
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub transaction_digest: Option<String>,
 }
 

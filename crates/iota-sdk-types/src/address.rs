@@ -71,6 +71,12 @@ pub struct Address(
 
 crate::impl_uniffi_byte_vec_wrapper!(Address);
 
+#[cfg(feature = "uniffi")]
+#[uniffi::export]
+pub fn address_from_hex(hex: &str) -> Result<Address, AddressParseError> {
+    Address::from_hex(hex)
+}
+
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
@@ -239,6 +245,7 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Address::LENGTH]> for ReadableAddr
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Object), uniffi::export(Display))]
 pub struct AddressParseError;
 
 impl std::fmt::Display for AddressParseError {

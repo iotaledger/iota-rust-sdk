@@ -8,14 +8,6 @@ readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "GraphQL RPC Client for the IOTA Blockchain"
 
-[lib]
-name = "iota_graphql_client"
-crate-type = ["lib", "cdylib"]
-
-[[bin]]
-name = "iota_graphql_client_bindings"
-path = "uniffi-bindgen.rs"
-
 [dependencies]
 anyhow = "1.0.71"
 async-stream = "0.3.3"
@@ -45,4 +37,4 @@ iota-graphql-client-build = { version = "0.0.1", path = "../iota-graphql-client-
 
 [features]
 default = []
-uniffi = ["dep:uniffi", "iota-types/uniffi"]
+uniffi = ["dep:uniffi"]

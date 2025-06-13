@@ -198,6 +198,20 @@ pub enum TransactionKind {
     RandomnessStateUpdate(RandomnessStateUpdate),
 }
 
+impl TransactionKind {
+    crate::def_is_as_opt! {
+        ProgrammableTransaction,
+        ConsensusCommitPrologueV1,
+        AuthenticatorStateUpdateV1,
+        RandomnessStateUpdate,
+    }
+
+    crate::def_is_as_opt! {
+        Genesis => GenesisTransaction,
+        EndOfEpoch => Vec<EndOfEpochTransactionKind>,
+    }
+}
+
 /// Operation run at the end of an epoch
 ///
 /// # BCS
@@ -277,64 +291,23 @@ pub enum EndOfEpochTransactionKind {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ExecutionTimeObservations {
-    V1(
-        Vec<(
-            ExecutionTimeObservationKey,
-            Vec<ValidatorExecutionTimeObservation>,
-        )>,
-    ),
+    V1(Vec<ExecutionTimeObservation>),
 }
 
-#[cfg(feature = "uniffi")]
-#[derive(uniffi::Enum)]
-pub enum UniffiExecutionTimeObservations {
-    V1(Vec<UniffiExecutionTimeObservation>),
+#[derive(Debug, Hash, PartialEq, Eq, Clone)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_derive::Serialize, serde_derive::Deserialize)
+)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+pub struct ExecutionTimeObservation {
+    pub key: ExecutionTimeObservationKey,
+    pub observations: Vec<ValidatorExecutionTimeObservation>,
 }
-
-#[cfg(feature = "uniffi")]
-#[derive(uniffi::Record)]
-pub struct UniffiExecutionTimeObservation {
-    key: ExecutionTimeObservationKey,
-    observations: Vec<ValidatorExecutionTimeObservation>,
-}
-
-#[cfg(feature = "uniffi")]
-impl From<ExecutionTimeObservations> for UniffiExecutionTimeObservations {
-    fn from(value: ExecutionTimeObservations) -> Self {
-        match value {
-            ExecutionTimeObservations::V1(v) => UniffiExecutionTimeObservations::V1(
-                v.into_iter()
-                    .map(|v| UniffiExecutionTimeObservation {
-                        key: v.0,
-                        observations: v.1,
-                    })
-                    .collect(),
-            ),
-        }
-    }
-}
-
-#[cfg(feature = "uniffi")]
-impl From<UniffiExecutionTimeObservations> for ExecutionTimeObservations {
-    fn from(value: UniffiExecutionTimeObservations) -> Self {
-        match value {
-            UniffiExecutionTimeObservations::V1(v) => ExecutionTimeObservations::V1(
-                v.into_iter().map(|v| (v.key, v.observations)).collect(),
-            ),
-        }
-    }
-}
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(
-    ExecutionTimeObservations,
-    UniffiExecutionTimeObservations,
-    {
-        lower: |ob| ob.into(),
-        try_lift: |ob| Ok(ob.into()),
-    }
-);
 
 /// An execution time observation from a particular validator
 ///
@@ -746,7 +719,7 @@ pub struct ChangeEpochV2 {
     /// write out the modules below.  Modules are provided with the version they
     /// will be upgraded to, their modules in serialized form (which include
     /// their package ID), and a list of their transitive dependencies.
-    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
+    #[cfg_attr(all(test, not(feature = "uniffi")), any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
 }
 

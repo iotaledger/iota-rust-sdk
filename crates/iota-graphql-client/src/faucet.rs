@@ -37,6 +37,7 @@ struct BatchStatusFaucetResponse {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 #[serde(rename_all = "UPPERCASE")]
 pub enum BatchSendStatusType {
     Inprogress,
@@ -45,22 +46,21 @@ pub enum BatchSendStatusType {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct BatchSendStatus {
     pub status: BatchSendStatusType,
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub transferred_gas_objects: Option<FaucetReceipt>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct FaucetReceipt {
     pub sent: Vec<CoinInfo>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-struct BatchFaucetReceipt {
-    pub task: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[serde(rename_all = "camelCase")]
 pub struct CoinInfo {
     pub amount: u64,
@@ -84,38 +84,29 @@ impl FaucetClient {
 
     /// Set to local faucet.
     pub fn local() -> Self {
-        Self {
-            faucet_url: Url::parse(FAUCET_LOCAL_HOST).expect("Invalid faucet URL"),
-            inner: reqwest::Client::new(),
-        }
+        Self::new(FAUCET_LOCAL_HOST)
     }
 
     /// Set to devnet faucet.
     pub fn devnet() -> Self {
-        Self {
-            faucet_url: Url::parse(FAUCET_DEVNET_HOST).expect("Invalid faucet URL"),
-            inner: reqwest::Client::new(),
-        }
+        Self::new(FAUCET_DEVNET_HOST)
     }
 
     /// Set to testnet faucet.
     pub fn testnet() -> Self {
-        Self {
-            faucet_url: Url::parse(FAUCET_TESTNET_HOST).expect("Invalid faucet URL"),
-            inner: reqwest::Client::new(),
-        }
+        Self::new(FAUCET_TESTNET_HOST)
     }
 
     /// Request gas from the faucet. Note that this will return the UUID of the
     /// request and not wait until the token is received. Use
     /// `request_and_wait` to wait for the token.
-    pub async fn request(&self, address: Address) -> Result<Option<String>, anyhow::Error> {
+    pub async fn request(&self, address: Address) -> anyhow::Result<Option<String>> {
         self.request_impl(address).await
     }
 
     /// Internal implementation of a faucet request. It returns the task Uuid as
     /// a String.
-    async fn request_impl(&self, address: Address) -> Result<Option<String>, anyhow::Error> {
+    async fn request_impl(&self, address: Address) -> anyhow::Result<Option<String>> {
         let address = address.to_string();
         let json_body = json![{
             "FixedAmountRequest": {
@@ -175,7 +166,7 @@ impl FaucetClient {
     pub async fn request_and_wait(
         &self,
         address: Address,
-    ) -> Result<Option<FaucetReceipt>, anyhow::Error> {
+    ) -> anyhow::Result<Option<FaucetReceipt>> {
         let request_id = self.request(address).await?;
         if let Some(request_id) = request_id {
             let poll_response = tokio::time::timeout(FAUCET_REQUEST_TIMEOUT, async {
@@ -227,10 +218,7 @@ impl FaucetClient {
     /// Check the faucet request status.
     ///
     /// Possible statuses are defined in: [`BatchSendStatusType`]
-    pub async fn request_status(
-        &self,
-        id: String,
-    ) -> Result<Option<BatchSendStatus>, anyhow::Error> {
+    pub async fn request_status(&self, id: String) -> anyhow::Result<Option<BatchSendStatus>> {
         let status_url = format!("{}v1/status/{}", self.faucet_url, id);
         info!("Checking status of faucet request: {status_url}");
         let response = self.inner.get(&status_url).send().await?;

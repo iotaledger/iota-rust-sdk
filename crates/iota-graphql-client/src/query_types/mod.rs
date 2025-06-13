@@ -108,14 +108,14 @@ uniffi::custom_type!(DateTime, String, {
 // Types used in several queries
 // ===========================================================================
 
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone, Copy)]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "Address")]
 pub struct GQLAddress {
     pub address: Address,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "MoveObject")]
 pub struct MoveObject {
