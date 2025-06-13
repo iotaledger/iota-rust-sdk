@@ -172,7 +172,7 @@ uniffi::custom_type!(CircomG2, Vec<Vec<Bn254FieldElement>>, {
         v.into_iter()
             .map(|v|
                 <[Bn254FieldElement; 2]>::try_from(v)
-                    .map_err(|_| anyhow!("failed to convert field elements to CircomG1"))
+                    .map_err(|_| anyhow!("failed to convert field elements to CircomG2"))
             ).collect::<Result<Vec<_>, _>>()?
             .try_into()
             .map_err(|_| anyhow!("failed to convert field elements to CircomG1"))?

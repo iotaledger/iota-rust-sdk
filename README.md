@@ -33,26 +33,3 @@ In an effort to be modular, functionality is split between a number of crates.
   [![iota-graphql-client on crates.io](https://img.shields.io/crates/v/iota-graphql-client)](https://crates.io/crates/iota-graphql-client)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-graphql-client)
   [![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota-graphql-client/)
-
-# Bindings
-
-To generate bindings with [UniFFI](https://github.com/mozilla/uniffi-rs), you can do the following:
-
-```sh
-cargo build --lib --release -F uniffi
-```
-
-## Python GraphQL Bindings
-
-```sh
-
-cargo run -F uniffi --bin iota_graphql_client_bindings -- generate --library "target/release/libiota_graphql_client.dylib" --language python --out-dir bindings/python/lib
-
-cp target/release/libiota_graphql_client.* bindings/python/lib/
-
-python bindings/python/test.py
-```
-
-## License
-
-This project is available under the terms of the [Apache 2.0 license](LICENSE).
