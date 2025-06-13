@@ -33,3 +33,7 @@ In an effort to be modular, functionality is split between a number of crates.
   [![iota-graphql-client on crates.io](https://img.shields.io/crates/v/iota-graphql-client)](https://crates.io/crates/iota-graphql-client)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-graphql-client)
   [![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota-graphql-client/)
+
+## License
+
+This project is available under the terms of the [Apache 2.0 license](LICENSE).
