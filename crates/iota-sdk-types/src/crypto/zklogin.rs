@@ -145,7 +145,7 @@ pub struct CircomG1(pub [Bn254FieldElement; 3]);
 #[cfg(feature = "uniffi")]
 uniffi::custom_type!(CircomG1, Vec<Bn254FieldElement>, {
     lower: |c| c.0.to_vec(),
-    try_lift: |v| Ok(CircomG1(v.try_into().map_err(|_| anyhow!("failed to convert field elements to CircomG1"))?)),
+    try_lift: |v| Ok(CircomG1(v.try_into().map_err(|_| anyhow!("failed to convert vec to array"))?)),
 });
 
 /// A G2 point
@@ -168,15 +168,16 @@ pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
 #[cfg(feature = "uniffi")]
 uniffi::custom_type!(CircomG2, Vec<Vec<Bn254FieldElement>>, {
     lower: |c| c.0.into_iter().map(|v| v.to_vec()).collect(),
-    try_lift: |v| Ok(CircomG2(
-        v.into_iter()
-            .map(|v|
-                <[Bn254FieldElement; 2]>::try_from(v)
-                    .map_err(|_| anyhow!("failed to convert field elements to CircomG2"))
-            ).collect::<Result<Vec<_>, _>>()?
-            .try_into()
-            .map_err(|_| anyhow!("failed to convert field elements to CircomG1"))?
-    )),
+    try_lift: |v| {
+        fn vec_to_array<const N: usize, T>(vec: Vec<T>) -> anyhow::Result<[T; N]> {
+            vec.try_into().map_err(|_| anyhow!("failed to convert vec to array"))
+        }
+        Ok(CircomG2(
+            vec_to_array(
+                v.into_iter().map(vec_to_array).collect::<Result<Vec<_>, _>>()?
+            )?
+        ))
+    },
 });
 
 /// Public Key equivalent for Zklogin authenticators
