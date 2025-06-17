@@ -645,7 +645,7 @@ mod serialization {
                         ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
-                        if !id_opt(&contents).is_some_and(|id| id == object_id) {
+                        if id_opt(&contents).is_none_or(|id| id != object_id) {
                             return Err(serde::de::Error::custom("id from contents doesn't match"));
                         }
 
@@ -799,7 +799,7 @@ mod serialization {
                         ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
-                        if !id_opt(&contents).is_some_and(|id| id == object_id) {
+                        if id_opt(&contents).is_none_or(|id| id != object_id) {
                             return Err(serde::de::Error::custom("id from contents doesn't match"));
                         }
 
