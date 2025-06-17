@@ -42,7 +42,7 @@ bnum = "0.11.0"
 bs58 = "0.5.1"
 hex = "0.4.3"
 roaring = { version = "0.10.6", default-features = false }
-winnow = "0.6.26"
+winnow = "0.6.18"
 
 # Serialization and Deserialization support
 bcs = { version = "0.1.6", optional = true }

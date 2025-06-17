@@ -1,5 +1,5 @@
 use winnow::{
-    ModalResult, Parser,
+    PResult, Parser,
     ascii::space0,
     combinator::{alt, delimited, eof, opt, separated},
     stream::AsChar,
@@ -12,11 +12,11 @@ use super::{Address, Identifier, StructTag, TypeTag};
 // r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
 static MAX_IDENTIFIER_LENGTH: usize = 128;
 
-pub(super) fn parse_identifier(mut input: &str) -> ModalResult<&str> {
+pub(super) fn parse_identifier(mut input: &str) -> PResult<&str> {
     (identifier, eof).take().parse_next(&mut input)
 }
 
-fn identifier<'s>(input: &mut &'s str) -> ModalResult<&'s str> {
+fn identifier<'s>(input: &mut &'s str) -> PResult<&'s str> {
     alt((
         (one_of(|c: char| c.is_alpha()), valid_remainder(0)),
         ('_', valid_remainder(1)),
@@ -38,17 +38,17 @@ fn valid_remainder<'a>(
     }
 }
 
-fn parse_address<'s>(input: &mut &'s str) -> ModalResult<&'s str> {
+fn parse_address<'s>(input: &mut &'s str) -> PResult<&'s str> {
     ("0x", take_while(1..=64, AsChar::is_hex_digit))
         .take()
         .parse_next(input)
 }
 
-pub(super) fn parse_type_tag(mut input: &str) -> ModalResult<TypeTag> {
+pub(super) fn parse_type_tag(mut input: &str) -> PResult<TypeTag> {
     (type_tag, eof).parse_next(&mut input).map(|(t, _)| t)
 }
 
-fn type_tag(input: &mut &str) -> ModalResult<TypeTag> {
+fn type_tag(input: &mut &str) -> PResult<TypeTag> {
     alt((
         "u8".value(TypeTag::U8),
         "u16".value(TypeTag::U16),
@@ -65,11 +65,11 @@ fn type_tag(input: &mut &str) -> ModalResult<TypeTag> {
     .parse_next(input)
 }
 
-pub(super) fn parse_struct_tag(mut input: &str) -> ModalResult<StructTag> {
+pub(super) fn parse_struct_tag(mut input: &str) -> PResult<StructTag> {
     (struct_tag, eof).parse_next(&mut input).map(|(s, _)| s)
 }
 
-fn struct_tag(input: &mut &str) -> ModalResult<StructTag> {
+fn struct_tag(input: &mut &str) -> PResult<StructTag> {
     let (address, _, module, _, name) = (
         parse_address.try_map(|s| s.parse::<Address>()),
         "::",
@@ -92,7 +92,7 @@ fn struct_tag(input: &mut &str) -> ModalResult<StructTag> {
     })
 }
 
-fn generics(input: &mut &str) -> ModalResult<Vec<TypeTag>> {
+fn generics(input: &mut &str) -> PResult<Vec<TypeTag>> {
     separated(1.., delimited(space0, type_tag, space0), ",").parse_next(input)
 }
 
