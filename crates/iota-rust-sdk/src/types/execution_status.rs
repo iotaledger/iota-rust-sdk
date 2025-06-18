@@ -158,6 +158,13 @@ pub enum ExecutionError {
     /// Certificate is cancelled due to congestion on shared objects
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
 
+    /// Certificate is cancelled due to congestion on shared objects;
+    /// suggested gas price can be used to give this certificate more priority.
+    ExecutionCancelledDueToSharedObjectCongestionV2 {
+        congested_objects: Vec<ObjectId>,
+        suggested_gas_price: u64,
+    },
+
     /// Address is denied for this coin type
     AddressDeniedForCoin { address: Address, coin_type: String },
 
@@ -470,6 +477,11 @@ mod serialization {
         },
 
         ExecutionCancelledDueToRandomnessUnavailable,
+
+        ExecutionCancelledDueToSharedObjectCongestionV2 {
+            congested_objects: Vec<ObjectId>,
+            suggested_gas_price: u64,
+        },
     }
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
@@ -553,6 +565,11 @@ mod serialization {
         },
 
         ExecutionCancelledDueToRandomnessUnavailable,
+
+        ExecutionCancelledDueToSharedObjectCongestionV2 {
+            congested_objects: Vec<ObjectId>,
+            suggested_gas_price: u64,
+        },
     }
 
     impl Serialize for ExecutionError {
@@ -671,6 +688,13 @@ mod serialization {
                     Self::ExecutionCancelledDueToRandomnessUnavailable => {
                         ReadableExecutionError::ExecutionCancelledDueToRandomnessUnavailable
                     }
+                    Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects,
+                        suggested_gas_price,
+                    } => ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects,
+                        suggested_gas_price,
+                    },
                 };
                 readable.serialize(serializer)
             } else {
@@ -780,6 +804,13 @@ mod serialization {
                     Self::ExecutionCancelledDueToRandomnessUnavailable => {
                         BinaryExecutionError::ExecutionCancelledDueToRandomnessUnavailable
                     }
+                    Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects,
+                        suggested_gas_price,
+                    } => BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects,
+                        suggested_gas_price,
+                    },
                 };
                 binary.serialize(serializer)
             }
@@ -900,6 +931,13 @@ mod serialization {
                     ReadableExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
                         Self::ExecutionCancelledDueToRandomnessUnavailable
                     }
+                    ReadableExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects,
+                        suggested_gas_price,
+                    } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects,
+                        suggested_gas_price,
+                    },
                 })
             } else {
                 BinaryExecutionError::deserialize(deserializer).map(|binary| match binary {
@@ -1006,6 +1044,13 @@ mod serialization {
                     BinaryExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
                         Self::ExecutionCancelledDueToRandomnessUnavailable
                     }
+                    BinaryExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects,
+                        suggested_gas_price,
+                    } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects,
+                        suggested_gas_price,
+                    },
                 })
             }
         }
