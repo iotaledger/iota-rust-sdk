@@ -54,9 +54,7 @@ bcs = { version = "0.1.6", optional = true }
 serde = { version = "1.0.210", optional = true }
 serde_derive = { version = "1.0.210", optional = true }
 serde_json = { version = "1.0.128", optional = true }
-serde_with = { version = "3.9", default-features = false, features = [
-  "alloc",
-], optional = true }
+serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
 
 # JsonSchema definitions for types, useful for generating an OpenAPI Specificaiton.
 schemars = { version = "0.8.21", optional = true }
@@ -68,9 +66,7 @@ rand_core = { version = "0.6.4", optional = true }
 blake2 = { version = "0.10.6", optional = true }
 
 # proptest support
-proptest = { version = "1.6.0", default-features = false, features = [
-  "std",
-], optional = true }
+proptest = { version = "1.6.0", default-features = false, features = ["std"], optional = true }
 test-strategy = { version = "0.4", optional = true }
 
 [dev-dependencies]
