@@ -37,10 +37,10 @@ schemars = ["serde", "dep:schemars", "dep:serde_json"]
 rand = ["dep:rand_core"]
 hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
-uniffi = ["dep:uniffi"]
+uniffi = ["dep:uniffi", "dep:anyhow"]
 
 [dependencies]
-anyhow = "1.0"
+anyhow = { version = "1.0", optional = true }
 base64ct = { version = "1.6.0", features = ["alloc"] }
 bnum = "0.12.0"
 bs58 = "0.5.1"
