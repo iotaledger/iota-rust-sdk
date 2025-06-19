@@ -162,7 +162,7 @@ pub struct ValidatorSignature {
     pub signature: Bls12381Signature,
 }
 
-#[cfg(all(test, not(feature = "uniffi")))]
+#[cfg(test)]
 mod test {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
