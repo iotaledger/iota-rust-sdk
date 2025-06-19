@@ -144,41 +144,7 @@ impl TypeTag {
         Self::Signer
     }
 
-    pub fn is_u8(&self) -> bool {
-        matches!(self, Self::U8)
-    }
-
-    pub fn is_u16(&self) -> bool {
-        matches!(self, Self::U16)
-    }
-
-    pub fn is_u32(&self) -> bool {
-        matches!(self, Self::U32)
-    }
-
-    pub fn is_u64(&self) -> bool {
-        matches!(self, Self::U64)
-    }
-
-    pub fn is_u128(&self) -> bool {
-        matches!(self, Self::U128)
-    }
-
-    pub fn is_u256(&self) -> bool {
-        matches!(self, Self::U256)
-    }
-
-    pub fn is_bool(&self) -> bool {
-        matches!(self, Self::Bool)
-    }
-
-    pub fn is_address(&self) -> bool {
-        matches!(self, Self::Address)
-    }
-
-    pub fn is_signer(&self) -> bool {
-        matches!(self, Self::Signer)
-    }
+    crate::def_is!(U8, U16, U32, U64, U128, U256, Bool, Address, Signer);
 
     pub fn is_vector(&self) -> bool {
         matches!(self, Self::Vector(_))
