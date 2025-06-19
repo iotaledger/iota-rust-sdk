@@ -54,6 +54,7 @@ pub struct ValidatorConnection {
 
 /// Represents a validator in the system.
 #[derive(cynic::QueryFragment, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "Validator")]
 pub struct Validator {
     /// The APY of this validator in basis points.
@@ -116,6 +117,7 @@ pub struct Validator {
 
 /// The credentials related fields associated with a validator.
 #[derive(cynic::QueryFragment, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ValidatorCredentials")]
 #[allow(non_snake_case)]
 pub struct ValidatorCredentials {

@@ -32,6 +32,7 @@ pub type ProtocolVersion = u64;
     schemars(tag = "type", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum CheckpointCommitment {
     /// An Elliptic Curve Multiset Hash attesting to the set of Objects that
     /// comprise the live state of the IOTA blockchain.
@@ -58,6 +59,7 @@ pub enum CheckpointCommitment {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct EndOfEpochData {
     /// The set of Validators that will be in the ValidatorCommittee for the
     /// next epoch.
@@ -118,6 +120,7 @@ pub struct EndOfEpochData {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct CheckpointSummary {
     /// Epoch that this checkpoint belongs to.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]

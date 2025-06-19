@@ -20,6 +20,7 @@ pub struct ServiceConfigQuery {
 
 // Information about the configuration of the GraphQL service.
 #[derive(cynic::QueryFragment, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ServiceConfig")]
 pub struct ServiceConfig {
     /// Default number of elements allowed on a single page of a connection.
@@ -75,6 +76,7 @@ pub struct ServiceConfig {
 }
 
 #[derive(cynic::Enum, Clone, Copy, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 #[cynic(
     schema = "rpc",
     graphql_type = "Feature",

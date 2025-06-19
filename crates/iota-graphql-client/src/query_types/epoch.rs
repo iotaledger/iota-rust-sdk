@@ -71,6 +71,7 @@ pub struct EpochSummary {
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug, Clone)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "Epoch")]
 pub struct Epoch {
     /// The epoch's id as a sequence number that starts at 0 and is incremented
@@ -124,6 +125,7 @@ pub struct Epoch {
 }
 
 #[derive(cynic::QueryFragment, Debug, Clone)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ValidatorSet")]
 pub struct ValidatorSet {
     /// Object ID of the `Table` storing the inactive staking pools.

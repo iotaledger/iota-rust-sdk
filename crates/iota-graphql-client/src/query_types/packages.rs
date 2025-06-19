@@ -14,7 +14,7 @@ use crate::query_types::{Base64, PageInfo, schema};
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
 pub struct PackageQuery {
     #[arguments(address: $address, version: $version)]
-    pub package: Option<MovePackage>,
+    pub package: Option<MovePackageQuery>,
 }
 
 // ===========================================================================
@@ -25,7 +25,7 @@ pub struct PackageQuery {
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
 pub struct LatestPackageQuery {
     #[arguments(address: $address)]
-    pub latest_package: Option<MovePackage>,
+    pub latest_package: Option<MovePackageQuery>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -46,7 +46,7 @@ pub struct PackageArgs {
 )]
 pub struct PackageByNameQuery {
     #[arguments(name: "")]
-    pub package_by_name: Option<MovePackage>,
+    pub package_by_name: Option<MovePackageQuery>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -55,8 +55,9 @@ pub struct PackageByNameArgs<'a> {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
-pub struct MovePackage {
+pub struct MovePackageQuery {
     pub package_bcs: Option<Base64>,
 }
 
@@ -94,7 +95,7 @@ pub struct PackageCheckpointFilter {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageConnection")]
 pub struct MovePackageConnection {
-    pub nodes: Vec<MovePackage>,
+    pub nodes: Vec<MovePackageQuery>,
     pub page_info: PageInfo,
 }
 

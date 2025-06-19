@@ -175,11 +175,31 @@ pub use transaction::{
 };
 pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
 
+#[cfg(feature = "uniffi")]
+uniffi::setup_scaffolding!();
+
 #[cfg(test)]
 mod serialization_proptests;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
+
+#[cfg(feature = "uniffi")]
+#[macro_export]
+macro_rules! impl_uniffi_byte_vec_wrapper {
+    ($id:ident) => {
+        uniffi::custom_type!($id, Vec<u8>, {
+            lower: |val| val.as_bytes().to_vec(),
+            try_lift: |vec| Ok($id::from_bytes(vec)?),
+        });
+    };
+}
+
+#[cfg(not(feature = "uniffi"))]
+#[macro_export]
+macro_rules! impl_uniffi_byte_vec_wrapper {
+    ($id:ident) => {};
+}
 
 #[cfg(feature = "serde")]
 mod _serde {

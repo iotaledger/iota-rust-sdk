@@ -49,8 +49,8 @@ pub use object::{
     ObjectFilter, ObjectKey, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs,
 };
 pub use packages::{
-    LatestPackageQuery, MovePackage, MovePackageConnection, MovePackageVersionFilter, PackageArgs,
-    PackageByNameArgs, PackageByNameQuery, PackageCheckpointFilter, PackageQuery,
+    LatestPackageQuery, MovePackageConnection, MovePackageQuery, MovePackageVersionFilter,
+    PackageArgs, PackageByNameArgs, PackageByNameQuery, PackageCheckpointFilter, PackageQuery,
     PackageVersionsArgs, PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
 };
 pub use protocol_config::{ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionArgs};
@@ -76,29 +76,47 @@ impl_scalar!(Address, schema::IotaAddress);
 impl_scalar!(u64, schema::UInt53);
 impl_scalar!(JsonValue, schema::JSON);
 
-#[derive(cynic::Scalar, Debug, Clone)]
+#[derive(cynic::Scalar, Debug, Clone, derive_more::From)]
 #[cynic(graphql_type = "Base64")]
 pub struct Base64(pub String);
 
-#[derive(cynic::Scalar, Debug, Clone)]
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(Base64, String, {
+    lower: |i| i.0,
+});
+
+#[derive(cynic::Scalar, Debug, Clone, derive_more::From)]
 #[cynic(graphql_type = "BigInt")]
 pub struct BigInt(pub String);
+
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(BigInt, String, {
+    lower: |i| i.0,
+});
 
 #[derive(cynic::Scalar, Debug, Clone)]
 #[cynic(graphql_type = "DateTime")]
 pub struct DateTime(pub String);
+
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(DateTime, String, {
+    lower: |kv| kv.0,
+    try_lift: |s| Ok(DateTime(s)),
+});
 
 // ===========================================================================
 // Types used in several queries
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "Address")]
 pub struct GQLAddress {
     pub address: Address,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "MoveObject")]
 pub struct MoveObject {
     pub bcs: Option<Base64>,
@@ -128,6 +146,7 @@ pub struct MoveType {
 // ===========================================================================
 
 #[derive(Clone, Default, cynic::QueryFragment, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "PageInfo")]
 /// Information about pagination in a connection.
 pub struct PageInfo {

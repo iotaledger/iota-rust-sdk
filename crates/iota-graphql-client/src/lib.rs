@@ -8,6 +8,8 @@ pub mod error;
 pub mod faucet;
 pub mod query_types;
 pub mod streams;
+#[cfg(feature = "uniffi")]
+mod uniffi_helpers;
 
 use std::str::FromStr;
 
@@ -49,6 +51,9 @@ use crate::{
     },
 };
 
+#[cfg(feature = "uniffi")]
+uniffi::setup_scaffolding!();
+
 const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
 const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
 const TESTNET_HOST: &str = "https://graphql.testnet.iota.cafe";
@@ -68,6 +73,7 @@ pub struct DryRunResult {
     pub error: Option<String>,
 }
 
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TransactionDataEffects {
     pub tx: SignedTransaction,
     pub effects: TransactionEffects,
@@ -76,6 +82,7 @@ pub struct TransactionDataEffects {
 /// The name part of a dynamic field, including its type, bcs, and json
 /// representation.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DynamicFieldName {
     /// The type name of this dynamic field name
     pub type_: TypeTag,
@@ -85,14 +92,23 @@ pub struct DynamicFieldName {
     pub json: Option<serde_json::Value>,
 }
 
+/// The value part of a dynamic field.
+#[derive(Clone, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+pub struct DynamicFieldValue {
+    pub type_: TypeTag,
+    pub bcs: Vec<u8>,
+}
+
 /// The output of a dynamic field query, that includes the name, value, and
 /// value's json representation.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DynamicFieldOutput {
     /// The name of the dynamic field
     pub name: DynamicFieldName,
     /// The dynamic field value typename and bcs
-    pub value: Option<(TypeTag, Vec<u8>)>,
+    pub value: Option<DynamicFieldValue>,
     /// The json representation of the dynamic field value object
     pub value_as_json: Option<serde_json::Value>,
 }
@@ -100,8 +116,27 @@ pub struct DynamicFieldOutput {
 /// Helper struct for passing a value that has a type that implements Serialize,
 /// for the dynamic fields API.
 pub struct NameValue(Vec<u8>);
+
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(NameValue, Vec<u8>, {
+    lower: |kv| kv.0,
+});
+
 /// Helper struct for passing a raw bcs value.
+#[derive(derive_more::From)]
 pub struct BcsName(pub Vec<u8>);
+
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(BcsName, Vec<u8>, {
+    lower: |kv| kv.0,
+});
+
+#[derive(Clone, Debug)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+pub struct TransactionEvent {
+    pub event: Event,
+    pub digest: TransactionDigest,
+}
 
 #[derive(Clone, Debug)]
 /// A page of items returned by the GraphQL server.
@@ -147,6 +182,7 @@ impl<T> Page<T> {
 
 /// Pagination direction.
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Direction {
     #[default]
     Forward,
@@ -156,6 +192,7 @@ pub enum Direction {
 /// Pagination options for querying the GraphQL server. It defaults to forward
 /// pagination with the GraphQL server's max page size.
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct PaginationFilter {
     /// The direction of pagination.
     pub direction: Direction,
@@ -178,6 +215,15 @@ impl From<BcsName> for NameValue {
     }
 }
 
+#[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+pub struct PaginationFilterResponse {
+    after: Option<String>,
+    before: Option<String>,
+    first: Option<i32>,
+    last: Option<i32>,
+}
+
 impl DynamicFieldOutput {
     /// Deserialize the name of the dynamic field into the specified type.
     pub fn deserialize_name<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
@@ -193,7 +239,7 @@ impl DynamicFieldOutput {
 
     /// Deserialize the value of the dynamic field into the specified type.
     pub fn deserialize_value<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
-        let typetag = self.value.as_ref().map(|(typename, _)| typename);
+        let typetag = self.value.as_ref().map(|dfv| &dfv.type_);
         assert_eq!(
             Some(&expected_type),
             typetag.as_ref(),
@@ -202,8 +248,8 @@ impl DynamicFieldOutput {
             typetag
         );
 
-        if let Some((_, bcs)) = &self.value {
-            bcs::from_bytes::<T>(bcs).map_err(Into::into)
+        if let Some(dfv) = &self.value {
+            bcs::from_bytes::<T>(&dfv.bcs).map_err(Into::into)
         } else {
             Err(Error::from_error(Kind::Deserialization, "Value is missing"))
         }
@@ -212,6 +258,7 @@ impl DynamicFieldOutput {
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
+#[cfg_attr(feature = "uniffi", derive(uniffi::Object))]
 pub struct Client {
     /// The URL of the GraphQL server.
     rpc: Url,
@@ -222,44 +269,9 @@ pub struct Client {
 }
 
 impl Client {
-    // ===========================================================================
-    // Client Misc API
-    // ===========================================================================
-
-    /// Create a new GraphQL client with the provided server address.
-    pub fn new(server: &str) -> Result<Self> {
-        let rpc = reqwest::Url::parse(server)?;
-
-        let client = Client {
-            rpc,
-            inner: reqwest::Client::builder().user_agent(USER_AGENT).build()?,
-            service_config: Default::default(),
-        };
-        Ok(client)
-    }
-
-    /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
-    /// {MAINNET_HOST}.
-    pub fn new_mainnet() -> Self {
-        Self::new(MAINNET_HOST).expect("Invalid mainnet URL")
-    }
-
-    /// Create a new GraphQL client connected to the `testnet` GraphQL server:
-    /// {TESTNET_HOST}.
-    pub fn new_testnet() -> Self {
-        Self::new(TESTNET_HOST).expect("Invalid testnet URL")
-    }
-
-    /// Create a new GraphQL client connected to the `devnet` GraphQL server:
-    /// {DEVNET_HOST}.
-    pub fn new_devnet() -> Self {
-        Self::new(DEVNET_HOST).expect("Invalid devnet URL")
-    }
-
-    /// Create a new GraphQL client connected to the `localhost` GraphQL server:
-    /// {DEFAULT_LOCAL_HOST}.
-    pub fn new_localhost() -> Self {
-        Self::new(LOCAL_HOST).expect("Invalid localhost URL")
+    /// Return the URL for the GraphQL server.
+    fn rpc_server(&self) -> &str {
+        self.rpc.as_str()
     }
 
     /// Set the server address for the GraphQL GraphQL client. It should be a
@@ -268,100 +280,6 @@ impl Client {
         let rpc = reqwest::Url::parse(server)?;
         self.rpc = rpc;
         Ok(())
-    }
-
-    /// Return the URL for the GraphQL server.
-    fn rpc_server(&self) -> &str {
-        self.rpc.as_str()
-    }
-
-    /// Handle pagination filters and return the appropriate values (after,
-    /// before, first, last). If limit is omitted, it will use the max page
-    /// size from the service config.
-    pub async fn pagination_filter(
-        &self,
-        pagination_filter: PaginationFilter,
-    ) -> (Option<String>, Option<String>, Option<i32>, Option<i32>) {
-        let limit = pagination_filter
-            .limit
-            .unwrap_or(self.max_page_size().await.unwrap_or(DEFAULT_ITEMS_PER_PAGE));
-
-        let (after, before, first, last) = match pagination_filter.direction {
-            Direction::Forward => (pagination_filter.cursor, None, Some(limit), None),
-            Direction::Backward => (None, pagination_filter.cursor, None, Some(limit)),
-        };
-        (after, before, first, last)
-    }
-
-    /// Lazily fetch the max page size
-    pub async fn max_page_size(&self) -> Result<i32> {
-        self.service_config().await.map(|cfg| cfg.max_page_size)
-    }
-
-    /// Run a query on the GraphQL server and return the response.
-    /// This method returns [`cynic::GraphQlResponse`]  over the query type `T`,
-    /// and it is intended to be used with custom queries.
-    pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> Result<GraphQlResponse<T>>
-    where
-        T: serde::de::DeserializeOwned,
-        V: serde::Serialize,
-    {
-        let res = self
-            .inner
-            .post(self.rpc_server())
-            .json(&operation)
-            .send()
-            .await?
-            .json::<GraphQlResponse<T>>()
-            .await?;
-        Ok(res)
-    }
-
-    // ===========================================================================
-    // Network info API
-    // ===========================================================================
-
-    /// Get the chain identifier.
-    pub async fn chain_id(&self) -> Result<String> {
-        let operation = ChainIdentifierQuery::build(());
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        response
-            .data
-            .map(|e| e.chain_identifier)
-            .ok_or_else(Error::empty_response_error)
-    }
-
-    /// Get the reference gas price for the provided epoch or the last known one
-    /// if no epoch is provided.
-    ///
-    /// This will return `Ok(None)` if the epoch requested is not available in
-    /// the GraphQL service (e.g., due to pruning).
-    pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        response
-            .data
-            .and_then(|e| e.epoch)
-            .and_then(|e| e.reference_gas_price)
-            .map(|x| x.try_into())
-            .transpose()
-    }
-
-    /// Get the protocol configuration.
-    pub async fn protocol_config(&self, version: Option<u64>) -> Result<Option<ProtocolConfigs>> {
-        let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version });
-        let response = self.run_query(&operation).await?;
-        Ok(response.data.map(|p| p.protocol_config))
     }
 
     /// Get the GraphQL service configuration, including complexity limits, read
@@ -392,6 +310,367 @@ impl Client {
         Ok(service_config)
     }
 
+    /// Get the list of coins for the specified address as a stream.
+    ///
+    /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
+    /// which will return all coins. For IOTA coin, pass in the coin type:
+    /// `0x2::coin::Coin<0x2::iota::IOTA>`.
+    pub async fn coins_stream(
+        &self,
+        address: Address,
+        coin_type: Option<String>,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<Coin>> + '_ {
+        stream_paginated_query(
+            move |filter| self.coins(address, coin_type.clone(), filter),
+            streaming_direction,
+        )
+    }
+
+    /// Get a stream of [`CheckpointSummary`]. Note that this will fetch all
+    /// checkpoints which may trigger a lot of requests.
+    pub async fn checkpoints_stream(
+        &self,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<CheckpointSummary>> + '_ {
+        stream_paginated_query(move |filter| self.checkpoints(filter), streaming_direction)
+    }
+
+    /// Get a stream of dynamic fields for the provided address. Note that this
+    /// will also fetch dynamic fields on wrapped objects.
+    pub async fn dynamic_fields_stream(
+        &self,
+        address: Address,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<DynamicFieldOutput>> + '_ {
+        stream_paginated_query(
+            move |filter| self.dynamic_fields(address, filter),
+            streaming_direction,
+        )
+    }
+
+    /// Return a stream of epochs based on the (optional) object filter.
+    pub async fn epochs_stream(
+        &self,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<Epoch>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.epochs(pag_filter),
+            streaming_direction,
+        )
+    }
+
+    /// Internal method for getting the epoch summary that is called in a few
+    /// other APIs for convenience.
+    async fn epoch_summary(
+        &self,
+        epoch: Option<u64>,
+    ) -> Result<GraphQlResponse<EpochSummaryQuery>> {
+        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
+        self.run_query(&operation).await
+    }
+
+    /// Return a stream of events based on the (optional) event filter.
+    pub async fn events_stream(
+        &self,
+        filter: Option<EventFilter>,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<TransactionEvent>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.events(filter.clone(), pag_filter),
+            streaming_direction,
+        )
+    }
+
+    /// Return a stream of objects based on the (optional) object filter.
+    pub async fn objects_stream(
+        &self,
+        filter: Option<ObjectFilter>,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<Object>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.objects(filter.clone(), pag_filter),
+            streaming_direction,
+        )
+    }
+
+    // ===========================================================================
+    // Dry Run API
+    // ===========================================================================
+
+    /// Dry run a [`Transaction`] and return the transaction effects and dry run
+    /// error (if any).
+    ///
+    /// `skipChecks` optional flag disables the usual verification checks that
+    /// prevent access to objects that are owned by addresses other than the
+    /// sender, and calling non-public, non-entry functions, and some other
+    /// checks. Defaults to false.
+    pub async fn dry_run_tx(
+        &self,
+        tx: &Transaction,
+        skip_checks: Option<bool>,
+    ) -> Result<DryRunResult> {
+        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx)?);
+        self.dry_run(tx_bytes, skip_checks, None).await
+    }
+
+    /// Dry run a [`TransactionKind`] and return the transaction effects and dry
+    /// run error (if any).
+    ///
+    /// `skipChecks` optional flag disables the usual verification checks that
+    /// prevent access to objects that are owned by addresses other than the
+    /// sender, and calling non-public, non-entry functions, and some other
+    /// checks. Defaults to false.
+    ///
+    /// `tx_meta` is the transaction metadata.
+    pub async fn dry_run_tx_kind(
+        &self,
+        tx_kind: &TransactionKind,
+        skip_checks: Option<bool>,
+        tx_meta: TransactionMetadata,
+    ) -> Result<DryRunResult> {
+        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx_kind)?);
+        self.dry_run(tx_bytes, skip_checks, Some(tx_meta)).await
+    }
+
+    /// Internal implementation of the dry run API.
+    async fn dry_run(
+        &self,
+        tx_bytes: String,
+        skip_checks: Option<bool>,
+        tx_meta: Option<TransactionMetadata>,
+    ) -> Result<DryRunResult> {
+        let skip_checks = skip_checks.unwrap_or(false);
+        let operation = DryRunQuery::build(DryRunArgs {
+            tx_bytes,
+            skip_checks,
+            tx_meta,
+        });
+        let response = self.run_query(&operation).await?;
+
+        // Query errors
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        // Dry Run errors
+        let error = response
+            .data
+            .as_ref()
+            .and_then(|tx| tx.dry_run_transaction_block.error.clone());
+
+        let effects = response
+            .data
+            .map(|tx| tx.dry_run_transaction_block)
+            .and_then(|tx| tx.transaction)
+            .and_then(|tx| tx.effects)
+            .and_then(|bcs| bcs.bcs)
+            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .transpose()?
+            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
+            .transpose()?;
+
+        Ok(DryRunResult { effects, error })
+    }
+
+    /// Get a stream of transactions based on the (optional) transaction filter.
+    pub async fn transactions_stream(
+        &self,
+        filter: Option<TransactionsFilter>,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<SignedTransaction>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.transactions(filter.clone(), pag_filter),
+            streaming_direction,
+        )
+    }
+
+    /// Get a stream of transactions' effects based on the (optional)
+    /// transaction filter.
+    pub async fn transactions_effects_stream(
+        &self,
+        filter: Option<TransactionsFilter>,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<TransactionEffects>> + '_ {
+        stream_paginated_query(
+            move |pag_filter| self.transactions_effects(filter.clone(), pag_filter),
+            streaming_direction,
+        )
+    }
+
+    /// Run a query on the GraphQL server and return the response.
+    /// This method returns [`cynic::GraphQlResponse`]  over the query type `T`,
+    /// and it is intended to be used with custom queries.
+    pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> Result<GraphQlResponse<T>>
+    where
+        T: serde::de::DeserializeOwned,
+        V: serde::Serialize,
+    {
+        let res = self
+            .inner
+            .post(self.rpc_server())
+            .json(&operation)
+            .send()
+            .await?
+            .json::<GraphQlResponse<T>>()
+            .await?;
+        Ok(res)
+    }
+
+    // ===========================================================================
+    // Balance API
+    // ===========================================================================
+
+    /// Get the balance of all the coins owned by address for the provided coin
+    /// type. Coin type will default to `0x2::coin::Coin<0x2::iota::IOTA>`
+    /// if not provided.
+    pub async fn balance(
+        &self,
+        address: Address,
+        coin_type: Option<String>,
+    ) -> Result<Option<u128>> {
+        let operation = BalanceQuery::build(BalanceArgs {
+            address,
+            coin_type: coin_type.map(|x| x.to_string()),
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        let total_balance = response
+            .data
+            .map(|b| b.owner.and_then(|o| o.balance.map(|b| b.total_balance)))
+            .ok_or_else(Error::empty_response_error)?
+            .flatten()
+            .map(|x| x.0.parse::<u128>())
+            .transpose()?;
+        Ok(total_balance)
+    }
+}
+
+#[cfg_attr(feature = "uniffi", uniffi::export(async_runtime = "tokio"))]
+impl Client {
+    // ===========================================================================
+    // Client Misc API
+    // ===========================================================================
+
+    /// Create a new GraphQL client with the provided server address.
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
+    pub fn new(server: &str) -> Result<Self> {
+        let rpc = reqwest::Url::parse(server)?;
+
+        let client = Client {
+            rpc,
+            inner: reqwest::Client::builder().user_agent(USER_AGENT).build()?,
+            service_config: Default::default(),
+        };
+        Ok(client)
+    }
+
+    /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
+    /// {MAINNET_HOST}.
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
+    pub fn new_mainnet() -> Self {
+        Self::new(MAINNET_HOST).expect("Invalid mainnet URL")
+    }
+
+    /// Create a new GraphQL client connected to the `testnet` GraphQL server:
+    /// {TESTNET_HOST}.
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
+    pub fn new_testnet() -> Self {
+        Self::new(TESTNET_HOST).expect("Invalid testnet URL")
+    }
+
+    /// Create a new GraphQL client connected to the `devnet` GraphQL server:
+    /// {DEVNET_HOST}.
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
+    pub fn new_devnet() -> Self {
+        Self::new(DEVNET_HOST).expect("Invalid devnet URL")
+    }
+
+    /// Create a new GraphQL client connected to the `localhost` GraphQL server:
+    /// {DEFAULT_LOCAL_HOST}.
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
+    pub fn new_localhost() -> Self {
+        Self::new(LOCAL_HOST).expect("Invalid localhost URL")
+    }
+
+    /// Get the chain identifier.
+    pub async fn chain_id(&self) -> Result<String> {
+        let operation = ChainIdentifierQuery::build(());
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        response
+            .data
+            .map(|e| e.chain_identifier)
+            .ok_or_else(Error::empty_response_error)
+    }
+
+    /// Handle pagination filters and return the appropriate values. If limit is
+    /// omitted, it will use the max page size from the service config.
+    pub async fn pagination_filter(
+        &self,
+        pagination_filter: PaginationFilter,
+    ) -> PaginationFilterResponse {
+        let limit = pagination_filter
+            .limit
+            .unwrap_or(self.max_page_size().await.unwrap_or(DEFAULT_ITEMS_PER_PAGE));
+
+        let (after, before, first, last) = match pagination_filter.direction {
+            Direction::Forward => (pagination_filter.cursor, None, Some(limit), None),
+            Direction::Backward => (None, pagination_filter.cursor, None, Some(limit)),
+        };
+        PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        }
+    }
+
+    /// Lazily fetch the max page size
+    pub async fn max_page_size(&self) -> Result<i32> {
+        self.service_config().await.map(|cfg| cfg.max_page_size)
+    }
+
+    // ===========================================================================
+    // Network info API
+    // ===========================================================================
+
+    /// Get the reference gas price for the provided epoch or the last known one
+    /// if no epoch is provided.
+    ///
+    /// This will return `Ok(None)` if the epoch requested is not available in
+    /// the GraphQL service (e.g., due to pruning).
+    pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
+        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        response
+            .data
+            .and_then(|e| e.epoch)
+            .and_then(|e| e.reference_gas_price)
+            .map(|x| x.try_into())
+            .transpose()
+    }
+
+    /// Get the protocol configuration.
+    pub async fn protocol_config(&self, version: Option<u64>) -> Result<Option<ProtocolConfigs>> {
+        let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version });
+        let response = self.run_query(&operation).await?;
+        Ok(response.data.map(|p| p.protocol_config))
+    }
+
     /// Get the list of active validators for the provided epoch, including
     /// related metadata. If no epoch is provided, it will return the active
     /// validators for the current epoch.
@@ -400,7 +679,12 @@ impl Client {
         epoch: Option<u64>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Validator>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = ActiveValidatorsQuery::build(ActiveValidatorsArgs {
             id: epoch,
@@ -488,34 +772,6 @@ impl Client {
     }
 
     // ===========================================================================
-    // Balance API
-    // ===========================================================================
-
-    /// Get the balance of all the coins owned by address for the provided coin
-    /// type. Coin type will default to `0x2::coin::Coin<0x2::iota::IOTA>`
-    /// if not provided.
-    pub async fn balance(&self, address: Address, coin_type: Option<&str>) -> Result<Option<u128>> {
-        let operation = BalanceQuery::build(BalanceArgs {
-            address,
-            coin_type: coin_type.map(|x| x.to_string()),
-        });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        let total_balance = response
-            .data
-            .map(|b| b.owner.and_then(|o| o.balance.map(|b| b.total_balance)))
-            .ok_or_else(Error::empty_response_error)?
-            .flatten()
-            .map(|x| x.0.parse::<u128>())
-            .transpose()?;
-        Ok(total_balance)
-    }
-
-    // ===========================================================================
     // Coin API
     // ===========================================================================
 
@@ -527,13 +783,13 @@ impl Client {
     pub async fn coins(
         &self,
         owner: Address,
-        coin_type: Option<&str>,
+        coin_type: Option<String>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Coin>> {
         let response = self
             .objects(
                 Some(ObjectFilter {
-                    type_: Some(coin_type.unwrap_or("0x2::coin::Coin")),
+                    type_: Some(coin_type.unwrap_or_else(|| "0x2::coin::Coin".to_owned())),
                     owner: Some(owner),
                     object_ids: None,
                 }),
@@ -547,26 +803,8 @@ impl Client {
                 .data
                 .iter()
                 .flat_map(Coin::try_from_object)
-                .map(|c| c.into_owned())
                 .collect::<Vec<_>>(),
         ))
-    }
-
-    /// Get the list of coins for the specified address as a stream.
-    ///
-    /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-    /// which will return all coins. For IOTA coin, pass in the coin type:
-    /// `0x2::coin::Coin<0x2::iota::IOTA>`.
-    pub async fn coins_stream(
-        &self,
-        address: Address,
-        coin_type: Option<&'static str>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Coin>> {
-        stream_paginated_query(
-            move |filter| self.coins(address, coin_type, filter),
-            streaming_direction,
-        )
     }
 
     /// Get the coin metadata for the coin type.
@@ -633,7 +871,12 @@ impl Client {
         &self,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<CheckpointSummary>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = CheckpointsQuery::build(CheckpointsArgs {
             after: after.as_deref(),
@@ -662,15 +905,6 @@ impl Client {
         }
     }
 
-    /// Get a stream of [`CheckpointSummary`]. Note that this will fetch all
-    /// checkpoints which may trigger a lot of requests.
-    pub async fn checkpoints_stream(
-        &self,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<CheckpointSummary>> + '_ {
-        stream_paginated_query(move |filter| self.checkpoints(filter), streaming_direction)
-    }
-
     /// Return the sequence number of the latest checkpoint that has been
     /// executed.
     pub async fn latest_checkpoint_sequence_number(
@@ -680,151 +914,6 @@ impl Client {
             .checkpoint(None, None)
             .await?
             .map(|c| c.sequence_number))
-    }
-
-    // ===========================================================================
-    // Dynamic Field(s) API
-    // ===========================================================================
-
-    /// Access a dynamic field on an object using its name. Names are arbitrary
-    /// Move values whose type have copy, drop, and store, and are specified
-    /// using their type, and their BCS contents, Base64 encoded.
-    ///
-    /// The `name` argument can be either a [`BcsName`] for passing raw bcs
-    /// bytes or a type that implements Serialize.
-    ///
-    /// This returns [`DynamicFieldOutput`] which contains the name, the value
-    /// as json, and object.
-    ///
-    /// # Example
-    /// ```rust,ignore
-    /// 
-    /// let client = iota_graphql_client::Client::new_devnet();
-    /// let address = Address::from_str("0x5").unwrap();
-    /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-    ///
-    /// # alternatively, pass in the bcs bytes
-    /// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-    /// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-    /// ```
-    pub async fn dynamic_field(
-        &self,
-        address: Address,
-        type_: TypeTag,
-        name: impl Into<NameValue>,
-    ) -> Result<Option<DynamicFieldOutput>> {
-        let bcs = name.into().0;
-        let operation = DynamicFieldQuery::build(DynamicFieldArgs {
-            address,
-            name: crate::query_types::DynamicFieldName {
-                type_: type_.to_string(),
-                bcs: crate::query_types::Base64(base64ct::Base64::encode_string(&bcs)),
-            },
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        let result = response
-            .data
-            .and_then(|d| d.owner)
-            .and_then(|o| o.dynamic_field)
-            .map(|df| df.try_into())
-            .transpose()?;
-
-        Ok(result)
-    }
-
-    /// Access a dynamic object field on an object using its name. Names are
-    /// arbitrary Move values whose type have copy, drop, and store, and are
-    /// specified using their type, and their BCS contents, Base64 encoded.
-    ///
-    /// The `name` argument can be either a [`BcsName`] for passing raw bcs
-    /// bytes or a type that implements Serialize.
-    ///
-    /// This returns [`DynamicFieldOutput`] which contains the name, the value
-    /// as json, and object.
-    pub async fn dynamic_object_field(
-        &self,
-        address: Address,
-        type_: TypeTag,
-        name: impl Into<NameValue>,
-    ) -> Result<Option<DynamicFieldOutput>> {
-        let bcs = name.into().0;
-        let operation = DynamicObjectFieldQuery::build(DynamicFieldArgs {
-            address,
-            name: crate::query_types::DynamicFieldName {
-                type_: type_.to_string(),
-                bcs: crate::query_types::Base64(base64ct::Base64::encode_string(&bcs)),
-            },
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        let result: Option<DynamicFieldOutput> = response
-            .data
-            .and_then(|d| d.owner)
-            .and_then(|o| o.dynamic_object_field)
-            .map(|df| df.try_into())
-            .transpose()?;
-        Ok(result)
-    }
-
-    /// Get a page of dynamic fields for the provided address. Note that this
-    /// will also fetch dynamic fields on wrapped objects.
-    ///
-    /// This returns [`Page`] of [`DynamicFieldOutput`]s.
-    pub async fn dynamic_fields(
-        &self,
-        address: Address,
-        pagination_filter: PaginationFilter,
-    ) -> Result<Page<DynamicFieldOutput>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
-        let operation = DynamicFieldsOwnerQuery::build(DynamicFieldConnectionArgs {
-            address,
-            after: after.as_deref(),
-            before: before.as_deref(),
-            first,
-            last,
-        });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        let Some(DynamicFieldsOwnerQuery { owner: Some(dfs) }) = response.data else {
-            return Ok(Page::new_empty());
-        };
-
-        Ok(Page::new(
-            dfs.dynamic_fields.page_info,
-            dfs.dynamic_fields
-                .nodes
-                .into_iter()
-                .map(TryInto::try_into)
-                .collect::<Result<Vec<_>>>()?,
-        ))
-    }
-
-    /// Get a stream of dynamic fields for the provided address. Note that this
-    /// will also fetch dynamic fields on wrapped objects.
-    pub async fn dynamic_fields_stream(
-        &self,
-        address: Address,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<DynamicFieldOutput>> + '_ {
-        stream_paginated_query(
-            move |filter| self.dynamic_fields(address, filter),
-            streaming_direction,
-        )
     }
 
     // ===========================================================================
@@ -846,7 +935,12 @@ impl Client {
 
     /// Return a page of epochs.
     pub async fn epochs(&self, pagination_filter: PaginationFilter) -> Result<Page<Epoch>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
         let operation = EpochsQuery::build(EpochsArgs {
             after: after.as_deref(),
             before: before.as_deref(),
@@ -864,17 +958,6 @@ impl Client {
         } else {
             Ok(Page::new_empty())
         }
-    }
-
-    /// Return a stream of epochs based on the (optional) object filter.
-    pub async fn epochs_stream(
-        &self,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Epoch>> + '_ {
-        stream_paginated_query(
-            move |pag_filter| self.epochs(pag_filter),
-            streaming_direction,
-        )
     }
 
     /// Return the number of checkpoints in this epoch. This will return
@@ -909,16 +992,6 @@ impl Client {
             .and_then(|e| e.total_transactions))
     }
 
-    /// Internal method for getting the epoch summary that is called in a few
-    /// other APIs for convenience.
-    async fn epoch_summary(
-        &self,
-        epoch: Option<u64>,
-    ) -> Result<GraphQlResponse<EpochSummaryQuery>> {
-        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
-        self.run_query(&operation).await
-    }
-
     // ===========================================================================
     // Events API
     // ===========================================================================
@@ -929,8 +1002,13 @@ impl Client {
         &self,
         filter: Option<EventFilter>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<(Event, TransactionDigest)>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+    ) -> Result<Page<TransactionEvent>> {
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = EventsQuery::build(EventsQueryArgs {
             filter,
@@ -953,7 +1031,7 @@ impl Client {
             let events_with_digests = ec
                 .nodes
                 .into_iter()
-                .map(|node| -> Result<(Event, TransactionDigest)> {
+                .map(|node| {
                     let event =
                         bcs::from_bytes::<Event>(&base64ct::Base64::decode_vec(&node.bcs.0)?)?;
 
@@ -970,7 +1048,10 @@ impl Client {
 
                     let tx_digest = TransactionDigest::from_base58(&tx_digest)?;
 
-                    Ok((event, tx_digest))
+                    Ok(TransactionEvent {
+                        event,
+                        digest: tx_digest,
+                    })
                 })
                 .collect::<Result<Vec<_>>>()?;
 
@@ -978,18 +1059,6 @@ impl Client {
         } else {
             Ok(Page::new_empty())
         }
-    }
-
-    /// Return a stream of events based on the (optional) event filter.
-    pub async fn events_stream(
-        &self,
-        filter: Option<EventFilter>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<(Event, TransactionDigest)>> + '_ {
-        stream_paginated_query(
-            move |pag_filter| self.events(filter.clone(), pag_filter),
-            streaming_direction,
-        )
     }
 
     // ===========================================================================
@@ -1045,13 +1114,18 @@ impl Client {
     /// ```
     pub async fn objects(
         &self,
-        filter: Option<ObjectFilter<'_>>,
+        filter: Option<ObjectFilter>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Object>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
         let operation = ObjectsQuery::build(ObjectsQueryArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
+            after,
+            before,
             filter,
             first,
             last,
@@ -1085,18 +1159,6 @@ impl Client {
         }
     }
 
-    /// Return a stream of objects based on the (optional) object filter.
-    pub async fn objects_stream<'a>(
-        &'a self,
-        filter: Option<ObjectFilter<'a>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Object>> + 'a {
-        stream_paginated_query(
-            move |pag_filter| self.objects(filter.clone(), pag_filter),
-            streaming_direction,
-        )
-    }
-
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`].
     pub async fn object_bcs(&self, object_id: Address) -> Result<Option<Vec<u8>>> {
@@ -1121,34 +1183,6 @@ impl Client {
         }
     }
 
-    /// Return the contents' JSON of an object that is a Move object.
-    ///
-    /// If the object does not exist (e.g., due to pruning), this will return
-    /// `Ok(None)`. Similarly, if this is not an object but an address, it
-    /// will return `Ok(None)`.
-    pub async fn move_object_contents(
-        &self,
-        address: Address,
-        version: Option<u64>,
-    ) -> Result<Option<serde_json::Value>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs { address, version });
-
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        if let Some(object) = response.data {
-            Ok(object
-                .object
-                .and_then(|o| o.as_move_object)
-                .and_then(|o| o.contents)
-                .and_then(|mv| mv.json))
-        } else {
-            Ok(None)
-        }
-    }
     /// Return the BCS of an object that is a Move object.
     ///
     /// If the object does not exist (e.g., due to pruning), this will return
@@ -1227,7 +1261,12 @@ impl Client {
         after_version: Option<u64>,
         before_version: Option<u64>,
     ) -> Result<Page<MovePackage>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
         let operation = PackageVersionsQuery::build(PackageVersionsArgs {
             address,
             after: after.as_deref(),
@@ -1327,7 +1366,12 @@ impl Client {
         after_checkpoint: Option<u64>,
         before_checkpoint: Option<u64>,
     ) -> Result<Page<MovePackage>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = PackagesQuery::build(PackagesQueryArgs {
             after: after.as_deref(),
@@ -1367,85 +1411,6 @@ impl Client {
         } else {
             Ok(Page::new_empty())
         }
-    }
-
-    // ===========================================================================
-    // Dry Run API
-    // ===========================================================================
-
-    /// Dry run a [`Transaction`] and return the transaction effects and dry run
-    /// error (if any).
-    ///
-    /// `skipChecks` optional flag disables the usual verification checks that
-    /// prevent access to objects that are owned by addresses other than the
-    /// sender, and calling non-public, non-entry functions, and some other
-    /// checks. Defaults to false.
-    pub async fn dry_run_tx(
-        &self,
-        tx: &Transaction,
-        skip_checks: Option<bool>,
-    ) -> Result<DryRunResult> {
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx)?);
-        self.dry_run(tx_bytes, skip_checks, None).await
-    }
-
-    /// Dry run a [`TransactionKind`] and return the transaction effects and dry
-    /// run error (if any).
-    ///
-    /// `skipChecks` optional flag disables the usual verification checks that
-    /// prevent access to objects that are owned by addresses other than the
-    /// sender, and calling non-public, non-entry functions, and some other
-    /// checks. Defaults to false.
-    ///
-    /// `tx_meta` is the transaction metadata.
-    pub async fn dry_run_tx_kind(
-        &self,
-        tx_kind: &TransactionKind,
-        skip_checks: Option<bool>,
-        tx_meta: TransactionMetadata,
-    ) -> Result<DryRunResult> {
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx_kind)?);
-        self.dry_run(tx_bytes, skip_checks, Some(tx_meta)).await
-    }
-
-    /// Internal implementation of the dry run API.
-    async fn dry_run(
-        &self,
-        tx_bytes: String,
-        skip_checks: Option<bool>,
-        tx_meta: Option<TransactionMetadata>,
-    ) -> Result<DryRunResult> {
-        let skip_checks = skip_checks.unwrap_or(false);
-        let operation = DryRunQuery::build(DryRunArgs {
-            tx_bytes,
-            skip_checks,
-            tx_meta,
-        });
-        let response = self.run_query(&operation).await?;
-
-        // Query errors
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        // Dry Run errors
-        let error = response
-            .data
-            .as_ref()
-            .and_then(|tx| tx.dry_run_transaction_block.error.clone());
-
-        let effects = response
-            .data
-            .map(|tx| tx.dry_run_transaction_block)
-            .and_then(|tx| tx.transaction)
-            .and_then(|tx| tx.effects)
-            .and_then(|bcs| bcs.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
-            .transpose()?
-            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
-            .transpose()?;
-
-        Ok(DryRunResult { effects, error })
     }
 
     // ===========================================================================
@@ -1528,14 +1493,19 @@ impl Client {
     /// Get a page of transactions based on the provided filters.
     pub async fn transactions(
         &self,
-        filter: Option<TransactionsFilter<'_>>,
+        filter: Option<TransactionsFilter>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<SignedTransaction>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
+            after,
+            before,
             filter,
             first,
             last,
@@ -1566,14 +1536,19 @@ impl Client {
     /// Get a page of transactions' effects based on the provided filters.
     pub async fn transactions_effects(
         &self,
-        filter: Option<TransactionsFilter<'_>>,
+        filter: Option<TransactionsFilter>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<TransactionEffects>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksEffectsQuery::build(TransactionBlocksQueryArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
+            after,
+            before,
             filter,
             first,
             last,
@@ -1601,14 +1576,19 @@ impl Client {
     /// filters.
     pub async fn transactions_data_effects(
         &self,
-        filter: Option<TransactionsFilter<'_>>,
+        filter: Option<TransactionsFilter>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<TransactionDataEffects>> {
-        let (after, before, first, last) = self.pagination_filter(pagination_filter).await;
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksQueryArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
+            after,
+            before,
             filter,
             first,
             last,
@@ -1662,31 +1642,6 @@ impl Client {
         } else {
             Ok(Page::new_empty())
         }
-    }
-
-    /// Get a stream of transactions based on the (optional) transaction filter.
-    pub async fn transactions_stream<'a>(
-        &'a self,
-        filter: Option<TransactionsFilter<'a>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<SignedTransaction>> + 'a {
-        stream_paginated_query(
-            move |pag_filter| self.transactions(filter.clone(), pag_filter),
-            streaming_direction,
-        )
-    }
-
-    /// Get a stream of transactions' effects based on the (optional)
-    /// transaction filter.
-    pub async fn transactions_effects_stream<'a>(
-        &'a self,
-        filter: Option<TransactionsFilter<'a>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<TransactionEffects>> + 'a {
-        stream_paginated_query(
-            move |pag_filter| self.transactions_effects(filter.clone(), pag_filter),
-            streaming_direction,
-        )
     }
 
     /// Execute a transaction.
@@ -1748,6 +1703,35 @@ impl Client {
             .and_then(|m| m.function))
     }
 
+    /// Return the contents' JSON of an object that is a Move object.
+    ///
+    /// If the object does not exist (e.g., due to pruning), this will return
+    /// `Ok(None)`. Similarly, if this is not an object but an address, it
+    /// will return `Ok(None)`.
+    pub async fn move_object_contents(
+        &self,
+        address: Address,
+        version: Option<u64>,
+    ) -> Result<Option<serde_json::Value>> {
+        let operation = ObjectQuery::build(ObjectQueryArgs { address, version });
+
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        if let Some(object) = response.data {
+            Ok(object
+                .object
+                .and_then(|o| o.as_move_object)
+                .and_then(|o| o.contents)
+                .and_then(|mv| mv.json))
+        } else {
+            Ok(None)
+        }
+    }
+
     /// Return the normalized Move module data for the provided module.
     // TODO: do we want to self paginate everything and return all the data, or keep pagination
     // options?
@@ -1762,34 +1746,30 @@ impl Client {
         pagination_filter_functions: PaginationFilter,
         pagination_filter_structs: PaginationFilter,
     ) -> Result<Option<MoveModule>> {
-        let (after_enums, before_enums, first_enums, last_enums) =
-            self.pagination_filter(pagination_filter_enums).await;
-        let (after_friends, before_friends, first_friends, last_friends) =
-            self.pagination_filter(pagination_filter_friends).await;
-        let (after_functions, before_functions, first_functions, last_functions) =
-            self.pagination_filter(pagination_filter_functions).await;
-        let (after_structs, before_structs, first_structs, last_structs) =
-            self.pagination_filter(pagination_filter_structs).await;
+        let enums = self.pagination_filter(pagination_filter_enums).await;
+        let friends = self.pagination_filter(pagination_filter_friends).await;
+        let functions = self.pagination_filter(pagination_filter_functions).await;
+        let structs = self.pagination_filter(pagination_filter_structs).await;
         let operation = NormalizedMoveModuleQuery::build(NormalizedMoveModuleQueryArgs {
             package: Address::from_str(package)?,
             module,
             version,
-            after_enums: after_enums.as_deref(),
-            after_functions: after_functions.as_deref(),
-            after_structs: after_structs.as_deref(),
-            after_friends: after_friends.as_deref(),
-            before_enums: before_enums.as_deref(),
-            before_functions: before_functions.as_deref(),
-            before_structs: before_structs.as_deref(),
-            before_friends: before_friends.as_deref(),
-            first_enums,
-            first_functions,
-            first_structs,
-            first_friends,
-            last_enums,
-            last_functions,
-            last_structs,
-            last_friends,
+            after_enums: enums.after.as_deref(),
+            after_functions: functions.after.as_deref(),
+            after_structs: structs.after.as_deref(),
+            after_friends: friends.after.as_deref(),
+            before_enums: enums.after.as_deref(),
+            before_functions: functions.before.as_deref(),
+            before_structs: structs.before.as_deref(),
+            before_friends: friends.before.as_deref(),
+            first_enums: enums.first,
+            first_functions: functions.first,
+            first_structs: structs.first,
+            first_friends: friends.first,
+            last_enums: enums.last,
+            last_functions: functions.last,
+            last_structs: structs.last,
+            last_friends: friends.last,
         });
         let response = self.run_query(&operation).await?;
 
@@ -1798,6 +1778,143 @@ impl Client {
         }
 
         Ok(response.data.and_then(|p| p.package).and_then(|p| p.module))
+    }
+
+    // ===========================================================================
+    // Dynamic Field(s) API
+    // ===========================================================================
+
+    /// Access a dynamic field on an object using its name. Names are arbitrary
+    /// Move values whose type have copy, drop, and store, and are specified
+    /// using their type, and their BCS contents, Base64 encoded.
+    ///
+    /// The `name` argument can be either a [`BcsName`] for passing raw bcs
+    /// bytes or a type that implements Serialize.
+    ///
+    /// This returns [`DynamicFieldOutput`] which contains the name, the value
+    /// as json, and object.
+    ///
+    /// # Example
+    /// ```rust,ignore
+    /// 
+    /// let client = iota_graphql_client::Client::new_devnet();
+    /// let address = Address::from_str("0x5").unwrap();
+    /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
+    ///
+    /// # alternatively, pass in the bcs bytes
+    /// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
+    /// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
+    /// ```
+    pub async fn dynamic_field(
+        &self,
+        address: Address,
+        type_: TypeTag,
+        name: NameValue,
+    ) -> Result<Option<DynamicFieldOutput>> {
+        let bcs = name.0;
+        let operation = DynamicFieldQuery::build(DynamicFieldArgs {
+            address,
+            name: crate::query_types::DynamicFieldName {
+                type_: type_.to_string(),
+                bcs: crate::query_types::Base64(base64ct::Base64::encode_string(&bcs)),
+            },
+        });
+
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        let result = response
+            .data
+            .and_then(|d| d.owner)
+            .and_then(|o| o.dynamic_field)
+            .map(|df| df.try_into())
+            .transpose()?;
+
+        Ok(result)
+    }
+
+    /// Access a dynamic object field on an object using its name. Names are
+    /// arbitrary Move values whose type have copy, drop, and store, and are
+    /// specified using their type, and their BCS contents, Base64 encoded.
+    ///
+    /// The `name` argument can be either a [`BcsName`] for passing raw bcs
+    /// bytes or a type that implements Serialize.
+    ///
+    /// This returns [`DynamicFieldOutput`] which contains the name, the value
+    /// as json, and object.
+    pub async fn dynamic_object_field(
+        &self,
+        address: Address,
+        type_: TypeTag,
+        name: NameValue,
+    ) -> Result<Option<DynamicFieldOutput>> {
+        let bcs = name.0;
+        let operation = DynamicObjectFieldQuery::build(DynamicFieldArgs {
+            address,
+            name: crate::query_types::DynamicFieldName {
+                type_: type_.to_string(),
+                bcs: crate::query_types::Base64(base64ct::Base64::encode_string(&bcs)),
+            },
+        });
+
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        let result: Option<DynamicFieldOutput> = response
+            .data
+            .and_then(|d| d.owner)
+            .and_then(|o| o.dynamic_object_field)
+            .map(|df| df.try_into())
+            .transpose()?;
+        Ok(result)
+    }
+
+    /// Get a page of dynamic fields for the provided address. Note that this
+    /// will also fetch dynamic fields on wrapped objects.
+    ///
+    /// This returns [`Page`] of [`DynamicFieldOutput`]s.
+    pub async fn dynamic_fields(
+        &self,
+        address: Address,
+        pagination_filter: PaginationFilter,
+    ) -> Result<Page<DynamicFieldOutput>> {
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
+        let operation = DynamicFieldsOwnerQuery::build(DynamicFieldConnectionArgs {
+            address,
+            after: after.as_deref(),
+            before: before.as_deref(),
+            first,
+            last,
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        let Some(DynamicFieldsOwnerQuery { owner: Some(dfs) }) = response.data else {
+            return Ok(Page::new_empty());
+        };
+
+        Ok(Page::new(
+            dfs.dynamic_fields.page_info,
+            dfs.dynamic_fields
+                .nodes
+                .into_iter()
+                .map(TryInto::try_into)
+                .collect::<Result<Vec<_>>>()?,
+        ))
     }
 }
 
@@ -2207,13 +2324,13 @@ mod tests {
         let client = test_client();
         let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
         let dynamic_field = client
-            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, BcsName(bcs))
+            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, BcsName(bcs).into())
             .await;
 
         assert!(dynamic_field.is_ok());
 
         let dynamic_field = client
-            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, 2u64)
+            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, 2u64.into())
             .await;
 
         assert!(dynamic_field.is_ok());

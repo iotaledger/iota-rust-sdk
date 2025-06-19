@@ -28,6 +28,7 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Transaction {
     pub kind: TransactionKind,
     pub sender: Address,
@@ -42,6 +43,7 @@ pub struct Transaction {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SignedTransaction {
     pub transaction: Transaction,
     pub signatures: Vec<UserSignature>,
@@ -59,6 +61,7 @@ pub struct SignedTransaction {
 /// ```
 #[derive(Clone, Copy, Default, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TransactionExpiration {
     /// The transaction has no expiration
     #[default]
@@ -88,6 +91,7 @@ pub enum TransactionExpiration {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct GasPayment {
     pub objects: Vec<ObjectReference>,
 
@@ -124,6 +128,7 @@ pub struct GasPayment {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct RandomnessStateUpdate {
     /// Epoch of the randomness state update transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -168,6 +173,7 @@ pub struct RandomnessStateUpdate {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TransactionKind {
     /// A user transaction comprised of a list of native commands and move calls
     ProgrammableTransaction(ProgrammableTransaction),
@@ -224,6 +230,7 @@ pub enum TransactionKind {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum EndOfEpochTransactionKind {
     /// End the epoch and start the next one
     ChangeEpoch(ChangeEpoch),
@@ -279,6 +286,56 @@ pub enum ExecutionTimeObservations {
     ),
 }
 
+#[cfg(feature = "uniffi")]
+#[derive(uniffi::Enum)]
+pub enum UniffiExecutionTimeObservations {
+    V1(Vec<UniffiExecutionTimeObservation>),
+}
+
+#[cfg(feature = "uniffi")]
+#[derive(uniffi::Record)]
+pub struct UniffiExecutionTimeObservation {
+    key: ExecutionTimeObservationKey,
+    observations: Vec<ValidatorExecutionTimeObservation>,
+}
+
+#[cfg(feature = "uniffi")]
+impl From<ExecutionTimeObservations> for UniffiExecutionTimeObservations {
+    fn from(value: ExecutionTimeObservations) -> Self {
+        match value {
+            ExecutionTimeObservations::V1(v) => UniffiExecutionTimeObservations::V1(
+                v.into_iter()
+                    .map(|v| UniffiExecutionTimeObservation {
+                        key: v.0,
+                        observations: v.1,
+                    })
+                    .collect(),
+            ),
+        }
+    }
+}
+
+#[cfg(feature = "uniffi")]
+impl From<UniffiExecutionTimeObservations> for ExecutionTimeObservations {
+    fn from(value: UniffiExecutionTimeObservations) -> Self {
+        match value {
+            UniffiExecutionTimeObservations::V1(v) => ExecutionTimeObservations::V1(
+                v.into_iter().map(|v| (v.key, v.observations)).collect(),
+            ),
+        }
+    }
+}
+
+#[cfg(feature = "uniffi")]
+uniffi::custom_type!(
+    ExecutionTimeObservations,
+    UniffiExecutionTimeObservations,
+    {
+        lower: |ob| ob.into(),
+        try_lift: |ob| Ok(ob.into()),
+    }
+);
+
 /// An execution time observation from a particular validator
 ///
 /// # BCS
@@ -297,6 +354,7 @@ pub enum ExecutionTimeObservations {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ValidatorExecutionTimeObservation {
     pub validator: crate::Bls12381PublicKey,
     pub duration: std::time::Duration,
@@ -326,6 +384,7 @@ pub struct ValidatorExecutionTimeObservation {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ExecutionTimeObservationKey {
     // Containts all the fields from `ProgrammableMoveCall` besides `arguments`.
     MoveEntryPoint {
@@ -363,6 +422,7 @@ pub enum ExecutionTimeObservationKey {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct AuthenticatorStateExpire {
     /// expire JWKs that have a lower epoch than this
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -394,6 +454,7 @@ pub struct AuthenticatorStateExpire {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct AuthenticatorStateUpdateV1 {
     /// Epoch of the authenticator state update transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -430,6 +491,7 @@ pub struct AuthenticatorStateUpdateV1 {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ActiveJwk {
     /// Identifier used to uniquely identify a Jwk
     pub jwk_id: JwkId,
@@ -450,6 +512,7 @@ pub struct ActiveJwk {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ConsensusDeterminedVersionAssignments {
     /// Cancelled transaction version assignment.
     CancelledTransactions {
@@ -474,6 +537,7 @@ pub enum ConsensusDeterminedVersionAssignments {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct CancelledTransaction {
     pub digest: TransactionDigest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -496,6 +560,7 @@ pub struct CancelledTransaction {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct VersionAssignment {
     pub object_id: ObjectId,
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -520,6 +585,7 @@ pub struct VersionAssignment {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ConsensusCommitPrologueV1 {
     /// Epoch of the commit prologue transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -575,6 +641,7 @@ pub struct ConsensusCommitPrologueV1 {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ChangeEpoch {
     /// The next (to become) epoch ID.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -639,6 +706,7 @@ pub struct ChangeEpoch {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ChangeEpochV2 {
     /// The next (to become) epoch ID.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -689,6 +757,7 @@ pub struct ChangeEpochV2 {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SystemPackage {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -721,6 +790,7 @@ pub struct SystemPackage {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct GenesisTransaction {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub objects: Vec<GenesisObject>,
@@ -747,6 +817,7 @@ pub struct GenesisTransaction {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ProgrammableTransaction {
     /// Input objects or primitive values
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
@@ -779,6 +850,7 @@ pub struct ProgrammableTransaction {
     schemars(tag = "type", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Input {
     /// A move value serialized as BCS.
     ///
@@ -838,6 +910,7 @@ pub enum Input {
     schemars(tag = "command", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Command {
     /// A call to either an entry or a public Move function
     MoveCall(MoveCall),
@@ -892,6 +965,7 @@ pub enum Command {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TransferObjects {
     /// Set of objects to transfer
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -917,6 +991,7 @@ pub struct TransferObjects {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SplitCoins {
     /// The coin to split
     pub coin: Argument,
@@ -942,6 +1017,7 @@ pub struct SplitCoins {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MergeCoins {
     /// Coin to merge coins into
     pub coin: Argument,
@@ -970,6 +1046,7 @@ pub struct MergeCoins {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Publish {
     /// The serialized move modules
     #[cfg_attr(
@@ -1001,6 +1078,7 @@ pub struct Publish {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MakeMoveVector {
     /// Type of the individual elements
     ///
@@ -1033,6 +1111,7 @@ pub struct MakeMoveVector {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Upgrade {
     /// The serialized move modules
     #[cfg_attr(
@@ -1073,6 +1152,7 @@ pub struct Upgrade {
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Argument {
     /// The gas coin. The gas coin can only be used by-ref, except for with
     /// `TransferObjects`, which can use it by-value.
@@ -1127,6 +1207,7 @@ impl Argument {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveCall {
     /// The package containing the module and function.
     pub package: ObjectId,

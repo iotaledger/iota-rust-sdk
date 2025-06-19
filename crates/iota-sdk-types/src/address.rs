@@ -69,6 +69,8 @@ pub struct Address(
     [u8; Self::LENGTH],
 );
 
+crate::impl_uniffi_byte_vec_wrapper!(Address);
+
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
