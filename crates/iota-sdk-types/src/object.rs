@@ -352,6 +352,8 @@ pub enum ObjectType {
 }
 
 impl ObjectType {
+    crate::def_is!(Package);
+
     crate::def_is_as_opt!(Struct => StructTag);
 }
 

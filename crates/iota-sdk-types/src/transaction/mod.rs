@@ -719,7 +719,7 @@ pub struct ChangeEpochV2 {
     /// write out the modules below.  Modules are provided with the version they
     /// will be upgraded to, their modules in serialized form (which include
     /// their package ID), and a list of their transitive dependencies.
-    #[cfg_attr(all(test, not(feature = "uniffi")), any(proptest::collection::size_range(0..=2).lift()))]
+    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
 }
 
