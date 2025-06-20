@@ -45,7 +45,7 @@ impl Coin {
                     u64::from_le_bytes((&contents[ObjectId::LENGTH..]).try_into().unwrap());
 
                 Ok(Self {
-                    coin_type: coin_type.clone().into(),
+                    coin_type: coin_type.clone(),
                     id,
                     balance,
                 })

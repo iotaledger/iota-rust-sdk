@@ -45,11 +45,10 @@ impl FaucetClient {
     /// request and not wait until the token is received. Use
     /// `request_and_wait` to wait for the token.
     pub async fn request(&self, address: Address) -> Result<Option<String>> {
-        Ok(self
-            .0
+        self.0
             .request(address)
             .await
-            .map_err(BindingsSdkError::custom)?)
+            .map_err(BindingsSdkError::custom)
     }
 
     /// Request gas from the faucet and wait until the request is completed and
@@ -60,21 +59,19 @@ impl FaucetClient {
     /// Note that the faucet is heavily rate-limited, so calling repeatedly the
     /// faucet would likely result in a 429 code or 502 code.
     pub async fn request_and_wait(&self, address: Address) -> Result<Option<FaucetReceipt>> {
-        Ok(self
-            .0
+        self.0
             .request_and_wait(address)
             .await
-            .map_err(BindingsSdkError::custom)?)
+            .map_err(BindingsSdkError::custom)
     }
 
     /// Check the faucet request status.
     ///
     /// Possible statuses are defined in: [`BatchSendStatusType`]
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>> {
-        Ok(self
-            .0
+        self.0
             .request_status(id)
             .await
-            .map_err(BindingsSdkError::custom)?)
+            .map_err(BindingsSdkError::custom)
     }
 }

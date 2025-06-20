@@ -518,7 +518,7 @@ impl GraphQLClient {
         signatures: &[UserSignature],
         tx: &Transaction,
     ) -> Result<Option<TransactionEffects>> {
-        Ok(self.0.read().await.execute_tx(signatures, &tx).await?)
+        Ok(self.0.read().await.execute_tx(signatures, tx).await?)
     }
 
     // ===========================================================================
@@ -701,7 +701,7 @@ impl GraphQLClient {
         tx: &Transaction,
         skip_checks: Option<bool>,
     ) -> Result<DryRunResult> {
-        Ok(self.0.read().await.dry_run_tx(&tx, skip_checks).await?)
+        Ok(self.0.read().await.dry_run_tx(tx, skip_checks).await?)
     }
 
     /// Dry run a [`TransactionKind`] and return the transaction effects and dry
@@ -724,7 +724,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .dry_run_tx_kind(&tx_kind, skip_checks, tx_meta)
+            .dry_run_tx_kind(tx_kind, skip_checks, tx_meta)
             .await?)
     }
 

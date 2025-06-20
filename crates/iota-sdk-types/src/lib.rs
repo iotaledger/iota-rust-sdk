@@ -242,7 +242,7 @@ macro_rules! def_is_as_opt {
         )*}
     };
     ($($variant:ident),* $(,)?) => {
-        crate::def_is_as_opt!{$($variant => $variant,)*}
+        $crate::def_is_as_opt!{$($variant => $variant,)*}
     };
 }
 
