@@ -15,6 +15,7 @@ test:
 	cargo nextest run --all-features
 	cargo test --all-features --doc
 
+# --all-features except `uniffi`
 .PHONY: wasm
 wasm:
 	CC=clang wasm-pack test --node -F serde,schemars,rand,hash,proptest
