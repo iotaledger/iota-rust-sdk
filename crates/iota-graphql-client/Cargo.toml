@@ -37,4 +37,4 @@ iota-graphql-client-build = { version = "0.0.1", path = "../iota-graphql-client-
 
 [features]
 default = []
-uniffi = ["dep:uniffi"]
+uniffi = ["dep:uniffi", "iota-types/uniffi"]
