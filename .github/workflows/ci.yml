@@ -65,7 +65,6 @@ jobs:
 
       - name: rust version
         run: |
-          rustup default 1.86.0
           rustc --version
           cargo --version
 
@@ -75,7 +74,7 @@ jobs:
         run: sudo apt-get install -y clang
 
       - name: Run tests in wasm
-        run: make wasm
+        run: RUSTFLAGS='-Dwarnings --cfg getrandom_backend="wasm_js"' make wasm
 
   run_tests_with_network:
     runs-on: ubuntu-latest
