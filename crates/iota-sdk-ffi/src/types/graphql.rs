@@ -7,12 +7,11 @@ use base64ct::Encoding;
 use iota_graphql_client::{
     pagination::{Direction, PaginationFilter},
     query_types::{
-        Base64, BigInt, CoinMetadata, Feature, MoveAbility, MoveEnum, MoveEnumConnection,
-        MoveEnumVariant, MoveField, MoveFunction, MoveFunctionConnection,
-        MoveFunctionTypeParameter, MoveObject, MoveStructConnection, MoveStructQuery,
-        MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo, ProtocolConfigAttr,
-        ProtocolConfigFeatureFlag, ProtocolConfigs, ServiceConfig, TransactionBlockKindInput,
-        ValidatorCredentials,
+        Base64, BigInt, Feature, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant,
+        MoveField, MoveFunction, MoveFunctionConnection, MoveFunctionTypeParameter, MoveObject,
+        MoveStructConnection, MoveStructQuery, MoveStructTypeParameter, MoveVisibility,
+        OpenMoveType, PageInfo, ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigs,
+        ServiceConfig, TransactionBlockKindInput, ValidatorCredentials,
     },
 };
 use iota_types::{Identifier, StructTag, TransactionDigest};
@@ -678,8 +677,10 @@ pub struct ProtocolConfigAttr {
 }
 
 /// The coin metadata associated with the given coin type.
-#[uniffi::remote(Record)]
+#[derive(uniffi::Record)]
 pub struct CoinMetadata {
+    /// The CoinMetadata object ID.
+    pub address: Arc<ObjectId>,
     /// The number of decimal places used to represent the token.
     #[uniffi(default = None)]
     pub decimals: Option<i32>,
@@ -700,6 +701,36 @@ pub struct CoinMetadata {
     pub supply: Option<BigInt>,
     /// Version of the token.
     pub version: u64,
+}
+
+impl From<iota_graphql_client::query_types::CoinMetadata> for CoinMetadata {
+    fn from(value: iota_graphql_client::query_types::CoinMetadata) -> Self {
+        Self {
+            address: Arc::new(value.address.into()),
+            decimals: value.decimals,
+            description: value.description,
+            icon_url: value.icon_url,
+            name: value.name,
+            symbol: value.symbol,
+            supply: value.supply,
+            version: value.version,
+        }
+    }
+}
+
+impl From<CoinMetadata> for iota_graphql_client::query_types::CoinMetadata {
+    fn from(value: CoinMetadata) -> Self {
+        Self {
+            address: **value.address,
+            decimals: value.decimals,
+            description: value.description,
+            icon_url: value.icon_url,
+            name: value.name,
+            symbol: value.symbol,
+            supply: value.supply,
+            version: value.version,
+        }
+    }
 }
 
 #[uniffi::remote(Record)]
