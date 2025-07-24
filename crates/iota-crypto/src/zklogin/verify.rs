@@ -15,7 +15,7 @@ use iota_sdk_types::{
 use super::POSEIDON;
 use crate::SignatureError;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Default)]
 pub struct VerifyingKey {
     inner: PreparedVerifyingKey<ark_bn254::Bn254>,
 }
