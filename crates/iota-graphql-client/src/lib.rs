@@ -125,11 +125,6 @@ pub struct DynamicFieldOutput {
 /// for the dynamic fields API.
 pub struct NameValue(Vec<u8>);
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(NameValue, Vec<u8>, {
-    lower: |kv| kv.0,
-});
-
 /// Helper struct for passing a raw bcs value.
 #[derive(derive_more::From)]
 pub struct BcsName(pub Vec<u8>);
@@ -1733,9 +1728,9 @@ impl Client {
         &self,
         address: Address,
         type_: TypeTag,
-        name: NameValue,
+        name: impl Into<NameValue>,
     ) -> Result<Option<DynamicFieldOutput>> {
-        let bcs = name.0;
+        let bcs = name.into().0;
         let operation = DynamicFieldQuery::build(DynamicFieldArgs {
             address,
             name: crate::query_types::DynamicFieldName {
@@ -1773,9 +1768,9 @@ impl Client {
         &self,
         address: Address,
         type_: TypeTag,
-        name: NameValue,
+        name: impl Into<NameValue>,
     ) -> Result<Option<DynamicFieldOutput>> {
-        let bcs = name.0;
+        let bcs = name.into().0;
         let operation = DynamicObjectFieldQuery::build(DynamicFieldArgs {
             address,
             name: crate::query_types::DynamicFieldName {
@@ -2248,13 +2243,13 @@ mod tests {
         let client = test_client();
         let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
         let dynamic_field = client
-            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, BcsName(bcs).into())
+            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, BcsName(bcs))
             .await;
 
         assert!(dynamic_field.is_ok());
 
         let dynamic_field = client
-            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, 2u64.into())
+            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, 2u64)
             .await;
 
         assert!(dynamic_field.is_ok());

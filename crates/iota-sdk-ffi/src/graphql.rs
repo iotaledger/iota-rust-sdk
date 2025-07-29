@@ -704,8 +704,7 @@ impl GraphQLClient {
     /// Move values whose type have copy, drop, and store, and are specified
     /// using their type, and their BCS contents, Base64 encoded.
     ///
-    /// The `name` argument can be either a [`BcsName`] for passing raw bcs
-    /// bytes or a type that implements Serialize.
+    /// The `name` argument is a json serialized type.
     ///
     /// This returns [`DynamicFieldOutput`] which contains the name, the value
     /// as json, and object.
@@ -725,7 +724,7 @@ impl GraphQLClient {
         &self,
         address: &Address,
         type_: &TypeTag,
-        name: NameValue,
+        name: serde_json::Value,
     ) -> Result<Option<Arc<DynamicFieldOutput>>> {
         Ok(self
             .0
@@ -741,8 +740,7 @@ impl GraphQLClient {
     /// arbitrary Move values whose type have copy, drop, and store, and are
     /// specified using their type, and their BCS contents, Base64 encoded.
     ///
-    /// The `name` argument can be either a [`BcsName`] for passing raw bcs
-    /// bytes or a type that implements Serialize.
+    /// The `name` argument is a json serialized type.
     ///
     /// This returns [`DynamicFieldOutput`] which contains the name, the value
     /// as json, and object.
@@ -750,7 +748,7 @@ impl GraphQLClient {
         &self,
         address: &Address,
         type_: &TypeTag,
-        name: NameValue,
+        name: serde_json::Value,
     ) -> Result<Option<Arc<DynamicFieldOutput>>> {
         Ok(self
             .0
