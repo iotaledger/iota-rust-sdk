@@ -32,7 +32,6 @@ struct InnerError {
 }
 
 #[derive(Debug, Copy, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 #[non_exhaustive]
 pub enum Kind {
     Deserialization,

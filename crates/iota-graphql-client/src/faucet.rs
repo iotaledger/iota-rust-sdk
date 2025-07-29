@@ -37,7 +37,6 @@ struct BatchStatusFaucetResponse {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 #[serde(rename_all = "UPPERCASE")]
 pub enum BatchSendStatusType {
     Inprogress,

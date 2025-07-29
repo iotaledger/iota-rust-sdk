@@ -55,7 +55,6 @@ impl Coin {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Error))]
 pub enum CoinFromObjectError {
     NotACoin,
     InvalidContentLength,

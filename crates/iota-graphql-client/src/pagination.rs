@@ -54,7 +54,6 @@ impl<T> Page<T> {
 
 /// Pagination direction.
 #[derive(Clone, Debug, Default)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Direction {
     #[default]
     Forward,
@@ -64,21 +63,17 @@ pub enum Direction {
 /// Pagination options for querying the GraphQL server. It defaults to forward
 /// pagination with the GraphQL server's max page size.
 #[derive(Clone, Debug, Default)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct PaginationFilter {
     /// The direction of pagination.
     pub direction: Direction,
     /// An opaque cursor used for pagination.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub cursor: Option<String>,
     /// The maximum number of items to return. If this is ommitted, it will
     /// lazily query the service configuration for the max page size.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub limit: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct PaginationFilterResponse {
     pub after: Option<String>,
     pub before: Option<String>,

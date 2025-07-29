@@ -286,7 +286,6 @@ pub enum ObjectOut {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum IdOperation {
     None,
     Created,

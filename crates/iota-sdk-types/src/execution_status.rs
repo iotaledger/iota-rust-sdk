@@ -345,7 +345,6 @@ pub struct MoveLocation {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
     TypeMismatch,
@@ -465,7 +464,6 @@ pub enum PackageUpgradeError {
     schemars(rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
     TypeNotFound,

@@ -1,13 +1,15 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::{pagination::Page, query_types::PageInfo};
+use iota_graphql_client::pagination::Page;
 use serde_json::Value;
 
 use crate::types::{
     checkpoint::CheckpointSummary,
     coin::Coin,
-    graphql::{DynamicFieldOutput, Epoch, TransactionDataEffects, TransactionEvent, Validator},
+    graphql::{
+        DynamicFieldOutput, Epoch, PageInfo, TransactionDataEffects, TransactionEvent, Validator,
+    },
     object::{MovePackage, Object},
     transaction::{SignedTransaction, TransactionEffects},
 };
@@ -20,7 +22,7 @@ macro_rules! define_paged_object {
         #[uniffi::export]
         impl $id {
             pub fn page_info(&self) -> PageInfo {
-                self.0.page_info().clone()
+                self.0.page_info().clone().into()
             }
 
             pub fn data(&self) -> Vec<std::sync::Arc<$typ>> {

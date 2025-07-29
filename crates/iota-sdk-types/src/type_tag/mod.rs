@@ -171,7 +171,6 @@ impl From<StructTag> for TypeTag {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Object), uniffi::export(Display))]
 pub struct TypeParseError {
     source: String,
 }
@@ -209,12 +208,6 @@ pub struct Identifier(
     )]
     Box<str>,
 );
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(Identifier, String, {
-    lower: |id| id.0.into(),
-    try_lift: |s| Ok(Identifier::new(s)?),
-});
 
 impl Identifier {
     pub fn new(identifier: impl AsRef<str>) -> Result<Self, TypeParseError> {

@@ -3,8 +3,6 @@
 
 use std::sync::Arc;
 
-use iota_graphql_client::query_types::TransactionBlockKindInput;
-
 use crate::types::{
     address::Address,
     transaction::{SignedTransaction, TransactionEffects},
@@ -89,9 +87,9 @@ impl TransactionsFilter {
         Self(inner)
     }
 
-    pub fn kind(&self, kind: TransactionBlockKindInput) -> Self {
+    pub fn kind(&self, kind: &TransactionBlockKindInput) -> Self {
         let Self(mut inner) = self.clone();
-        inner.kind = Some(kind);
+        inner.kind = Some(kind.0.clone());
         Self(inner)
     }
 
@@ -167,3 +165,29 @@ pub struct DynamicFieldOutput(pub iota_graphql_client::DynamicFieldOutput);
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Validator(pub iota_graphql_client::query_types::Validator);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct TransactionBlockKindInput(
+    pub iota_graphql_client::query_types::TransactionBlockKindInput,
+);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct PageInfo(pub iota_graphql_client::query_types::PageInfo);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct PaginationFilter(pub iota_graphql_client::pagination::PaginationFilter);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ProtocolConfigs(pub iota_graphql_client::query_types::ProtocolConfigs);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct CoinMetadata(pub iota_graphql_client::query_types::CoinMetadata);
+
+#[derive(Debug, derive_more::From, uniffi::Object)]
+pub struct MoveFunction(pub iota_graphql_client::query_types::MoveFunction);
+
+#[derive(Debug, derive_more::From, uniffi::Object)]
+pub struct MoveModule(pub iota_graphql_client::query_types::MoveModule);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ServiceConfig(pub iota_graphql_client::query_types::ServiceConfig);

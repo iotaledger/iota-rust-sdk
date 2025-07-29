@@ -142,7 +142,6 @@ pub struct TransactionBlockEffects {
     graphql_type = "TransactionBlockKindInput",
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,

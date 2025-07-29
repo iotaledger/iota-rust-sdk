@@ -6,6 +6,7 @@ pub mod checkpoint;
 pub mod coin;
 pub mod crypto;
 pub mod digest;
+pub mod gas;
 pub mod graphql;
 pub mod object;
 pub mod signature;

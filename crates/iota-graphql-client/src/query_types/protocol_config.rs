@@ -37,7 +37,6 @@ pub struct ProtocolVersionArgs {
 /// These can only change during protocol upgrades which happen on epoch
 /// boundaries.
 #[derive(cynic::QueryFragment, Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ProtocolConfigs")]
 pub struct ProtocolConfigs {
     /// The protocol is not required to change on every epoch boundary, so the
@@ -59,7 +58,6 @@ pub struct ProtocolConfigs {
 /// gate features while they are in development. Once a lag has been enabled, it
 /// is rare for it to be disabled.
 #[derive(cynic::QueryFragment, Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ProtocolConfigFeatureFlag")]
 pub struct ProtocolConfigFeatureFlag {
     pub key: String,
@@ -68,10 +66,8 @@ pub struct ProtocolConfigFeatureFlag {
 
 /// A key-value protocol configuration attribute.
 #[derive(cynic::QueryFragment, Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ProtocolConfigAttr")]
 pub struct ProtocolConfigAttr {
     pub key: String,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub value: Option<String>,
 }

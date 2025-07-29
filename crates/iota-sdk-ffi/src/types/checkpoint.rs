@@ -3,11 +3,10 @@
 
 use std::sync::Arc;
 
-use iota_types::GasCostSummary;
-
 use crate::types::{
     crypto::ValidatorCommitteeMember,
     digest::{CheckpointContentsDigest, CheckpointDigest, Digest},
+    gas::GasCostSummary,
 };
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
@@ -36,7 +35,7 @@ impl CheckpointSummary {
     }
 
     pub fn epoch_rolling_gas_cost_summary(&self) -> GasCostSummary {
-        self.0.epoch_rolling_gas_cost_summary.clone()
+        self.0.epoch_rolling_gas_cost_summary.clone().into()
     }
 
     pub fn timestamp_ms(&self) -> u64 {

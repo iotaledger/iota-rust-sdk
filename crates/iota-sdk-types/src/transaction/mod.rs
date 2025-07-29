@@ -59,7 +59,6 @@ pub struct SignedTransaction {
 /// ```
 #[derive(Clone, Copy, Default, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TransactionExpiration {
     /// The transaction has no expiration
     #[default]
@@ -125,7 +124,6 @@ pub struct GasPayment {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct RandomnessStateUpdate {
     /// Epoch of the randomness state update transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -386,7 +384,6 @@ pub enum ExecutionTimeObservationKey {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct AuthenticatorStateExpire {
     /// expire JWKs that have a lower epoch than this
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -418,7 +415,6 @@ pub struct AuthenticatorStateExpire {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct AuthenticatorStateUpdateV1 {
     /// Epoch of the authenticator state update transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -455,7 +451,6 @@ pub struct AuthenticatorStateUpdateV1 {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ActiveJwk {
     /// Identifier used to uniquely identify a Jwk
     pub jwk_id: JwkId,
@@ -918,7 +913,6 @@ pub enum Command {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TransferObjects {
     /// Set of objects to transfer
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -944,7 +938,6 @@ pub struct TransferObjects {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SplitCoins {
     /// The coin to split
     pub coin: Argument,
@@ -970,7 +963,6 @@ pub struct SplitCoins {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MergeCoins {
     /// Coin to merge coins into
     pub coin: Argument,
@@ -1102,7 +1094,6 @@ pub struct Upgrade {
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Argument {
     /// The gas coin. The gas coin can only be used by-ref, except for with
     /// `TransferObjects`, which can use it by-value.

@@ -163,7 +163,6 @@ impl super::PasskeyPublicKey {
 }
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Object), uniffi::export(Display))]
 pub struct InvalidSignatureScheme(u8);
 
 impl std::fmt::Display for InvalidSignatureScheme {

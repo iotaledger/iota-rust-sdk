@@ -3,8 +3,6 @@
 
 use std::sync::Arc;
 
-use iota_types::{EndOfEpochData, RandomnessStateUpdate, TransactionExpiration};
-
 use crate::types::{
     address::Address, digest::CheckpointDigest, object::ObjectReference, signature::UserSignature,
 };
@@ -19,13 +17,13 @@ impl Transaction {
         kind: &TransactionKind,
         sender: &Address,
         gas_payment: &GasPayment,
-        expiration: TransactionExpiration,
+        expiration: &TransactionExpiration,
     ) -> Self {
         Self(iota_types::Transaction {
             kind: kind.0.clone(),
             sender: **sender,
             gas_payment: gas_payment.0.clone(),
-            expiration,
+            expiration: expiration.0.clone(),
         })
     }
 
@@ -42,7 +40,7 @@ impl Transaction {
     }
 
     pub fn expiration(&self) -> TransactionExpiration {
-        self.0.expiration
+        self.0.expiration.clone().into()
     }
 }
 
@@ -113,8 +111,10 @@ impl TransactionKind {
     }
 
     #[uniffi::constructor]
-    pub fn randomness_state_update(tx: RandomnessStateUpdate) -> Self {
-        Self(iota_types::TransactionKind::RandomnessStateUpdate(tx))
+    pub fn randomness_state_update(tx: &RandomnessStateUpdate) -> Self {
+        Self(iota_types::TransactionKind::RandomnessStateUpdate(
+            tx.0.clone(),
+        ))
     }
 }
 
@@ -144,6 +144,9 @@ pub struct AuthenticatorStateUpdateV1(pub iota_types::AuthenticatorStateUpdateV1
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ExecutionTimeObservations(pub iota_types::ExecutionTimeObservations);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct RandomnessStateUpdate(pub iota_types::RandomnessStateUpdate);
 
 #[uniffi::export]
 impl EndOfEpochTransactionKind {
@@ -214,3 +217,6 @@ impl GasPayment {
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct TransactionEffects(pub iota_types::TransactionEffects);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct TransactionExpiration(pub iota_types::TransactionExpiration);

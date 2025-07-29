@@ -51,20 +51,6 @@ use crate::{
     },
 };
 
-#[cfg(feature = "uniffi")]
-uniffi::setup_scaffolding!();
-
-#[cfg(feature = "uniffi")]
-mod _uniffi {
-    use serde_json::Value;
-
-    uniffi::custom_type!(Value, String, {
-        remote,
-        lower: |val| val.to_string(),
-        try_lift: |s| Ok(serde_json::from_str(&s)?),
-    });
-}
-
 const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
 const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
 const TESTNET_HOST: &str = "https://graphql.testnet.iota.cafe";
@@ -128,11 +114,6 @@ pub struct NameValue(Vec<u8>);
 /// Helper struct for passing a raw bcs value.
 #[derive(derive_more::From)]
 pub struct BcsName(pub Vec<u8>);
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(BcsName, Vec<u8>, {
-    lower: |kv| kv.0,
-});
 
 #[derive(Clone, Debug)]
 pub struct TransactionEvent {
