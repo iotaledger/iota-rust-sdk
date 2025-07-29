@@ -93,7 +93,6 @@ pub struct TransactionDataEffects {
 /// The name part of a dynamic field, including its type, bcs, and json
 /// representation.
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DynamicFieldName {
     /// The type name of this dynamic field name
     pub type_: TypeTag,
@@ -105,7 +104,6 @@ pub struct DynamicFieldName {
 
 /// The value part of a dynamic field.
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DynamicFieldValue {
     pub type_: TypeTag,
     pub bcs: Vec<u8>,
@@ -114,7 +112,6 @@ pub struct DynamicFieldValue {
 /// The output of a dynamic field query, that includes the name, value, and
 /// value's json representation.
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DynamicFieldOutput {
     /// The name of the dynamic field
     pub name: DynamicFieldName,

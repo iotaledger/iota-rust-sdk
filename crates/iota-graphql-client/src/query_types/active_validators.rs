@@ -54,7 +54,6 @@ pub struct ValidatorConnection {
 
 /// Represents a validator in the system.
 #[derive(cynic::QueryFragment, Debug, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "Validator")]
 pub struct Validator {
     /// The APY of this validator in basis points.

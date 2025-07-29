@@ -109,7 +109,6 @@ uniffi::custom_type!(DateTime, String, {
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug, Clone, Copy)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "Address")]
 pub struct GQLAddress {
     pub address: Address,

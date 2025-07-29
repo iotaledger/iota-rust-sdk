@@ -286,7 +286,6 @@ pub enum EndOfEpochTransactionKind {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ExecutionTimeObservations {
     V1(Vec<ExecutionTimeObservation>),
 }
@@ -298,7 +297,6 @@ pub enum ExecutionTimeObservations {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ExecutionTimeObservation {
     pub key: ExecutionTimeObservationKey,
     pub observations: Vec<ValidatorExecutionTimeObservation>,
@@ -322,7 +320,6 @@ pub struct ExecutionTimeObservation {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ValidatorExecutionTimeObservation {
     pub validator: crate::Bls12381PublicKey,
     pub duration: std::time::Duration,
@@ -352,7 +349,6 @@ pub struct ValidatorExecutionTimeObservation {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ExecutionTimeObservationKey {
     // Containts all the fields from `ProgrammableMoveCall` besides `arguments`.
     MoveEntryPoint {
@@ -526,7 +522,6 @@ pub struct CancelledTransaction {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct VersionAssignment {
     pub object_id: ObjectId,
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -606,7 +601,6 @@ pub struct ConsensusCommitPrologueV1 {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ChangeEpoch {
     /// The next (to become) epoch ID.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -671,7 +665,6 @@ pub struct ChangeEpoch {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ChangeEpochV2 {
     /// The next (to become) epoch ID.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -722,7 +715,6 @@ pub struct ChangeEpochV2 {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SystemPackage {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -872,7 +864,6 @@ pub enum Input {
     schemars(tag = "command", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Command {
     /// A call to either an entry or a public Move function
     MoveCall(MoveCall),
@@ -1008,7 +999,6 @@ pub struct MergeCoins {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Publish {
     /// The serialized move modules
     #[cfg_attr(
@@ -1040,7 +1030,6 @@ pub struct Publish {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MakeMoveVector {
     /// Type of the individual elements
     ///
@@ -1073,7 +1062,6 @@ pub struct MakeMoveVector {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Upgrade {
     /// The serialized move modules
     #[cfg_attr(
@@ -1169,7 +1157,6 @@ impl Argument {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveCall {
     /// The package containing the module and function.
     pub package: ObjectId,

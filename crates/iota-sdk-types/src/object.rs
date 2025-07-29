@@ -100,7 +100,6 @@ impl ObjectReference {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Owner {
     /// Object is exclusively owned by a single address, and is mutable.
     Address(Address),
@@ -230,7 +229,6 @@ pub struct MovePackage {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TypeOrigin {
     pub module_name: Identifier,
     pub struct_name: Identifier,
@@ -253,7 +251,6 @@ pub struct TypeOrigin {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct UpgradeInfo {
     /// Id of the upgraded packages
     pub upgraded_id: ObjectId,
@@ -288,7 +285,6 @@ pub struct UpgradeInfo {
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveStruct {
     /// The type of this object
     #[cfg_attr(
@@ -313,7 +309,6 @@ pub struct MoveStruct {
 
 /// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
     Package,

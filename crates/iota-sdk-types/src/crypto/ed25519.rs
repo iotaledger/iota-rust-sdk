@@ -29,8 +29,6 @@ pub struct Ed25519PublicKey(
     [u8; Self::LENGTH],
 );
 
-crate::impl_uniffi_byte_vec_wrapper!(Ed25519PublicKey);
-
 impl Ed25519PublicKey {
     /// The length of an ed25519 public key in bytes.
     pub const LENGTH: usize = 32;
@@ -140,8 +138,6 @@ pub struct Ed25519Signature(
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     [u8; Self::LENGTH],
 );
-
-crate::impl_uniffi_byte_vec_wrapper!(Ed25519Signature);
 
 impl Ed25519Signature {
     /// The length of an ed25519 signature key in bytes.

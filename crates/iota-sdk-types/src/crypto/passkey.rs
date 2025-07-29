@@ -32,7 +32,6 @@ use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct PasskeyAuthenticator {
     /// The secp256r1 public key for this passkey.
     public_key: Secp256r1PublicKey,

@@ -30,7 +30,6 @@ use crate::{checkpoint::EpochId, u256::U256};
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ZkLoginAuthenticator {
     /// Zklogin proof and inputs required to perform proof verification.
     pub inputs: ZkLoginInputs,
@@ -42,15 +41,6 @@ pub struct ZkLoginAuthenticator {
     /// User signature with the pubkey attested to by the provided proof.
     pub signature: SimpleSignature,
 }
-
-#[cfg(feature = "uniffi")]
-pub type BoxedZkLoginAuthenticator = Box<ZkLoginAuthenticator>;
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(BoxedZkLoginAuthenticator, ZkLoginAuthenticator, {
-    lower: |btt| *btt,
-    try_lift: |tt| Ok(Box::new(tt)),
-});
 
 /// A zklogin groth16 proof and the required inputs to perform proof
 /// verification.

@@ -71,112 +71,85 @@ pub struct EpochSummary {
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "Epoch")]
 pub struct Epoch {
     /// The epoch's id as a sequence number that starts at 0 and is incremented
     /// by one at every epoch change.
     pub epoch_id: u64,
     /// The storage fees paid for transactions executed during the epoch.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub fund_inflow: Option<BigInt>,
     /// The storage fee rebates paid to users who deleted the data associated
     /// with past transactions.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub fund_outflow: Option<BigInt>,
     /// The storage fund available in this epoch.
     /// This fund is used to redistribute storage fees from past transactions
     /// to future validators.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub fund_size: Option<BigInt>,
     /// A commitment by the committee at the end of epoch on the contents of the
     /// live object set at that time. This can be used to verify state
     /// snapshots.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub live_object_set_digest: Option<String>,
     /// The difference between the fund inflow and outflow, representing
     /// the net amount of storage fees accumulated in this epoch.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub net_inflow: Option<BigInt>,
     /// The epoch's corresponding protocol configuration, including the feature
     /// flags and the configuration options.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub protocol_configs: Option<ProtocolConfigs>,
     /// The minimum gas price that a quorum of validators are guaranteed to sign
     /// a transaction for.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub reference_gas_price: Option<BigInt>,
     /// The epoch's starting timestamp.
     pub start_timestamp: DateTime,
     /// The epoch's ending timestamp. Note that this is available only on epochs
     /// that have ended.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub end_timestamp: Option<DateTime>,
     /// The value of the `version` field of `0x5`, the
     /// `0x3::iota::IotaSystemState` object.  This version changes whenever
     /// the fields contained in the system state object (held in a dynamic
     /// field attached to `0x5`) change.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub system_state_version: Option<u64>,
     /// The total number of checkpoints in this epoch.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub total_checkpoints: Option<u64>,
     /// The total amount of gas fees (in MIST) that were paid in this epoch.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub total_gas_fees: Option<BigInt>,
     /// The total MIST rewarded as stake.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub total_stake_rewards: Option<BigInt>,
     /// The amount added to total gas fees to make up the total stake rewards.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub total_stake_subsidies: Option<BigInt>,
     /// The total number of transaction in this epoch.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub total_transactions: Option<u64>,
     /// Validator related properties. For active validators, see
     /// `active_validators` API.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub validator_set: Option<ValidatorSet>,
 }
 
 #[derive(cynic::QueryFragment, Debug, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ValidatorSet")]
 pub struct ValidatorSet {
     /// Object ID of the `Table` storing the inactive staking pools.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub inactive_pools_id: Option<Address>,
     /// Size of the inactive pools `Table`.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub inactive_pools_size: Option<i32>,
     /// Object ID of the wrapped object `TableVec` storing the pending active
     /// validators.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub pending_active_validators_id: Option<Address>,
     /// Size of the pending active validators table.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub pending_active_validators_size: Option<i32>,
     /// Validators that are pending removal from the active validator set,
     /// expressed as indices in to `activeValidators`.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub pending_removals: Option<Vec<i32>>,
     /// Object ID of the `Table` storing the mapping from staking pool ids to
     /// the addresses of the corresponding validators. This is needed
     /// because a validator's address can potentially change but the object
     /// ID of its pool will not.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub staking_pool_mappings_id: Option<Address>,
     /// Size of the stake pool mappings `Table`.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub staking_pool_mappings_size: Option<i32>,
     /// Total amount of stake for all active validators at the beginning of the
     /// epoch.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub total_stake: Option<BigInt>,
     /// Size of the validator candidates `Table`.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub validator_candidates_size: Option<i32>,
     /// Object ID of the `Table` storing the validator candidates.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub validator_candidates_id: Option<Address>,
 }

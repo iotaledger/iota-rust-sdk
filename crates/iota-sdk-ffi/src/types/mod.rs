@@ -7,4 +7,6 @@ pub mod coin;
 pub mod digest;
 pub mod graphql;
 pub mod object;
+pub mod signature;
 pub mod transaction;
+pub mod type_tag;

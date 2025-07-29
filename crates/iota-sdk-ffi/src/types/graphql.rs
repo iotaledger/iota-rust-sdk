@@ -1,7 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::query_types::{ObjectRef, TransactionBlockKindInput};
+use std::sync::Arc;
+
+use iota_graphql_client::query_types::TransactionBlockKindInput;
 
 use crate::types::{
     address::Address,
@@ -24,9 +26,9 @@ impl TransactionMetadata {
         Self(inner)
     }
 
-    pub fn gas_objects(&self, gas_objects: Vec<ObjectRef>) -> Self {
+    pub fn gas_objects(&self, gas_objects: Vec<Arc<ObjectRef>>) -> Self {
         let Self(mut inner) = self.clone();
-        inner.gas_objects = Some(gas_objects);
+        inner.gas_objects = Some(gas_objects.into_iter().map(|obj| obj.0.clone()).collect());
         Self(inner)
     }
 
@@ -147,3 +149,21 @@ pub struct DryRunResult(pub iota_graphql_client::DryRunResult);
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct TransactionEvent(pub iota_graphql_client::TransactionEvent);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ObjectRef(pub iota_graphql_client::query_types::ObjectRef);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct Epoch(pub iota_graphql_client::query_types::Epoch);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct EventFilter(pub iota_graphql_client::query_types::EventFilter);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ObjectFilter(pub iota_graphql_client::query_types::ObjectFilter);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct DynamicFieldOutput(pub iota_graphql_client::DynamicFieldOutput);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct Validator(pub iota_graphql_client::query_types::Validator);

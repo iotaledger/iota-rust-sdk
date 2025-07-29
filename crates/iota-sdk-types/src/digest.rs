@@ -29,8 +29,6 @@ pub struct Digest(
     [u8; Self::LENGTH],
 );
 
-crate::impl_uniffi_byte_vec_wrapper!(Digest);
-
 impl Digest {
     /// A constant representing the length of a digest in bytes.
     pub const LENGTH: usize = 32;

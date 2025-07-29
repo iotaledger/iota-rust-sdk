@@ -4,14 +4,11 @@
 use std::sync::Arc;
 
 use iota_graphql_client::{
-    DynamicFieldOutput, NameValue,
+    NameValue,
     pagination::PaginationFilter,
-    query_types::{
-        CoinMetadata, Epoch, EventFilter, MoveFunction, MoveModule, ObjectFilter, ProtocolConfigs,
-        ServiceConfig,
-    },
+    query_types::{CoinMetadata, MoveFunction, MoveModule, ProtocolConfigs, ServiceConfig},
 };
-use iota_types::{CheckpointSequenceNumber, TypeTag, UserSignature};
+use iota_types::CheckpointSequenceNumber;
 use tokio::sync::RwLock;
 
 use crate::{
@@ -20,9 +17,14 @@ use crate::{
         address::Address,
         checkpoint::CheckpointSummary,
         digest::{CheckpointDigest, TransactionDigest},
-        graphql::{DryRunResult, TransactionDataEffects, TransactionMetadata, TransactionsFilter},
+        graphql::{
+            DryRunResult, DynamicFieldOutput, Epoch, EventFilter, ObjectFilter,
+            TransactionDataEffects, TransactionMetadata, TransactionsFilter,
+        },
         object::{MovePackage, Object},
+        signature::UserSignature,
         transaction::{SignedTransaction, Transaction, TransactionEffects, TransactionKind},
+        type_tag::TypeTag,
     },
     uniffi_helpers::{
         CheckpointSummaryPage, CoinPage, DynamicFieldOutputPage, EpochPage, MovePackagePage,
@@ -121,6 +123,7 @@ impl GraphQLClient {
             .await
             .active_validators(epoch, pagination_filter)
             .await?
+            .map(Into::into)
             .into())
     }
 
@@ -249,13 +252,27 @@ impl GraphQLClient {
     /// Return the epoch information for the provided epoch. If no epoch is
     /// provided, it will return the last known epoch.
     #[uniffi::method(default(epoch = None))]
-    pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<Epoch>> {
-        Ok(self.0.read().await.epoch(epoch).await?)
+    pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<Arc<Epoch>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .epoch(epoch)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Return a page of epochs.
     pub async fn epochs(&self, pagination_filter: PaginationFilter) -> Result<EpochPage> {
-        Ok(self.0.read().await.epochs(pagination_filter).await?.into())
+        Ok(self
+            .0
+            .read()
+            .await
+            .epochs(pagination_filter)
+            .await?
+            .map(Into::into)
+            .into())
     }
 
     /// Return the number of checkpoints in this epoch. This will return
@@ -289,13 +306,13 @@ impl GraphQLClient {
     pub async fn events(
         &self,
         pagination_filter: PaginationFilter,
-        filter: Option<EventFilter>,
+        filter: Option<Arc<EventFilter>>,
     ) -> Result<TransactionEventPage> {
         Ok(self
             .0
             .read()
             .await
-            .events(filter, pagination_filter)
+            .events(filter.map(|f| f.0.clone()), pagination_filter)
             .await?
             .map(Into::into)
             .into())
@@ -346,13 +363,13 @@ impl GraphQLClient {
     pub async fn objects(
         &self,
         pagination_filter: PaginationFilter,
-        filter: Option<ObjectFilter>,
+        filter: Option<Arc<ObjectFilter>>,
     ) -> Result<ObjectPage> {
         Ok(self
             .0
             .read()
             .await
-            .objects(filter, pagination_filter)
+            .objects(filter.map(|f| f.0.clone()), pagination_filter)
             .await?
             .map(Into::into)
             .into())
@@ -589,14 +606,20 @@ impl GraphQLClient {
     /// Execute a transaction.
     pub async fn execute_tx(
         &self,
-        signatures: &[UserSignature],
+        signatures: Vec<Arc<UserSignature>>,
         tx: &Transaction,
     ) -> Result<Option<Arc<TransactionEffects>>> {
         Ok(self
             .0
             .read()
             .await
-            .execute_tx(signatures, &tx.0)
+            .execute_tx(
+                &signatures
+                    .into_iter()
+                    .map(|s| s.0.clone())
+                    .collect::<Vec<_>>(),
+                &tx.0,
+            )
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -701,15 +724,17 @@ impl GraphQLClient {
     pub async fn dynamic_field(
         &self,
         address: &Address,
-        type_: TypeTag,
+        type_: &TypeTag,
         name: NameValue,
-    ) -> Result<Option<DynamicFieldOutput>> {
+    ) -> Result<Option<Arc<DynamicFieldOutput>>> {
         Ok(self
             .0
             .read()
             .await
-            .dynamic_field(**address, type_.clone(), name)
-            .await?)
+            .dynamic_field(**address, type_.0.clone(), name)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Access a dynamic object field on an object using its name. Names are
@@ -724,15 +749,17 @@ impl GraphQLClient {
     pub async fn dynamic_object_field(
         &self,
         address: &Address,
-        type_: TypeTag,
+        type_: &TypeTag,
         name: NameValue,
-    ) -> Result<Option<DynamicFieldOutput>> {
+    ) -> Result<Option<Arc<DynamicFieldOutput>>> {
         Ok(self
             .0
             .read()
             .await
-            .dynamic_object_field(**address, type_.clone(), name)
-            .await?)
+            .dynamic_object_field(**address, type_.0.clone(), name)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Get a page of dynamic fields for the provided address. Note that this
@@ -750,6 +777,7 @@ impl GraphQLClient {
             .await
             .dynamic_fields(**address, pagination_filter)
             .await?
+            .map(Into::into)
             .into())
     }
 

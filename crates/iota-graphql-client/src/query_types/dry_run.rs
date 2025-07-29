@@ -39,7 +39,6 @@ pub struct TransactionMetadata {
 }
 
 #[derive(Clone, cynic::InputObject, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ObjectRef")]
 pub struct ObjectRef {
     pub address: Address,

@@ -3,13 +3,11 @@
 
 use std::sync::Arc;
 
-use iota_types::{
-    AuthenticatorStateExpire, AuthenticatorStateUpdateV1, ChangeEpoch, ChangeEpochV2,
-    EndOfEpochData, ExecutionTimeObservations, RandomnessStateUpdate, TransactionExpiration,
-    UserSignature,
-};
+use iota_types::{EndOfEpochData, RandomnessStateUpdate, TransactionExpiration};
 
-use crate::types::{address::Address, digest::CheckpointDigest, object::ObjectReference};
+use crate::types::{
+    address::Address, digest::CheckpointDigest, object::ObjectReference, signature::UserSignature,
+};
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Transaction(pub iota_types::Transaction);
@@ -54,10 +52,10 @@ pub struct SignedTransaction(pub iota_types::SignedTransaction);
 #[uniffi::export]
 impl SignedTransaction {
     #[uniffi::constructor]
-    pub fn new(transaction: &Transaction, signatures: Vec<UserSignature>) -> Self {
+    pub fn new(transaction: &Transaction, signatures: Vec<Arc<UserSignature>>) -> Self {
         Self(iota_types::SignedTransaction {
             transaction: transaction.0.clone(),
-            signatures,
+            signatures: signatures.into_iter().map(|s| s.0.clone()).collect(),
         })
     }
 
@@ -65,8 +63,14 @@ impl SignedTransaction {
         self.0.transaction.clone().into()
     }
 
-    pub fn signatures(&self) -> Vec<UserSignature> {
-        self.0.signatures.clone()
+    pub fn signatures(&self) -> Vec<Arc<UserSignature>> {
+        self.0
+            .signatures
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
     }
 }
 
@@ -95,8 +99,10 @@ impl TransactionKind {
     }
 
     #[uniffi::constructor]
-    pub fn authenticator_state_update_v1(tx: AuthenticatorStateUpdateV1) -> Self {
-        Self(iota_types::TransactionKind::AuthenticatorStateUpdateV1(tx))
+    pub fn authenticator_state_update_v1(tx: &AuthenticatorStateUpdateV1) -> Self {
+        Self(iota_types::TransactionKind::AuthenticatorStateUpdateV1(
+            tx.0.clone(),
+        ))
     }
 
     #[uniffi::constructor]
@@ -124,16 +130,35 @@ pub struct EndOfEpochTransactionKind(pub iota_types::EndOfEpochTransactionKind);
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct GenesisTransaction(pub iota_types::GenesisTransaction);
 
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ChangeEpoch(pub iota_types::ChangeEpoch);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ChangeEpochV2(pub iota_types::ChangeEpochV2);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct AuthenticatorStateExpire(pub iota_types::AuthenticatorStateExpire);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct AuthenticatorStateUpdateV1(pub iota_types::AuthenticatorStateUpdateV1);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ExecutionTimeObservations(pub iota_types::ExecutionTimeObservations);
+
 #[uniffi::export]
 impl EndOfEpochTransactionKind {
     #[uniffi::constructor]
-    pub fn change_epoch(tx: ChangeEpoch) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::ChangeEpoch(tx))
+    pub fn change_epoch(tx: &ChangeEpoch) -> Self {
+        Self(iota_types::EndOfEpochTransactionKind::ChangeEpoch(
+            tx.0.clone(),
+        ))
     }
 
     #[uniffi::constructor]
-    pub fn change_epoch_v2(tx: ChangeEpochV2) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::ChangeEpochV2(tx))
+    pub fn change_epoch_v2(tx: &ChangeEpochV2) -> Self {
+        Self(iota_types::EndOfEpochTransactionKind::ChangeEpochV2(
+            tx.0.clone(),
+        ))
     }
 
     #[uniffi::constructor]
@@ -142,8 +167,8 @@ impl EndOfEpochTransactionKind {
     }
 
     #[uniffi::constructor]
-    pub fn authenticator_state_expire(tx: AuthenticatorStateExpire) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx))
+    pub fn authenticator_state_expire(tx: &AuthenticatorStateExpire) -> Self {
+        Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.0.clone()))
     }
 
     #[uniffi::constructor]
@@ -161,8 +186,8 @@ impl EndOfEpochTransactionKind {
     }
 
     #[uniffi::constructor]
-    pub fn store_execution_time_observations(obs: ExecutionTimeObservations) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::StoreExecutionTimeObservations(obs))
+    pub fn store_execution_time_observations(obs: &ExecutionTimeObservations) -> Self {
+        Self(iota_types::EndOfEpochTransactionKind::StoreExecutionTimeObservations(obs.0.clone()))
     }
 }
 
