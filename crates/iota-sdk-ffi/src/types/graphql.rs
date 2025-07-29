@@ -174,8 +174,40 @@ pub struct TransactionBlockKindInput(
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct PageInfo(pub iota_graphql_client::query_types::PageInfo);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(Clone, Debug, Default, derive_more::From, uniffi::Object)]
 pub struct PaginationFilter(pub iota_graphql_client::pagination::PaginationFilter);
+
+#[uniffi::export]
+impl PaginationFilter {
+    #[uniffi::constructor]
+    pub fn new(
+        direction: Option<Arc<Direction>>,
+        cursor: Option<String>,
+        limit: Option<i32>,
+    ) -> Self {
+        Self(iota_graphql_client::pagination::PaginationFilter {
+            direction: direction.map(|d| d.0.clone()).unwrap_or_default(),
+            cursor,
+            limit,
+        })
+    }
+}
+
+#[derive(Clone, Debug, Default, derive_more::From, uniffi::Object)]
+pub struct Direction(pub iota_graphql_client::pagination::Direction);
+
+#[uniffi::export]
+impl Direction {
+    #[uniffi::constructor]
+    pub fn forward() -> Self {
+        Self(iota_graphql_client::pagination::Direction::Forward)
+    }
+
+    #[uniffi::constructor]
+    pub fn backward() -> Self {
+        Self(iota_graphql_client::pagination::Direction::Backward)
+    }
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ProtocolConfigs(pub iota_graphql_client::query_types::ProtocolConfigs);
