@@ -12,7 +12,6 @@ async def main():
         my_address, 
         PaginationFilter(direction=Direction.forward(), cursor=None, limit=None)
     )
-    my_coins = []
     for coin in coins.data():
         print(f'ID = 0x{coin.id().to_hex()} Balance = {coin.balance()}')
 
