@@ -39,7 +39,7 @@ pub use dynamic_fields::{
 pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, EpochsArgs, EpochsQuery};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
 pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
-use iota_types::Address;
+use iota_types::{Address, ObjectId};
 pub use normalized_move::{
     MoveAbility, MoveFunction, MoveFunctionTypeParameter, MoveModule, MoveVisibility,
     NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
@@ -73,6 +73,7 @@ pub mod schema {}
 // ===========================================================================
 
 impl_scalar!(Address, schema::IotaAddress);
+impl_scalar!(ObjectId, schema::IotaAddress);
 impl_scalar!(u64, schema::UInt53);
 impl_scalar!(JsonValue, schema::JSON);
 

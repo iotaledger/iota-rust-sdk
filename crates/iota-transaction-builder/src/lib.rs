@@ -867,7 +867,7 @@ mod tests {
         let mut tx = TransactionBuilder::new();
         let mut upgrade_cap = None;
         for o in created_objs {
-            let obj = client.object(*o.as_address(), None).await.unwrap().unwrap();
+            let obj = client.object(o, None).await.unwrap().unwrap();
             match obj.object_type() {
                 ObjectType::Struct(x) if x.name.to_string() == "UpgradeCap" => {
                     match obj.owner() {

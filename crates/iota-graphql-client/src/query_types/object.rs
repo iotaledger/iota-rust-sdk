@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_types::ObjectId;
+
 use crate::query_types::{Address, Base64, MoveObjectContents, PageInfo, schema};
 
 // ===========================================================================
@@ -58,13 +60,13 @@ pub struct ObjectFilter {
     #[cynic(rename = "type")]
     pub type_: Option<String>,
     pub owner: Option<Address>,
-    pub object_ids: Option<Vec<Address>>,
+    pub object_ids: Option<Vec<ObjectId>>,
 }
 
 #[derive(Clone, cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "ObjectKey")]
 pub struct ObjectKey {
-    pub object_id: Address,
+    pub object_id: ObjectId,
     pub version: u64,
 }
 

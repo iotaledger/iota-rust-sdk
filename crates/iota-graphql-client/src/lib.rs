@@ -18,8 +18,8 @@ use error::Error;
 use futures::Stream;
 use iota_types::{
     Address, CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, Event, MovePackage,
-    Object, SignedTransaction, Transaction, TransactionDigest, TransactionEffects, TransactionKind,
-    TypeTag, UserSignature, framework::Coin,
+    Object, ObjectId, SignedTransaction, Transaction, TransactionDigest, TransactionEffects,
+    TransactionKind, TypeTag, UserSignature, framework::Coin,
 };
 use query_types::{
     ActiveValidatorsArgs, ActiveValidatorsQuery, BalanceArgs, BalanceQuery, ChainIdentifierQuery,
@@ -989,8 +989,15 @@ impl Client {
     /// If the object does not exist (e.g., due to pruning), this will return
     /// `Ok(None)`. Similarly, if this is not an object but an address, it
     /// will return `Ok(None)`.
-    pub async fn object(&self, address: Address, version: Option<u64>) -> Result<Option<Object>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs { address, version });
+    pub async fn object(
+        &self,
+        object_id: ObjectId,
+        version: Option<u64>,
+    ) -> Result<Option<Object>> {
+        let operation = ObjectQuery::build(ObjectQueryArgs {
+            address: *object_id.as_address(),
+            version,
+        });
 
         let response = self.run_query(&operation).await?;
 

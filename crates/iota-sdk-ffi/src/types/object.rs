@@ -1,13 +1,16 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::str::FromStr;
+use std::{str::FromStr, sync::Arc};
 
 use iota_types::Version;
 
 use crate::{
     error::Result,
-    types::{address::Address, digest::ObjectDigest},
+    types::{
+        address::Address,
+        digest::{ObjectDigest, TransactionDigest},
+    },
 };
 
 #[derive(Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
@@ -58,8 +61,78 @@ impl ObjectReference {
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Object(pub iota_types::Object);
 
+#[uniffi::export]
+impl Object {
+    #[uniffi::constructor]
+    pub fn new(
+        data: &ObjectData,
+        owner: &Owner,
+        previous_transaction: &TransactionDigest,
+        storage_rebate: u64,
+    ) -> Self {
+        Self(iota_types::Object::new(
+            data.0.clone(),
+            **owner,
+            **previous_transaction,
+            storage_rebate,
+        ))
+    }
+
+    /// Return this object's id
+    pub fn object_id(&self) -> ObjectId {
+        self.0.object_id().into()
+    }
+
+    /// Return this object's version
+    pub fn version(&self) -> Version {
+        self.0.version()
+    }
+
+    /// Return this object's type
+    pub fn object_type(&self) -> ObjectType {
+        self.0.object_type().into()
+    }
+
+    /// Try to interpret this object as a move struct
+    pub fn as_struct(&self) -> Option<Arc<MoveStruct>> {
+        self.0.as_struct().cloned().map(Into::into).map(Arc::new)
+    }
+
+    /// Return this object's owner
+    pub fn owner(&self) -> Owner {
+        (*self.0.owner()).into()
+    }
+
+    /// Return this object's data
+    pub fn data(&self) -> ObjectData {
+        self.0.data().clone().into()
+    }
+
+    /// Return the digest of the transaction that last modified this object
+    pub fn previous_transaction(&self) -> TransactionDigest {
+        self.0.previous_transaction.into()
+    }
+
+    /// Return the storage rebate locked in this object
+    ///
+    /// Storage rebates are credited to the gas coin used in a transaction that
+    /// deletes this object.
+    pub fn storage_rebate(&self) -> u64 {
+        self.0.storage_rebate
+    }
+}
+
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectData(pub iota_types::ObjectData);
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct MovePackage(pub iota_types::MovePackage);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct MoveStruct(pub iota_types::MoveStruct);
+
+#[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+pub struct Owner(pub iota_types::Owner);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ObjectType(pub iota_types::ObjectType);

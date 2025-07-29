@@ -21,7 +21,7 @@ use crate::{
             DryRunResult, DynamicFieldOutput, Epoch, EventFilter, ObjectFilter,
             TransactionDataEffects, TransactionMetadata, TransactionsFilter,
         },
-        object::{MovePackage, Object},
+        object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
         transaction::{SignedTransaction, Transaction, TransactionEffects, TransactionKind},
         type_tag::TypeTag,
@@ -330,14 +330,14 @@ impl GraphQLClient {
     #[uniffi::method(default(version = None))]
     pub async fn object(
         &self,
-        address: &Address,
+        object_id: &ObjectId,
         version: Option<u64>,
     ) -> Result<Option<Arc<Object>>> {
         Ok(self
             .0
             .read()
             .await
-            .object(**address, version)
+            .object(**object_id, version)
             .await?
             .map(Into::into)
             .map(Arc::new))
