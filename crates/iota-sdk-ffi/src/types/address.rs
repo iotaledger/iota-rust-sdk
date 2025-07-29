@@ -1,18 +1,20 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use crate::error::Result;
+
 #[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Address(pub iota_types::Address);
 
 #[uniffi::export]
 impl Address {
     #[uniffi::constructor]
-    pub fn from_bytes(bytes: Vec<u8>) -> anyhow::Result<Self> {
+    pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
         Ok(Self(iota_types::Address::from_bytes(bytes)?))
     }
 
     #[uniffi::constructor]
-    pub fn from_hex(hex: &str) -> anyhow::Result<Self> {
+    pub fn from_hex(hex: &str) -> Result<Self> {
         Ok(Self(iota_types::Address::from_hex(hex)?))
     }
 

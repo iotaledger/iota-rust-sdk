@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use crate::error::Result;
+
 macro_rules! impl_digest_wrapper {
     ($t:ident) => {
         #[derive(
@@ -21,12 +23,12 @@ macro_rules! impl_digest_wrapper {
 
         impl $t {
             #[uniffi::constructor]
-            pub fn from_bytes(bytes: Vec<u8>) -> anyhow::Result<Self> {
+            pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
                 Ok(Self(iota_types::$t::from_bytes(bytes)?))
             }
 
             #[uniffi::constructor]
-            pub fn from_base58(hex: &str) -> anyhow::Result<Self> {
+            pub fn from_base58(hex: &str) -> Result<Self> {
                 Ok(Self(iota_types::$t::from_base58(hex)?))
             }
 

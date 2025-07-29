@@ -1,9 +1,12 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::types::{
-    object::{Object, ObjectId},
-    type_tag::TypeTag,
+use crate::{
+    error::Result,
+    types::{
+        object::{Object, ObjectId},
+        type_tag::TypeTag,
+    },
 };
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
@@ -12,7 +15,7 @@ pub struct Coin(pub iota_types::framework::Coin);
 #[uniffi::export]
 impl Coin {
     #[uniffi::constructor]
-    pub fn try_from_object(object: &Object) -> anyhow::Result<Self> {
+    pub fn try_from_object(object: &Object) -> Result<Self> {
         Ok(iota_types::framework::Coin::try_from_object(&object.0)?.into())
     }
 

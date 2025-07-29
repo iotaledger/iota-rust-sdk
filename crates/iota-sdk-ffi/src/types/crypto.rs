@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use crate::error::Result;
+
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ValidatorCommitteeMember(pub iota_types::ValidatorCommitteeMember);
 
@@ -23,12 +25,12 @@ macro_rules! impl_public_key {
         #[uniffi::export]
         impl $t {
             #[uniffi::constructor]
-            pub fn from_bytes(bytes: Vec<u8>) -> anyhow::Result<Self> {
+            pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
                 Ok(Self(iota_types::$t::from_bytes(bytes)?))
             }
 
             #[uniffi::constructor]
-            pub fn from_str(s: &str) -> anyhow::Result<Self> {
+            pub fn from_str(s: &str) -> Result<Self> {
                 Ok(Self(std::str::FromStr::from_str(s)?))
             }
 

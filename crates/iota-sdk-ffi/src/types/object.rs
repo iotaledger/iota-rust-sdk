@@ -5,7 +5,10 @@ use std::str::FromStr;
 
 use iota_types::Version;
 
-use crate::types::{address::Address, digest::ObjectDigest};
+use crate::{
+    error::Result,
+    types::{address::Address, digest::ObjectDigest},
+};
 
 #[derive(Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct ObjectId(pub iota_types::ObjectId);
@@ -13,14 +16,14 @@ pub struct ObjectId(pub iota_types::ObjectId);
 #[uniffi::export]
 impl ObjectId {
     #[uniffi::constructor]
-    pub fn from_bytes(bytes: Vec<u8>) -> anyhow::Result<Self> {
+    pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
         Ok(Self(iota_types::ObjectId::from(
             iota_types::Address::from_bytes(bytes)?,
         )))
     }
 
     #[uniffi::constructor]
-    pub fn from_hex(hex: &str) -> anyhow::Result<Self> {
+    pub fn from_hex(hex: &str) -> Result<Self> {
         Ok(Self(iota_types::ObjectId::from_str(hex)?))
     }
 

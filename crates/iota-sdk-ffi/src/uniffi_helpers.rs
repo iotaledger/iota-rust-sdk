@@ -1,7 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use anyhow::Error;
 use iota_graphql_client::{pagination::Page, query_types::PageInfo};
 use serde_json::Value;
 
@@ -56,10 +55,4 @@ uniffi::custom_type!(Value, String, {
     remote,
     lower: |val| val.to_string(),
     try_lift: |s| Ok(serde_json::from_str(&s)?),
-});
-
-uniffi::custom_type!(Error, String, {
-    remote,
-    lower: |val| val.to_string(),
-    try_lift: |s| Ok(anyhow::anyhow!(s)),
 });
