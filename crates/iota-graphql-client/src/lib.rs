@@ -271,7 +271,6 @@ impl DynamicFieldOutput {
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
-#[cfg_attr(feature = "uniffi", derive(uniffi::Object))]
 pub struct Client {
     /// The URL of the GraphQL server.
     rpc: Url,

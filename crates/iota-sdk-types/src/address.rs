@@ -71,12 +71,6 @@ pub struct Address(
 
 crate::impl_uniffi_byte_vec_wrapper!(Address);
 
-#[cfg(feature = "uniffi")]
-#[uniffi::export]
-pub fn address_from_hex(hex: &str) -> Result<Address, AddressParseError> {
-    Address::from_hex(hex)
-}
-
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);

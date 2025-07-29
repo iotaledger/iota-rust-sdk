@@ -11,7 +11,7 @@ use iota_graphql_client::{
     },
 };
 use iota_types::{
-    Address, CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, MovePackage, Object,
+    CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, MovePackage, Object,
     SignedTransaction, Transaction, TransactionDigest, TransactionEffects, TransactionKind,
     TypeTag, UserSignature,
 };
@@ -19,6 +19,7 @@ use tokio::sync::RwLock;
 
 use crate::{
     error::Result,
+    types::address::Address,
     uniffi_helpers::{
         CheckpointSummaryPage, CoinPage, DynamicFieldOutputPage, EpochPage, MovePackagePage,
         ObjectPage, SignedTransactionPage, TransactionDataEffectsPage, TransactionEffectsPage,
@@ -162,7 +163,7 @@ impl GraphQLClient {
     #[uniffi::method(default(coin_type = None))]
     pub async fn coins(
         &self,
-        owner: Address,
+        owner: &Address,
         pagination_filter: PaginationFilter,
         coin_type: Option<String>,
     ) -> Result<CoinPage> {
@@ -170,7 +171,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .coins(owner, coin_type, pagination_filter)
+            .coins(**owner, coin_type, pagination_filter)
             .await?
             .into())
     }
@@ -296,8 +297,8 @@ impl GraphQLClient {
     /// `Ok(None)`. Similarly, if this is not an object but an address, it
     /// will return `Ok(None)`.
     #[uniffi::method(default(version = None))]
-    pub async fn object(&self, address: Address, version: Option<u64>) -> Result<Option<Object>> {
-        Ok(self.0.read().await.object(address, version).await?)
+    pub async fn object(&self, address: &Address, version: Option<u64>) -> Result<Option<Object>> {
+        Ok(self.0.read().await.object(**address, version).await?)
     }
 
     /// Return a page of objects based on the provided parameters.
@@ -333,8 +334,8 @@ impl GraphQLClient {
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`].
-    pub async fn object_bcs(&self, address: Address) -> Result<Option<Vec<u8>>> {
-        Ok(self.0.read().await.object_bcs(address).await?)
+    pub async fn object_bcs(&self, address: &Address) -> Result<Option<Vec<u8>>> {
+        Ok(self.0.read().await.object_bcs(**address).await?)
     }
 
     /// Return the BCS of an object that is a Move object.
@@ -345,14 +346,14 @@ impl GraphQLClient {
     #[uniffi::method(default(version = None))]
     pub async fn move_object_contents_bcs(
         &self,
-        address: Address,
+        address: &Address,
         version: Option<u64>,
     ) -> Result<Option<Vec<u8>>> {
         Ok(self
             .0
             .read()
             .await
-            .move_object_contents_bcs(address, version)
+            .move_object_contents_bcs(**address, version)
             .await?)
     }
 
@@ -374,10 +375,10 @@ impl GraphQLClient {
     #[uniffi::method(default(version = None))]
     pub async fn package(
         &self,
-        address: Address,
+        address: &Address,
         version: Option<u64>,
     ) -> Result<Option<MovePackage>> {
-        Ok(self.0.read().await.package(address, version).await?)
+        Ok(self.0.read().await.package(**address, version).await?)
     }
 
     /// Fetch all versions of package at address (packages that share this
@@ -386,7 +387,7 @@ impl GraphQLClient {
     #[uniffi::method(default(after_version = None, before_version = None))]
     pub async fn package_versions(
         &self,
-        address: Address,
+        address: &Address,
         pagination_filter: PaginationFilter,
         after_version: Option<u64>,
         before_version: Option<u64>,
@@ -395,7 +396,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .package_versions(address, pagination_filter, after_version, before_version)
+            .package_versions(**address, pagination_filter, after_version, before_version)
             .await?
             .into())
     }
@@ -403,8 +404,8 @@ impl GraphQLClient {
     /// Fetch the latest version of the package at address.
     /// This corresponds to the package with the highest version that shares its
     /// original ID with the package at address.
-    pub async fn package_latest(&self, address: Address) -> Result<Option<MovePackage>> {
-        Ok(self.0.read().await.package_latest(address).await?)
+    pub async fn package_latest(&self, address: &Address) -> Result<Option<MovePackage>> {
+        Ok(self.0.read().await.package_latest(**address).await?)
     }
 
     /// Fetch a package by its name (using Move Registry Service)
@@ -550,14 +551,14 @@ impl GraphQLClient {
     #[uniffi::method(default(version = None))]
     pub async fn move_object_contents(
         &self,
-        address: Address,
+        address: &Address,
         version: Option<u64>,
     ) -> Result<Option<serde_json::Value>> {
         Ok(self
             .0
             .read()
             .await
-            .move_object_contents(address, version)
+            .move_object_contents(**address, version)
             .await?)
     }
 
@@ -619,7 +620,7 @@ impl GraphQLClient {
     /// ```
     pub async fn dynamic_field(
         &self,
-        address: Address,
+        address: &Address,
         type_: TypeTag,
         name: NameValue,
     ) -> Result<Option<DynamicFieldOutput>> {
@@ -627,7 +628,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .dynamic_field(address, type_.clone(), name)
+            .dynamic_field(**address, type_.clone(), name)
             .await?)
     }
 
@@ -642,7 +643,7 @@ impl GraphQLClient {
     /// as json, and object.
     pub async fn dynamic_object_field(
         &self,
-        address: Address,
+        address: &Address,
         type_: TypeTag,
         name: NameValue,
     ) -> Result<Option<DynamicFieldOutput>> {
@@ -650,7 +651,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .dynamic_object_field(address, type_.clone(), name)
+            .dynamic_object_field(**address, type_.clone(), name)
             .await?)
     }
 
@@ -660,14 +661,14 @@ impl GraphQLClient {
     /// This returns [`Page`] of [`DynamicFieldOutput`]s.
     pub async fn dynamic_fields(
         &self,
-        address: Address,
+        address: &Address,
         pagination_filter: PaginationFilter,
     ) -> Result<DynamicFieldOutputPage> {
         Ok(self
             .0
             .read()
             .await
-            .dynamic_fields(address, pagination_filter)
+            .dynamic_fields(**address, pagination_filter)
             .await?
             .into())
     }
@@ -738,9 +739,9 @@ impl GraphQLClient {
     #[uniffi::method(default(coin_type = None))]
     pub async fn balance(
         &self,
-        address: Address,
+        address: &Address,
         coin_type: Option<String>,
     ) -> Result<Option<u64>> {
-        Ok(self.0.read().await.balance(address, coin_type).await?)
+        Ok(self.0.read().await.balance(**address, coin_type).await?)
     }
 }

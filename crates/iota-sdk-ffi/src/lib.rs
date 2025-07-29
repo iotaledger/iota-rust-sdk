@@ -108,6 +108,7 @@
 mod error;
 mod faucet;
 mod graphql;
+mod types;
 mod uniffi_helpers;
 
 uniffi::setup_scaffolding!();
