@@ -3,8 +3,8 @@
 
 use iota_types::AddressParseError;
 
-#[derive(Copy, Clone, Debug, derive_more::Deref, uniffi::Object)]
-pub struct Address(iota_types::Address);
+#[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+pub struct Address(pub iota_types::Address);
 
 #[uniffi::export]
 impl Address {

@@ -6,6 +6,7 @@
 
 pub mod error;
 pub mod faucet;
+pub mod pagination;
 pub mod query_types;
 pub mod streams;
 
@@ -32,8 +33,8 @@ use query_types::{
     NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, ObjectFilter, ObjectQuery,
     ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs, PackageArgs, PackageByNameArgs,
     PackageByNameQuery, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs,
-    PackageVersionsQuery, PackagesQuery, PackagesQueryArgs, PageInfo, ProtocolConfigQuery,
-    ProtocolConfigs, ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery, TransactionBlockArgs,
+    PackageVersionsQuery, PackagesQuery, PackagesQueryArgs, ProtocolConfigQuery, ProtocolConfigs,
+    ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery, TransactionBlockArgs,
     TransactionBlockEffectsQuery, TransactionBlockQuery, TransactionBlocksEffectsQuery,
     TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionMetadata, TransactionsFilter,
     Validator,
@@ -44,6 +45,7 @@ use streams::stream_paginated_query;
 
 use crate::{
     error::{Kind, Result},
+    pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         CheckpointTotalTxQuery, TransactionBlockWithEffectsQuery, TransactionBlocksWithEffectsQuery,
     },
@@ -83,8 +85,7 @@ pub struct DryRunResult {
     pub error: Option<String>,
 }
 
-#[derive(Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+#[derive(Clone, Debug)]
 pub struct TransactionDataEffects {
     pub tx: SignedTransaction,
     pub effects: TransactionEffects,
@@ -149,73 +150,6 @@ pub struct TransactionEvent {
     pub digest: TransactionDigest,
 }
 
-#[derive(Clone, Debug)]
-/// A page of items returned by the GraphQL server.
-pub struct Page<T> {
-    /// Information about the page, such as the cursor and whether there are
-    /// more pages.
-    page_info: PageInfo,
-    /// The data returned by the server.
-    data: Vec<T>,
-}
-
-impl<T> Page<T> {
-    /// Return the page information.
-    pub fn page_info(&self) -> &PageInfo {
-        &self.page_info
-    }
-
-    /// Return the data in the page.
-    pub fn data(&self) -> &[T] {
-        &self.data
-    }
-
-    /// Create a new page with the provided data and page information.
-    pub fn new(page_info: PageInfo, data: Vec<T>) -> Self {
-        Self { page_info, data }
-    }
-
-    /// Check if the page has no data.
-    pub fn is_empty(&self) -> bool {
-        self.data.is_empty()
-    }
-
-    /// Create a page with no data.
-    pub fn new_empty() -> Self {
-        Self::new(PageInfo::default(), vec![])
-    }
-
-    /// Return a tuple of page info and the data.
-    pub fn into_parts(self) -> (PageInfo, Vec<T>) {
-        (self.page_info, self.data)
-    }
-}
-
-/// Pagination direction.
-#[derive(Clone, Debug, Default)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
-pub enum Direction {
-    #[default]
-    Forward,
-    Backward,
-}
-
-/// Pagination options for querying the GraphQL server. It defaults to forward
-/// pagination with the GraphQL server's max page size.
-#[derive(Clone, Debug, Default)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
-pub struct PaginationFilter {
-    /// The direction of pagination.
-    pub direction: Direction,
-    /// An opaque cursor used for pagination.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
-    pub cursor: Option<String>,
-    /// The maximum number of items to return. If this is ommitted, it will
-    /// lazily query the service configuration for the max page size.
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
-    pub limit: Option<i32>,
-}
-
 impl<T: Serialize> From<T> for NameValue {
     fn from(value: T) -> Self {
         NameValue(bcs::to_bytes(&value).unwrap())
@@ -226,15 +160,6 @@ impl From<BcsName> for NameValue {
     fn from(value: BcsName) -> Self {
         NameValue(value.0)
     }
-}
-
-#[derive(Clone, Debug, Default)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
-pub struct PaginationFilterResponse {
-    after: Option<String>,
-    before: Option<String>,
-    first: Option<i32>,
-    last: Option<i32>,
 }
 
 impl DynamicFieldOutput {

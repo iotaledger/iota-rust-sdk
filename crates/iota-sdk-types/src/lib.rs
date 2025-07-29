@@ -167,7 +167,7 @@ pub use object_id::ObjectId;
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
     ActiveJwk, Argument, AuthenticatorStateExpire, AuthenticatorStateUpdateV1,
-    CancelledTransaction, ChangeEpoch, Command, ConsensusCommitPrologueV1,
+    CancelledTransaction, ChangeEpoch, ChangeEpochV2, Command, ConsensusCommitPrologueV1,
     ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind, ExecutionTimeObservationKey,
     ExecutionTimeObservations, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
     MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SignedTransaction,

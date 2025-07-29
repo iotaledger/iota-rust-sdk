@@ -31,7 +31,7 @@ pub use checkpoint::{
 };
 pub use coin::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery};
 use cynic::impl_scalar;
-pub use dry_run::{DryRunArgs, DryRunQuery, DryRunResult, TransactionMetadata};
+pub use dry_run::{DryRunArgs, DryRunQuery, DryRunResult, ObjectRef, TransactionMetadata};
 pub use dynamic_fields::{
     DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
     DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
@@ -57,10 +57,10 @@ pub use protocol_config::{ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionA
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
 pub use transaction::{
-    TransactionBlock, TransactionBlockArgs, TransactionBlockEffectsQuery, TransactionBlockQuery,
-    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
-    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
-    TransactionsFilter,
+    TransactionBlock, TransactionBlockArgs, TransactionBlockEffectsQuery,
+    TransactionBlockKindInput, TransactionBlockQuery, TransactionBlockWithEffects,
+    TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
+    TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery, TransactionsFilter,
 };
 
 use crate::error;

@@ -4,22 +4,26 @@
 use std::sync::Arc;
 
 use iota_graphql_client::{
-    DryRunResult, DynamicFieldOutput, NameValue, PaginationFilter, TransactionDataEffects,
+    DryRunResult, DynamicFieldOutput, NameValue,
+    pagination::PaginationFilter,
     query_types::{
         CoinMetadata, Epoch, EventFilter, MoveFunction, MoveModule, ObjectFilter, ProtocolConfigs,
-        ServiceConfig, TransactionMetadata, TransactionsFilter,
+        ServiceConfig,
     },
 };
 use iota_types::{
     CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, MovePackage, Object,
-    SignedTransaction, Transaction, TransactionDigest, TransactionEffects, TransactionKind,
-    TypeTag, UserSignature,
+    TransactionDigest, TransactionEffects, TypeTag, UserSignature,
 };
 use tokio::sync::RwLock;
 
 use crate::{
     error::Result,
-    types::address::Address,
+    types::{
+        address::Address,
+        graphql::{TransactionDataEffects, TransactionMetadata, TransactionsFilter},
+        transaction::{SignedTransaction, Transaction, TransactionKind},
+    },
     uniffi_helpers::{
         CheckpointSummaryPage, CoinPage, DynamicFieldOutputPage, EpochPage, MovePackagePage,
         ObjectPage, SignedTransactionPage, TransactionDataEffectsPage, TransactionEffectsPage,
@@ -444,8 +448,15 @@ impl GraphQLClient {
     pub async fn transaction(
         &self,
         digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>> {
-        Ok(self.0.read().await.transaction(digest).await?)
+    ) -> Result<Option<Arc<SignedTransaction>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .transaction(digest)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Get a transaction's effects by its digest.
@@ -460,8 +471,15 @@ impl GraphQLClient {
     pub async fn transaction_data_effects(
         &self,
         digest: TransactionDigest,
-    ) -> Result<Option<TransactionDataEffects>> {
-        Ok(self.0.read().await.transaction_data_effects(digest).await?)
+    ) -> Result<Option<Arc<TransactionDataEffects>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .transaction_data_effects(digest)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Get a page of transactions based on the provided filters.
@@ -469,14 +487,15 @@ impl GraphQLClient {
     pub async fn transactions(
         &self,
         pagination_filter: PaginationFilter,
-        filter: Option<TransactionsFilter>,
+        filter: Option<Arc<TransactionsFilter>>,
     ) -> Result<SignedTransactionPage> {
         Ok(self
             .0
             .read()
             .await
-            .transactions(filter, pagination_filter)
+            .transactions(filter.map(|f| f.0.clone()), pagination_filter)
             .await?
+            .map(Into::into)
             .into())
     }
 
@@ -485,13 +504,13 @@ impl GraphQLClient {
     pub async fn transactions_effects(
         &self,
         pagination_filter: PaginationFilter,
-        filter: Option<TransactionsFilter>,
+        filter: Option<Arc<TransactionsFilter>>,
     ) -> Result<TransactionEffectsPage> {
         Ok(self
             .0
             .read()
             .await
-            .transactions_effects(filter, pagination_filter)
+            .transactions_effects(filter.map(|f| f.0.clone()), pagination_filter)
             .await?
             .into())
     }
@@ -502,14 +521,15 @@ impl GraphQLClient {
     pub async fn transactions_data_effects(
         &self,
         pagination_filter: PaginationFilter,
-        filter: Option<TransactionsFilter>,
+        filter: Option<Arc<TransactionsFilter>>,
     ) -> Result<TransactionDataEffectsPage> {
         Ok(self
             .0
             .read()
             .await
-            .transactions_data_effects(filter, pagination_filter)
+            .transactions_data_effects(filter.map(|f| f.0.clone()), pagination_filter)
             .await?
+            .map(Into::into)
             .into())
     }
 
@@ -519,7 +539,7 @@ impl GraphQLClient {
         signatures: &[UserSignature],
         tx: &Transaction,
     ) -> Result<Option<TransactionEffects>> {
-        Ok(self.0.read().await.execute_tx(signatures, tx).await?)
+        Ok(self.0.read().await.execute_tx(signatures, &tx.0).await?)
     }
 
     // ===========================================================================
@@ -702,7 +722,7 @@ impl GraphQLClient {
         tx: &Transaction,
         skip_checks: Option<bool>,
     ) -> Result<DryRunResult> {
-        Ok(self.0.read().await.dry_run_tx(tx, skip_checks).await?)
+        Ok(self.0.read().await.dry_run_tx(&tx.0, skip_checks).await?)
     }
 
     /// Dry run a [`TransactionKind`] and return the transaction effects and dry
@@ -718,14 +738,14 @@ impl GraphQLClient {
     pub async fn dry_run_tx_kind(
         &self,
         tx_kind: &TransactionKind,
-        tx_meta: TransactionMetadata,
+        tx_meta: &TransactionMetadata,
         skip_checks: Option<bool>,
     ) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx_kind(tx_kind, skip_checks, tx_meta)
+            .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.0.clone())
             .await?)
     }
 

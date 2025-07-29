@@ -481,8 +481,9 @@ mod tests {
     use base64ct::Encoding;
     use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
     use iota_graphql_client::{
-        Client, PaginationFilter,
+        Client,
         faucet::{CoinInfo, FaucetClient},
+        pagination::PaginationFilter,
     };
     use iota_types::{
         Address, ExecutionStatus, IdOperation, ObjectId, ObjectType, TransactionDigest,
