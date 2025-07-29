@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_graphql_client::query_types::{ObjectRef, TransactionBlockKindInput};
-use iota_types::TransactionEffects;
 
-use crate::types::{address::Address, transaction::SignedTransaction};
+use crate::types::{
+    address::Address,
+    transaction::{SignedTransaction, TransactionEffects},
+};
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct TransactionMetadata(pub iota_graphql_client::query_types::TransactionMetadata);
@@ -53,10 +55,10 @@ pub struct TransactionDataEffects(pub iota_graphql_client::TransactionDataEffect
 #[uniffi::export]
 impl TransactionDataEffects {
     #[uniffi::constructor]
-    pub fn new(tx: &SignedTransaction, effects: TransactionEffects) -> Self {
+    pub fn new(tx: &SignedTransaction, effects: &TransactionEffects) -> Self {
         Self(iota_graphql_client::TransactionDataEffects {
             tx: tx.0.clone(),
-            effects,
+            effects: effects.0.clone(),
         })
     }
 
@@ -65,7 +67,7 @@ impl TransactionDataEffects {
     }
 
     pub fn effects(&self) -> TransactionEffects {
-        self.0.effects.clone()
+        self.0.effects.clone().into()
     }
 }
 
@@ -139,3 +141,9 @@ impl TransactionsFilter {
         Self(inner)
     }
 }
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct DryRunResult(pub iota_graphql_client::DryRunResult);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct TransactionEvent(pub iota_graphql_client::TransactionEvent);

@@ -89,7 +89,6 @@ pub enum TransactionExpiration {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct GasPayment {
     pub objects: Vec<ObjectReference>,
 
@@ -241,7 +240,6 @@ impl TransactionKind {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum EndOfEpochTransactionKind {
     /// End the epoch and start the next one
     ChangeEpoch(ChangeEpoch),
@@ -482,7 +480,6 @@ pub struct ActiveJwk {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ConsensusDeterminedVersionAssignments {
     /// Cancelled transaction version assignment.
     CancelledTransactions {
@@ -507,7 +504,6 @@ pub enum ConsensusDeterminedVersionAssignments {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct CancelledTransaction {
     pub digest: TransactionDigest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -555,7 +551,6 @@ pub struct VersionAssignment {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ConsensusCommitPrologueV1 {
     /// Epoch of the commit prologue transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -760,7 +755,6 @@ pub struct SystemPackage {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct GenesisTransaction {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub objects: Vec<GenesisObject>,
@@ -787,7 +781,6 @@ pub struct GenesisTransaction {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ProgrammableTransaction {
     /// Input objects or primitive values
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
@@ -820,7 +813,6 @@ pub struct ProgrammableTransaction {
     schemars(tag = "type", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Input {
     /// A move value serialized as BCS.
     ///

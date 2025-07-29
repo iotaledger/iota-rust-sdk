@@ -2,5 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 pub mod address;
+pub mod checkpoint;
+pub mod coin;
+pub mod digest;
 pub mod graphql;
+pub mod object;
 pub mod transaction;

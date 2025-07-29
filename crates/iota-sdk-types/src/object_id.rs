@@ -34,12 +34,6 @@ pub struct ObjectId(Address);
 #[cfg(feature = "uniffi")]
 uniffi::custom_type!(ObjectId, Address);
 
-#[cfg(feature = "uniffi")]
-#[uniffi::export]
-pub fn object_id_from_hex(hex: &str) -> Result<ObjectId, crate::AddressParseError> {
-    Ok(ObjectId::from(Address::from_hex(hex)?))
-}
-
 impl ObjectId {
     pub const LENGTH: usize = Address::LENGTH;
     pub const ZERO: Self = Self(Address::ZERO);

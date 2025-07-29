@@ -1,10 +1,12 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::faucet::{BatchSendStatus, FaucetReceipt};
-use iota_types::Address;
+use std::sync::Arc;
 
-use crate::error::{BindingsSdkError, Result};
+use crate::{
+    error::{BindingsSdkError, Result},
+    types::address::Address,
+};
 
 #[derive(uniffi::Object)]
 pub struct FaucetClient(iota_graphql_client::faucet::FaucetClient);
@@ -44,9 +46,9 @@ impl FaucetClient {
     /// Request gas from the faucet. Note that this will return the UUID of the
     /// request and not wait until the token is received. Use
     /// `request_and_wait` to wait for the token.
-    pub async fn request(&self, address: Address) -> Result<Option<String>> {
+    pub async fn request(&self, address: &Address) -> Result<Option<String>> {
         self.0
-            .request(address)
+            .request(**address)
             .await
             .map_err(BindingsSdkError::custom)
     }
@@ -58,20 +60,32 @@ impl FaucetClient {
     ///
     /// Note that the faucet is heavily rate-limited, so calling repeatedly the
     /// faucet would likely result in a 429 code or 502 code.
-    pub async fn request_and_wait(&self, address: Address) -> Result<Option<FaucetReceipt>> {
-        self.0
-            .request_and_wait(address)
+    pub async fn request_and_wait(&self, address: &Address) -> Result<Option<Arc<FaucetReceipt>>> {
+        Ok(self
+            .0
+            .request_and_wait(**address)
             .await
-            .map_err(BindingsSdkError::custom)
+            .map_err(BindingsSdkError::custom)?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Check the faucet request status.
     ///
     /// Possible statuses are defined in: [`BatchSendStatusType`]
-    pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>> {
-        self.0
+    pub async fn request_status(&self, id: String) -> Result<Option<Arc<BatchSendStatus>>> {
+        Ok(self
+            .0
             .request_status(id)
             .await
-            .map_err(BindingsSdkError::custom)
+            .map_err(BindingsSdkError::custom)?
+            .map(Into::into)
+            .map(Arc::new))
     }
 }
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct FaucetReceipt(pub iota_graphql_client::faucet::FaucetReceipt);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct BatchSendStatus(pub iota_graphql_client::faucet::BatchSendStatus);

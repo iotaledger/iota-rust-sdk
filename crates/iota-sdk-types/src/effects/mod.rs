@@ -28,20 +28,10 @@ use crate::execution_status::ExecutionStatus;
     schemars(tag = "version")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TransactionEffects {
     #[cfg_attr(feature = "schemars", schemars(rename = "1"))]
     V1(Box<TransactionEffectsV1>),
 }
-
-#[cfg(feature = "uniffi")]
-pub type BoxedTransactionEffectsV1 = Box<TransactionEffectsV1>;
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(BoxedTransactionEffectsV1, TransactionEffectsV1, {
-    lower: |btt| *btt,
-    try_lift: |tt| Ok(Box::new(tt)),
-});
 
 impl TransactionEffects {
     /// Return the status of the transaction.

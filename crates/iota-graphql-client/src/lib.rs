@@ -78,8 +78,7 @@ static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_V
 
 /// The result of a dry run, which includes the effects of the transaction and
 /// any errors that may have occurred.
-#[derive(Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+#[derive(Clone, Debug)]
 pub struct DryRunResult {
     pub effects: Option<TransactionEffects>,
     pub error: Option<String>,
@@ -144,7 +143,6 @@ uniffi::custom_type!(BcsName, Vec<u8>, {
 });
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TransactionEvent {
     pub event: Event,
     pub digest: TransactionDigest,

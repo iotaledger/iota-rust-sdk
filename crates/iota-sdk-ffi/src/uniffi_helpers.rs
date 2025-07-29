@@ -2,14 +2,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_graphql_client::{
-    DynamicFieldOutput, TransactionEvent,
+    DynamicFieldOutput,
     pagination::Page,
     query_types::{Epoch, PageInfo, Validator},
 };
-use iota_types::{CheckpointSummary, MovePackage, Object, TransactionEffects, framework::Coin};
 use serde_json::Value;
 
-use crate::types::{graphql::TransactionDataEffects, transaction::SignedTransaction};
+use crate::types::{
+    checkpoint::CheckpointSummary,
+    coin::Coin,
+    graphql::{TransactionDataEffects, TransactionEvent},
+    object::{MovePackage, Object},
+    transaction::{SignedTransaction, TransactionEffects},
+};
 
 macro_rules! define_paged_record {
     ($id:ident, $typ:ty) => {
@@ -34,14 +39,8 @@ macro_rules! define_paged_record {
 }
 
 define_paged_record!(ValidatorPage, Validator);
-define_paged_record!(CheckpointSummaryPage, CheckpointSummary);
 define_paged_record!(EpochPage, Epoch);
-define_paged_record!(TransactionEffectsPage, TransactionEffects);
-define_paged_record!(MovePackagePage, MovePackage);
-define_paged_record!(ObjectPage, Object);
 define_paged_record!(DynamicFieldOutputPage, DynamicFieldOutput);
-define_paged_record!(TransactionEventPage, TransactionEvent);
-define_paged_record!(CoinPage, Coin);
 
 macro_rules! define_paged_object {
     ($id:ident, $typ:ty) => {
@@ -72,6 +71,12 @@ macro_rules! define_paged_object {
 
 define_paged_object!(SignedTransactionPage, SignedTransaction);
 define_paged_object!(TransactionDataEffectsPage, TransactionDataEffects);
+define_paged_object!(TransactionEventPage, TransactionEvent);
+define_paged_object!(CoinPage, Coin);
+define_paged_object!(ObjectPage, Object);
+define_paged_object!(TransactionEffectsPage, TransactionEffects);
+define_paged_object!(CheckpointSummaryPage, CheckpointSummary);
+define_paged_object!(MovePackagePage, MovePackage);
 
 uniffi::custom_type!(Value, String, {
     remote,

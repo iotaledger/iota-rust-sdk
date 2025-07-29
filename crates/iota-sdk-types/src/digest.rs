@@ -31,12 +31,6 @@ pub struct Digest(
 
 crate::impl_uniffi_byte_vec_wrapper!(Digest);
 
-#[cfg(feature = "uniffi")]
-#[uniffi::export]
-pub fn digest_from_base58(base58: &str) -> Result<Digest, DigestParseError> {
-    Digest::from_base58(base58)
-}
-
 impl Digest {
     /// A constant representing the length of a digest in bytes.
     pub const LENGTH: usize = 32;
@@ -233,9 +227,6 @@ macro_rules! impl_digest {
         #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
         #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
         pub struct $t(Digest);
-
-        #[cfg(feature = "uniffi")]
-        uniffi::custom_type!($t, Digest);
 
         impl $t {
             pub const LENGTH: usize = Digest::LENGTH;

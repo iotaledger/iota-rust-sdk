@@ -7,7 +7,6 @@
 use super::{Object, ObjectId, TypeTag};
 
 #[derive(Debug, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Coin {
     coin_type: TypeTag,
     id: ObjectId,
@@ -53,12 +52,6 @@ impl Coin {
             _ => Err(CoinFromObjectError::NotACoin), // package
         }
     }
-}
-
-#[cfg(feature = "uniffi")]
-#[uniffi::export]
-pub fn try_coin_from_object(object: &Object) -> Result<Coin, CoinFromObjectError> {
-    Coin::try_from_object(object)
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

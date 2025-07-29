@@ -5,12 +5,11 @@ use std::sync::Arc;
 
 use iota_types::{
     AuthenticatorStateExpire, AuthenticatorStateUpdateV1, ChangeEpoch, ChangeEpochV2,
-    CheckpointDigest, ConsensusCommitPrologueV1, EndOfEpochData, ExecutionTimeObservations,
-    GasPayment, GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate,
-    TransactionExpiration, UserSignature,
+    EndOfEpochData, ExecutionTimeObservations, RandomnessStateUpdate, TransactionExpiration,
+    UserSignature,
 };
 
-use crate::types::address::Address;
+use crate::types::{address::Address, digest::CheckpointDigest, object::ObjectReference};
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Transaction(pub iota_types::Transaction);
@@ -21,27 +20,27 @@ impl Transaction {
     pub fn new(
         kind: &TransactionKind,
         sender: &Address,
-        gas_payment: GasPayment,
+        gas_payment: &GasPayment,
         expiration: TransactionExpiration,
     ) -> Self {
         Self(iota_types::Transaction {
             kind: kind.0.clone(),
             sender: **sender,
-            gas_payment,
+            gas_payment: gas_payment.0.clone(),
             expiration,
         })
     }
 
     pub fn kind(&self) -> TransactionKind {
-        TransactionKind(self.0.kind.clone())
+        self.0.kind.clone().into()
     }
 
     pub fn sender(&self) -> Address {
-        Address(self.0.sender)
+        self.0.sender.into()
     }
 
     pub fn gas_payment(&self) -> GasPayment {
-        self.0.gas_payment.clone()
+        self.0.gas_payment.clone().into()
     }
 
     pub fn expiration(&self) -> TransactionExpiration {
@@ -63,7 +62,7 @@ impl SignedTransaction {
     }
 
     pub fn transaction(&self) -> Transaction {
-        Transaction(self.0.transaction.clone())
+        self.0.transaction.clone().into()
     }
 
     pub fn signatures(&self) -> Vec<UserSignature> {
@@ -77,18 +76,22 @@ pub struct TransactionKind(pub iota_types::TransactionKind);
 #[uniffi::export]
 impl TransactionKind {
     #[uniffi::constructor]
-    pub fn programmable_transaction(tx: ProgrammableTransaction) -> Self {
-        Self(iota_types::TransactionKind::ProgrammableTransaction(tx))
+    pub fn programmable_transaction(tx: &ProgrammableTransaction) -> Self {
+        Self(iota_types::TransactionKind::ProgrammableTransaction(
+            tx.0.clone(),
+        ))
     }
 
     #[uniffi::constructor]
-    pub fn genesis(tx: GenesisTransaction) -> Self {
-        Self(iota_types::TransactionKind::Genesis(tx))
+    pub fn genesis(tx: &GenesisTransaction) -> Self {
+        Self(iota_types::TransactionKind::Genesis(tx.0.clone()))
     }
 
     #[uniffi::constructor]
-    pub fn consensus_commit_prologue_v1(tx: ConsensusCommitPrologueV1) -> Self {
-        Self(iota_types::TransactionKind::ConsensusCommitPrologueV1(tx))
+    pub fn consensus_commit_prologue_v1(tx: &ConsensusCommitPrologueV1) -> Self {
+        Self(iota_types::TransactionKind::ConsensusCommitPrologueV1(
+            tx.0.clone(),
+        ))
     }
 
     #[uniffi::constructor]
@@ -110,7 +113,16 @@ impl TransactionKind {
 }
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ProgrammableTransaction(pub iota_types::ProgrammableTransaction);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ConsensusCommitPrologueV1(pub iota_types::ConsensusCommitPrologueV1);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct EndOfEpochTransactionKind(pub iota_types::EndOfEpochTransactionKind);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct GenesisTransaction(pub iota_types::GenesisTransaction);
 
 #[uniffi::export]
 impl EndOfEpochTransactionKind {
@@ -135,8 +147,10 @@ impl EndOfEpochTransactionKind {
     }
 
     #[uniffi::constructor]
-    pub fn bridge_state_create(chain_id: CheckpointDigest) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::BridgeStateCreate { chain_id })
+    pub fn bridge_state_create(chain_id: &CheckpointDigest) -> Self {
+        Self(iota_types::EndOfEpochTransactionKind::BridgeStateCreate {
+            chain_id: **chain_id,
+        })
     }
 
     #[uniffi::constructor]
@@ -151,3 +165,27 @@ impl EndOfEpochTransactionKind {
         Self(iota_types::EndOfEpochTransactionKind::StoreExecutionTimeObservations(obs))
     }
 }
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct GasPayment(pub iota_types::GasPayment);
+
+#[uniffi::export]
+impl GasPayment {
+    #[uniffi::constructor]
+    pub fn new(
+        objects: Vec<Arc<ObjectReference>>,
+        owner: &Address,
+        price: u64,
+        budget: u64,
+    ) -> Self {
+        Self(iota_types::GasPayment {
+            objects: objects.into_iter().map(|obj| obj.0.clone()).collect(),
+            owner: todo!(),
+            price,
+            budget,
+        })
+    }
+}
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct TransactionEffects(pub iota_types::TransactionEffects);

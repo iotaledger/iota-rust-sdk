@@ -4,25 +4,25 @@
 use std::sync::Arc;
 
 use iota_graphql_client::{
-    DryRunResult, DynamicFieldOutput, NameValue,
+    DynamicFieldOutput, NameValue,
     pagination::PaginationFilter,
     query_types::{
         CoinMetadata, Epoch, EventFilter, MoveFunction, MoveModule, ObjectFilter, ProtocolConfigs,
         ServiceConfig,
     },
 };
-use iota_types::{
-    CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, MovePackage, Object,
-    TransactionDigest, TransactionEffects, TypeTag, UserSignature,
-};
+use iota_types::{CheckpointSequenceNumber, TypeTag, UserSignature};
 use tokio::sync::RwLock;
 
 use crate::{
     error::Result,
     types::{
         address::Address,
-        graphql::{TransactionDataEffects, TransactionMetadata, TransactionsFilter},
-        transaction::{SignedTransaction, Transaction, TransactionKind},
+        checkpoint::CheckpointSummary,
+        digest::{CheckpointDigest, TransactionDigest},
+        graphql::{DryRunResult, TransactionDataEffects, TransactionMetadata, TransactionsFilter},
+        object::{MovePackage, Object},
+        transaction::{SignedTransaction, Transaction, TransactionEffects, TransactionKind},
     },
     uniffi_helpers::{
         CheckpointSummaryPage, CoinPage, DynamicFieldOutputPage, EpochPage, MovePackagePage,
@@ -128,13 +128,13 @@ impl GraphQLClient {
     /// provided checkpoint digest.
     pub async fn total_transaction_blocks_by_digest(
         &self,
-        digest: CheckpointDigest,
+        digest: &CheckpointDigest,
     ) -> Result<Option<u64>> {
         Ok(self
             .0
             .read()
             .await
-            .total_transaction_blocks_by_digest(digest)
+            .total_transaction_blocks_by_digest(**digest)
             .await?)
     }
 
@@ -177,6 +177,7 @@ impl GraphQLClient {
             .await
             .coins(**owner, coin_type, pagination_filter)
             .await?
+            .map(Into::into)
             .into())
     }
 
@@ -200,10 +201,17 @@ impl GraphQLClient {
     #[uniffi::method(default(digest = None, seq_num = None))]
     pub async fn checkpoint(
         &self,
-        digest: Option<CheckpointDigest>,
+        digest: Option<Arc<CheckpointDigest>>,
         seq_num: Option<u64>,
-    ) -> Result<Option<CheckpointSummary>> {
-        Ok(self.0.read().await.checkpoint(digest, seq_num).await?)
+    ) -> Result<Option<Arc<CheckpointSummary>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .checkpoint(digest.map(|d| **d), seq_num)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Get a page of [`CheckpointSummary`] for the provided parameters.
@@ -217,6 +225,7 @@ impl GraphQLClient {
             .await
             .checkpoints(pagination_filter)
             .await?
+            .map(Into::into)
             .into())
     }
 
@@ -288,6 +297,7 @@ impl GraphQLClient {
             .await
             .events(filter, pagination_filter)
             .await?
+            .map(Into::into)
             .into())
     }
 
@@ -301,8 +311,19 @@ impl GraphQLClient {
     /// `Ok(None)`. Similarly, if this is not an object but an address, it
     /// will return `Ok(None)`.
     #[uniffi::method(default(version = None))]
-    pub async fn object(&self, address: &Address, version: Option<u64>) -> Result<Option<Object>> {
-        Ok(self.0.read().await.object(**address, version).await?)
+    pub async fn object(
+        &self,
+        address: &Address,
+        version: Option<u64>,
+    ) -> Result<Option<Arc<Object>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .object(**address, version)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Return a page of objects based on the provided parameters.
@@ -333,6 +354,7 @@ impl GraphQLClient {
             .await
             .objects(filter, pagination_filter)
             .await?
+            .map(Into::into)
             .into())
     }
 
@@ -381,8 +403,15 @@ impl GraphQLClient {
         &self,
         address: &Address,
         version: Option<u64>,
-    ) -> Result<Option<MovePackage>> {
-        Ok(self.0.read().await.package(**address, version).await?)
+    ) -> Result<Option<Arc<MovePackage>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .package(**address, version)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Fetch all versions of package at address (packages that share this
@@ -402,19 +431,34 @@ impl GraphQLClient {
             .await
             .package_versions(**address, pagination_filter, after_version, before_version)
             .await?
+            .map(Into::into)
             .into())
     }
 
     /// Fetch the latest version of the package at address.
     /// This corresponds to the package with the highest version that shares its
     /// original ID with the package at address.
-    pub async fn package_latest(&self, address: &Address) -> Result<Option<MovePackage>> {
-        Ok(self.0.read().await.package_latest(**address).await?)
+    pub async fn package_latest(&self, address: &Address) -> Result<Option<Arc<MovePackage>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .package_latest(**address)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Fetch a package by its name (using Move Registry Service)
-    pub async fn package_by_name(&self, name: &str) -> Result<Option<MovePackage>> {
-        Ok(self.0.read().await.package_by_name(name).await?)
+    pub async fn package_by_name(&self, name: &str) -> Result<Option<Arc<MovePackage>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .package_by_name(name)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// The Move packages that exist in the network, optionally filtered to be
@@ -437,6 +481,7 @@ impl GraphQLClient {
             .await
             .packages(pagination_filter, after_checkpoint, before_checkpoint)
             .await?
+            .map(Into::into)
             .into())
     }
 
@@ -447,13 +492,13 @@ impl GraphQLClient {
     /// Get a transaction by its digest.
     pub async fn transaction(
         &self,
-        digest: TransactionDigest,
+        digest: &TransactionDigest,
     ) -> Result<Option<Arc<SignedTransaction>>> {
         Ok(self
             .0
             .read()
             .await
-            .transaction(digest)
+            .transaction(**digest)
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -462,21 +507,28 @@ impl GraphQLClient {
     /// Get a transaction's effects by its digest.
     pub async fn transaction_effects(
         &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>> {
-        Ok(self.0.read().await.transaction_effects(digest).await?)
+        digest: &TransactionDigest,
+    ) -> Result<Option<Arc<TransactionEffects>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .transaction_effects(**digest)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Get a transaction's data and effects by its digest.
     pub async fn transaction_data_effects(
         &self,
-        digest: TransactionDigest,
+        digest: &TransactionDigest,
     ) -> Result<Option<Arc<TransactionDataEffects>>> {
         Ok(self
             .0
             .read()
             .await
-            .transaction_data_effects(digest)
+            .transaction_data_effects(**digest)
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -512,6 +564,7 @@ impl GraphQLClient {
             .await
             .transactions_effects(filter.map(|f| f.0.clone()), pagination_filter)
             .await?
+            .map(Into::into)
             .into())
     }
 
@@ -538,8 +591,15 @@ impl GraphQLClient {
         &self,
         signatures: &[UserSignature],
         tx: &Transaction,
-    ) -> Result<Option<TransactionEffects>> {
-        Ok(self.0.read().await.execute_tx(signatures, &tx.0).await?)
+    ) -> Result<Option<Arc<TransactionEffects>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .execute_tx(signatures, &tx.0)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     // ===========================================================================
@@ -722,7 +782,13 @@ impl GraphQLClient {
         tx: &Transaction,
         skip_checks: Option<bool>,
     ) -> Result<DryRunResult> {
-        Ok(self.0.read().await.dry_run_tx(&tx.0, skip_checks).await?)
+        Ok(self
+            .0
+            .read()
+            .await
+            .dry_run_tx(&tx.0, skip_checks)
+            .await?
+            .into())
     }
 
     /// Dry run a [`TransactionKind`] and return the transaction effects and dry
@@ -746,7 +812,8 @@ impl GraphQLClient {
             .read()
             .await
             .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.0.clone())
-            .await?)
+            .await?
+            .into())
     }
 
     // ===========================================================================
