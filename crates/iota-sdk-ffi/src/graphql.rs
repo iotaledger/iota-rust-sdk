@@ -3,6 +3,7 @@
 
 use std::sync::Arc;
 
+use anyhow::Result;
 use iota_graphql_client::{
     NameValue,
     pagination::PaginationFilter,
@@ -12,7 +13,6 @@ use iota_types::CheckpointSequenceNumber;
 use tokio::sync::RwLock;
 
 use crate::{
-    error::Result,
     types::{
         address::Address,
         checkpoint::CheckpointSummary,

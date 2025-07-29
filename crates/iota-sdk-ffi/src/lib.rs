@@ -105,7 +105,6 @@
 
 #![allow(unused)]
 
-mod error;
 mod faucet;
 mod graphql;
 mod types;

@@ -4,6 +4,7 @@
 pub mod address;
 pub mod checkpoint;
 pub mod coin;
+pub mod crypto;
 pub mod digest;
 pub mod graphql;
 pub mod object;
