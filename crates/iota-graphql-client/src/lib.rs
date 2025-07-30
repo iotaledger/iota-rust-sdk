@@ -17,9 +17,9 @@ use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::Error;
 use futures::Stream;
 use iota_types::{
-    Address, CheckpointContentsDigest, CheckpointSequenceNumber, CheckpointSummary, Event,
-    Identifier, MovePackage, Object, ObjectId, SignedTransaction, Transaction, TransactionDigest,
-    TransactionEffects, TransactionKind, TypeTag, UserSignature, framework::Coin,
+    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, Event, Identifier, MovePackage,
+    Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TransactionKind, TypeTag,
+    UserSignature, framework::Coin,
 };
 use query_types::{
     ActiveValidatorsArgs, ActiveValidatorsQuery, BalanceArgs, BalanceQuery, ChainIdentifierQuery,
@@ -598,10 +598,7 @@ impl Client {
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint digest.
-    pub async fn total_transaction_blocks_by_digest(
-        &self,
-        digest: CheckpointContentsDigest,
-    ) -> Result<Option<u64>> {
+    pub async fn total_transaction_blocks_by_digest(&self, digest: Digest) -> Result<Option<u64>> {
         self.internal_total_transaction_blocks(Some(digest.to_string()), None)
             .await
     }
@@ -718,7 +715,7 @@ impl Client {
     /// checkpoint id.
     pub async fn checkpoint(
         &self,
-        digest: Option<CheckpointContentsDigest>,
+        digest: Option<Digest>,
         seq_num: Option<u64>,
     ) -> Result<Option<CheckpointSummary>> {
         if digest.is_some() && seq_num.is_some() {
@@ -1251,10 +1248,7 @@ impl Client {
     // ===========================================================================
 
     /// Get a transaction by its digest.
-    pub async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>> {
+    pub async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>> {
         let operation = TransactionBlockQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -1272,10 +1266,7 @@ impl Client {
     }
 
     /// Get a transaction's effects by its digest.
-    pub async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>> {
+    pub async fn transaction_effects(&self, digest: Digest) -> Result<Option<TransactionEffects>> {
         let operation = TransactionBlockEffectsQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -1291,7 +1282,7 @@ impl Client {
     /// Get a transaction's data and effects by its digest.
     pub async fn transaction_data_effects(
         &self,
-        digest: TransactionDigest,
+        digest: Digest,
     ) -> Result<Option<TransactionDataEffects>> {
         let operation = TransactionBlockWithEffectsQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),

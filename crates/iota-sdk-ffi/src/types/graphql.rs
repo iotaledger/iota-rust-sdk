@@ -14,7 +14,7 @@ use iota_graphql_client::{
         ServiceConfig, TransactionBlockKindInput, ValidatorCredentials,
     },
 };
-use iota_types::{Identifier, StructTag, TransactionDigest};
+use iota_types::{Digest, Identifier, StructTag};
 
 use crate::types::{
     address::Address,

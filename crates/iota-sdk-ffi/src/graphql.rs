@@ -15,7 +15,7 @@ use crate::{
     types::{
         address::Address,
         checkpoint::CheckpointSummary,
-        digest::{CheckpointContentsDigest, CheckpointDigest, TransactionDigest},
+        digest::Digest,
         graphql::{
             CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveModule,
             ObjectFilter, TransactionDataEffects, TransactionMetadata, TransactionsFilter,
@@ -129,10 +129,7 @@ impl GraphQLClient {
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint digest.
-    pub async fn total_transaction_blocks_by_digest(
-        &self,
-        digest: &CheckpointContentsDigest,
-    ) -> Result<Option<u64>> {
+    pub async fn total_transaction_blocks_by_digest(&self, digest: &Digest) -> Result<Option<u64>> {
         Ok(self
             .0
             .read()
@@ -210,7 +207,7 @@ impl GraphQLClient {
     #[uniffi::method(default(digest = None, seq_num = None))]
     pub async fn checkpoint(
         &self,
-        digest: Option<Arc<CheckpointContentsDigest>>,
+        digest: Option<Arc<Digest>>,
         seq_num: Option<u64>,
     ) -> Result<Option<CheckpointSummary>> {
         Ok(self
@@ -488,10 +485,7 @@ impl GraphQLClient {
     // ===========================================================================
 
     /// Get a transaction by its digest.
-    pub async fn transaction(
-        &self,
-        digest: &TransactionDigest,
-    ) -> Result<Option<SignedTransaction>> {
+    pub async fn transaction(&self, digest: &Digest) -> Result<Option<SignedTransaction>> {
         Ok(self
             .0
             .read()
@@ -504,7 +498,7 @@ impl GraphQLClient {
     /// Get a transaction's effects by its digest.
     pub async fn transaction_effects(
         &self,
-        digest: &TransactionDigest,
+        digest: &Digest,
     ) -> Result<Option<Arc<TransactionEffects>>> {
         Ok(self
             .0
@@ -519,7 +513,7 @@ impl GraphQLClient {
     /// Get a transaction's data and effects by its digest.
     pub async fn transaction_data_effects(
         &self,
-        digest: &TransactionDigest,
+        digest: &Digest,
     ) -> Result<Option<TransactionDataEffects>> {
         Ok(self
             .0

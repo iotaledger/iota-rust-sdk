@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::types::{
-    digest::ObjectDigest,
+    digest::Digest,
     object::{Object, ObjectId},
 };
 
@@ -32,7 +32,7 @@ impl UnresolvedInput {
 
     /// Return an owned kind of object with all required fields.
     #[uniffi::constructor]
-    pub fn new_owned(object_id: &ObjectId, version: u64, digest: &ObjectDigest) -> Self {
+    pub fn new_owned(object_id: &ObjectId, version: u64, digest: &Digest) -> Self {
         Self(iota_transaction_builder::unresolved::Input::owned(
             **object_id,
             version,
@@ -42,7 +42,7 @@ impl UnresolvedInput {
 
     /// Return an immutable kind of object with all required fields.
     #[uniffi::constructor]
-    pub fn new_immutable(object_id: &ObjectId, version: u64, digest: &ObjectDigest) -> Self {
+    pub fn new_immutable(object_id: &ObjectId, version: u64, digest: &Digest) -> Self {
         Self(iota_transaction_builder::unresolved::Input::immutable(
             **object_id,
             version,
@@ -52,7 +52,7 @@ impl UnresolvedInput {
 
     /// Return a receiving kind of object with all required fields.
     #[uniffi::constructor]
-    pub fn new_receiving(object_id: &ObjectId, version: u64, digest: &ObjectDigest) -> Self {
+    pub fn new_receiving(object_id: &ObjectId, version: u64, digest: &Digest) -> Self {
         Self(iota_transaction_builder::unresolved::Input::receiving(
             **object_id,
             version,
@@ -108,7 +108,7 @@ impl UnresolvedInput {
     }
 
     /// Set the specified digest.
-    pub fn with_digest(&self, digest: &ObjectDigest) -> Self {
+    pub fn with_digest(&self, digest: &Digest) -> Self {
         Self(self.0.clone().with_digest(**digest))
     }
 

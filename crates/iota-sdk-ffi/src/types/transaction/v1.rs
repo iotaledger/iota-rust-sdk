@@ -6,9 +6,7 @@ use std::sync::Arc;
 use iota_types::{GasCostSummary, IdOperation};
 
 use crate::types::{
-    digest::{
-        EffectsAuxiliaryDataDigest, ObjectDigest, TransactionDigest, TransactionEventsDigest,
-    },
+    digest::Digest,
     execution_status::ExecutionStatus,
     object::{ObjectId, Owner},
 };
@@ -41,16 +39,16 @@ pub struct TransactionEffectsV1 {
     /// The gas used by this transaction
     pub gas_used: GasCostSummary,
     /// The transaction digest
-    pub transaction_digest: Arc<TransactionDigest>,
+    pub transaction_digest: Arc<Digest>,
     /// The updated gas object reference, as an index into the `changed_objects`
     /// vector. Having a dedicated field for convenient access.
     /// System transaction that don't require gas will leave this as None.
     pub gas_object_index: Option<u32>,
     /// The digest of the events emitted during execution,
     /// can be None if the transaction does not emit any event.
-    pub events_digest: Option<Arc<TransactionEventsDigest>>,
+    pub events_digest: Option<Arc<Digest>>,
     /// The set of transaction digests this transaction depends on.
-    pub dependencies: Vec<Arc<TransactionDigest>>,
+    pub dependencies: Vec<Arc<Digest>>,
     /// The version number of all the written Move objects by this transaction.
     pub lamport_version: u64,
     /// Objects whose state are changed in the object store.
@@ -65,7 +63,7 @@ pub struct TransactionEffectsV1 {
     /// effects but are stored separately. Storing it separately allows us
     /// to avoid bloating the effects with data that are not critical.
     /// It also provides more flexibility on the format and type of the data.
-    pub auxiliary_data_digest: Option<Arc<EffectsAuxiliaryDataDigest>>,
+    pub auxiliary_data_digest: Option<Arc<Digest>>,
 }
 
 impl From<iota_types::TransactionEffectsV1> for TransactionEffectsV1 {
@@ -219,10 +217,7 @@ pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
     /// verify untrusted read.
-    ReadOnlyRoot {
-        version: u64,
-        digest: Arc<ObjectDigest>,
-    },
+    ReadOnlyRoot { version: u64, digest: Arc<Digest> },
     /// Deleted shared objects that appear mutably/owned in the input.
     MutateDeleted { version: u64 },
     /// Deleted shared objects that appear as read-only in the input.
@@ -293,7 +288,7 @@ pub enum ObjectIn {
     /// The old version, digest and owner.
     Data {
         version: u64,
-        digest: Arc<ObjectDigest>,
+        digest: Arc<Digest>,
         owner: Arc<Owner>,
     },
 }
@@ -354,15 +349,12 @@ pub enum ObjectOut {
     Missing,
     /// Any written object, including all of mutated, created, unwrapped today.
     ObjectWrite {
-        digest: Arc<ObjectDigest>,
+        digest: Arc<Digest>,
         owner: Arc<Owner>,
     },
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
-    PackageWrite {
-        version: u64,
-        digest: Arc<ObjectDigest>,
-    },
+    PackageWrite { version: u64, digest: Arc<Digest> },
 }
 
 impl From<iota_types::ObjectOut> for ObjectOut {
