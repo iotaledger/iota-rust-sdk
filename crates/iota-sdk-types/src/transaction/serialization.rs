@@ -283,11 +283,8 @@ mod transaction_kind {
 
 mod end_of_epoch {
     use super::*;
-    use crate::{
-        CheckpointDigest,
-        transaction::{
-            AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, EndOfEpochTransactionKind,
-        },
+    use crate::transaction::{
+        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, EndOfEpochTransactionKind,
     };
 
     #[derive(serde_derive::Serialize)]
@@ -297,13 +294,6 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-        BridgeStateCreate {
-            chain_id: &'a CheckpointDigest,
-        },
-        BridgeCommitteeInit {
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-            bridge_object_version: u64,
-        },
         StoreExecutionTimeObservations(&'a crate::transaction::ExecutionTimeObservations),
     }
 
@@ -314,13 +304,6 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
-        BridgeStateCreate {
-            chain_id: CheckpointDigest,
-        },
-        BridgeCommitteeInit {
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-            bridge_object_version: u64,
-        },
         StoreExecutionTimeObservations(crate::transaction::ExecutionTimeObservations),
     }
 
@@ -330,8 +313,6 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-        BridgeStateCreate { chain_id: &'a CheckpointDigest },
-        BridgeCommitteeInit { bridge_object_version: u64 },
         StoreExecutionTimeObservations(&'a crate::transaction::ExecutionTimeObservations),
     }
 
@@ -341,8 +322,6 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
-        BridgeStateCreate { chain_id: CheckpointDigest },
-        BridgeCommitteeInit { bridge_object_version: u64 },
         StoreExecutionTimeObservations(crate::transaction::ExecutionTimeObservations),
     }
 
@@ -363,14 +342,6 @@ mod end_of_epoch {
                     Self::AuthenticatorStateExpire(k) => {
                         ReadableEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
                     }
-                    Self::BridgeStateCreate { chain_id } => {
-                        ReadableEndOfEpochTransactionKindRef::BridgeStateCreate { chain_id }
-                    }
-                    Self::BridgeCommitteeInit {
-                        bridge_object_version,
-                    } => ReadableEndOfEpochTransactionKindRef::BridgeCommitteeInit {
-                        bridge_object_version: *bridge_object_version,
-                    },
                     Self::StoreExecutionTimeObservations(obs) => {
                         ReadableEndOfEpochTransactionKindRef::StoreExecutionTimeObservations(obs)
                     }
@@ -386,14 +357,6 @@ mod end_of_epoch {
                     Self::AuthenticatorStateExpire(k) => {
                         BinaryEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
                     }
-                    Self::BridgeStateCreate { chain_id } => {
-                        BinaryEndOfEpochTransactionKindRef::BridgeStateCreate { chain_id }
-                    }
-                    Self::BridgeCommitteeInit {
-                        bridge_object_version,
-                    } => BinaryEndOfEpochTransactionKindRef::BridgeCommitteeInit {
-                        bridge_object_version: *bridge_object_version,
-                    },
                     Self::StoreExecutionTimeObservations(obs) => {
                         BinaryEndOfEpochTransactionKindRef::StoreExecutionTimeObservations(obs)
                     }
@@ -421,14 +384,6 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
                             Self::AuthenticatorStateExpire(k)
                         }
-                        ReadableEndOfEpochTransactionKind::BridgeStateCreate { chain_id } => {
-                            Self::BridgeStateCreate { chain_id }
-                        }
-                        ReadableEndOfEpochTransactionKind::BridgeCommitteeInit {
-                            bridge_object_version,
-                        } => Self::BridgeCommitteeInit {
-                            bridge_object_version,
-                        },
                         ReadableEndOfEpochTransactionKind::StoreExecutionTimeObservations(obs) => {
                             Self::StoreExecutionTimeObservations(obs)
                         }
@@ -445,14 +400,6 @@ mod end_of_epoch {
                         BinaryEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
                             Self::AuthenticatorStateExpire(k)
                         }
-                        BinaryEndOfEpochTransactionKind::BridgeStateCreate { chain_id } => {
-                            Self::BridgeStateCreate { chain_id }
-                        }
-                        BinaryEndOfEpochTransactionKind::BridgeCommitteeInit {
-                            bridge_object_version,
-                        } => Self::BridgeCommitteeInit {
-                            bridge_object_version,
-                        },
                         BinaryEndOfEpochTransactionKind::StoreExecutionTimeObservations(obs) => {
                             Self::StoreExecutionTimeObservations(obs)
                         }
@@ -928,10 +875,36 @@ mod signed_transaction {
         transaction::{SignedTransaction, Transaction},
     };
 
-    /// Serde implementation that serializes a transaction prefixed with the
-    /// signing intent. See [struct Intent] for more info.
+    /// Intents are defined as:
     ///
-    /// So we need to serialize Transaction as (0, 0, 0, Transaction)
+    /// ```
+    /// struct Intent {
+    ///     scope: IntentScope,
+    ///     version: IntentVersion,
+    ///     app_id: AppId,
+    /// }
+    ///
+    /// enum IntentVersion {
+    ///     V0 = 0,
+    /// }
+    ///
+    /// enum AppId {
+    ///     Iota = 0,
+    ///     Narwhal = 1,
+    ///     Consensus = 2,
+    /// }
+    ///
+    /// enum IntentScope {
+    ///     TransactionData = 0,         // Used for a user signature on a transaction data.
+    ///     TransactionEffects = 1,      // Used for an authority signature on transaction effects.
+    ///     CheckpointSummary = 2,       // Used for an authority signature on a checkpoint summary.
+    ///     PersonalMessage = 3,         // Used for a user signature on a personal message.
+    ///     SenderSignedTransaction = 4, // Used for an authority signature on a user signed transaction.
+    ///     ProofOfPossession = 5, // Used as a signature representing an authority's proof of possession of its authority protocol key.
+    ///     BridgeEventDeprecated = 6, // Deprecated. Should not be reused. Introduced for bridge purposes but was never included in messages.
+    ///     ConsensusBlock = 7,    // Used for consensus authority signature on block's digest
+    /// }
+    /// ```
     struct IntentMessageWrappedTransaction;
 
     impl SerializeAs<Transaction> for IntentMessageWrappedTransaction {

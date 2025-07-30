@@ -243,14 +243,6 @@ pub enum EndOfEpochTransactionKind {
 
     /// Expire JWKs used for zklogin
     AuthenticatorStateExpire(AuthenticatorStateExpire),
-    /// Create and initialize the bridge object
-    BridgeStateCreate { chain_id: super::CheckpointDigest },
-
-    /// Initialize the bridge committee
-    BridgeCommitteeInit {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        bridge_object_version: u64,
-    },
 
     /// Execution time observations from the committee to preserve cross epoch
     StoreExecutionTimeObservations(ExecutionTimeObservations),
