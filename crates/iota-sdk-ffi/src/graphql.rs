@@ -319,13 +319,13 @@ impl GraphQLClient {
     pub async fn events(
         &self,
         pagination_filter: &PaginationFilter,
-        filter: Option<Arc<EventFilter>>,
+        filter: Option<EventFilter>,
     ) -> Result<TransactionEventPage> {
         Ok(self
             .0
             .read()
             .await
-            .events(filter.map(|f| f.0.clone()), pagination_filter.0.clone())
+            .events(filter.map(|f| f.into()), pagination_filter.0.clone())
             .await?
             .map(Into::into)
             .into())

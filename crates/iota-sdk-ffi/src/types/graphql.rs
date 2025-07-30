@@ -155,8 +155,41 @@ pub struct ObjectRef(pub iota_graphql_client::query_types::ObjectRef);
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Epoch(pub iota_graphql_client::query_types::Epoch);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct EventFilter(pub iota_graphql_client::query_types::EventFilter);
+type CoreEventFilter = iota_graphql_client::query_types::EventFilter;
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+pub struct EventFilter {
+    #[uniffi(default = None)]
+    pub emitting_module: Option<String>,
+    #[uniffi(default = None)]
+    pub event_type: Option<String>,
+    #[uniffi(default = None)]
+    pub sender: Option<Arc<Address>>,
+    #[uniffi(default = None)]
+    pub transaction_digest: Option<String>,
+}
+
+impl From<CoreEventFilter> for EventFilter {
+    fn from(value: CoreEventFilter) -> Self {
+        Self {
+            emitting_module: value.emitting_module,
+            event_type: value.event_type,
+            sender: value.sender.map(Into::into).map(Arc::new),
+            transaction_digest: value.transaction_digest,
+        }
+    }
+}
+
+impl From<EventFilter> for CoreEventFilter {
+    fn from(value: EventFilter) -> Self {
+        Self {
+            emitting_module: value.emitting_module,
+            event_type: value.event_type,
+            sender: value.sender.as_ref().map(|s| s.0.clone()),
+            transaction_digest: value.transaction_digest,
+        }
+    }
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectFilter(pub iota_graphql_client::query_types::ObjectFilter);

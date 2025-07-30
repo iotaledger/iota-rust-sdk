@@ -537,6 +537,16 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 52543:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_computation_cost() != 25438:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_computation_cost_burned() != 58768:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_non_refundable_storage_fee() != 35483:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_storage_cost() != 18719:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_storage_rebate() != 26317:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators() != 21727:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_balance() != 7900:
@@ -569,7 +579,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epochs() != 21031:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 5856:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 22881:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 21554:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -577,9 +587,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size() != 7485:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 52927:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 45984:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 51010:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 56613:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 55119:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -587,7 +597,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 19423:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 2904:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 59810:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 23089:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -725,11 +735,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsfilter_before_checkpoint() != 63457:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsfilter_changed_object() != 20385:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsfilter_changed_object() != 35492:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsfilter_function() != 61239:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsfilter_input_object() != 3632:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsfilter_input_object() != 57360:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsfilter_kind() != 35149:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -792,6 +802,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 13557:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_testnet() != 16109:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_gascostsummary_new() != 32819:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_gaspayment_new() != 36162:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1499,16 +1511,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_epochpage_page_info.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_epochpage_page_info.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_eventfilter.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_eventfilter.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_eventfilter.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_eventfilter.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -1581,6 +1583,40 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_gascostsummary.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_gascostsummary.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_gascostsummary_new.argtypes = (
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_gascostsummary_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_computation_cost.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_computation_cost.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_computation_cost_burned.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_computation_cost_burned.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_non_refundable_storage_fee.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_non_refundable_storage_fee.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_storage_cost.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_storage_cost.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_storage_rebate.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_storage_rebate.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_gaspayment.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3162,6 +3198,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_computation_cost.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_computation_cost.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_computation_cost_burned.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_computation_cost_burned.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_non_refundable_storage_fee.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_non_refundable_storage_fee.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_storage_cost.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_storage_cost.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_storage_rebate.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_gascostsummary_storage_rebate.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators.restype = ctypes.c_uint16
@@ -3546,6 +3597,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_testnet.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_testnet.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_gascostsummary_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_gascostsummary_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_gaspayment_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_gaspayment_new.restype = ctypes.c_uint16
@@ -3913,6 +3967,66 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
 
 
 
+class EventFilter:
+    emitting_module: "typing.Optional[str]"
+    event_type: "typing.Optional[str]"
+    sender: "typing.Optional[Address]"
+    transaction_digest: "typing.Optional[str]"
+    def __init__(self, *, emitting_module: "typing.Optional[str]" = _DEFAULT, event_type: "typing.Optional[str]" = _DEFAULT, sender: "typing.Optional[Address]" = _DEFAULT, transaction_digest: "typing.Optional[str]" = _DEFAULT):
+        if emitting_module is _DEFAULT:
+            self.emitting_module = None
+        else:
+            self.emitting_module = emitting_module
+        if event_type is _DEFAULT:
+            self.event_type = None
+        else:
+            self.event_type = event_type
+        if sender is _DEFAULT:
+            self.sender = None
+        else:
+            self.sender = sender
+        if transaction_digest is _DEFAULT:
+            self.transaction_digest = None
+        else:
+            self.transaction_digest = transaction_digest
+
+    def __str__(self):
+        return "EventFilter(emitting_module={}, event_type={}, sender={}, transaction_digest={})".format(self.emitting_module, self.event_type, self.sender, self.transaction_digest)
+
+    def __eq__(self, other):
+        if self.emitting_module != other.emitting_module:
+            return False
+        if self.event_type != other.event_type:
+            return False
+        if self.sender != other.sender:
+            return False
+        if self.transaction_digest != other.transaction_digest:
+            return False
+        return True
+
+class _UniffiConverterTypeEventFilter(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return EventFilter(
+            emitting_module=_UniffiConverterOptionalString.read(buf),
+            event_type=_UniffiConverterOptionalString.read(buf),
+            sender=_UniffiConverterOptionalTypeAddress.read(buf),
+            transaction_digest=_UniffiConverterOptionalString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.emitting_module)
+        _UniffiConverterOptionalString.check_lower(value.event_type)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.sender)
+        _UniffiConverterOptionalString.check_lower(value.transaction_digest)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.emitting_module, buf)
+        _UniffiConverterOptionalString.write(value.event_type, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.sender, buf)
+        _UniffiConverterOptionalString.write(value.transaction_digest, buf)
 
 
 # BindingsSdkError
@@ -4089,6 +4203,33 @@ class _UniffiConverterOptionalBytes(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterBytes.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeAddress(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeAddress.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeAddress.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeAddress.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -4305,33 +4446,6 @@ class _UniffiConverterOptionalTypeEpoch(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeEpoch.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
-class _UniffiConverterOptionalTypeEventFilter(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeEventFilter.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeEventFilter.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeEventFilter.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -4656,6 +4770,33 @@ class _UniffiConverterOptionalTypeTransactionsFilter(_UniffiConverterRustBuffer)
             return None
         elif flag == 1:
             return _UniffiConverterTypeTransactionsFilter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeEventFilter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeEventFilter.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeEventFilter.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeEventFilter.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -7254,62 +7395,6 @@ class _UniffiConverterTypeEpochPage:
     @classmethod
     def write(cls, value: EpochPageProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
-class EventFilterProtocol(typing.Protocol):
-    pass
-# EventFilter is a Rust-only trait - it's a wrapper around a Rust implementation.
-class EventFilter():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_eventfilter, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_eventfilter, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeEventFilter:
-
-    @staticmethod
-    def lift(value: int):
-        return EventFilter._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: EventFilter):
-        if not isinstance(value, EventFilter):
-            raise TypeError("Expected EventFilter instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: EventFilterProtocol):
-        if not isinstance(value, EventFilter):
-            raise TypeError("Expected EventFilter instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: EventFilterProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
 class ExecutionTimeObservationsProtocol(typing.Protocol):
     pass
 # ExecutionTimeObservations is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -7633,13 +7718,36 @@ class _UniffiConverterTypeFaucetReceipt:
     def write(cls, value: FaucetReceiptProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class GasCostSummaryProtocol(typing.Protocol):
-    pass
+    def computation_cost(self, ):
+        raise NotImplementedError
+    def computation_cost_burned(self, ):
+        raise NotImplementedError
+    def non_refundable_storage_fee(self, ):
+        raise NotImplementedError
+    def storage_cost(self, ):
+        raise NotImplementedError
+    def storage_rebate(self, ):
+        raise NotImplementedError
 # GasCostSummary is a Rust-only trait - it's a wrapper around a Rust implementation.
 class GasCostSummary():
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, computation_cost: "int",computation_cost_burned: "int",storage_cost: "int",storage_rebate: "int",non_refundable_storage_fee: "int"):
+        _UniffiConverterUInt64.check_lower(computation_cost)
+        
+        _UniffiConverterUInt64.check_lower(computation_cost_burned)
+        
+        _UniffiConverterUInt64.check_lower(storage_cost)
+        
+        _UniffiConverterUInt64.check_lower(storage_rebate)
+        
+        _UniffiConverterUInt64.check_lower(non_refundable_storage_fee)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_gascostsummary_new,
+        _UniffiConverterUInt64.lower(computation_cost),
+        _UniffiConverterUInt64.lower(computation_cost_burned),
+        _UniffiConverterUInt64.lower(storage_cost),
+        _UniffiConverterUInt64.lower(storage_rebate),
+        _UniffiConverterUInt64.lower(non_refundable_storage_fee))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -7658,6 +7766,51 @@ class GasCostSummary():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def computation_cost(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_computation_cost,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def computation_cost_burned(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_computation_cost_burned,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def non_refundable_storage_fee(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_non_refundable_storage_fee,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def storage_cost(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_storage_cost,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def storage_rebate(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_gascostsummary_storage_rebate,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -7992,7 +8145,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_object_contents(self, address: "Address",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def move_object_contents(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
         """
         Return the contents' JSON of an object that is a Move object.
 
@@ -8002,7 +8155,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_object_contents_bcs(self, address: "Address",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def move_object_contents_bcs(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
         """
         Return the BCS of an object that is a Move object.
 
@@ -8035,7 +8188,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def object_bcs(self, address: "Address"):
+    def object_bcs(self, object_id: "ObjectId"):
         """
         Return the object's bcs content [`Vec<u8>`] based on the provided
         [`Address`].
@@ -8900,7 +9053,7 @@ _UniffiConverterTypeBindingsSdkError,
 
 
 
-    async def move_object_contents(self, address: "Address",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[Value]":
+    async def move_object_contents(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[Value]":
         """
         Return the contents' JSON of an object that is a Move object.
 
@@ -8909,7 +9062,7 @@ _UniffiConverterTypeBindingsSdkError,
         will return `Ok(None)`.
         """
 
-        _UniffiConverterTypeAddress.check_lower(address)
+        _UniffiConverterTypeObjectId.check_lower(object_id)
         
         if version is _DEFAULT:
             version = None
@@ -8918,7 +9071,7 @@ _UniffiConverterTypeBindingsSdkError,
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeAddress.lower(address),
+        _UniffiConverterTypeObjectId.lower(object_id),
         _UniffiConverterOptionalUInt64.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -8934,7 +9087,7 @@ _UniffiConverterTypeBindingsSdkError,
 
 
 
-    async def move_object_contents_bcs(self, address: "Address",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[bytes]":
+    async def move_object_contents_bcs(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[bytes]":
         """
         Return the BCS of an object that is a Move object.
 
@@ -8943,7 +9096,7 @@ _UniffiConverterTypeBindingsSdkError,
         will return `Ok(None)`.
         """
 
-        _UniffiConverterTypeAddress.check_lower(address)
+        _UniffiConverterTypeObjectId.check_lower(object_id)
         
         if version is _DEFAULT:
             version = None
@@ -8952,7 +9105,7 @@ _UniffiConverterTypeBindingsSdkError,
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeAddress.lower(address),
+        _UniffiConverterTypeObjectId.lower(object_id),
         _UniffiConverterOptionalUInt64.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9084,18 +9237,18 @@ _UniffiConverterTypeBindingsSdkError,
 
 
 
-    async def object_bcs(self, address: "Address") -> "typing.Optional[bytes]":
+    async def object_bcs(self, object_id: "ObjectId") -> "typing.Optional[bytes]":
         """
         Return the object's bcs content [`Vec<u8>`] based on the provided
         [`Address`].
         """
 
-        _UniffiConverterTypeAddress.check_lower(address)
+        _UniffiConverterTypeObjectId.check_lower(object_id)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object_bcs(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeAddress.lower(address)
+        _UniffiConverterTypeObjectId.lower(object_id)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -12647,11 +12800,11 @@ class TransactionsFilterProtocol(typing.Protocol):
         raise NotImplementedError
     def before_checkpoint(self, before_checkpoint: "int"):
         raise NotImplementedError
-    def changed_object(self, changed_object: "Address"):
+    def changed_object(self, changed_object: "ObjectId"):
         raise NotImplementedError
     def function(self, function: "str"):
         raise NotImplementedError
-    def input_object(self, input_object: "Address"):
+    def input_object(self, input_object: "ObjectId"):
         raise NotImplementedError
     def kind(self, kind: "TransactionBlockKindInput"):
         raise NotImplementedError
@@ -12732,12 +12885,12 @@ class TransactionsFilter():
 
 
 
-    def changed_object(self, changed_object: "Address") -> "TransactionsFilter":
-        _UniffiConverterTypeAddress.check_lower(changed_object)
+    def changed_object(self, changed_object: "ObjectId") -> "TransactionsFilter":
+        _UniffiConverterTypeObjectId.check_lower(changed_object)
         
         return _UniffiConverterTypeTransactionsFilter.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionsfilter_changed_object,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeAddress.lower(changed_object))
+        _UniffiConverterTypeObjectId.lower(changed_object))
         )
 
 
@@ -12756,12 +12909,12 @@ class TransactionsFilter():
 
 
 
-    def input_object(self, input_object: "Address") -> "TransactionsFilter":
-        _UniffiConverterTypeAddress.check_lower(input_object)
+    def input_object(self, input_object: "ObjectId") -> "TransactionsFilter":
+        _UniffiConverterTypeObjectId.check_lower(input_object)
         
         return _UniffiConverterTypeTransactionsFilter.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionsfilter_input_object,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeAddress.lower(input_object))
+        _UniffiConverterTypeObjectId.lower(input_object))
         )
 
 
@@ -13234,6 +13387,7 @@ async def _uniffi_rust_call_async(rust_future, ffi_poll, ffi_complete, ffi_free,
 __all__ = [
     "InternalError",
     "BindingsSdkError",
+    "EventFilter",
     "Address",
     "AuthenticatorStateExpire",
     "AuthenticatorStateUpdateV1",
@@ -13262,7 +13416,6 @@ __all__ = [
     "EndOfEpochTransactionKind",
     "Epoch",
     "EpochPage",
-    "EventFilter",
     "ExecutionTimeObservations",
     "FaucetClient",
     "FaucetReceipt",

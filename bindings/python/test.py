@@ -1,4 +1,4 @@
-from lib.iota_sdk_ffi import GraphQlClient, PaginationFilter, Address, Direction
+from lib.iota_sdk_ffi import GraphQlClient, PaginationFilter, Address, Direction, TransactionsFilter, ObjectId, EventFilter
 import asyncio
 
 async def main():
@@ -18,6 +18,10 @@ async def main():
     balance = await client.balance(my_address)
 
     print(f'Total Balance = {balance}')
+
+    filter=TransactionsFilter().at_checkpoint(3).input_object(ObjectId.from_hex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"))
+
+    filter=EventFilter(sender=my_address)
 
 
 if __name__ == '__main__':
