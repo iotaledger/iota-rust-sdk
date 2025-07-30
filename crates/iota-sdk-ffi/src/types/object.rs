@@ -13,6 +13,24 @@ use crate::{
     },
 };
 
+/// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
+/// the IOTA blockchain.
+///
+/// ## Relationship to Address
+///
+/// [`Address`]es and [`ObjectId`]s share the same 32-byte addressable space but
+/// are derived leveraging different domain-separator values to ensure,
+/// cryptographically, that there won't be any overlap, e.g. there can't be a
+/// valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
+/// account.
+///
+/// # BCS
+///
+/// An `ObjectId`'s BCS serialized form is defined by the following:
+///
+/// ```text
+/// object-id = 32*OCTET
+/// ```
 #[derive(Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct ObjectId(pub iota_types::ObjectId);
 
@@ -43,21 +61,55 @@ impl ObjectId {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct ObjectReference(pub iota_types::ObjectReference);
-
-#[uniffi::export]
-impl ObjectReference {
-    #[uniffi::constructor]
-    pub fn new(object_id: &ObjectId, version: Version, digest: &ObjectDigest) -> Self {
-        Self(iota_types::ObjectReference::new(
-            **object_id,
-            version,
-            **digest,
-        ))
+impl From<&iota_types::ObjectId> for ObjectId {
+    fn from(value: &iota_types::ObjectId) -> Self {
+        Self(*value)
     }
 }
 
+/// Reference to an object
+///
+/// Contains sufficient information to uniquely identify a specific object.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-ref = object-id u64 digest
+/// ```
+#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+pub struct ObjectReference {
+    object_id: Arc<ObjectId>,
+    version: u64,
+    digest: Arc<ObjectDigest>,
+}
+
+impl From<iota_types::ObjectReference> for ObjectReference {
+    fn from(value: iota_types::ObjectReference) -> Self {
+        Self {
+            object_id: Arc::new(value.object_id().into()),
+            version: value.version(),
+            digest: Arc::new(value.digest().into()),
+        }
+    }
+}
+
+impl From<ObjectReference> for iota_types::ObjectReference {
+    fn from(value: ObjectReference) -> Self {
+        Self::new(**value.object_id, value.version, **value.digest)
+    }
+}
+
+/// An object on the IOTA blockchain
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object = object-data owner digest u64
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Object(pub iota_types::Object);
 

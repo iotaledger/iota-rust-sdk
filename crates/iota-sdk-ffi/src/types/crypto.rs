@@ -1,25 +1,48 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::sync::Arc;
+
 use crate::error::Result;
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct ValidatorCommitteeMember(pub iota_types::ValidatorCommitteeMember);
+/// A member of a Validator Committee
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// validator-committee-member = bls-public-key
+///                              u64 ; stake
+/// ```
+#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+pub struct ValidatorCommitteeMember {
+    pub public_key: Arc<Bls12381PublicKey>,
+    pub stake: u64,
+}
 
-#[uniffi::export]
-impl ValidatorCommitteeMember {
-    pub fn public_key(&self) -> Bls12381PublicKey {
-        self.0.public_key.into()
+impl From<iota_types::ValidatorCommitteeMember> for ValidatorCommitteeMember {
+    fn from(value: iota_types::ValidatorCommitteeMember) -> Self {
+        Self {
+            public_key: Arc::new(value.public_key.into()),
+            stake: value.stake,
+        }
     }
+}
 
-    pub fn stake(&self) -> u64 {
-        self.0.stake
+impl From<ValidatorCommitteeMember> for iota_types::ValidatorCommitteeMember {
+    fn from(value: ValidatorCommitteeMember) -> Self {
+        Self {
+            public_key: **value.public_key,
+            stake: value.stake,
+        }
     }
 }
 
 macro_rules! impl_public_key {
-    ($t:ident) => {
-        #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+    ($(#[$meta:meta])* $t:ident) => {
+        $(#[$meta])*
+        #[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
         pub struct $t(pub iota_types::$t);
 
         #[uniffi::export]
@@ -47,7 +70,56 @@ macro_rules! impl_public_key {
     };
 }
 
-impl_public_key!(Bls12381PublicKey);
-impl_public_key!(Ed25519PublicKey);
-impl_public_key!(Secp256k1PublicKey);
-impl_public_key!(Secp256r1PublicKey);
+impl_public_key!(
+    /// A bls12381 min-sig public key.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form for this type is defined by the following ABNF:
+    ///
+    /// ```text
+    /// bls-public-key = %x60 96OCTECT
+    /// ```
+    ///
+    /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
+    /// fixed-length of 96, IOTA's binary representation of a min-sig
+    /// `Bls12381PublicKey` is prefixed with its length meaning its serialized
+    /// binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
+    Bls12381PublicKey
+);
+impl_public_key!(
+    /// An ed25519 public key.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form for this type is defined by the following ABNF:
+    ///
+    /// ```text
+    /// ed25519-public-key = 32OCTECT
+    /// ```
+    Ed25519PublicKey
+);
+impl_public_key!(
+    /// A secp256k1 signature.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form for this type is defined by the following ABNF:
+    ///
+    /// ```text
+    /// secp256k1-signature = 64OCTECT
+    /// ```
+    Secp256k1PublicKey
+);
+impl_public_key!(
+    /// A secp256r1 signature.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form for this type is defined by the following ABNF:
+    ///
+    /// ```text
+    /// secp256r1-signature = 64OCTECT
+    /// ```
+    Secp256r1PublicKey
+);
