@@ -75,15 +75,25 @@ impl TransactionDataEffects {
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Record)]
 pub struct TransactionsFilter {
+    #[uniffi(default = None)]
     pub function: Option<String>,
+    #[uniffi(default = None)]
     pub kind: Option<TransactionBlockKindInput>,
+    #[uniffi(default = None)]
     pub after_checkpoint: Option<u64>,
+    #[uniffi(default = None)]
     pub at_checkpoint: Option<u64>,
+    #[uniffi(default = None)]
     pub before_checkpoint: Option<u64>,
+    #[uniffi(default = None)]
     pub affected_address: Option<Arc<Address>>,
+    #[uniffi(default = None)]
     pub sent_address: Option<Arc<Address>>,
+    #[uniffi(default = None)]
     pub input_object: Option<Arc<ObjectId>>,
+    #[uniffi(default = None)]
     pub changed_object: Option<Arc<ObjectId>>,
+    #[uniffi(default = None)]
     pub transaction_ids: Option<Vec<String>>,
 }
 
@@ -216,9 +226,11 @@ pub struct PaginationFilter {
     /// The direction of pagination.
     pub direction: Direction,
     /// An opaque cursor used for pagination.
+    #[uniffi(default = None)]
     pub cursor: Option<String>,
     /// The maximum number of items to return. If this is ommitted, it will
     /// lazily query the service configuration for the max page size.
+    #[uniffi(default = None)]
     pub limit: Option<i32>,
 }
 

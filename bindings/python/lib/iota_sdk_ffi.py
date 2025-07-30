@@ -3871,10 +3871,16 @@ class PaginationFilter:
     lazily query the service configuration for the max page size.
     """
 
-    def __init__(self, *, direction: "Direction", cursor: "typing.Optional[str]", limit: "typing.Optional[int]"):
+    def __init__(self, *, direction: "Direction", cursor: "typing.Optional[str]" = _DEFAULT, limit: "typing.Optional[int]" = _DEFAULT):
         self.direction = direction
-        self.cursor = cursor
-        self.limit = limit
+        if cursor is _DEFAULT:
+            self.cursor = None
+        else:
+            self.cursor = cursor
+        if limit is _DEFAULT:
+            self.limit = None
+        else:
+            self.limit = limit
 
     def __str__(self):
         return "PaginationFilter(direction={}, cursor={}, limit={})".format(self.direction, self.cursor, self.limit)
@@ -3993,17 +3999,47 @@ class TransactionsFilter:
     input_object: "typing.Optional[ObjectId]"
     changed_object: "typing.Optional[ObjectId]"
     transaction_ids: "typing.Optional[typing.List[str]]"
-    def __init__(self, *, function: "typing.Optional[str]", kind: "typing.Optional[TransactionBlockKindInput]", after_checkpoint: "typing.Optional[int]", at_checkpoint: "typing.Optional[int]", before_checkpoint: "typing.Optional[int]", affected_address: "typing.Optional[Address]", sent_address: "typing.Optional[Address]", input_object: "typing.Optional[ObjectId]", changed_object: "typing.Optional[ObjectId]", transaction_ids: "typing.Optional[typing.List[str]]"):
-        self.function = function
-        self.kind = kind
-        self.after_checkpoint = after_checkpoint
-        self.at_checkpoint = at_checkpoint
-        self.before_checkpoint = before_checkpoint
-        self.affected_address = affected_address
-        self.sent_address = sent_address
-        self.input_object = input_object
-        self.changed_object = changed_object
-        self.transaction_ids = transaction_ids
+    def __init__(self, *, function: "typing.Optional[str]" = _DEFAULT, kind: "typing.Optional[TransactionBlockKindInput]" = _DEFAULT, after_checkpoint: "typing.Optional[int]" = _DEFAULT, at_checkpoint: "typing.Optional[int]" = _DEFAULT, before_checkpoint: "typing.Optional[int]" = _DEFAULT, affected_address: "typing.Optional[Address]" = _DEFAULT, sent_address: "typing.Optional[Address]" = _DEFAULT, input_object: "typing.Optional[ObjectId]" = _DEFAULT, changed_object: "typing.Optional[ObjectId]" = _DEFAULT, transaction_ids: "typing.Optional[typing.List[str]]" = _DEFAULT):
+        if function is _DEFAULT:
+            self.function = None
+        else:
+            self.function = function
+        if kind is _DEFAULT:
+            self.kind = None
+        else:
+            self.kind = kind
+        if after_checkpoint is _DEFAULT:
+            self.after_checkpoint = None
+        else:
+            self.after_checkpoint = after_checkpoint
+        if at_checkpoint is _DEFAULT:
+            self.at_checkpoint = None
+        else:
+            self.at_checkpoint = at_checkpoint
+        if before_checkpoint is _DEFAULT:
+            self.before_checkpoint = None
+        else:
+            self.before_checkpoint = before_checkpoint
+        if affected_address is _DEFAULT:
+            self.affected_address = None
+        else:
+            self.affected_address = affected_address
+        if sent_address is _DEFAULT:
+            self.sent_address = None
+        else:
+            self.sent_address = sent_address
+        if input_object is _DEFAULT:
+            self.input_object = None
+        else:
+            self.input_object = input_object
+        if changed_object is _DEFAULT:
+            self.changed_object = None
+        else:
+            self.changed_object = changed_object
+        if transaction_ids is _DEFAULT:
+            self.transaction_ids = None
+        else:
+            self.transaction_ids = transaction_ids
 
     def __str__(self):
         return "TransactionsFilter(function={}, kind={}, after_checkpoint={}, at_checkpoint={}, before_checkpoint={}, affected_address={}, sent_address={}, input_object={}, changed_object={}, transaction_ids={})".format(self.function, self.kind, self.after_checkpoint, self.at_checkpoint, self.before_checkpoint, self.affected_address, self.sent_address, self.input_object, self.changed_object, self.transaction_ids)
