@@ -1,0 +1,259 @@
+// Copyright (c) 2025 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+use std::sync::Arc;
+
+use crate::types::{
+    address::Address,
+    object::ObjectId,
+    transaction::{SignedTransaction, TransactionEffects},
+};
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct TransactionMetadata(pub iota_graphql_client::query_types::TransactionMetadata);
+
+#[uniffi::export]
+impl TransactionMetadata {
+    #[uniffi::constructor]
+    pub fn new() -> Self {
+        Self(Default::default())
+    }
+
+    pub fn gas_budget(&self, gas_budget: u64) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.gas_budget = Some(gas_budget);
+        Self(inner)
+    }
+
+    pub fn gas_objects(&self, gas_objects: Vec<Arc<ObjectRef>>) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.gas_objects = Some(gas_objects.into_iter().map(|obj| obj.0.clone()).collect());
+        Self(inner)
+    }
+
+    pub fn gas_price(&self, gas_price: u64) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.gas_price = Some(gas_price);
+        Self(inner)
+    }
+
+    pub fn gas_sponsor(&self, gas_sponsor: &Address) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.gas_sponsor = Some(**gas_sponsor);
+        Self(inner)
+    }
+
+    pub fn sender(&self, sender: &Address) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.sender = Some(**sender);
+        Self(inner)
+    }
+}
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct TransactionDataEffects(pub iota_graphql_client::TransactionDataEffects);
+
+#[uniffi::export]
+impl TransactionDataEffects {
+    #[uniffi::constructor]
+    pub fn new(tx: &SignedTransaction, effects: &TransactionEffects) -> Self {
+        Self(iota_graphql_client::TransactionDataEffects {
+            tx: tx.0.clone(),
+            effects: effects.0.clone(),
+        })
+    }
+
+    pub fn tx(&self) -> SignedTransaction {
+        self.0.tx.clone().into()
+    }
+
+    pub fn effects(&self) -> TransactionEffects {
+        self.0.effects.clone().into()
+    }
+}
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct TransactionsFilter(pub iota_graphql_client::query_types::TransactionsFilter);
+
+#[uniffi::export]
+impl TransactionsFilter {
+    #[uniffi::constructor]
+    pub fn new() -> Self {
+        Self(Default::default())
+    }
+
+    pub fn function(&self, function: String) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.function = Some(function);
+        Self(inner)
+    }
+
+    pub fn kind(&self, kind: &TransactionBlockKindInput) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.kind = Some(kind.0.clone());
+        Self(inner)
+    }
+
+    pub fn after_checkpoint(&self, after_checkpoint: u64) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.after_checkpoint = Some(after_checkpoint);
+        Self(inner)
+    }
+
+    pub fn at_checkpoint(&self, at_checkpoint: u64) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.at_checkpoint = Some(at_checkpoint);
+        Self(inner)
+    }
+
+    pub fn before_checkpoint(&self, before_checkpoint: u64) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.before_checkpoint = Some(before_checkpoint);
+        Self(inner)
+    }
+
+    pub fn affected_address(&self, affected_address: &Address) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.affected_address = Some(**affected_address);
+        Self(inner)
+    }
+
+    pub fn sent_address(&self, sent_address: &Address) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.sent_address = Some(**sent_address);
+        Self(inner)
+    }
+
+    pub fn input_object(&self, input_object: &ObjectId) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.input_object = Some(**input_object);
+        Self(inner)
+    }
+
+    pub fn changed_object(&self, changed_object: &ObjectId) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.changed_object = Some(**changed_object);
+        Self(inner)
+    }
+
+    pub fn transaction_ids(&self, transaction_ids: Vec<String>) -> Self {
+        let Self(mut inner) = self.clone();
+        inner.transaction_ids = Some(transaction_ids);
+        Self(inner)
+    }
+}
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct DryRunResult(pub iota_graphql_client::DryRunResult);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct TransactionEvent(pub iota_graphql_client::TransactionEvent);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ObjectRef(pub iota_graphql_client::query_types::ObjectRef);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct Epoch(pub iota_graphql_client::query_types::Epoch);
+
+type CoreEventFilter = iota_graphql_client::query_types::EventFilter;
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+pub struct EventFilter {
+    #[uniffi(default = None)]
+    pub emitting_module: Option<String>,
+    #[uniffi(default = None)]
+    pub event_type: Option<String>,
+    #[uniffi(default = None)]
+    pub sender: Option<Arc<Address>>,
+    #[uniffi(default = None)]
+    pub transaction_digest: Option<String>,
+}
+
+impl From<CoreEventFilter> for EventFilter {
+    fn from(value: CoreEventFilter) -> Self {
+        Self {
+            emitting_module: value.emitting_module,
+            event_type: value.event_type,
+            sender: value.sender.map(Into::into).map(Arc::new),
+            transaction_digest: value.transaction_digest,
+        }
+    }
+}
+
+impl From<EventFilter> for CoreEventFilter {
+    fn from(value: EventFilter) -> Self {
+        Self {
+            emitting_module: value.emitting_module,
+            event_type: value.event_type,
+            sender: value.sender.as_ref().map(|s| s.0.clone()),
+            transaction_digest: value.transaction_digest,
+        }
+    }
+}
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ObjectFilter(pub iota_graphql_client::query_types::ObjectFilter);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct DynamicFieldOutput(pub iota_graphql_client::DynamicFieldOutput);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct Validator(pub iota_graphql_client::query_types::Validator);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct TransactionBlockKindInput(
+    pub iota_graphql_client::query_types::TransactionBlockKindInput,
+);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct PageInfo(pub iota_graphql_client::query_types::PageInfo);
+
+#[derive(Clone, Debug, Default, derive_more::From, uniffi::Object)]
+pub struct PaginationFilter(pub iota_graphql_client::pagination::PaginationFilter);
+
+#[uniffi::export]
+impl PaginationFilter {
+    #[uniffi::constructor]
+    pub fn new(
+        direction: Option<Arc<Direction>>,
+        cursor: Option<String>,
+        limit: Option<i32>,
+    ) -> Self {
+        Self(iota_graphql_client::pagination::PaginationFilter {
+            direction: direction.map(|d| d.0.clone()).unwrap_or_default(),
+            cursor,
+            limit,
+        })
+    }
+}
+
+#[derive(Clone, Debug, Default, derive_more::From, uniffi::Object)]
+pub struct Direction(pub iota_graphql_client::pagination::Direction);
+
+#[uniffi::export]
+impl Direction {
+    #[uniffi::constructor]
+    pub fn forward() -> Self {
+        Self(iota_graphql_client::pagination::Direction::Forward)
+    }
+
+    #[uniffi::constructor]
+    pub fn backward() -> Self {
+        Self(iota_graphql_client::pagination::Direction::Backward)
+    }
+}
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ProtocolConfigs(pub iota_graphql_client::query_types::ProtocolConfigs);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct CoinMetadata(pub iota_graphql_client::query_types::CoinMetadata);
+
+#[derive(Debug, derive_more::From, uniffi::Object)]
+pub struct MoveFunction(pub iota_graphql_client::query_types::MoveFunction);
+
+#[derive(Debug, derive_more::From, uniffi::Object)]
+pub struct MoveModule(pub iota_graphql_client::query_types::MoveModule);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct ServiceConfig(pub iota_graphql_client::query_types::ServiceConfig);

@@ -37,7 +37,6 @@ use super::{
     schemars(tag = "scheme", rename_all = "lowercase")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum SimpleSignature {
     Ed25519 {
         signature: Ed25519Signature,
@@ -164,7 +163,6 @@ impl super::PasskeyPublicKey {
 }
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Object), uniffi::export(Display))]
 pub struct InvalidSignatureScheme(u8);
 
 impl std::fmt::Display for InvalidSignatureScheme {
@@ -194,7 +192,6 @@ impl std::fmt::Display for InvalidSignatureScheme {
 /// the completely serialized signature.
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum UserSignature {
     Simple(SimpleSignature),
     Multisig(MultisigAggregatedSignature),

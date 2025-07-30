@@ -37,7 +37,6 @@ struct BatchStatusFaucetResponse {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 #[serde(rename_all = "UPPERCASE")]
 pub enum BatchSendStatusType {
     Inprogress,
@@ -46,21 +45,17 @@ pub enum BatchSendStatusType {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct BatchSendStatus {
     pub status: BatchSendStatusType,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub transferred_gas_objects: Option<FaucetReceipt>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct FaucetReceipt {
     pub sent: Vec<CoinInfo>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[serde(rename_all = "camelCase")]
 pub struct CoinInfo {
     pub amount: u64,

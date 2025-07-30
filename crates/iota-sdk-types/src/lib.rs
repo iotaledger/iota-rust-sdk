@@ -167,7 +167,7 @@ pub use object_id::ObjectId;
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
     ActiveJwk, Argument, AuthenticatorStateExpire, AuthenticatorStateUpdateV1,
-    CancelledTransaction, ChangeEpoch, Command, ConsensusCommitPrologueV1,
+    CancelledTransaction, ChangeEpoch, ChangeEpochV2, Command, ConsensusCommitPrologueV1,
     ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind, ExecutionTimeObservationKey,
     ExecutionTimeObservations, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
     MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SignedTransaction,
@@ -176,31 +176,11 @@ pub use transaction::{
 };
 pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
 
-#[cfg(feature = "uniffi")]
-uniffi::setup_scaffolding!();
-
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
-
-#[cfg(feature = "uniffi")]
-#[macro_export]
-macro_rules! impl_uniffi_byte_vec_wrapper {
-    ($id:ident) => {
-        uniffi::custom_type!($id, Vec<u8>, {
-            lower: |val| val.as_bytes().to_vec(),
-            try_lift: |vec| Ok($id::from_bytes(vec)?),
-        });
-    };
-}
-
-#[cfg(not(feature = "uniffi"))]
-#[macro_export]
-macro_rules! impl_uniffi_byte_vec_wrapper {
-    ($id:ident) => {};
-}
 
 #[macro_export]
 macro_rules! def_is {

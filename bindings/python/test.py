@@ -1,26 +1,27 @@
-from lib.iota_graphql_client import Direction
-from lib.iota_sdk_ffi import GraphQlClient, PaginationFilter
-from lib.iota_sdk_types import address_from_hex, ObjectReference
+from lib.iota_sdk_ffi import GraphQlClient, PaginationFilter, Address, Direction, TransactionsFilter, ObjectId, EventFilter
 import asyncio
 
 async def main():
     client = GraphQlClient.new_devnet()
     chain_id = await client.chain_id()
     print(chain_id)
-
-    my_address=address_from_hex("0xda06e01d11c8d3ef8f8e238c2f144076fdc6832378fb48b153d57027ae868b39")
+    
+    my_address=Address.from_hex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")
 
     coins = await client.coins(
         my_address, 
-        PaginationFilter(direction=Direction.FORWARD, cursor=None, limit=None)
+        PaginationFilter(direction=Direction.forward(), cursor=None, limit=None)
     )
-    my_coins = []
     for coin in coins.data():
-        print(f'ID = 0x{coin.id.hex()} Balance = {coin.balance}')
+        print(f'ID = 0x{coin.id().to_hex()} Balance = {coin.balance()}')
 
     balance = await client.balance(my_address)
 
     print(f'Total Balance = {balance}')
+
+    filter=TransactionsFilter().at_checkpoint(3).input_object(ObjectId.from_hex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"))
+
+    filter=EventFilter(sender=my_address)
 
 
 if __name__ == '__main__':

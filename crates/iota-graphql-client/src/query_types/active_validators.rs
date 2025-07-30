@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::query_types::{Address, Base64, BigInt, GQLAddress, MoveObject, PageInfo, schema};
+use crate::query_types::{Base64, BigInt, GQLAddress, MoveObject, ObjectId, PageInfo, schema};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(
@@ -54,7 +54,6 @@ pub struct ValidatorConnection {
 
 /// Represents a validator in the system.
 #[derive(cynic::QueryFragment, Debug, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "Validator")]
 pub struct Validator {
     /// The APY of this validator in basis points.
@@ -107,7 +106,7 @@ pub struct Validator {
     /// The epoch at which this pool became active.
     pub staking_pool_activation_epoch: Option<u64>,
     /// The ID of this validator's `0x3::staking_pool::StakingPool`.
-    pub staking_pool_id: Address,
+    pub staking_pool_id: ObjectId,
     /// The total number of IOTA tokens in this pool.
     pub staking_pool_iota_balance: Option<BigInt>,
     /// The voting power of this validator in basis points (e.g., 100 = 1%
@@ -117,7 +116,6 @@ pub struct Validator {
 
 /// The credentials related fields associated with a validator.
 #[derive(cynic::QueryFragment, Debug, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ValidatorCredentials")]
 #[allow(non_snake_case)]
 pub struct ValidatorCredentials {

@@ -36,8 +36,6 @@ pub struct Bls12381PublicKey(
     [u8; Self::LENGTH],
 );
 
-crate::impl_uniffi_byte_vec_wrapper!(Bls12381PublicKey);
-
 impl Bls12381PublicKey {
     /// The length of an bls12381 public key in bytes.
     pub const LENGTH: usize = 96;

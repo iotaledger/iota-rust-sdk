@@ -26,7 +26,6 @@ pub type Version = u64;
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ObjectReference {
     /// The object id of this object.
     object_id: ObjectId,
@@ -101,7 +100,6 @@ impl ObjectReference {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Owner {
     /// Object is exclusively owned by a single address, and is mutable.
     Address(Address),
@@ -137,7 +135,6 @@ pub enum Owner {
 )]
 #[allow(clippy::large_enum_variant)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 // TODO think about hiding this type and not exposing it
 pub enum ObjectData {
     /// An object whose governing logic lives in a published Move module
@@ -216,34 +213,6 @@ pub struct MovePackage {
     pub linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
 }
 
-#[cfg(feature = "uniffi")]
-#[derive(uniffi::Record)]
-pub struct UniffiMovePackage {
-    id: ObjectId,
-    version: Version,
-    modules: std::collections::HashMap<Identifier, Vec<u8>>,
-    type_origin_table: Vec<TypeOrigin>,
-    linkage_table: std::collections::HashMap<ObjectId, UpgradeInfo>,
-}
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(MovePackage, UniffiMovePackage, {
-    lower: |mp| UniffiMovePackage {
-        id: mp.id,
-        version: mp.version,
-        modules: mp.modules.into_iter().collect(),
-        type_origin_table: mp.type_origin_table,
-        linkage_table: mp.linkage_table.into_iter().collect()
-    },
-    try_lift: |ump| Ok(MovePackage {
-        id: ump.id,
-        version: ump.version,
-        modules: ump.modules.into_iter().collect(),
-        type_origin_table: ump.type_origin_table,
-        linkage_table: ump.linkage_table.into_iter().collect()
-    }),
-});
-
 /// Identifies a struct and the module it was defined in
 ///
 /// # BCS
@@ -260,7 +229,6 @@ uniffi::custom_type!(MovePackage, UniffiMovePackage, {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TypeOrigin {
     pub module_name: Identifier,
     pub struct_name: Identifier,
@@ -283,7 +251,6 @@ pub struct TypeOrigin {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct UpgradeInfo {
     /// Id of the upgraded packages
     pub upgraded_id: ObjectId,
@@ -318,7 +285,6 @@ pub struct UpgradeInfo {
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveStruct {
     /// The type of this object
     #[cfg_attr(
@@ -343,7 +309,6 @@ pub struct MoveStruct {
 
 /// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
     Package,
@@ -368,7 +333,6 @@ impl ObjectType {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Object {
     /// The meat of the object
     pub data: ObjectData,
@@ -478,7 +442,6 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct GenesisObject {
     pub data: ObjectData,
     pub owner: Owner,

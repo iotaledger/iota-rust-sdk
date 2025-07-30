@@ -31,8 +31,6 @@ pub struct Secp256r1PublicKey(
     [u8; Self::LENGTH],
 );
 
-crate::impl_uniffi_byte_vec_wrapper!(Secp256r1PublicKey);
-
 impl Secp256r1PublicKey {
     /// The length of an secp256r1 public key in bytes.
     pub const LENGTH: usize = 33;
@@ -142,8 +140,6 @@ pub struct Secp256r1Signature(
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     [u8; Self::LENGTH],
 );
-
-crate::impl_uniffi_byte_vec_wrapper!(Secp256r1Signature);
 
 impl Secp256r1Signature {
     /// The length of an secp256r1 signature key in bytes.

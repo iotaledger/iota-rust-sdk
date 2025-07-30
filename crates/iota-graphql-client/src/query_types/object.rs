@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_types::ObjectId;
+
 use crate::query_types::{Address, Base64, MoveObjectContents, PageInfo, schema};
 
 // ===========================================================================
@@ -11,7 +13,7 @@ use crate::query_types::{Address, Base64, MoveObjectContents, PageInfo, schema};
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectQueryArgs")]
 pub struct ObjectQuery {
-    #[arguments(address: $address, version: $version)]
+    #[arguments(objectId: $object_id, version: $version)]
     pub object: Option<Object>,
 }
 
@@ -28,7 +30,7 @@ pub struct ObjectsQuery {
 
 #[derive(cynic::QueryVariables, Debug)]
 pub struct ObjectQueryArgs {
-    pub address: Address,
+    pub object_id: ObjectId,
     pub version: Option<u64>,
 }
 
@@ -54,21 +56,17 @@ pub struct Object {
 
 #[derive(Clone, Default, cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "ObjectFilter")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ObjectFilter {
     #[cynic(rename = "type")]
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub type_: Option<String>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub owner: Option<Address>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
-    pub object_ids: Option<Vec<Address>>,
+    pub object_ids: Option<Vec<ObjectId>>,
 }
 
 #[derive(Clone, cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "ObjectKey")]
 pub struct ObjectKey {
-    pub object_id: Address,
+    pub object_id: ObjectId,
     pub version: u64,
 }
 

@@ -46,7 +46,6 @@ pub struct ValidatorCommittee {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ValidatorCommitteeMember {
     #[cfg_attr(feature = "serde", serde(with = "ValidatorPublicKeySerialization"))]
     #[cfg_attr(feature = "schemars", schemars(with = "Bls12381PublicKey"))]

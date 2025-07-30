@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use base64ct::Encoding;
-use iota_types::{SignedTransaction, Transaction, TransactionEffects, UserSignature};
+use iota_types::{ObjectId, SignedTransaction, Transaction, TransactionEffects, UserSignature};
 
 use crate::{
     error,
@@ -142,35 +142,23 @@ pub struct TransactionBlockEffects {
     graphql_type = "TransactionBlockKindInput",
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,
 }
 
-#[derive(Clone, cynic::InputObject, Debug)]
+#[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TransactionsFilter {
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub function: Option<String>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub kind: Option<TransactionBlockKindInput>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub after_checkpoint: Option<u64>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub at_checkpoint: Option<u64>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub before_checkpoint: Option<u64>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub affected_address: Option<Address>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub sent_address: Option<Address>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
-    pub input_object: Option<Address>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
-    pub changed_object: Option<Address>,
-    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
+    pub input_object: Option<ObjectId>,
+    pub changed_object: Option<ObjectId>,
     pub transaction_ids: Option<Vec<String>>,
 }
 
