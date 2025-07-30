@@ -338,7 +338,7 @@ impl MultisigAggregator {
         Ok(())
     }
 
-    pub fn finish(&mut self) -> Result<MultisigAggregatedSignature, SignatureError> {
+    pub fn finish(&self) -> Result<MultisigAggregatedSignature, SignatureError> {
         if self.signed_weight < self.committee.threshold() {
             return Err(SignatureError::from_source(
                 "insufficient signature weight to reach threshold",

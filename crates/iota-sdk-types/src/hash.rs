@@ -384,6 +384,21 @@ mod signing_message {
             digest.into_inner()
         }
     }
+
+    impl crate::CheckpointSummary {
+        pub fn signing_message(&self) -> Vec<u8> {
+            const INTENT: Intent = Intent {
+                scope: IntentScope::CheckpointSummary,
+                version: IntentVersion::V0,
+                app_id: IntentAppId::Iota,
+            };
+            let mut message = Vec::new();
+            message.extend(INTENT.to_bytes());
+            bcs::serialize_into(&mut message, self).unwrap();
+            bcs::serialize_into(&mut message, &self.epoch).unwrap();
+            message
+        }
+    }
 }
 
 /// A 1-byte domain separator for hashing Object ID in IOTA. It is starting from
