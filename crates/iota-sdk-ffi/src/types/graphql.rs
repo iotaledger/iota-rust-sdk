@@ -745,5 +745,139 @@ pub struct MoveFunction(pub iota_graphql_client::query_types::MoveFunction);
 #[derive(Debug, derive_more::From, uniffi::Object)]
 pub struct MoveModule(pub iota_graphql_client::query_types::MoveModule);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct ServiceConfig(pub iota_graphql_client::query_types::ServiceConfig);
+type CoreServiceConfig = iota_graphql_client::query_types::ServiceConfig;
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct ServiceConfig {
+    /// Default number of elements allowed on a single page of a connection.
+    pub default_page_size: i32,
+    /// List of all features that are enabled on this RPC service.
+    pub enabled_features: Vec<Feature>,
+    // TODO This field is retrieved as a string, instead of i32
+    /// Maximum estimated cost of a database query used to serve a GraphQL
+    /// request.  This is measured in the same units that the database uses
+    /// in EXPLAIN queries.
+    // pub max_db_query_cost: i32,
+    /// Maximum nesting allowed in struct fields when calculating the layout of
+    /// a single Move Type.
+    pub max_move_value_depth: i32,
+    /// The maximum number of output nodes in a GraphQL response.
+    /// Non-connection nodes have a count of 1, while connection nodes are
+    /// counted as the specified 'first' or 'last' number of items, or the
+    /// default_page_size as set by the server if those arguments are not
+    /// set. Counts accumulate multiplicatively down the query tree. For
+    /// example, if a query starts with a connection of first: 10 and has a
+    /// field to a connection with last: 20, the count at the second level
+    /// would be 200 nodes. This is then summed to the count of 10 nodes
+    /// at the first level, for a total of 210 nodes.
+    pub max_output_nodes: i32,
+    /// Maximum number of elements allowed on a single page of a connection.
+    pub max_page_size: i32,
+    /// The maximum depth a GraphQL query can be to be accepted by this service.
+    pub max_query_depth: i32,
+    /// The maximum number of nodes (field names) the service will accept in a
+    /// single query.
+    pub max_query_nodes: i32,
+    /// Maximum length of a query payload string.
+    pub max_query_payload_size: i32,
+    /// Maximum nesting allowed in type arguments in Move Types resolved by this
+    /// service.
+    pub max_type_argument_depth: i32,
+    /// Maximum number of type arguments passed into a generic instantiation of
+    /// a Move Type resolved by this service.
+    pub max_type_argument_width: i32,
+    /// Maximum number of structs that need to be processed when calculating the
+    /// layout of a single Move Type.
+    pub max_type_nodes: i32,
+    /// Maximum time in milliseconds spent waiting for a response from fullnode
+    /// after issuing a a transaction to execute. Note that the transaction
+    /// may still succeed even in the case of a timeout. Transactions are
+    /// idempotent, so a transaction that times out should be resubmitted
+    /// until the network returns a definite response (success or failure, not
+    /// timeout).
+    pub mutation_timeout_ms: i32,
+    /// Maximum time in milliseconds that will be spent to serve one query
+    /// request.
+    pub request_timeout_ms: i32,
+}
+
+impl From<CoreServiceConfig> for ServiceConfig {
+    fn from(value: CoreServiceConfig) -> Self {
+        Self {
+            default_page_size: value.default_page_size,
+            enabled_features: value.enabled_features.into_iter().map(Into::into).collect(),
+            max_move_value_depth: value.max_move_value_depth,
+            max_output_nodes: value.max_output_nodes,
+            max_page_size: value.max_page_size,
+            max_query_depth: value.max_query_depth,
+            max_query_nodes: value.max_query_nodes,
+            max_query_payload_size: value.max_query_payload_size,
+            max_type_argument_depth: value.max_type_argument_depth,
+            max_type_argument_width: value.max_type_argument_width,
+            max_type_nodes: value.max_type_nodes,
+            mutation_timeout_ms: value.mutation_timeout_ms,
+            request_timeout_ms: value.request_timeout_ms,
+        }
+    }
+}
+
+impl From<ServiceConfig> for CoreServiceConfig {
+    fn from(value: ServiceConfig) -> Self {
+        Self {
+            default_page_size: value.default_page_size,
+            enabled_features: value.enabled_features.into_iter().map(Into::into).collect(),
+            max_move_value_depth: value.max_move_value_depth,
+            max_output_nodes: value.max_output_nodes,
+            max_page_size: value.max_page_size,
+            max_query_depth: value.max_query_depth,
+            max_query_nodes: value.max_query_nodes,
+            max_query_payload_size: value.max_query_payload_size,
+            max_type_argument_depth: value.max_type_argument_depth,
+            max_type_argument_width: value.max_type_argument_width,
+            max_type_nodes: value.max_type_nodes,
+            mutation_timeout_ms: value.mutation_timeout_ms,
+            request_timeout_ms: value.request_timeout_ms,
+        }
+    }
+}
+
+type CoreFeature = iota_graphql_client::query_types::Feature;
+
+#[derive(Clone, Debug, uniffi::Enum)]
+pub enum Feature {
+    Analytics,
+    Coins,
+    DynamicFields,
+    NameService,
+    Subscriptions,
+    SystemState,
+    MoveRegistry,
+}
+
+impl From<CoreFeature> for Feature {
+    fn from(value: CoreFeature) -> Self {
+        match value {
+            CoreFeature::Analytics => Self::Analytics,
+            CoreFeature::Coins => Self::Coins,
+            CoreFeature::DynamicFields => Self::DynamicFields,
+            CoreFeature::NameService => Self::NameService,
+            CoreFeature::Subscriptions => Self::Subscriptions,
+            CoreFeature::SystemState => Self::SystemState,
+            CoreFeature::MoveRegistry => Self::MoveRegistry,
+        }
+    }
+}
+
+impl From<Feature> for CoreFeature {
+    fn from(value: Feature) -> Self {
+        match value {
+            Feature::Analytics => Self::Analytics,
+            Feature::Coins => Self::Coins,
+            Feature::DynamicFields => Self::DynamicFields,
+            Feature::NameService => Self::NameService,
+            Feature::Subscriptions => Self::Subscriptions,
+            Feature::SystemState => Self::SystemState,
+            Feature::MoveRegistry => Self::MoveRegistry,
+        }
+    }
+}
