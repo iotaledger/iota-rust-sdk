@@ -500,7 +500,7 @@ input CheckpointId {
 Some 0x2::coin::Coin Move object.
 """
 type Coin implements IMoveObject & IObject & IOwner {
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	Objects owned by this object, optionally `filter`-ed.
 	"""
@@ -678,7 +678,7 @@ type CoinEdge {
 The metadata for a coin type.
 """
 type CoinMetadata implements IMoveObject & IObject & IOwner {
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	Objects owned by this object, optionally `filter`-ed.
 	"""
@@ -1646,11 +1646,11 @@ type Linkage {
 	"""
 	The ID on-chain of the first version of the dependency.
 	"""
-	originalId: IotaAddress!
+	originalId: ObjectId!
 	"""
 	The ID on-chain of the version of the dependency that this package depends on.
 	"""
-	upgradedId: IotaAddress!
+	upgradedId: ObjectId!
 	"""
 	The version of the dependency that this package depends on.
 	"""
@@ -1742,8 +1742,8 @@ The contents of a Move Value, corresponding to the following recursive type:
 
 type MoveData =
     { Address: IotaAddress }
-  | { UID:     IotaAddress }
-  | { ID:      IotaAddress }
+  | { UID:     ObjectId }
+  | { ID:      ObjectId }
   | { Bool:    bool }
   | { Number:  BigInt }
   | { String:  string }
@@ -2048,7 +2048,7 @@ The representation of an object as a Move Object, which exposes additional infor
 (content, module that governs it, version, is transferrable, etc.) about this object.
 """
 type MoveObject implements IMoveObject & IObject & IOwner {
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	Objects owned by this object, optionally `filter`-ed.
 	"""
@@ -2658,7 +2658,7 @@ with fields) with additional metadata detailing its id, version, transaction dig
 field indicating how this object can be accessed.
 """
 type Object implements IObject & IOwner {
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	Objects owned by this object, optionally `filter`-ed.
 	"""
@@ -2796,7 +2796,7 @@ type ObjectChange {
 	"""
 	The address of the object that has changed.
 	"""
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	The contents of the object immediately before the transaction.
 	"""
@@ -2897,11 +2897,11 @@ input ObjectFilter {
 	"""
 	Filter for live objects by their IDs.
 	"""
-	objectIds: [IotaAddress!]
+	objectIds: [ObjectId!]
 }
 
 input ObjectKey {
-	objectId: IotaAddress!
+	objectId: ObjectId!
 	version: UInt53!
 }
 
@@ -2926,7 +2926,7 @@ input ObjectRef {
 	"""
 	ID of the object.
 	"""
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	Version or sequence number of the object.
 	"""
@@ -2984,7 +2984,7 @@ type OwnedOrImmutable {
 	"""
 	ID of the object being read.
 	"""
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	Version of the object being read.
 	"""
@@ -3277,7 +3277,7 @@ type Query {
 	The object corresponding to the given address at the (optionally) given version.
 	When no version is given, the latest version is returned.
 	"""
-	object(address: IotaAddress!, version: UInt53): Object
+	object(objectId: ObjectId!, version: UInt53): Object
 	"""
 	The package corresponding to the given address (at the optionally given version).
 	
@@ -3457,7 +3457,7 @@ type Receiving {
 	"""
 	ID of the object being read.
 	"""
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	Version of the object being read.
 	"""
@@ -3620,7 +3620,7 @@ type Shared {
 A Move object that's shared.
 """
 type SharedInput {
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	The version that this this object was shared at.
 	"""
@@ -3642,7 +3642,7 @@ type SharedObjectCancelled {
 	"""
 	ID of the shared object.
 	"""
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	The assigned shared object version. It is a special version indicating transaction cancellation reason.
 	"""
@@ -3657,7 +3657,7 @@ type SharedObjectDelete {
 	"""
 	ID of the shared object.
 	"""
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	The version of the shared object that was assigned to this transaction during by consensus,
 	during sequencing.
@@ -3677,7 +3677,7 @@ type SharedObjectRead {
 	"""
 	ID of the object being read.
 	"""
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	Version of the object being read.
 	"""
@@ -3760,7 +3760,7 @@ type StakeSubsidy {
 Represents a `0x3::staking_pool::StakedIota` Move object on-chain.
 """
 type StakedIota implements IMoveObject & IObject & IOwner {
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	Objects owned by this object, optionally `filter`-ed.
 	"""
@@ -3907,7 +3907,7 @@ type StakedIota implements IMoveObject & IObject & IOwner {
 	"""
 	The object id of the validator staking pool this stake belongs to.
 	"""
-	poolId: IotaAddress
+	poolId: ObjectId
 	"""
 	The IOTA that was initially staked.
 	"""
@@ -3987,8 +3987,13 @@ String containing 32B hex-encoded address, with a leading "0x". Leading zeroes c
 """
 scalar IotaAddress
 
+"""
+String containing 32B hex-encoded address, with a leading "0x". Leading zeroes can be omitted on input but will always appear in outputs.
+"""
+scalar ObjectId
+
 type IotaNSRegistration implements IMoveObject & IObject & IOwner {
-	address: IotaAddress!
+	objectId: ObjectId!
 	"""
 	Objects owned by this object, optionally `filter`-ed.
 	"""
@@ -4379,7 +4384,7 @@ input TransactionBlockFilter {
 	This filter will be removed with 1.36.0 (2024-10-14), or at least one release after
 	`affectedObject` is introduced, whichever is later.
 	"""
-	inputObject: IotaAddress
+	inputObject: ObjectId
 	"""
 	Limit to transactions that output a versioon of this object. NOTE: this input filter has
 	been deprecated in favor of `affectedObject` which offers an easier to understand behavor.
@@ -4387,7 +4392,7 @@ input TransactionBlockFilter {
 	This filter will be removed with 1.36.0 (2024-10-14), or at least one release after
 	`affectedObject` is introduced, whichever is later.
 	"""
-	changedObject: IotaAddress
+	changedObject: ObjectId
 	"""
 	Select transactions by their digest.
 	"""
@@ -4601,7 +4606,7 @@ type Validator {
 	"""
 	The ID of this validator's `0x3::staking_pool::StakingPool`.
 	"""
-	stakingPoolId: IotaAddress!
+	stakingPoolId: ObjectId!
 	"""
 	The validator's current exchange object. The exchange rate is used to determine
 	the amount of IOTA tokens that each past IOTA staker can withdraw in the future.
@@ -4745,7 +4750,7 @@ type ValidatorSet {
 	"""
 	Object ID of the wrapped object `TableVec` storing the pending active validators.
 	"""
-	pendingActiveValidatorsId: IotaAddress
+	pendingActiveValidatorsId: ObjectId
 	"""
 	Size of the pending active validators table.
 	"""
@@ -4755,7 +4760,7 @@ type ValidatorSet {
 	of the corresponding validators. This is needed because a validator's address
 	can potentially change but the object ID of its pool will not.
 	"""
-	stakingPoolMappingsId: IotaAddress
+	stakingPoolMappingsId: ObjectId
 	"""
 	Size of the stake pool mappings `Table`.
 	"""
@@ -4763,7 +4768,7 @@ type ValidatorSet {
 	"""
 	Object ID of the `Table` storing the inactive staking pools.
 	"""
-	inactivePoolsId: IotaAddress
+	inactivePoolsId: ObjectId
 	"""
 	Size of the inactive pools `Table`.
 	"""
@@ -4771,7 +4776,7 @@ type ValidatorSet {
 	"""
 	Object ID of the `Table` storing the validator candidates.
 	"""
-	validatorCandidatesId: IotaAddress
+	validatorCandidatesId: ObjectId
 	"""
 	Size of the validator candidates `Table`.
 	"""

@@ -1,9 +1,8 @@
 // Copyright (c) Mysten Labs, Inc.
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
-//
 use super::PageInfo;
-use crate::query_types::{Address, BigInt, DateTime, ProtocolConfigs, schema};
+use crate::query_types::{BigInt, DateTime, ObjectId, ProtocolConfigs, schema};
 
 // ===========================================================================
 // Epoch Queries
@@ -127,12 +126,12 @@ pub struct Epoch {
 #[cynic(schema = "rpc", graphql_type = "ValidatorSet")]
 pub struct ValidatorSet {
     /// Object ID of the `Table` storing the inactive staking pools.
-    pub inactive_pools_id: Option<Address>,
+    pub inactive_pools_id: Option<ObjectId>,
     /// Size of the inactive pools `Table`.
     pub inactive_pools_size: Option<i32>,
     /// Object ID of the wrapped object `TableVec` storing the pending active
     /// validators.
-    pub pending_active_validators_id: Option<Address>,
+    pub pending_active_validators_id: Option<ObjectId>,
     /// Size of the pending active validators table.
     pub pending_active_validators_size: Option<i32>,
     /// Validators that are pending removal from the active validator set,
@@ -142,7 +141,7 @@ pub struct ValidatorSet {
     /// the addresses of the corresponding validators. This is needed
     /// because a validator's address can potentially change but the object
     /// ID of its pool will not.
-    pub staking_pool_mappings_id: Option<Address>,
+    pub staking_pool_mappings_id: Option<ObjectId>,
     /// Size of the stake pool mappings `Table`.
     pub staking_pool_mappings_size: Option<i32>,
     /// Total amount of stake for all active validators at the beginning of the
@@ -151,5 +150,5 @@ pub struct ValidatorSet {
     /// Size of the validator candidates `Table`.
     pub validator_candidates_size: Option<i32>,
     /// Object ID of the `Table` storing the validator candidates.
-    pub validator_candidates_id: Option<Address>,
+    pub validator_candidates_id: Option<ObjectId>,
 }

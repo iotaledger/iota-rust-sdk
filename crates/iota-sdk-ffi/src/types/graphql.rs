@@ -5,6 +5,7 @@ use std::sync::Arc;
 
 use crate::types::{
     address::Address,
+    object::ObjectId,
     transaction::{SignedTransaction, TransactionEffects},
 };
 
@@ -123,13 +124,13 @@ impl TransactionsFilter {
         Self(inner)
     }
 
-    pub fn input_object(&self, input_object: &Address) -> Self {
+    pub fn input_object(&self, input_object: &ObjectId) -> Self {
         let Self(mut inner) = self.clone();
         inner.input_object = Some(**input_object);
         Self(inner)
     }
 
-    pub fn changed_object(&self, changed_object: &Address) -> Self {
+    pub fn changed_object(&self, changed_object: &ObjectId) -> Self {
         let Self(mut inner) = self.clone();
         inner.changed_object = Some(**changed_object);
         Self(inner)

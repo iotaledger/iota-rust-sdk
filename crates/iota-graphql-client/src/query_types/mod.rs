@@ -73,7 +73,7 @@ pub mod schema {}
 // ===========================================================================
 
 impl_scalar!(Address, schema::IotaAddress);
-impl_scalar!(ObjectId, schema::IotaAddress);
+impl_scalar!(ObjectId, schema::ObjectId);
 impl_scalar!(u64, schema::UInt53);
 impl_scalar!(JsonValue, schema::JSON);
 

@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::query_types::{Address, Base64, BigInt, GQLAddress, MoveObject, PageInfo, schema};
+use crate::query_types::{Base64, BigInt, GQLAddress, MoveObject, ObjectId, PageInfo, schema};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(
@@ -106,7 +106,7 @@ pub struct Validator {
     /// The epoch at which this pool became active.
     pub staking_pool_activation_epoch: Option<u64>,
     /// The ID of this validator's `0x3::staking_pool::StakingPool`.
-    pub staking_pool_id: Address,
+    pub staking_pool_id: ObjectId,
     /// The total number of IOTA tokens in this pool.
     pub staking_pool_iota_balance: Option<BigInt>,
     /// The voting power of this validator in basis points (e.g., 100 = 1%

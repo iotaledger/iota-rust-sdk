@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use base64ct::Encoding;
-use iota_types::{SignedTransaction, Transaction, TransactionEffects, UserSignature};
+use iota_types::{ObjectId, SignedTransaction, Transaction, TransactionEffects, UserSignature};
 
 use crate::{
     error,
@@ -157,8 +157,8 @@ pub struct TransactionsFilter {
     pub before_checkpoint: Option<u64>,
     pub affected_address: Option<Address>,
     pub sent_address: Option<Address>,
-    pub input_object: Option<Address>,
-    pub changed_object: Option<Address>,
+    pub input_object: Option<ObjectId>,
+    pub changed_object: Option<ObjectId>,
     pub transaction_ids: Option<Vec<String>>,
 }
 

@@ -390,8 +390,8 @@ impl GraphQLClient {
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`].
-    pub async fn object_bcs(&self, address: &Address) -> Result<Option<Vec<u8>>> {
-        Ok(self.0.read().await.object_bcs(**address).await?)
+    pub async fn object_bcs(&self, object_id: &ObjectId) -> Result<Option<Vec<u8>>> {
+        Ok(self.0.read().await.object_bcs(**object_id).await?)
     }
 
     /// Return the BCS of an object that is a Move object.
@@ -402,14 +402,14 @@ impl GraphQLClient {
     #[uniffi::method(default(version = None))]
     pub async fn move_object_contents_bcs(
         &self,
-        address: &Address,
+        object_id: &ObjectId,
         version: Option<u64>,
     ) -> Result<Option<Vec<u8>>> {
         Ok(self
             .0
             .read()
             .await
-            .move_object_contents_bcs(**address, version)
+            .move_object_contents_bcs(**object_id, version)
             .await?)
     }
 
@@ -678,14 +678,14 @@ impl GraphQLClient {
     #[uniffi::method(default(version = None))]
     pub async fn move_object_contents(
         &self,
-        address: &Address,
+        object_id: &ObjectId,
         version: Option<u64>,
     ) -> Result<Option<serde_json::Value>> {
         Ok(self
             .0
             .read()
             .await
-            .move_object_contents(**address, version)
+            .move_object_contents(**object_id, version)
             .await?)
     }
 

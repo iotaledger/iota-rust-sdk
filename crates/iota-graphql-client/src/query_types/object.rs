@@ -13,7 +13,7 @@ use crate::query_types::{Address, Base64, MoveObjectContents, PageInfo, schema};
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectQueryArgs")]
 pub struct ObjectQuery {
-    #[arguments(address: $address, version: $version)]
+    #[arguments(objectId: $object_id, version: $version)]
     pub object: Option<Object>,
 }
 
@@ -30,7 +30,7 @@ pub struct ObjectsQuery {
 
 #[derive(cynic::QueryVariables, Debug)]
 pub struct ObjectQueryArgs {
-    pub address: Address,
+    pub object_id: ObjectId,
     pub version: Option<u64>,
 }
 
