@@ -7,6 +7,17 @@ use crate::types::{
     address::Address, digest::CheckpointDigest, object::ObjectReference, signature::UserSignature,
 };
 
+/// A transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction = %x00 transaction-v1
+///
+/// transaction-v1 = transaction-kind address gas-payment transaction-expiration
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Transaction(pub iota_types::Transaction);
 
@@ -16,13 +27,13 @@ impl Transaction {
     pub fn new(
         kind: &TransactionKind,
         sender: &Address,
-        gas_payment: &GasPayment,
+        gas_payment: GasPayment,
         expiration: &TransactionExpiration,
     ) -> Self {
         Self(iota_types::Transaction {
             kind: kind.0.clone(),
             sender: **sender,
-            gas_payment: gas_payment.0.clone(),
+            gas_payment: gas_payment.into(),
             expiration: expiration.0.clone(),
         })
     }
@@ -72,6 +83,23 @@ impl SignedTransaction {
     }
 }
 
+/// Transaction type
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction-kind    =  %x00 ptb
+///                     =/ %x01 change-epoch
+///                     =/ %x02 genesis-transaction
+///                     =/ %x03 consensus-commit-prologue
+///                     =/ %x04 authenticator-state-update
+///                     =/ %x05 (vector end-of-epoch-transaction-kind)
+///                     =/ %x06 randomness-state-update
+///                     =/ %x07 consensus-commit-prologue-v2
+///                     =/ %x08 consensus-commit-prologue-v3
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct TransactionKind(pub iota_types::TransactionKind);
 
@@ -125,9 +153,6 @@ pub struct ProgrammableTransaction(pub iota_types::ProgrammableTransaction);
 pub struct ConsensusCommitPrologueV1(pub iota_types::ConsensusCommitPrologueV1);
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct EndOfEpochTransactionKind(pub iota_types::EndOfEpochTransactionKind);
-
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct GenesisTransaction(pub iota_types::GenesisTransaction);
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
@@ -147,6 +172,34 @@ pub struct ExecutionTimeObservations(pub iota_types::ExecutionTimeObservations);
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct RandomnessStateUpdate(pub iota_types::RandomnessStateUpdate);
+
+/// Operation run at the end of an epoch
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// end-of-epoch-transaction-kind   =  eoe-change-epoch
+///                                 =/ eoe-authenticator-state-create
+///                                 =/ eoe-authenticator-state-expire
+///                                 =/ eoe-randomness-state-create
+///                                 =/ eoe-deny-list-state-create
+///                                 =/ eoe-bridge-state-create
+///                                 =/ eoe-bridge-committee-init
+///                                 =/ eoe-store-execution-time-observations
+///
+/// eoe-change-epoch                = %x00 change-epoch
+/// eoe-authenticator-state-create  = %x01
+/// eoe-authenticator-state-expire  = %x02 authenticator-state-expire
+/// eoe-randomness-state-create     = %x03
+/// eoe-deny-list-state-create      = %x04
+/// eoe-bridge-state-create         = %x05 digest
+/// eoe-bridge-committee-init       = %x06 u64
+/// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+/// ```
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct EndOfEpochTransactionKind(pub iota_types::EndOfEpochTransactionKind);
 
 #[uniffi::export]
 impl EndOfEpochTransactionKind {
@@ -194,24 +247,45 @@ impl EndOfEpochTransactionKind {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct GasPayment(pub iota_types::GasPayment);
+/// Payment information for executing a transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// gas-payment = (vector object-ref) ; gas coin objects
+///               address             ; owner
+///               u64                 ; price
+///               u64                 ; budget
+/// ```
+#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+pub struct GasPayment {
+    pub objects: Vec<ObjectReference>,
+    pub owner: Arc<Address>,
+    pub price: u64,
+    pub budget: u64,
+}
 
-#[uniffi::export]
-impl GasPayment {
-    #[uniffi::constructor]
-    pub fn new(
-        objects: Vec<Arc<ObjectReference>>,
-        owner: &Address,
-        price: u64,
-        budget: u64,
-    ) -> Self {
-        Self(iota_types::GasPayment {
-            objects: objects.into_iter().map(|obj| obj.0.clone()).collect(),
-            owner: todo!(),
-            price,
-            budget,
-        })
+impl From<iota_types::GasPayment> for GasPayment {
+    fn from(value: iota_types::GasPayment) -> Self {
+        Self {
+            objects: value.objects.into_iter().map(Into::into).collect(),
+            owner: Arc::new(value.owner.into()),
+            price: value.price,
+            budget: value.budget,
+        }
+    }
+}
+
+impl From<GasPayment> for iota_types::GasPayment {
+    fn from(value: GasPayment) -> Self {
+        Self {
+            objects: value.objects.into_iter().map(Into::into).collect(),
+            owner: value.owner.0,
+            price: value.price,
+            budget: value.budget,
+        }
     }
 }
 

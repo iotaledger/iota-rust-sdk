@@ -14,6 +14,30 @@ use crate::types::{
     transaction::{SignedTransaction, TransactionEffects},
 };
 
+macro_rules! define_paged_record {
+    ($id:ident, $typ:ty) => {
+        #[derive(uniffi::Object, derive_more::From)]
+        pub struct $id(Page<$typ>);
+
+        #[uniffi::export]
+        impl $id {
+            pub fn page_info(&self) -> PageInfo {
+                self.0.page_info().clone().into()
+            }
+
+            pub fn data(&self) -> Vec<$typ> {
+                self.0.data().to_vec()
+            }
+
+            pub fn is_empty(&self) -> bool {
+                self.0.is_empty()
+            }
+        }
+    };
+}
+
+define_paged_record!(CheckpointSummaryPage, CheckpointSummary);
+
 macro_rules! define_paged_object {
     ($id:ident, $typ:ty) => {
         #[derive(uniffi::Object, derive_more::From)]
@@ -47,7 +71,6 @@ define_paged_object!(TransactionEventPage, TransactionEvent);
 define_paged_object!(CoinPage, Coin);
 define_paged_object!(ObjectPage, Object);
 define_paged_object!(TransactionEffectsPage, TransactionEffects);
-define_paged_object!(CheckpointSummaryPage, CheckpointSummary);
 define_paged_object!(MovePackagePage, MovePackage);
 define_paged_object!(ValidatorPage, Validator);
 define_paged_object!(EpochPage, Epoch);

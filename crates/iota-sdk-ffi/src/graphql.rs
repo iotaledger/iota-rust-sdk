@@ -120,14 +120,14 @@ impl GraphQLClient {
     #[uniffi::method(default(epoch = None))]
     pub async fn active_validators(
         &self,
-        pagination_filter: &PaginationFilter,
+        pagination_filter: PaginationFilter,
         epoch: Option<u64>,
     ) -> Result<ValidatorPage> {
         Ok(self
             .0
             .read()
             .await
-            .active_validators(epoch, pagination_filter.0.clone())
+            .active_validators(epoch, pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -177,14 +177,14 @@ impl GraphQLClient {
     pub async fn coins(
         &self,
         owner: &Address,
-        pagination_filter: &PaginationFilter,
+        pagination_filter: PaginationFilter,
         coin_type: Option<String>,
     ) -> Result<CoinPage> {
         Ok(self
             .0
             .read()
             .await
-            .coins(**owner, coin_type, pagination_filter.0.clone())
+            .coins(**owner, coin_type, pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -219,27 +219,26 @@ impl GraphQLClient {
         &self,
         digest: Option<Arc<CheckpointDigest>>,
         seq_num: Option<u64>,
-    ) -> Result<Option<Arc<CheckpointSummary>>> {
+    ) -> Result<Option<CheckpointSummary>> {
         Ok(self
             .0
             .read()
             .await
             .checkpoint(digest.map(|d| **d), seq_num)
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .map(Into::into))
     }
 
     /// Get a page of [`CheckpointSummary`] for the provided parameters.
     pub async fn checkpoints(
         &self,
-        pagination_filter: &PaginationFilter,
+        pagination_filter: PaginationFilter,
     ) -> Result<CheckpointSummaryPage> {
         Ok(self
             .0
             .read()
             .await
-            .checkpoints(pagination_filter.0.clone())
+            .checkpoints(pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -277,12 +276,12 @@ impl GraphQLClient {
     }
 
     /// Return a page of epochs.
-    pub async fn epochs(&self, pagination_filter: &PaginationFilter) -> Result<EpochPage> {
+    pub async fn epochs(&self, pagination_filter: PaginationFilter) -> Result<EpochPage> {
         Ok(self
             .0
             .read()
             .await
-            .epochs(pagination_filter.0.clone())
+            .epochs(pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -318,14 +317,14 @@ impl GraphQLClient {
     #[uniffi::method(default(filter = None))]
     pub async fn events(
         &self,
-        pagination_filter: &PaginationFilter,
+        pagination_filter: PaginationFilter,
         filter: Option<EventFilter>,
     ) -> Result<TransactionEventPage> {
         Ok(self
             .0
             .read()
             .await
-            .events(filter.map(|f| f.into()), pagination_filter.0.clone())
+            .events(filter.map(|f| f.into()), pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -375,14 +374,14 @@ impl GraphQLClient {
     #[uniffi::method(default(filter = None))]
     pub async fn objects(
         &self,
-        pagination_filter: &PaginationFilter,
+        pagination_filter: PaginationFilter,
         filter: Option<Arc<ObjectFilter>>,
     ) -> Result<ObjectPage> {
         Ok(self
             .0
             .read()
             .await
-            .objects(filter.map(|f| f.0.clone()), pagination_filter.0.clone())
+            .objects(filter.map(|f| f.0.clone()), pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -451,7 +450,7 @@ impl GraphQLClient {
     pub async fn package_versions(
         &self,
         address: &Address,
-        pagination_filter: &PaginationFilter,
+        pagination_filter: PaginationFilter,
         after_version: Option<u64>,
         before_version: Option<u64>,
     ) -> Result<MovePackagePage> {
@@ -461,7 +460,7 @@ impl GraphQLClient {
             .await
             .package_versions(
                 **address,
-                pagination_filter.0.clone(),
+                pagination_filter.into(),
                 after_version,
                 before_version,
             )
@@ -506,7 +505,7 @@ impl GraphQLClient {
     #[uniffi::method(default(after_checkpoint = None, before_checkpoint = None))]
     pub async fn packages(
         &self,
-        pagination_filter: &PaginationFilter,
+        pagination_filter: PaginationFilter,
         after_checkpoint: Option<u64>,
         before_checkpoint: Option<u64>,
     ) -> Result<MovePackagePage> {
@@ -515,7 +514,7 @@ impl GraphQLClient {
             .read()
             .await
             .packages(
-                pagination_filter.0.clone(),
+                pagination_filter.into(),
                 after_checkpoint,
                 before_checkpoint,
             )
@@ -577,14 +576,14 @@ impl GraphQLClient {
     #[uniffi::method(default(filter = None))]
     pub async fn transactions(
         &self,
-        pagination_filter: &PaginationFilter,
-        filter: Option<Arc<TransactionsFilter>>,
+        pagination_filter: PaginationFilter,
+        filter: Option<TransactionsFilter>,
     ) -> Result<SignedTransactionPage> {
         Ok(self
             .0
             .read()
             .await
-            .transactions(filter.map(|f| f.0.clone()), pagination_filter.0.clone())
+            .transactions(filter.map(Into::into), pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -594,14 +593,14 @@ impl GraphQLClient {
     #[uniffi::method(default(filter = None))]
     pub async fn transactions_effects(
         &self,
-        pagination_filter: &PaginationFilter,
-        filter: Option<Arc<TransactionsFilter>>,
+        pagination_filter: PaginationFilter,
+        filter: Option<TransactionsFilter>,
     ) -> Result<TransactionEffectsPage> {
         Ok(self
             .0
             .read()
             .await
-            .transactions_effects(filter.map(|f| f.0.clone()), pagination_filter.0.clone())
+            .transactions_effects(filter.map(Into::into), pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -612,14 +611,14 @@ impl GraphQLClient {
     #[uniffi::method(default(filter = None))]
     pub async fn transactions_data_effects(
         &self,
-        pagination_filter: &PaginationFilter,
-        filter: Option<Arc<TransactionsFilter>>,
+        pagination_filter: PaginationFilter,
+        filter: Option<TransactionsFilter>,
     ) -> Result<TransactionDataEffectsPage> {
         Ok(self
             .0
             .read()
             .await
-            .transactions_data_effects(filter.map(|f| f.0.clone()), pagination_filter.0.clone())
+            .transactions_data_effects(filter.map(Into::into), pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -698,10 +697,10 @@ impl GraphQLClient {
         &self,
         package: &str,
         module: &str,
-        pagination_filter_enums: &PaginationFilter,
-        pagination_filter_friends: &PaginationFilter,
-        pagination_filter_functions: &PaginationFilter,
-        pagination_filter_structs: &PaginationFilter,
+        pagination_filter_enums: PaginationFilter,
+        pagination_filter_friends: PaginationFilter,
+        pagination_filter_functions: PaginationFilter,
+        pagination_filter_structs: PaginationFilter,
         version: Option<u64>,
     ) -> Result<Option<Arc<MoveModule>>> {
         Ok(self
@@ -712,10 +711,10 @@ impl GraphQLClient {
                 package,
                 module,
                 version,
-                pagination_filter_enums.0.clone(),
-                pagination_filter_friends.0.clone(),
-                pagination_filter_functions.0.clone(),
-                pagination_filter_structs.0.clone(),
+                pagination_filter_enums.into(),
+                pagination_filter_friends.into(),
+                pagination_filter_functions.into(),
+                pagination_filter_structs.into(),
             )
             .await?
             .map(Into::into)
@@ -793,13 +792,13 @@ impl GraphQLClient {
     pub async fn dynamic_fields(
         &self,
         address: &Address,
-        pagination_filter: &PaginationFilter,
+        pagination_filter: PaginationFilter,
     ) -> Result<DynamicFieldOutputPage> {
         Ok(self
             .0
             .read()
             .await
-            .dynamic_fields(**address, pagination_filter.0.clone())
+            .dynamic_fields(**address, pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -856,14 +855,14 @@ impl GraphQLClient {
     pub async fn dry_run_tx_kind(
         &self,
         tx_kind: &TransactionKind,
-        tx_meta: &TransactionMetadata,
+        tx_meta: TransactionMetadata,
         skip_checks: Option<bool>,
     ) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.0.clone())
+            .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.into())
             .await?
             .into())
     }

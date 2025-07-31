@@ -9,44 +9,45 @@ use crate::types::{
     transaction::{SignedTransaction, TransactionEffects},
 };
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct TransactionMetadata(pub iota_graphql_client::query_types::TransactionMetadata);
+#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+pub struct TransactionMetadata {
+    #[uniffi(default = None)]
+    pub gas_budget: Option<u64>,
+    #[uniffi(default = None)]
+    pub gas_objects: Option<Vec<Arc<ObjectRef>>>,
+    #[uniffi(default = None)]
+    pub gas_price: Option<u64>,
+    #[uniffi(default = None)]
+    pub gas_sponsor: Option<Arc<Address>>,
+    #[uniffi(default = None)]
+    pub sender: Option<Arc<Address>>,
+}
 
-#[uniffi::export]
-impl TransactionMetadata {
-    #[uniffi::constructor]
-    pub fn new() -> Self {
-        Self(Default::default())
+impl From<iota_graphql_client::query_types::TransactionMetadata> for TransactionMetadata {
+    fn from(value: iota_graphql_client::query_types::TransactionMetadata) -> Self {
+        Self {
+            gas_budget: value.gas_budget,
+            gas_objects: value
+                .gas_objects
+                .map(|v| v.into_iter().map(Into::into).map(Arc::new).collect()),
+            gas_price: value.gas_price,
+            gas_sponsor: value.gas_sponsor.map(Into::into).map(Arc::new),
+            sender: value.sender.map(Into::into).map(Arc::new),
+        }
     }
+}
 
-    pub fn gas_budget(&self, gas_budget: u64) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.gas_budget = Some(gas_budget);
-        Self(inner)
-    }
-
-    pub fn gas_objects(&self, gas_objects: Vec<Arc<ObjectRef>>) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.gas_objects = Some(gas_objects.into_iter().map(|obj| obj.0.clone()).collect());
-        Self(inner)
-    }
-
-    pub fn gas_price(&self, gas_price: u64) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.gas_price = Some(gas_price);
-        Self(inner)
-    }
-
-    pub fn gas_sponsor(&self, gas_sponsor: &Address) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.gas_sponsor = Some(**gas_sponsor);
-        Self(inner)
-    }
-
-    pub fn sender(&self, sender: &Address) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.sender = Some(**sender);
-        Self(inner)
+impl From<TransactionMetadata> for iota_graphql_client::query_types::TransactionMetadata {
+    fn from(value: TransactionMetadata) -> Self {
+        Self {
+            gas_budget: value.gas_budget,
+            gas_objects: value
+                .gas_objects
+                .map(|v| v.into_iter().map(|o| o.0.clone()).collect()),
+            gas_price: value.gas_price,
+            gas_sponsor: value.gas_sponsor.map(|a| a.0.clone()),
+            sender: value.sender.map(|a| a.0.clone()),
+        }
     }
 }
 
@@ -72,74 +73,61 @@ impl TransactionDataEffects {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct TransactionsFilter(pub iota_graphql_client::query_types::TransactionsFilter);
+#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+pub struct TransactionsFilter {
+    #[uniffi(default = None)]
+    pub function: Option<String>,
+    #[uniffi(default = None)]
+    pub kind: Option<TransactionBlockKindInput>,
+    #[uniffi(default = None)]
+    pub after_checkpoint: Option<u64>,
+    #[uniffi(default = None)]
+    pub at_checkpoint: Option<u64>,
+    #[uniffi(default = None)]
+    pub before_checkpoint: Option<u64>,
+    #[uniffi(default = None)]
+    pub affected_address: Option<Arc<Address>>,
+    #[uniffi(default = None)]
+    pub sent_address: Option<Arc<Address>>,
+    #[uniffi(default = None)]
+    pub input_object: Option<Arc<ObjectId>>,
+    #[uniffi(default = None)]
+    pub changed_object: Option<Arc<ObjectId>>,
+    #[uniffi(default = None)]
+    pub transaction_ids: Option<Vec<String>>,
+}
 
-#[uniffi::export]
-impl TransactionsFilter {
-    #[uniffi::constructor]
-    pub fn new() -> Self {
-        Self(Default::default())
+impl From<iota_graphql_client::query_types::TransactionsFilter> for TransactionsFilter {
+    fn from(value: iota_graphql_client::query_types::TransactionsFilter) -> Self {
+        Self {
+            function: value.function,
+            kind: value.kind.map(Into::into),
+            after_checkpoint: value.after_checkpoint,
+            at_checkpoint: value.at_checkpoint,
+            before_checkpoint: value.before_checkpoint,
+            affected_address: value.affected_address.map(Into::into).map(Arc::new),
+            sent_address: value.sent_address.map(Into::into).map(Arc::new),
+            input_object: value.input_object.map(Into::into).map(Arc::new),
+            changed_object: value.changed_object.map(Into::into).map(Arc::new),
+            transaction_ids: value.transaction_ids,
+        }
     }
+}
 
-    pub fn function(&self, function: String) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.function = Some(function);
-        Self(inner)
-    }
-
-    pub fn kind(&self, kind: &TransactionBlockKindInput) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.kind = Some(kind.0.clone());
-        Self(inner)
-    }
-
-    pub fn after_checkpoint(&self, after_checkpoint: u64) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.after_checkpoint = Some(after_checkpoint);
-        Self(inner)
-    }
-
-    pub fn at_checkpoint(&self, at_checkpoint: u64) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.at_checkpoint = Some(at_checkpoint);
-        Self(inner)
-    }
-
-    pub fn before_checkpoint(&self, before_checkpoint: u64) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.before_checkpoint = Some(before_checkpoint);
-        Self(inner)
-    }
-
-    pub fn affected_address(&self, affected_address: &Address) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.affected_address = Some(**affected_address);
-        Self(inner)
-    }
-
-    pub fn sent_address(&self, sent_address: &Address) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.sent_address = Some(**sent_address);
-        Self(inner)
-    }
-
-    pub fn input_object(&self, input_object: &ObjectId) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.input_object = Some(**input_object);
-        Self(inner)
-    }
-
-    pub fn changed_object(&self, changed_object: &ObjectId) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.changed_object = Some(**changed_object);
-        Self(inner)
-    }
-
-    pub fn transaction_ids(&self, transaction_ids: Vec<String>) -> Self {
-        let Self(mut inner) = self.clone();
-        inner.transaction_ids = Some(transaction_ids);
-        Self(inner)
+impl From<TransactionsFilter> for iota_graphql_client::query_types::TransactionsFilter {
+    fn from(value: TransactionsFilter) -> Self {
+        Self {
+            function: value.function,
+            kind: value.kind.map(Into::into),
+            after_checkpoint: value.after_checkpoint,
+            at_checkpoint: value.at_checkpoint,
+            before_checkpoint: value.before_checkpoint,
+            affected_address: value.affected_address.map(|v| **v),
+            sent_address: value.sent_address.map(|v| **v),
+            input_object: value.input_object.map(|v| **v),
+            changed_object: value.changed_object.map(|v| **v),
+            transaction_ids: value.transaction_ids,
+        }
     }
 }
 
@@ -155,8 +143,6 @@ pub struct ObjectRef(pub iota_graphql_client::query_types::ObjectRef);
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Epoch(pub iota_graphql_client::query_types::Epoch);
 
-type CoreEventFilter = iota_graphql_client::query_types::EventFilter;
-
 #[derive(Clone, Debug, derive_more::From, uniffi::Record)]
 pub struct EventFilter {
     #[uniffi(default = None)]
@@ -169,8 +155,8 @@ pub struct EventFilter {
     pub transaction_digest: Option<String>,
 }
 
-impl From<CoreEventFilter> for EventFilter {
-    fn from(value: CoreEventFilter) -> Self {
+impl From<iota_graphql_client::query_types::EventFilter> for EventFilter {
+    fn from(value: iota_graphql_client::query_types::EventFilter) -> Self {
         Self {
             emitting_module: value.emitting_module,
             event_type: value.event_type,
@@ -180,12 +166,12 @@ impl From<CoreEventFilter> for EventFilter {
     }
 }
 
-impl From<EventFilter> for CoreEventFilter {
+impl From<EventFilter> for iota_graphql_client::query_types::EventFilter {
     fn from(value: EventFilter) -> Self {
         Self {
             emitting_module: value.emitting_module,
             event_type: value.event_type,
-            sender: value.sender.as_ref().map(|s| s.0.clone()),
+            sender: value.sender.map(|s| s.0.clone()),
             transaction_digest: value.transaction_digest,
         }
     }
@@ -200,46 +186,97 @@ pub struct DynamicFieldOutput(pub iota_graphql_client::DynamicFieldOutput);
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Validator(pub iota_graphql_client::query_types::Validator);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct TransactionBlockKindInput(
-    pub iota_graphql_client::query_types::TransactionBlockKindInput,
-);
+#[derive(Copy, Clone, Debug, derive_more::From, uniffi::Enum)]
+pub enum TransactionBlockKindInput {
+    SystemTx,
+    ProgrammableTx,
+}
+
+impl From<iota_graphql_client::query_types::TransactionBlockKindInput>
+    for TransactionBlockKindInput
+{
+    fn from(value: iota_graphql_client::query_types::TransactionBlockKindInput) -> Self {
+        match value {
+            iota_graphql_client::query_types::TransactionBlockKindInput::SystemTx => Self::SystemTx,
+            iota_graphql_client::query_types::TransactionBlockKindInput::ProgrammableTx => {
+                Self::ProgrammableTx
+            }
+        }
+    }
+}
+
+impl From<TransactionBlockKindInput>
+    for iota_graphql_client::query_types::TransactionBlockKindInput
+{
+    fn from(value: TransactionBlockKindInput) -> Self {
+        match value {
+            TransactionBlockKindInput::SystemTx => Self::SystemTx,
+            TransactionBlockKindInput::ProgrammableTx => Self::ProgrammableTx,
+        }
+    }
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct PageInfo(pub iota_graphql_client::query_types::PageInfo);
 
-#[derive(Clone, Debug, Default, derive_more::From, uniffi::Object)]
-pub struct PaginationFilter(pub iota_graphql_client::pagination::PaginationFilter);
+/// Pagination options for querying the GraphQL server. It defaults to forward
+/// pagination with the GraphQL server's max page size.
+#[derive(Clone, Debug, Default, uniffi::Record)]
+pub struct PaginationFilter {
+    /// The direction of pagination.
+    pub direction: Direction,
+    /// An opaque cursor used for pagination.
+    #[uniffi(default = None)]
+    pub cursor: Option<String>,
+    /// The maximum number of items to return. If this is ommitted, it will
+    /// lazily query the service configuration for the max page size.
+    #[uniffi(default = None)]
+    pub limit: Option<i32>,
+}
 
-#[uniffi::export]
-impl PaginationFilter {
-    #[uniffi::constructor]
-    pub fn new(
-        direction: Option<Arc<Direction>>,
-        cursor: Option<String>,
-        limit: Option<i32>,
-    ) -> Self {
-        Self(iota_graphql_client::pagination::PaginationFilter {
-            direction: direction.map(|d| d.0.clone()).unwrap_or_default(),
-            cursor,
-            limit,
-        })
+impl From<iota_graphql_client::pagination::PaginationFilter> for PaginationFilter {
+    fn from(value: iota_graphql_client::pagination::PaginationFilter) -> Self {
+        Self {
+            direction: value.direction.into(),
+            cursor: value.cursor,
+            limit: value.limit,
+        }
     }
 }
 
-#[derive(Clone, Debug, Default, derive_more::From, uniffi::Object)]
-pub struct Direction(pub iota_graphql_client::pagination::Direction);
-
-#[uniffi::export]
-impl Direction {
-    #[uniffi::constructor]
-    pub fn forward() -> Self {
-        Self(iota_graphql_client::pagination::Direction::Forward)
+impl From<PaginationFilter> for iota_graphql_client::pagination::PaginationFilter {
+    fn from(value: PaginationFilter) -> Self {
+        Self {
+            direction: value.direction.into(),
+            cursor: value.cursor,
+            limit: value.limit,
+        }
     }
+}
 
-    #[uniffi::constructor]
-    pub fn backward() -> Self {
-        Self(iota_graphql_client::pagination::Direction::Backward)
+/// Pagination direction.
+#[derive(Clone, Debug, Default, uniffi::Enum)]
+pub enum Direction {
+    #[default]
+    Forward,
+    Backward,
+}
+
+impl From<iota_graphql_client::pagination::Direction> for Direction {
+    fn from(value: iota_graphql_client::pagination::Direction) -> Self {
+        match value {
+            iota_graphql_client::pagination::Direction::Forward => Self::Forward,
+            iota_graphql_client::pagination::Direction::Backward => Self::Backward,
+        }
+    }
+}
+
+impl From<Direction> for iota_graphql_client::pagination::Direction {
+    fn from(value: Direction) -> Self {
+        match value {
+            Direction::Forward => Self::Forward,
+            Direction::Backward => Self::Backward,
+        }
     }
 }
 

@@ -10,7 +10,7 @@ async def main():
 
     coins = await client.coins(
         my_address, 
-        PaginationFilter(direction=Direction.forward(), cursor=None, limit=None)
+        PaginationFilter(direction=Direction.FORWARD, cursor=None, limit=None)
     )
     for coin in coins.data():
         print(f'ID = 0x{coin.id().to_hex()} Balance = {coin.balance()}')
@@ -19,7 +19,7 @@ async def main():
 
     print(f'Total Balance = {balance}')
 
-    filter=TransactionsFilter().at_checkpoint(3).input_object(ObjectId.from_hex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"))
+    filter=TransactionsFilter(at_checkpoint=3, input_object=ObjectId.from_hex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"))
 
     filter=EventFilter(sender=my_address)
 

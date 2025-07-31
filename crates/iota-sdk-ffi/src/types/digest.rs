@@ -4,7 +4,8 @@
 use crate::error::Result;
 
 macro_rules! impl_digest_wrapper {
-    ($t:ident) => {
+    ($(#[$meta:meta])* $t:ident) => {
+        $(#[$meta])*
         #[derive(
             Copy,
             Clone,
@@ -46,10 +47,32 @@ macro_rules! impl_digest_wrapper {
                 self.0.to_base58()
             }
         }
+
+        impl From<&iota_types::$t> for $t {
+            fn from(value: &iota_types::$t) -> Self {
+                Self(*value)
+            }
+        }
     };
 }
 
-impl_digest_wrapper!(Digest);
+impl_digest_wrapper!(
+    /// A 32-byte Blake2b256 hash output.
+    ///
+    /// # BCS
+    ///
+    /// A `Digest`'s BCS serialized form is defined by the following:
+    ///
+    /// ```text
+    /// digest = %x20 32OCTET
+    /// ```
+    ///
+    /// Due to historical reasons, even though a `Digest` has a fixed-length of 32,
+    /// IOTA's binary representation of a `Digest` is prefixed with its length
+    /// meaning its serialized binary form (in bcs) is 33 bytes long vs a more
+    /// compact 32 bytes.
+    Digest
+);
 impl_digest_wrapper!(CheckpointDigest);
 impl_digest_wrapper!(CheckpointContentsDigest);
 impl_digest_wrapper!(TransactionDigest);
