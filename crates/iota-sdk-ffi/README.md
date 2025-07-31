@@ -4,40 +4,33 @@ This crate can generate bindings for various languages (Go, Kotlin, Python, etc.
 
 ## 1. Build the Rust FFI library
 
-Start by building the library to generate the appropriate `.dylib` (Mac) or `.so` (Linux) files.
+To build the Rust FFI library for the IOTA SDK, run:
 
 ```sh
 cargo build -p iota-sdk-ffi --lib --release
 ```
 
-## 2. Generate the binding
+Note that the generated library will have an OS specific file extension. For simplicity the commands below target Linux. But if you're using any other platform, please make sure to adapt the extension accordingly, i.e. Mac users need to replace `.so` with `.dylib`, Windows users `.so` with `.dll`.
 
-Next, run the `iota_sdk_bindings` binary to generate the bindings for the desired language.
+## 2. Generate binding
+
+Next, run the `iota_sdk_bindings` binary to generate the bindings for, e.g., Python, Kotlin, Go.
+Note that the command below targets Python as an example. Make sure to change the `--language` parameter and the `--out-dir` path to your desired language, e.g. `kotlin`, `go`, etc.
 
 ```sh
-# Mac
-cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi.dylib" --language python --out-dir bindings/python/lib --no-format
-
-# Linux
-cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi.so" --language python --out-dir bindings/python/lib --no-format
+cargo run --bin iota_sdk_bindings -- generate --library target/release/libiota_sdk_ffi.so --language python --out-dir bindings/python/lib --no-format
 ```
 
-## 3. Copy the Rust FFI library to the output directory
+## 3. Copy or Link the FFI library
+
+Copy the Rust FFI library to the output directory for the new binding:
 
 ```sh
-# Mac
-cp target/release/libiota_sdk_ffi.dylib bindings/python/lib/
-
-# Linux
 cp target/release/libiota_sdk_ffi.so bindings/python/lib/
 ```
 
-Or alternatively, create a symbolic link to always point to the latest build.
+Alternatively (to skip this step for future builds), create a symbolic link to always point to the latest release build:
 
 ```sh
-# Mac
-ln -s target/release/libiota_sdk_ffi.dylib bindings/python/lib/libiota_sdk_ffi.dylib
-
-# Linux
 ln -s target/release/libiota_sdk_ffi.so bindings/python/lib/libiota_sdk_ffi.so
 ```
