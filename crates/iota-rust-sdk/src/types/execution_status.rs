@@ -174,6 +174,10 @@ pub enum ExecutionError {
     /// Certificate is cancelled because randomness could not be generated this
     /// epoch
     ExecutionCancelledDueToRandomnessUnavailable,
+
+    /// A valid linkage was unable to be determined for the transaction or one
+    /// of its commands.
+    InvalidLinkage,
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -482,6 +486,8 @@ mod serialization {
             congested_objects: Vec<ObjectId>,
             suggested_gas_price: u64,
         },
+
+        InvalidLinkage,
     }
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
@@ -570,6 +576,8 @@ mod serialization {
             congested_objects: Vec<ObjectId>,
             suggested_gas_price: u64,
         },
+
+        InvalidLinkage,
     }
 
     impl Serialize for ExecutionError {
@@ -695,6 +703,7 @@ mod serialization {
                         congested_objects,
                         suggested_gas_price,
                     },
+                    Self::InvalidLinkage => ReadableExecutionError::InvalidLinkage,
                 };
                 readable.serialize(serializer)
             } else {
@@ -811,6 +820,7 @@ mod serialization {
                         congested_objects,
                         suggested_gas_price,
                     },
+                    Self::InvalidLinkage => BinaryExecutionError::InvalidLinkage,
                 };
                 binary.serialize(serializer)
             }
@@ -938,6 +948,7 @@ mod serialization {
                         congested_objects,
                         suggested_gas_price,
                     },
+                    ReadableExecutionError::InvalidLinkage => Self::InvalidLinkage,
                 })
             } else {
                 BinaryExecutionError::deserialize(deserializer).map(|binary| match binary {
@@ -1051,6 +1062,7 @@ mod serialization {
                         congested_objects,
                         suggested_gas_price,
                     },
+                    BinaryExecutionError::InvalidLinkage => Self::InvalidLinkage,
                 })
             }
         }
