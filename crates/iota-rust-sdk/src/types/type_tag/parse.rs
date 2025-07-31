@@ -146,7 +146,7 @@ mod tests {
             "0x1::_bar::_BAR<0x2::_____::______fooo______>",
             "0x1::__::__<0x2::_____::______fooo______, 0xff::Bar____::_______foo>",
         ] {
-            assert!(parse_type_tag(s).is_ok(), "Failed to parse tag {}", s);
+            assert!(parse_type_tag(s).is_ok(), "Failed to parse tag {s}");
         }
     }
 
@@ -216,9 +216,7 @@ mod tests {
                 st.to_string().replace(' ', ""),
                 text.replace(' ', "")
                     .replace("0x1", &Address::from_str("0x1").unwrap().to_string()),
-                "text: {:?}, StructTag: {:?}",
-                text,
-                st
+                "text: {text:?}, StructTag: {st:?}"
             );
         }
     }
