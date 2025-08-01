@@ -470,8 +470,6 @@ mod keypair {
 #[cfg(test)]
 mod test {
     use test_strategy::proptest;
-    #[cfg(target_arch = "wasm32")]
-    use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use super::*;
     use crate::{
