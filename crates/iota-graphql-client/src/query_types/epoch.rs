@@ -115,8 +115,6 @@ pub struct Epoch {
     pub total_gas_fees: Option<BigInt>,
     /// The total MIST rewarded as stake.
     pub total_stake_rewards: Option<BigInt>,
-    /// The amount added to total gas fees to make up the total stake rewards.
-    pub total_stake_subsidies: Option<BigInt>,
     /// The total number of transaction in this epoch.
     pub total_transactions: Option<u64>,
     /// Validator related properties. For active validators, see
