@@ -132,13 +132,6 @@ uniffi::custom_type!(BcsName, Vec<u8>, {
 });
 
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
-pub struct TransactionEvent {
-    pub event: Event,
-    pub digest: TransactionDigest,
-}
-
-#[derive(Clone, Debug)]
 /// A page of items returned by the GraphQL server.
 pub struct Page<T> {
     /// Information about the page, such as the cursor and whether there are
@@ -373,7 +366,7 @@ impl Client {
         &self,
         filter: Option<EventFilter>,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<TransactionEvent>> + '_ {
+    ) -> impl Stream<Item = Result<Event>> + '_ {
         stream_paginated_query(
             move |pag_filter| self.events(filter.clone(), pag_filter),
             streaming_direction,
@@ -1000,7 +993,7 @@ impl Client {
         &self,
         filter: Option<EventFilter>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<TransactionEvent>> {
+    ) -> Result<Page<Event>> {
         let PaginationFilterResponse {
             after,
             before,
@@ -1026,34 +1019,17 @@ impl Client {
             let ec = events.events;
             let page_info = ec.page_info;
 
-            let events_with_digests = ec
+            let events = ec
                 .nodes
                 .into_iter()
                 .map(|node| {
-                    let event =
-                        bcs::from_bytes::<Event>(&base64ct::Base64::decode_vec(&node.bcs.0)?)?;
-
-                    let tx_digest = node
-                        .transaction_block
-                        .ok_or_else(Error::empty_response_error)?
-                        .digest
-                        .ok_or_else(|| {
-                            Error::from_error(
-                                Kind::Deserialization,
-                                "Expected a transaction digest for this event, but it is missing.",
-                            )
-                        })?;
-
-                    let tx_digest = TransactionDigest::from_base58(&tx_digest)?;
-
-                    Ok(TransactionEvent {
-                        event,
-                        digest: tx_digest,
-                    })
+                    Ok(bcs::from_bytes::<Event>(&base64ct::Base64::decode_vec(
+                        &node.bcs.0,
+                    )?)?)
                 })
                 .collect::<Result<Vec<_>>>()?;
 
-            Ok(Page::new(page_info, events_with_digests))
+            Ok(Page::new(page_info, events))
         } else {
             Ok(Page::new_empty())
         }
