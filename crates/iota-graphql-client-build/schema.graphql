@@ -1418,6 +1418,10 @@ type GasCostSummary {
 	"""
 	computationCost: BigInt
 	"""
+	The burned component of the computation/execution costs.
+	"""
+	computationCostBurned: BigInt
+	"""
 	Gas paid for the data stored on-chain by this transaction (in NANOS).
 	"""
 	storageCost: BigInt
