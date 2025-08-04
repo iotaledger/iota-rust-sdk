@@ -18,9 +18,9 @@ use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::Error;
 use futures::Stream;
 use iota_types::{
-    Address, CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, Event, MovePackage,
-    Object, SignedTransaction, Transaction, TransactionDigest, TransactionEffects, TransactionKind,
-    TypeTag, UserSignature, framework::Coin,
+    Address, CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, Event, Identifier,
+    MovePackage, Object, SignedTransaction, Transaction, TransactionDigest, TransactionEffects,
+    TransactionKind, TypeTag, UserSignature, framework::Coin,
 };
 use query_types::{
     ActiveValidatorsArgs, ActiveValidatorsQuery, BalanceArgs, BalanceQuery, ChainIdentifierQuery,
@@ -983,9 +983,19 @@ impl Client {
                 .nodes
                 .into_iter()
                 .map(|node| {
-                    let event =
-                        bcs::from_bytes::<Event>(&base64ct::Base64::decode_vec(&node.bcs.0)?)?;
-                    Ok(event)
+                    let module = node.sending_module.ok_or_else(|| {
+                        Error::from_error(
+                            Kind::Deserialization,
+                            "Expected a sending module for this event, but it is missing.",
+                        )
+                    })?;
+                    Ok(Event {
+                        package_id: module.package.address.into(),
+                        module: Identifier::new(module.name)?,
+                        sender: node.sender.map(|s| s.address).unwrap_or(Address::ZERO),
+                        type_: node.type_.repr.parse()?,
+                        contents: base64ct::Base64::decode_vec(&node.bcs.0)?,
+                    })
                 })
                 .collect::<Result<Vec<_>>>()?;
 

@@ -38,6 +38,7 @@ pub struct PackageArgs {
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
 pub struct MovePackageQuery {
+    pub address: Address,
     pub bcs: Option<Base64>,
 }
 
