@@ -27,13 +27,12 @@ use query_types::{
     CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointsArgs, CheckpointsQuery, CoinMetadata,
     CoinMetadataArgs, CoinMetadataQuery, DryRunArgs, DryRunQuery, DynamicFieldArgs,
     DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
-    DynamicObjectFieldQuery, Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, EpochsArgs,
-    EpochsQuery, EventFilter, EventsQuery, EventsQueryArgs, ExecuteTransactionArgs,
-    ExecuteTransactionQuery, LatestPackageQuery, MoveFunction, MoveModule,
-    MovePackageVersionFilter, NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs,
-    NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, ObjectFilter, ObjectQuery,
-    ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs, PackageArgs, PackageByNameArgs,
-    PackageByNameQuery, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs,
+    DynamicObjectFieldQuery, Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, EventFilter,
+    EventsQuery, EventsQueryArgs, ExecuteTransactionArgs, ExecuteTransactionQuery,
+    LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
+    NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
+    NormalizedMoveModuleQueryArgs, ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery,
+    ObjectsQueryArgs, PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs,
     PackageVersionsQuery, PackagesQuery, PackagesQueryArgs, PageInfo, ProtocolConfigQuery,
     ProtocolConfigs, ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery, TransactionBlockArgs,
     TransactionBlockEffectsQuery, TransactionBlockQuery, TransactionBlocksEffectsQuery,
@@ -336,17 +335,6 @@ impl Client {
     ) -> impl Stream<Item = Result<DynamicFieldOutput>> + '_ {
         stream_paginated_query(
             move |filter| self.dynamic_fields(address, filter),
-            streaming_direction,
-        )
-    }
-
-    /// Return a stream of epochs based on the (optional) object filter.
-    pub async fn epochs_stream(
-        &self,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Epoch>> + '_ {
-        stream_paginated_query(
-            move |pag_filter| self.epochs(pag_filter),
             streaming_direction,
         )
     }
@@ -924,33 +912,6 @@ impl Client {
         Ok(response.data.and_then(|d| d.epoch))
     }
 
-    /// Return a page of epochs.
-    pub async fn epochs(&self, pagination_filter: PaginationFilter) -> Result<Page<Epoch>> {
-        let PaginationFilterResponse {
-            after,
-            before,
-            first,
-            last,
-        } = self.pagination_filter(pagination_filter).await;
-        let operation = EpochsQuery::build(EpochsArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
-            first,
-            last,
-        });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        if let Some(epochs) = response.data {
-            Ok(Page::new(epochs.epochs.page_info, epochs.epochs.nodes))
-        } else {
-            Ok(Page::new_empty())
-        }
-    }
-
     /// Return the number of checkpoints in this epoch. This will return
     /// `Ok(None)` if the epoch requested is not available in the GraphQL
     /// service (e.g., due to pruning).
@@ -987,8 +948,7 @@ impl Client {
     // Events API
     // ===========================================================================
 
-    /// Return a page of tuple (event, transaction digest) based on the
-    /// (optional) event filter.
+    /// Return a page of events based on the (optional) event filter.
     pub async fn events(
         &self,
         filter: Option<EventFilter>,
@@ -1023,9 +983,9 @@ impl Client {
                 .nodes
                 .into_iter()
                 .map(|node| {
-                    Ok(bcs::from_bytes::<Event>(&base64ct::Base64::decode_vec(
-                        &node.bcs.0,
-                    )?)?)
+                    let event =
+                        bcs::from_bytes::<Event>(&base64ct::Base64::decode_vec(&node.bcs.0)?)?;
+                    Ok(event)
                 })
                 .collect::<Result<Vec<_>>>()?;
 
@@ -1218,7 +1178,7 @@ impl Client {
         Ok(response
             .data
             .and_then(|x| x.package)
-            .and_then(|x| x.package_bcs)
+            .and_then(|x| x.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<MovePackage>(&bcs))
@@ -1265,7 +1225,7 @@ impl Client {
             let bcs = pc
                 .nodes
                 .iter()
-                .map(|p| &p.package_bcs)
+                .map(|p| &p.bcs)
                 .filter_map(|b64| {
                     b64.as_ref()
                         .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
@@ -1300,31 +1260,13 @@ impl Client {
         let pkg = response
             .data
             .and_then(|x| x.latest_package)
-            .and_then(|x| x.package_bcs)
+            .and_then(|x| x.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<MovePackage>(&bcs))
             .transpose()?;
 
         Ok(pkg)
-    }
-
-    /// Fetch a package by its name (using Move Registry Service)
-    pub async fn package_by_name(&self, name: &str) -> Result<Option<MovePackage>> {
-        let operation = PackageByNameQuery::build(PackageByNameArgs { name });
-
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        Ok(response
-            .data
-            .and_then(|x| x.package_by_name)
-            .and_then(|x| x.package_bcs)
-            .and_then(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()).ok())
-            .and_then(|bcs| bcs::from_bytes::<MovePackage>(&bcs).ok()))
     }
 
     /// The Move packages that exist in the network, optionally filtered to be
@@ -1370,7 +1312,7 @@ impl Client {
             let bcs = pc
                 .nodes
                 .iter()
-                .map(|p| &p.package_bcs)
+                .map(|p| &p.bcs)
                 .filter_map(|b64| {
                     b64.as_ref()
                         .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
@@ -2384,14 +2326,6 @@ mod tests {
             "Package query returned None for {} network",
             client.rpc_server()
         );
-    }
-
-    #[tokio::test]
-    #[ignore] // don't know which name is not malformed
-    async fn test_package_by_name() {
-        let client = Client::new_testnet();
-        let package = client.package_by_name("iota@iota").await;
-        assert!(package.is_ok());
     }
 
     #[tokio::test]
