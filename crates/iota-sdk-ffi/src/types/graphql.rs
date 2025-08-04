@@ -10,6 +10,8 @@ use iota_graphql_client::{
 };
 use iota_types::{Identifier, StructTag, TransactionDigest};
 
+use iota_graphql_client::query_types::BigInt;
+
 use crate::types::{
     address::Address,
     object::ObjectId,
@@ -736,8 +738,52 @@ impl From<MoveObject> for iota_graphql_client::query_types::MoveObject {
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ProtocolConfigs(pub iota_graphql_client::query_types::ProtocolConfigs);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct CoinMetadata(pub iota_graphql_client::query_types::CoinMetadata);
+/// The coin metadata associated with the given coin type.
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct CoinMetadata {
+    /// The number of decimal places used to represent the token.
+    pub decimals: Option<i32>,
+    /// Optional description of the token, provided by the creator of the token.
+    pub description: Option<String>,
+    /// Icon URL of the coin.
+    pub icon_url: Option<String>,
+    /// Full, official name of the token.
+    pub name: Option<String>,
+    /// The token's identifying abbreviation.
+    pub symbol: Option<String>,
+    /// The overall quantity of tokens that will be issued.
+    pub supply: Option<String>,
+    /// Version of the token.
+    pub version: u64,
+}
+
+impl From<iota_graphql_client::query_types::CoinMetadata> for CoinMetadata {
+    fn from(value: iota_graphql_client::query_types::CoinMetadata) -> Self {
+        Self {
+            decimals: value.decimals,
+            description: value.description,
+            icon_url: value.icon_url,
+            name: value.name,
+            symbol: value.symbol,
+            supply: value.supply.map(|s| s.0),
+            version: value.version,
+        }
+    }
+}
+
+impl From<CoinMetadata> for iota_graphql_client::query_types::CoinMetadata {
+    fn from(value: CoinMetadata) -> Self {
+        Self {
+            decimals: value.decimals,
+            description: value.description,
+            icon_url: value.icon_url,
+            name: value.name,
+            symbol: value.symbol,
+            supply: value.supply.map(|s| BigInt(s)),
+            version: value.version,
+        }
+    }
+}
 
 #[derive(Debug, derive_more::From, uniffi::Object)]
 pub struct MoveFunction(pub iota_graphql_client::query_types::MoveFunction);
@@ -747,6 +793,7 @@ pub struct MoveModule(pub iota_graphql_client::query_types::MoveModule);
 
 type CoreServiceConfig = iota_graphql_client::query_types::ServiceConfig;
 
+/// Information about the configuration of the GraphQL service.
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct ServiceConfig {
     /// Default number of elements allowed on a single page of a connection.

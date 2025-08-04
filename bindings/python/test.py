@@ -1,4 +1,4 @@
-from lib.iota_sdk_ffi import GraphQlClient, PaginationFilter, Address, Direction, TransactionsFilter, ObjectId, EventFilter, ServiceConfig
+from lib.iota_sdk_ffi import GraphQlClient, PaginationFilter, Address, Direction, TransactionsFilter, ObjectId, EventFilter, ServiceConfig, CoinMetadata
 import asyncio
 
 async def main():
@@ -37,6 +37,13 @@ async def main():
                                  mutation_timeout_ms=0,
                                  request_timeout_ms=0)
 
+    coin_metadata=CoinMetadata(decimals=2,
+                               description="test",
+                               icon_url=None,
+                               name="test",
+                               symbol=None,
+                               supply="1000",
+                               version=0)
 
 if __name__ == '__main__':
     asyncio.run(main())
