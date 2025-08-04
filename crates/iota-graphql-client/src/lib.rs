@@ -18,9 +18,9 @@ use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::Error;
 use futures::Stream;
 use iota_types::{
-    Address, CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, Event, Identifier,
-    MovePackage, Object, SignedTransaction, Transaction, TransactionDigest, TransactionEffects,
-    TransactionKind, TypeTag, UserSignature, framework::Coin,
+    Address, CheckpointContentsDigest, CheckpointSequenceNumber, CheckpointSummary, Event,
+    Identifier, MovePackage, Object, SignedTransaction, Transaction, TransactionDigest,
+    TransactionEffects, TransactionKind, TypeTag, UserSignature, framework::Coin,
 };
 use query_types::{
     ActiveValidatorsArgs, ActiveValidatorsQuery, BalanceArgs, BalanceQuery, ChainIdentifierQuery,
@@ -699,7 +699,7 @@ impl Client {
     /// provided checkpoint digest.
     pub async fn total_transaction_blocks_by_digest(
         &self,
-        digest: CheckpointDigest,
+        digest: CheckpointContentsDigest,
     ) -> Result<Option<u64>> {
         self.internal_total_transaction_blocks(Some(digest.to_string()), None)
             .await
@@ -817,7 +817,7 @@ impl Client {
     /// checkpoint id.
     pub async fn checkpoint(
         &self,
-        digest: Option<CheckpointDigest>,
+        digest: Option<CheckpointContentsDigest>,
         seq_num: Option<u64>,
     ) -> Result<Option<CheckpointSummary>> {
         if digest.is_some() && seq_num.is_some() {
@@ -1191,8 +1191,9 @@ impl Client {
             .and_then(|x| x.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<MovePackage>(&bcs))
-            .transpose()?)
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .transpose()?
+            .map(|obj| obj.data.as_package()))
     }
 
     /// Fetch all versions of package at address (packages that share this
@@ -1243,7 +1244,7 @@ impl Client {
                 .collect::<Result<Vec<_>, base64ct::Error>>()?;
             let packages = bcs
                 .iter()
-                .map(|b| bcs::from_bytes::<MovePackage>(b))
+                .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.as_package()))
                 .collect::<Result<Vec<_>, bcs::Error>>()?;
 
             Ok(Page::new(page_info, packages))
@@ -1271,10 +1272,11 @@ impl Client {
             .data
             .and_then(|x| x.latest_package)
             .and_then(|x| x.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| base64ct::Base64::decode_vec(&bcs.0))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<MovePackage>(&bcs))
-            .transpose()?;
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .transpose()?
+            .map(|obj| obj.data.as_package());
 
         Ok(pkg)
     }
@@ -1330,7 +1332,7 @@ impl Client {
                 .collect::<Result<Vec<_>, base64ct::Error>>()?;
             let packages = bcs
                 .iter()
-                .map(|b| bcs::from_bytes::<MovePackage>(b))
+                .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.as_package()))
                 .collect::<Result<Vec<_>, bcs::Error>>()?;
 
             Ok(Page::new(page_info, packages))
@@ -2240,9 +2242,10 @@ mod tests {
         // this tx bytes works on testnet
         let tx_bytes = "AAACAAiA8PoCAAAAAAAg7q6yDns6nPznaKLd9pUD2K6NFiiibC10pDVQHJKdP2kCAgABAQAAAQECAAABAQBGLuHCJ/xjZfhC4vTJt/Zrvq1gexKLaKf3aVzyIkxRaAFUHzz8ftiZdY25qP4f9zySuT1K/qyTWjbGiTu0i0Z1ZFA4gwUAAAAAILeG86EeQm3qY3ajat3iUnY2Gbrk/NbdwV/d9MZviAwwRi7hwif8Y2X4QuL0ybf2a76tYHsSi2in92lc8iJMUWjoAwAAAAAAAECrPAAAAAAAAA==";
 
-        let dry_run = client.dry_run(tx_bytes.to_string(), None, None).await;
-
-        assert!(dry_run.is_ok());
+        client
+            .dry_run(tx_bytes.to_string(), None, None)
+            .await
+            .unwrap();
     }
 
     #[tokio::test]
@@ -2279,30 +2282,39 @@ mod tests {
     #[tokio::test]
     async fn test_total_transaction_blocks() {
         let client = test_client();
-        let total_transaction_blocks = client.total_transaction_blocks().await;
-        assert!(
-            total_transaction_blocks
-                .as_ref()
-                .is_ok_and(|f| f.is_some_and(|tx| tx > 0)),
-            "Total transaction blocks query failed for {} network. Error: {}",
-            client.rpc_server(),
-            total_transaction_blocks.unwrap_err()
-        );
-
-        let chckp = client.latest_checkpoint_sequence_number().await;
-        assert!(
-            chckp.is_ok(),
-            "Latest checkpoint sequence number query failed for {} network. Error: {}",
-            client.rpc_server(),
-            chckp.unwrap_err()
-        );
-        let chckp_id = chckp.unwrap().unwrap();
         let total_transaction_blocks = client
+            .total_transaction_blocks()
+            .await
+            .map_err(|e| {
+                format!(
+                    "Total transaction blocks query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
+        assert!(total_transaction_blocks > 0);
+
+        let chckp_id = client
+            .latest_checkpoint_sequence_number()
+            .await
+            .map_err(|e| {
+                format!(
+                    "Latest checkpoint sequence number query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
+        let total_transaction_blocks_by_seq_num = client
             .total_transaction_blocks_by_seq_num(chckp_id)
             .await
             .unwrap()
             .unwrap();
-        assert!(total_transaction_blocks > 0);
+        assert_eq!(
+            total_transaction_blocks,
+            total_transaction_blocks_by_seq_num
+        );
 
         let chckp = client
             .checkpoint(None, Some(chckp_id))
@@ -2310,14 +2322,13 @@ mod tests {
             .unwrap()
             .unwrap();
 
-        let digest = chckp.digest();
-        let total_transaction_blocks_by_digest =
-            client.total_transaction_blocks_by_digest(digest).await;
-        assert!(total_transaction_blocks_by_digest.is_ok());
-        assert_eq!(
-            total_transaction_blocks_by_digest.unwrap().unwrap(),
-            total_transaction_blocks
-        );
+        let digest = chckp.content_digest;
+        let total_transaction_blocks_by_digest = client
+            .total_transaction_blocks_by_digest(digest)
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(total_transaction_blocks, total_transaction_blocks_by_digest);
     }
 
     #[tokio::test]
@@ -2341,16 +2352,19 @@ mod tests {
     #[tokio::test]
     async fn test_latest_package_query() {
         let client = test_client();
-        let package = client.package_latest("0x2".parse().unwrap()).await;
-        assert!(
-            package.is_ok(),
-            "Latest package query failed for {} network. Error: {}",
-            client.rpc_server(),
-            package.unwrap_err()
-        );
+        let package = client
+            .package_latest("0x2".parse().unwrap())
+            .await
+            .map_err(|e| {
+                format!(
+                    "Latest package query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
 
         assert!(
-            package.unwrap().is_some(),
+            package.is_some(),
             "Latest package for 0x2 query returned None for {} network",
             client.rpc_server()
         );
@@ -2361,16 +2375,17 @@ mod tests {
         let client = test_client();
         let packages = client
             .packages(PaginationFilter::default(), None, None)
-            .await;
-        assert!(
-            packages.is_ok(),
-            "Packages query failed for {} network. Error: {}",
-            client.rpc_server(),
-            packages.unwrap_err()
-        );
+            .await
+            .map_err(|e| {
+                format!(
+                    "Packages query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
 
         assert!(
-            !packages.unwrap().is_empty(),
+            !packages.is_empty(),
             "Packages query returned no data for {} network",
             client.rpc_server()
         );
