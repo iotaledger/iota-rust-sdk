@@ -28,6 +28,7 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Transaction {
     pub kind: TransactionKind,
@@ -60,6 +61,10 @@ pub struct SignedTransaction {
 ///                        =/ %x01 u64  ; epoch
 /// ```
 #[derive(Clone, Copy, Default, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_derive::Serialize, serde_derive::Deserialize)
+)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TransactionExpiration {
@@ -102,12 +107,10 @@ pub struct GasPayment {
     ///
     /// Must be greater-than-or-equal-to the network's current RGP (reference
     /// gas price)
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub price: u64,
 
     /// Total budget willing to spend for the execution of a transaction
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub budget: u64,
 }
@@ -131,12 +134,10 @@ pub struct GasPayment {
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct RandomnessStateUpdate {
     /// Epoch of the randomness state update transaction
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
 
     /// Randomness round of the update
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub randomness_round: u64,
 
@@ -149,7 +150,6 @@ pub struct RandomnessStateUpdate {
     pub random_bytes: Vec<u8>,
 
     /// The initial version of the randomness object that it was shared at.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub randomness_obj_initial_shared_version: u64,
 }
@@ -172,6 +172,11 @@ pub struct RandomnessStateUpdate {
 ///                     =/ %x08 consensus-commit-prologue-v3
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_derive::Serialize, serde_derive::Deserialize)
+)]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TransactionKind {
@@ -228,6 +233,10 @@ pub enum TransactionKind {
     feature = "schemars",
     derive(schemars::JsonSchema),
     schemars(tag = "kind", rename_all = "snake_case")
+)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
@@ -414,12 +423,10 @@ pub enum ExecutionTimeObservationKey {
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct AuthenticatorStateExpire {
     /// expire JWKs that have a lower epoch than this
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub min_epoch: u64,
 
     /// The initial version of the authenticator object that it was shared at.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub authenticator_obj_initial_shared_version: u64,
 }
@@ -446,12 +453,10 @@ pub struct AuthenticatorStateExpire {
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct AuthenticatorStateUpdateV1 {
     /// Epoch of the authenticator state update transaction
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
 
     /// Consensus round of the authenticator state update
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub round: u64,
 
@@ -459,7 +464,6 @@ pub struct AuthenticatorStateUpdateV1 {
     pub new_active_jwks: Vec<ActiveJwk>,
 
     /// The initial version of the authenticator object that it was shared at.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub authenticator_obj_initial_shared_version: u64,
 }
@@ -489,7 +493,6 @@ pub struct ActiveJwk {
     pub jwk: Jwk,
 
     /// Most recent epoch in which the jwk was validated
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
 }
@@ -499,6 +502,10 @@ pub struct ActiveJwk {
     feature = "schemars",
     derive(schemars::JsonSchema),
     schemars(tag = "kind", rename_all = "snake_case")
+)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
@@ -552,7 +559,6 @@ pub struct CancelledTransaction {
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct VersionAssignment {
     pub object_id: ObjectId,
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
 }
@@ -577,26 +583,19 @@ pub struct VersionAssignment {
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ConsensusCommitPrologueV1 {
     /// Epoch of the commit prologue transaction
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
 
     /// Consensus round of the commit
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub round: u64,
 
     /// The sub DAG index of the consensus commit. This field will be populated
     /// if there are multiple consensus commits per round.
-    #[cfg_attr(
-        feature = "serde",
-        serde(with = "crate::_serde::OptionReadableDisplay")
-    )]
     #[cfg_attr(feature = "schemars", schemars(with = "Option<crate::_schemars::U64>"))]
     pub sub_dag_index: Option<u64>,
 
     /// Unix timestamp from consensus
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub commit_timestamp_ms: CheckpointTimestamp,
 
@@ -633,37 +632,30 @@ pub struct ConsensusCommitPrologueV1 {
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ChangeEpoch {
     /// The next (to become) epoch ID.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: EpochId,
 
     /// The protocol version in effect in the new epoch.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub protocol_version: ProtocolVersion,
 
     /// The total amount of gas charged for storage during the epoch.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_charge: u64,
 
     /// The total amount of gas charged for computation during the epoch.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge: u64,
 
     /// The amount of storage rebate refunded to the txn senders.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_rebate: u64,
 
     /// The non-refundable storage fee.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub non_refundable_storage_fee: u64,
 
     /// Unix timestamp when epoch started
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch_start_timestamp_ms: u64,
 
@@ -698,35 +690,27 @@ pub struct ChangeEpoch {
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ChangeEpochV2 {
     /// The next (to become) epoch ID.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: EpochId,
     /// The protocol version in effect in the new epoch.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub protocol_version: ProtocolVersion,
     /// The total amount of gas charged for storage during the epoch.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_charge: u64,
     /// The total amount of gas charged for computation during the epoch.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge: u64,
     /// The total amount of gas burned for computation during the epoch.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge_burned: u64,
     /// The amount of storage rebate refunded to the txn senders.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_rebate: u64,
     /// The non-refundable storage fee.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub non_refundable_storage_fee: u64,
     /// Unix timestamp when epoch started
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch_start_timestamp_ms: u64,
     /// System packages (specifically framework and move stdlib) that are
@@ -748,7 +732,6 @@ pub struct ChangeEpochV2 {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SystemPackage {
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
     #[cfg_attr(
@@ -897,6 +880,10 @@ pub enum Input {
     feature = "schemars",
     derive(schemars::JsonSchema),
     schemars(tag = "command", rename_all = "snake_case")
+)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
@@ -1140,6 +1127,11 @@ pub struct Upgrade {
 /// argument-nested-result  = %x03 u16 u16
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_derive::Serialize, serde_derive::Deserialize)
+)]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum Argument {

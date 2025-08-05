@@ -5,9 +5,6 @@
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_with::{DeserializeAs, SerializeAs};
 
-use super::Argument;
-use crate::{ObjectId, ObjectReference};
-
 mod transaction {
     use super::*;
     use crate::{
@@ -16,33 +13,15 @@ mod transaction {
     };
 
     #[derive(serde_derive::Serialize)]
-    #[serde(tag = "version")]
     #[serde(rename = "Transaction")]
     enum TransactionDataRef<'a> {
-        #[serde(rename = "1")]
         V1(TransactionV1Ref<'a>),
     }
 
     #[derive(serde_derive::Deserialize)]
-    #[serde(tag = "version")]
     #[serde(rename = "Transaction")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum TransactionData {
-        #[serde(rename = "1")]
-        V1(TransactionV1),
-    }
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(rename = "Transaction")]
-    enum BinaryTransactionDataRef<'a> {
-        #[serde(rename = "1")]
-        V1(TransactionV1Ref<'a>),
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(rename = "Transaction")]
-    enum BinaryTransactionData {
-        #[serde(rename = "1")]
         V1(TransactionV1),
     }
 
@@ -77,11 +56,7 @@ mod transaction {
                 expiration: &self.expiration,
             };
 
-            if serializer.is_human_readable() {
-                TransactionDataRef::V1(transaction).serialize(serializer)
-            } else {
-                BinaryTransactionDataRef::V1(transaction).serialize(serializer)
-            }
+            TransactionDataRef::V1(transaction).serialize(serializer)
         }
     }
 
@@ -90,19 +65,12 @@ mod transaction {
         where
             D: Deserializer<'de>,
         {
-            let TransactionV1 {
+            let TransactionData::V1(TransactionV1 {
                 kind,
                 sender,
                 gas_payment,
                 expiration,
-            } = if deserializer.is_human_readable() {
-                let TransactionData::V1(transaction) = Deserialize::deserialize(deserializer)?;
-                transaction
-            } else {
-                let BinaryTransactionData::V1(transaction) =
-                    Deserialize::deserialize(deserializer)?;
-                transaction
-            };
+            }) = Deserialize::deserialize(deserializer)?;
 
             Ok(Transaction {
                 kind,
@@ -112,399 +80,11 @@ mod transaction {
             })
         }
     }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for Transaction {
-        fn schema_name() -> String {
-            TransactionData::schema_name()
-        }
-
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            TransactionData::json_schema(gen)
-        }
-    }
-}
-
-mod transaction_kind {
-    use super::*;
-    use crate::transaction::{
-        AuthenticatorStateUpdateV1, ConsensusCommitPrologueV1, EndOfEpochTransactionKind,
-        GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
-    };
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    enum ReadableTransactionKindRef<'a> {
-        ProgrammableTransaction(&'a ProgrammableTransaction),
-        Genesis(&'a GenesisTransaction),
-        ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
-        EndOfEpoch {
-            commands: &'a Vec<EndOfEpochTransactionKind>,
-        },
-        RandomnessStateUpdate(&'a RandomnessStateUpdate),
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    #[serde(rename = "TransactionKind")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-    enum ReadableTransactionKind {
-        ProgrammableTransaction(ProgrammableTransaction),
-        Genesis(GenesisTransaction),
-        ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
-        EndOfEpoch {
-            commands: Vec<EndOfEpochTransactionKind>,
-        },
-        RandomnessStateUpdate(RandomnessStateUpdate),
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for TransactionKind {
-        fn schema_name() -> String {
-            ReadableTransactionKind::schema_name()
-        }
-
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableTransactionKind::json_schema(gen)
-        }
-    }
-
-    #[derive(serde_derive::Serialize)]
-    enum BinaryTransactionKindRef<'a> {
-        ProgrammableTransaction(&'a ProgrammableTransaction),
-        Genesis(&'a GenesisTransaction),
-        ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
-        EndOfEpoch(&'a Vec<EndOfEpochTransactionKind>),
-        RandomnessStateUpdate(&'a RandomnessStateUpdate),
-    }
-    #[derive(serde_derive::Deserialize)]
-    enum BinaryTransactionKind {
-        ProgrammableTransaction(ProgrammableTransaction),
-        Genesis(GenesisTransaction),
-        ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-        AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
-        EndOfEpoch(Vec<EndOfEpochTransactionKind>),
-        RandomnessStateUpdate(RandomnessStateUpdate),
-    }
-
-    impl Serialize for TransactionKind {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self {
-                    Self::ProgrammableTransaction(k) => {
-                        ReadableTransactionKindRef::ProgrammableTransaction(k)
-                    }
-                    Self::Genesis(k) => ReadableTransactionKindRef::Genesis(k),
-                    Self::ConsensusCommitPrologueV1(k) => {
-                        ReadableTransactionKindRef::ConsensusCommitPrologueV1(k)
-                    }
-                    Self::AuthenticatorStateUpdateV1(k) => {
-                        ReadableTransactionKindRef::AuthenticatorStateUpdateV1(k)
-                    }
-                    Self::EndOfEpoch(commands) => {
-                        ReadableTransactionKindRef::EndOfEpoch { commands }
-                    }
-                    Self::RandomnessStateUpdate(k) => {
-                        ReadableTransactionKindRef::RandomnessStateUpdate(k)
-                    }
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self {
-                    Self::ProgrammableTransaction(k) => {
-                        BinaryTransactionKindRef::ProgrammableTransaction(k)
-                    }
-                    Self::Genesis(k) => BinaryTransactionKindRef::Genesis(k),
-                    Self::ConsensusCommitPrologueV1(k) => {
-                        BinaryTransactionKindRef::ConsensusCommitPrologueV1(k)
-                    }
-                    Self::AuthenticatorStateUpdateV1(k) => {
-                        BinaryTransactionKindRef::AuthenticatorStateUpdateV1(k)
-                    }
-                    Self::EndOfEpoch(k) => BinaryTransactionKindRef::EndOfEpoch(k),
-                    Self::RandomnessStateUpdate(k) => {
-                        BinaryTransactionKindRef::RandomnessStateUpdate(k)
-                    }
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for TransactionKind {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableTransactionKind::deserialize(deserializer).map(|readable| match readable {
-                    ReadableTransactionKind::ProgrammableTransaction(k) => {
-                        Self::ProgrammableTransaction(k)
-                    }
-                    ReadableTransactionKind::Genesis(k) => Self::Genesis(k),
-                    ReadableTransactionKind::ConsensusCommitPrologueV1(k) => {
-                        Self::ConsensusCommitPrologueV1(k)
-                    }
-                    ReadableTransactionKind::AuthenticatorStateUpdateV1(k) => {
-                        Self::AuthenticatorStateUpdateV1(k)
-                    }
-                    ReadableTransactionKind::EndOfEpoch { commands } => Self::EndOfEpoch(commands),
-                    ReadableTransactionKind::RandomnessStateUpdate(k) => {
-                        Self::RandomnessStateUpdate(k)
-                    }
-                })
-            } else {
-                BinaryTransactionKind::deserialize(deserializer).map(|binary| match binary {
-                    BinaryTransactionKind::ProgrammableTransaction(k) => {
-                        Self::ProgrammableTransaction(k)
-                    }
-                    BinaryTransactionKind::Genesis(k) => Self::Genesis(k),
-                    BinaryTransactionKind::ConsensusCommitPrologueV1(k) => {
-                        Self::ConsensusCommitPrologueV1(k)
-                    }
-                    BinaryTransactionKind::AuthenticatorStateUpdateV1(k) => {
-                        Self::AuthenticatorStateUpdateV1(k)
-                    }
-                    BinaryTransactionKind::EndOfEpoch(k) => Self::EndOfEpoch(k),
-                    BinaryTransactionKind::RandomnessStateUpdate(k) => {
-                        Self::RandomnessStateUpdate(k)
-                    }
-                })
-            }
-        }
-    }
-}
-
-mod end_of_epoch {
-    use super::*;
-    use crate::transaction::{
-        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, EndOfEpochTransactionKind,
-    };
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    enum ReadableEndOfEpochTransactionKindRef<'a> {
-        ChangeEpoch(&'a ChangeEpoch),
-        ChangeEpochV2(&'a ChangeEpochV2),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    enum ReadableEndOfEpochTransactionKind {
-        ChangeEpoch(ChangeEpoch),
-        ChangeEpochV2(ChangeEpochV2),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(AuthenticatorStateExpire),
-    }
-
-    #[derive(serde_derive::Serialize)]
-    enum BinaryEndOfEpochTransactionKindRef<'a> {
-        ChangeEpoch(&'a ChangeEpoch),
-        ChangeEpochV2(&'a ChangeEpochV2),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    enum BinaryEndOfEpochTransactionKind {
-        ChangeEpoch(ChangeEpoch),
-        ChangeEpochV2(ChangeEpochV2),
-        AuthenticatorStateCreate,
-        AuthenticatorStateExpire(AuthenticatorStateExpire),
-    }
-
-    impl Serialize for EndOfEpochTransactionKind {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self {
-                    Self::ChangeEpoch(k) => ReadableEndOfEpochTransactionKindRef::ChangeEpoch(k),
-                    Self::ChangeEpochV2(k) => {
-                        ReadableEndOfEpochTransactionKindRef::ChangeEpochV2(k)
-                    }
-                    Self::AuthenticatorStateCreate => {
-                        ReadableEndOfEpochTransactionKindRef::AuthenticatorStateCreate
-                    }
-                    Self::AuthenticatorStateExpire(k) => {
-                        ReadableEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
-                    }
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self {
-                    Self::ChangeEpoch(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpoch(k),
-                    Self::ChangeEpochV2(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV2(k),
-                    Self::AuthenticatorStateCreate => {
-                        BinaryEndOfEpochTransactionKindRef::AuthenticatorStateCreate
-                    }
-                    Self::AuthenticatorStateExpire(k) => {
-                        BinaryEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
-                    }
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for EndOfEpochTransactionKind {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableEndOfEpochTransactionKind::deserialize(deserializer).map(|readable| {
-                    match readable {
-                        ReadableEndOfEpochTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
-                        ReadableEndOfEpochTransactionKind::ChangeEpochV2(k) => {
-                            Self::ChangeEpochV2(k)
-                        }
-                        ReadableEndOfEpochTransactionKind::AuthenticatorStateCreate => {
-                            Self::AuthenticatorStateCreate
-                        }
-                        ReadableEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
-                            Self::AuthenticatorStateExpire(k)
-                        }
-                    }
-                })
-            } else {
-                BinaryEndOfEpochTransactionKind::deserialize(deserializer).map(
-                    |binary| match binary {
-                        BinaryEndOfEpochTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
-                        BinaryEndOfEpochTransactionKind::ChangeEpochV2(k) => Self::ChangeEpochV2(k),
-                        BinaryEndOfEpochTransactionKind::AuthenticatorStateCreate => {
-                            Self::AuthenticatorStateCreate
-                        }
-                        BinaryEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
-                            Self::AuthenticatorStateExpire(k)
-                        }
-                    },
-                )
-            }
-        }
-    }
-}
-
-mod version_assignments {
-    use super::*;
-    use crate::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    enum ReadableConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions {
-            cancelled_transactions: &'a Vec<CancelledTransaction>,
-        },
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
-    enum ReadableConsensusDeterminedVersionAssignments {
-        CancelledTransactions {
-            cancelled_transactions: Vec<CancelledTransaction>,
-        },
-    }
-
-    #[derive(serde_derive::Serialize)]
-    enum BinaryConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions {
-            cancelled_transactions: &'a Vec<CancelledTransaction>,
-        },
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    enum BinaryConsensusDeterminedVersionAssignments {
-        CancelledTransactions {
-            cancelled_transactions: Vec<CancelledTransaction>,
-        },
-    }
-
-    impl Serialize for ConsensusDeterminedVersionAssignments {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self {
-                    Self::CancelledTransactions {
-                        cancelled_transactions,
-                    } => ReadableConsensusDeterminedVersionAssignmentsRef::CancelledTransactions {
-                        cancelled_transactions,
-                    },
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self {
-                    Self::CancelledTransactions {
-                        cancelled_transactions,
-                    } => BinaryConsensusDeterminedVersionAssignmentsRef::CancelledTransactions {
-                        cancelled_transactions,
-                    },
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for ConsensusDeterminedVersionAssignments {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
-                    |readable| match readable {
-                        ReadableConsensusDeterminedVersionAssignments::CancelledTransactions {
-                            cancelled_transactions,
-                        } => Self::CancelledTransactions {
-                            cancelled_transactions,
-                        },
-                    },
-                )
-            } else {
-                BinaryConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
-                    |binary| match binary {
-                        BinaryConsensusDeterminedVersionAssignments::CancelledTransactions {
-                            cancelled_transactions,
-                        } => Self::CancelledTransactions {
-                            cancelled_transactions,
-                        },
-                    },
-                )
-            }
-        }
-    }
 }
 
 mod input_argument {
     use super::*;
-    use crate::transaction::Input;
-
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
-    #[serde(tag = "type", rename_all = "snake_case")]
-    enum ReadableInput {
-        Pure {
-            #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
-            value: Vec<u8>,
-        },
-        ImmutableOrOwned(ObjectReference),
-        Shared {
-            object_id: ObjectId,
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-            initial_shared_version: u64,
-            mutable: bool,
-        },
-        Receiving(ObjectReference),
-    }
+    use crate::{ObjectId, ObjectReference, transaction::Input};
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     enum CallArg {
@@ -528,45 +108,23 @@ mod input_argument {
         where
             S: Serializer,
         {
-            if serializer.is_human_readable() {
-                let readable = match self.clone() {
-                    Input::Pure { value } => ReadableInput::Pure { value },
-                    Input::ImmutableOrOwned(object_ref) => {
-                        ReadableInput::ImmutableOrOwned(object_ref)
-                    }
-                    Input::Shared {
-                        object_id,
-                        initial_shared_version,
-                        mutable,
-                    } => ReadableInput::Shared {
-                        object_id,
-                        initial_shared_version,
-                        mutable,
-                    },
-                    Input::Receiving(object_ref) => ReadableInput::Receiving(object_ref),
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self.clone() {
-                    Input::Pure { value } => CallArg::Pure(value),
-                    Input::ImmutableOrOwned(object_ref) => {
-                        CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref))
-                    }
-                    Input::Shared {
-                        object_id,
-                        initial_shared_version,
-                        mutable,
-                    } => CallArg::Object(ObjectArg::Shared {
-                        object_id,
-                        initial_shared_version,
-                        mutable,
-                    }),
-                    Input::Receiving(object_ref) => {
-                        CallArg::Object(ObjectArg::Receiving(object_ref))
-                    }
-                };
-                binary.serialize(serializer)
-            }
+            let binary = match self.clone() {
+                Input::Pure { value } => CallArg::Pure(value),
+                Input::ImmutableOrOwned(object_ref) => {
+                    CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref))
+                }
+                Input::Shared {
+                    object_id,
+                    initial_shared_version,
+                    mutable,
+                } => CallArg::Object(ObjectArg::Shared {
+                    object_id,
+                    initial_shared_version,
+                    mutable,
+                }),
+                Input::Receiving(object_ref) => CallArg::Object(ObjectArg::Receiving(object_ref)),
+            };
+            binary.serialize(serializer)
         }
     }
 
@@ -575,275 +133,22 @@ mod input_argument {
         where
             D: Deserializer<'de>,
         {
-            if deserializer.is_human_readable() {
-                ReadableInput::deserialize(deserializer).map(|readable| match readable {
-                    ReadableInput::Pure { value } => Input::Pure { value },
-                    ReadableInput::ImmutableOrOwned(object_ref) => {
-                        Input::ImmutableOrOwned(object_ref)
-                    }
-                    ReadableInput::Shared {
-                        object_id,
-                        initial_shared_version,
-                        mutable,
-                    } => Input::Shared {
-                        object_id,
-                        initial_shared_version,
-                        mutable,
-                    },
-                    ReadableInput::Receiving(object_ref) => Input::Receiving(object_ref),
-                })
-            } else {
-                CallArg::deserialize(deserializer).map(|binary| match binary {
-                    CallArg::Pure(value) => Input::Pure { value },
-                    CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref)) => {
-                        Input::ImmutableOrOwned(object_ref)
-                    }
-                    CallArg::Object(ObjectArg::Shared {
-                        object_id,
-                        initial_shared_version,
-                        mutable,
-                    }) => Input::Shared {
-                        object_id,
-                        initial_shared_version,
-                        mutable,
-                    },
-                    CallArg::Object(ObjectArg::Receiving(object_ref)) => {
-                        Input::Receiving(object_ref)
-                    }
-                })
-            }
-        }
-    }
-}
-
-mod argument {
-    use super::*;
-
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
-    #[serde(rename = "Argument", untagged, rename_all = "lowercase")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-    enum ReadableArgument {
-        /// # Gas
-        Gas(Gas),
-        /// # Input
-        Input { input: u16 },
-        /// # Result
-        Result { result: u16 },
-        /// # NestedResult
-        NestedResult { result: (u16, u16) },
-    }
-
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
-    #[serde(rename_all = "lowercase")]
-    enum Gas {
-        Gas,
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for Gas {
-        fn schema_name() -> std::string::String {
-            "GasArgument".to_owned()
-        }
-
-        fn json_schema(_gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            schemars::schema::Schema::Object(schemars::schema::SchemaObject {
-                instance_type: Some(schemars::schema::InstanceType::String.into()),
-                enum_values: Some(vec!["gas".into()]),
-                ..Default::default()
+            CallArg::deserialize(deserializer).map(|binary| match binary {
+                CallArg::Pure(value) => Input::Pure { value },
+                CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref)) => {
+                    Input::ImmutableOrOwned(object_ref)
+                }
+                CallArg::Object(ObjectArg::Shared {
+                    object_id,
+                    initial_shared_version,
+                    mutable,
+                }) => Input::Shared {
+                    object_id,
+                    initial_shared_version,
+                    mutable,
+                },
+                CallArg::Object(ObjectArg::Receiving(object_ref)) => Input::Receiving(object_ref),
             })
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for Argument {
-        fn schema_name() -> String {
-            ReadableArgument::schema_name()
-        }
-
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableArgument::json_schema(gen)
-        }
-    }
-
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
-    enum BinaryArgument {
-        Gas,
-        Input(u16),
-        Result(u16),
-        NestedResult(u16, u16),
-    }
-
-    impl Serialize for Argument {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match *self {
-                    Argument::Gas => ReadableArgument::Gas(Gas::Gas),
-                    Argument::Input(input) => ReadableArgument::Input { input },
-                    Argument::Result(result) => ReadableArgument::Result { result },
-                    Argument::NestedResult(result, subresult) => ReadableArgument::NestedResult {
-                        result: (result, subresult),
-                    },
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match *self {
-                    Argument::Gas => BinaryArgument::Gas,
-                    Argument::Input(input) => BinaryArgument::Input(input),
-                    Argument::Result(result) => BinaryArgument::Result(result),
-                    Argument::NestedResult(result, subresult) => {
-                        BinaryArgument::NestedResult(result, subresult)
-                    }
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for Argument {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableArgument::deserialize(deserializer).map(|readable| match readable {
-                    ReadableArgument::Gas(_) => Argument::Gas,
-                    ReadableArgument::Input { input } => Argument::Input(input),
-                    ReadableArgument::Result { result } => Argument::Result(result),
-                    ReadableArgument::NestedResult {
-                        result: (result, subresult),
-                    } => Argument::NestedResult(result, subresult),
-                })
-            } else {
-                BinaryArgument::deserialize(deserializer).map(|binary| match binary {
-                    BinaryArgument::Gas => Argument::Gas,
-                    BinaryArgument::Input(input) => Argument::Input(input),
-                    BinaryArgument::Result(result) => Argument::Result(result),
-                    BinaryArgument::NestedResult(result, subresult) => {
-                        Argument::NestedResult(result, subresult)
-                    }
-                })
-            }
-        }
-    }
-}
-
-mod command {
-    use super::*;
-    use crate::transaction::{
-        Command, MakeMoveVector, MergeCoins, MoveCall, Publish, SplitCoins, TransferObjects,
-        Upgrade,
-    };
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(tag = "command", rename_all = "snake_case")]
-    enum ReadableCommandRef<'a> {
-        MoveCall(&'a MoveCall),
-        TransferObjects(&'a TransferObjects),
-        SplitCoins(&'a SplitCoins),
-        MergeCoins(&'a MergeCoins),
-        Publish(&'a Publish),
-        MakeMoveVector(&'a MakeMoveVector),
-        Upgrade(&'a Upgrade),
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(tag = "command", rename_all = "snake_case")]
-    enum ReadableCommand {
-        MoveCall(MoveCall),
-        TransferObjects(TransferObjects),
-        SplitCoins(SplitCoins),
-        MergeCoins(MergeCoins),
-        Publish(Publish),
-        MakeMoveVector(MakeMoveVector),
-        Upgrade(Upgrade),
-    }
-
-    #[derive(serde_derive::Serialize)]
-    enum BinaryCommandRef<'a> {
-        MoveCall(&'a MoveCall),
-        TransferObjects(&'a TransferObjects),
-        SplitCoins(&'a SplitCoins),
-        MergeCoins(&'a MergeCoins),
-        Publish(&'a Publish),
-        MakeMoveVector(&'a MakeMoveVector),
-        Upgrade(&'a Upgrade),
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    enum BinaryCommand {
-        MoveCall(MoveCall),
-        TransferObjects(TransferObjects),
-        SplitCoins(SplitCoins),
-        MergeCoins(MergeCoins),
-        Publish(Publish),
-        MakeMoveVector(MakeMoveVector),
-        Upgrade(Upgrade),
-    }
-
-    impl Serialize for Command {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                let readable = match self {
-                    Command::MoveCall(c) => ReadableCommandRef::MoveCall(c),
-                    Command::TransferObjects(c) => ReadableCommandRef::TransferObjects(c),
-                    Command::SplitCoins(c) => ReadableCommandRef::SplitCoins(c),
-                    Command::MergeCoins(c) => ReadableCommandRef::MergeCoins(c),
-                    Command::Publish(c) => ReadableCommandRef::Publish(c),
-                    Command::MakeMoveVector(c) => ReadableCommandRef::MakeMoveVector(c),
-                    Command::Upgrade(c) => ReadableCommandRef::Upgrade(c),
-                };
-                readable.serialize(serializer)
-            } else {
-                let binary = match self {
-                    Command::MoveCall(c) => BinaryCommandRef::MoveCall(c),
-                    Command::TransferObjects(c) => BinaryCommandRef::TransferObjects(c),
-                    Command::SplitCoins(c) => BinaryCommandRef::SplitCoins(c),
-                    Command::MergeCoins(c) => BinaryCommandRef::MergeCoins(c),
-                    Command::Publish(c) => BinaryCommandRef::Publish(c),
-                    Command::MakeMoveVector(c) => BinaryCommandRef::MakeMoveVector(c),
-                    Command::Upgrade(c) => BinaryCommandRef::Upgrade(c),
-                };
-                binary.serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for Command {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                ReadableCommand::deserialize(deserializer).map(|readable| match readable {
-                    ReadableCommand::MoveCall(c) => Command::MoveCall(c),
-                    ReadableCommand::TransferObjects(c) => Command::TransferObjects(c),
-                    ReadableCommand::SplitCoins(c) => Command::SplitCoins(c),
-                    ReadableCommand::MergeCoins(c) => Command::MergeCoins(c),
-                    ReadableCommand::Publish(c) => Command::Publish(c),
-                    ReadableCommand::MakeMoveVector(c) => Command::MakeMoveVector(c),
-                    ReadableCommand::Upgrade(c) => Command::Upgrade(c),
-                })
-            } else {
-                BinaryCommand::deserialize(deserializer).map(|binary| match binary {
-                    BinaryCommand::MoveCall(c) => Command::MoveCall(c),
-                    BinaryCommand::TransferObjects(c) => Command::TransferObjects(c),
-                    BinaryCommand::SplitCoins(c) => Command::SplitCoins(c),
-                    BinaryCommand::MergeCoins(c) => Command::MergeCoins(c),
-                    BinaryCommand::Publish(c) => Command::Publish(c),
-                    BinaryCommand::MakeMoveVector(c) => Command::MakeMoveVector(c),
-                    BinaryCommand::Upgrade(c) => Command::Upgrade(c),
-                })
-            }
         }
     }
 }
@@ -1016,71 +321,8 @@ mod signed_transaction {
 }
 
 mod transaction_expiration {
-    use serde::{Deserialize, Deserializer, Serialize, Serializer};
-
-    use crate::{EpochId, TransactionExpiration};
-
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
-    #[serde(rename = "TransactionExpiration")]
-    #[serde(rename_all = "lowercase")]
-    enum ReadableTransactionExpiration {
-        /// Validators wont sign a transaction unless the expiration Epoch
-        /// is greater than or equal to the current epoch
-        Epoch(
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))] EpochId,
-        ),
-    }
-
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
-    pub enum BinaryTransactionExpiration {
-        /// The transaction has no expiration
-        None,
-        /// Validators wont sign a transaction unless the expiration Epoch
-        /// is greater than or equal to the current epoch
-        Epoch(EpochId),
-    }
-
-    impl Serialize for TransactionExpiration {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            if serializer.is_human_readable() {
-                match *self {
-                    Self::None => None,
-                    Self::Epoch(epoch) => Some(ReadableTransactionExpiration::Epoch(epoch)),
-                }
-                .serialize(serializer)
-            } else {
-                match *self {
-                    Self::None => BinaryTransactionExpiration::None,
-                    Self::Epoch(epoch) => BinaryTransactionExpiration::Epoch(epoch),
-                }
-                .serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for TransactionExpiration {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            if deserializer.is_human_readable() {
-                Option::<ReadableTransactionExpiration>::deserialize(deserializer).map(|readable| {
-                    match readable {
-                        None => Self::None,
-                        Some(ReadableTransactionExpiration::Epoch(epoch)) => Self::Epoch(epoch),
-                    }
-                })
-            } else {
-                BinaryTransactionExpiration::deserialize(deserializer).map(|binary| match binary {
-                    BinaryTransactionExpiration::None => Self::None,
-                    BinaryTransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
-                })
-            }
-        }
-    }
+    #[cfg(feature = "schemars")]
+    use crate::TransactionExpiration;
 
     #[cfg(feature = "schemars")]
     impl schemars::JsonSchema for TransactionExpiration {
@@ -1147,91 +389,7 @@ mod test {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
-    use crate::{
-        ObjectDigest, ObjectId, ObjectReference,
-        transaction::{Argument, Input, Transaction},
-    };
-
-    #[test]
-    fn argument() {
-        let test_cases = [
-            (Argument::Gas, serde_json::json!("gas")),
-            (Argument::Input(1), serde_json::json!({"input": 1})),
-            (Argument::Result(2), serde_json::json!({"result": 2})),
-            (
-                Argument::NestedResult(3, 4),
-                serde_json::json!({"result": [3, 4]}),
-            ),
-        ];
-
-        for (case, expected) in test_cases {
-            let actual = serde_json::to_value(case).unwrap();
-            assert_eq!(actual, expected);
-            println!("{actual}");
-
-            let deser = serde_json::from_value(expected).unwrap();
-            assert_eq!(case, deser);
-        }
-    }
-
-    #[test]
-    fn input_argument() {
-        let test_cases = [
-            (
-                Input::Pure {
-                    value: vec![1, 2, 3, 4],
-                },
-                serde_json::json!({
-                  "type": "pure",
-                  "value": "AQIDBA=="
-                }),
-            ),
-            (
-                Input::ImmutableOrOwned(ObjectReference::new(
-                    ObjectId::ZERO,
-                    1,
-                    ObjectDigest::ZERO,
-                )),
-                serde_json::json!({
-                  "type": "immutable_or_owned",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "version": "1",
-                  "digest": "11111111111111111111111111111111"
-                }),
-            ),
-            (
-                Input::Shared {
-                    object_id: ObjectId::ZERO,
-                    initial_shared_version: 1,
-                    mutable: true,
-                },
-                serde_json::json!({
-                  "type": "shared",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "initial_shared_version": "1",
-                  "mutable": true
-                }),
-            ),
-            (
-                Input::Receiving(ObjectReference::new(ObjectId::ZERO, 1, ObjectDigest::ZERO)),
-                serde_json::json!({
-                  "type": "receiving",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "version": "1",
-                  "digest": "11111111111111111111111111111111"
-                }),
-            ),
-        ];
-
-        for (case, expected) in test_cases {
-            let actual = serde_json::to_value(&case).unwrap();
-            assert_eq!(actual, expected);
-            println!("{actual}");
-
-            let deser = serde_json::from_value(expected).unwrap();
-            assert_eq!(case, deser);
-        }
-    }
+    use crate::transaction::Transaction;
 
     #[test]
     fn transaction_fixtures() {

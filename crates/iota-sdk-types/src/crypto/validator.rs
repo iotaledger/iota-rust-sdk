@@ -23,7 +23,6 @@ use crate::checkpoint::{EpochId, StakeUnit};
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ValidatorCommittee {
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: EpochId,
     pub members: Vec<ValidatorCommitteeMember>,
@@ -51,7 +50,6 @@ pub struct ValidatorCommitteeMember {
     #[cfg_attr(feature = "serde", serde(with = "ValidatorPublicKeySerialization"))]
     #[cfg_attr(feature = "schemars", schemars(with = "Bls12381PublicKey"))]
     pub public_key: Bls12381PublicKey,
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub stake: StakeUnit,
 }
@@ -81,7 +79,6 @@ pub struct ValidatorCommitteeMember {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ValidatorAggregatedSignature {
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: EpochId,
     pub signature: Bls12381Signature,
@@ -153,7 +150,6 @@ impl<'de> serde_with::DeserializeAs<'de, Bls12381PublicKey> for BinaryValidatorP
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ValidatorSignature {
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: EpochId,
     #[cfg_attr(feature = "serde", serde(with = "ValidatorPublicKeySerialization"))]
