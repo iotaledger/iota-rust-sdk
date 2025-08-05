@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use base64ct::Encoding;
-use iota_types::{SignedTransaction, Transaction, TransactionEffects, UserSignature};
+use iota_types::{SenderSignedTransaction, SignedTransaction, TransactionEffects, UserSignature};
 
 use crate::{
     error,
@@ -193,7 +193,7 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
             .bcs
             .map(|tx| base64ct::Base64::decode_vec(tx.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Transaction>(&bcs))
+            .map(|bcs| bcs::from_bytes::<SenderSignedTransaction>(&bcs))
             .transpose()?;
 
         let signatures = if let Some(sigs) = value.signatures {
@@ -206,7 +206,7 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
 
         if let Some(transaction) = transaction {
             Ok(SignedTransaction {
-                transaction,
+                transaction: transaction.0.transaction,
                 signatures,
             })
         } else {
