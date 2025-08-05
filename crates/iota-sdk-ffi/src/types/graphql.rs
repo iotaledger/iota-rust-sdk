@@ -214,9 +214,9 @@ impl From<CoreEvent> for Event {
 impl From<Event> for CoreEvent {
     fn from(value: Event) -> Self {
         Self {
-            package_id: (**value.package_id).clone().into(),
+            package_id: (**value.package_id),
             module: Identifier::from_str(&value.module).unwrap(),
-            sender: (**value.sender).clone().into(),
+            sender: (**value.sender),
             type_: StructTag::from_str(&value.type_).unwrap(),
             contents: value.contents,
         }
@@ -243,7 +243,7 @@ impl From<iota_graphql_client::query_types::ObjectRef> for ObjectRef {
 impl From<ObjectRef> for iota_graphql_client::query_types::ObjectRef {
     fn from(value: ObjectRef) -> Self {
         Self {
-            address: (**value.address).clone().into(),
+            address: (**value.address),
             digest: value.digest,
             version: value.version,
         }
@@ -528,7 +528,7 @@ impl From<Validator> for iota_graphql_client::query_types::Validator {
             next_epoch_stake: value.next_epoch_stake.map(|v| v.to_string().into()),
             operation_cap: value.operation_cap.map(|o| {
                 MoveObject {
-                    bcs: Some(base64ct::Base64::encode_string(&o).into()),
+                    bcs: Some(base64ct::Base64::encode_string(&o)),
                 }
                 .into()
             }),
@@ -543,7 +543,7 @@ impl From<Validator> for iota_graphql_client::query_types::Validator {
             project_url: value.project_url,
             rewards_pool: value.rewards_pool.map(|v| v.to_string().into()),
             staking_pool_activation_epoch: value.staking_pool_activation_epoch,
-            staking_pool_id: (**value.staking_pool_id).clone().into(),
+            staking_pool_id: (**value.staking_pool_id),
             staking_pool_iota_balance: value
                 .staking_pool_iota_balance
                 .map(|v| v.to_string().into()),
@@ -762,7 +762,7 @@ impl From<iota_graphql_client::query_types::GQLAddress> for GQLAddress {
 impl From<GQLAddress> for iota_graphql_client::query_types::GQLAddress {
     fn from(value: GQLAddress) -> Self {
         iota_graphql_client::query_types::GQLAddress {
-            address: (**value.address).clone().into(),
+            address: (**value.address),
         }
     }
 }
@@ -786,7 +786,7 @@ impl From<MoveObject> for iota_graphql_client::query_types::MoveObject {
         iota_graphql_client::query_types::MoveObject {
             bcs: value
                 .bcs
-                .map(|v| iota_graphql_client::query_types::Base64(v)),
+                .map(iota_graphql_client::query_types::Base64),
         }
     }
 }

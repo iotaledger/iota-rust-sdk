@@ -131,8 +131,8 @@ impl DynamicFieldOutput {
     pub fn deserialize_name<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
         assert_eq!(
             expected_type, &self.name.type_,
-            "Expected type {}, but got {}",
-            expected_type, &self.name.type_
+            "Expected type {expected_type}, but got {}",
+            &self.name.type_
         );
 
         let bcs = &self.name.bcs;
@@ -1722,7 +1722,7 @@ impl Client {
             before,
             first,
             last,
-        } = self.pagination_filter(pagination_filter.into()).await;
+        } = self.pagination_filter(pagination_filter).await;
         let operation = DynamicFieldsOwnerQuery::build(DynamicFieldConnectionArgs {
             address,
             after: after.as_deref(),
