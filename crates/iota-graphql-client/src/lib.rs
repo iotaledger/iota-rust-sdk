@@ -1900,7 +1900,6 @@ mod tests {
                     client.rpc_server()
                 )
             })
-            .unwrap()
             .unwrap();
     }
 
