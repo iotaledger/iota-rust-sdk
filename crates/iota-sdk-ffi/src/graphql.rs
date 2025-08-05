@@ -3,7 +3,6 @@
 
 use std::sync::Arc;
 
-use iota_graphql_client::pagination::PaginationFilter;
 use iota_types::CheckpointSequenceNumber;
 use tokio::sync::RwLock;
 
@@ -15,8 +14,8 @@ use crate::{
         digest::{CheckpointContentsDigest, CheckpointDigest, TransactionDigest},
         graphql::{
             CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveFunction,
-            MoveModule, ObjectFilter, ProtocolConfigs, ServiceConfig, TransactionDataEffects,
-            TransactionMetadata, TransactionsFilter,
+            MoveModule, ObjectFilter, PaginationFilter, ProtocolConfigs, ServiceConfig,
+            TransactionDataEffects, TransactionMetadata, TransactionsFilter,
         },
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
@@ -128,7 +127,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .active_validators(epoch, pagination_filter)
+            .active_validators(epoch, pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -185,7 +184,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .coins(**owner, coin_type, pagination_filter)
+            .coins(**owner, coin_type, pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -239,7 +238,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .checkpoints(pagination_filter)
+            .checkpoints(pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -313,7 +312,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .events(filter.map(|f| f.into()), pagination_filter)
+            .events(filter.map(|f| f.into()), pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -370,7 +369,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .objects(filter.map(Into::into), pagination_filter)
+            .objects(filter.map(Into::into), pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -447,7 +446,12 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .package_versions(**address, pagination_filter, after_version, before_version)
+            .package_versions(
+                **address,
+                pagination_filter.into(),
+                after_version,
+                before_version,
+            )
             .await?
             .map(Into::into)
             .into())
@@ -485,7 +489,11 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .packages(pagination_filter, after_checkpoint, before_checkpoint)
+            .packages(
+                pagination_filter.into(),
+                after_checkpoint,
+                before_checkpoint,
+            )
             .await?
             .map(Into::into)
             .into())
@@ -549,7 +557,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .transactions(filter.map(Into::into), pagination_filter)
+            .transactions(filter.map(Into::into), pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -566,7 +574,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .transactions_effects(filter.map(Into::into), pagination_filter)
+            .transactions_effects(filter.map(Into::into), pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -584,7 +592,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .transactions_data_effects(filter.map(Into::into), pagination_filter)
+            .transactions_data_effects(filter.map(Into::into), pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -677,10 +685,10 @@ impl GraphQLClient {
                 package,
                 module,
                 version,
-                pagination_filter_enums,
-                pagination_filter_friends,
-                pagination_filter_functions,
-                pagination_filter_structs,
+                pagination_filter_enums.into(),
+                pagination_filter_friends.into(),
+                pagination_filter_functions.into(),
+                pagination_filter_structs.into(),
             )
             .await?
             .map(Into::into)
@@ -762,7 +770,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .dynamic_fields(**address, pagination_filter)
+            .dynamic_fields(**address, pagination_filter.into())
             .await?
             .map(Into::into)
             .into())

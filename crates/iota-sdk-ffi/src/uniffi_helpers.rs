@@ -1,13 +1,13 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::query_types::{Base64, PageInfo};
+use iota_graphql_client::query_types::Base64;
 use serde_json::Value;
 
 use crate::types::{
     checkpoint::CheckpointSummary,
     coin::Coin,
-    graphql::{DynamicFieldOutput, Epoch, Event, TransactionDataEffects, Validator},
+    graphql::{DynamicFieldOutput, Epoch, Event, PageInfo, TransactionDataEffects, Validator},
     object::{MovePackage, Object},
     transaction::{SignedTransaction, TransactionEffects},
 };
@@ -39,6 +39,7 @@ define_paged_record!(CheckpointSummaryPage, CheckpointSummary);
 define_paged_record!(SignedTransactionPage, SignedTransaction);
 define_paged_record!(TransactionDataEffectsPage, TransactionDataEffects);
 define_paged_record!(DynamicFieldOutputPage, DynamicFieldOutput);
+define_paged_record!(EventPage, Event);
 define_paged_record!(ValidatorPage, Validator);
 
 macro_rules! define_paged_object {
@@ -70,6 +71,8 @@ macro_rules! define_paged_object {
 }
 
 define_paged_object!(EventPage, Event);
+define_paged_object!(SignedTransactionPage, SignedTransaction);
+define_paged_object!(TransactionDataEffectsPage, TransactionDataEffects);
 define_paged_object!(CoinPage, Coin);
 define_paged_object!(ObjectPage, Object);
 define_paged_object!(TransactionEffectsPage, TransactionEffects);

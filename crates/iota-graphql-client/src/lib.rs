@@ -1722,7 +1722,7 @@ impl Client {
             before,
             first,
             last,
-        } = self.pagination_filter(pagination_filter).await;
+        } = self.pagination_filter(pagination_filter.into()).await;
         let operation = DynamicFieldsOwnerQuery::build(DynamicFieldConnectionArgs {
             address,
             after: after.as_deref(),
