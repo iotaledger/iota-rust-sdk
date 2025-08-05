@@ -36,10 +36,13 @@ pub struct Transaction {
     pub expiration: TransactionExpiration,
 }
 
-#[derive(serde_derive::Deserialize)]
+#[cfg_attr(feature = "serde", derive(serde_derive::Deserialize))]
 pub struct SenderSignedTransaction(
-    #[serde(with = "::serde_with::As::<crate::_serde::SignedTransactionWithIntentMessage>")]
-    pub  SignedTransaction,
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "::serde_with::As::<crate::_serde::SignedTransactionWithIntentMessage>")
+    )]
+    pub SignedTransaction,
 );
 
 #[derive(Clone, Debug, PartialEq, Eq)]
