@@ -177,6 +177,49 @@ impl Object {
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectData(pub iota_types::ObjectData);
 
+#[uniffi::export]
+impl ObjectData {
+    /// Create an `ObjectData` from a `MoveStruct`
+    #[uniffi::constructor]
+    pub fn from_move_struct(move_struct: Arc<MoveStruct>) -> Self {
+        Self(iota_types::ObjectData::Struct(move_struct.0.clone()))
+    }
+
+    /// Create an `ObjectData` from  `MovePackage`
+    #[uniffi::constructor]
+    pub fn from_move_package(move_package: Arc<MovePackage>) -> Self {
+        Self(iota_types::ObjectData::Package(move_package.0.clone()))
+    }
+
+    /// Return whether this object is a `MoveStruct`
+    pub fn is_struct(&self) -> bool {
+        self.0.is_struct()
+    }
+
+    /// Return whether this object is a `MovePackage`
+    pub fn is_package(&self) -> bool {
+        self.0.is_package()
+    }
+
+    /// Try to interpret this object as a `MoveStruct`
+    pub fn as_struct(&self) -> Option<Arc<MoveStruct>> {
+        self.0
+            .as_struct_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+    }
+
+    /// Try to interpret this object as a `MovePackage`
+    pub fn as_package(&self) -> Option<Arc<MovePackage>> {
+        self.0
+            .as_package_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+    }
+}
+
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct MovePackage(pub iota_types::MovePackage);
 
