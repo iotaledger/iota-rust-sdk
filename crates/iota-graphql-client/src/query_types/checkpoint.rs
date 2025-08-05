@@ -102,6 +102,7 @@ pub struct GasCostSummary {
 }
 
 // TODO need bcs in GraphQL Checkpoint to avoid this conversion
+// http://github.com/mystenlabs/sui-rust-sdk/issues/62
 impl TryInto<CheckpointSummary> for Checkpoint {
     type Error = error::Error;
 
