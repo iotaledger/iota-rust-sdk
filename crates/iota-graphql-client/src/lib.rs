@@ -2233,24 +2233,17 @@ mod tests {
             .unwrap();
     }
 
-    // TODO: Find a suitable transaction to dry run
-    // // This needs the tx builder to be able to be tested properly
-    // #[tokio::test]
-    // async fn test_dry_run() {
-    //     let client = Client::new_testnet();
-    //     // this tx bytes works on testnet
-    //     let tx_bytes =
-    // "AAACAAiA8PoCAAAAAAAg7q6yDns6nPznaKLd9pUD2K6NFiiibC10pDVQHJKdP2kCAgABAQAAAQECAAABAQBGLuHCJ/
-    // xjZfhC4vTJt/Zrvq1gexKLaKf3aVzyIkxRaAFUHzz8ftiZdY25qP4f9zySuT1K/
-    // qyTWjbGiTu0i0Z1ZFA4gwUAAAAAILeG86EeQm3qY3ajat3iUnY2Gbrk/NbdwV/
-    // d9MZviAwwRi7hwif8Y2X4QuL0ybf2a76tYHsSi2in92lc8iJMUWjoAwAAAAAAAECrPAAAAAAAAA=="
-    // ;
+    // This needs the tx builder to be able to be tested properly
+    #[tokio::test]
+    async fn test_dry_run() {
+        let client = Client::new_testnet();
+        let tx_bytes = "AAACAAgAypo7AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgABAQAAAQEDAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACg9WqbvnpQmublI1+/dnonzEvhVPHnGEX++ianEHLIZmoiqRAAAAAAAgmrviNLnSJMjhRUZ8il2SFFjZ60cdJWv9v3M7pTsTQaA0FjZwX1JlYTftfc/+nF7J1QTfVacG+5wc2teKJoJHBDf/BgAAAAAAIOFdV7nQyvw+7AJpDmJFifAa4SqrI5qqXqAq1IKZsSxKVTI1Cd7yJVFzIqi4nnPX1ShmHEJWweFl5BId7OSkHXViNQ0AAAAAACA4U7t1jiQwTs87xenAvOkQWAAMWbElg0Exz1annhowtXPQJaMX5mcenWnm/aFAXhUM2rGsvqqa2zM2OOQyEKqbNP8GAAAAAAAg7pHVs4Z58mP71Y53cDuY3X/TbTgfmBHkDWe16J+kBOqhnfl+yRNiYZ3fpWvyc4rB2u+a2qjUGqcw7yFnlhJAj1w00w8AAAAAIDEjW30S0iN4lnDXpigCjEmOA0tUYKf339ZayYUU9PG6s1wmB/dndlMUdTZGe5MOz1baxXMESHbVd5L7XTObgECAQpEAAAAAACBCkCOAwD6Dl2DkdXj/eFRBTsNPWg3XYATTPxeThLuhzrTmcYf4XqT8ceMAoKbQBjtzyaTv+xb0K0MzHfvJR1NFgUKRAAAAAAAgxUVPvQUU/R1jcC2+AxZ7uC3ls+09G7xAk0xusdBSUkXPNNWDsV8xzw6ipjnf5pk9W3R9P0RD6iORRe+0JKaLtmE1DQAAAAAAIPhsUoriBlzhLc4SHds72JTbjeI37VhyjlFVtQurLY+26e+jqKb2TsdARpYEvxPl31WAelj2RMuUyK8S5NeluEWjKpEAAAAAACCR/0nc3l5UIXpl6I6SEpWABP/vJewHhZ5iMDpIDXdMqf0VCu+y2k/TZIpRFMDRiBO0oUW+L8+06uAi3pZkwpbFNf8GAAAAAAAgyIfExjdHxdt7+eiOLRh4N4/iSMZCrHf2t5iYI+Kl8ysAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOgDAAAAAAAA4G88AAAAAAAA";
 
-    //     client
-    //         .dry_run(tx_bytes.to_string(), None, None)
-    //         .await
-    //         .unwrap();
-    // }
+        client
+            .dry_run(tx_bytes.to_string(), None, None)
+            .await
+            .unwrap();
+    }
 
     #[tokio::test]
     async fn test_dynamic_field_query() {
