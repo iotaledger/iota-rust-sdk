@@ -294,7 +294,6 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-        StoreExecutionTimeObservations(&'a crate::transaction::ExecutionTimeObservations),
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -304,7 +303,6 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
-        StoreExecutionTimeObservations(crate::transaction::ExecutionTimeObservations),
     }
 
     #[derive(serde_derive::Serialize)]
@@ -313,7 +311,6 @@ mod end_of_epoch {
         ChangeEpochV2(&'a ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
-        StoreExecutionTimeObservations(&'a crate::transaction::ExecutionTimeObservations),
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -322,7 +319,6 @@ mod end_of_epoch {
         ChangeEpochV2(ChangeEpochV2),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
-        StoreExecutionTimeObservations(crate::transaction::ExecutionTimeObservations),
     }
 
     impl Serialize for EndOfEpochTransactionKind {
@@ -342,9 +338,6 @@ mod end_of_epoch {
                     Self::AuthenticatorStateExpire(k) => {
                         ReadableEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
                     }
-                    Self::StoreExecutionTimeObservations(obs) => {
-                        ReadableEndOfEpochTransactionKindRef::StoreExecutionTimeObservations(obs)
-                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -356,9 +349,6 @@ mod end_of_epoch {
                     }
                     Self::AuthenticatorStateExpire(k) => {
                         BinaryEndOfEpochTransactionKindRef::AuthenticatorStateExpire(k)
-                    }
-                    Self::StoreExecutionTimeObservations(obs) => {
-                        BinaryEndOfEpochTransactionKindRef::StoreExecutionTimeObservations(obs)
                     }
                 };
                 binary.serialize(serializer)
@@ -384,9 +374,6 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
                             Self::AuthenticatorStateExpire(k)
                         }
-                        ReadableEndOfEpochTransactionKind::StoreExecutionTimeObservations(obs) => {
-                            Self::StoreExecutionTimeObservations(obs)
-                        }
                     }
                 })
             } else {
@@ -399,9 +386,6 @@ mod end_of_epoch {
                         }
                         BinaryEndOfEpochTransactionKind::AuthenticatorStateExpire(k) => {
                             Self::AuthenticatorStateExpire(k)
-                        }
-                        BinaryEndOfEpochTransactionKind::StoreExecutionTimeObservations(obs) => {
-                            Self::StoreExecutionTimeObservations(obs)
                         }
                     },
                 )
