@@ -535,6 +535,7 @@ mod serialization {
     #[derive(serde_derive::Serialize)]
     struct AuthenticatorRef<'a> {
         inputs: &'a ZkLoginInputs,
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_epoch: EpochId,
         signature: &'a SimpleSignature,
     }
@@ -542,6 +543,7 @@ mod serialization {
     #[derive(serde_derive::Deserialize)]
     struct Authenticator {
         inputs: ZkLoginInputs,
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_epoch: EpochId,
         signature: SimpleSignature,
     }

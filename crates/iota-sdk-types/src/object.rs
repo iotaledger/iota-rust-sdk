@@ -31,6 +31,7 @@ pub struct ObjectReference {
     /// The object id of this object.
     object_id: ObjectId,
     /// The version of this object.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     version: Version,
     /// The digest of this object.
@@ -109,6 +110,7 @@ pub enum Owner {
     /// Object is shared, can be used by any address, and is mutable.
     Shared(
         /// The version at which the object became shared
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         Version,
     ),
@@ -133,7 +135,6 @@ pub enum Owner {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[allow(clippy::large_enum_variant)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
@@ -173,7 +174,6 @@ impl ObjectData {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MovePackage {
     /// Address or Id of this package
@@ -190,6 +190,7 @@ pub struct MovePackage {
     ///
     /// In all cases, packages are referred to by move calls using just their
     /// ID, and they are always loaded at their latest version.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
 
     /// Set of modules defined by this package
@@ -202,10 +203,6 @@ pub struct MovePackage {
         strategy(
             proptest::collection::btree_map(proptest::arbitrary::any::<Identifier>(), proptest::collection::vec(proptest::arbitrary::any::<u8>(), 0..=1024), 0..=5)
         )
-    )]
-    #[cfg_attr(
-        feature = "schemars",
-        schemars(with = "BTreeMap<Identifier, crate::_schemars::Base64>")
     )]
     pub modules: BTreeMap<Identifier, Vec<u8>>,
 
@@ -296,6 +293,7 @@ pub struct UpgradeInfo {
     /// Id of the upgraded packages
     pub upgraded_id: ObjectId,
     /// Version of the upgraded package
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub upgraded_version: Version,
 }
@@ -324,7 +322,6 @@ pub struct UpgradeInfo {
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveStruct {
@@ -333,19 +330,18 @@ pub struct MoveStruct {
         feature = "serde",
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
-    #[cfg_attr(feature = "schemars", schemars(with = "StructTag"))]
     pub type_: StructTag,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
     /// BCS bytes of a Move struct value
     #[cfg_attr(
         feature = "serde",
-        serde(with = "crate::_serde::ReadableBase64Encoded")
+        serde(with = "::serde_with::As::<::serde_with::Bytes>")
     )]
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(32..=1024).lift()))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     pub contents: Vec<u8>,
 }
 
@@ -368,11 +364,6 @@ pub enum ObjectType {
 /// object = object-data owner digest u64
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Object {
@@ -484,7 +475,6 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct GenesisObject {
     pub data: ObjectData,
@@ -530,11 +520,48 @@ impl GenesisObject {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
+    use std::{borrow::Cow, str::FromStr};
+
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use serde_with::{DeserializeAs, SerializeAs};
 
     use super::*;
     use crate::TypeTag;
+
+    #[test]
+    fn obj() {
+        let o = Object {
+            data: ObjectData::Struct(MoveStruct {
+                type_: StructTag {
+                    address: Address::TWO,
+                    module: Identifier::new("bar").unwrap(),
+                    name: Identifier::new("foo").unwrap(),
+                    type_params: Vec::new(),
+                },
+                version: 12,
+                contents: ObjectId::ZERO.into(),
+            }),
+            // owner: Owner::Address(Address::ZERO),
+            owner: Owner::Object(ObjectId::ZERO),
+            // owner: Owner::Immutable,
+            // owner: Owner::Shared {
+            //     initial_shared_version: 14,
+            // },
+            previous_transaction: TransactionDigest::ZERO,
+            storage_rebate: 100,
+        };
+
+        println!("{}", serde_json::to_string_pretty(&o).unwrap());
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&ObjectReference {
+                object_id: ObjectId::ZERO,
+                version: 1,
+                digest: ObjectDigest::ZERO,
+            })
+            .unwrap()
+        );
+    }
 
     /// Wrapper around StructTag with a space-efficient representation for
     /// common types like coins The StructTag for a gas coin is 84 bytes, so
@@ -650,9 +677,288 @@ mod serialization {
         }
     }
 
+    struct ReadableObjectType;
+
+    impl SerializeAs<ObjectType> for ReadableObjectType {
+        fn serialize_as<S>(source: &ObjectType, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            match source {
+                ObjectType::Package => "package".serialize(serializer),
+                ObjectType::Struct(s) => s.serialize(serializer),
+            }
+        }
+    }
+
+    impl<'de> DeserializeAs<'de, ObjectType> for ReadableObjectType {
+        fn deserialize_as<D>(deserializer: D) -> Result<ObjectType, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let s: Cow<'de, str> = Deserialize::deserialize(deserializer)?;
+            if s == "package" {
+                Ok(ObjectType::Package)
+            } else {
+                let struct_tag = StructTag::from_str(&s)
+                    .map_err(|_| serde::de::Error::custom("invalid object type"))?;
+                Ok(ObjectType::Struct(struct_tag))
+            }
+        }
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[serde(rename = "Object")]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+    struct ReadableObject {
+        object_id: ObjectId,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        version: Version,
+        owner: Owner,
+
+        #[serde(with = "::serde_with::As::<ReadableObjectType>")]
+        #[serde(rename = "type")]
+        #[cfg_attr(feature = "schemars", schemars(with = "String"))]
+        type_: ObjectType,
+
+        #[serde(flatten)]
+        data: ReadableObjectData,
+
+        previous_transaction: TransactionDigest,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        storage_rebate: u64,
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for Object {
+        fn schema_name() -> String {
+            ReadableObject::schema_name()
+        }
+
+        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+            ReadableObject::json_schema(gen)
+        }
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[serde(untagged)]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "ObjectData")
+    )]
+    enum ReadableObjectData {
+        Move(ReadableMoveStruct),
+        Package(ReadablePackage),
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "Package")
+    )]
+    struct ReadablePackage {
+        #[serde(
+            with = "::serde_with::As::<BTreeMap<::serde_with::Same, crate::_serde::Base64Encoded>>"
+        )]
+        #[cfg_attr(
+            feature = "schemars",
+            schemars(with = "BTreeMap<Identifier, crate::_schemars::Base64>")
+        )]
+        modules: BTreeMap<Identifier, Vec<u8>>,
+        type_origin_table: Vec<TypeOrigin>,
+        linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "MoveStruct")
+    )]
+    struct ReadableMoveStruct {
+        #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
+        contents: Vec<u8>,
+    }
+
+    impl Object {
+        fn readable_object_data(&self) -> ReadableObjectData {
+            match &self.data {
+                ObjectData::Struct(struct_) => ReadableObjectData::Move(ReadableMoveStruct {
+                    contents: struct_.contents.clone(),
+                }),
+                ObjectData::Package(package) => ReadableObjectData::Package(ReadablePackage {
+                    modules: package.modules.clone(),
+                    type_origin_table: package.type_origin_table.clone(),
+                    linkage_table: package.linkage_table.clone(),
+                }),
+            }
+        }
+    }
+
+    impl Serialize for Object {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                let readable = ReadableObject {
+                    object_id: self.object_id(),
+                    version: self.version(),
+                    // digest: todo!(),
+                    owner: self.owner,
+                    previous_transaction: self.previous_transaction,
+                    storage_rebate: self.storage_rebate,
+                    type_: self.object_type(),
+                    data: self.readable_object_data(),
+                };
+                readable.serialize(serializer)
+            } else {
+                let binary = BinaryObject {
+                    data: self.data.clone(),
+                    owner: self.owner,
+                    previous_transaction: self.previous_transaction,
+                    storage_rebate: self.storage_rebate,
+                };
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for Object {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                let ReadableObject {
+                    object_id,
+                    version,
+                    owner,
+                    previous_transaction,
+                    storage_rebate,
+                    type_,
+                    data,
+                } = Deserialize::deserialize(deserializer)?;
+
+                // check if package or struct
+                let data = match (type_, data) {
+                    (
+                        ObjectType::Package,
+                        ReadableObjectData::Package(ReadablePackage {
+                            modules,
+                            type_origin_table,
+                            linkage_table,
+                        }),
+                    ) => ObjectData::Package(MovePackage {
+                        id: object_id,
+                        version,
+                        modules,
+                        type_origin_table,
+                        linkage_table,
+                    }),
+                    (
+                        ObjectType::Struct(type_),
+                        ReadableObjectData::Move(ReadableMoveStruct { contents }),
+                    ) => {
+                        // check id matches in contents
+                        if id_opt(&contents).is_none_or(|id| id != object_id) {
+                            return Err(serde::de::Error::custom("id from contents doesn't match"));
+                        }
+
+                        ObjectData::Struct(MoveStruct {
+                            type_,
+                            version,
+                            contents,
+                        })
+                    }
+                    _ => return Err(serde::de::Error::custom("type and data don't match")),
+                };
+
+                Ok(Object {
+                    data,
+                    owner,
+                    previous_transaction,
+                    storage_rebate,
+                })
+            } else {
+                let BinaryObject {
+                    data,
+                    owner,
+                    previous_transaction,
+                    storage_rebate,
+                } = Deserialize::deserialize(deserializer)?;
+
+                Ok(Object {
+                    data,
+                    owner,
+                    previous_transaction,
+                    storage_rebate,
+                })
+            }
+        }
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    struct BinaryObject {
+        data: ObjectData,
+        owner: Owner,
+        previous_transaction: TransactionDigest,
+        storage_rebate: u64,
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[serde(rename = "GenesisObject")]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+    struct ReadableGenesisObject {
+        object_id: ObjectId,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        version: Version,
+        owner: Owner,
+
+        #[serde(with = "::serde_with::As::<ReadableObjectType>")]
+        #[serde(rename = "type")]
+        #[cfg_attr(feature = "schemars", schemars(with = "String"))]
+        type_: ObjectType,
+
+        #[serde(flatten)]
+        data: ReadableObjectData,
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for GenesisObject {
+        fn schema_name() -> String {
+            ReadableGenesisObject::schema_name()
+        }
+
+        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+            ReadableGenesisObject::json_schema(gen)
+        }
+    }
+
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     enum BinaryGenesisObject {
         RawObject { data: ObjectData, owner: Owner },
+    }
+
+    impl GenesisObject {
+        fn readable_object_data(&self) -> ReadableObjectData {
+            match &self.data {
+                ObjectData::Struct(struct_) => ReadableObjectData::Move(ReadableMoveStruct {
+                    contents: struct_.contents.clone(),
+                }),
+                ObjectData::Package(package) => ReadableObjectData::Package(ReadablePackage {
+                    modules: package.modules.clone(),
+                    type_origin_table: package.type_origin_table.clone(),
+                    linkage_table: package.linkage_table.clone(),
+                }),
+            }
+        }
     }
 
     impl Serialize for GenesisObject {
@@ -660,11 +966,22 @@ mod serialization {
         where
             S: Serializer,
         {
-            let binary = BinaryGenesisObject::RawObject {
-                data: self.data.clone(),
-                owner: self.owner,
-            };
-            binary.serialize(serializer)
+            if serializer.is_human_readable() {
+                let readable = ReadableGenesisObject {
+                    object_id: self.object_id(),
+                    version: self.version(),
+                    owner: self.owner,
+                    type_: self.object_type(),
+                    data: self.readable_object_data(),
+                };
+                readable.serialize(serializer)
+            } else {
+                let binary = BinaryGenesisObject::RawObject {
+                    data: self.data.clone(),
+                    owner: self.owner,
+                };
+                binary.serialize(serializer)
+            }
         }
     }
 
@@ -673,10 +990,56 @@ mod serialization {
         where
             D: Deserializer<'de>,
         {
-            let BinaryGenesisObject::RawObject { data, owner } =
-                Deserialize::deserialize(deserializer)?;
+            if deserializer.is_human_readable() {
+                let ReadableGenesisObject {
+                    object_id,
+                    version,
+                    owner,
+                    type_,
+                    data,
+                } = Deserialize::deserialize(deserializer)?;
 
-            Ok(GenesisObject { data, owner })
+                // check if package or struct
+                let data = match (type_, data) {
+                    (
+                        ObjectType::Package,
+                        ReadableObjectData::Package(ReadablePackage {
+                            modules,
+                            type_origin_table,
+                            linkage_table,
+                        }),
+                    ) => ObjectData::Package(MovePackage {
+                        id: object_id,
+                        version,
+                        modules,
+                        type_origin_table,
+                        linkage_table,
+                    }),
+                    (
+                        ObjectType::Struct(type_),
+                        ReadableObjectData::Move(ReadableMoveStruct { contents }),
+                    ) => {
+                        // check id matches in contents
+                        if id_opt(&contents).is_none_or(|id| id != object_id) {
+                            return Err(serde::de::Error::custom("id from contents doesn't match"));
+                        }
+
+                        ObjectData::Struct(MoveStruct {
+                            type_,
+                            version,
+                            contents,
+                        })
+                    }
+                    _ => return Err(serde::de::Error::custom("type and data don't match")),
+                };
+
+                Ok(GenesisObject { data, owner })
+            } else {
+                let BinaryGenesisObject::RawObject { data, owner } =
+                    Deserialize::deserialize(deserializer)?;
+
+                Ok(GenesisObject { data, owner })
+            }
         }
     }
 

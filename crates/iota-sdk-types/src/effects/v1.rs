@@ -30,10 +30,6 @@ use crate::{
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TransactionEffectsV1 {
@@ -164,10 +160,6 @@ pub struct UnchangedSharedObject {
     derive(schemars::JsonSchema),
     schemars(tag = "kind", rename_all = "snake_case")
 )]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum UnchangedSharedKind {
@@ -223,10 +215,6 @@ pub enum UnchangedSharedKind {
     derive(schemars::JsonSchema),
     schemars(tag = "state", rename_all = "snake_case")
 )]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ObjectIn {
@@ -262,10 +250,6 @@ pub enum ObjectIn {
     feature = "schemars",
     derive(schemars::JsonSchema),
     schemars(tag = "state", rename_all = "snake_case")
-)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
@@ -303,7 +287,8 @@ pub enum ObjectOut {
 #[derive(Eq, PartialEq, Copy, Clone, Debug)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
+    derive(serde_derive::Serialize, serde_derive::Deserialize),
+    serde(rename_all = "lowercase")
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -328,5 +313,506 @@ impl TransactionEffectsV1 {
     /// The gas used in this transaction.
     pub fn gas_summary(&self) -> &GasCostSummary {
         &self.gas_used
+    }
+}
+
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+mod serialization {
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+    use super::*;
+
+    #[derive(serde_derive::Serialize)]
+    struct ReadableTransactionEffectsV1Ref<'a> {
+        #[serde(flatten)]
+        status: &'a ExecutionStatus,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        epoch: &'a EpochId,
+        gas_used: &'a GasCostSummary,
+        transaction_digest: &'a TransactionDigest,
+        gas_object_index: &'a Option<u32>,
+        events_digest: &'a Option<TransactionEventsDigest>,
+        dependencies: &'a Vec<TransactionDigest>,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        lamport_version: &'a Version,
+        changed_objects: &'a Vec<ChangedObject>,
+        unchanged_shared_objects: &'a Vec<UnchangedSharedObject>,
+        auxiliary_data_digest: &'a Option<EffectsAuxiliaryDataDigest>,
+    }
+
+    #[derive(serde_derive::Deserialize)]
+    struct ReadableTransactionEffectsV1 {
+        #[serde(flatten)]
+        status: ExecutionStatus,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        epoch: EpochId,
+        gas_used: GasCostSummary,
+        transaction_digest: TransactionDigest,
+        gas_object_index: Option<u32>,
+        events_digest: Option<TransactionEventsDigest>,
+        dependencies: Vec<TransactionDigest>,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        lamport_version: Version,
+        changed_objects: Vec<ChangedObject>,
+        unchanged_shared_objects: Vec<UnchangedSharedObject>,
+        auxiliary_data_digest: Option<EffectsAuxiliaryDataDigest>,
+    }
+
+    #[derive(serde_derive::Serialize)]
+    struct BinaryTransactionEffectsV1Ref<'a> {
+        status: &'a ExecutionStatus,
+        epoch: &'a EpochId,
+        gas_used: &'a GasCostSummary,
+        transaction_digest: &'a TransactionDigest,
+        gas_object_index: &'a Option<u32>,
+        events_digest: &'a Option<TransactionEventsDigest>,
+        dependencies: &'a Vec<TransactionDigest>,
+        lamport_version: &'a Version,
+        changed_objects: &'a Vec<ChangedObject>,
+        unchanged_shared_objects: &'a Vec<UnchangedSharedObject>,
+        auxiliary_data_digest: &'a Option<EffectsAuxiliaryDataDigest>,
+    }
+
+    #[derive(serde_derive::Deserialize)]
+    struct BinaryTransactionEffectsV1 {
+        status: ExecutionStatus,
+        epoch: EpochId,
+        gas_used: GasCostSummary,
+        transaction_digest: TransactionDigest,
+        gas_object_index: Option<u32>,
+        events_digest: Option<TransactionEventsDigest>,
+        dependencies: Vec<TransactionDigest>,
+        lamport_version: Version,
+        changed_objects: Vec<ChangedObject>,
+        unchanged_shared_objects: Vec<UnchangedSharedObject>,
+        auxiliary_data_digest: Option<EffectsAuxiliaryDataDigest>,
+    }
+
+    impl Serialize for TransactionEffectsV1 {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            let Self {
+                status,
+                epoch,
+                gas_used,
+                transaction_digest,
+                gas_object_index,
+                events_digest,
+                dependencies,
+                lamport_version,
+                changed_objects,
+                unchanged_shared_objects,
+                auxiliary_data_digest,
+            } = self;
+            if serializer.is_human_readable() {
+                let readable = ReadableTransactionEffectsV1Ref {
+                    status,
+                    epoch,
+                    gas_used,
+                    transaction_digest,
+                    gas_object_index,
+                    events_digest,
+                    dependencies,
+                    lamport_version,
+                    changed_objects,
+                    unchanged_shared_objects,
+                    auxiliary_data_digest,
+                };
+                readable.serialize(serializer)
+            } else {
+                let binary = BinaryTransactionEffectsV1Ref {
+                    status,
+                    epoch,
+                    gas_used,
+                    transaction_digest,
+                    gas_object_index,
+                    events_digest,
+                    dependencies,
+                    lamport_version,
+                    changed_objects,
+                    unchanged_shared_objects,
+                    auxiliary_data_digest,
+                };
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for TransactionEffectsV1 {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                let ReadableTransactionEffectsV1 {
+                    status,
+                    epoch,
+                    gas_used,
+                    transaction_digest,
+                    gas_object_index,
+                    events_digest,
+                    dependencies,
+                    lamport_version,
+                    changed_objects,
+                    unchanged_shared_objects,
+                    auxiliary_data_digest,
+                } = Deserialize::deserialize(deserializer)?;
+                Ok(Self {
+                    status,
+                    epoch,
+                    gas_used,
+                    transaction_digest,
+                    gas_object_index,
+                    events_digest,
+                    dependencies,
+                    lamport_version,
+                    changed_objects,
+                    unchanged_shared_objects,
+                    auxiliary_data_digest,
+                })
+            } else {
+                let BinaryTransactionEffectsV1 {
+                    status,
+                    epoch,
+                    gas_used,
+                    transaction_digest,
+                    gas_object_index,
+                    events_digest,
+                    dependencies,
+                    lamport_version,
+                    changed_objects,
+                    unchanged_shared_objects,
+                    auxiliary_data_digest,
+                } = Deserialize::deserialize(deserializer)?;
+                Ok(Self {
+                    status,
+                    epoch,
+                    gas_used,
+                    transaction_digest,
+                    gas_object_index,
+                    events_digest,
+                    dependencies,
+                    lamport_version,
+                    changed_objects,
+                    unchanged_shared_objects,
+                    auxiliary_data_digest,
+                })
+            }
+        }
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[serde(tag = "kind", rename_all = "snake_case")]
+    enum ReadableUnchangedSharedKind {
+        ReadOnlyRoot {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+            digest: ObjectDigest,
+        },
+        MutateDeleted {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+        },
+        ReadDeleted {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+        },
+        Cancelled {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+        },
+        PerEpochConfig,
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    enum BinaryUnchangedSharedKind {
+        ReadOnlyRoot {
+            version: Version,
+            digest: ObjectDigest,
+        },
+        MutateDeleted {
+            version: Version,
+        },
+        ReadDeleted {
+            version: Version,
+        },
+        Cancelled {
+            version: Version,
+        },
+        PerEpochConfig,
+    }
+
+    impl Serialize for UnchangedSharedKind {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                let readable = match self.clone() {
+                    UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                        ReadableUnchangedSharedKind::ReadOnlyRoot { version, digest }
+                    }
+                    UnchangedSharedKind::MutateDeleted { version } => {
+                        ReadableUnchangedSharedKind::MutateDeleted { version }
+                    }
+                    UnchangedSharedKind::ReadDeleted { version } => {
+                        ReadableUnchangedSharedKind::ReadDeleted { version }
+                    }
+                    UnchangedSharedKind::Cancelled { version } => {
+                        ReadableUnchangedSharedKind::Cancelled { version }
+                    }
+                    UnchangedSharedKind::PerEpochConfig => {
+                        ReadableUnchangedSharedKind::PerEpochConfig
+                    }
+                };
+                readable.serialize(serializer)
+            } else {
+                let binary = match self.clone() {
+                    UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                        BinaryUnchangedSharedKind::ReadOnlyRoot { version, digest }
+                    }
+                    UnchangedSharedKind::MutateDeleted { version } => {
+                        BinaryUnchangedSharedKind::MutateDeleted { version }
+                    }
+                    UnchangedSharedKind::ReadDeleted { version } => {
+                        BinaryUnchangedSharedKind::ReadDeleted { version }
+                    }
+                    UnchangedSharedKind::Cancelled { version } => {
+                        BinaryUnchangedSharedKind::Cancelled { version }
+                    }
+                    UnchangedSharedKind::PerEpochConfig => {
+                        BinaryUnchangedSharedKind::PerEpochConfig
+                    }
+                };
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for UnchangedSharedKind {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                ReadableUnchangedSharedKind::deserialize(deserializer).map(
+                    |readable| match readable {
+                        ReadableUnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                            Self::ReadOnlyRoot { version, digest }
+                        }
+                        ReadableUnchangedSharedKind::MutateDeleted { version } => {
+                            Self::MutateDeleted { version }
+                        }
+                        ReadableUnchangedSharedKind::ReadDeleted { version } => {
+                            Self::ReadDeleted { version }
+                        }
+                        ReadableUnchangedSharedKind::Cancelled { version } => {
+                            Self::Cancelled { version }
+                        }
+                        ReadableUnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
+                    },
+                )
+            } else {
+                BinaryUnchangedSharedKind::deserialize(deserializer).map(|binary| match binary {
+                    BinaryUnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                        Self::ReadOnlyRoot { version, digest }
+                    }
+                    BinaryUnchangedSharedKind::MutateDeleted { version } => {
+                        Self::MutateDeleted { version }
+                    }
+                    BinaryUnchangedSharedKind::ReadDeleted { version } => {
+                        Self::ReadDeleted { version }
+                    }
+                    BinaryUnchangedSharedKind::Cancelled { version } => Self::Cancelled { version },
+                    BinaryUnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
+                })
+            }
+        }
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[serde(tag = "state", rename_all = "snake_case")]
+    enum ReadableObjectIn {
+        NotExist,
+        Exist {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+            digest: ObjectDigest,
+            owner: Owner,
+        },
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    enum BinaryObjectIn {
+        NotExist,
+        Exist {
+            version: Version,
+            digest: ObjectDigest,
+            owner: Owner,
+        },
+    }
+
+    impl Serialize for ObjectIn {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                let readable = match self.clone() {
+                    ObjectIn::NotExist => ReadableObjectIn::NotExist,
+                    ObjectIn::Exist {
+                        version,
+                        digest,
+                        owner,
+                    } => ReadableObjectIn::Exist {
+                        version,
+                        digest,
+                        owner,
+                    },
+                };
+                readable.serialize(serializer)
+            } else {
+                let binary = match self.clone() {
+                    ObjectIn::NotExist => BinaryObjectIn::NotExist,
+                    ObjectIn::Exist {
+                        version,
+                        digest,
+                        owner,
+                    } => BinaryObjectIn::Exist {
+                        version,
+                        digest,
+                        owner,
+                    },
+                };
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for ObjectIn {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                ReadableObjectIn::deserialize(deserializer).map(|readable| match readable {
+                    ReadableObjectIn::NotExist => Self::NotExist,
+                    ReadableObjectIn::Exist {
+                        version,
+                        digest,
+                        owner,
+                    } => Self::Exist {
+                        version,
+                        digest,
+                        owner,
+                    },
+                })
+            } else {
+                BinaryObjectIn::deserialize(deserializer).map(|binary| match binary {
+                    BinaryObjectIn::NotExist => Self::NotExist,
+                    BinaryObjectIn::Exist {
+                        version,
+                        digest,
+                        owner,
+                    } => Self::Exist {
+                        version,
+                        digest,
+                        owner,
+                    },
+                })
+            }
+        }
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[serde(tag = "state", rename_all = "snake_case")]
+    enum ReadableObjectOut {
+        NotExist,
+        ObjectWrite {
+            digest: ObjectDigest,
+            owner: Owner,
+        },
+        PackageWrite {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+            digest: ObjectDigest,
+        },
+    }
+
+    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    enum BinaryObjectOut {
+        NotExist,
+        ObjectWrite {
+            digest: ObjectDigest,
+            owner: Owner,
+        },
+        PackageWrite {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+            digest: ObjectDigest,
+        },
+    }
+
+    impl Serialize for ObjectOut {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                let readable = match self.clone() {
+                    ObjectOut::NotExist => ReadableObjectOut::NotExist,
+                    ObjectOut::ObjectWrite { digest, owner } => {
+                        ReadableObjectOut::ObjectWrite { digest, owner }
+                    }
+                    ObjectOut::PackageWrite { version, digest } => {
+                        ReadableObjectOut::PackageWrite { version, digest }
+                    }
+                };
+                readable.serialize(serializer)
+            } else {
+                let binary = match self.clone() {
+                    ObjectOut::NotExist => BinaryObjectOut::NotExist,
+                    ObjectOut::ObjectWrite { digest, owner } => {
+                        BinaryObjectOut::ObjectWrite { digest, owner }
+                    }
+                    ObjectOut::PackageWrite { version, digest } => {
+                        BinaryObjectOut::PackageWrite { version, digest }
+                    }
+                };
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for ObjectOut {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                ReadableObjectOut::deserialize(deserializer).map(|readable| match readable {
+                    ReadableObjectOut::NotExist => Self::NotExist,
+                    ReadableObjectOut::ObjectWrite { digest, owner } => {
+                        Self::ObjectWrite { digest, owner }
+                    }
+                    ReadableObjectOut::PackageWrite { version, digest } => {
+                        Self::PackageWrite { version, digest }
+                    }
+                })
+            } else {
+                BinaryObjectOut::deserialize(deserializer).map(|binary| match binary {
+                    BinaryObjectOut::NotExist => Self::NotExist,
+                    BinaryObjectOut::ObjectWrite { digest, owner } => {
+                        Self::ObjectWrite { digest, owner }
+                    }
+                    BinaryObjectOut::PackageWrite { version, digest } => {
+                        Self::PackageWrite { version, digest }
+                    }
+                })
+            }
+        }
     }
 }
