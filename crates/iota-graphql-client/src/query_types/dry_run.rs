@@ -41,7 +41,7 @@ pub struct TransactionMetadata {
 #[derive(Clone, cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "ObjectRef")]
 pub struct ObjectRef {
-    pub object_id: ObjectId,
+    pub address: ObjectId,
     pub digest: String,
     pub version: u64,
 }
@@ -49,7 +49,7 @@ pub struct ObjectRef {
 impl From<ObjectReference> for ObjectRef {
     fn from(value: ObjectReference) -> Self {
         ObjectRef {
-            object_id: *value.object_id(),
+            address: *value.object_id(),
             version: value.version(),
             digest: value.digest().to_string(),
         }

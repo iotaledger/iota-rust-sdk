@@ -1,7 +1,7 @@
 // Copyright (c) Mysten Labs, Inc.
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
-use super::PageInfo;
+
 use crate::query_types::{BigInt, DateTime, ObjectId, ProtocolConfigs, schema};
 
 // ===========================================================================
@@ -15,25 +15,12 @@ pub struct EpochQuery {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochsArgs")]
-pub struct EpochsQuery {
-    #[arguments(first: $first, after: $after, last: $last, before: $before)]
-    pub epochs: EpochConnection,
-}
-
-#[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochArgs")]
 pub struct EpochSummaryQuery {
     #[arguments(id: $id)]
     pub epoch: Option<EpochSummary>,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "EpochConnection")]
-pub struct EpochConnection {
-    pub nodes: Vec<Epoch>,
-    pub page_info: PageInfo,
-}
 // ===========================================================================
 // Epoch Summary Args
 // ===========================================================================
@@ -41,14 +28,6 @@ pub struct EpochConnection {
 #[derive(cynic::QueryVariables, Debug)]
 pub struct EpochArgs {
     pub id: Option<u64>,
-}
-
-#[derive(cynic::QueryVariables, Debug)]
-pub struct EpochsArgs<'a> {
-    pub first: Option<i32>,
-    pub after: Option<&'a str>,
-    pub last: Option<i32>,
-    pub before: Option<&'a str>,
 }
 
 /// A summary of the epoch.
@@ -113,8 +92,6 @@ pub struct Epoch {
     pub total_gas_fees: Option<BigInt>,
     /// The total MIST rewarded as stake.
     pub total_stake_rewards: Option<BigInt>,
-    /// The amount added to total gas fees to make up the total stake rewards.
-    pub total_stake_subsidies: Option<BigInt>,
     /// The total number of transaction in this epoch.
     pub total_transactions: Option<u64>,
     /// Validator related properties. For active validators, see

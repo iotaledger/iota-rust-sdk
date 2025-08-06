@@ -34,30 +34,11 @@ pub struct PackageArgs {
     pub version: Option<u64>,
 }
 
-// ===========================================================================
-// Package By Name
-// ===========================================================================
-
-#[derive(cynic::QueryFragment, Debug)]
-#[cynic(
-    schema = "rpc",
-    graphql_type = "Query",
-    variables = "PackageByNameArgs"
-)]
-pub struct PackageByNameQuery {
-    #[arguments(name: "")]
-    pub package_by_name: Option<MovePackageQuery>,
-}
-
-#[derive(cynic::QueryVariables, Debug)]
-pub struct PackageByNameArgs<'a> {
-    pub name: &'a str,
-}
-
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
 pub struct MovePackageQuery {
-    pub package_bcs: Option<Base64>,
+    pub address: Address,
+    pub bcs: Option<Base64>,
 }
 
 // ===========================================================================

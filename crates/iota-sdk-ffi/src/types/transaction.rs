@@ -226,25 +226,6 @@ impl EndOfEpochTransactionKind {
     pub fn authenticator_state_expire(tx: &AuthenticatorStateExpire) -> Self {
         Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.0.clone()))
     }
-
-    #[uniffi::constructor]
-    pub fn bridge_state_create(chain_id: &CheckpointDigest) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::BridgeStateCreate {
-            chain_id: **chain_id,
-        })
-    }
-
-    #[uniffi::constructor]
-    pub fn bridge_committee_init(bridge_object_version: u64) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::BridgeCommitteeInit {
-            bridge_object_version,
-        })
-    }
-
-    #[uniffi::constructor]
-    pub fn store_execution_time_observations(obs: &ExecutionTimeObservations) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::StoreExecutionTimeObservations(obs.0.clone()))
-    }
 }
 
 /// Payment information for executing a transaction

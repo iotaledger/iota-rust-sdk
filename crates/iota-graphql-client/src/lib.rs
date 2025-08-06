@@ -17,22 +17,21 @@ use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::Error;
 use futures::Stream;
 use iota_types::{
-    Address, CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary, Event, MovePackage,
-    Object, ObjectId, SignedTransaction, Transaction, TransactionDigest, TransactionEffects,
-    TransactionKind, TypeTag, UserSignature, framework::Coin,
+    Address, CheckpointContentsDigest, CheckpointSequenceNumber, CheckpointSummary, Event,
+    Identifier, MovePackage, Object, ObjectId, SignedTransaction, Transaction, TransactionDigest,
+    TransactionEffects, TransactionKind, TypeTag, UserSignature, framework::Coin,
 };
 use query_types::{
     ActiveValidatorsArgs, ActiveValidatorsQuery, BalanceArgs, BalanceQuery, ChainIdentifierQuery,
     CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointsArgs, CheckpointsQuery, CoinMetadata,
     CoinMetadataArgs, CoinMetadataQuery, DryRunArgs, DryRunQuery, DynamicFieldArgs,
     DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
-    DynamicObjectFieldQuery, Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, EpochsArgs,
-    EpochsQuery, EventFilter, EventsQuery, EventsQueryArgs, ExecuteTransactionArgs,
-    ExecuteTransactionQuery, LatestPackageQuery, MoveFunction, MoveModule,
-    MovePackageVersionFilter, NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs,
-    NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, ObjectFilter, ObjectQuery,
-    ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs, PackageArgs, PackageByNameArgs,
-    PackageByNameQuery, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs,
+    DynamicObjectFieldQuery, Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, EventFilter,
+    EventsQuery, EventsQueryArgs, ExecuteTransactionArgs, ExecuteTransactionQuery,
+    LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
+    NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
+    NormalizedMoveModuleQueryArgs, ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery,
+    ObjectsQueryArgs, PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs,
     PackageVersionsQuery, PackagesQuery, PackagesQueryArgs, ProtocolConfigQuery, ProtocolConfigs,
     ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery, TransactionBlockArgs,
     TransactionBlockEffectsQuery, TransactionBlockQuery, TransactionBlocksEffectsQuery,
@@ -115,12 +114,6 @@ pub struct NameValue(Vec<u8>);
 #[derive(derive_more::From)]
 pub struct BcsName(pub Vec<u8>);
 
-#[derive(Clone, Debug)]
-pub struct TransactionEvent {
-    pub event: Event,
-    pub digest: TransactionDigest,
-}
-
 impl<T: Serialize> From<T> for NameValue {
     fn from(value: T) -> Self {
         NameValue(bcs::to_bytes(&value).unwrap())
@@ -152,9 +145,7 @@ impl DynamicFieldOutput {
         assert_eq!(
             Some(&expected_type),
             typetag.as_ref(),
-            "Expected type {}, but got {:?}",
-            expected_type,
-            typetag
+            "Expected type {expected_type}, but got {typetag:?}"
         );
 
         if let Some(dfv) = &self.value {
@@ -178,8 +169,8 @@ pub struct Client {
 
 impl Client {
     /// Return the URL for the GraphQL server.
-    fn rpc_server(&self) -> &str {
-        self.rpc.as_str()
+    fn rpc_server(&self) -> &Url {
+        &self.rpc
     }
 
     /// Set the server address for the GraphQL GraphQL client. It should be a
@@ -257,17 +248,6 @@ impl Client {
         )
     }
 
-    /// Return a stream of epochs based on the (optional) object filter.
-    pub async fn epochs_stream(
-        &self,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Epoch>> + '_ {
-        stream_paginated_query(
-            move |pag_filter| self.epochs(pag_filter),
-            streaming_direction,
-        )
-    }
-
     /// Internal method for getting the epoch summary that is called in a few
     /// other APIs for convenience.
     async fn epoch_summary(
@@ -283,7 +263,7 @@ impl Client {
         &self,
         filter: Option<EventFilter>,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<TransactionEvent>> + '_ {
+    ) -> impl Stream<Item = Result<Event>> + '_ {
         stream_paginated_query(
             move |pag_filter| self.events(filter.clone(), pag_filter),
             streaming_direction,
@@ -416,7 +396,7 @@ impl Client {
     {
         let res = self
             .inner
-            .post(self.rpc_server())
+            .post(self.rpc_server().clone())
             .json(&operation)
             .send()
             .await?
@@ -620,7 +600,7 @@ impl Client {
     /// provided checkpoint digest.
     pub async fn total_transaction_blocks_by_digest(
         &self,
-        digest: CheckpointDigest,
+        digest: CheckpointContentsDigest,
     ) -> Result<Option<u64>> {
         self.internal_total_transaction_blocks(Some(digest.to_string()), None)
             .await
@@ -738,7 +718,7 @@ impl Client {
     /// checkpoint id.
     pub async fn checkpoint(
         &self,
-        digest: Option<CheckpointDigest>,
+        digest: Option<CheckpointContentsDigest>,
         seq_num: Option<u64>,
     ) -> Result<Option<CheckpointSummary>> {
         if digest.is_some() && seq_num.is_some() {
@@ -833,33 +813,6 @@ impl Client {
         Ok(response.data.and_then(|d| d.epoch))
     }
 
-    /// Return a page of epochs.
-    pub async fn epochs(&self, pagination_filter: PaginationFilter) -> Result<Page<Epoch>> {
-        let PaginationFilterResponse {
-            after,
-            before,
-            first,
-            last,
-        } = self.pagination_filter(pagination_filter).await;
-        let operation = EpochsQuery::build(EpochsArgs {
-            after: after.as_deref(),
-            before: before.as_deref(),
-            first,
-            last,
-        });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        if let Some(epochs) = response.data {
-            Ok(Page::new(epochs.epochs.page_info, epochs.epochs.nodes))
-        } else {
-            Ok(Page::new_empty())
-        }
-    }
-
     /// Return the number of checkpoints in this epoch. This will return
     /// `Ok(None)` if the epoch requested is not available in the GraphQL
     /// service (e.g., due to pruning).
@@ -896,13 +849,12 @@ impl Client {
     // Events API
     // ===========================================================================
 
-    /// Return a page of tuple (event, transaction digest) based on the
-    /// (optional) event filter.
+    /// Return a page of events based on the (optional) event filter.
     pub async fn events(
         &self,
         filter: Option<EventFilter>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<TransactionEvent>> {
+    ) -> Result<Page<Event>> {
         let PaginationFilterResponse {
             after,
             before,
@@ -928,34 +880,27 @@ impl Client {
             let ec = events.events;
             let page_info = ec.page_info;
 
-            let events_with_digests = ec
+            let events = ec
                 .nodes
                 .into_iter()
                 .map(|node| {
-                    let event =
-                        bcs::from_bytes::<Event>(&base64ct::Base64::decode_vec(&node.bcs.0)?)?;
-
-                    let tx_digest = node
-                        .transaction_block
-                        .ok_or_else(Error::empty_response_error)?
-                        .digest
-                        .ok_or_else(|| {
-                            Error::from_error(
-                                Kind::Deserialization,
-                                "Expected a transaction digest for this event, but it is missing.",
-                            )
-                        })?;
-
-                    let tx_digest = TransactionDigest::from_base58(&tx_digest)?;
-
-                    Ok(TransactionEvent {
-                        event,
-                        digest: tx_digest,
+                    let module = node.sending_module.ok_or_else(|| {
+                        Error::from_error(
+                            Kind::Deserialization,
+                            "Expected a sending module for this event, but it is missing.",
+                        )
+                    })?;
+                    Ok(Event {
+                        package_id: module.package.address.into(),
+                        module: Identifier::new(module.name)?,
+                        sender: node.sender.map(|s| s.address).unwrap_or(Address::ZERO),
+                        type_: node.type_.repr.parse()?,
+                        contents: base64ct::Base64::decode_vec(&node.bcs.0)?,
                     })
                 })
                 .collect::<Result<Vec<_>>>()?;
 
-            Ok(Page::new(page_info, events_with_digests))
+            Ok(Page::new(page_info, events))
         } else {
             Ok(Page::new_empty())
         }
@@ -1148,11 +1093,12 @@ impl Client {
         Ok(response
             .data
             .and_then(|x| x.package)
-            .and_then(|x| x.package_bcs)
+            .and_then(|x| x.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<MovePackage>(&bcs))
-            .transpose()?)
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .transpose()?
+            .map(|obj| obj.data.into_package()))
     }
 
     /// Fetch all versions of package at address (packages that share this
@@ -1195,7 +1141,7 @@ impl Client {
             let bcs = pc
                 .nodes
                 .iter()
-                .map(|p| &p.package_bcs)
+                .map(|p| &p.bcs)
                 .filter_map(|b64| {
                     b64.as_ref()
                         .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
@@ -1203,7 +1149,7 @@ impl Client {
                 .collect::<Result<Vec<_>, base64ct::Error>>()?;
             let packages = bcs
                 .iter()
-                .map(|b| bcs::from_bytes::<MovePackage>(b))
+                .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
                 .collect::<Result<Vec<_>, bcs::Error>>()?;
 
             Ok(Page::new(page_info, packages))
@@ -1230,31 +1176,14 @@ impl Client {
         let pkg = response
             .data
             .and_then(|x| x.latest_package)
-            .and_then(|x| x.package_bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .and_then(|x| x.bcs)
+            .map(|bcs| base64ct::Base64::decode_vec(&bcs.0))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<MovePackage>(&bcs))
-            .transpose()?;
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .transpose()?
+            .map(|obj| obj.data.into_package());
 
         Ok(pkg)
-    }
-
-    /// Fetch a package by its name (using Move Registry Service)
-    pub async fn package_by_name(&self, name: &str) -> Result<Option<MovePackage>> {
-        let operation = PackageByNameQuery::build(PackageByNameArgs { name });
-
-        let response = self.run_query(&operation).await?;
-
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        Ok(response
-            .data
-            .and_then(|x| x.package_by_name)
-            .and_then(|x| x.package_bcs)
-            .and_then(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()).ok())
-            .and_then(|bcs| bcs::from_bytes::<MovePackage>(&bcs).ok()))
     }
 
     /// The Move packages that exist in the network, optionally filtered to be
@@ -1300,7 +1229,7 @@ impl Client {
             let bcs = pc
                 .nodes
                 .iter()
-                .map(|p| &p.package_bcs)
+                .map(|p| &p.bcs)
                 .filter_map(|b64| {
                     b64.as_ref()
                         .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
@@ -1308,7 +1237,7 @@ impl Client {
                 .collect::<Result<Vec<_>, base64ct::Error>>()?;
             let packages = bcs
                 .iter()
-                .map(|b| bcs::from_bytes::<MovePackage>(b))
+                .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
                 .collect::<Result<Vec<_>, bcs::Error>>()?;
 
             Ok(Page::new(page_info, packages))
@@ -1852,13 +1781,13 @@ mod tests {
     #[test]
     fn test_rpc_server() {
         let mut client = Client::new_mainnet();
-        assert_eq!(client.rpc_server(), MAINNET_HOST);
+        assert_eq!(client.rpc_server(), &MAINNET_HOST.parse().unwrap());
         client.set_rpc_server(TESTNET_HOST).unwrap();
-        assert_eq!(client.rpc_server(), TESTNET_HOST);
+        assert_eq!(client.rpc_server(), &TESTNET_HOST.parse().unwrap());
         client.set_rpc_server(DEVNET_HOST).unwrap();
-        assert_eq!(client.rpc_server(), DEVNET_HOST);
+        assert_eq!(client.rpc_server(), &DEVNET_HOST.parse().unwrap());
         client.set_rpc_server(LOCAL_HOST).unwrap();
-        assert_eq!(client.rpc_server(), LOCAL_HOST);
+        assert_eq!(client.rpc_server(), &LOCAL_HOST.parse().unwrap());
 
         assert!(client.set_rpc_server("localhost:9125/graphql").is_ok());
         assert!(client.set_rpc_server("9125/graphql").is_err());
@@ -1867,12 +1796,16 @@ mod tests {
     #[tokio::test]
     async fn test_balance_query() {
         let client = test_client();
-        let balance = client.balance("0x1".parse().unwrap(), None).await;
-        assert!(
-            balance.is_ok(),
-            "Balance query failed for {} network",
-            client.rpc_server()
-        );
+        client
+            .balance("0x1".parse().unwrap(), None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Balance query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
     }
 
     #[tokio::test]
@@ -1885,24 +1818,45 @@ mod tests {
     #[tokio::test]
     async fn test_reference_gas_price_query() {
         let client = test_client();
-        let rgp = client.reference_gas_price(None).await;
-        assert!(
-            rgp.is_ok(),
-            "Reference gas price query failed for {} network",
-            client.rpc_server()
-        );
+        client
+            .reference_gas_price(None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Reference gas price query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_protocol_config_query() {
         let client = test_client();
-        let pc = client.protocol_config(None).await;
-        assert!(pc.is_ok());
+        client
+            .protocol_config(None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Protocol config query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
 
         // test specific version
-        let pc = client.protocol_config(Some(50)).await;
-        assert!(pc.is_ok());
-        let pc = pc.unwrap();
+        let pc = client
+            .protocol_config(Some(50))
+            .await
+            .map_err(|e| {
+                format!(
+                    "Protocol config query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
         if let Some(pc) = pc {
             assert_eq!(
                 pc.protocol_version,
@@ -1917,12 +1871,16 @@ mod tests {
     #[tokio::test]
     async fn test_service_config_query() {
         let client = test_client();
-        let sc = client.service_config().await;
-        assert!(
-            sc.is_ok(),
-            "Service config query failed for {} network",
-            client.rpc_server()
-        );
+        client
+            .service_config()
+            .await
+            .map_err(|e| {
+                format!(
+                    "Service config query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
     }
 
     #[tokio::test]
@@ -1930,17 +1888,18 @@ mod tests {
         let client = test_client();
         let av = client
             .active_validators(None, PaginationFilter::default())
-            .await;
-        assert!(
-            av.is_ok(),
-            "Active validators query failed for {} network. Error: {}",
-            client.rpc_server(),
-            av.unwrap_err()
-        );
+            .await
+            .map_err(|e| {
+                format!(
+                    "Active validators query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
 
         assert!(
-            !av.unwrap().is_empty(),
-            "Active validators query returned None for {} network",
+            !av.is_empty(),
+            "Active validators query returned no data for {} network",
             client.rpc_server()
         );
     }
@@ -1948,115 +1907,148 @@ mod tests {
     #[tokio::test]
     async fn test_coin_metadata_query() {
         let client = test_client();
-        let cm = client.coin_metadata("0x2::iota::IOTA").await;
-        assert!(
-            cm.is_ok(),
-            "Coin metadata query failed for {} network",
-            client.rpc_server()
-        );
+        client
+            .coin_metadata("0x2::iota::IOTA")
+            .await
+            .map_err(|e| {
+                format!(
+                    "Coin metadata query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_checkpoint_query() {
         let client = test_client();
-        let c = client.checkpoint(None, None).await;
-        assert!(
-            c.is_ok(),
-            "Checkpoint query failed for {} network. Error: {}",
-            client.rpc_server(),
-            c.unwrap_err()
-        );
+        client
+            .checkpoint(None, None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Checkpoint query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
     #[tokio::test]
     async fn test_checkpoints_query() {
         let client = test_client();
-        let c = client.checkpoints(PaginationFilter::default()).await;
+        let cs = client
+            .checkpoints(PaginationFilter::default())
+            .await
+            .map_err(|e| {
+                format!(
+                    "Checkpoints query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
+
         assert!(
-            c.is_ok(),
-            "Checkpoints query failed for {} network. Error: {}",
-            client.rpc_server(),
-            c.unwrap_err()
+            !cs.is_empty(),
+            "Checkpoints query returned no data for {} network",
+            client.rpc_server()
         );
     }
 
     #[tokio::test]
     async fn test_latest_checkpoint_sequence_number_query() {
         let client = test_client();
-        let last_checkpoint = client.latest_checkpoint_sequence_number().await;
-        assert!(
-            last_checkpoint.is_ok(),
-            "Latest checkpoint sequence number query failed for {} network. Error: {}",
-            client.rpc_server(),
-            last_checkpoint.unwrap_err()
-        );
+        client
+            .latest_checkpoint_sequence_number()
+            .await
+            .map_err(|e| {
+                format!(
+                    "Latest checkpoint sequence number query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_epoch_query() {
         let client = test_client();
-        let e = client.epoch(None).await;
-        assert!(
-            e.is_ok(),
-            "Epoch query failed for {} network. Error: {}",
-            client.rpc_server(),
-            e.unwrap_err()
-        );
-
-        assert!(
-            e.unwrap().is_some(),
-            "Epoch query returned None for {} network",
-            client.rpc_server()
-        );
+        client
+            .epoch(None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Epoch query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_epoch_total_checkpoints_query() {
         let client = test_client();
-        let e = client.epoch_total_checkpoints(None).await;
-        assert!(
-            e.is_ok(),
-            "Epoch total checkpoints query failed for {} network. Error: {}",
-            client.rpc_server(),
-            e.unwrap_err()
-        );
+        client
+            .epoch_total_checkpoints(None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Epoch total checkpoints query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_epoch_total_transaction_blocks_query() {
         let client = test_client();
-        let e = client.epoch_total_transaction_blocks(None).await;
-        assert!(
-            e.is_ok(),
-            "Epoch total transaction blocks query failed for {} network. Error: {}",
-            client.rpc_server(),
-            e.unwrap_err()
-        );
+        client
+            .epoch_total_transaction_blocks(None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Epoch total transaction blocks query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_epoch_summary_query() {
         let client = test_client();
-        let e = client.epoch_summary(None).await;
-        assert!(
-            e.is_ok(),
-            "Epoch summary query failed for {} network. Error: {}",
-            client.rpc_server(),
-            e.unwrap_err()
-        );
+        client
+            .epoch_summary(None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Epoch summary query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_events_query() {
         let client = test_client();
-        let events = client.events(None, PaginationFilter::default()).await;
+        let events = client
+            .events(None, PaginationFilter::default())
+            .await
+            .map_err(|e| {
+                format!(
+                    "Events query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
         assert!(
-            events.is_ok(),
-            "Events query failed for {} network. Error: {}",
-            client.rpc_server(),
-            events.unwrap_err()
-        );
-        assert!(
-            !events.unwrap().is_empty(),
+            !events.is_empty(),
             "Events query returned no data for {} network",
             client.rpc_server()
         );
@@ -2065,57 +2057,74 @@ mod tests {
     #[tokio::test]
     async fn test_objects_query() {
         let client = test_client();
-        let objects = client.objects(None, PaginationFilter::default()).await;
+        let objects = client
+            .objects(None, PaginationFilter::default())
+            .await
+            .map_err(|e| {
+                format!(
+                    "Objects query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
         assert!(
-            objects.is_ok(),
-            "Objects query failed for {} network. Error: {}",
-            client.rpc_server(),
-            objects.unwrap_err()
+            !objects.is_empty(),
+            "Objects query returned no data for {} network",
+            client.rpc_server()
         );
     }
 
     #[tokio::test]
     async fn test_object_query() {
         let client = test_client();
-        let object = client.object("0x5".parse().unwrap(), None).await;
-        assert!(
-            object.is_ok(),
-            "Object query failed for {} network. Error: {}",
-            client.rpc_server(),
-            object.unwrap_err()
-        );
+        client
+            .object("0x5".parse().unwrap(), None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Object query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_object_bcs_query() {
         let client = test_client();
-        let object_bcs = client.object_bcs("0x5".parse().unwrap()).await;
-        assert!(
-            object_bcs.is_ok(),
-            "Object bcs query failed for {} network. Error: {}",
-            client.rpc_server(),
-            object_bcs.unwrap_err()
-        );
+        client
+            .object_bcs("0x5".parse().unwrap())
+            .await
+            .map_err(|e| {
+                format!(
+                    "Object bcs query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_coins_query() {
         let client = test_client();
-        let coins = client
+        client
             .coins("0x1".parse().unwrap(), None, PaginationFilter::default())
-            .await;
-        assert!(
-            coins.is_ok(),
-            "Coins query failed for {} network. Error: {}",
-            client.rpc_server(),
-            coins.unwrap_err()
-        );
+            .await
+            .map_err(|e| {
+                format!(
+                    "Coins query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_coins_stream() {
         let client = test_client();
-        let faucet = match client.rpc_server() {
+        let faucet = match client.rpc_server().as_str() {
             LOCAL_HOST => FaucetClient::local(),
             TESTNET_HOST => FaucetClient::testnet(),
             DEVNET_HOST => FaucetClient::devnet(),
@@ -2170,117 +2179,150 @@ mod tests {
     #[tokio::test]
     async fn test_transactions_effects_query() {
         let client = test_client();
-        let txs_effects = client
+        client
             .transactions_effects(None, PaginationFilter::default())
-            .await;
-        assert!(
-            txs_effects.is_ok(),
-            "Transactions effects query failed for {} network. Error: {}",
-            client.rpc_server(),
-            txs_effects.unwrap_err()
-        );
+            .await
+            .map_err(|e| {
+                format!(
+                    "Transactions effects query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_transactions_query() {
         let client = test_client();
-        let transactions = client.transactions(None, PaginationFilter::default()).await;
+        let transactions = client
+            .transactions(None, PaginationFilter::default())
+            .await
+            .map_err(|e| {
+                format!(
+                    "Transactions query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
         assert!(
-            transactions.is_ok(),
-            "Transactions query failed for {} network. Error: {}",
-            client.rpc_server(),
-            transactions.unwrap_err()
+            !transactions.is_empty(),
+            "Transactions query returned no data for {} network",
+            client.rpc_server()
         );
     }
 
     #[tokio::test]
     async fn test_total_supply() {
         let client = test_client();
-        let ts = client.total_supply("0x2::iota::IOTA").await;
-        assert!(
-            ts.is_ok(),
-            "Total supply query failed for {} network. Error: {}",
-            client.rpc_server(),
-            ts.unwrap_err()
-        );
-        assert_eq!(
-            ts.unwrap().unwrap(),
-            10_000_000_000,
-            "Total supply mismatch for {} network",
-            client.rpc_server()
-        );
+        client
+            .total_supply("0x2::iota::IOTA")
+            .await
+            .map_err(|e| {
+                format!(
+                    "Total supply query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
 
     // This needs the tx builder to be able to be tested properly
     #[tokio::test]
     async fn test_dry_run() {
         let client = Client::new_testnet();
-        // this tx bytes works on testnet
-        let tx_bytes = "AAACAAiA8PoCAAAAAAAg7q6yDns6nPznaKLd9pUD2K6NFiiibC10pDVQHJKdP2kCAgABAQAAAQECAAABAQBGLuHCJ/xjZfhC4vTJt/Zrvq1gexKLaKf3aVzyIkxRaAFUHzz8ftiZdY25qP4f9zySuT1K/qyTWjbGiTu0i0Z1ZFA4gwUAAAAAILeG86EeQm3qY3ajat3iUnY2Gbrk/NbdwV/d9MZviAwwRi7hwif8Y2X4QuL0ybf2a76tYHsSi2in92lc8iJMUWjoAwAAAAAAAECrPAAAAAAAAA==";
+        let tx_bytes = "AAACAAgAypo7AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgABAQAAAQEDAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACg9WqbvnpQmublI1+/dnonzEvhVPHnGEX++ianEHLIZmoiqRAAAAAAAgmrviNLnSJMjhRUZ8il2SFFjZ60cdJWv9v3M7pTsTQaA0FjZwX1JlYTftfc/+nF7J1QTfVacG+5wc2teKJoJHBDf/BgAAAAAAIOFdV7nQyvw+7AJpDmJFifAa4SqrI5qqXqAq1IKZsSxKVTI1Cd7yJVFzIqi4nnPX1ShmHEJWweFl5BId7OSkHXViNQ0AAAAAACA4U7t1jiQwTs87xenAvOkQWAAMWbElg0Exz1annhowtXPQJaMX5mcenWnm/aFAXhUM2rGsvqqa2zM2OOQyEKqbNP8GAAAAAAAg7pHVs4Z58mP71Y53cDuY3X/TbTgfmBHkDWe16J+kBOqhnfl+yRNiYZ3fpWvyc4rB2u+a2qjUGqcw7yFnlhJAj1w00w8AAAAAIDEjW30S0iN4lnDXpigCjEmOA0tUYKf339ZayYUU9PG6s1wmB/dndlMUdTZGe5MOz1baxXMESHbVd5L7XTObgECAQpEAAAAAACBCkCOAwD6Dl2DkdXj/eFRBTsNPWg3XYATTPxeThLuhzrTmcYf4XqT8ceMAoKbQBjtzyaTv+xb0K0MzHfvJR1NFgUKRAAAAAAAgxUVPvQUU/R1jcC2+AxZ7uC3ls+09G7xAk0xusdBSUkXPNNWDsV8xzw6ipjnf5pk9W3R9P0RD6iORRe+0JKaLtmE1DQAAAAAAIPhsUoriBlzhLc4SHds72JTbjeI37VhyjlFVtQurLY+26e+jqKb2TsdARpYEvxPl31WAelj2RMuUyK8S5NeluEWjKpEAAAAAACCR/0nc3l5UIXpl6I6SEpWABP/vJewHhZ5iMDpIDXdMqf0VCu+y2k/TZIpRFMDRiBO0oUW+L8+06uAi3pZkwpbFNf8GAAAAAAAgyIfExjdHxdt7+eiOLRh4N4/iSMZCrHf2t5iYI+Kl8ysAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOgDAAAAAAAA4G88AAAAAAAA";
 
-        let dry_run = client.dry_run(tx_bytes.to_string(), None, None).await;
-
-        assert!(dry_run.is_ok());
+        client
+            .dry_run(tx_bytes.to_string(), None, None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Dry run failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_dynamic_field_query() {
         let client = test_client();
         let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-        let dynamic_field = client
+        client
             .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, BcsName(bcs))
-            .await;
+            .await
+            .map_err(|e| {
+                format!(
+                    "Dynamic field query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
 
-        assert!(dynamic_field.is_ok());
-
-        let dynamic_field = client
+        client
             .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, 2u64)
-            .await;
-
-        assert!(dynamic_field.is_ok());
+            .await
+            .map_err(|e| {
+                format!(
+                    "Dynamic field query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_dynamic_fields_query() {
         let client = test_client();
-        let dynamic_fields = client
+        client
             .dynamic_fields("0x5".parse().unwrap(), PaginationFilter::default())
-            .await;
-        assert!(
-            dynamic_fields.is_ok(),
-            "Dynamic fields query failed for {} network. Error: {}",
-            client.rpc_server(),
-            dynamic_fields.unwrap_err()
-        );
+            .await
+            .map_err(|e| {
+                format!(
+                    "Dynamic fields query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_total_transaction_blocks() {
         let client = test_client();
-        let total_transaction_blocks = client.total_transaction_blocks().await;
-        assert!(
-            total_transaction_blocks
-                .as_ref()
-                .is_ok_and(|f| f.is_some_and(|tx| tx > 0)),
-            "Total transaction blocks query failed for {} network. Error: {}",
-            client.rpc_server(),
-            total_transaction_blocks.unwrap_err()
-        );
-
-        let chckp = client.latest_checkpoint_sequence_number().await;
-        assert!(
-            chckp.is_ok(),
-            "Latest checkpoint sequence number query failed for {} network. Error: {}",
-            client.rpc_server(),
-            chckp.unwrap_err()
-        );
-        let chckp_id = chckp.unwrap().unwrap();
         let total_transaction_blocks = client
+            .total_transaction_blocks()
+            .await
+            .map_err(|e| {
+                format!(
+                    "Total transaction blocks query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
+        assert!(total_transaction_blocks > 0);
+
+        let chckp_id = client
+            .latest_checkpoint_sequence_number()
+            .await
+            .map_err(|e| {
+                format!(
+                    "Latest checkpoint sequence number query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
+        let total_transaction_blocks_by_seq_num = client
             .total_transaction_blocks_by_seq_num(chckp_id)
             .await
             .unwrap()
             .unwrap();
-        assert!(total_transaction_blocks > 0);
+        assert_eq!(
+            total_transaction_blocks,
+            total_transaction_blocks_by_seq_num
+        );
 
         let chckp = client
             .checkpoint(None, Some(chckp_id))
@@ -2288,58 +2330,45 @@ mod tests {
             .unwrap()
             .unwrap();
 
-        let digest = chckp.digest();
-        let total_transaction_blocks_by_digest =
-            client.total_transaction_blocks_by_digest(digest).await;
-        assert!(total_transaction_blocks_by_digest.is_ok());
-        assert_eq!(
-            total_transaction_blocks_by_digest.unwrap().unwrap(),
-            total_transaction_blocks
-        );
+        let digest = chckp.content_digest;
+        let total_transaction_blocks_by_digest = client
+            .total_transaction_blocks_by_digest(digest)
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(total_transaction_blocks, total_transaction_blocks_by_digest);
     }
 
     #[tokio::test]
     async fn test_package() {
         let client = test_client();
-        let package = client.package("0x2".parse().unwrap(), None).await;
-        assert!(
-            package.is_ok(),
-            "Package query failed for {} network. Error: {}",
-            client.rpc_server(),
-            package.unwrap_err()
-        );
-
-        assert!(
-            package.unwrap().is_some(),
-            "Package query returned None for {} network",
-            client.rpc_server()
-        );
-    }
-
-    #[tokio::test]
-    #[ignore] // don't know which name is not malformed
-    async fn test_package_by_name() {
-        let client = Client::new_testnet();
-        let package = client.package_by_name("iota@iota").await;
-        assert!(package.is_ok());
+        client
+            .package("0x2".parse().unwrap(), None)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Package query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_latest_package_query() {
         let client = test_client();
-        let package = client.package_latest("0x2".parse().unwrap()).await;
-        assert!(
-            package.is_ok(),
-            "Latest package query failed for {} network. Error: {}",
-            client.rpc_server(),
-            package.unwrap_err()
-        );
-
-        assert!(
-            package.unwrap().is_some(),
-            "Latest package for 0x2 query returned None for {} network",
-            client.rpc_server()
-        );
+        client
+            .package_latest("0x2".parse().unwrap())
+            .await
+            .map_err(|e| {
+                format!(
+                    "Latest package query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap()
+            .unwrap();
     }
 
     #[tokio::test]
@@ -2347,16 +2376,17 @@ mod tests {
         let client = test_client();
         let packages = client
             .packages(PaginationFilter::default(), None, None)
-            .await;
-        assert!(
-            packages.is_ok(),
-            "Packages query failed for {} network. Error: {}",
-            client.rpc_server(),
-            packages.unwrap_err()
-        );
+            .await
+            .map_err(|e| {
+                format!(
+                    "Packages query failed for {} network. Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
 
         assert!(
-            !packages.unwrap().is_empty(),
+            !packages.is_empty(),
             "Packages query returned no data for {} network",
             client.rpc_server()
         );

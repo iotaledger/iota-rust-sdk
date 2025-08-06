@@ -602,7 +602,7 @@ mod tests {
         digest: TransactionDigest,
         effects: Result<Option<TransactionEffects>, iota_graphql_client::error::Error>,
     ) {
-        assert!(effects.is_ok(), "Execution failed. Effects: {:?}", effects);
+        assert!(effects.is_ok(), "Execution failed. Effects: {effects:?}");
         // wait for the transaction to be finalized
         wait_for_tx(client, digest).await;
         // check that it succeeded

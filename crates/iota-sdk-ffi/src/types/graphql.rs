@@ -86,15 +86,17 @@ pub struct TransactionsFilter {
     #[uniffi(default = None)]
     pub before_checkpoint: Option<u64>,
     #[uniffi(default = None)]
-    pub affected_address: Option<Arc<Address>>,
+    pub sign_address: Option<Arc<Address>>,
     #[uniffi(default = None)]
-    pub sent_address: Option<Arc<Address>>,
+    pub recv_address: Option<Arc<Address>>,
     #[uniffi(default = None)]
     pub input_object: Option<Arc<ObjectId>>,
     #[uniffi(default = None)]
     pub changed_object: Option<Arc<ObjectId>>,
     #[uniffi(default = None)]
     pub transaction_ids: Option<Vec<String>>,
+    #[uniffi(default = None)]
+    pub wrapped_or_deleted_object: Option<Arc<ObjectId>>,
 }
 
 impl From<iota_graphql_client::query_types::TransactionsFilter> for TransactionsFilter {
@@ -105,11 +107,15 @@ impl From<iota_graphql_client::query_types::TransactionsFilter> for Transactions
             after_checkpoint: value.after_checkpoint,
             at_checkpoint: value.at_checkpoint,
             before_checkpoint: value.before_checkpoint,
-            affected_address: value.affected_address.map(Into::into).map(Arc::new),
-            sent_address: value.sent_address.map(Into::into).map(Arc::new),
+            sign_address: value.sign_address.map(Into::into).map(Arc::new),
+            recv_address: value.recv_address.map(Into::into).map(Arc::new),
             input_object: value.input_object.map(Into::into).map(Arc::new),
             changed_object: value.changed_object.map(Into::into).map(Arc::new),
             transaction_ids: value.transaction_ids,
+            wrapped_or_deleted_object: value
+                .wrapped_or_deleted_object
+                .map(Into::into)
+                .map(Arc::new),
         }
     }
 }
@@ -122,11 +128,12 @@ impl From<TransactionsFilter> for iota_graphql_client::query_types::Transactions
             after_checkpoint: value.after_checkpoint,
             at_checkpoint: value.at_checkpoint,
             before_checkpoint: value.before_checkpoint,
-            affected_address: value.affected_address.map(|v| **v),
-            sent_address: value.sent_address.map(|v| **v),
+            sign_address: value.sign_address.map(|v| **v),
+            recv_address: value.recv_address.map(|v| **v),
             input_object: value.input_object.map(|v| **v),
             changed_object: value.changed_object.map(|v| **v),
             transaction_ids: value.transaction_ids,
+            wrapped_or_deleted_object: value.wrapped_or_deleted_object.map(|v| **v),
         }
     }
 }
@@ -135,7 +142,7 @@ impl From<TransactionsFilter> for iota_graphql_client::query_types::Transactions
 pub struct DryRunResult(pub iota_graphql_client::DryRunResult);
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct TransactionEvent(pub iota_graphql_client::TransactionEvent);
+pub struct Event(pub iota_types::Event);
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectRef(pub iota_graphql_client::query_types::ObjectRef);
@@ -190,17 +197,26 @@ pub struct Validator(pub iota_graphql_client::query_types::Validator);
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,
+    Genesis,
+    ConsensusCommitPrologueV1,
+    AuthenticatorStateUpdateV1,
+    RandomnessStateUpdate,
+    EndOfEpochTx,
 }
 
 impl From<iota_graphql_client::query_types::TransactionBlockKindInput>
     for TransactionBlockKindInput
 {
     fn from(value: iota_graphql_client::query_types::TransactionBlockKindInput) -> Self {
+        use iota_graphql_client::query_types::TransactionBlockKindInput::*;
         match value {
-            iota_graphql_client::query_types::TransactionBlockKindInput::SystemTx => Self::SystemTx,
-            iota_graphql_client::query_types::TransactionBlockKindInput::ProgrammableTx => {
-                Self::ProgrammableTx
-            }
+            SystemTx => Self::SystemTx,
+            ProgrammableTx => Self::ProgrammableTx,
+            Genesis => Self::Genesis,
+            ConsensusCommitPrologueV1 => Self::ConsensusCommitPrologueV1,
+            AuthenticatorStateUpdateV1 => Self::AuthenticatorStateUpdateV1,
+            RandomnessStateUpdate => Self::RandomnessStateUpdate,
+            EndOfEpochTx => Self::EndOfEpochTx,
         }
     }
 }
@@ -212,6 +228,13 @@ impl From<TransactionBlockKindInput>
         match value {
             TransactionBlockKindInput::SystemTx => Self::SystemTx,
             TransactionBlockKindInput::ProgrammableTx => Self::ProgrammableTx,
+            TransactionBlockKindInput::Genesis => Self::Genesis,
+            TransactionBlockKindInput::ConsensusCommitPrologueV1 => Self::ConsensusCommitPrologueV1,
+            TransactionBlockKindInput::AuthenticatorStateUpdateV1 => {
+                Self::AuthenticatorStateUpdateV1
+            }
+            TransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
+            TransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
         }
     }
 }

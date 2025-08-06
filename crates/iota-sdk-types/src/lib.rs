@@ -170,9 +170,10 @@ pub use transaction::{
     CancelledTransaction, ChangeEpoch, ChangeEpochV2, Command, ConsensusCommitPrologueV1,
     ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind, ExecutionTimeObservationKey,
     ExecutionTimeObservations, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
-    MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SignedTransaction,
-    SplitCoins, SystemPackage, Transaction, TransactionExpiration, TransactionKind,
-    TransferObjects, Upgrade, ValidatorExecutionTimeObservation, VersionAssignment,
+    MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
+    SignedTransaction, SplitCoins, SystemPackage, Transaction, TransactionExpiration,
+    TransactionKind, TransferObjects, Upgrade, ValidatorExecutionTimeObservation,
+    VersionAssignment,
 };
 pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
 
@@ -218,6 +219,14 @@ macro_rules! def_is_as_opt {
             } else {
                 None
             }
+        }
+
+        #[inline]
+        pub fn [< into_ $variant:snake >](self) -> $inner {
+            let Self::$variant(inner) = self else {
+                panic!("not a {}", stringify!($variant));
+            };
+            inner
         }
         )*}
     };

@@ -11,7 +11,7 @@ use crate::{
     types::{
         address::Address,
         checkpoint::CheckpointSummary,
-        digest::{CheckpointDigest, TransactionDigest},
+        digest::{CheckpointContentsDigest, CheckpointDigest, TransactionDigest},
         graphql::{
             CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveFunction,
             MoveModule, ObjectFilter, PaginationFilter, ProtocolConfigs, ServiceConfig,
@@ -23,9 +23,9 @@ use crate::{
         type_tag::TypeTag,
     },
     uniffi_helpers::{
-        CheckpointSummaryPage, CoinPage, DynamicFieldOutputPage, EpochPage, MovePackagePage,
-        ObjectPage, SignedTransactionPage, TransactionDataEffectsPage, TransactionEffectsPage,
-        TransactionEventPage, ValidatorPage,
+        CheckpointSummaryPage, CoinPage, DynamicFieldOutputPage, EpochPage, EventPage,
+        MovePackagePage, ObjectPage, SignedTransactionPage, TransactionDataEffectsPage,
+        TransactionEffectsPage, ValidatorPage,
     },
 };
 
@@ -137,7 +137,7 @@ impl GraphQLClient {
     /// provided checkpoint digest.
     pub async fn total_transaction_blocks_by_digest(
         &self,
-        digest: &CheckpointDigest,
+        digest: &CheckpointContentsDigest,
     ) -> Result<Option<u64>> {
         Ok(self
             .0
@@ -217,7 +217,7 @@ impl GraphQLClient {
     #[uniffi::method(default(digest = None, seq_num = None))]
     pub async fn checkpoint(
         &self,
-        digest: Option<Arc<CheckpointDigest>>,
+        digest: Option<Arc<CheckpointContentsDigest>>,
         seq_num: Option<u64>,
     ) -> Result<Option<CheckpointSummary>> {
         Ok(self
@@ -275,18 +275,6 @@ impl GraphQLClient {
             .map(Arc::new))
     }
 
-    /// Return a page of epochs.
-    pub async fn epochs(&self, pagination_filter: PaginationFilter) -> Result<EpochPage> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .epochs(pagination_filter.into())
-            .await?
-            .map(Into::into)
-            .into())
-    }
-
     /// Return the number of checkpoints in this epoch. This will return
     /// `Ok(None)` if the epoch requested is not available in the GraphQL
     /// service (e.g., due to pruning).
@@ -319,7 +307,7 @@ impl GraphQLClient {
         &self,
         pagination_filter: PaginationFilter,
         filter: Option<EventFilter>,
-    ) -> Result<TransactionEventPage> {
+    ) -> Result<EventPage> {
         Ok(self
             .0
             .read()
@@ -478,18 +466,6 @@ impl GraphQLClient {
             .read()
             .await
             .package_latest(**address)
-            .await?
-            .map(Into::into)
-            .map(Arc::new))
-    }
-
-    /// Fetch a package by its name (using Move Registry Service)
-    pub async fn package_by_name(&self, name: &str) -> Result<Option<Arc<MovePackage>>> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .package_by_name(name)
             .await?
             .map(Into::into)
             .map(Arc::new))

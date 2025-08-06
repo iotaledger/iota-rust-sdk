@@ -2,7 +2,9 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::query_types::{Address, Base64, PageInfo, schema, transaction::TransactionBlockDigest};
+use crate::query_types::{
+    Address, Base64, GQLAddress, MoveType, PageInfo, normalized_move::MoveModuleQuery, schema,
+};
 
 // ===========================================================================
 // Events Queries
@@ -51,6 +53,8 @@ pub struct EventFilter {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Event")]
 pub struct Event {
+    pub sending_module: Option<MoveModuleQuery>,
+    pub sender: Option<GQLAddress>,
+    pub type_: MoveType,
     pub bcs: Base64,
-    pub transaction_block: Option<TransactionBlockDigest>,
 }

@@ -7,9 +7,7 @@ use serde_json::Value;
 use crate::types::{
     checkpoint::CheckpointSummary,
     coin::Coin,
-    graphql::{
-        DynamicFieldOutput, Epoch, PageInfo, TransactionDataEffects, TransactionEvent, Validator,
-    },
+    graphql::{DynamicFieldOutput, Epoch, Event, PageInfo, TransactionDataEffects, Validator},
     object::{MovePackage, Object},
     transaction::{SignedTransaction, TransactionEffects},
 };
@@ -67,7 +65,7 @@ macro_rules! define_paged_object {
 
 define_paged_object!(SignedTransactionPage, SignedTransaction);
 define_paged_object!(TransactionDataEffectsPage, TransactionDataEffects);
-define_paged_object!(TransactionEventPage, TransactionEvent);
+define_paged_object!(EventPage, Event);
 define_paged_object!(CoinPage, Coin);
 define_paged_object!(ObjectPage, Object);
 define_paged_object!(TransactionEffectsPage, TransactionEffects);

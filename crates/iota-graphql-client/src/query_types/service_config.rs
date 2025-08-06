@@ -84,8 +84,6 @@ pub enum Feature {
     Analytics,
     Coins,
     DynamicFields,
-    NameService,
     Subscriptions,
     SystemState,
-    MoveRegistry,
 }

@@ -2,7 +2,9 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::query_types::{Address, MoveAbility, MoveFunction, OpenMoveType, PageInfo, schema};
+use crate::query_types::{
+    Address, MoveAbility, MoveFunction, MovePackageQuery, OpenMoveType, PageInfo, schema,
+};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(
@@ -86,13 +88,14 @@ pub struct MoveStruct {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModuleConnection")]
 pub struct MoveModuleConnection {
-    pub nodes: Vec<MoveModule2>,
+    pub nodes: Vec<MoveModuleQuery>,
     pub page_info: PageInfo,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModule")]
-pub struct MoveModule2 {
+pub struct MoveModuleQuery {
+    pub package: MovePackageQuery,
     pub name: String,
 }
 

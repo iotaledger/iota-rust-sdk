@@ -36,7 +36,7 @@ pub use dynamic_fields::{
     DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
     DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
 };
-pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, EpochsArgs, EpochsQuery};
+pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
 pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
 use iota_types::{Address, ObjectId};
@@ -50,8 +50,8 @@ pub use object::{
 };
 pub use packages::{
     LatestPackageQuery, MovePackageConnection, MovePackageQuery, MovePackageVersionFilter,
-    PackageArgs, PackageByNameArgs, PackageByNameQuery, PackageCheckpointFilter, PackageQuery,
-    PackageVersionsArgs, PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
+    PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery,
+    PackagesQuery, PackagesQueryArgs,
 };
 pub use protocol_config::{ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionArgs};
 use serde_json::Value as JsonValue;
@@ -73,7 +73,7 @@ pub mod schema {}
 // ===========================================================================
 
 impl_scalar!(Address, schema::IotaAddress);
-impl_scalar!(ObjectId, schema::ObjectId);
+impl_scalar!(ObjectId, schema::IotaAddress);
 impl_scalar!(u64, schema::UInt53);
 impl_scalar!(JsonValue, schema::JSON);
 

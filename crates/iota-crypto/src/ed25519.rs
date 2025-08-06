@@ -270,8 +270,6 @@ impl Verifier<UserSignature> for Ed25519Verifier {
 mod test {
     use iota_sdk_types::PersonalMessage;
     use test_strategy::proptest;
-    #[cfg(target_arch = "wasm32")]
-    use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use super::*;
     use crate::{IotaSigner, IotaVerifier};
