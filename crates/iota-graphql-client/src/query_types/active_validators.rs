@@ -119,7 +119,6 @@ pub struct Validator {
 #[derive(cynic::QueryFragment, Debug)]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ValidatorCredentials")]
-#[allow(non_snake_case)]
 pub struct ValidatorCredentials {
     pub authority_pub_key: Option<Base64>,
     pub network_pub_key: Option<Base64>,
