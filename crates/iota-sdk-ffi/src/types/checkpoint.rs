@@ -92,7 +92,7 @@ impl From<iota_types::CheckpointSummary> for CheckpointSummary {
             network_total_transactions: value.network_total_transactions,
             content_digest: Arc::new(value.content_digest.into()),
             previous_digest: value.previous_digest.map(Into::into).map(Arc::new),
-            epoch_rolling_gas_cost_summary: value.epoch_rolling_gas_cost_summary.into(),
+            epoch_rolling_gas_cost_summary: value.epoch_rolling_gas_cost_summary,
             timestamp_ms: value.timestamp_ms,
             checkpoint_commitments: value
                 .checkpoint_commitments
@@ -114,7 +114,7 @@ impl From<CheckpointSummary> for iota_types::CheckpointSummary {
             network_total_transactions: value.network_total_transactions,
             content_digest: **value.content_digest,
             previous_digest: value.previous_digest.map(|v| **v),
-            epoch_rolling_gas_cost_summary: value.epoch_rolling_gas_cost_summary.into(),
+            epoch_rolling_gas_cost_summary: value.epoch_rolling_gas_cost_summary,
             timestamp_ms: value.timestamp_ms,
             checkpoint_commitments: value
                 .checkpoint_commitments

@@ -45,8 +45,8 @@ impl From<TransactionMetadata> for iota_graphql_client::query_types::Transaction
                 .gas_objects
                 .map(|v| v.into_iter().map(|o| o.0.clone()).collect()),
             gas_price: value.gas_price,
-            gas_sponsor: value.gas_sponsor.map(|a| a.0.clone()),
-            sender: value.sender.map(|a| a.0.clone()),
+            gas_sponsor: value.gas_sponsor.map(|a| **a),
+            sender: value.sender.map(|a| **a),
         }
     }
 }
@@ -178,7 +178,7 @@ impl From<EventFilter> for iota_graphql_client::query_types::EventFilter {
         Self {
             emitting_module: value.emitting_module,
             event_type: value.event_type,
-            sender: value.sender.map(|s| s.0.clone()),
+            sender: value.sender.map(|a| **a),
             transaction_digest: value.transaction_digest,
         }
     }

@@ -34,7 +34,7 @@ impl Transaction {
             kind: kind.0.clone(),
             sender: **sender,
             gas_payment: gas_payment.into(),
-            expiration: expiration.0.clone(),
+            expiration: expiration.0,
         })
     }
 
@@ -51,7 +51,7 @@ impl Transaction {
     }
 
     pub fn expiration(&self) -> TransactionExpiration {
-        self.0.expiration.clone().into()
+        self.0.expiration.into()
     }
 }
 

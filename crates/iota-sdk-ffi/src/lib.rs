@@ -104,6 +104,7 @@
 //! [RFC-5234]: https://datatracker.ietf.org/doc/html/rfc5234
 
 #![allow(unused)]
+#![allow(clippy::wrong_self_convention)]
 
 mod error;
 mod faucet;

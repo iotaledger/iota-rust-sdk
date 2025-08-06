@@ -578,7 +578,7 @@ mod tests {
 
         let gas = coins.last().unwrap().id;
         // TODO when we have tx resolution, we can just pass an ObjectId
-        let gas_obj: Input = (&client.object(gas.into(), None).await.unwrap().unwrap()).into();
+        let gas_obj: Input = (&client.object(gas, None).await.unwrap().unwrap()).into();
         tx.add_gas_objects(vec![gas_obj.with_owned_kind()]);
         tx.set_gas_budget(500000000);
         tx.set_gas_price(1000);
@@ -659,7 +659,7 @@ mod tests {
         // get the object information from the client
         let client = Client::new_localhost();
         let first = coins.first().unwrap().id;
-        let coin: Input = (&client.object(first.into(), None).await.unwrap().unwrap()).into();
+        let coin: Input = (&client.object(first, None).await.unwrap().unwrap()).into();
         let coin_input = tx.input(coin.with_owned_kind());
         let recipient = Address::generate(rand::thread_rng());
         let recipient_input = tx.input(Serialized(&recipient));
@@ -736,7 +736,7 @@ mod tests {
         let (_, pk, coins) = helper_setup(&mut tx, &client).await;
 
         let coin = coins.first().unwrap().id;
-        let coin_obj: Input = (&client.object(coin.into(), None).await.unwrap().unwrap()).into();
+        let coin_obj: Input = (&client.object(coin, None).await.unwrap().unwrap()).into();
         let coin_input = tx.input(coin_obj.with_owned_kind());
 
         // transfer 1 IOTA
@@ -770,13 +770,13 @@ mod tests {
         let (address, pk, coins) = helper_setup(&mut tx, &client).await;
 
         let coin1 = coins.first().unwrap().id;
-        let coin1_obj: Input = (&client.object(coin1.into(), None).await.unwrap().unwrap()).into();
+        let coin1_obj: Input = (&client.object(coin1, None).await.unwrap().unwrap()).into();
         let coin_to_merge = tx.input(coin1_obj.with_owned_kind());
 
         let mut coins_to_merge = vec![];
         // last coin is used for gas, first coin is the one we merge into
         for c in coins[1..&coins.len() - 1].iter() {
-            let coin: Input = (&client.object(c.id.into(), None).await.unwrap().unwrap()).into();
+            let coin: Input = (&client.object(c.id, None).await.unwrap().unwrap()).into();
             coins_to_merge.push(tx.input(coin.with_owned_kind()));
         }
 
@@ -926,7 +926,7 @@ mod tests {
         );
 
         let gas = coins.last().unwrap().id;
-        let gas_obj: Input = (&client.object(gas.into(), None).await.unwrap().unwrap()).into();
+        let gas_obj: Input = (&client.object(gas, None).await.unwrap().unwrap()).into();
         tx.add_gas_objects(vec![gas_obj.with_owned_kind()]);
         tx.set_gas_budget(500000000);
         tx.set_gas_price(1000);
