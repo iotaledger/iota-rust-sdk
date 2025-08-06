@@ -12,7 +12,7 @@ use crate::error::Result;
 /// `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
 ///
 /// ```
-/// use iota_sdk_types::Address;
+/// use iota_types::Address;
 ///
 /// let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
 /// let address = Address::from_hex(hex).unwrap();
