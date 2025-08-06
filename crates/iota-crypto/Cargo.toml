@@ -104,6 +104,7 @@ wasm-bindgen-test = "0.3"
 # Since both versions are in our dependency tree, we need to overwrite them with the proper feature
 getrandom_2 = { version = "0.2", package = "getrandom", features = ["js"] }
 getrandom_3 = { version = "0.3", package = "getrandom", features = ["wasm_js"] }
+test-strategy = "=0.4.1"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(doc_cfg)'] }

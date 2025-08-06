@@ -119,15 +119,13 @@ pub struct Validator {
 #[derive(cynic::QueryFragment, Debug)]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "ValidatorCredentials")]
-#[allow(non_snake_case)]
 pub struct ValidatorCredentials {
-    pub protocol_pub_key: Option<Base64>,
+    pub authority_pub_key: Option<Base64>,
     pub network_pub_key: Option<Base64>,
-    pub worker_pub_key: Option<Base64>,
+    pub protocol_pub_key: Option<Base64>,
     pub proof_of_possession: Option<Base64>,
     pub net_address: Option<String>,
-    // TODO need to fix this in the graphQL schema ugh. p2P -> p2p
-    // pub p2P_address: Option<String>,
+    #[cynic(rename = "p2PAddress")]
+    pub p2p_address: Option<String>,
     pub primary_address: Option<String>,
-    pub worker_address: Option<String>,
 }

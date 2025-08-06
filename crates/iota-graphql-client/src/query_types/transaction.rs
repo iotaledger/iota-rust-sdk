@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use base64ct::Encoding;
-use iota_types::{SignedTransaction, Transaction, TransactionEffects, UserSignature};
+use iota_types::{SenderSignedTransaction, SignedTransaction, TransactionEffects, UserSignature};
 
 use crate::{
     error,
@@ -120,12 +120,6 @@ pub struct TransactionBlockWithEffects {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TransactionBlockDigest {
-    pub digest: Option<String>,
-}
-
-#[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
 pub struct TxBlockEffects {
     pub effects: Option<TransactionBlockEffects>,
 }
@@ -146,6 +140,11 @@ pub struct TransactionBlockEffects {
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,
+    Genesis,
+    ConsensusCommitPrologueV1,
+    AuthenticatorStateUpdateV1,
+    RandomnessStateUpdate,
+    EndOfEpochTx,
 }
 
 #[derive(Clone, cynic::InputObject, Debug)]
@@ -157,10 +156,11 @@ pub struct TransactionsFilter {
     pub after_checkpoint: Option<u64>,
     pub at_checkpoint: Option<u64>,
     pub before_checkpoint: Option<u64>,
-    pub affected_address: Option<Address>,
-    pub sent_address: Option<Address>,
+    pub sign_address: Option<Address>,
+    pub recv_address: Option<Address>,
     pub input_object: Option<Address>,
     pub changed_object: Option<Address>,
+    pub wrapped_or_deleted_object: Option<Address>,
     pub transaction_ids: Option<Vec<String>>,
 }
 
@@ -193,7 +193,7 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
             .bcs
             .map(|tx| base64ct::Base64::decode_vec(tx.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Transaction>(&bcs))
+            .map(|bcs| bcs::from_bytes::<SenderSignedTransaction>(&bcs))
             .transpose()?;
 
         let signatures = if let Some(sigs) = value.signatures {
@@ -206,7 +206,7 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
 
         if let Some(transaction) = transaction {
             Ok(SignedTransaction {
-                transaction,
+                transaction: transaction.0.transaction,
                 signatures,
             })
         } else {

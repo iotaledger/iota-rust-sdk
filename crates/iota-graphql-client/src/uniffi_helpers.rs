@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_types::{
-    CheckpointSummary, MovePackage, Object, SignedTransaction, TransactionEffects, framework::Coin,
+    CheckpointSummary, Event, MovePackage, Object, SignedTransaction, TransactionEffects,
+    framework::Coin,
 };
 
 use crate::{
-    DynamicFieldOutput, Page, TransactionDataEffects, TransactionEvent,
+    DynamicFieldOutput, Page, TransactionDataEffects,
     query_types::{Epoch, PageInfo, Validator},
 };
 
@@ -27,7 +28,7 @@ define_paged!(ValidatorPage, Validator);
 define_paged!(CoinPage, Coin);
 define_paged!(CheckpointSummaryPage, CheckpointSummary);
 define_paged!(EpochPage, Epoch);
-define_paged!(TransactionEventPage, TransactionEvent);
+define_paged!(EventPage, Event);
 define_paged!(ObjectPage, Object);
 define_paged!(SignedTransactionPage, SignedTransaction);
 define_paged!(TransactionEffectsPage, TransactionEffects);

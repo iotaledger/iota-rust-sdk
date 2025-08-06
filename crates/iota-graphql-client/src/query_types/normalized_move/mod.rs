@@ -6,7 +6,9 @@ mod function;
 mod module;
 
 pub use function::{NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs};
-pub use module::{MoveModule, NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs};
+pub use module::{
+    MoveModule, MoveModuleQuery, NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs,
+};
 
 use crate::query_types::schema;
 

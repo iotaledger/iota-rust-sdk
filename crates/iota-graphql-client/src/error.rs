@@ -113,7 +113,19 @@ impl std::fmt::Display for Error {
         write!(f, "{}", self.inner.kind)?;
 
         if let Some(source) = &self.inner.source {
-            writeln!(f, " {}", source)?;
+            write!(f, " {source}")?;
+        }
+
+        if let Some(errors) = &self.inner.query_errors {
+            write!(
+                f,
+                " [{}]",
+                errors
+                    .iter()
+                    .map(|e| e.to_string())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )?;
         }
         Ok(())
     }

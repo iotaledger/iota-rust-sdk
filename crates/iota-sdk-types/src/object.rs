@@ -147,6 +147,15 @@ pub enum ObjectData {
     // ... IOTA "native" types go here
 }
 
+impl ObjectData {
+    pub fn as_package(self) -> MovePackage {
+        let Self::Package(p) = self else {
+            panic!("Not a package");
+        };
+        p
+    }
+}
+
 /// A move package
 ///
 /// # BCS
