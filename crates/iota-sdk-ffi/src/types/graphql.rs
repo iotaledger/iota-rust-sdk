@@ -779,7 +779,7 @@ impl From<CoinMetadata> for iota_graphql_client::query_types::CoinMetadata {
             icon_url: value.icon_url,
             name: value.name,
             symbol: value.symbol,
-            supply: value.supply.map(|s| BigInt(s)),
+            supply: value.supply.map(BigInt),
             version: value.version,
         }
     }
