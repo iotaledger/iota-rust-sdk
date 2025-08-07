@@ -146,8 +146,8 @@ impl Object {
     }
 
     /// Try to interpret this object as a move struct
-    pub fn as_struct(&self) -> Option<Arc<MoveStruct>> {
-        self.0.as_struct().cloned().map(Into::into).map(Arc::new)
+    pub fn as_struct(&self) -> Option<MoveStruct> {
+        self.0.as_struct().cloned().map(Into::into)
     }
 
     /// Return this object's owner
@@ -181,7 +181,34 @@ pub struct ObjectData(pub iota_types::ObjectData);
 pub struct MovePackage(pub iota_types::MovePackage);
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct MoveStruct(pub iota_types::MoveStruct);
+pub struct StructTag(pub iota_types::StructTag);
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct MoveStruct {
+    pub type_tag: Arc<StructTag>,
+    pub version: Version,
+    pub contents: Vec<u8>,
+}
+
+impl From<iota_types::MoveStruct> for MoveStruct {
+    fn from(value: iota_types::MoveStruct) -> Self {
+        Self {
+            type_tag: Arc::new(value.type_.into()),
+            version: value.version,
+            contents: value.contents,
+        }
+    }
+}
+
+impl From<MoveStruct> for iota_types::MoveStruct {
+    fn from(value: MoveStruct) -> Self {
+        Self {
+            type_: value.type_tag.0.clone(),
+            version: value.version,
+            contents: value.contents,
+        }
+    }
+}
 
 #[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Owner(pub iota_types::Owner);
