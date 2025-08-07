@@ -3,3 +3,6 @@
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct TypeTag(pub iota_types::TypeTag);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct StructTag(pub iota_types::StructTag);

@@ -20,8 +20,8 @@ use crate::{
         },
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
+        tag::TypeTag,
         transaction::{SignedTransaction, Transaction, TransactionEffects, TransactionKind},
-        type_tag::TypeTag,
     },
     uniffi_helpers::{
         CheckpointSummaryPage, CoinPage, DynamicFieldOutputPage, EpochPage, EventPage,

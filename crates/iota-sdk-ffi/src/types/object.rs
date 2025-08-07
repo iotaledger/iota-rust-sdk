@@ -10,6 +10,7 @@ use crate::{
     types::{
         address::Address,
         digest::{ObjectDigest, TransactionDigest},
+        tag::StructTag,
     },
 };
 
@@ -290,9 +291,6 @@ impl Owner {
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectType(pub iota_types::ObjectType);
-
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct StructTag(pub iota_types::StructTag);
 
 #[uniffi::export]
 impl ObjectType {
