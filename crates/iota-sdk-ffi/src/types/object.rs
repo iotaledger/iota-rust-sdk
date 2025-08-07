@@ -181,13 +181,13 @@ pub struct ObjectData(pub iota_types::ObjectData);
 impl ObjectData {
     /// Create an `ObjectData` from a `MoveStruct`
     #[uniffi::constructor]
-    pub fn from_move_struct(move_struct: Arc<MoveStruct>) -> Self {
+    pub fn from_move_struct(move_struct: &MoveStruct) -> Self {
         Self(iota_types::ObjectData::Struct(move_struct.0.clone()))
     }
 
     /// Create an `ObjectData` from  `MovePackage`
     #[uniffi::constructor]
-    pub fn from_move_package(move_package: Arc<MovePackage>) -> Self {
+    pub fn from_move_package(move_package: &MovePackage) -> Self {
         Self(iota_types::ObjectData::Package(move_package.0.clone()))
     }
 
@@ -202,7 +202,7 @@ impl ObjectData {
     }
 
     /// Try to interpret this object as a `MoveStruct`
-    pub fn as_struct(&self) -> Option<Arc<MoveStruct>> {
+    pub fn try_as_struct(&self) -> Option<Arc<MoveStruct>> {
         self.0
             .as_struct_opt()
             .cloned()
@@ -211,7 +211,7 @@ impl ObjectData {
     }
 
     /// Try to interpret this object as a `MovePackage`
-    pub fn as_package(&self) -> Option<Arc<MovePackage>> {
+    pub fn try_as_package(&self) -> Option<Arc<MovePackage>> {
         self.0
             .as_package_opt()
             .cloned()
@@ -228,6 +228,66 @@ pub struct MoveStruct(pub iota_types::MoveStruct);
 
 #[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Owner(pub iota_types::Owner);
+
+#[uniffi::export]
+impl Owner {
+    #[uniffi::constructor]
+    pub fn new_address(address: &Address) -> Self {
+        Self(iota_types::Owner::Address(address.0))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_object(id: &ObjectId) -> Self {
+        Self(iota_types::Owner::Object(id.0))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_shared(version: Version) -> Self {
+        Self(iota_types::Owner::Shared(version))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_immutable() -> Self {
+        Self(iota_types::Owner::Immutable)
+    }
+
+    pub fn is_address(&self) -> bool {
+        matches!(self.0, iota_types::Owner::Address(_))
+    }
+
+    pub fn is_object(&self) -> bool {
+        matches!(self.0, iota_types::Owner::Object(_))
+    }
+
+    pub fn is_shared(&self) -> bool {
+        matches!(self.0, iota_types::Owner::Shared(_))
+    }
+
+    pub fn is_immutable(&self) -> bool {
+        matches!(self.0, iota_types::Owner::Immutable)
+    }
+
+    pub fn try_as_address(&self) -> Option<Arc<Address>> {
+        match self.0 {
+            iota_types::Owner::Address(address) => Some(Arc::new(address.into())),
+            _ => None,
+        }
+    }
+
+    pub fn try_as_object(&self) -> Option<Arc<ObjectId>> {
+        match self.0 {
+            iota_types::Owner::Object(id) => Some(Arc::new(id.into())),
+            _ => None,
+        }
+    }
+
+    pub fn try_as_shared(&self) -> Option<Version> {
+        match self.0 {
+            iota_types::Owner::Shared(version) => Some(version),
+            _ => None,
+        }
+    }
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectType(pub iota_types::ObjectType);
