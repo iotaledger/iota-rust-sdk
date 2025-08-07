@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-	fmt.Println("HELLO")
 	client := sdk.GraphQlClientNewDevnet()
 
 	chainID, err := client.ChainId()
@@ -22,22 +21,20 @@ func main() {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
-	// cursor := ""
-	// limit := int32(0)
-	// pagination := sdk.PaginationFilter{
-	// 	Direction: sdk.DirectionForward,
-	// 	Cursor:    &cursor,
-	// 	Limit:     &limit,
-	// }
+	pagination := sdk.PaginationFilter{
+		Direction: sdk.DirectionForward,
+		Cursor:    nil,
+		Limit:     nil,
+	}
 
-	// coins, err := client.Coins(myAddress, pagination, nil)
+	coins, err := client.Coins(myAddress, pagination, nil)
 	// if err != nil {
 	// 	log.Fatalf("Failed to get coins: %v", err)
 	// }
 
-	// // for _, coin := range coins.Data {
-	// // 	fmt.Printf("ID = 0x%s Balance = %d\n", coin.ID.ToHex(), coin.Balance)
-	// // }
+	for _, coin := range coins.Data() {
+		fmt.Printf("ID = 0x%s Balance = %d\n", coin.Id().ToHex(), coin.Balance())
+	}
 
 	balance, err := client.Balance(myAddress, nil)
 	// if err != nil {
