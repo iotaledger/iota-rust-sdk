@@ -18,7 +18,7 @@ test:
 # --all-features
 .PHONY: wasm
 wasm:
-	RUSTFLAGS='--cfg getrandom_backend="wasm_js"' CC=clang wasm-pack test --node --all-features
+	CC=clang wasm-pack test --node --all-features
 
 %:
 	$(MAKE) -C ../.. $@
