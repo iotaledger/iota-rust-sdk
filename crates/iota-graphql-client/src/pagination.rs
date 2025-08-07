@@ -3,8 +3,8 @@
 
 use crate::query_types::PageInfo;
 
-#[derive(Clone, Debug)]
 /// A page of items returned by the GraphQL server.
+#[derive(Clone, Debug)]
 pub struct Page<T> {
     /// Information about the page, such as the cursor and whether there are
     /// more pages.

@@ -2,9 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::ObjectId;
-
-use crate::query_types::{Address, Base64, MoveObjectContents, PageInfo, schema};
+use crate::query_types::{Address, Base64, MoveObjectContents, ObjectId, PageInfo, schema};
 
 // ===========================================================================
 // Object(s) Queries
