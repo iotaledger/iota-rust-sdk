@@ -6,10 +6,9 @@
 
 pub mod error;
 pub mod faucet;
+pub mod pagination;
 pub mod query_types;
 pub mod streams;
-#[cfg(feature = "uniffi")]
-mod uniffi_helpers;
 
 use std::str::FromStr;
 
@@ -19,7 +18,7 @@ use error::Error;
 use futures::Stream;
 use iota_types::{
     Address, CheckpointContentsDigest, CheckpointSequenceNumber, CheckpointSummary, Event,
-    Identifier, MovePackage, Object, SignedTransaction, Transaction, TransactionDigest,
+    Identifier, MovePackage, Object, ObjectId, SignedTransaction, Transaction, TransactionDigest,
     TransactionEffects, TransactionKind, TypeTag, UserSignature, framework::Coin,
 };
 use query_types::{
@@ -33,8 +32,8 @@ use query_types::{
     NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
     NormalizedMoveModuleQueryArgs, ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery,
     ObjectsQueryArgs, PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs,
-    PackageVersionsQuery, PackagesQuery, PackagesQueryArgs, PageInfo, ProtocolConfigQuery,
-    ProtocolConfigs, ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery, TransactionBlockArgs,
+    PackageVersionsQuery, PackagesQuery, PackagesQueryArgs, ProtocolConfigQuery, ProtocolConfigs,
+    ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery, TransactionBlockArgs,
     TransactionBlockEffectsQuery, TransactionBlockQuery, TransactionBlocksEffectsQuery,
     TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionMetadata, TransactionsFilter,
     Validator,
@@ -45,13 +44,11 @@ use streams::stream_paginated_query;
 
 use crate::{
     error::{Kind, Result},
+    pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         CheckpointTotalTxQuery, TransactionBlockWithEffectsQuery, TransactionBlocksWithEffectsQuery,
     },
 };
-
-#[cfg(feature = "uniffi")]
-uniffi::setup_scaffolding!();
 
 const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
 const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
@@ -66,13 +63,13 @@ static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_V
 
 /// The result of a dry run, which includes the effects of the transaction and
 /// any errors that may have occurred.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct DryRunResult {
     pub effects: Option<TransactionEffects>,
     pub error: Option<String>,
 }
 
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+#[derive(Clone, Debug)]
 pub struct TransactionDataEffects {
     pub tx: SignedTransaction,
     pub effects: TransactionEffects,
@@ -81,7 +78,6 @@ pub struct TransactionDataEffects {
 /// The name part of a dynamic field, including its type, bcs, and json
 /// representation.
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DynamicFieldName {
     /// The type name of this dynamic field name
     pub type_: TypeTag,
@@ -93,7 +89,6 @@ pub struct DynamicFieldName {
 
 /// The value part of a dynamic field.
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DynamicFieldValue {
     pub type_: TypeTag,
     pub bcs: Vec<u8>,
@@ -102,7 +97,6 @@ pub struct DynamicFieldValue {
 /// The output of a dynamic field query, that includes the name, value, and
 /// value's json representation.
 #[derive(Clone, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DynamicFieldOutput {
     /// The name of the dynamic field
     pub name: DynamicFieldName,
@@ -116,84 +110,9 @@ pub struct DynamicFieldOutput {
 /// for the dynamic fields API.
 pub struct NameValue(Vec<u8>);
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(NameValue, Vec<u8>, {
-    lower: |kv| kv.0,
-});
-
 /// Helper struct for passing a raw bcs value.
 #[derive(derive_more::From)]
 pub struct BcsName(pub Vec<u8>);
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(BcsName, Vec<u8>, {
-    lower: |kv| kv.0,
-});
-
-#[derive(Clone, Debug)]
-/// A page of items returned by the GraphQL server.
-pub struct Page<T> {
-    /// Information about the page, such as the cursor and whether there are
-    /// more pages.
-    page_info: PageInfo,
-    /// The data returned by the server.
-    data: Vec<T>,
-}
-
-impl<T> Page<T> {
-    /// Return the page information.
-    pub fn page_info(&self) -> &PageInfo {
-        &self.page_info
-    }
-
-    /// Return the data in the page.
-    pub fn data(&self) -> &[T] {
-        &self.data
-    }
-
-    /// Create a new page with the provided data and page information.
-    pub fn new(page_info: PageInfo, data: Vec<T>) -> Self {
-        Self { page_info, data }
-    }
-
-    /// Check if the page has no data.
-    pub fn is_empty(&self) -> bool {
-        self.data.is_empty()
-    }
-
-    /// Create a page with no data.
-    pub fn new_empty() -> Self {
-        Self::new(PageInfo::default(), vec![])
-    }
-
-    /// Return a tuple of page info and the data.
-    pub fn into_parts(self) -> (PageInfo, Vec<T>) {
-        (self.page_info, self.data)
-    }
-}
-
-/// Pagination direction.
-#[derive(Clone, Debug, Default)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
-pub enum Direction {
-    #[default]
-    Forward,
-    Backward,
-}
-
-/// Pagination options for querying the GraphQL server. It defaults to forward
-/// pagination with the GraphQL server's max page size.
-#[derive(Clone, Debug, Default)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
-pub struct PaginationFilter {
-    /// The direction of pagination.
-    pub direction: Direction,
-    /// An opaque cursor used for pagination.
-    pub cursor: Option<String>,
-    /// The maximum number of items to return. If this is ommitted, it will
-    /// lazily query the service configuration for the max page size.
-    pub limit: Option<i32>,
-}
 
 impl<T: Serialize> From<T> for NameValue {
     fn from(value: T) -> Self {
@@ -205,15 +124,6 @@ impl From<BcsName> for NameValue {
     fn from(value: BcsName) -> Self {
         NameValue(value.0)
     }
-}
-
-#[derive(Clone, Debug, Default)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
-pub struct PaginationFilterResponse {
-    after: Option<String>,
-    before: Option<String>,
-    first: Option<i32>,
-    last: Option<i32>,
 }
 
 impl DynamicFieldOutput {
@@ -248,7 +158,6 @@ impl DynamicFieldOutput {
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
-#[cfg_attr(feature = "uniffi", derive(uniffi::Object))]
 pub struct Client {
     /// The URL of the GraphQL server.
     rpc: Url,
@@ -507,7 +416,7 @@ impl Client {
         &self,
         address: Address,
         coin_type: Option<String>,
-    ) -> Result<Option<u128>> {
+    ) -> Result<Option<u64>> {
         let operation = BalanceQuery::build(BalanceArgs {
             address,
             coin_type: coin_type.map(|x| x.to_string()),
@@ -523,20 +432,16 @@ impl Client {
             .map(|b| b.owner.and_then(|o| o.balance.map(|b| b.total_balance)))
             .ok_or_else(Error::empty_response_error)?
             .flatten()
-            .map(|x| x.0.parse::<u128>())
+            .map(|x| x.0.parse::<u64>())
             .transpose()?;
         Ok(total_balance)
     }
-}
 
-#[cfg_attr(feature = "uniffi", uniffi::export(async_runtime = "tokio"))]
-impl Client {
     // ===========================================================================
     // Client Misc API
     // ===========================================================================
 
     /// Create a new GraphQL client with the provided server address.
-    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new(server: &str) -> Result<Self> {
         let rpc = reqwest::Url::parse(server)?;
 
@@ -550,28 +455,24 @@ impl Client {
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
     /// {MAINNET_HOST}.
-    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new_mainnet() -> Self {
         Self::new(MAINNET_HOST).expect("Invalid mainnet URL")
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
-    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new_testnet() -> Self {
         Self::new(TESTNET_HOST).expect("Invalid testnet URL")
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
-    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new_devnet() -> Self {
         Self::new(DEVNET_HOST).expect("Invalid devnet URL")
     }
 
     /// Create a new GraphQL client connected to the `localhost` GraphQL server:
     /// {DEFAULT_LOCAL_HOST}.
-    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new_localhost() -> Self {
         Self::new(LOCAL_HOST).expect("Invalid localhost URL")
     }
@@ -1014,8 +915,12 @@ impl Client {
     /// If the object does not exist (e.g., due to pruning), this will return
     /// `Ok(None)`. Similarly, if this is not an object but an address, it
     /// will return `Ok(None)`.
-    pub async fn object(&self, address: Address, version: Option<u64>) -> Result<Option<Object>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs { address, version });
+    pub async fn object(
+        &self,
+        object_id: ObjectId,
+        version: Option<u64>,
+    ) -> Result<Option<Object>> {
+        let operation = ObjectQuery::build(ObjectQueryArgs { object_id, version });
 
         let response = self.run_query(&operation).await?;
 
@@ -1105,9 +1010,9 @@ impl Client {
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`].
-    pub async fn object_bcs(&self, object_id: Address) -> Result<Option<Vec<u8>>> {
+    pub async fn object_bcs(&self, object_id: ObjectId) -> Result<Option<Vec<u8>>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
-            address: object_id,
+            object_id,
             version: None,
         });
 
@@ -1134,10 +1039,10 @@ impl Client {
     /// will return `Ok(None)`.
     pub async fn move_object_contents_bcs(
         &self,
-        address: Address,
+        object_id: ObjectId,
         version: Option<u64>,
     ) -> Result<Option<Vec<u8>>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs { address, version });
+        let operation = ObjectQuery::build(ObjectQueryArgs { object_id, version });
 
         let response = self.run_query(&operation).await?;
 
@@ -1193,7 +1098,7 @@ impl Client {
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs))
             .transpose()?
-            .map(|obj| obj.data.as_package()))
+            .map(|obj| obj.data.into_package()))
     }
 
     /// Fetch all versions of package at address (packages that share this
@@ -1244,7 +1149,7 @@ impl Client {
                 .collect::<Result<Vec<_>, base64ct::Error>>()?;
             let packages = bcs
                 .iter()
-                .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.as_package()))
+                .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
                 .collect::<Result<Vec<_>, bcs::Error>>()?;
 
             Ok(Page::new(page_info, packages))
@@ -1276,7 +1181,7 @@ impl Client {
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs))
             .transpose()?
-            .map(|obj| obj.data.as_package());
+            .map(|obj| obj.data.into_package());
 
         Ok(pkg)
     }
@@ -1332,7 +1237,7 @@ impl Client {
                 .collect::<Result<Vec<_>, base64ct::Error>>()?;
             let packages = bcs
                 .iter()
-                .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.as_package()))
+                .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
                 .collect::<Result<Vec<_>, bcs::Error>>()?;
 
             Ok(Page::new(page_info, packages))
@@ -1575,7 +1480,7 @@ impl Client {
     /// Execute a transaction.
     pub async fn execute_tx(
         &self,
-        signatures: Vec<UserSignature>,
+        signatures: &[UserSignature],
         tx: &Transaction,
     ) -> Result<Option<TransactionEffects>> {
         let operation = ExecuteTransactionQuery::build(ExecuteTransactionArgs {
@@ -1638,10 +1543,10 @@ impl Client {
     /// will return `Ok(None)`.
     pub async fn move_object_contents(
         &self,
-        address: Address,
+        object_id: ObjectId,
         version: Option<u64>,
     ) -> Result<Option<serde_json::Value>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs { address, version });
+        let operation = ObjectQuery::build(ObjectQueryArgs { object_id, version });
 
         let response = self.run_query(&operation).await?;
 
@@ -1737,9 +1642,9 @@ impl Client {
         &self,
         address: Address,
         type_: TypeTag,
-        name: NameValue,
+        name: impl Into<NameValue>,
     ) -> Result<Option<DynamicFieldOutput>> {
-        let bcs = name.0;
+        let bcs = name.into().0;
         let operation = DynamicFieldQuery::build(DynamicFieldArgs {
             address,
             name: crate::query_types::DynamicFieldName {
@@ -1777,9 +1682,9 @@ impl Client {
         &self,
         address: Address,
         type_: TypeTag,
-        name: NameValue,
+        name: impl Into<NameValue>,
     ) -> Result<Option<DynamicFieldOutput>> {
-        let bcs = name.0;
+        let bcs = name.into().0;
         let operation = DynamicObjectFieldQuery::build(DynamicFieldArgs {
             address,
             name: crate::query_types::DynamicFieldName {
@@ -2345,7 +2250,7 @@ mod tests {
         let client = test_client();
         let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
         client
-            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, BcsName(bcs).into())
+            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, BcsName(bcs))
             .await
             .map_err(|e| {
                 format!(
@@ -2356,7 +2261,7 @@ mod tests {
             .unwrap();
 
         client
-            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, 2u64.into())
+            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, 2u64)
             .await
             .map_err(|e| {
                 format!(

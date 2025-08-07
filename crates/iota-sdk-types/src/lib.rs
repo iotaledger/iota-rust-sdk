@@ -133,8 +133,8 @@ pub use checkpoint::{
 };
 pub use crypto::{
     Bls12381PublicKey, Bls12381Signature, Bn254FieldElement, CircomG1, CircomG2, Ed25519PublicKey,
-    Ed25519Signature, Intent, IntentAppId, IntentScope, IntentVersion, Jwk, JwkId,
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
+    Ed25519Signature, Intent, IntentAppId, IntentScope, IntentVersion, InvalidSignatureScheme, Jwk,
+    JwkId, MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
     MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, Secp256k1PublicKey,
     Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature, SignatureScheme, SimpleSignature,
     UserSignature, ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember,
@@ -155,6 +155,7 @@ pub use execution_status::{
     CommandArgumentError, ExecutionError, ExecutionStatus, MoveLocation, PackageUpgradeError,
     TypeArgumentError,
 };
+pub use framework::Coin;
 pub use gas::GasCostSummary;
 pub use object::{
     GenesisObject, MovePackage, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
@@ -166,7 +167,7 @@ pub use object_id::ObjectId;
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
     ActiveJwk, Argument, AuthenticatorStateExpire, AuthenticatorStateUpdateV1,
-    CancelledTransaction, ChangeEpoch, Command, ConsensusCommitPrologueV1,
+    CancelledTransaction, ChangeEpoch, ChangeEpochV2, Command, ConsensusCommitPrologueV1,
     ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind, ExecutionTimeObservationKey,
     ExecutionTimeObservations, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
     MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
@@ -176,30 +177,65 @@ pub use transaction::{
 };
 pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
 
-#[cfg(feature = "uniffi")]
-uniffi::setup_scaffolding!();
-
-#[cfg(test)]
+#[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
 
-#[cfg(feature = "uniffi")]
 #[macro_export]
-macro_rules! impl_uniffi_byte_vec_wrapper {
-    ($id:ident) => {
-        uniffi::custom_type!($id, Vec<u8>, {
-            lower: |val| val.as_bytes().to_vec(),
-            try_lift: |vec| Ok($id::from_bytes(vec)?),
-        });
+macro_rules! def_is {
+    ($($variant:ident),* $(,)?) => {
+        paste::paste! {$(
+        #[inline]
+        pub fn [< is_ $variant:snake >](&self) -> bool {
+            matches!(self, Self::$variant)
+        }
+        )*}
     };
 }
 
-#[cfg(not(feature = "uniffi"))]
 #[macro_export]
-macro_rules! impl_uniffi_byte_vec_wrapper {
-    ($id:ident) => {};
+macro_rules! def_is_as_into_opt {
+    ($($variant:ident => $inner:ty),* $(,)?) => {
+        paste::paste! {$(
+        #[inline]
+        pub fn [< is_ $variant:snake >](&self) -> bool {
+            matches!(self, Self::$variant(_))
+        }
+
+        #[inline]
+        pub fn [< as_ $variant:snake >](&self) -> &$inner {
+            self.[< as_ $variant:snake _opt >]().expect(&format!("not a {}", stringify!($variant)))
+        }
+
+        #[inline]
+        pub fn [< as_ $variant:snake _opt >](&self) -> Option<&$inner> {
+            if let Self::$variant(inner) = self {
+                Some(inner)
+            } else {
+                None
+            }
+        }
+
+        #[inline]
+        pub fn [< into_ $variant:snake _opt >](self) -> Option<$inner> {
+            if let Self::$variant(inner) = self {
+                Some(inner)
+            } else {
+                None
+            }
+        }
+
+        #[inline]
+        pub fn [< into_ $variant:snake >](self) -> $inner {
+            self.[< into_ $variant:snake _opt >]().expect(&format!("not a {}", stringify!($variant)))
+        }
+        )*}
+    };
+    ($($variant:ident),* $(,)?) => {
+        $crate::def_is_as_into_opt!{$($variant => $variant,)*}
+    };
 }
 
 #[cfg(feature = "serde")]

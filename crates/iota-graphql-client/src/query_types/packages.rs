@@ -35,7 +35,6 @@ pub struct PackageArgs {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
 pub struct MovePackageQuery {
     pub address: Address,

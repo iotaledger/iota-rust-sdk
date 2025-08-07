@@ -31,7 +31,7 @@ pub use checkpoint::{
 };
 pub use coin::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery};
 use cynic::impl_scalar;
-pub use dry_run::{DryRunArgs, DryRunQuery, DryRunResult, TransactionMetadata};
+pub use dry_run::{DryRunArgs, DryRunQuery, DryRunResult, ObjectRef, TransactionMetadata};
 pub use dynamic_fields::{
     DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
     DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
@@ -39,7 +39,7 @@ pub use dynamic_fields::{
 pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
 pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
-use iota_types::Address;
+use iota_types::{Address, ObjectId};
 pub use normalized_move::{
     MoveAbility, MoveFunction, MoveFunctionTypeParameter, MoveModule, MoveVisibility,
     NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
@@ -57,10 +57,10 @@ pub use protocol_config::{ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionA
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
 pub use transaction::{
-    TransactionBlock, TransactionBlockArgs, TransactionBlockEffectsQuery, TransactionBlockQuery,
-    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
-    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
-    TransactionsFilter,
+    TransactionBlock, TransactionBlockArgs, TransactionBlockEffectsQuery,
+    TransactionBlockKindInput, TransactionBlockQuery, TransactionBlockWithEffects,
+    TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
+    TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery, TransactionsFilter,
 };
 
 use crate::error;
@@ -73,6 +73,7 @@ pub mod schema {}
 // ===========================================================================
 
 impl_scalar!(Address, schema::IotaAddress);
+impl_scalar!(ObjectId, schema::IotaAddress);
 impl_scalar!(u64, schema::UInt53);
 impl_scalar!(JsonValue, schema::JSON);
 
@@ -80,43 +81,25 @@ impl_scalar!(JsonValue, schema::JSON);
 #[cynic(graphql_type = "Base64")]
 pub struct Base64(pub String);
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(Base64, String, {
-    lower: |i| i.0,
-});
-
 #[derive(cynic::Scalar, Debug, Clone, derive_more::From)]
 #[cynic(graphql_type = "BigInt")]
 pub struct BigInt(pub String);
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(BigInt, String, {
-    lower: |i| i.0,
-});
 
 #[derive(cynic::Scalar, Debug, Clone)]
 #[cynic(graphql_type = "DateTime")]
 pub struct DateTime(pub String);
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(DateTime, String, {
-    lower: |kv| kv.0,
-    try_lift: |s| Ok(DateTime(s)),
-});
-
 // ===========================================================================
 // Types used in several queries
 // ===========================================================================
 
-#[derive(cynic::QueryFragment, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+#[derive(cynic::QueryFragment, Debug, Clone, Copy)]
 #[cynic(schema = "rpc", graphql_type = "Address")]
 pub struct GQLAddress {
     pub address: Address,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MoveObject")]
 pub struct MoveObject {
     pub bcs: Option<Base64>,
@@ -146,7 +129,6 @@ pub struct MoveType {
 // ===========================================================================
 
 #[derive(Clone, Default, cynic::QueryFragment, Debug)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cynic(schema = "rpc", graphql_type = "PageInfo")]
 /// Information about pagination in a connection.
 pub struct PageInfo {

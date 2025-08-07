@@ -57,7 +57,6 @@ pub struct MovePackage {
     graphql_type = "MoveModule",
     variables = "NormalizedMoveModuleQueryArgs"
 )]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveModule {
     pub file_format_version: i32,
     #[arguments(after: $after_enums, before:$before_enums, first: $first_enums, last: $last_enums)]
@@ -72,7 +71,6 @@ pub struct MoveModule {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveStructConnection")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveStructConnection {
     pub page_info: PageInfo,
     pub nodes: Vec<MoveStruct>,
@@ -80,7 +78,6 @@ pub struct MoveStructConnection {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveStruct")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveStruct {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
@@ -90,7 +87,6 @@ pub struct MoveStruct {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModuleConnection")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveModuleConnection {
     pub nodes: Vec<MoveModuleQuery>,
     pub page_info: PageInfo,
@@ -98,7 +94,6 @@ pub struct MoveModuleConnection {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModule")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveModuleQuery {
     pub package: MovePackageQuery,
     pub name: String,
@@ -106,7 +101,6 @@ pub struct MoveModuleQuery {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveFunctionConnection")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveFunctionConnection {
     pub nodes: Vec<MoveFunction>,
     pub page_info: PageInfo,
@@ -114,7 +108,6 @@ pub struct MoveFunctionConnection {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveEnumConnection")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveEnumConnection {
     pub nodes: Vec<MoveEnum>,
     pub page_info: PageInfo,
@@ -122,7 +115,6 @@ pub struct MoveEnumConnection {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveEnum")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveEnum {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
@@ -132,7 +124,6 @@ pub struct MoveEnum {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveEnumVariant")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveEnumVariant {
     pub fields: Option<Vec<MoveField>>,
     pub name: String,
@@ -140,7 +131,6 @@ pub struct MoveEnumVariant {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveField")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveField {
     pub name: String,
     #[cynic(rename = "type")]
@@ -149,7 +139,6 @@ pub struct MoveField {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveStructTypeParameter")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct MoveStructTypeParameter {
     pub constraints: Vec<MoveAbility>,
     pub is_phantom: bool,

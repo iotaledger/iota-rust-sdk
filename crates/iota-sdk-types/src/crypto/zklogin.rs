@@ -2,9 +2,6 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-#[cfg(feature = "uniffi")]
-use anyhow::anyhow;
-
 use super::SimpleSignature;
 use crate::{checkpoint::EpochId, u256::U256};
 
@@ -30,7 +27,6 @@ use crate::{checkpoint::EpochId, u256::U256};
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ZkLoginAuthenticator {
     /// Zklogin proof and inputs required to perform proof verification.
     pub inputs: ZkLoginInputs,
@@ -42,15 +38,6 @@ pub struct ZkLoginAuthenticator {
     /// User signature with the pubkey attested to by the provided proof.
     pub signature: SimpleSignature,
 }
-
-#[cfg(feature = "uniffi")]
-pub type BoxedZkLoginAuthenticator = Box<ZkLoginAuthenticator>;
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(BoxedZkLoginAuthenticator, ZkLoginAuthenticator, {
-    lower: |btt| *btt,
-    try_lift: |tt| Ok(Box::new(tt)),
-});
 
 /// A zklogin groth16 proof and the required inputs to perform proof
 /// verification.
@@ -72,7 +59,6 @@ uniffi::custom_type!(BoxedZkLoginAuthenticator, ZkLoginAuthenticator, {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ZkLoginInputs {
     pub proof_points: ZkLoginProof,
     pub iss_base64_details: ZkLoginClaim,
@@ -96,7 +82,6 @@ pub struct ZkLoginInputs {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ZkLoginClaim {
     pub value: String,
     pub index_mod_4: u8,
@@ -118,7 +103,6 @@ pub struct ZkLoginClaim {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ZkLoginProof {
     pub a: CircomG1,
     pub b: CircomG2,
@@ -142,12 +126,6 @@ pub struct ZkLoginProof {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CircomG1(pub [Bn254FieldElement; 3]);
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(CircomG1, Vec<Bn254FieldElement>, {
-    lower: |c| c.0.to_vec(),
-    try_lift: |v| Ok(CircomG1(v.try_into().map_err(|_| anyhow!("failed to convert vec to array"))?)),
-});
-
 /// A G2 point
 ///
 /// This represents the canonical decimal representation of the coefficients of
@@ -164,21 +142,6 @@ uniffi::custom_type!(CircomG1, Vec<Bn254FieldElement>, {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(CircomG2, Vec<Vec<Bn254FieldElement>>, {
-    lower: |c| c.0.into_iter().map(|v| v.to_vec()).collect(),
-    try_lift: |v| {
-        fn vec_to_array<const N: usize, T>(vec: Vec<T>) -> anyhow::Result<[T; N]> {
-            vec.try_into().map_err(|_| anyhow!("failed to convert vec to array"))
-        }
-        Ok(CircomG2(
-            vec_to_array(
-                v.into_iter().map(vec_to_array).collect::<Result<Vec<_>, _>>()?
-            )?
-        ))
-    },
-});
 
 /// Public Key equivalent for Zklogin authenticators
 ///
@@ -235,7 +198,6 @@ uniffi::custom_type!(CircomG2, Vec<Vec<Bn254FieldElement>>, {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ZkLoginPublicIdentifier {
     iss: String,
     address_seed: Bn254FieldElement,
@@ -279,7 +241,6 @@ impl ZkLoginPublicIdentifier {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Jwk {
     /// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
     pub kty: String,
@@ -310,7 +271,6 @@ pub struct Jwk {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct JwkId {
     /// The issuer or identity of the OIDC provider.
     pub iss: String,
@@ -338,12 +298,6 @@ pub struct JwkId {
 pub struct Bn254FieldElement(
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U256"))] [u8; 32],
 );
-
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(Bn254FieldElement, String, {
-    lower: |key| key.to_string(),
-    try_lift: |s| Ok(std::str::FromStr::from_str(&s)?),
-});
 
 impl Bn254FieldElement {
     pub const fn new(bytes: [u8; 32]) -> Self {

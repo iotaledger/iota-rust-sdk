@@ -481,8 +481,9 @@ mod tests {
     use base64ct::Encoding;
     use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
     use iota_graphql_client::{
-        Client, PaginationFilter,
+        Client,
         faucet::{CoinInfo, FaucetClient},
+        pagination::PaginationFilter,
     };
     use iota_types::{
         Address, ExecutionStatus, IdOperation, ObjectId, ObjectType, TransactionDigest,
@@ -577,7 +578,7 @@ mod tests {
 
         let gas = coins.last().unwrap().id;
         // TODO when we have tx resolution, we can just pass an ObjectId
-        let gas_obj: Input = (&client.object(gas.into(), None).await.unwrap().unwrap()).into();
+        let gas_obj: Input = (&client.object(gas, None).await.unwrap().unwrap()).into();
         tx.add_gas_objects(vec![gas_obj.with_owned_kind()]);
         tx.set_gas_budget(500000000);
         tx.set_gas_price(1000);
@@ -658,7 +659,7 @@ mod tests {
         // get the object information from the client
         let client = Client::new_localhost();
         let first = coins.first().unwrap().id;
-        let coin: Input = (&client.object(first.into(), None).await.unwrap().unwrap()).into();
+        let coin: Input = (&client.object(first, None).await.unwrap().unwrap()).into();
         let coin_input = tx.input(coin.with_owned_kind());
         let recipient = Address::generate(rand::thread_rng());
         let recipient_input = tx.input(Serialized(&recipient));
@@ -667,7 +668,7 @@ mod tests {
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
 
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
 
         // check that recipient has 1 coin
@@ -697,7 +698,7 @@ mod tests {
 
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
     }
 
@@ -717,7 +718,7 @@ mod tests {
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
 
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
 
         // check that recipient has 1 coin
@@ -735,7 +736,7 @@ mod tests {
         let (_, pk, coins) = helper_setup(&mut tx, &client).await;
 
         let coin = coins.first().unwrap().id;
-        let coin_obj: Input = (&client.object(coin.into(), None).await.unwrap().unwrap()).into();
+        let coin_obj: Input = (&client.object(coin, None).await.unwrap().unwrap()).into();
         let coin_input = tx.input(coin_obj.with_owned_kind());
 
         // transfer 1 IOTA
@@ -745,7 +746,7 @@ mod tests {
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
 
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         assert!(effects.is_ok());
 
         // wait for the transaction to be finalized
@@ -769,13 +770,13 @@ mod tests {
         let (address, pk, coins) = helper_setup(&mut tx, &client).await;
 
         let coin1 = coins.first().unwrap().id;
-        let coin1_obj: Input = (&client.object(coin1.into(), None).await.unwrap().unwrap()).into();
+        let coin1_obj: Input = (&client.object(coin1, None).await.unwrap().unwrap()).into();
         let coin_to_merge = tx.input(coin1_obj.with_owned_kind());
 
         let mut coins_to_merge = vec![];
         // last coin is used for gas, first coin is the one we merge into
         for c in coins[1..&coins.len() - 1].iter() {
-            let coin: Input = (&client.object(c.id.into(), None).await.unwrap().unwrap()).into();
+            let coin: Input = (&client.object(c.id, None).await.unwrap().unwrap()).into();
             coins_to_merge.push(tx.input(coin.with_owned_kind()));
         }
 
@@ -783,7 +784,7 @@ mod tests {
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
 
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
 
         // check that there are two coins
@@ -806,7 +807,7 @@ mod tests {
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
 
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
     }
 
@@ -822,7 +823,7 @@ mod tests {
         tx.transfer_objects(vec![upgrade_cap], sender);
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
     }
 
@@ -838,7 +839,7 @@ mod tests {
         tx.transfer_objects(vec![upgrade_cap], sender);
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         let mut package_id: Option<ObjectId> = None;
         let mut created_objs = vec![];
         if let Ok(Some(ref effects)) = effects {
@@ -866,7 +867,7 @@ mod tests {
         let mut tx = TransactionBuilder::new();
         let mut upgrade_cap = None;
         for o in created_objs {
-            let obj = client.object(*o.as_address(), None).await.unwrap().unwrap();
+            let obj = client.object(o, None).await.unwrap().unwrap();
             match obj.object_type() {
                 ObjectType::Struct(x) if x.name.to_string() == "UpgradeCap" => {
                     match obj.owner() {
@@ -925,14 +926,14 @@ mod tests {
         );
 
         let gas = coins.last().unwrap().id;
-        let gas_obj: Input = (&client.object(gas.into(), None).await.unwrap().unwrap()).into();
+        let gas_obj: Input = (&client.object(gas, None).await.unwrap().unwrap()).into();
         tx.add_gas_objects(vec![gas_obj.with_owned_kind()]);
         tx.set_gas_budget(500000000);
         tx.set_gas_price(1000);
         tx.set_sender(address);
         let tx = tx.finish().unwrap();
         let sig = pk.sign_transaction(&tx).unwrap();
-        let effects = client.execute_tx(vec![sig], &tx).await;
+        let effects = client.execute_tx(&[sig], &tx).await;
         wait_for_tx_and_check_effects_status_success(&client, tx.digest(), effects).await;
     }
 }

@@ -10,7 +10,11 @@ use std::{
 
 use futures::Stream;
 
-use crate::{Direction, Page, PaginationFilter, error, query_types::PageInfo};
+use crate::{
+    error,
+    pagination::{Direction, Page, PaginationFilter},
+    query_types::PageInfo,
+};
 
 /// A stream that yields items from a paginated query with support for
 /// bidirectional pagination.

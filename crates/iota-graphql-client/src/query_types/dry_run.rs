@@ -5,7 +5,7 @@
 use iota_types::ObjectReference;
 
 use super::transaction::TxBlockEffects;
-use crate::query_types::{Address, schema};
+use crate::query_types::{Address, ObjectId, schema};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "DryRunArgs")]
@@ -28,7 +28,7 @@ pub struct DryRunArgs {
     pub tx_meta: Option<TransactionMetadata>,
 }
 
-#[derive(cynic::InputObject, Debug)]
+#[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "TransactionMetadata")]
 pub struct TransactionMetadata {
     pub gas_budget: Option<u64>,
@@ -38,19 +38,18 @@ pub struct TransactionMetadata {
     pub sender: Option<Address>,
 }
 
-#[derive(cynic::InputObject, Debug)]
+#[derive(Clone, cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "ObjectRef")]
 pub struct ObjectRef {
-    pub address: Address,
+    pub address: ObjectId,
     pub digest: String,
     pub version: u64,
 }
 
 impl From<ObjectReference> for ObjectRef {
     fn from(value: ObjectReference) -> Self {
-        let address: Address = (*value.object_id()).into();
         ObjectRef {
-            address,
+            address: *value.object_id(),
             version: value.version(),
             digest: value.digest().to_string(),
         }

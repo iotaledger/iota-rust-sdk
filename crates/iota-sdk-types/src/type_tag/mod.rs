@@ -42,7 +42,6 @@ use super::Address;
 /// type-tag-struct = %x07 struct-tag
 /// ```
 #[derive(Eq, PartialEq, PartialOrd, Ord, Debug, Clone, Hash)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum TypeTag {
     U8,
@@ -59,23 +58,101 @@ pub enum TypeTag {
     Struct(Box<StructTag>),
 }
 
-#[cfg(feature = "uniffi")]
-pub type BoxedTypeTag = Box<TypeTag>;
+impl TypeTag {
+    crate::def_is!(U8, U16, U32, U64, U128, U256, Bool, Address, Signer);
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(BoxedTypeTag, TypeTag, {
-    lower: |btt| *btt,
-    try_lift: |tt| Ok(Box::new(tt)),
-});
+    pub fn is_vector_type(&self) -> bool {
+        matches!(self, Self::Vector(_))
+    }
 
-#[cfg(feature = "uniffi")]
-pub type BoxedStructTag = Box<StructTag>;
+    pub fn as_vector_type_opt(&self) -> Option<&TypeTag> {
+        if let Self::Vector(inner) = self {
+            Some(inner)
+        } else {
+            None
+        }
+    }
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(BoxedStructTag, StructTag, {
-    lower: |btt| *btt,
-    try_lift: |tt| Ok(Box::new(tt)),
-});
+    pub fn as_vector_type(&self) -> &TypeTag {
+        self.as_vector_type_opt().expect("not a Vector")
+    }
+
+    pub fn into_vector_type_opt(self) -> Option<TypeTag> {
+        if let Self::Vector(inner) = self {
+            Some(*inner)
+        } else {
+            None
+        }
+    }
+
+    pub fn into_vector_type(self) -> TypeTag {
+        self.into_vector_type_opt().expect("not a Vector type")
+    }
+
+    pub fn is_struct(&self) -> bool {
+        matches!(self, Self::Struct(_))
+    }
+
+    pub fn as_struct_tag_opt(&self) -> Option<&StructTag> {
+        if let Self::Struct(inner) = self {
+            Some(inner)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_struct_tag(&self) -> &StructTag {
+        self.as_struct_tag_opt().expect("not a Struct")
+    }
+
+    pub fn into_struct_tag_opt(self) -> Option<StructTag> {
+        if let Self::Struct(inner) = self {
+            Some(*inner)
+        } else {
+            None
+        }
+    }
+
+    pub fn into_struct_tag(self) -> StructTag {
+        self.into_struct_tag_opt().expect("not a Struct")
+    }
+
+    pub fn u8() -> Self {
+        Self::U8
+    }
+
+    pub fn u16() -> Self {
+        Self::U16
+    }
+
+    pub fn u32() -> Self {
+        Self::U32
+    }
+
+    pub fn u64() -> Self {
+        Self::U64
+    }
+
+    pub fn u128() -> Self {
+        Self::U128
+    }
+
+    pub fn u256() -> Self {
+        Self::U256
+    }
+
+    pub fn bool() -> Self {
+        Self::Bool
+    }
+
+    pub fn address() -> Self {
+        Self::Address
+    }
+
+    pub fn signer() -> Self {
+        Self::Signer
+    }
+}
 
 impl std::fmt::Display for TypeTag {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -150,12 +227,6 @@ pub struct Identifier(
     Box<str>,
 );
 
-#[cfg(feature = "uniffi")]
-uniffi::custom_type!(Identifier, String, {
-    lower: |id| id.0.into(),
-    try_lift: |s| Ok(Identifier::new(s)?),
-});
-
 impl Identifier {
     pub fn new(identifier: impl AsRef<str>) -> Result<Self, TypeParseError> {
         parse::parse_identifier(identifier.as_ref())
@@ -209,7 +280,6 @@ impl PartialEq<str> for Identifier {
 ///              (vector type-tag)  ; type parameters
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct StructTag {
     pub address: Address,
@@ -220,17 +290,6 @@ pub struct StructTag {
 }
 
 impl StructTag {
-    pub fn gas_coin() -> Self {
-        let iota = Self {
-            address: Address::TWO,
-            module: Identifier::new("iota").unwrap(),
-            name: Identifier::new("IOTA").unwrap(),
-            type_params: vec![],
-        };
-
-        Self::coin(TypeTag::Struct(Box::new(iota)))
-    }
-
     pub fn coin(type_tag: TypeTag) -> Self {
         Self {
             address: Address::TWO,
@@ -240,17 +299,8 @@ impl StructTag {
         }
     }
 
-    pub fn staked_iota() -> Self {
-        Self {
-            address: Address::THREE,
-            module: Identifier::new("staking_pool").unwrap(),
-            name: Identifier::new("StakedIota").unwrap(),
-            type_params: vec![],
-        }
-    }
-
     /// Checks if this is a Coin type
-    pub fn is_coin(&self) -> Option<&TypeTag> {
+    pub fn coin_type_opt(&self) -> Option<&crate::TypeTag> {
         let Self {
             address,
             module,
@@ -264,6 +314,35 @@ impl StructTag {
         } else {
             None
         }
+    }
+
+    /// Checks if this is a Coin type
+    pub fn coin_type(&self) -> &TypeTag {
+        self.coin_type_opt().expect("not a coin")
+    }
+
+    pub fn gas_coin() -> Self {
+        let iota = Self {
+            address: Address::TWO,
+            module: Identifier::new("iota").unwrap(),
+            name: Identifier::new("IOTA").unwrap(),
+            type_params: vec![],
+        };
+
+        Self::coin(TypeTag::Struct(Box::new(iota)))
+    }
+
+    pub fn staked_iota() -> Self {
+        Self {
+            address: Address::THREE,
+            module: Identifier::new("staking_pool").unwrap(),
+            name: Identifier::new("StakedIota").unwrap(),
+            type_params: vec![],
+        }
+    }
+
+    pub fn address(&self) -> Address {
+        self.address
     }
 }
 

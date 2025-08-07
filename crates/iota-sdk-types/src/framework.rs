@@ -7,7 +7,6 @@
 use super::{Object, ObjectId, TypeTag};
 
 #[derive(Debug, Clone)]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Coin {
     coin_type: TypeTag,
     id: ObjectId,
@@ -27,27 +26,47 @@ impl Coin {
         self.balance
     }
 
-    pub fn try_from_object(object: &Object) -> Option<Self> {
+    pub fn try_from_object(object: &Object) -> Result<Self, CoinFromObjectError> {
         match &object.data {
             super::ObjectData::Struct(move_struct) => {
-                let coin_type = move_struct.type_.is_coin()?;
+                let coin_type = move_struct
+                    .type_
+                    .coin_type_opt()
+                    .ok_or(CoinFromObjectError::NotACoin)?;
 
                 let contents = &move_struct.contents;
                 if contents.len() != ObjectId::LENGTH + std::mem::size_of::<u64>() {
-                    return None;
+                    return Err(CoinFromObjectError::InvalidContentLength);
                 }
 
                 let id = ObjectId::new((&contents[..ObjectId::LENGTH]).try_into().unwrap());
                 let balance =
                     u64::from_le_bytes((&contents[ObjectId::LENGTH..]).try_into().unwrap());
 
-                Some(Self {
+                Ok(Self {
                     coin_type: coin_type.clone(),
                     id,
                     balance,
                 })
             }
-            _ => None, // package
+            _ => Err(CoinFromObjectError::NotACoin), // package
         }
     }
 }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum CoinFromObjectError {
+    NotACoin,
+    InvalidContentLength,
+}
+
+impl std::fmt::Display for CoinFromObjectError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            CoinFromObjectError::NotACoin => write!(f, "not a coin"),
+            CoinFromObjectError::InvalidContentLength => write!(f, "invalid content length"),
+        }
+    }
+}
+
+impl std::error::Error for CoinFromObjectError {}

@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use base64ct::Encoding;
-use iota_types::{SenderSignedTransaction, SignedTransaction, TransactionEffects, UserSignature};
+use iota_types::{
+    ObjectId, SenderSignedTransaction, SignedTransaction, TransactionEffects, UserSignature,
+};
 
 use crate::{
     error,
@@ -136,7 +138,6 @@ pub struct TransactionBlockEffects {
     graphql_type = "TransactionBlockKindInput",
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,
@@ -147,9 +148,8 @@ pub enum TransactionBlockKindInput {
     EndOfEpochTx,
 }
 
-#[derive(Clone, cynic::InputObject, Debug)]
+#[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
-#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TransactionsFilter {
     pub function: Option<String>,
     pub kind: Option<TransactionBlockKindInput>,
@@ -158,9 +158,9 @@ pub struct TransactionsFilter {
     pub before_checkpoint: Option<u64>,
     pub sign_address: Option<Address>,
     pub recv_address: Option<Address>,
-    pub input_object: Option<Address>,
-    pub changed_object: Option<Address>,
-    pub wrapped_or_deleted_object: Option<Address>,
+    pub input_object: Option<ObjectId>,
+    pub changed_object: Option<ObjectId>,
+    pub wrapped_or_deleted_object: Option<ObjectId>,
     pub transaction_ids: Option<Vec<String>>,
 }
 
