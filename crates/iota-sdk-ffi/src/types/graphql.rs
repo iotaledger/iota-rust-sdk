@@ -9,7 +9,7 @@ use crate::types::{
     transaction::{SignedTransaction, TransactionEffects},
 };
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct TransactionMetadata {
     #[uniffi(default = None)]
     pub gas_budget: Option<u64>,
@@ -73,7 +73,7 @@ impl TransactionDataEffects {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct TransactionsFilter {
     #[uniffi(default = None)]
     pub function: Option<String>,
@@ -193,7 +193,7 @@ pub struct DynamicFieldOutput(pub iota_graphql_client::DynamicFieldOutput);
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Validator(pub iota_graphql_client::query_types::Validator);
 
-#[derive(Copy, Clone, Debug, derive_more::From, uniffi::Enum)]
+#[derive(Copy, Clone, Debug, uniffi::Enum)]
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,

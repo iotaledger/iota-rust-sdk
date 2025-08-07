@@ -15,7 +15,7 @@ use crate::error::Result;
 /// validator-committee-member = bls-public-key
 ///                              u64 ; stake
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct ValidatorCommitteeMember {
     pub public_key: Arc<Bls12381PublicKey>,
     pub stake: u64,

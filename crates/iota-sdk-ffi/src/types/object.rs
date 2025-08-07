@@ -78,7 +78,7 @@ impl From<&iota_types::ObjectId> for ObjectId {
 /// ```text
 /// object-ref = object-id u64 digest
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct ObjectReference {
     object_id: Arc<ObjectId>,
     version: u64,

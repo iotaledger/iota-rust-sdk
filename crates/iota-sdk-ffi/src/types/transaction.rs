@@ -240,7 +240,7 @@ impl EndOfEpochTransactionKind {
 ///               u64                 ; price
 ///               u64                 ; budget
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct GasPayment {
     pub objects: Vec<ObjectReference>,
     pub owner: Arc<Address>,
