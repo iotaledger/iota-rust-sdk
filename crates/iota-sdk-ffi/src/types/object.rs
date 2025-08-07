@@ -252,42 +252,73 @@ impl Owner {
     }
 
     pub fn is_address(&self) -> bool {
-        matches!(self.0, iota_types::Owner::Address(_))
+        self.0.is_address()
     }
 
     pub fn is_object(&self) -> bool {
-        matches!(self.0, iota_types::Owner::Object(_))
+        self.0.is_object()
     }
 
     pub fn is_shared(&self) -> bool {
-        matches!(self.0, iota_types::Owner::Shared(_))
+        self.0.is_shared()
     }
 
     pub fn is_immutable(&self) -> bool {
-        matches!(self.0, iota_types::Owner::Immutable)
+        self.0.is_immutable()
     }
 
     pub fn try_as_address(&self) -> Option<Arc<Address>> {
-        match self.0 {
-            iota_types::Owner::Address(address) => Some(Arc::new(address.into())),
-            _ => None,
-        }
+        self.0
+            .as_address_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn try_as_object(&self) -> Option<Arc<ObjectId>> {
-        match self.0 {
-            iota_types::Owner::Object(id) => Some(Arc::new(id.into())),
-            _ => None,
-        }
+        self.0
+            .as_object_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn try_as_shared(&self) -> Option<Version> {
-        match self.0 {
-            iota_types::Owner::Shared(version) => Some(version),
-            _ => None,
-        }
+        self.0.as_shared_opt().copied()
     }
 }
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectType(pub iota_types::ObjectType);
+
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct StructTag(pub iota_types::StructTag);
+
+#[uniffi::export]
+impl ObjectType {
+    #[uniffi::constructor]
+    pub fn new_package() -> Self {
+        Self(iota_types::ObjectType::Package)
+    }
+
+    #[uniffi::constructor]
+    pub fn new_struct(struct_tag: &StructTag) -> Self {
+        Self(iota_types::ObjectType::Struct(struct_tag.0.clone()))
+    }
+
+    pub fn is_package(&self) -> bool {
+        self.0.is_package()
+    }
+
+    pub fn is_struct(&self) -> bool {
+        self.0.is_struct()
+    }
+
+    pub fn try_as_struct(&self) -> Option<Arc<StructTag>> {
+        self.0
+            .as_struct_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+    }
+}
