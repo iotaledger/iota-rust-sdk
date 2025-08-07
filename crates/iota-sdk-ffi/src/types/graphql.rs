@@ -150,7 +150,7 @@ pub struct ObjectRef(pub iota_graphql_client::query_types::ObjectRef);
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Epoch(pub iota_graphql_client::query_types::Epoch);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct EventFilter {
     #[uniffi(default = None)]
     pub emitting_module: Option<String>,
