@@ -4,7 +4,7 @@
 use std::sync::Arc;
 
 use crate::{
-    error::{BindingsSdkError, Result},
+    error::{Result, SdkFfiError},
     types::address::Address,
 };
 
@@ -47,10 +47,7 @@ impl FaucetClient {
     /// request and not wait until the token is received. Use
     /// `request_and_wait` to wait for the token.
     pub async fn request(&self, address: &Address) -> Result<Option<String>> {
-        self.0
-            .request(**address)
-            .await
-            .map_err(BindingsSdkError::custom)
+        self.0.request(**address).await.map_err(SdkFfiError::custom)
     }
 
     /// Request gas from the faucet and wait until the request is completed and
@@ -65,7 +62,7 @@ impl FaucetClient {
             .0
             .request_and_wait(**address)
             .await
-            .map_err(BindingsSdkError::custom)?
+            .map_err(SdkFfiError::custom)?
             .map(Into::into)
             .map(Arc::new))
     }
@@ -78,7 +75,7 @@ impl FaucetClient {
             .0
             .request_status(id)
             .await
-            .map_err(BindingsSdkError::custom)?
+            .map_err(SdkFfiError::custom)?
             .map(Into::into)
             .map(Arc::new))
     }

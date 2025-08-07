@@ -5,15 +5,15 @@ use std::fmt;
 
 use uniffi::Error;
 
-pub type Result<T, E = BindingsSdkError> = std::result::Result<T, E>;
+pub type Result<T, E = SdkFfiError> = std::result::Result<T, E>;
 
 #[derive(Debug, Error)]
 #[uniffi(flat_error)]
-pub enum BindingsSdkError {
+pub enum SdkFfiError {
     Generic(String),
 }
 
-impl BindingsSdkError {
+impl SdkFfiError {
     pub fn new<E: std::error::Error>(err: E) -> Self {
         Self::Generic(err.to_string())
     }
@@ -23,7 +23,7 @@ impl BindingsSdkError {
     }
 }
 
-impl fmt::Display for BindingsSdkError {
+impl fmt::Display for SdkFfiError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Generic(e) => write!(f, "{e}"),
@@ -31,8 +31,8 @@ impl fmt::Display for BindingsSdkError {
     }
 }
 
-impl<E: std::error::Error> From<E> for BindingsSdkError {
-    fn from(e: E) -> BindingsSdkError {
+impl<E: std::error::Error> From<E> for SdkFfiError {
+    fn from(e: E) -> SdkFfiError {
         Self::new(e)
     }
 }
