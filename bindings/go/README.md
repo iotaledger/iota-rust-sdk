@@ -17,9 +17,5 @@ uniffi-bindgen-go --library target/release/libiota_sdk_ffi.dylib --out-dir ./bin
 To test it
 
 ```sh
-BINARIES_DIR="../../target/release" \
-LD_LIBRARY_PATH="$BINARIES_DIR" \
-CGO_LDFLAGS="-liota_sdk_ffi -L$BINARIES_DIR" \
-CGO_ENABLED=1 \
-go run test.go
+CGO_LDFLAGS="-liota_sdk_ffi -L../../target/release" go run test.go
 ```
