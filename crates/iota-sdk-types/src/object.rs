@@ -145,7 +145,7 @@ pub enum ObjectData {
 }
 
 impl ObjectData {
-    crate::def_is_as_opt!(Struct => MoveStruct, Package => MovePackage);
+    crate::def_is_as_into_opt!(Struct => MoveStruct, Package => MovePackage);
 }
 
 /// A move package
@@ -318,7 +318,7 @@ pub enum ObjectType {
 impl ObjectType {
     crate::def_is!(Package);
 
-    crate::def_is_as_opt!(Struct => StructTag);
+    crate::def_is_as_into_opt!(Struct => StructTag);
 }
 
 /// An object on the IOTA blockchain

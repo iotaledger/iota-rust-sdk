@@ -202,14 +202,14 @@ pub enum TransactionKind {
 }
 
 impl TransactionKind {
-    crate::def_is_as_opt! {
+    crate::def_is_as_into_opt! {
         ProgrammableTransaction,
         ConsensusCommitPrologueV1,
         AuthenticatorStateUpdateV1,
         RandomnessStateUpdate,
     }
 
-    crate::def_is_as_opt! {
+    crate::def_is_as_into_opt! {
         Genesis => GenesisTransaction,
         EndOfEpoch => Vec<EndOfEpochTransactionKind>,
     }

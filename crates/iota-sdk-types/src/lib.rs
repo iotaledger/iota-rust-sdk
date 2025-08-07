@@ -196,7 +196,7 @@ macro_rules! def_is {
 }
 
 #[macro_export]
-macro_rules! def_is_as_opt {
+macro_rules! def_is_as_into_opt {
     ($($variant:ident => $inner:ty),* $(,)?) => {
         paste::paste! {$(
         #[inline]
@@ -231,7 +231,7 @@ macro_rules! def_is_as_opt {
         )*}
     };
     ($($variant:ident),* $(,)?) => {
-        $crate::def_is_as_opt!{$($variant => $variant,)*}
+        $crate::def_is_as_into_opt!{$($variant => $variant,)*}
     };
 }
 
