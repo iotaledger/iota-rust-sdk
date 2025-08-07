@@ -59,7 +59,13 @@ pub enum TypeTag {
 }
 
 impl TypeTag {
-    pub fn vector_type_opt(&self) -> Option<&TypeTag> {
+    crate::def_is!(U8, U16, U32, U64, U128, U256, Bool, Address, Signer);
+
+    pub fn is_vector_type(&self) -> bool {
+        matches!(self, Self::Vector(_))
+    }
+
+    pub fn as_vector_type_opt(&self) -> Option<&TypeTag> {
         if let Self::Vector(inner) = self {
             Some(inner)
         } else {
@@ -67,14 +73,27 @@ impl TypeTag {
         }
     }
 
-    pub fn vector_type(&self) -> &TypeTag {
-        let Self::Vector(inner) = self else {
-            panic!("not a Vector");
-        };
-        inner
+    pub fn as_vector_type(&self) -> &TypeTag {
+        self.as_vector_type_opt().expect("not a Vector")
     }
 
-    pub fn struct_tag_opt(&self) -> Option<&StructTag> {
+    pub fn into_vector_type_opt(self) -> Option<TypeTag> {
+        if let Self::Vector(inner) = self {
+            Some(*inner)
+        } else {
+            None
+        }
+    }
+
+    pub fn into_vector_type(self) -> TypeTag {
+        self.into_vector_type_opt().expect("not a Vector type")
+    }
+
+    pub fn is_struct(&self) -> bool {
+        matches!(self, Self::Struct(_))
+    }
+
+    pub fn as_struct_tag_opt(&self) -> Option<&StructTag> {
         if let Self::Struct(inner) = self {
             Some(inner)
         } else {
@@ -82,11 +101,20 @@ impl TypeTag {
         }
     }
 
-    pub fn struct_tag(&self) -> &StructTag {
-        let Self::Struct(inner) = self else {
-            panic!("not a Struct");
-        };
-        inner
+    pub fn as_struct_tag(&self) -> &StructTag {
+        self.as_struct_tag_opt().expect("not a Struct")
+    }
+
+    pub fn into_struct_tag_opt(self) -> Option<StructTag> {
+        if let Self::Struct(inner) = self {
+            Some(*inner)
+        } else {
+            None
+        }
+    }
+
+    pub fn into_struct_tag(self) -> StructTag {
+        self.into_struct_tag_opt().expect("not a Struct")
     }
 
     pub fn u8() -> Self {
@@ -123,16 +151,6 @@ impl TypeTag {
 
     pub fn signer() -> Self {
         Self::Signer
-    }
-
-    crate::def_is!(U8, U16, U32, U64, U128, U256, Bool, Address, Signer);
-
-    pub fn is_vector(&self) -> bool {
-        matches!(self, Self::Vector(_))
-    }
-
-    pub fn is_struct(&self) -> bool {
-        matches!(self, Self::Struct(_))
     }
 }
 

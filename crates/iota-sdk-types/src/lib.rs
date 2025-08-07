@@ -206,10 +206,7 @@ macro_rules! def_is_as_into_opt {
 
         #[inline]
         pub fn [< as_ $variant:snake >](&self) -> &$inner {
-            let Self::$variant(inner) = self else {
-                panic!("not a {}", stringify!($variant));
-            };
-            inner
+            self.[< as_ $variant:snake _opt >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
         #[inline]
@@ -222,11 +219,17 @@ macro_rules! def_is_as_into_opt {
         }
 
         #[inline]
+        pub fn [< into_ $variant:snake _opt >](self) -> Option<$inner> {
+            if let Self::$variant(inner) = self {
+                Some(inner)
+            } else {
+                None
+            }
+        }
+
+        #[inline]
         pub fn [< into_ $variant:snake >](self) -> $inner {
-            let Self::$variant(inner) = self else {
-                panic!("not a {}", stringify!($variant));
-            };
-            inner
+            self.[< into_ $variant:snake _opt >]().expect(&format!("not a {}", stringify!($variant)))
         }
         )*}
     };
