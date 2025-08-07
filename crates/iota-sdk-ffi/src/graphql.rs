@@ -724,14 +724,14 @@ impl GraphQLClient {
     pub async fn dynamic_field(
         &self,
         address: &Address,
-        type_: &TypeTag,
+        type_tag: &TypeTag,
         name: serde_json::Value,
     ) -> Result<Option<Arc<DynamicFieldOutput>>> {
         Ok(self
             .0
             .read()
             .await
-            .dynamic_field(**address, type_.0.clone(), name)
+            .dynamic_field(**address, type_tag.0.clone(), name)
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -748,14 +748,14 @@ impl GraphQLClient {
     pub async fn dynamic_object_field(
         &self,
         address: &Address,
-        type_: &TypeTag,
+        type_tag: &TypeTag,
         name: serde_json::Value,
     ) -> Result<Option<Arc<DynamicFieldOutput>>> {
         Ok(self
             .0
             .read()
             .await
-            .dynamic_object_field(**address, type_.0.clone(), name)
+            .dynamic_object_field(**address, type_tag.0.clone(), name)
             .await?
             .map(Into::into)
             .map(Arc::new))
