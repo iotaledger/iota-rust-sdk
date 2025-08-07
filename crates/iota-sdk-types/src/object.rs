@@ -292,7 +292,6 @@ pub struct MoveStruct {
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
     pub type_: StructTag,
-
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version

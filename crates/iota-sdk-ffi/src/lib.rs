@@ -103,7 +103,7 @@
 //! [BCS]: https://docs.rs/bcs
 //! [RFC-5234]: https://datatracker.ietf.org/doc/html/rfc5234
 
-#![allow(unused)]
+#![expect(unused)]
 #![allow(clippy::wrong_self_convention)]
 
 mod error;
