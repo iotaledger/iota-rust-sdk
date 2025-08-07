@@ -685,7 +685,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field()
 	})
-	if checksum != 27957 {
+	if checksum != 8125 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field: UniFFI API checksum mismatch")
 	}
@@ -703,7 +703,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field()
 	})
-	if checksum != 44558 {
+	if checksum != 23995 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field: UniFFI API checksum mismatch")
 	}
@@ -4672,7 +4672,7 @@ type GraphQlClientInterface interface {
 	// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
 	// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
 	// ```
-	DynamicField(address *Address, type *TypeTag, name Value) (**DynamicFieldOutput, error)
+	DynamicField(address *Address, typeTag *TypeTag, name Value) (**DynamicFieldOutput, error)
 	// Get a page of dynamic fields for the provided address. Note that this
 	// will also fetch dynamic fields on wrapped objects.
 	//
@@ -4686,7 +4686,7 @@ type GraphQlClientInterface interface {
 	//
 	// This returns [`DynamicFieldOutput`] which contains the name, the value
 	// as json, and object.
-	DynamicObjectField(address *Address, type *TypeTag, name Value) (**DynamicFieldOutput, error)
+	DynamicObjectField(address *Address, typeTag *TypeTag, name Value) (**DynamicFieldOutput, error)
 	// Return the epoch information for the provided epoch. If no epoch is
 	// provided, it will return the last known epoch.
 	Epoch(epoch *uint64) (**Epoch, error)
@@ -5191,7 +5191,7 @@ func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta Transac
 // let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
 // let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
 // ```
-func (_self *GraphQlClient) DynamicField(address *Address, type *TypeTag, name Value) (**DynamicFieldOutput, error) {
+func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, name Value) (**DynamicFieldOutput, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -5208,7 +5208,7 @@ func (_self *GraphQlClient) DynamicField(address *Address, type *TypeTag, name V
 			return FfiConverterOptionalDynamicFieldOutputINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(
-		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterTypeTagINSTANCE.Lower(type), FfiConverterTypeValueINSTANCE.Lower(name)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterTypeTagINSTANCE.Lower(typeTag), FfiConverterTypeValueINSTANCE.Lower(name)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -5263,7 +5263,7 @@ func (_self *GraphQlClient) DynamicFields(address *Address, paginationFilter Pag
 //
 // This returns [`DynamicFieldOutput`] which contains the name, the value
 // as json, and object.
-func (_self *GraphQlClient) DynamicObjectField(address *Address, type *TypeTag, name Value) (**DynamicFieldOutput, error) {
+func (_self *GraphQlClient) DynamicObjectField(address *Address, typeTag *TypeTag, name Value) (**DynamicFieldOutput, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -5280,7 +5280,7 @@ func (_self *GraphQlClient) DynamicObjectField(address *Address, type *TypeTag, 
 			return FfiConverterOptionalDynamicFieldOutputINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_object_field(
-		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterTypeTagINSTANCE.Lower(type), FfiConverterTypeValueINSTANCE.Lower(name)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterTypeTagINSTANCE.Lower(typeTag), FfiConverterTypeValueINSTANCE.Lower(name)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)

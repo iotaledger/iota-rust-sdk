@@ -1006,7 +1006,7 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(void* ptr, 
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DYNAMIC_FIELD
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DYNAMIC_FIELD
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(void* ptr, void* address, void* type_, RustBuffer name
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(void* ptr, void* address, void* type_tag, RustBuffer name
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DYNAMIC_FIELDS
@@ -1016,7 +1016,7 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_fields(void* ptr, v
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DYNAMIC_OBJECT_FIELD
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DYNAMIC_OBJECT_FIELD
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_object_field(void* ptr, void* address, void* type_, RustBuffer name
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_object_field(void* ptr, void* address, void* type_tag, RustBuffer name
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_EPOCH
