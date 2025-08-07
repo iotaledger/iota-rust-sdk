@@ -1,9 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{str::FromStr, sync::Arc};
+use std::{collections::BTreeMap, str::FromStr, sync::Arc};
 
-use iota_types::Version;
+use iota_types::{TypeParseError, Version};
 
 use crate::{
     error::Result,
@@ -64,6 +64,12 @@ impl ObjectId {
 impl From<&iota_types::ObjectId> for ObjectId {
     fn from(value: &iota_types::ObjectId) -> Self {
         Self(*value)
+    }
+}
+
+impl From<&ObjectId> for iota_types::ObjectId {
+    fn from(value: &ObjectId) -> Self {
+        (*value.0.as_address()).into()
     }
 }
 
@@ -177,8 +183,129 @@ impl Object {
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectData(pub iota_types::ObjectData);
 
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct Identifier {
+    pub inner: String,
+}
+
+impl From<iota_types::Identifier> for Identifier {
+    fn from(value: iota_types::Identifier) -> Self {
+        Self {
+            inner: value.into_inner().into_string(),
+        }
+    }
+}
+
+impl TryFrom<Identifier> for iota_types::Identifier {
+    type Error = TypeParseError;
+
+    fn try_from(value: Identifier) -> Result<Self, Self::Error> {
+        value.inner.parse()
+    }
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct TypeOrigin {
+    pub module_name: Identifier,
+    pub struct_name: Identifier,
+    pub package: Arc<ObjectId>,
+}
+
+impl From<iota_types::TypeOrigin> for TypeOrigin {
+    fn from(value: iota_types::TypeOrigin) -> Self {
+        Self {
+            module_name: value.module_name.into(),
+            struct_name: value.struct_name.into(),
+            package: Arc::new(value.package.into()),
+        }
+    }
+}
+
+impl TryFrom<TypeOrigin> for iota_types::TypeOrigin {
+    type Error = TypeParseError;
+
+    fn try_from(value: TypeOrigin) -> Result<Self, Self::Error> {
+        Ok(Self {
+            module_name: value.module_name.try_into()?,
+            struct_name: value.struct_name.try_into()?,
+            package: **value.package,
+        })
+    }
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct IdentifierModuleMap {
+    id: Identifier,
+    module: Vec<u8>,
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct ObjectIdUpgradeInfoMap {
+    id: Arc<ObjectId>,
+    info: UpgradeInfo,
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct UpgradeInfo {
+    /// Id of the upgraded packages
+    pub upgraded_id: Arc<ObjectId>,
+    /// Version of the upgraded package
+    pub upgraded_version: Version,
+}
+
+impl From<iota_types::UpgradeInfo> for UpgradeInfo {
+    fn from(value: iota_types::UpgradeInfo) -> Self {
+        Self {
+            upgraded_id: Arc::new(value.upgraded_id.into()),
+            upgraded_version: value.upgraded_version,
+        }
+    }
+}
+
+impl From<UpgradeInfo> for iota_types::UpgradeInfo {
+    fn from(value: UpgradeInfo) -> Self {
+        Self {
+            upgraded_id: **value.upgraded_id,
+            upgraded_version: value.upgraded_version,
+        }
+    }
+}
+
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct MovePackage(pub iota_types::MovePackage);
+
+#[uniffi::export]
+impl MovePackage {
+    #[uniffi::constructor]
+    pub fn new(
+        id: &ObjectId,
+        version: Version,
+        modules: Vec<IdentifierModuleMap>,
+        type_origin_table: Vec<TypeOrigin>,
+        linkage_table: Vec<ObjectIdUpgradeInfoMap>,
+    ) -> Result<Self> {
+        Ok(Self(iota_types::MovePackage {
+            id: id.into(),
+            version,
+            modules: modules
+                .into_iter()
+                .map(|m| (iota_types::Identifier::try_from(m.id), m.module))
+                .map(|(r, module)| match r {
+                    Ok(id) => Ok((id, module)),
+                    Err(err) => Err(err),
+                })
+                .collect::<Result<BTreeMap<_, _>, _>>()?,
+            type_origin_table: type_origin_table
+                .into_iter()
+                .map(TryInto::try_into)
+                .collect::<Result<Vec<_>, _>>()?,
+            linkage_table: linkage_table
+                .into_iter()
+                .map(|m| (m.id.0, m.info.into()))
+                .collect(),
+        }))
+    }
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct StructTag(pub iota_types::StructTag);
