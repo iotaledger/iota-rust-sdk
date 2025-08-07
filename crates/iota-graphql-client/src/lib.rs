@@ -2320,7 +2320,7 @@ mod tests {
             .unwrap()
             .unwrap();
         assert!(
-            total_transaction_blocks_by_seq_num > total_transaction_blocks,
+            total_transaction_blocks_by_seq_num >= total_transaction_blocks,
             "expected at least {total_transaction_blocks} transaction blocks, found {total_transaction_blocks_by_seq_num}"
         );
 
