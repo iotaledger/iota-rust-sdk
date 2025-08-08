@@ -28,7 +28,7 @@ async def main():
     if txn is not None:
         for sig in txn.signatures():
             print("Scheme: ", sig.scheme(), sig.scheme().value)
-        print(txn.transaction().sender().to_hex())
+        print("Sender: ", txn.transaction().sender().to_hex())
 
 
 if __name__ == '__main__':
