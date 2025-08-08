@@ -8503,7 +8503,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def dynamic_field(self, address: "Address",type: "TypeTag",name: "Value"):
+    def dynamic_field(self, address: "Address",type_tag: "TypeTag",name: "Value"):
         """
         Access a dynamic field on an object using its name. Names are arbitrary
         Move values whose type have copy, drop, and store, and are specified
@@ -8537,7 +8537,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def dynamic_object_field(self, address: "Address",type: "TypeTag",name: "Value"):
+    def dynamic_object_field(self, address: "Address",type_tag: "TypeTag",name: "Value"):
         """
         Access a dynamic object field on an object using its name. Names are
         arbitrary Move values whose type have copy, drop, and store, and are
@@ -9167,7 +9167,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def dynamic_field(self, address: "Address",type: "TypeTag",name: "Value") -> "typing.Optional[DynamicFieldOutput]":
+    async def dynamic_field(self, address: "Address",type_tag: "TypeTag",name: "Value") -> "typing.Optional[DynamicFieldOutput]":
         """
         Access a dynamic field on an object using its name. Names are arbitrary
         Move values whose type have copy, drop, and store, and are specified
@@ -9193,7 +9193,7 @@ _UniffiConverterTypeSdkFfiError,
 
         _UniffiConverterTypeAddress.check_lower(address)
         
-        _UniffiConverterTypeTypeTag.check_lower(type)
+        _UniffiConverterTypeTypeTag.check_lower(type_tag)
         
         _UniffiConverterTypeValue.check_lower(name)
         
@@ -9201,7 +9201,7 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(address),
-        _UniffiConverterTypeTypeTag.lower(type),
+        _UniffiConverterTypeTypeTag.lower(type_tag),
         _UniffiConverterTypeValue.lower(name)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9248,7 +9248,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def dynamic_object_field(self, address: "Address",type: "TypeTag",name: "Value") -> "typing.Optional[DynamicFieldOutput]":
+    async def dynamic_object_field(self, address: "Address",type_tag: "TypeTag",name: "Value") -> "typing.Optional[DynamicFieldOutput]":
         """
         Access a dynamic object field on an object using its name. Names are
         arbitrary Move values whose type have copy, drop, and store, and are
@@ -9262,7 +9262,7 @@ _UniffiConverterTypeSdkFfiError,
 
         _UniffiConverterTypeAddress.check_lower(address)
         
-        _UniffiConverterTypeTypeTag.check_lower(type)
+        _UniffiConverterTypeTypeTag.check_lower(type_tag)
         
         _UniffiConverterTypeValue.check_lower(name)
         
@@ -9270,7 +9270,7 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_object_field(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(address),
-        _UniffiConverterTypeTypeTag.lower(type),
+        _UniffiConverterTypeTypeTag.lower(type_tag),
         _UniffiConverterTypeValue.lower(name)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -10396,9 +10396,41 @@ class _UniffiConverterTypeMoveModule:
     def write(cls, value: MoveModuleProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class MovePackageProtocol(typing.Protocol):
+    """
+    A move package
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    object-move-package = object-id u64 move-modules type-origin-table linkage-table
+
+    move-modules = map (identifier bytes)
+    type-origin-table = vector type-origin
+    linkage-table = map (object-id upgrade-info)
+    ```
+    """
+
     pass
 # MovePackage is a Rust-only trait - it's a wrapper around a Rust implementation.
 class MovePackage():
+    """
+    A move package
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    object-move-package = object-id u64 move-modules type-origin-table linkage-table
+
+    move-modules = map (identifier bytes)
+    type-origin-table = vector type-origin
+    linkage-table = map (object-id upgrade-info)
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     
     def __init__(self, *args, **kwargs):
@@ -12634,4 +12666,3 @@ __all__ = [
     "TypeTag",
     "UserSignature",
 ]
-

@@ -13,6 +13,8 @@ use crate::{
     },
 };
 
+pub type Identifier = String;
+
 /// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 /// the IOTA blockchain.
 ///
@@ -184,27 +186,6 @@ impl Object {
 pub struct ObjectData(pub iota_types::ObjectData);
 
 #[derive(Clone, Debug, uniffi::Record)]
-pub struct Identifier {
-    pub inner: String,
-}
-
-impl From<iota_types::Identifier> for Identifier {
-    fn from(value: iota_types::Identifier) -> Self {
-        Self {
-            inner: value.into_inner().into_string(),
-        }
-    }
-}
-
-impl TryFrom<Identifier> for iota_types::Identifier {
-    type Error = TypeParseError;
-
-    fn try_from(value: Identifier) -> Result<Self, Self::Error> {
-        value.inner.parse()
-    }
-}
-
-#[derive(Clone, Debug, uniffi::Record)]
 pub struct TypeOrigin {
     pub module_name: Identifier,
     pub struct_name: Identifier,
@@ -214,8 +195,8 @@ pub struct TypeOrigin {
 impl From<iota_types::TypeOrigin> for TypeOrigin {
     fn from(value: iota_types::TypeOrigin) -> Self {
         Self {
-            module_name: value.module_name.into(),
-            struct_name: value.struct_name.into(),
+            module_name: value.module_name.into_inner().into_string(),
+            struct_name: value.struct_name.into_inner().into_string(),
             package: Arc::new(value.package.into()),
         }
     }
@@ -226,8 +207,8 @@ impl TryFrom<TypeOrigin> for iota_types::TypeOrigin {
 
     fn try_from(value: TypeOrigin) -> Result<Self, Self::Error> {
         Ok(Self {
-            module_name: value.module_name.try_into()?,
-            struct_name: value.struct_name.try_into()?,
+            module_name: value.module_name.parse()?,
+            struct_name: value.struct_name.parse()?,
             package: **value.package,
         })
     }
@@ -271,6 +252,19 @@ impl From<UpgradeInfo> for iota_types::UpgradeInfo {
     }
 }
 
+/// A move package
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-move-package = object-id u64 move-modules type-origin-table linkage-table
+///
+/// move-modules = map (identifier bytes)
+/// type-origin-table = vector type-origin
+/// linkage-table = map (object-id upgrade-info)
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct MovePackage(pub iota_types::MovePackage);
 
@@ -289,7 +283,7 @@ impl MovePackage {
             version,
             modules: modules
                 .into_iter()
-                .map(|m| (iota_types::Identifier::try_from(m.id), m.module))
+                .map(|m| (iota_types::Identifier::from_str(&m.id), m.module))
                 .map(|(r, module)| match r {
                     Ok(id) => Ok((id, module)),
                     Err(err) => Err(err),
@@ -310,6 +304,24 @@ impl MovePackage {
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct StructTag(pub iota_types::StructTag);
 
+/// A move struct
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-move-struct = compressed-struct-tag bool u64 object-contents
+///
+/// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
+/// other-struct-type     = %x00 struct-tag
+/// gas-coin-type         = %x01
+/// staked-iota-type      = %x02
+/// coin-type             = %x03 type-tag
+///
+/// ; first 32 bytes of the contents are the object's object-id
+/// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+/// ```
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct MoveStruct {
     pub type_tag: Arc<StructTag>,
