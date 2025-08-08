@@ -12,7 +12,7 @@ async def main():
         my_address, 
         PaginationFilter(direction=Direction.FORWARD, cursor=None, limit=None)
     )
-    for coin in coins.data():
+    for coin in coins.data:
         print(f'ID = 0x{coin.id().to_hex()} Balance = {coin.balance()}')
 
     balance = await client.balance(my_address)

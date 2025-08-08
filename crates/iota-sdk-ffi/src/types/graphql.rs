@@ -3,10 +3,19 @@
 
 use std::sync::Arc;
 
+use base64ct::Encoding;
+use iota_graphql_client::{
+    pagination::{Direction, PaginationFilter},
+    query_types::{
+        Base64, GQLAddress, MoveObject, PageInfo, TransactionBlockKindInput, ValidatorCredentials,
+    },
+};
+
 use crate::types::{
     address::Address,
     object::ObjectId,
     transaction::{SignedTransaction, TransactionEffects},
+    type_tag::TypeTag,
 };
 
 #[derive(Clone, Debug, uniffi::Record)]
@@ -105,7 +114,7 @@ impl From<iota_graphql_client::query_types::TransactionsFilter> for Transactions
     fn from(value: iota_graphql_client::query_types::TransactionsFilter) -> Self {
         Self {
             function: value.function,
-            kind: value.kind.map(Into::into),
+            kind: value.kind,
             after_checkpoint: value.after_checkpoint,
             at_checkpoint: value.at_checkpoint,
             before_checkpoint: value.before_checkpoint,
@@ -126,7 +135,7 @@ impl From<TransactionsFilter> for iota_graphql_client::query_types::Transactions
     fn from(value: TransactionsFilter) -> Self {
         Self {
             function: value.function,
-            kind: value.kind.map(Into::into),
+            kind: value.kind,
             after_checkpoint: value.after_checkpoint,
             at_checkpoint: value.at_checkpoint,
             before_checkpoint: value.before_checkpoint,
@@ -186,16 +195,279 @@ impl From<EventFilter> for iota_graphql_client::query_types::EventFilter {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct ObjectFilter(pub iota_graphql_client::query_types::ObjectFilter);
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct ObjectFilter {
+    pub type_tag: Option<String>,
+    pub owner: Option<Arc<Address>>,
+    pub object_ids: Option<Vec<Arc<ObjectId>>>,
+}
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct DynamicFieldOutput(pub iota_graphql_client::DynamicFieldOutput);
+impl From<iota_graphql_client::query_types::ObjectFilter> for ObjectFilter {
+    fn from(value: iota_graphql_client::query_types::ObjectFilter) -> Self {
+        Self {
+            type_tag: value.type_,
+            owner: value.owner.map(Into::into).map(Arc::new),
+            object_ids: value
+                .object_ids
+                .map(|v| v.into_iter().map(Into::into).map(Arc::new).collect()),
+        }
+    }
+}
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct Validator(pub iota_graphql_client::query_types::Validator);
+impl From<ObjectFilter> for iota_graphql_client::query_types::ObjectFilter {
+    fn from(value: ObjectFilter) -> Self {
+        Self {
+            type_: value.type_tag,
+            owner: value.owner.map(|v| **v),
+            object_ids: value
+                .object_ids
+                .map(|v| v.into_iter().map(|v| **v).collect()),
+        }
+    }
+}
 
-#[derive(Copy, Clone, Debug, uniffi::Enum)]
+/// The output of a dynamic field query, that includes the name, value, and
+/// value's json representation.
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct DynamicFieldOutput {
+    /// The name of the dynamic field
+    pub name: DynamicFieldName,
+    /// The dynamic field value typename and bcs
+    pub value: Option<DynamicFieldValue>,
+    /// The json representation of the dynamic field value object
+    pub value_as_json: Option<serde_json::Value>,
+}
+
+impl From<iota_graphql_client::DynamicFieldOutput> for DynamicFieldOutput {
+    fn from(value: iota_graphql_client::DynamicFieldOutput) -> Self {
+        Self {
+            name: value.name.into(),
+            value: value.value.map(Into::into),
+            value_as_json: value.value_as_json,
+        }
+    }
+}
+
+impl From<DynamicFieldOutput> for iota_graphql_client::DynamicFieldOutput {
+    fn from(value: DynamicFieldOutput) -> Self {
+        Self {
+            name: value.name.into(),
+            value: value.value.map(Into::into),
+            value_as_json: value.value_as_json,
+        }
+    }
+}
+
+/// The name part of a dynamic field, including its type, bcs, and json
+/// representation.
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct DynamicFieldName {
+    /// The type name of this dynamic field name
+    pub type_tag: Arc<TypeTag>,
+    /// The bcs bytes of this dynamic field name
+    pub bcs: Vec<u8>,
+    /// The json representation of the dynamic field name
+    pub json: Option<serde_json::Value>,
+}
+
+impl From<iota_graphql_client::DynamicFieldName> for DynamicFieldName {
+    fn from(value: iota_graphql_client::DynamicFieldName) -> Self {
+        Self {
+            type_tag: Arc::new(value.type_.into()),
+            bcs: value.bcs,
+            json: value.json,
+        }
+    }
+}
+
+impl From<DynamicFieldName> for iota_graphql_client::DynamicFieldName {
+    fn from(value: DynamicFieldName) -> Self {
+        Self {
+            type_: value.type_tag.0.clone(),
+            bcs: value.bcs,
+            json: value.json,
+        }
+    }
+}
+
+/// The value part of a dynamic field.
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct DynamicFieldValue {
+    pub type_tag: Arc<TypeTag>,
+    pub bcs: Vec<u8>,
+}
+
+impl From<iota_graphql_client::DynamicFieldValue> for DynamicFieldValue {
+    fn from(value: iota_graphql_client::DynamicFieldValue) -> Self {
+        Self {
+            type_tag: Arc::new(value.type_.into()),
+            bcs: value.bcs,
+        }
+    }
+}
+
+impl From<DynamicFieldValue> for iota_graphql_client::DynamicFieldValue {
+    fn from(value: DynamicFieldValue) -> Self {
+        Self {
+            type_: value.type_tag.0.clone(),
+            bcs: value.bcs,
+        }
+    }
+}
+
+/// Represents a validator in the system.
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct Validator {
+    /// The APY of this validator in basis points.
+    /// To get the APY in percentage, divide by 100.
+    pub apy: Option<i32>,
+    /// The validator's address.
+    pub address: Arc<Address>,
+    /// The fee charged by the validator for staking services.
+    pub commission_rate: Option<i32>,
+    /// Validator's credentials.
+    pub credentials: Option<ValidatorCredentials>,
+    /// Validator's description.
+    pub description: Option<String>,
+    /// Number of exchange rates in the table.
+    pub exchange_rates_size: Option<u64>,
+    /// The reference gas price for this epoch.
+    pub gas_price: Option<u64>,
+    /// Validator's name.
+    pub name: Option<String>,
+    /// Validator's url containing their custom image.
+    pub image_url: Option<String>,
+    /// The proposed next epoch fee for the validator's staking services.
+    pub next_epoch_commission_rate: Option<i32>,
+    /// Validator's credentials for the next epoch.
+    pub next_epoch_credentials: Option<ValidatorCredentials>,
+    /// The validator's gas price quote for the next epoch.
+    pub next_epoch_gas_price: Option<u64>,
+    /// The total number of IOTA tokens in this pool plus
+    /// the pending stake amount for this epoch.
+    pub next_epoch_stake: Option<u64>,
+    /// The validator's current valid `Cap` object. Validators can delegate
+    /// the operation ability to another address. The address holding this `Cap`
+    /// object can then update the reference gas price and tallying rule on
+    /// behalf of the validator.
+    pub operation_cap: Option<Vec<u8>>,
+    /// Pending pool token withdrawn during the current epoch, emptied at epoch
+    /// boundaries.
+    pub pending_pool_token_withdraw: Option<u64>,
+    /// Pending stake amount for this epoch.
+    pub pending_stake: Option<u64>,
+    /// Pending stake withdrawn during the current epoch, emptied at epoch
+    /// boundaries.
+    pub pending_total_iota_withdraw: Option<u64>,
+    /// Total number of pool tokens issued by the pool.
+    pub pool_token_balance: Option<u64>,
+    /// Validator's homepage URL.
+    pub project_url: Option<String>,
+    /// The epoch stake rewards will be added here at the end of each epoch.
+    pub rewards_pool: Option<u64>,
+    /// The epoch at which this pool became active.
+    pub staking_pool_activation_epoch: Option<u64>,
+    /// The ID of this validator's `0x3::staking_pool::StakingPool`.
+    pub staking_pool_id: Arc<ObjectId>,
+    /// The total number of IOTA tokens in this pool.
+    pub staking_pool_iota_balance: Option<u64>,
+    /// The voting power of this validator in basis points (e.g., 100 = 1%
+    /// voting power).
+    pub voting_power: Option<i32>,
+}
+
+impl From<iota_graphql_client::query_types::Validator> for Validator {
+    fn from(value: iota_graphql_client::query_types::Validator) -> Self {
+        Self {
+            apy: value.apy,
+            address: Arc::new(value.address.address.into()),
+            commission_rate: value.commission_rate,
+            credentials: value.credentials,
+            description: value.description,
+            exchange_rates_size: value.exchange_rates_size,
+            gas_price: value.gas_price.map(|v| v.0.parse().unwrap()),
+            name: value.name,
+            image_url: value.image_url,
+            next_epoch_commission_rate: value.next_epoch_commission_rate,
+            next_epoch_credentials: value.next_epoch_credentials,
+            next_epoch_gas_price: value.next_epoch_gas_price.map(|v| v.0.parse().unwrap()),
+            next_epoch_stake: value.next_epoch_stake.map(|v| v.0.parse().unwrap()),
+            operation_cap: value
+                .operation_cap
+                .and_then(|o| o.bcs.map(|b| base64ct::Base64::decode_vec(&b.0).unwrap())),
+            pending_pool_token_withdraw: value
+                .pending_pool_token_withdraw
+                .map(|v| v.0.parse().unwrap()),
+            pending_stake: value.pending_stake.map(|v| v.0.parse().unwrap()),
+            pending_total_iota_withdraw: value
+                .pending_total_iota_withdraw
+                .map(|v| v.0.parse().unwrap()),
+            pool_token_balance: value.pool_token_balance.map(|v| v.0.parse().unwrap()),
+            project_url: value.project_url,
+            rewards_pool: value.rewards_pool.map(|v| v.0.parse().unwrap()),
+            staking_pool_activation_epoch: value.staking_pool_activation_epoch,
+            staking_pool_id: Arc::new(value.staking_pool_id.into()),
+            staking_pool_iota_balance: value
+                .staking_pool_iota_balance
+                .map(|v| v.0.parse().unwrap()),
+            voting_power: value.voting_power,
+        }
+    }
+}
+
+impl From<Validator> for iota_graphql_client::query_types::Validator {
+    fn from(value: Validator) -> Self {
+        Self {
+            apy: value.apy,
+            address: GQLAddress {
+                address: **value.address,
+            },
+            commission_rate: value.commission_rate,
+            credentials: value.credentials,
+            description: value.description,
+            exchange_rates_size: value.exchange_rates_size,
+            gas_price: value.gas_price.map(|v| v.to_string().into()),
+            name: value.name,
+            image_url: value.image_url,
+            next_epoch_commission_rate: value.next_epoch_commission_rate,
+            next_epoch_credentials: value.next_epoch_credentials,
+            next_epoch_gas_price: value.next_epoch_gas_price.map(|v| v.to_string().into()),
+            next_epoch_stake: value.next_epoch_stake.map(|v| v.to_string().into()),
+            operation_cap: value.operation_cap.map(|o| MoveObject {
+                bcs: Some(base64ct::Base64::encode_string(&o).into()),
+            }),
+            pending_pool_token_withdraw: value
+                .pending_pool_token_withdraw
+                .map(|v| v.to_string().into()),
+            pending_stake: value.pending_stake.map(|v| v.to_string().into()),
+            pending_total_iota_withdraw: value
+                .pending_total_iota_withdraw
+                .map(|v| v.to_string().into()),
+            pool_token_balance: value.pool_token_balance.map(|v| v.to_string().into()),
+            project_url: value.project_url,
+            rewards_pool: value.rewards_pool.map(|v| v.to_string().into()),
+            staking_pool_activation_epoch: value.staking_pool_activation_epoch,
+            staking_pool_id: **value.staking_pool_id,
+            staking_pool_iota_balance: value
+                .staking_pool_iota_balance
+                .map(|v| v.to_string().into()),
+            voting_power: value.voting_power,
+        }
+    }
+}
+
+#[uniffi::remote(Record)]
+pub struct ValidatorCredentials {
+    pub authority_pub_key: Option<Base64>,
+    pub network_pub_key: Option<Base64>,
+    pub protocol_pub_key: Option<Base64>,
+    pub proof_of_possession: Option<Base64>,
+    pub net_address: Option<String>,
+    pub p2p_address: Option<String>,
+    pub primary_address: Option<String>,
+}
+
+#[uniffi::remote(Enum)]
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,
@@ -206,103 +478,28 @@ pub enum TransactionBlockKindInput {
     EndOfEpochTx,
 }
 
-impl From<iota_graphql_client::query_types::TransactionBlockKindInput>
-    for TransactionBlockKindInput
-{
-    fn from(value: iota_graphql_client::query_types::TransactionBlockKindInput) -> Self {
-        use iota_graphql_client::query_types::TransactionBlockKindInput::*;
-        match value {
-            SystemTx => Self::SystemTx,
-            ProgrammableTx => Self::ProgrammableTx,
-            Genesis => Self::Genesis,
-            ConsensusCommitPrologueV1 => Self::ConsensusCommitPrologueV1,
-            AuthenticatorStateUpdateV1 => Self::AuthenticatorStateUpdateV1,
-            RandomnessStateUpdate => Self::RandomnessStateUpdate,
-            EndOfEpochTx => Self::EndOfEpochTx,
-        }
-    }
+#[uniffi::remote(Record)]
+pub struct PageInfo {
+    pub has_previous_page: bool,
+    pub has_next_page: bool,
+    pub start_cursor: Option<String>,
+    pub end_cursor: Option<String>,
 }
 
-impl From<TransactionBlockKindInput>
-    for iota_graphql_client::query_types::TransactionBlockKindInput
-{
-    fn from(value: TransactionBlockKindInput) -> Self {
-        match value {
-            TransactionBlockKindInput::SystemTx => Self::SystemTx,
-            TransactionBlockKindInput::ProgrammableTx => Self::ProgrammableTx,
-            TransactionBlockKindInput::Genesis => Self::Genesis,
-            TransactionBlockKindInput::ConsensusCommitPrologueV1 => Self::ConsensusCommitPrologueV1,
-            TransactionBlockKindInput::AuthenticatorStateUpdateV1 => {
-                Self::AuthenticatorStateUpdateV1
-            }
-            TransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
-            TransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
-        }
-    }
-}
-
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct PageInfo(pub iota_graphql_client::query_types::PageInfo);
-
-/// Pagination options for querying the GraphQL server. It defaults to forward
-/// pagination with the GraphQL server's max page size.
-#[derive(Clone, Debug, Default, uniffi::Record)]
+#[uniffi::remote(Record)]
 pub struct PaginationFilter {
-    /// The direction of pagination.
     pub direction: Direction,
-    /// An opaque cursor used for pagination.
     #[uniffi(default = None)]
     pub cursor: Option<String>,
-    /// The maximum number of items to return. If this is ommitted, it will
-    /// lazily query the service configuration for the max page size.
     #[uniffi(default = None)]
     pub limit: Option<i32>,
 }
 
-impl From<iota_graphql_client::pagination::PaginationFilter> for PaginationFilter {
-    fn from(value: iota_graphql_client::pagination::PaginationFilter) -> Self {
-        Self {
-            direction: value.direction.into(),
-            cursor: value.cursor,
-            limit: value.limit,
-        }
-    }
-}
-
-impl From<PaginationFilter> for iota_graphql_client::pagination::PaginationFilter {
-    fn from(value: PaginationFilter) -> Self {
-        Self {
-            direction: value.direction.into(),
-            cursor: value.cursor,
-            limit: value.limit,
-        }
-    }
-}
-
-/// Pagination direction.
-#[derive(Clone, Debug, Default, uniffi::Enum)]
+#[uniffi::remote(Enum)]
 pub enum Direction {
     #[default]
     Forward,
     Backward,
-}
-
-impl From<iota_graphql_client::pagination::Direction> for Direction {
-    fn from(value: iota_graphql_client::pagination::Direction) -> Self {
-        match value {
-            iota_graphql_client::pagination::Direction::Forward => Self::Forward,
-            iota_graphql_client::pagination::Direction::Backward => Self::Backward,
-        }
-    }
-}
-
-impl From<Direction> for iota_graphql_client::pagination::Direction {
-    fn from(value: Direction) -> Self {
-        match value {
-            Direction::Forward => Self::Forward,
-            Direction::Backward => Self::Backward,
-        }
-    }
 }
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]

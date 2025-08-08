@@ -21,7 +21,7 @@ mod transaction;
 
 pub use active_validators::{
     ActiveValidatorsArgs, ActiveValidatorsQuery, EpochValidator, Validator, ValidatorConnection,
-    ValidatorSet,
+    ValidatorCredentials, ValidatorSet,
 };
 pub use balance::{Balance, BalanceArgs, BalanceQuery, Owner};
 pub use chain::ChainIdentifierQuery;
