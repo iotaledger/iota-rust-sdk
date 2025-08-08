@@ -195,7 +195,7 @@ impl From<EventFilter> for iota_graphql_client::query_types::EventFilter {
 
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct ObjectFilter {
-    pub type_: Option<String>,
+    pub type_tag: Option<String>,
     pub owner: Option<Arc<Address>>,
     pub object_ids: Option<Vec<Arc<ObjectId>>>,
 }
@@ -203,7 +203,7 @@ pub struct ObjectFilter {
 impl From<iota_graphql_client::query_types::ObjectFilter> for ObjectFilter {
     fn from(value: iota_graphql_client::query_types::ObjectFilter) -> Self {
         Self {
-            type_: value.type_,
+            type_tag: value.type_,
             owner: value.owner.map(Into::into).map(Arc::new),
             object_ids: value
                 .object_ids
@@ -215,7 +215,7 @@ impl From<iota_graphql_client::query_types::ObjectFilter> for ObjectFilter {
 impl From<ObjectFilter> for iota_graphql_client::query_types::ObjectFilter {
     fn from(value: ObjectFilter) -> Self {
         Self {
-            type_: value.type_,
+            type_: value.type_tag,
             owner: value.owner.map(|v| **v),
             object_ids: value
                 .object_ids
@@ -261,7 +261,7 @@ impl From<DynamicFieldOutput> for iota_graphql_client::DynamicFieldOutput {
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct DynamicFieldName {
     /// The type name of this dynamic field name
-    pub type_: Arc<TypeTag>,
+    pub type_tag: Arc<TypeTag>,
     /// The bcs bytes of this dynamic field name
     pub bcs: Vec<u8>,
     /// The json representation of the dynamic field name
@@ -271,7 +271,7 @@ pub struct DynamicFieldName {
 impl From<iota_graphql_client::DynamicFieldName> for DynamicFieldName {
     fn from(value: iota_graphql_client::DynamicFieldName) -> Self {
         Self {
-            type_: Arc::new(value.type_.into()),
+            type_tag: Arc::new(value.type_.into()),
             bcs: value.bcs,
             json: value.json,
         }
@@ -281,7 +281,7 @@ impl From<iota_graphql_client::DynamicFieldName> for DynamicFieldName {
 impl From<DynamicFieldName> for iota_graphql_client::DynamicFieldName {
     fn from(value: DynamicFieldName) -> Self {
         Self {
-            type_: value.type_.0.clone(),
+            type_: value.type_tag.0.clone(),
             bcs: value.bcs,
             json: value.json,
         }
@@ -291,14 +291,14 @@ impl From<DynamicFieldName> for iota_graphql_client::DynamicFieldName {
 /// The value part of a dynamic field.
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct DynamicFieldValue {
-    pub type_: Arc<TypeTag>,
+    pub type_tag: Arc<TypeTag>,
     pub bcs: Vec<u8>,
 }
 
 impl From<iota_graphql_client::DynamicFieldValue> for DynamicFieldValue {
     fn from(value: iota_graphql_client::DynamicFieldValue) -> Self {
         Self {
-            type_: Arc::new(value.type_.into()),
+            type_tag: Arc::new(value.type_.into()),
             bcs: value.bcs,
         }
     }
@@ -307,7 +307,7 @@ impl From<iota_graphql_client::DynamicFieldValue> for DynamicFieldValue {
 impl From<DynamicFieldValue> for iota_graphql_client::DynamicFieldValue {
     fn from(value: DynamicFieldValue) -> Self {
         Self {
-            type_: value.type_.0.clone(),
+            type_: value.type_tag.0.clone(),
             bcs: value.bcs,
         }
     }
