@@ -61,11 +61,11 @@ pub enum TypeTag {
 impl TypeTag {
     crate::def_is!(U8, U16, U32, U64, U128, U256, Bool, Address, Signer);
 
-    pub fn is_vector_type(&self) -> bool {
+    pub fn is_vector(&self) -> bool {
         matches!(self, Self::Vector(_))
     }
 
-    pub fn as_vector_type_opt(&self) -> Option<&TypeTag> {
+    pub fn as_vector_type_tag_opt(&self) -> Option<&TypeTag> {
         if let Self::Vector(inner) = self {
             Some(inner)
         } else {
@@ -73,11 +73,11 @@ impl TypeTag {
         }
     }
 
-    pub fn as_vector_type(&self) -> &TypeTag {
-        self.as_vector_type_opt().expect("not a Vector")
+    pub fn as_vector_type_tag(&self) -> &TypeTag {
+        self.as_vector_type_tag_opt().expect("not a Vector")
     }
 
-    pub fn into_vector_type_opt(self) -> Option<TypeTag> {
+    pub fn into_vector_type_tag_opt(self) -> Option<TypeTag> {
         if let Self::Vector(inner) = self {
             Some(*inner)
         } else {
@@ -85,8 +85,8 @@ impl TypeTag {
         }
     }
 
-    pub fn into_vector_type(self) -> TypeTag {
-        self.into_vector_type_opt().expect("not a Vector type")
+    pub fn into_vector_type_tag(self) -> TypeTag {
+        self.into_vector_type_tag_opt().expect("not a Vector")
     }
 
     pub fn is_struct(&self) -> bool {

@@ -10,5 +10,6 @@ pub mod gas;
 pub mod graphql;
 pub mod object;
 pub mod signature;
+pub mod struct_tag;
 pub mod transaction;
 pub mod type_tag;
