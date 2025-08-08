@@ -114,11 +114,10 @@ pub struct ZkLoginPublicIdentifier(pub iota_types::ZkLoginPublicIdentifier);
 #[uniffi::export]
 impl ZkLoginPublicIdentifier {
     #[uniffi::constructor]
-    pub fn new(iss: String, address_seed: &Bn254FieldElement) -> Result<Arc<Self>> {
+    pub fn new(iss: String, address_seed: &Bn254FieldElement) -> Result<Self> {
         iota_types::ZkLoginPublicIdentifier::new(iss, address_seed.0.clone())
             .ok_or_else(|| SdkFfiError::custom("iss length must be <= 255"))
             .map(Self)
-            .map(Arc::new)
     }
 
     pub fn iss(&self) -> String {
