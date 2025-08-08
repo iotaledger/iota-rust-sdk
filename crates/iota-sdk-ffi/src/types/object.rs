@@ -13,6 +13,19 @@ use crate::{
     },
 };
 
+/// A move identifier
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// identifier = %x01-80    ; length of the identifier
+///              (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
+///              (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
+///
+/// UNDERSCORE = %x95
+/// ```
 pub type Identifier = String;
 
 /// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
@@ -185,6 +198,15 @@ impl Object {
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectData(pub iota_types::ObjectData);
 
+/// Identifies a struct and the module it was defined in
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// type-origin = identifier identifier object-id
+/// ```
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct TypeOrigin {
     pub module_name: Identifier,
@@ -214,18 +236,29 @@ impl TryFrom<TypeOrigin> for iota_types::TypeOrigin {
     }
 }
 
+/// A mapping between an identifier and a BCS encoded module.
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct IdentifierModuleMap {
     id: Identifier,
     module: Vec<u8>,
 }
 
+/// A mapping between an Object ID and a package upgrade info.
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct ObjectIdUpgradeInfoMap {
     id: Arc<ObjectId>,
     info: UpgradeInfo,
 }
 
+/// Upgraded package info for the linkage table
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// upgrade-info = object-id u64
+/// ```
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct UpgradeInfo {
     /// Id of the upgraded packages
@@ -324,8 +357,13 @@ pub struct StructTag(pub iota_types::StructTag);
 /// ```
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct MoveStruct {
+    /// The type of this object
     pub type_tag: Arc<StructTag>,
+    /// Number that increases each time a tx takes this object as a mutable
+    /// input This is a lamport timestamp, not a sequentially increasing
+    /// version
     pub version: Version,
+    /// BCS bytes of a Move struct value
     pub contents: Vec<u8>,
 }
 
