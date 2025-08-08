@@ -1,4 +1,4 @@
-from lib.iota_sdk_ffi import GraphQlClient, PaginationFilter, Address, Direction, TransactionsFilter, ObjectId, EventFilter
+from lib.iota_sdk_ffi import GraphQlClient, PaginationFilter, Address, Direction, TransactionsFilter, ObjectId, EventFilter, MoveStruct, MovePackage
 import asyncio
 
 async def main():
@@ -23,6 +23,11 @@ async def main():
 
     filter=EventFilter(sender=my_address)
 
+    # TODO depends on StructTag
+    # move_struct = MoveStruct(struct_tag, version, contents)
+
+    package_id = ObjectId.from_hex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")
+    move_package = MovePackage(id=package_id, version=42, modules=[], type_origin_table=[], linkage_table=[])
 
 if __name__ == '__main__':
     asyncio.run(main())
