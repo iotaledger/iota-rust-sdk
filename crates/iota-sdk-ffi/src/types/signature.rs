@@ -8,9 +8,9 @@ use iota_types::{SignatureScheme, ZkLoginClaim};
 use crate::{
     error::Result,
     types::crypto::{
-        Ed25519PublicKey, Ed25519Signature, PasskeyAuthenticator, Secp256k1PublicKey,
-        Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
-        multisig::MultisigAggregatedSignature, zklogin::ZkLoginAuthenticator,
+        Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
+        Secp256r1PublicKey, Secp256r1Signature, multisig::MultisigAggregatedSignature,
+        passkey::PasskeyAuthenticator, zklogin::ZkLoginAuthenticator,
     },
 };
 
