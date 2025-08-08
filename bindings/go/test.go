@@ -32,7 +32,7 @@ func main() {
 	// 	log.Fatalf("Failed to get coins: %v", err)
 	// }
 
-	for _, coin := range coins.Data() {
+	for _, coin := range coins.Data {
 		fmt.Printf("ID = 0x%s Balance = %d\n", coin.Id().ToHex(), coin.Balance())
 	}
 

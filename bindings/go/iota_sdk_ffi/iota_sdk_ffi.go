@@ -404,33 +404,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummarypage_data()
-	})
-	if checksum != 44115 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummarypage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummarypage_is_empty()
-	})
-	if checksum != 48209 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummarypage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummarypage_page_info()
-	})
-	if checksum != 63456 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummarypage_page_info: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_coin_balance()
 	})
 	if checksum != 29928 {
@@ -458,119 +431,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_coinpage_data()
-	})
-	if checksum != 29556 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_coinpage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_coinpage_is_empty()
-	})
-	if checksum != 6966 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_coinpage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_coinpage_page_info()
-	})
-	if checksum != 50368 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_coinpage_page_info: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_dynamicfieldoutputpage_data()
-	})
-	if checksum != 46262 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_dynamicfieldoutputpage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_dynamicfieldoutputpage_is_empty()
-	})
-	if checksum != 38341 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_dynamicfieldoutputpage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_dynamicfieldoutputpage_page_info()
-	})
-	if checksum != 21447 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_dynamicfieldoutputpage_page_info: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes()
 	})
 	if checksum != 16656 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_epochpage_data()
-	})
-	if checksum != 13705 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_epochpage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_epochpage_is_empty()
-	})
-	if checksum != 19239 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_epochpage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_epochpage_page_info()
-	})
-	if checksum != 57718 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_epochpage_page_info: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_eventpage_data()
-	})
-	if checksum != 29547 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_eventpage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_eventpage_is_empty()
-	})
-	if checksum != 14566 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_eventpage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_eventpage_page_info()
-	})
-	if checksum != 27854 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_eventpage_page_info: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -604,7 +469,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators()
 	})
-	if checksum != 32356 {
+	if checksum != 26965 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators: UniFFI API checksum mismatch")
 	}
@@ -640,7 +505,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints()
 	})
-	if checksum != 37650 {
+	if checksum != 8422 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints: UniFFI API checksum mismatch")
 	}
@@ -658,7 +523,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins()
 	})
-	if checksum != 49561 {
+	if checksum != 48442 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins: UniFFI API checksum mismatch")
 	}
@@ -685,7 +550,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field()
 	})
-	if checksum != 8125 {
+	if checksum != 29988 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field: UniFFI API checksum mismatch")
 	}
@@ -694,7 +559,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields()
 	})
-	if checksum != 28199 {
+	if checksum != 43452 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields: UniFFI API checksum mismatch")
 	}
@@ -703,7 +568,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field()
 	})
-	if checksum != 23995 {
+	if checksum != 47284 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field: UniFFI API checksum mismatch")
 	}
@@ -739,7 +604,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events()
 	})
-	if checksum != 3400 {
+	if checksum != 41916 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events: UniFFI API checksum mismatch")
 	}
@@ -829,7 +694,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects()
 	})
-	if checksum != 49764 {
+	if checksum != 37555 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects: UniFFI API checksum mismatch")
 	}
@@ -856,7 +721,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions()
 	})
-	if checksum != 23726 {
+	if checksum != 33869 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions: UniFFI API checksum mismatch")
 	}
@@ -865,7 +730,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages()
 	})
-	if checksum != 53612 {
+	if checksum != 3319 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages: UniFFI API checksum mismatch")
 	}
@@ -973,7 +838,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions()
 	})
-	if checksum != 29564 {
+	if checksum != 31273 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions: UniFFI API checksum mismatch")
 	}
@@ -982,7 +847,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects()
 	})
-	if checksum != 61098 {
+	if checksum != 14121 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects: UniFFI API checksum mismatch")
 	}
@@ -991,36 +856,9 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects()
 	})
-	if checksum != 56867 {
+	if checksum != 2687 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagepage_data()
-	})
-	if checksum != 63718 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagepage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagepage_is_empty()
-	})
-	if checksum != 64716 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagepage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagepage_page_info()
-	})
-	if checksum != 5493 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagepage_page_info: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -1124,33 +962,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_objectpage_data()
-	})
-	if checksum != 3639 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectpage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_objectpage_is_empty()
-	})
-	if checksum != 56778 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectpage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_objectpage_page_info()
-	})
-	if checksum != 10226 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectpage_page_info: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes()
 	})
 	if checksum != 49170 {
@@ -1183,33 +994,6 @@ func uniffiCheckChecksums() {
 	if checksum != 60873 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_signedtransaction_transaction: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_signedtransactionpage_data()
-	})
-	if checksum != 7316 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_signedtransactionpage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_signedtransactionpage_is_empty()
-	})
-	if checksum != 52119 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_signedtransactionpage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_signedtransactionpage_page_info()
-	})
-	if checksum != 4757 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_signedtransactionpage_page_info: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -1264,87 +1048,6 @@ func uniffiCheckChecksums() {
 	if checksum != 13303 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_tx: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffectspage_data()
-	})
-	if checksum != 63792 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondataeffectspage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffectspage_is_empty()
-	})
-	if checksum != 31504 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondataeffectspage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffectspage_page_info()
-	})
-	if checksum != 59789 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondataeffectspage_page_info: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneffectspage_data()
-	})
-	if checksum != 20040 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactioneffectspage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneffectspage_is_empty()
-	})
-	if checksum != 19615 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactioneffectspage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneffectspage_page_info()
-	})
-	if checksum != 44668 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactioneffectspage_page_info: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_validatorpage_data()
-	})
-	if checksum != 23633 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorpage_data: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_validatorpage_is_empty()
-	})
-	if checksum != 5938 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorpage_is_empty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_validatorpage_page_info()
-	})
-	if checksum != 50813 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorpage_page_info: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2830,98 +2533,6 @@ func (_ FfiDestroyerCheckpointDigest) Destroy(value *CheckpointDigest) {
 
 
 
-type CheckpointSummaryPageInterface interface {
-	Data() []CheckpointSummary
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type CheckpointSummaryPage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *CheckpointSummaryPage) Data() []CheckpointSummary {
-	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummaryPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceCheckpointSummaryINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummarypage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *CheckpointSummaryPage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummaryPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_checkpointsummarypage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *CheckpointSummaryPage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummaryPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_checkpointsummarypage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *CheckpointSummaryPage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterCheckpointSummaryPage struct {}
-
-var FfiConverterCheckpointSummaryPageINSTANCE = FfiConverterCheckpointSummaryPage{}
-
-
-func (c FfiConverterCheckpointSummaryPage) Lift(pointer unsafe.Pointer) *CheckpointSummaryPage {
-	result := &CheckpointSummaryPage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_checkpointsummarypage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_checkpointsummarypage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*CheckpointSummaryPage).Destroy)
-	return result
-}
-
-func (c FfiConverterCheckpointSummaryPage) Read(reader io.Reader) *CheckpointSummaryPage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterCheckpointSummaryPage) Lower(value *CheckpointSummaryPage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*CheckpointSummaryPage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterCheckpointSummaryPage) Write(writer io.Writer, value *CheckpointSummaryPage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerCheckpointSummaryPage struct {}
-
-func (_ FfiDestroyerCheckpointSummaryPage) Destroy(value *CheckpointSummaryPage) {
-		value.Destroy()
-}
-
-
-
 type CoinInterface interface {
 	Balance() uint64
 	CoinType() *TypeTag
@@ -3079,98 +2690,6 @@ func (c FfiConverterCoinMetadata) Write(writer io.Writer, value *CoinMetadata) {
 type FfiDestroyerCoinMetadata struct {}
 
 func (_ FfiDestroyerCoinMetadata) Destroy(value *CoinMetadata) {
-		value.Destroy()
-}
-
-
-
-type CoinPageInterface interface {
-	Data() []*Coin
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type CoinPage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *CoinPage) Data() []*Coin {
-	_pointer := _self.ffiObject.incrementPointer("*CoinPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceCoinINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_coinpage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *CoinPage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*CoinPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_coinpage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *CoinPage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*CoinPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_coinpage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *CoinPage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterCoinPage struct {}
-
-var FfiConverterCoinPageINSTANCE = FfiConverterCoinPage{}
-
-
-func (c FfiConverterCoinPage) Lift(pointer unsafe.Pointer) *CoinPage {
-	result := &CoinPage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_coinpage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_coinpage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*CoinPage).Destroy)
-	return result
-}
-
-func (c FfiConverterCoinPage) Read(reader io.Reader) *CoinPage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterCoinPage) Lower(value *CoinPage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*CoinPage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterCoinPage) Write(writer io.Writer, value *CoinPage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerCoinPage struct {}
-
-func (_ FfiDestroyerCoinPage) Destroy(value *CoinPage) {
 		value.Destroy()
 }
 
@@ -3439,158 +2958,6 @@ func (c FfiConverterDryRunResult) Write(writer io.Writer, value *DryRunResult) {
 type FfiDestroyerDryRunResult struct {}
 
 func (_ FfiDestroyerDryRunResult) Destroy(value *DryRunResult) {
-		value.Destroy()
-}
-
-
-
-type DynamicFieldOutputInterface interface {
-}
-type DynamicFieldOutput struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *DynamicFieldOutput) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterDynamicFieldOutput struct {}
-
-var FfiConverterDynamicFieldOutputINSTANCE = FfiConverterDynamicFieldOutput{}
-
-
-func (c FfiConverterDynamicFieldOutput) Lift(pointer unsafe.Pointer) *DynamicFieldOutput {
-	result := &DynamicFieldOutput {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_dynamicfieldoutput(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_dynamicfieldoutput(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*DynamicFieldOutput).Destroy)
-	return result
-}
-
-func (c FfiConverterDynamicFieldOutput) Read(reader io.Reader) *DynamicFieldOutput {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterDynamicFieldOutput) Lower(value *DynamicFieldOutput) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*DynamicFieldOutput")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterDynamicFieldOutput) Write(writer io.Writer, value *DynamicFieldOutput) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerDynamicFieldOutput struct {}
-
-func (_ FfiDestroyerDynamicFieldOutput) Destroy(value *DynamicFieldOutput) {
-		value.Destroy()
-}
-
-
-
-type DynamicFieldOutputPageInterface interface {
-	Data() []*DynamicFieldOutput
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type DynamicFieldOutputPage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *DynamicFieldOutputPage) Data() []*DynamicFieldOutput {
-	_pointer := _self.ffiObject.incrementPointer("*DynamicFieldOutputPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceDynamicFieldOutputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_dynamicfieldoutputpage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *DynamicFieldOutputPage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*DynamicFieldOutputPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_dynamicfieldoutputpage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *DynamicFieldOutputPage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*DynamicFieldOutputPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_dynamicfieldoutputpage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *DynamicFieldOutputPage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterDynamicFieldOutputPage struct {}
-
-var FfiConverterDynamicFieldOutputPageINSTANCE = FfiConverterDynamicFieldOutputPage{}
-
-
-func (c FfiConverterDynamicFieldOutputPage) Lift(pointer unsafe.Pointer) *DynamicFieldOutputPage {
-	result := &DynamicFieldOutputPage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_dynamicfieldoutputpage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_dynamicfieldoutputpage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*DynamicFieldOutputPage).Destroy)
-	return result
-}
-
-func (c FfiConverterDynamicFieldOutputPage) Read(reader io.Reader) *DynamicFieldOutputPage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterDynamicFieldOutputPage) Lower(value *DynamicFieldOutputPage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*DynamicFieldOutputPage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterDynamicFieldOutputPage) Write(writer io.Writer, value *DynamicFieldOutputPage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerDynamicFieldOutputPage struct {}
-
-func (_ FfiDestroyerDynamicFieldOutputPage) Destroy(value *DynamicFieldOutputPage) {
 		value.Destroy()
 }
 
@@ -3970,98 +3337,6 @@ func (_ FfiDestroyerEpoch) Destroy(value *Epoch) {
 
 
 
-type EpochPageInterface interface {
-	Data() []*Epoch
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type EpochPage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *EpochPage) Data() []*Epoch {
-	_pointer := _self.ffiObject.incrementPointer("*EpochPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceEpochINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_epochpage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *EpochPage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*EpochPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_epochpage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *EpochPage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*EpochPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_epochpage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *EpochPage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterEpochPage struct {}
-
-var FfiConverterEpochPageINSTANCE = FfiConverterEpochPage{}
-
-
-func (c FfiConverterEpochPage) Lift(pointer unsafe.Pointer) *EpochPage {
-	result := &EpochPage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_epochpage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_epochpage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*EpochPage).Destroy)
-	return result
-}
-
-func (c FfiConverterEpochPage) Read(reader io.Reader) *EpochPage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterEpochPage) Lower(value *EpochPage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*EpochPage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterEpochPage) Write(writer io.Writer, value *EpochPage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerEpochPage struct {}
-
-func (_ FfiDestroyerEpochPage) Destroy(value *EpochPage) {
-		value.Destroy()
-}
-
-
-
 type EventInterface interface {
 }
 type Event struct {
@@ -4117,98 +3392,6 @@ func (c FfiConverterEvent) Write(writer io.Writer, value *Event) {
 type FfiDestroyerEvent struct {}
 
 func (_ FfiDestroyerEvent) Destroy(value *Event) {
-		value.Destroy()
-}
-
-
-
-type EventPageInterface interface {
-	Data() []*Event
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type EventPage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *EventPage) Data() []*Event {
-	_pointer := _self.ffiObject.incrementPointer("*EventPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceEventINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_eventpage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *EventPage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*EventPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_eventpage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *EventPage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*EventPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_eventpage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *EventPage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterEventPage struct {}
-
-var FfiConverterEventPageINSTANCE = FfiConverterEventPage{}
-
-
-func (c FfiConverterEventPage) Lift(pointer unsafe.Pointer) *EventPage {
-	result := &EventPage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_eventpage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_eventpage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*EventPage).Destroy)
-	return result
-}
-
-func (c FfiConverterEventPage) Read(reader io.Reader) *EventPage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterEventPage) Lower(value *EventPage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*EventPage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterEventPage) Write(writer io.Writer, value *EventPage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerEventPage struct {}
-
-func (_ FfiDestroyerEventPage) Destroy(value *EventPage) {
 		value.Destroy()
 }
 
@@ -4613,7 +3796,7 @@ type GraphQlClientInterface interface {
 	// Get the list of active validators for the provided epoch, including
 	// related metadata. If no epoch is provided, it will return the active
 	// validators for the current epoch.
-	ActiveValidators(paginationFilter PaginationFilter, epoch *uint64) (*ValidatorPage, error)
+	ActiveValidators(paginationFilter PaginationFilter, epoch *uint64) (ValidatorPage, error)
 	// Get the balance of all the coins owned by address for the provided coin
 	// type. Coin type will default to `0x2::coin::Coin<0x2::iota::IOTA>`
 	// if not provided.
@@ -4625,7 +3808,7 @@ type GraphQlClientInterface interface {
 	// checkpoint id.
 	Checkpoint(digest **CheckpointContentsDigest, seqNum *uint64) (*CheckpointSummary, error)
 	// Get a page of [`CheckpointSummary`] for the provided parameters.
-	Checkpoints(paginationFilter PaginationFilter) (*CheckpointSummaryPage, error)
+	Checkpoints(paginationFilter PaginationFilter) (CheckpointSummaryPage, error)
 	// Get the coin metadata for the coin type.
 	CoinMetadata(coinType string) (**CoinMetadata, error)
 	// Get the list of coins for the specified address.
@@ -4633,7 +3816,7 @@ type GraphQlClientInterface interface {
 	// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
 	// which will return all coins. For IOTA coin, pass in the coin type:
 	// `0x2::coin::Coin<0x2::iota::IOTA>`.
-	Coins(owner *Address, paginationFilter PaginationFilter, coinType *string) (*CoinPage, error)
+	Coins(owner *Address, paginationFilter PaginationFilter, coinType *string) (CoinPage, error)
 	// Dry run a [`Transaction`] and return the transaction effects and dry run
 	// error (if any).
 	//
@@ -4672,12 +3855,12 @@ type GraphQlClientInterface interface {
 	// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
 	// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
 	// ```
-	DynamicField(address *Address, typeTag *TypeTag, name Value) (**DynamicFieldOutput, error)
+	DynamicField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error)
 	// Get a page of dynamic fields for the provided address. Note that this
 	// will also fetch dynamic fields on wrapped objects.
 	//
 	// This returns [`Page`] of [`DynamicFieldOutput`]s.
-	DynamicFields(address *Address, paginationFilter PaginationFilter) (*DynamicFieldOutputPage, error)
+	DynamicFields(address *Address, paginationFilter PaginationFilter) (DynamicFieldOutputPage, error)
 	// Access a dynamic object field on an object using its name. Names are
 	// arbitrary Move values whose type have copy, drop, and store, and are
 	// specified using their type, and their BCS contents, Base64 encoded.
@@ -4686,7 +3869,7 @@ type GraphQlClientInterface interface {
 	//
 	// This returns [`DynamicFieldOutput`] which contains the name, the value
 	// as json, and object.
-	DynamicObjectField(address *Address, typeTag *TypeTag, name Value) (**DynamicFieldOutput, error)
+	DynamicObjectField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error)
 	// Return the epoch information for the provided epoch. If no epoch is
 	// provided, it will return the last known epoch.
 	Epoch(epoch *uint64) (**Epoch, error)
@@ -4700,7 +3883,7 @@ type GraphQlClientInterface interface {
 	EpochTotalTransactionBlocks(epoch *uint64) (*uint64, error)
 	// Return a page of tuple (event, transaction digest) based on the
 	// (optional) event filter.
-	Events(paginationFilter PaginationFilter, filter *EventFilter) (*EventPage, error)
+	Events(paginationFilter PaginationFilter, filter *EventFilter) (EventPage, error)
 	// Execute a transaction.
 	ExecuteTx(signatures []*UserSignature, tx *Transaction) (**TransactionEffects, error)
 	// Return the sequence number of the latest checkpoint that has been
@@ -4743,14 +3926,14 @@ type GraphQlClientInterface interface {
 	//
 	// ```rust,ignore
 	// let filter = ObjectFilter {
-	// type_: None,
+	// type_tag: None,
 	// owner: Some(Address::from_str("test").unwrap().into()),
 	// object_ids: None,
 	// };
 	//
 	// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
 	// ```
-	Objects(paginationFilter PaginationFilter, filter **ObjectFilter) (*ObjectPage, error)
+	Objects(paginationFilter PaginationFilter, filter *ObjectFilter) (ObjectPage, error)
 	// The package corresponding to the given address (at the optionally given
 	// version). When no version is given, the package is loaded directly
 	// from the address given. Otherwise, the address is translated before
@@ -4770,7 +3953,7 @@ type GraphQlClientInterface interface {
 	// Fetch all versions of package at address (packages that share this
 	// package's original ID), optionally bounding the versions exclusively
 	// from below with afterVersion, or from above with beforeVersion.
-	PackageVersions(address *Address, paginationFilter PaginationFilter, afterVersion *uint64, beforeVersion *uint64) (*MovePackagePage, error)
+	PackageVersions(address *Address, paginationFilter PaginationFilter, afterVersion *uint64, beforeVersion *uint64) (MovePackagePage, error)
 	// The Move packages that exist in the network, optionally filtered to be
 	// strictly before beforeCheckpoint and/or strictly after
 	// afterCheckpoint.
@@ -4778,7 +3961,7 @@ type GraphQlClientInterface interface {
 	// This query returns all versions of a given user package that appear
 	// between the specified checkpoints, but only records the latest
 	// versions of system packages.
-	Packages(paginationFilter PaginationFilter, afterCheckpoint *uint64, beforeCheckpoint *uint64) (*MovePackagePage, error)
+	Packages(paginationFilter PaginationFilter, afterCheckpoint *uint64, beforeCheckpoint *uint64) (MovePackagePage, error)
 	// Get the protocol configuration.
 	ProtocolConfig(version *uint64) (**ProtocolConfigs, error)
 	// Get the reference gas price for the provided epoch or the last known one
@@ -4811,12 +3994,12 @@ type GraphQlClientInterface interface {
 	// Get a transaction's effects by its digest.
 	TransactionEffects(digest *TransactionDigest) (**TransactionEffects, error)
 	// Get a page of transactions based on the provided filters.
-	Transactions(paginationFilter PaginationFilter, filter *TransactionsFilter) (*SignedTransactionPage, error)
+	Transactions(paginationFilter PaginationFilter, filter *TransactionsFilter) (SignedTransactionPage, error)
 	// Get a page of transactions' data and effects based on the provided
 	// filters.
-	TransactionsDataEffects(paginationFilter PaginationFilter, filter *TransactionsFilter) (*TransactionDataEffectsPage, error)
+	TransactionsDataEffects(paginationFilter PaginationFilter, filter *TransactionsFilter) (TransactionDataEffectsPage, error)
 	// Get a page of transactions' effects based on the provided filters.
-	TransactionsEffects(paginationFilter PaginationFilter, filter *TransactionsFilter) (*TransactionEffectsPage, error)
+	TransactionsEffects(paginationFilter PaginationFilter, filter *TransactionsFilter) (TransactionEffectsPage, error)
 }
 type GraphQlClient struct {
 	ffiObject FfiObject
@@ -4872,29 +4055,31 @@ func GraphQlClientNewTestnet() *GraphQlClient {
 // Get the list of active validators for the provided epoch, including
 // related metadata. If no epoch is provided, it will return the active
 // validators for the current epoch.
-func (_self *GraphQlClient) ActiveValidators(paginationFilter PaginationFilter, epoch *uint64) (*ValidatorPage, error) {
+func (_self *GraphQlClient) ActiveValidators(paginationFilter PaginationFilter, epoch *uint64) (ValidatorPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *ValidatorPage {
+		func(ffi RustBufferI) ValidatorPage {
 			return FfiConverterValidatorPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_active_validators(
 		_pointer,FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalUint64INSTANCE.Lower(epoch)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -5002,29 +4187,31 @@ func (_self *GraphQlClient) Checkpoint(digest **CheckpointContentsDigest, seqNum
 }
 
 // Get a page of [`CheckpointSummary`] for the provided parameters.
-func (_self *GraphQlClient) Checkpoints(paginationFilter PaginationFilter) (*CheckpointSummaryPage, error) {
+func (_self *GraphQlClient) Checkpoints(paginationFilter PaginationFilter) (CheckpointSummaryPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *CheckpointSummaryPage {
+		func(ffi RustBufferI) CheckpointSummaryPage {
 			return FfiConverterCheckpointSummaryPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoints(
 		_pointer,FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -5068,29 +4255,31 @@ func (_self *GraphQlClient) CoinMetadata(coinType string) (**CoinMetadata, error
 // If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
 // which will return all coins. For IOTA coin, pass in the coin type:
 // `0x2::coin::Coin<0x2::iota::IOTA>`.
-func (_self *GraphQlClient) Coins(owner *Address, paginationFilter PaginationFilter, coinType *string) (*CoinPage, error) {
+func (_self *GraphQlClient) Coins(owner *Address, paginationFilter PaginationFilter, coinType *string) (CoinPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *CoinPage {
+		func(ffi RustBufferI) CoinPage {
 			return FfiConverterCoinPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(
 		_pointer,FfiConverterAddressINSTANCE.Lower(owner), FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalStringINSTANCE.Lower(coinType)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -5191,7 +4380,7 @@ func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta Transac
 // let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
 // let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
 // ```
-func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, name Value) (**DynamicFieldOutput, error) {
+func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -5204,7 +4393,7 @@ func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, nam
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) **DynamicFieldOutput {
+		func(ffi RustBufferI) *DynamicFieldOutput {
 			return FfiConverterOptionalDynamicFieldOutputINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(
@@ -5226,29 +4415,31 @@ func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, nam
 // will also fetch dynamic fields on wrapped objects.
 //
 // This returns [`Page`] of [`DynamicFieldOutput`]s.
-func (_self *GraphQlClient) DynamicFields(address *Address, paginationFilter PaginationFilter) (*DynamicFieldOutputPage, error) {
+func (_self *GraphQlClient) DynamicFields(address *Address, paginationFilter PaginationFilter) (DynamicFieldOutputPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *DynamicFieldOutputPage {
+		func(ffi RustBufferI) DynamicFieldOutputPage {
 			return FfiConverterDynamicFieldOutputPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_fields(
 		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -5263,7 +4454,7 @@ func (_self *GraphQlClient) DynamicFields(address *Address, paginationFilter Pag
 //
 // This returns [`DynamicFieldOutput`] which contains the name, the value
 // as json, and object.
-func (_self *GraphQlClient) DynamicObjectField(address *Address, typeTag *TypeTag, name Value) (**DynamicFieldOutput, error) {
+func (_self *GraphQlClient) DynamicObjectField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -5276,7 +4467,7 @@ func (_self *GraphQlClient) DynamicObjectField(address *Address, typeTag *TypeTa
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) **DynamicFieldOutput {
+		func(ffi RustBufferI) *DynamicFieldOutput {
 			return FfiConverterOptionalDynamicFieldOutputINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_object_field(
@@ -5397,29 +4588,31 @@ func (_self *GraphQlClient) EpochTotalTransactionBlocks(epoch *uint64) (*uint64,
 
 // Return a page of tuple (event, transaction digest) based on the
 // (optional) event filter.
-func (_self *GraphQlClient) Events(paginationFilter PaginationFilter, filter *EventFilter) (*EventPage, error) {
+func (_self *GraphQlClient) Events(paginationFilter PaginationFilter, filter *EventFilter) (EventPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *EventPage {
+		func(ffi RustBufferI) EventPage {
 			return FfiConverterEventPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(
 		_pointer,FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalEventFilterINSTANCE.Lower(filter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -5736,36 +4929,38 @@ func (_self *GraphQlClient) ObjectBcs(objectId *ObjectId) (*[]byte, error) {
 //
 // ```rust,ignore
 // let filter = ObjectFilter {
-// type_: None,
+// type_tag: None,
 // owner: Some(Address::from_str("test").unwrap().into()),
 // object_ids: None,
 // };
 //
 // let owned_objects = client.objects(None, None, Some(filter), None, None).await;
 // ```
-func (_self *GraphQlClient) Objects(paginationFilter PaginationFilter, filter **ObjectFilter) (*ObjectPage, error) {
+func (_self *GraphQlClient) Objects(paginationFilter PaginationFilter, filter *ObjectFilter) (ObjectPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *ObjectPage {
+		func(ffi RustBufferI) ObjectPage {
 			return FfiConverterObjectPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(
 		_pointer,FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalObjectFilterINSTANCE.Lower(filter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -5851,29 +5046,31 @@ func (_self *GraphQlClient) PackageLatest(address *Address) (**MovePackage, erro
 // Fetch all versions of package at address (packages that share this
 // package's original ID), optionally bounding the versions exclusively
 // from below with afterVersion, or from above with beforeVersion.
-func (_self *GraphQlClient) PackageVersions(address *Address, paginationFilter PaginationFilter, afterVersion *uint64, beforeVersion *uint64) (*MovePackagePage, error) {
+func (_self *GraphQlClient) PackageVersions(address *Address, paginationFilter PaginationFilter, afterVersion *uint64, beforeVersion *uint64) (MovePackagePage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *MovePackagePage {
+		func(ffi RustBufferI) MovePackagePage {
 			return FfiConverterMovePackagePageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
 		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalUint64INSTANCE.Lower(afterVersion), FfiConverterOptionalUint64INSTANCE.Lower(beforeVersion)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -5887,29 +5084,31 @@ func (_self *GraphQlClient) PackageVersions(address *Address, paginationFilter P
 // This query returns all versions of a given user package that appear
 // between the specified checkpoints, but only records the latest
 // versions of system packages.
-func (_self *GraphQlClient) Packages(paginationFilter PaginationFilter, afterCheckpoint *uint64, beforeCheckpoint *uint64) (*MovePackagePage, error) {
+func (_self *GraphQlClient) Packages(paginationFilter PaginationFilter, afterCheckpoint *uint64, beforeCheckpoint *uint64) (MovePackagePage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *MovePackagePage {
+		func(ffi RustBufferI) MovePackagePage {
 			return FfiConverterMovePackagePageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(
 		_pointer,FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalUint64INSTANCE.Lower(afterCheckpoint), FfiConverterOptionalUint64INSTANCE.Lower(beforeCheckpoint)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -6272,29 +5471,31 @@ func (_self *GraphQlClient) TransactionEffects(digest *TransactionDigest) (**Tra
 }
 
 // Get a page of transactions based on the provided filters.
-func (_self *GraphQlClient) Transactions(paginationFilter PaginationFilter, filter *TransactionsFilter) (*SignedTransactionPage, error) {
+func (_self *GraphQlClient) Transactions(paginationFilter PaginationFilter, filter *TransactionsFilter) (SignedTransactionPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *SignedTransactionPage {
+		func(ffi RustBufferI) SignedTransactionPage {
 			return FfiConverterSignedTransactionPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(
 		_pointer,FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalTransactionsFilterINSTANCE.Lower(filter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -6303,29 +5504,31 @@ func (_self *GraphQlClient) Transactions(paginationFilter PaginationFilter, filt
 
 // Get a page of transactions' data and effects based on the provided
 // filters.
-func (_self *GraphQlClient) TransactionsDataEffects(paginationFilter PaginationFilter, filter *TransactionsFilter) (*TransactionDataEffectsPage, error) {
+func (_self *GraphQlClient) TransactionsDataEffects(paginationFilter PaginationFilter, filter *TransactionsFilter) (TransactionDataEffectsPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *TransactionDataEffectsPage {
+		func(ffi RustBufferI) TransactionDataEffectsPage {
 			return FfiConverterTransactionDataEffectsPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(
 		_pointer,FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalTransactionsFilterINSTANCE.Lower(filter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -6333,29 +5536,31 @@ func (_self *GraphQlClient) TransactionsDataEffects(paginationFilter PaginationF
 }
 
 // Get a page of transactions' effects based on the provided filters.
-func (_self *GraphQlClient) TransactionsEffects(paginationFilter PaginationFilter, filter *TransactionsFilter) (*TransactionEffectsPage, error) {
+func (_self *GraphQlClient) TransactionsEffects(paginationFilter PaginationFilter, filter *TransactionsFilter) (TransactionEffectsPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *TransactionEffectsPage {
+		func(ffi RustBufferI) TransactionEffectsPage {
 			return FfiConverterTransactionEffectsPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(
 		_pointer,FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalTransactionsFilterINSTANCE.Lower(filter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -6588,98 +5793,6 @@ func (c FfiConverterMovePackage) Write(writer io.Writer, value *MovePackage) {
 type FfiDestroyerMovePackage struct {}
 
 func (_ FfiDestroyerMovePackage) Destroy(value *MovePackage) {
-		value.Destroy()
-}
-
-
-
-type MovePackagePageInterface interface {
-	Data() []*MovePackage
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type MovePackagePage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *MovePackagePage) Data() []*MovePackage {
-	_pointer := _self.ffiObject.incrementPointer("*MovePackagePage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceMovePackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_movepackagepage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *MovePackagePage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*MovePackagePage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_movepackagepage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *MovePackagePage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*MovePackagePage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_movepackagepage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *MovePackagePage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterMovePackagePage struct {}
-
-var FfiConverterMovePackagePageINSTANCE = FfiConverterMovePackagePage{}
-
-
-func (c FfiConverterMovePackagePage) Lift(pointer unsafe.Pointer) *MovePackagePage {
-	result := &MovePackagePage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_movepackagepage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_movepackagepage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*MovePackagePage).Destroy)
-	return result
-}
-
-func (c FfiConverterMovePackagePage) Read(reader io.Reader) *MovePackagePage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterMovePackagePage) Lower(value *MovePackagePage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*MovePackagePage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterMovePackagePage) Write(writer io.Writer, value *MovePackagePage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerMovePackagePage struct {}
-
-func (_ FfiDestroyerMovePackagePage) Destroy(value *MovePackagePage) {
 		value.Destroy()
 }
 
@@ -7052,66 +6165,6 @@ func (_ FfiDestroyerObjectDigest) Destroy(value *ObjectDigest) {
 
 
 
-type ObjectFilterInterface interface {
-}
-type ObjectFilter struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *ObjectFilter) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterObjectFilter struct {}
-
-var FfiConverterObjectFilterINSTANCE = FfiConverterObjectFilter{}
-
-
-func (c FfiConverterObjectFilter) Lift(pointer unsafe.Pointer) *ObjectFilter {
-	result := &ObjectFilter {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_objectfilter(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_objectfilter(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ObjectFilter).Destroy)
-	return result
-}
-
-func (c FfiConverterObjectFilter) Read(reader io.Reader) *ObjectFilter {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterObjectFilter) Lower(value *ObjectFilter) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ObjectFilter")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterObjectFilter) Write(writer io.Writer, value *ObjectFilter) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerObjectFilter struct {}
-
-func (_ FfiDestroyerObjectFilter) Destroy(value *ObjectFilter) {
-		value.Destroy()
-}
-
-
-
 // An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 // the IOTA blockchain.
 //
@@ -7261,98 +6314,6 @@ func (c FfiConverterObjectId) Write(writer io.Writer, value *ObjectId) {
 type FfiDestroyerObjectId struct {}
 
 func (_ FfiDestroyerObjectId) Destroy(value *ObjectId) {
-		value.Destroy()
-}
-
-
-
-type ObjectPageInterface interface {
-	Data() []*Object
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type ObjectPage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *ObjectPage) Data() []*Object {
-	_pointer := _self.ffiObject.incrementPointer("*ObjectPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceObjectINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_objectpage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ObjectPage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*ObjectPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_objectpage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ObjectPage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*ObjectPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_objectpage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *ObjectPage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterObjectPage struct {}
-
-var FfiConverterObjectPageINSTANCE = FfiConverterObjectPage{}
-
-
-func (c FfiConverterObjectPage) Lift(pointer unsafe.Pointer) *ObjectPage {
-	result := &ObjectPage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_objectpage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_objectpage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ObjectPage).Destroy)
-	return result
-}
-
-func (c FfiConverterObjectPage) Read(reader io.Reader) *ObjectPage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterObjectPage) Lower(value *ObjectPage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ObjectPage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterObjectPage) Write(writer io.Writer, value *ObjectPage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerObjectPage struct {}
-
-func (_ FfiDestroyerObjectPage) Destroy(value *ObjectPage) {
 		value.Destroy()
 }
 
@@ -7533,66 +6494,6 @@ func (c FfiConverterOwner) Write(writer io.Writer, value *Owner) {
 type FfiDestroyerOwner struct {}
 
 func (_ FfiDestroyerOwner) Destroy(value *Owner) {
-		value.Destroy()
-}
-
-
-
-type PageInfoInterface interface {
-}
-type PageInfo struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *PageInfo) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterPageInfo struct {}
-
-var FfiConverterPageInfoINSTANCE = FfiConverterPageInfo{}
-
-
-func (c FfiConverterPageInfo) Lift(pointer unsafe.Pointer) *PageInfo {
-	result := &PageInfo {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_pageinfo(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_pageinfo(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*PageInfo).Destroy)
-	return result
-}
-
-func (c FfiConverterPageInfo) Read(reader io.Reader) *PageInfo {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterPageInfo) Lower(value *PageInfo) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*PageInfo")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterPageInfo) Write(writer io.Writer, value *PageInfo) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerPageInfo struct {}
-
-func (_ FfiDestroyerPageInfo) Destroy(value *PageInfo) {
 		value.Destroy()
 }
 
@@ -8165,98 +7066,6 @@ func (_ FfiDestroyerSignedTransaction) Destroy(value *SignedTransaction) {
 
 
 
-type SignedTransactionPageInterface interface {
-	Data() []*SignedTransaction
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type SignedTransactionPage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *SignedTransactionPage) Data() []*SignedTransaction {
-	_pointer := _self.ffiObject.incrementPointer("*SignedTransactionPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceSignedTransactionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_signedtransactionpage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *SignedTransactionPage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*SignedTransactionPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_signedtransactionpage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *SignedTransactionPage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*SignedTransactionPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_signedtransactionpage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *SignedTransactionPage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterSignedTransactionPage struct {}
-
-var FfiConverterSignedTransactionPageINSTANCE = FfiConverterSignedTransactionPage{}
-
-
-func (c FfiConverterSignedTransactionPage) Lift(pointer unsafe.Pointer) *SignedTransactionPage {
-	result := &SignedTransactionPage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_signedtransactionpage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_signedtransactionpage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*SignedTransactionPage).Destroy)
-	return result
-}
-
-func (c FfiConverterSignedTransactionPage) Read(reader io.Reader) *SignedTransactionPage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterSignedTransactionPage) Lower(value *SignedTransactionPage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*SignedTransactionPage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterSignedTransactionPage) Write(writer io.Writer, value *SignedTransactionPage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerSignedTransactionPage struct {}
-
-func (_ FfiDestroyerSignedTransactionPage) Destroy(value *SignedTransactionPage) {
-		value.Destroy()
-}
-
-
-
 // A transaction
 //
 // # BCS
@@ -8471,98 +7280,6 @@ func (_ FfiDestroyerTransactionDataEffects) Destroy(value *TransactionDataEffect
 
 
 
-type TransactionDataEffectsPageInterface interface {
-	Data() []*TransactionDataEffects
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type TransactionDataEffectsPage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *TransactionDataEffectsPage) Data() []*TransactionDataEffects {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDataEffectsPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceTransactionDataEffectsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactiondataeffectspage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *TransactionDataEffectsPage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDataEffectsPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_transactiondataeffectspage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *TransactionDataEffectsPage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDataEffectsPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_transactiondataeffectspage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *TransactionDataEffectsPage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterTransactionDataEffectsPage struct {}
-
-var FfiConverterTransactionDataEffectsPageINSTANCE = FfiConverterTransactionDataEffectsPage{}
-
-
-func (c FfiConverterTransactionDataEffectsPage) Lift(pointer unsafe.Pointer) *TransactionDataEffectsPage {
-	result := &TransactionDataEffectsPage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_transactiondataeffectspage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_transactiondataeffectspage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*TransactionDataEffectsPage).Destroy)
-	return result
-}
-
-func (c FfiConverterTransactionDataEffectsPage) Read(reader io.Reader) *TransactionDataEffectsPage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterTransactionDataEffectsPage) Lower(value *TransactionDataEffectsPage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*TransactionDataEffectsPage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterTransactionDataEffectsPage) Write(writer io.Writer, value *TransactionDataEffectsPage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerTransactionDataEffectsPage struct {}
-
-func (_ FfiDestroyerTransactionDataEffectsPage) Destroy(value *TransactionDataEffectsPage) {
-		value.Destroy()
-}
-
-
-
 type TransactionDigestInterface interface {
 }
 type TransactionDigest struct {
@@ -8738,98 +7455,6 @@ func (c FfiConverterTransactionEffectsDigest) Write(writer io.Writer, value *Tra
 type FfiDestroyerTransactionEffectsDigest struct {}
 
 func (_ FfiDestroyerTransactionEffectsDigest) Destroy(value *TransactionEffectsDigest) {
-		value.Destroy()
-}
-
-
-
-type TransactionEffectsPageInterface interface {
-	Data() []*TransactionEffects
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type TransactionEffectsPage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *TransactionEffectsPage) Data() []*TransactionEffects {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionEffectsPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceTransactionEffectsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactioneffectspage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *TransactionEffectsPage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionEffectsPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_transactioneffectspage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *TransactionEffectsPage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionEffectsPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_transactioneffectspage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *TransactionEffectsPage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterTransactionEffectsPage struct {}
-
-var FfiConverterTransactionEffectsPageINSTANCE = FfiConverterTransactionEffectsPage{}
-
-
-func (c FfiConverterTransactionEffectsPage) Lift(pointer unsafe.Pointer) *TransactionEffectsPage {
-	result := &TransactionEffectsPage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_transactioneffectspage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_transactioneffectspage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*TransactionEffectsPage).Destroy)
-	return result
-}
-
-func (c FfiConverterTransactionEffectsPage) Read(reader io.Reader) *TransactionEffectsPage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterTransactionEffectsPage) Lower(value *TransactionEffectsPage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*TransactionEffectsPage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterTransactionEffectsPage) Write(writer io.Writer, value *TransactionEffectsPage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerTransactionEffectsPage struct {}
-
-func (_ FfiDestroyerTransactionEffectsPage) Destroy(value *TransactionEffectsPage) {
 		value.Destroy()
 }
 
@@ -9205,158 +7830,6 @@ func (_ FfiDestroyerUserSignature) Destroy(value *UserSignature) {
 
 
 
-type ValidatorInterface interface {
-}
-type Validator struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *Validator) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterValidator struct {}
-
-var FfiConverterValidatorINSTANCE = FfiConverterValidator{}
-
-
-func (c FfiConverterValidator) Lift(pointer unsafe.Pointer) *Validator {
-	result := &Validator {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_validator(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_validator(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*Validator).Destroy)
-	return result
-}
-
-func (c FfiConverterValidator) Read(reader io.Reader) *Validator {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterValidator) Lower(value *Validator) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*Validator")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterValidator) Write(writer io.Writer, value *Validator) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerValidator struct {}
-
-func (_ FfiDestroyerValidator) Destroy(value *Validator) {
-		value.Destroy()
-}
-
-
-
-type ValidatorPageInterface interface {
-	Data() []*Validator
-	IsEmpty() bool
-	PageInfo() *PageInfo
-}
-type ValidatorPage struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *ValidatorPage) Data() []*Validator {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceValidatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorpage_data(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ValidatorPage) IsEmpty() bool {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_validatorpage_is_empty(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *ValidatorPage) PageInfo() *PageInfo {
-	_pointer := _self.ffiObject.incrementPointer("*ValidatorPage")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterPageInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_validatorpage_page_info(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *ValidatorPage) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterValidatorPage struct {}
-
-var FfiConverterValidatorPageINSTANCE = FfiConverterValidatorPage{}
-
-
-func (c FfiConverterValidatorPage) Lift(pointer unsafe.Pointer) *ValidatorPage {
-	result := &ValidatorPage {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_validatorpage(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_validatorpage(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ValidatorPage).Destroy)
-	return result
-}
-
-func (c FfiConverterValidatorPage) Read(reader io.Reader) *ValidatorPage {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterValidatorPage) Lower(value *ValidatorPage) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ValidatorPage")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterValidatorPage) Write(writer io.Writer, value *ValidatorPage) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerValidatorPage struct {}
-
-func (_ FfiDestroyerValidatorPage) Destroy(value *ValidatorPage) {
-		value.Destroy()
-}
-
-
-
 // A header for a Checkpoint on the IOTA blockchain.
 //
 // On the IOTA network, checkpoints define the history of the blockchain. They
@@ -9488,6 +7961,271 @@ type FfiDestroyerCheckpointSummary struct {}
 func (_ FfiDestroyerCheckpointSummary) Destroy(value CheckpointSummary) {
 	value.Destroy()
 }
+// A page of items returned by the GraphQL server.
+type CheckpointSummaryPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []CheckpointSummary
+}
+
+func (r *CheckpointSummaryPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceCheckpointSummary{}.Destroy(r.Data);
+}
+
+type FfiConverterCheckpointSummaryPage struct {}
+
+var FfiConverterCheckpointSummaryPageINSTANCE = FfiConverterCheckpointSummaryPage{}
+
+func (c FfiConverterCheckpointSummaryPage) Lift(rb RustBufferI) CheckpointSummaryPage {
+	return LiftFromRustBuffer[CheckpointSummaryPage](c, rb)
+}
+
+func (c FfiConverterCheckpointSummaryPage) Read(reader io.Reader) CheckpointSummaryPage {
+	return CheckpointSummaryPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceCheckpointSummaryINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterCheckpointSummaryPage) Lower(value CheckpointSummaryPage) C.RustBuffer {
+	return LowerIntoRustBuffer[CheckpointSummaryPage](c, value)
+}
+
+func (c FfiConverterCheckpointSummaryPage) Write(writer io.Writer, value CheckpointSummaryPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceCheckpointSummaryINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerCheckpointSummaryPage struct {}
+
+func (_ FfiDestroyerCheckpointSummaryPage) Destroy(value CheckpointSummaryPage) {
+	value.Destroy()
+}
+// A page of items returned by the GraphQL server.
+type CoinPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []*Coin
+}
+
+func (r *CoinPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceCoin{}.Destroy(r.Data);
+}
+
+type FfiConverterCoinPage struct {}
+
+var FfiConverterCoinPageINSTANCE = FfiConverterCoinPage{}
+
+func (c FfiConverterCoinPage) Lift(rb RustBufferI) CoinPage {
+	return LiftFromRustBuffer[CoinPage](c, rb)
+}
+
+func (c FfiConverterCoinPage) Read(reader io.Reader) CoinPage {
+	return CoinPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceCoinINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterCoinPage) Lower(value CoinPage) C.RustBuffer {
+	return LowerIntoRustBuffer[CoinPage](c, value)
+}
+
+func (c FfiConverterCoinPage) Write(writer io.Writer, value CoinPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceCoinINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerCoinPage struct {}
+
+func (_ FfiDestroyerCoinPage) Destroy(value CoinPage) {
+	value.Destroy()
+}
+// The name part of a dynamic field, including its type, bcs, and json
+// representation.
+type DynamicFieldName struct {
+	// The type name of this dynamic field name
+	TypeTag *TypeTag
+	// The bcs bytes of this dynamic field name
+	Bcs []byte
+	// The json representation of the dynamic field name
+	Json *Value
+}
+
+func (r *DynamicFieldName) Destroy() {
+		FfiDestroyerTypeTag{}.Destroy(r.TypeTag);
+		FfiDestroyerBytes{}.Destroy(r.Bcs);
+		FfiDestroyerOptionalTypeValue{}.Destroy(r.Json);
+}
+
+type FfiConverterDynamicFieldName struct {}
+
+var FfiConverterDynamicFieldNameINSTANCE = FfiConverterDynamicFieldName{}
+
+func (c FfiConverterDynamicFieldName) Lift(rb RustBufferI) DynamicFieldName {
+	return LiftFromRustBuffer[DynamicFieldName](c, rb)
+}
+
+func (c FfiConverterDynamicFieldName) Read(reader io.Reader) DynamicFieldName {
+	return DynamicFieldName {
+			FfiConverterTypeTagINSTANCE.Read(reader),
+			FfiConverterBytesINSTANCE.Read(reader),
+			FfiConverterOptionalTypeValueINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterDynamicFieldName) Lower(value DynamicFieldName) C.RustBuffer {
+	return LowerIntoRustBuffer[DynamicFieldName](c, value)
+}
+
+func (c FfiConverterDynamicFieldName) Write(writer io.Writer, value DynamicFieldName) {
+		FfiConverterTypeTagINSTANCE.Write(writer, value.TypeTag);
+		FfiConverterBytesINSTANCE.Write(writer, value.Bcs);
+		FfiConverterOptionalTypeValueINSTANCE.Write(writer, value.Json);
+}
+
+type FfiDestroyerDynamicFieldName struct {}
+
+func (_ FfiDestroyerDynamicFieldName) Destroy(value DynamicFieldName) {
+	value.Destroy()
+}
+// The output of a dynamic field query, that includes the name, value, and
+// value's json representation.
+type DynamicFieldOutput struct {
+	// The name of the dynamic field
+	Name DynamicFieldName
+	// The dynamic field value typename and bcs
+	Value *DynamicFieldValue
+	// The json representation of the dynamic field value object
+	ValueAsJson *Value
+}
+
+func (r *DynamicFieldOutput) Destroy() {
+		FfiDestroyerDynamicFieldName{}.Destroy(r.Name);
+		FfiDestroyerOptionalDynamicFieldValue{}.Destroy(r.Value);
+		FfiDestroyerOptionalTypeValue{}.Destroy(r.ValueAsJson);
+}
+
+type FfiConverterDynamicFieldOutput struct {}
+
+var FfiConverterDynamicFieldOutputINSTANCE = FfiConverterDynamicFieldOutput{}
+
+func (c FfiConverterDynamicFieldOutput) Lift(rb RustBufferI) DynamicFieldOutput {
+	return LiftFromRustBuffer[DynamicFieldOutput](c, rb)
+}
+
+func (c FfiConverterDynamicFieldOutput) Read(reader io.Reader) DynamicFieldOutput {
+	return DynamicFieldOutput {
+			FfiConverterDynamicFieldNameINSTANCE.Read(reader),
+			FfiConverterOptionalDynamicFieldValueINSTANCE.Read(reader),
+			FfiConverterOptionalTypeValueINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterDynamicFieldOutput) Lower(value DynamicFieldOutput) C.RustBuffer {
+	return LowerIntoRustBuffer[DynamicFieldOutput](c, value)
+}
+
+func (c FfiConverterDynamicFieldOutput) Write(writer io.Writer, value DynamicFieldOutput) {
+		FfiConverterDynamicFieldNameINSTANCE.Write(writer, value.Name);
+		FfiConverterOptionalDynamicFieldValueINSTANCE.Write(writer, value.Value);
+		FfiConverterOptionalTypeValueINSTANCE.Write(writer, value.ValueAsJson);
+}
+
+type FfiDestroyerDynamicFieldOutput struct {}
+
+func (_ FfiDestroyerDynamicFieldOutput) Destroy(value DynamicFieldOutput) {
+	value.Destroy()
+}
+// A page of items returned by the GraphQL server.
+type DynamicFieldOutputPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []DynamicFieldOutput
+}
+
+func (r *DynamicFieldOutputPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceDynamicFieldOutput{}.Destroy(r.Data);
+}
+
+type FfiConverterDynamicFieldOutputPage struct {}
+
+var FfiConverterDynamicFieldOutputPageINSTANCE = FfiConverterDynamicFieldOutputPage{}
+
+func (c FfiConverterDynamicFieldOutputPage) Lift(rb RustBufferI) DynamicFieldOutputPage {
+	return LiftFromRustBuffer[DynamicFieldOutputPage](c, rb)
+}
+
+func (c FfiConverterDynamicFieldOutputPage) Read(reader io.Reader) DynamicFieldOutputPage {
+	return DynamicFieldOutputPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceDynamicFieldOutputINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterDynamicFieldOutputPage) Lower(value DynamicFieldOutputPage) C.RustBuffer {
+	return LowerIntoRustBuffer[DynamicFieldOutputPage](c, value)
+}
+
+func (c FfiConverterDynamicFieldOutputPage) Write(writer io.Writer, value DynamicFieldOutputPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceDynamicFieldOutputINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerDynamicFieldOutputPage struct {}
+
+func (_ FfiDestroyerDynamicFieldOutputPage) Destroy(value DynamicFieldOutputPage) {
+	value.Destroy()
+}
+// The value part of a dynamic field.
+type DynamicFieldValue struct {
+	TypeTag *TypeTag
+	Bcs []byte
+}
+
+func (r *DynamicFieldValue) Destroy() {
+		FfiDestroyerTypeTag{}.Destroy(r.TypeTag);
+		FfiDestroyerBytes{}.Destroy(r.Bcs);
+}
+
+type FfiConverterDynamicFieldValue struct {}
+
+var FfiConverterDynamicFieldValueINSTANCE = FfiConverterDynamicFieldValue{}
+
+func (c FfiConverterDynamicFieldValue) Lift(rb RustBufferI) DynamicFieldValue {
+	return LiftFromRustBuffer[DynamicFieldValue](c, rb)
+}
+
+func (c FfiConverterDynamicFieldValue) Read(reader io.Reader) DynamicFieldValue {
+	return DynamicFieldValue {
+			FfiConverterTypeTagINSTANCE.Read(reader),
+			FfiConverterBytesINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterDynamicFieldValue) Lower(value DynamicFieldValue) C.RustBuffer {
+	return LowerIntoRustBuffer[DynamicFieldValue](c, value)
+}
+
+func (c FfiConverterDynamicFieldValue) Write(writer io.Writer, value DynamicFieldValue) {
+		FfiConverterTypeTagINSTANCE.Write(writer, value.TypeTag);
+		FfiConverterBytesINSTANCE.Write(writer, value.Bcs);
+}
+
+type FfiDestroyerDynamicFieldValue struct {}
+
+func (_ FfiDestroyerDynamicFieldValue) Destroy(value DynamicFieldValue) {
+	value.Destroy()
+}
 type EndOfEpochData struct {
 	NextEpochCommittee []ValidatorCommitteeMember
 	NextEpochProtocolVersion uint64
@@ -9535,6 +8273,49 @@ type FfiDestroyerEndOfEpochData struct {}
 func (_ FfiDestroyerEndOfEpochData) Destroy(value EndOfEpochData) {
 	value.Destroy()
 }
+// A page of items returned by the GraphQL server.
+type EpochPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []*Epoch
+}
+
+func (r *EpochPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceEpoch{}.Destroy(r.Data);
+}
+
+type FfiConverterEpochPage struct {}
+
+var FfiConverterEpochPageINSTANCE = FfiConverterEpochPage{}
+
+func (c FfiConverterEpochPage) Lift(rb RustBufferI) EpochPage {
+	return LiftFromRustBuffer[EpochPage](c, rb)
+}
+
+func (c FfiConverterEpochPage) Read(reader io.Reader) EpochPage {
+	return EpochPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceEpochINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterEpochPage) Lower(value EpochPage) C.RustBuffer {
+	return LowerIntoRustBuffer[EpochPage](c, value)
+}
+
+func (c FfiConverterEpochPage) Write(writer io.Writer, value EpochPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceEpochINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerEpochPage struct {}
+
+func (_ FfiDestroyerEpochPage) Destroy(value EpochPage) {
+	value.Destroy()
+}
 type EventFilter struct {
 	EmittingModule *string
 	EventType *string
@@ -9580,6 +8361,49 @@ func (c FfiConverterEventFilter) Write(writer io.Writer, value EventFilter) {
 type FfiDestroyerEventFilter struct {}
 
 func (_ FfiDestroyerEventFilter) Destroy(value EventFilter) {
+	value.Destroy()
+}
+// A page of items returned by the GraphQL server.
+type EventPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []*Event
+}
+
+func (r *EventPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceEvent{}.Destroy(r.Data);
+}
+
+type FfiConverterEventPage struct {}
+
+var FfiConverterEventPageINSTANCE = FfiConverterEventPage{}
+
+func (c FfiConverterEventPage) Lift(rb RustBufferI) EventPage {
+	return LiftFromRustBuffer[EventPage](c, rb)
+}
+
+func (c FfiConverterEventPage) Read(reader io.Reader) EventPage {
+	return EventPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceEventINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterEventPage) Lower(value EventPage) C.RustBuffer {
+	return LowerIntoRustBuffer[EventPage](c, value)
+}
+
+func (c FfiConverterEventPage) Write(writer io.Writer, value EventPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceEventINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerEventPage struct {}
+
+func (_ FfiDestroyerEventPage) Destroy(value EventPage) {
 	value.Destroy()
 }
 type GasCostSummary struct {
@@ -9692,6 +8516,135 @@ type FfiDestroyerGasPayment struct {}
 func (_ FfiDestroyerGasPayment) Destroy(value GasPayment) {
 	value.Destroy()
 }
+// A page of items returned by the GraphQL server.
+type MovePackagePage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []*MovePackage
+}
+
+func (r *MovePackagePage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceMovePackage{}.Destroy(r.Data);
+}
+
+type FfiConverterMovePackagePage struct {}
+
+var FfiConverterMovePackagePageINSTANCE = FfiConverterMovePackagePage{}
+
+func (c FfiConverterMovePackagePage) Lift(rb RustBufferI) MovePackagePage {
+	return LiftFromRustBuffer[MovePackagePage](c, rb)
+}
+
+func (c FfiConverterMovePackagePage) Read(reader io.Reader) MovePackagePage {
+	return MovePackagePage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceMovePackageINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMovePackagePage) Lower(value MovePackagePage) C.RustBuffer {
+	return LowerIntoRustBuffer[MovePackagePage](c, value)
+}
+
+func (c FfiConverterMovePackagePage) Write(writer io.Writer, value MovePackagePage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceMovePackageINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerMovePackagePage struct {}
+
+func (_ FfiDestroyerMovePackagePage) Destroy(value MovePackagePage) {
+	value.Destroy()
+}
+type ObjectFilter struct {
+	TypeTag *string
+	Owner **Address
+	ObjectIds *[]*ObjectId
+}
+
+func (r *ObjectFilter) Destroy() {
+		FfiDestroyerOptionalString{}.Destroy(r.TypeTag);
+		FfiDestroyerOptionalAddress{}.Destroy(r.Owner);
+		FfiDestroyerOptionalSequenceObjectId{}.Destroy(r.ObjectIds);
+}
+
+type FfiConverterObjectFilter struct {}
+
+var FfiConverterObjectFilterINSTANCE = FfiConverterObjectFilter{}
+
+func (c FfiConverterObjectFilter) Lift(rb RustBufferI) ObjectFilter {
+	return LiftFromRustBuffer[ObjectFilter](c, rb)
+}
+
+func (c FfiConverterObjectFilter) Read(reader io.Reader) ObjectFilter {
+	return ObjectFilter {
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalAddressINSTANCE.Read(reader),
+			FfiConverterOptionalSequenceObjectIdINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterObjectFilter) Lower(value ObjectFilter) C.RustBuffer {
+	return LowerIntoRustBuffer[ObjectFilter](c, value)
+}
+
+func (c FfiConverterObjectFilter) Write(writer io.Writer, value ObjectFilter) {
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.TypeTag);
+		FfiConverterOptionalAddressINSTANCE.Write(writer, value.Owner);
+		FfiConverterOptionalSequenceObjectIdINSTANCE.Write(writer, value.ObjectIds);
+}
+
+type FfiDestroyerObjectFilter struct {}
+
+func (_ FfiDestroyerObjectFilter) Destroy(value ObjectFilter) {
+	value.Destroy()
+}
+// A page of items returned by the GraphQL server.
+type ObjectPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []*Object
+}
+
+func (r *ObjectPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceObject{}.Destroy(r.Data);
+}
+
+type FfiConverterObjectPage struct {}
+
+var FfiConverterObjectPageINSTANCE = FfiConverterObjectPage{}
+
+func (c FfiConverterObjectPage) Lift(rb RustBufferI) ObjectPage {
+	return LiftFromRustBuffer[ObjectPage](c, rb)
+}
+
+func (c FfiConverterObjectPage) Read(reader io.Reader) ObjectPage {
+	return ObjectPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceObjectINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterObjectPage) Lower(value ObjectPage) C.RustBuffer {
+	return LowerIntoRustBuffer[ObjectPage](c, value)
+}
+
+func (c FfiConverterObjectPage) Write(writer io.Writer, value ObjectPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceObjectINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerObjectPage struct {}
+
+func (_ FfiDestroyerObjectPage) Destroy(value ObjectPage) {
+	value.Destroy()
+}
 // Reference to an object
 //
 // Contains sufficient information to uniquely identify a specific object.
@@ -9746,15 +8699,56 @@ type FfiDestroyerObjectReference struct {}
 func (_ FfiDestroyerObjectReference) Destroy(value ObjectReference) {
 	value.Destroy()
 }
-// Pagination options for querying the GraphQL server. It defaults to forward
-// pagination with the GraphQL server's max page size.
+type PageInfo struct {
+	HasPreviousPage bool
+	HasNextPage bool
+	StartCursor *string
+	EndCursor *string
+}
+
+func (r *PageInfo) Destroy() {
+		FfiDestroyerBool{}.Destroy(r.HasPreviousPage);
+		FfiDestroyerBool{}.Destroy(r.HasNextPage);
+		FfiDestroyerOptionalString{}.Destroy(r.StartCursor);
+		FfiDestroyerOptionalString{}.Destroy(r.EndCursor);
+}
+
+type FfiConverterPageInfo struct {}
+
+var FfiConverterPageInfoINSTANCE = FfiConverterPageInfo{}
+
+func (c FfiConverterPageInfo) Lift(rb RustBufferI) PageInfo {
+	return LiftFromRustBuffer[PageInfo](c, rb)
+}
+
+func (c FfiConverterPageInfo) Read(reader io.Reader) PageInfo {
+	return PageInfo {
+			FfiConverterBoolINSTANCE.Read(reader),
+			FfiConverterBoolINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterPageInfo) Lower(value PageInfo) C.RustBuffer {
+	return LowerIntoRustBuffer[PageInfo](c, value)
+}
+
+func (c FfiConverterPageInfo) Write(writer io.Writer, value PageInfo) {
+		FfiConverterBoolINSTANCE.Write(writer, value.HasPreviousPage);
+		FfiConverterBoolINSTANCE.Write(writer, value.HasNextPage);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.StartCursor);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.EndCursor);
+}
+
+type FfiDestroyerPageInfo struct {}
+
+func (_ FfiDestroyerPageInfo) Destroy(value PageInfo) {
+	value.Destroy()
+}
 type PaginationFilter struct {
-	// The direction of pagination.
 	Direction Direction
-	// An opaque cursor used for pagination.
 	Cursor *string
-	// The maximum number of items to return. If this is ommitted, it will
-	// lazily query the service configuration for the max page size.
 	Limit *int32
 }
 
@@ -9793,6 +8787,135 @@ func (c FfiConverterPaginationFilter) Write(writer io.Writer, value PaginationFi
 type FfiDestroyerPaginationFilter struct {}
 
 func (_ FfiDestroyerPaginationFilter) Destroy(value PaginationFilter) {
+	value.Destroy()
+}
+// A page of items returned by the GraphQL server.
+type SignedTransactionPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []*SignedTransaction
+}
+
+func (r *SignedTransactionPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceSignedTransaction{}.Destroy(r.Data);
+}
+
+type FfiConverterSignedTransactionPage struct {}
+
+var FfiConverterSignedTransactionPageINSTANCE = FfiConverterSignedTransactionPage{}
+
+func (c FfiConverterSignedTransactionPage) Lift(rb RustBufferI) SignedTransactionPage {
+	return LiftFromRustBuffer[SignedTransactionPage](c, rb)
+}
+
+func (c FfiConverterSignedTransactionPage) Read(reader io.Reader) SignedTransactionPage {
+	return SignedTransactionPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceSignedTransactionINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterSignedTransactionPage) Lower(value SignedTransactionPage) C.RustBuffer {
+	return LowerIntoRustBuffer[SignedTransactionPage](c, value)
+}
+
+func (c FfiConverterSignedTransactionPage) Write(writer io.Writer, value SignedTransactionPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceSignedTransactionINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerSignedTransactionPage struct {}
+
+func (_ FfiDestroyerSignedTransactionPage) Destroy(value SignedTransactionPage) {
+	value.Destroy()
+}
+// A page of items returned by the GraphQL server.
+type TransactionDataEffectsPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []*TransactionDataEffects
+}
+
+func (r *TransactionDataEffectsPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceTransactionDataEffects{}.Destroy(r.Data);
+}
+
+type FfiConverterTransactionDataEffectsPage struct {}
+
+var FfiConverterTransactionDataEffectsPageINSTANCE = FfiConverterTransactionDataEffectsPage{}
+
+func (c FfiConverterTransactionDataEffectsPage) Lift(rb RustBufferI) TransactionDataEffectsPage {
+	return LiftFromRustBuffer[TransactionDataEffectsPage](c, rb)
+}
+
+func (c FfiConverterTransactionDataEffectsPage) Read(reader io.Reader) TransactionDataEffectsPage {
+	return TransactionDataEffectsPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceTransactionDataEffectsINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterTransactionDataEffectsPage) Lower(value TransactionDataEffectsPage) C.RustBuffer {
+	return LowerIntoRustBuffer[TransactionDataEffectsPage](c, value)
+}
+
+func (c FfiConverterTransactionDataEffectsPage) Write(writer io.Writer, value TransactionDataEffectsPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceTransactionDataEffectsINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerTransactionDataEffectsPage struct {}
+
+func (_ FfiDestroyerTransactionDataEffectsPage) Destroy(value TransactionDataEffectsPage) {
+	value.Destroy()
+}
+// A page of items returned by the GraphQL server.
+type TransactionEffectsPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []*TransactionEffects
+}
+
+func (r *TransactionEffectsPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceTransactionEffects{}.Destroy(r.Data);
+}
+
+type FfiConverterTransactionEffectsPage struct {}
+
+var FfiConverterTransactionEffectsPageINSTANCE = FfiConverterTransactionEffectsPage{}
+
+func (c FfiConverterTransactionEffectsPage) Lift(rb RustBufferI) TransactionEffectsPage {
+	return LiftFromRustBuffer[TransactionEffectsPage](c, rb)
+}
+
+func (c FfiConverterTransactionEffectsPage) Read(reader io.Reader) TransactionEffectsPage {
+	return TransactionEffectsPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceTransactionEffectsINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterTransactionEffectsPage) Lower(value TransactionEffectsPage) C.RustBuffer {
+	return LowerIntoRustBuffer[TransactionEffectsPage](c, value)
+}
+
+func (c FfiConverterTransactionEffectsPage) Write(writer io.Writer, value TransactionEffectsPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceTransactionEffectsINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerTransactionEffectsPage struct {}
+
+func (_ FfiDestroyerTransactionEffectsPage) Destroy(value TransactionEffectsPage) {
 	value.Destroy()
 }
 type TransactionMetadata struct {
@@ -9921,6 +9044,166 @@ type FfiDestroyerTransactionsFilter struct {}
 func (_ FfiDestroyerTransactionsFilter) Destroy(value TransactionsFilter) {
 	value.Destroy()
 }
+// Represents a validator in the system.
+type Validator struct {
+	// The APY of this validator in basis points.
+	// To get the APY in percentage, divide by 100.
+	Apy *int32
+	// The validator's address.
+	Address *Address
+	// The fee charged by the validator for staking services.
+	CommissionRate *int32
+	// Validator's credentials.
+	Credentials *ValidatorCredentials
+	// Validator's description.
+	Description *string
+	// Number of exchange rates in the table.
+	ExchangeRatesSize *uint64
+	// The reference gas price for this epoch.
+	GasPrice *uint64
+	// Validator's name.
+	Name *string
+	// Validator's url containing their custom image.
+	ImageUrl *string
+	// The proposed next epoch fee for the validator's staking services.
+	NextEpochCommissionRate *int32
+	// Validator's credentials for the next epoch.
+	NextEpochCredentials *ValidatorCredentials
+	// The validator's gas price quote for the next epoch.
+	NextEpochGasPrice *uint64
+	// The total number of IOTA tokens in this pool plus
+	// the pending stake amount for this epoch.
+	NextEpochStake *uint64
+	// The validator's current valid `Cap` object. Validators can delegate
+	// the operation ability to another address. The address holding this `Cap`
+	// object can then update the reference gas price and tallying rule on
+	// behalf of the validator.
+	OperationCap *[]byte
+	// Pending pool token withdrawn during the current epoch, emptied at epoch
+	// boundaries.
+	PendingPoolTokenWithdraw *uint64
+	// Pending stake amount for this epoch.
+	PendingStake *uint64
+	// Pending stake withdrawn during the current epoch, emptied at epoch
+	// boundaries.
+	PendingTotalIotaWithdraw *uint64
+	// Total number of pool tokens issued by the pool.
+	PoolTokenBalance *uint64
+	// Validator's homepage URL.
+	ProjectUrl *string
+	// The epoch stake rewards will be added here at the end of each epoch.
+	RewardsPool *uint64
+	// The epoch at which this pool became active.
+	StakingPoolActivationEpoch *uint64
+	// The ID of this validator's `0x3::staking_pool::StakingPool`.
+	StakingPoolId *ObjectId
+	// The total number of IOTA tokens in this pool.
+	StakingPoolIotaBalance *uint64
+	// The voting power of this validator in basis points (e.g., 100 = 1%
+	// voting power).
+	VotingPower *int32
+}
+
+func (r *Validator) Destroy() {
+		FfiDestroyerOptionalInt32{}.Destroy(r.Apy);
+		FfiDestroyerAddress{}.Destroy(r.Address);
+		FfiDestroyerOptionalInt32{}.Destroy(r.CommissionRate);
+		FfiDestroyerOptionalValidatorCredentials{}.Destroy(r.Credentials);
+		FfiDestroyerOptionalString{}.Destroy(r.Description);
+		FfiDestroyerOptionalUint64{}.Destroy(r.ExchangeRatesSize);
+		FfiDestroyerOptionalUint64{}.Destroy(r.GasPrice);
+		FfiDestroyerOptionalString{}.Destroy(r.Name);
+		FfiDestroyerOptionalString{}.Destroy(r.ImageUrl);
+		FfiDestroyerOptionalInt32{}.Destroy(r.NextEpochCommissionRate);
+		FfiDestroyerOptionalValidatorCredentials{}.Destroy(r.NextEpochCredentials);
+		FfiDestroyerOptionalUint64{}.Destroy(r.NextEpochGasPrice);
+		FfiDestroyerOptionalUint64{}.Destroy(r.NextEpochStake);
+		FfiDestroyerOptionalBytes{}.Destroy(r.OperationCap);
+		FfiDestroyerOptionalUint64{}.Destroy(r.PendingPoolTokenWithdraw);
+		FfiDestroyerOptionalUint64{}.Destroy(r.PendingStake);
+		FfiDestroyerOptionalUint64{}.Destroy(r.PendingTotalIotaWithdraw);
+		FfiDestroyerOptionalUint64{}.Destroy(r.PoolTokenBalance);
+		FfiDestroyerOptionalString{}.Destroy(r.ProjectUrl);
+		FfiDestroyerOptionalUint64{}.Destroy(r.RewardsPool);
+		FfiDestroyerOptionalUint64{}.Destroy(r.StakingPoolActivationEpoch);
+		FfiDestroyerObjectId{}.Destroy(r.StakingPoolId);
+		FfiDestroyerOptionalUint64{}.Destroy(r.StakingPoolIotaBalance);
+		FfiDestroyerOptionalInt32{}.Destroy(r.VotingPower);
+}
+
+type FfiConverterValidator struct {}
+
+var FfiConverterValidatorINSTANCE = FfiConverterValidator{}
+
+func (c FfiConverterValidator) Lift(rb RustBufferI) Validator {
+	return LiftFromRustBuffer[Validator](c, rb)
+}
+
+func (c FfiConverterValidator) Read(reader io.Reader) Validator {
+	return Validator {
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+			FfiConverterAddressINSTANCE.Read(reader),
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+			FfiConverterOptionalValidatorCredentialsINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+			FfiConverterOptionalValidatorCredentialsINSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalBytesINSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterObjectIdINSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterValidator) Lower(value Validator) C.RustBuffer {
+	return LowerIntoRustBuffer[Validator](c, value)
+}
+
+func (c FfiConverterValidator) Write(writer io.Writer, value Validator) {
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.Apy);
+		FfiConverterAddressINSTANCE.Write(writer, value.Address);
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.CommissionRate);
+		FfiConverterOptionalValidatorCredentialsINSTANCE.Write(writer, value.Credentials);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.Description);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.ExchangeRatesSize);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.GasPrice);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.Name);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.ImageUrl);
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.NextEpochCommissionRate);
+		FfiConverterOptionalValidatorCredentialsINSTANCE.Write(writer, value.NextEpochCredentials);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.NextEpochGasPrice);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.NextEpochStake);
+		FfiConverterOptionalBytesINSTANCE.Write(writer, value.OperationCap);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.PendingPoolTokenWithdraw);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.PendingStake);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.PendingTotalIotaWithdraw);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.PoolTokenBalance);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.ProjectUrl);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.RewardsPool);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.StakingPoolActivationEpoch);
+		FfiConverterObjectIdINSTANCE.Write(writer, value.StakingPoolId);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.StakingPoolIotaBalance);
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.VotingPower);
+}
+
+type FfiDestroyerValidator struct {}
+
+func (_ FfiDestroyerValidator) Destroy(value Validator) {
+	value.Destroy()
+}
 // A member of a Validator Committee
 //
 // # BCS
@@ -9970,9 +9253,110 @@ type FfiDestroyerValidatorCommitteeMember struct {}
 func (_ FfiDestroyerValidatorCommitteeMember) Destroy(value ValidatorCommitteeMember) {
 	value.Destroy()
 }
+type ValidatorCredentials struct {
+	AuthorityPubKey *Base64
+	NetworkPubKey *Base64
+	ProtocolPubKey *Base64
+	ProofOfPossession *Base64
+	NetAddress *string
+	P2pAddress *string
+	PrimaryAddress *string
+}
+
+func (r *ValidatorCredentials) Destroy() {
+		FfiDestroyerOptionalTypeBase64{}.Destroy(r.AuthorityPubKey);
+		FfiDestroyerOptionalTypeBase64{}.Destroy(r.NetworkPubKey);
+		FfiDestroyerOptionalTypeBase64{}.Destroy(r.ProtocolPubKey);
+		FfiDestroyerOptionalTypeBase64{}.Destroy(r.ProofOfPossession);
+		FfiDestroyerOptionalString{}.Destroy(r.NetAddress);
+		FfiDestroyerOptionalString{}.Destroy(r.P2pAddress);
+		FfiDestroyerOptionalString{}.Destroy(r.PrimaryAddress);
+}
+
+type FfiConverterValidatorCredentials struct {}
+
+var FfiConverterValidatorCredentialsINSTANCE = FfiConverterValidatorCredentials{}
+
+func (c FfiConverterValidatorCredentials) Lift(rb RustBufferI) ValidatorCredentials {
+	return LiftFromRustBuffer[ValidatorCredentials](c, rb)
+}
+
+func (c FfiConverterValidatorCredentials) Read(reader io.Reader) ValidatorCredentials {
+	return ValidatorCredentials {
+			FfiConverterOptionalTypeBase64INSTANCE.Read(reader),
+			FfiConverterOptionalTypeBase64INSTANCE.Read(reader),
+			FfiConverterOptionalTypeBase64INSTANCE.Read(reader),
+			FfiConverterOptionalTypeBase64INSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterValidatorCredentials) Lower(value ValidatorCredentials) C.RustBuffer {
+	return LowerIntoRustBuffer[ValidatorCredentials](c, value)
+}
+
+func (c FfiConverterValidatorCredentials) Write(writer io.Writer, value ValidatorCredentials) {
+		FfiConverterOptionalTypeBase64INSTANCE.Write(writer, value.AuthorityPubKey);
+		FfiConverterOptionalTypeBase64INSTANCE.Write(writer, value.NetworkPubKey);
+		FfiConverterOptionalTypeBase64INSTANCE.Write(writer, value.ProtocolPubKey);
+		FfiConverterOptionalTypeBase64INSTANCE.Write(writer, value.ProofOfPossession);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.NetAddress);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.P2pAddress);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.PrimaryAddress);
+}
+
+type FfiDestroyerValidatorCredentials struct {}
+
+func (_ FfiDestroyerValidatorCredentials) Destroy(value ValidatorCredentials) {
+	value.Destroy()
+}
+// A page of items returned by the GraphQL server.
+type ValidatorPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []Validator
+}
+
+func (r *ValidatorPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceValidator{}.Destroy(r.Data);
+}
+
+type FfiConverterValidatorPage struct {}
+
+var FfiConverterValidatorPageINSTANCE = FfiConverterValidatorPage{}
+
+func (c FfiConverterValidatorPage) Lift(rb RustBufferI) ValidatorPage {
+	return LiftFromRustBuffer[ValidatorPage](c, rb)
+}
+
+func (c FfiConverterValidatorPage) Read(reader io.Reader) ValidatorPage {
+	return ValidatorPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceValidatorINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterValidatorPage) Lower(value ValidatorPage) C.RustBuffer {
+	return LowerIntoRustBuffer[ValidatorPage](c, value)
+}
+
+func (c FfiConverterValidatorPage) Write(writer io.Writer, value ValidatorPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceValidatorINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerValidatorPage struct {}
+
+func (_ FfiDestroyerValidatorPage) Destroy(value ValidatorPage) {
+	value.Destroy()
+}
 
 
-// Pagination direction.
 type Direction uint
 
 const (
@@ -10507,43 +9891,6 @@ func (_ FfiDestroyerOptionalCoinMetadata) Destroy(value **CoinMetadata) {
 	}
 }
 
-type FfiConverterOptionalDynamicFieldOutput struct{}
-
-var FfiConverterOptionalDynamicFieldOutputINSTANCE = FfiConverterOptionalDynamicFieldOutput{}
-
-func (c FfiConverterOptionalDynamicFieldOutput) Lift(rb RustBufferI) **DynamicFieldOutput {
-	return LiftFromRustBuffer[**DynamicFieldOutput](c, rb)
-}
-
-func (_ FfiConverterOptionalDynamicFieldOutput) Read(reader io.Reader) **DynamicFieldOutput {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterDynamicFieldOutputINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalDynamicFieldOutput) Lower(value **DynamicFieldOutput) C.RustBuffer {
-	return LowerIntoRustBuffer[**DynamicFieldOutput](c, value)
-}
-
-func (_ FfiConverterOptionalDynamicFieldOutput) Write(writer io.Writer, value **DynamicFieldOutput) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterDynamicFieldOutputINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalDynamicFieldOutput struct {}
-
-func (_ FfiDestroyerOptionalDynamicFieldOutput) Destroy(value **DynamicFieldOutput) {
-	if value != nil {
-		FfiDestroyerDynamicFieldOutput{}.Destroy(*value)
-	}
-}
-
 type FfiConverterOptionalEpoch struct{}
 
 var FfiConverterOptionalEpochINSTANCE = FfiConverterOptionalEpoch{}
@@ -10803,43 +10150,6 @@ func (_ FfiDestroyerOptionalObject) Destroy(value **Object) {
 	}
 }
 
-type FfiConverterOptionalObjectFilter struct{}
-
-var FfiConverterOptionalObjectFilterINSTANCE = FfiConverterOptionalObjectFilter{}
-
-func (c FfiConverterOptionalObjectFilter) Lift(rb RustBufferI) **ObjectFilter {
-	return LiftFromRustBuffer[**ObjectFilter](c, rb)
-}
-
-func (_ FfiConverterOptionalObjectFilter) Read(reader io.Reader) **ObjectFilter {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterObjectFilterINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalObjectFilter) Lower(value **ObjectFilter) C.RustBuffer {
-	return LowerIntoRustBuffer[**ObjectFilter](c, value)
-}
-
-func (_ FfiConverterOptionalObjectFilter) Write(writer io.Writer, value **ObjectFilter) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterObjectFilterINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalObjectFilter struct {}
-
-func (_ FfiDestroyerOptionalObjectFilter) Destroy(value **ObjectFilter) {
-	if value != nil {
-		FfiDestroyerObjectFilter{}.Destroy(*value)
-	}
-}
-
 type FfiConverterOptionalObjectId struct{}
 
 var FfiConverterOptionalObjectIdINSTANCE = FfiConverterOptionalObjectId{}
@@ -11062,6 +10372,80 @@ func (_ FfiDestroyerOptionalCheckpointSummary) Destroy(value *CheckpointSummary)
 	}
 }
 
+type FfiConverterOptionalDynamicFieldOutput struct{}
+
+var FfiConverterOptionalDynamicFieldOutputINSTANCE = FfiConverterOptionalDynamicFieldOutput{}
+
+func (c FfiConverterOptionalDynamicFieldOutput) Lift(rb RustBufferI) *DynamicFieldOutput {
+	return LiftFromRustBuffer[*DynamicFieldOutput](c, rb)
+}
+
+func (_ FfiConverterOptionalDynamicFieldOutput) Read(reader io.Reader) *DynamicFieldOutput {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterDynamicFieldOutputINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalDynamicFieldOutput) Lower(value *DynamicFieldOutput) C.RustBuffer {
+	return LowerIntoRustBuffer[*DynamicFieldOutput](c, value)
+}
+
+func (_ FfiConverterOptionalDynamicFieldOutput) Write(writer io.Writer, value *DynamicFieldOutput) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterDynamicFieldOutputINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalDynamicFieldOutput struct {}
+
+func (_ FfiDestroyerOptionalDynamicFieldOutput) Destroy(value *DynamicFieldOutput) {
+	if value != nil {
+		FfiDestroyerDynamicFieldOutput{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalDynamicFieldValue struct{}
+
+var FfiConverterOptionalDynamicFieldValueINSTANCE = FfiConverterOptionalDynamicFieldValue{}
+
+func (c FfiConverterOptionalDynamicFieldValue) Lift(rb RustBufferI) *DynamicFieldValue {
+	return LiftFromRustBuffer[*DynamicFieldValue](c, rb)
+}
+
+func (_ FfiConverterOptionalDynamicFieldValue) Read(reader io.Reader) *DynamicFieldValue {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterDynamicFieldValueINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalDynamicFieldValue) Lower(value *DynamicFieldValue) C.RustBuffer {
+	return LowerIntoRustBuffer[*DynamicFieldValue](c, value)
+}
+
+func (_ FfiConverterOptionalDynamicFieldValue) Write(writer io.Writer, value *DynamicFieldValue) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterDynamicFieldValueINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalDynamicFieldValue struct {}
+
+func (_ FfiDestroyerOptionalDynamicFieldValue) Destroy(value *DynamicFieldValue) {
+	if value != nil {
+		FfiDestroyerDynamicFieldValue{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalEndOfEpochData struct{}
 
 var FfiConverterOptionalEndOfEpochDataINSTANCE = FfiConverterOptionalEndOfEpochData{}
@@ -11136,6 +10520,43 @@ func (_ FfiDestroyerOptionalEventFilter) Destroy(value *EventFilter) {
 	}
 }
 
+type FfiConverterOptionalObjectFilter struct{}
+
+var FfiConverterOptionalObjectFilterINSTANCE = FfiConverterOptionalObjectFilter{}
+
+func (c FfiConverterOptionalObjectFilter) Lift(rb RustBufferI) *ObjectFilter {
+	return LiftFromRustBuffer[*ObjectFilter](c, rb)
+}
+
+func (_ FfiConverterOptionalObjectFilter) Read(reader io.Reader) *ObjectFilter {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterObjectFilterINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalObjectFilter) Lower(value *ObjectFilter) C.RustBuffer {
+	return LowerIntoRustBuffer[*ObjectFilter](c, value)
+}
+
+func (_ FfiConverterOptionalObjectFilter) Write(writer io.Writer, value *ObjectFilter) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterObjectFilterINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalObjectFilter struct {}
+
+func (_ FfiDestroyerOptionalObjectFilter) Destroy(value *ObjectFilter) {
+	if value != nil {
+		FfiDestroyerObjectFilter{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalTransactionsFilter struct{}
 
 var FfiConverterOptionalTransactionsFilterINSTANCE = FfiConverterOptionalTransactionsFilter{}
@@ -11170,6 +10591,43 @@ type FfiDestroyerOptionalTransactionsFilter struct {}
 func (_ FfiDestroyerOptionalTransactionsFilter) Destroy(value *TransactionsFilter) {
 	if value != nil {
 		FfiDestroyerTransactionsFilter{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalValidatorCredentials struct{}
+
+var FfiConverterOptionalValidatorCredentialsINSTANCE = FfiConverterOptionalValidatorCredentials{}
+
+func (c FfiConverterOptionalValidatorCredentials) Lift(rb RustBufferI) *ValidatorCredentials {
+	return LiftFromRustBuffer[*ValidatorCredentials](c, rb)
+}
+
+func (_ FfiConverterOptionalValidatorCredentials) Read(reader io.Reader) *ValidatorCredentials {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterValidatorCredentialsINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalValidatorCredentials) Lower(value *ValidatorCredentials) C.RustBuffer {
+	return LowerIntoRustBuffer[*ValidatorCredentials](c, value)
+}
+
+func (_ FfiConverterOptionalValidatorCredentials) Write(writer io.Writer, value *ValidatorCredentials) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterValidatorCredentialsINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalValidatorCredentials struct {}
+
+func (_ FfiDestroyerOptionalValidatorCredentials) Destroy(value *ValidatorCredentials) {
+	if value != nil {
+		FfiDestroyerValidatorCredentials{}.Destroy(*value)
 	}
 }
 
@@ -11247,6 +10705,43 @@ func (_ FfiDestroyerOptionalSequenceString) Destroy(value *[]string) {
 	}
 }
 
+type FfiConverterOptionalSequenceObjectId struct{}
+
+var FfiConverterOptionalSequenceObjectIdINSTANCE = FfiConverterOptionalSequenceObjectId{}
+
+func (c FfiConverterOptionalSequenceObjectId) Lift(rb RustBufferI) *[]*ObjectId {
+	return LiftFromRustBuffer[*[]*ObjectId](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceObjectId) Read(reader io.Reader) *[]*ObjectId {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceObjectIdINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceObjectId) Lower(value *[]*ObjectId) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]*ObjectId](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceObjectId) Write(writer io.Writer, value *[]*ObjectId) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceObjectIdINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceObjectId struct {}
+
+func (_ FfiDestroyerOptionalSequenceObjectId) Destroy(value *[]*ObjectId) {
+	if value != nil {
+		FfiDestroyerSequenceObjectId{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalSequenceObjectRef struct{}
 
 var FfiConverterOptionalSequenceObjectRefINSTANCE = FfiConverterOptionalSequenceObjectRef{}
@@ -11281,6 +10776,43 @@ type FfiDestroyerOptionalSequenceObjectRef struct {}
 func (_ FfiDestroyerOptionalSequenceObjectRef) Destroy(value *[]*ObjectRef) {
 	if value != nil {
 		FfiDestroyerSequenceObjectRef{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalTypeBase64 struct{}
+
+var FfiConverterOptionalTypeBase64INSTANCE = FfiConverterOptionalTypeBase64{}
+
+func (c FfiConverterOptionalTypeBase64) Lift(rb RustBufferI) *Base64 {
+	return LiftFromRustBuffer[*Base64](c, rb)
+}
+
+func (_ FfiConverterOptionalTypeBase64) Read(reader io.Reader) *Base64 {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterTypeBase64INSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalTypeBase64) Lower(value *Base64) C.RustBuffer {
+	return LowerIntoRustBuffer[*Base64](c, value)
+}
+
+func (_ FfiConverterOptionalTypeBase64) Write(writer io.Writer, value *Base64) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterTypeBase64INSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalTypeBase64 struct {}
+
+func (_ FfiDestroyerOptionalTypeBase64) Destroy(value *Base64) {
+	if value != nil {
+		FfiDestroyerTypeBase64{}.Destroy(*value)
 	}
 }
 
@@ -11447,49 +10979,6 @@ type FfiDestroyerSequenceCoin struct {}
 func (FfiDestroyerSequenceCoin) Destroy(sequence []*Coin) {
 	for _, value := range sequence {
 		FfiDestroyerCoin{}.Destroy(value)
-	}
-}
-
-type FfiConverterSequenceDynamicFieldOutput struct{}
-
-var FfiConverterSequenceDynamicFieldOutputINSTANCE = FfiConverterSequenceDynamicFieldOutput{}
-
-func (c FfiConverterSequenceDynamicFieldOutput) Lift(rb RustBufferI) []*DynamicFieldOutput {
-	return LiftFromRustBuffer[[]*DynamicFieldOutput](c, rb)
-}
-
-func (c FfiConverterSequenceDynamicFieldOutput) Read(reader io.Reader) []*DynamicFieldOutput {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]*DynamicFieldOutput, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterDynamicFieldOutputINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceDynamicFieldOutput) Lower(value []*DynamicFieldOutput) C.RustBuffer {
-	return LowerIntoRustBuffer[[]*DynamicFieldOutput](c, value)
-}
-
-func (c FfiConverterSequenceDynamicFieldOutput) Write(writer io.Writer, value []*DynamicFieldOutput) {
-	if len(value) > math.MaxInt32 {
-		panic("[]*DynamicFieldOutput is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterDynamicFieldOutputINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceDynamicFieldOutput struct {}
-
-func (FfiDestroyerSequenceDynamicFieldOutput) Destroy(sequence []*DynamicFieldOutput) {
-	for _, value := range sequence {
-		FfiDestroyerDynamicFieldOutput{}.Destroy(value)
 	}
 }
 
@@ -11708,6 +11197,49 @@ func (FfiDestroyerSequenceObject) Destroy(sequence []*Object) {
 	}
 }
 
+type FfiConverterSequenceObjectId struct{}
+
+var FfiConverterSequenceObjectIdINSTANCE = FfiConverterSequenceObjectId{}
+
+func (c FfiConverterSequenceObjectId) Lift(rb RustBufferI) []*ObjectId {
+	return LiftFromRustBuffer[[]*ObjectId](c, rb)
+}
+
+func (c FfiConverterSequenceObjectId) Read(reader io.Reader) []*ObjectId {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*ObjectId, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterObjectIdINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceObjectId) Lower(value []*ObjectId) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*ObjectId](c, value)
+}
+
+func (c FfiConverterSequenceObjectId) Write(writer io.Writer, value []*ObjectId) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*ObjectId is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterObjectIdINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceObjectId struct {}
+
+func (FfiDestroyerSequenceObjectId) Destroy(sequence []*ObjectId) {
+	for _, value := range sequence {
+		FfiDestroyerObjectId{}.Destroy(value)
+	}
+}
+
 type FfiConverterSequenceObjectRef struct{}
 
 var FfiConverterSequenceObjectRefINSTANCE = FfiConverterSequenceObjectRef{}
@@ -11923,49 +11455,6 @@ func (FfiDestroyerSequenceUserSignature) Destroy(sequence []*UserSignature) {
 	}
 }
 
-type FfiConverterSequenceValidator struct{}
-
-var FfiConverterSequenceValidatorINSTANCE = FfiConverterSequenceValidator{}
-
-func (c FfiConverterSequenceValidator) Lift(rb RustBufferI) []*Validator {
-	return LiftFromRustBuffer[[]*Validator](c, rb)
-}
-
-func (c FfiConverterSequenceValidator) Read(reader io.Reader) []*Validator {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]*Validator, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterValidatorINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceValidator) Lower(value []*Validator) C.RustBuffer {
-	return LowerIntoRustBuffer[[]*Validator](c, value)
-}
-
-func (c FfiConverterSequenceValidator) Write(writer io.Writer, value []*Validator) {
-	if len(value) > math.MaxInt32 {
-		panic("[]*Validator is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterValidatorINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceValidator struct {}
-
-func (FfiDestroyerSequenceValidator) Destroy(sequence []*Validator) {
-	for _, value := range sequence {
-		FfiDestroyerValidator{}.Destroy(value)
-	}
-}
-
 type FfiConverterSequenceCheckpointSummary struct{}
 
 var FfiConverterSequenceCheckpointSummaryINSTANCE = FfiConverterSequenceCheckpointSummary{}
@@ -12006,6 +11495,49 @@ type FfiDestroyerSequenceCheckpointSummary struct {}
 func (FfiDestroyerSequenceCheckpointSummary) Destroy(sequence []CheckpointSummary) {
 	for _, value := range sequence {
 		FfiDestroyerCheckpointSummary{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceDynamicFieldOutput struct{}
+
+var FfiConverterSequenceDynamicFieldOutputINSTANCE = FfiConverterSequenceDynamicFieldOutput{}
+
+func (c FfiConverterSequenceDynamicFieldOutput) Lift(rb RustBufferI) []DynamicFieldOutput {
+	return LiftFromRustBuffer[[]DynamicFieldOutput](c, rb)
+}
+
+func (c FfiConverterSequenceDynamicFieldOutput) Read(reader io.Reader) []DynamicFieldOutput {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]DynamicFieldOutput, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterDynamicFieldOutputINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceDynamicFieldOutput) Lower(value []DynamicFieldOutput) C.RustBuffer {
+	return LowerIntoRustBuffer[[]DynamicFieldOutput](c, value)
+}
+
+func (c FfiConverterSequenceDynamicFieldOutput) Write(writer io.Writer, value []DynamicFieldOutput) {
+	if len(value) > math.MaxInt32 {
+		panic("[]DynamicFieldOutput is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterDynamicFieldOutputINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceDynamicFieldOutput struct {}
+
+func (FfiDestroyerSequenceDynamicFieldOutput) Destroy(sequence []DynamicFieldOutput) {
+	for _, value := range sequence {
+		FfiDestroyerDynamicFieldOutput{}.Destroy(value)
 	}
 }
 
@@ -12052,6 +11584,49 @@ func (FfiDestroyerSequenceObjectReference) Destroy(sequence []ObjectReference) {
 	}
 }
 
+type FfiConverterSequenceValidator struct{}
+
+var FfiConverterSequenceValidatorINSTANCE = FfiConverterSequenceValidator{}
+
+func (c FfiConverterSequenceValidator) Lift(rb RustBufferI) []Validator {
+	return LiftFromRustBuffer[[]Validator](c, rb)
+}
+
+func (c FfiConverterSequenceValidator) Read(reader io.Reader) []Validator {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]Validator, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterValidatorINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceValidator) Lower(value []Validator) C.RustBuffer {
+	return LowerIntoRustBuffer[[]Validator](c, value)
+}
+
+func (c FfiConverterSequenceValidator) Write(writer io.Writer, value []Validator) {
+	if len(value) > math.MaxInt32 {
+		panic("[]Validator is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterValidatorINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceValidator struct {}
+
+func (FfiDestroyerSequenceValidator) Destroy(sequence []Validator) {
+	for _, value := range sequence {
+		FfiDestroyerValidator{}.Destroy(value)
+	}
+}
+
 type FfiConverterSequenceValidatorCommitteeMember struct{}
 
 var FfiConverterSequenceValidatorCommitteeMemberINSTANCE = FfiConverterSequenceValidatorCommitteeMember{}
@@ -12094,6 +11669,15 @@ func (FfiDestroyerSequenceValidatorCommitteeMember) Destroy(sequence []Validator
 		FfiDestroyerValidatorCommitteeMember{}.Destroy(value)
 	}
 }
+/**
+ * Typealias from the type name used in the UDL file to the builtin type.  This
+ * is needed because the UDL type name is used in function/method signatures.
+ * It's also what we have an external type that references a custom type.
+ */
+type Base64 = string
+type FfiConverterTypeBase64 = FfiConverterString
+type FfiDestroyerTypeBase64 = FfiDestroyerString
+var FfiConverterTypeBase64INSTANCE = FfiConverterString{}
 /**
  * Typealias from the type name used in the UDL file to the builtin type.  This
  * is needed because the UDL type name is used in function/method signatures.
