@@ -60,7 +60,7 @@ impl Transaction {
     }
 
     pub fn expiration(&self) -> TransactionExpiration {
-        self.0.expiration.into()
+        self.0.expiration
     }
 }
 
