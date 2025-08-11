@@ -147,7 +147,7 @@ impl From<TransactionsFilter> for iota_graphql_client::query_types::Transactions
 
 /// The result of a dry run, which includes the effects of the transaction and
 /// any errors that may have occurred.
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct DryRunResult {
     pub effects: Option<Arc<TransactionEffects>>,
     pub error: Option<String>,
@@ -171,8 +171,6 @@ impl From<DryRunResult> for iota_graphql_client::DryRunResult {
     }
 }
 
-type CoreEvent = iota_types::Event;
-
 /// An event
 ///
 /// # BCS
@@ -182,7 +180,7 @@ type CoreEvent = iota_types::Event;
 /// ```text
 /// event = object-id identifier address struct-tag bytes
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct Event {
     /// Package id of the top-level function invoked by a MoveCall command which
     /// triggered this event to be emitted.
@@ -199,8 +197,8 @@ pub struct Event {
     pub contents: Vec<u8>,
 }
 
-impl From<CoreEvent> for Event {
-    fn from(value: CoreEvent) -> Self {
+impl From<iota_types::Event> for Event {
+    fn from(value: iota_types::Event) -> Self {
         Self {
             package_id: Arc::new(value.package_id.into()),
             module: value.module.to_string(),
@@ -211,7 +209,7 @@ impl From<CoreEvent> for Event {
     }
 }
 
-impl From<Event> for CoreEvent {
+impl From<Event> for iota_types::Event {
     fn from(value: Event) -> Self {
         Self {
             package_id: (**value.package_id),
@@ -223,7 +221,7 @@ impl From<Event> for CoreEvent {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct ObjectRef {
     pub address: Arc<ObjectId>,
     pub digest: String,
@@ -250,7 +248,7 @@ impl From<ObjectRef> for iota_graphql_client::query_types::ObjectRef {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(Clone, Debug, uniffi::Object)]
 pub struct Epoch(pub iota_graphql_client::query_types::Epoch);
 
 #[derive(Clone, Debug, uniffi::Record)]
@@ -684,6 +682,7 @@ pub enum Direction {
     Forward,
     Backward,
 }
+
 impl From<iota_graphql_client::pagination::Direction> for Direction {
     fn from(value: iota_graphql_client::pagination::Direction) -> Self {
         match value {
@@ -692,6 +691,7 @@ impl From<iota_graphql_client::pagination::Direction> for Direction {
         }
     }
 }
+
 impl From<Direction> for iota_graphql_client::pagination::Direction {
     fn from(value: Direction) -> Self {
         match value {
@@ -784,24 +784,22 @@ impl From<iota_graphql_client::query_types::MoveObject> for MoveObject {
 impl From<MoveObject> for iota_graphql_client::query_types::MoveObject {
     fn from(value: MoveObject) -> Self {
         iota_graphql_client::query_types::MoveObject {
-            bcs: value
-                .bcs
-                .map(iota_graphql_client::query_types::Base64),
+            bcs: value.bcs.map(iota_graphql_client::query_types::Base64),
         }
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(Clone, Debug, uniffi::Object)]
 pub struct ProtocolConfigs(pub iota_graphql_client::query_types::ProtocolConfigs);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(Clone, Debug, uniffi::Object)]
 pub struct CoinMetadata(pub iota_graphql_client::query_types::CoinMetadata);
 
-#[derive(Debug, derive_more::From, uniffi::Object)]
+#[derive(Debug, uniffi::Object)]
 pub struct MoveFunction(pub iota_graphql_client::query_types::MoveFunction);
 
-#[derive(Debug, derive_more::From, uniffi::Object)]
+#[derive(Debug, uniffi::Object)]
 pub struct MoveModule(pub iota_graphql_client::query_types::MoveModule);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(Clone, Debug, uniffi::Object)]
 pub struct ServiceConfig(pub iota_graphql_client::query_types::ServiceConfig);
