@@ -104,15 +104,6 @@ impl TypeTag {
     }
 
     #[inline]
-    pub fn into_vector_type_tag_opt(&self) -> Option<Arc<TypeTag>> {
-        self.clone()
-            .0
-            .into_vector_type_tag_opt()
-            .map(Into::into)
-            .map(Arc::new)
-    }
-
-    #[inline]
     pub fn into_vector_type_tag(&self) -> TypeTag {
         self.clone().0.into_vector_type_tag().into()
     }
@@ -134,16 +125,6 @@ impl TypeTag {
     #[inline]
     pub fn as_struct_tag(&self) -> super::struct_tag::StructTag {
         self.0.as_struct_tag().clone().into()
-    }
-
-    #[inline]
-    pub fn into_struct_tag_opt(&self) -> Option<Arc<super::struct_tag::StructTag>> {
-        self.clone()
-            .0
-            .into_struct_tag_opt()
-            .clone()
-            .map(Into::into)
-            .map(Arc::new)
     }
 
     #[inline]
