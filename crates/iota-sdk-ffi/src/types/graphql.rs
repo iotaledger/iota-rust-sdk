@@ -4,7 +4,10 @@
 use std::{str::FromStr, sync::Arc};
 
 use base64ct::Encoding;
-use iota_graphql_client::query_types::{Base64, TransactionBlockKindInput, ValidatorCredentials};
+use iota_graphql_client::{
+    pagination::{Direction, PaginationFilter},
+    query_types::{Base64, PageInfo, TransactionBlockKindInput, ValidatorCredentials},
+};
 use iota_types::{Identifier, StructTag, TransactionDigest};
 
 use crate::types::{
@@ -607,7 +610,7 @@ impl From<DateTime> for iota_graphql_client::query_types::DateTime {
 }
 
 /// Information about pagination in a connection.
-#[derive(Clone, Debug, uniffi::Record)]
+#[uniffi::remote(Record)]
 pub struct PageInfo {
     /// When paginating backwards, are there more items?
     pub has_previous_page: bool,
@@ -621,31 +624,9 @@ pub struct PageInfo {
     pub end_cursor: Option<String>,
 }
 
-impl From<iota_graphql_client::query_types::PageInfo> for PageInfo {
-    fn from(value: iota_graphql_client::query_types::PageInfo) -> Self {
-        PageInfo {
-            has_previous_page: value.has_previous_page,
-            has_next_page: value.has_next_page,
-            start_cursor: value.start_cursor,
-            end_cursor: value.end_cursor,
-        }
-    }
-}
-
-impl From<PageInfo> for iota_graphql_client::query_types::PageInfo {
-    fn from(value: PageInfo) -> Self {
-        iota_graphql_client::query_types::PageInfo {
-            has_previous_page: value.has_previous_page,
-            has_next_page: value.has_next_page,
-            start_cursor: value.start_cursor,
-            end_cursor: value.end_cursor,
-        }
-    }
-}
-
 /// Pagination options for querying the GraphQL server. It defaults to forward
 /// pagination with the GraphQL server's max page size.
-#[derive(Clone, Debug, Default, uniffi::Record)]
+#[uniffi::remote(Record)]
 pub struct PaginationFilter {
     pub direction: Direction,
     #[uniffi(default = None)]
@@ -656,49 +637,12 @@ pub struct PaginationFilter {
     pub limit: Option<i32>,
 }
 
-impl From<iota_graphql_client::pagination::PaginationFilter> for PaginationFilter {
-    fn from(value: iota_graphql_client::pagination::PaginationFilter) -> Self {
-        Self {
-            direction: value.direction.into(),
-            cursor: value.cursor,
-            limit: value.limit,
-        }
-    }
-}
-impl From<PaginationFilter> for iota_graphql_client::pagination::PaginationFilter {
-    fn from(value: PaginationFilter) -> Self {
-        Self {
-            direction: value.direction.into(),
-            cursor: value.cursor,
-            limit: value.limit,
-        }
-    }
-}
-
 /// Pagination direction.
-#[derive(Clone, Debug, Default, uniffi::Enum)]
+#[uniffi::remote(Enum)]
 pub enum Direction {
     #[default]
     Forward,
     Backward,
-}
-
-impl From<iota_graphql_client::pagination::Direction> for Direction {
-    fn from(value: iota_graphql_client::pagination::Direction) -> Self {
-        match value {
-            iota_graphql_client::pagination::Direction::Forward => Self::Forward,
-            iota_graphql_client::pagination::Direction::Backward => Self::Backward,
-        }
-    }
-}
-
-impl From<Direction> for iota_graphql_client::pagination::Direction {
-    fn from(value: Direction) -> Self {
-        match value {
-            Direction::Forward => Self::Forward,
-            Direction::Backward => Self::Backward,
-        }
-    }
 }
 
 #[derive(Clone, Debug, uniffi::Record)]
@@ -731,7 +675,7 @@ pub struct ValidatorConnection {
 impl From<iota_graphql_client::query_types::ValidatorConnection> for ValidatorConnection {
     fn from(value: iota_graphql_client::query_types::ValidatorConnection) -> Self {
         ValidatorConnection {
-            page_info: value.page_info.into(),
+            page_info: value.page_info,
             nodes: value.nodes.into_iter().map(Into::into).collect(),
         }
     }
@@ -740,7 +684,7 @@ impl From<iota_graphql_client::query_types::ValidatorConnection> for ValidatorCo
 impl From<ValidatorConnection> for iota_graphql_client::query_types::ValidatorConnection {
     fn from(value: ValidatorConnection) -> Self {
         iota_graphql_client::query_types::ValidatorConnection {
-            page_info: value.page_info.into(),
+            page_info: value.page_info,
             nodes: value.nodes.into_iter().map(Into::into).collect(),
         }
     }

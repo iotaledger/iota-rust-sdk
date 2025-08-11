@@ -1,13 +1,13 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::query_types::Base64;
+use iota_graphql_client::query_types::{Base64, PageInfo};
 use serde_json::Value;
 
 use crate::types::{
     checkpoint::CheckpointSummary,
     coin::Coin,
-    graphql::{DynamicFieldOutput, Epoch, Event, PageInfo, TransactionDataEffects, Validator},
+    graphql::{DynamicFieldOutput, Epoch, Event, TransactionDataEffects, Validator},
     object::{MovePackage, Object},
     transaction::{SignedTransaction, TransactionEffects},
 };
