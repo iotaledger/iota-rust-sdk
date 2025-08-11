@@ -1,21 +1,4 @@
-from lib.iota_sdk_ffi import (
-    GraphQlClient,
-    PaginationFilter,
-    Address,
-    Direction,
-    TransactionsFilter,
-    ObjectId,
-    EventFilter,
-    MoveStruct,
-    MovePackage,
-    TypeOrigin,
-    UpgradeInfo,
-    IdentifierModuleMap,
-    ObjectIdUpgradeInfoMap,
-    TypeTag,
-    StructTag,
-    Identifier,
-)
+from lib.iota_sdk_ffi import *
 
 import asyncio
 
