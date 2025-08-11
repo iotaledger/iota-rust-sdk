@@ -190,7 +190,7 @@ impl From<StructTag> for TypeTag {
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct TypeParseError {
-    source: String,
+    pub source: String,
 }
 
 impl std::fmt::Display for TypeParseError {
