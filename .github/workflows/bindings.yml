@@ -24,7 +24,7 @@ jobs:
         run: cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi.so" --language python --out-dir bindings/python/lib --no-format
       - name: Copy the dynamic library to the bindings directory
         run: cp target/release/libiota_sdk_ffi.so bindings/python/lib/
-      - name: git status (tmp)
-        run: git status
       - name: Checks for uncommitted changes
         run: git diff --exit-code
+      - name: Run the example
+        run: cd bindings/python && python3 test.py
