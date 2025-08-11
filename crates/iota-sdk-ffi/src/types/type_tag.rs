@@ -3,6 +3,8 @@
 
 use std::sync::Arc;
 
+use iota_types::StructTag;
+
 /// Type of a move value
 ///
 /// # BCS
@@ -165,5 +167,15 @@ impl TypeTag {
     #[uniffi::constructor]
     pub fn signer() -> Self {
         Self(iota_types::TypeTag::Signer)
+    }
+
+    #[uniffi::constructor]
+    pub fn vector(type_tag: &TypeTag) -> Self {
+        Self(iota_types::TypeTag::Vector(Box::new(type_tag.0.clone())))
+    }
+
+    #[uniffi::constructor]
+    pub fn struct_tag(struct_tag: &super::struct_tag::StructTag) -> Self {
+        Self(iota_types::TypeTag::Struct(Box::new(struct_tag.0.clone())))
     }
 }
