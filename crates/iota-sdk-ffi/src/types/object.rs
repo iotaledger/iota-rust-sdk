@@ -62,12 +62,6 @@ impl ObjectId {
     }
 }
 
-impl From<&iota_types::ObjectId> for ObjectId {
-    fn from(value: &iota_types::ObjectId) -> Self {
-        Self(*value)
-    }
-}
-
 /// Reference to an object
 ///
 /// Contains sufficient information to uniquely identify a specific object.
@@ -89,7 +83,7 @@ pub struct ObjectReference {
 impl From<iota_types::ObjectReference> for ObjectReference {
     fn from(value: iota_types::ObjectReference) -> Self {
         Self {
-            object_id: Arc::new(value.object_id().into()),
+            object_id: Arc::new((*value.object_id()).into()),
             version: value.version(),
             digest: Arc::new(value.digest().into()),
         }
@@ -203,7 +197,7 @@ impl ObjectData {
     }
 
     /// Try to interpret this object as a `MoveStruct`
-    pub fn try_as_struct(&self) -> Option<Arc<MoveStruct>> {
+    pub fn as_struct_opt(&self) -> Option<Arc<MoveStruct>> {
         self.0
             .as_struct_opt()
             .cloned()
@@ -212,7 +206,7 @@ impl ObjectData {
     }
 
     /// Try to interpret this object as a `MovePackage`
-    pub fn try_as_package(&self) -> Option<Arc<MovePackage>> {
+    pub fn as_package_opt(&self) -> Option<Arc<MovePackage>> {
         self.0
             .as_package_opt()
             .cloned()
@@ -268,7 +262,7 @@ impl Owner {
         self.0.is_immutable()
     }
 
-    pub fn try_as_address(&self) -> Option<Arc<Address>> {
+    pub fn as_address_opt(&self) -> Option<Arc<Address>> {
         self.0
             .as_address_opt()
             .cloned()
@@ -276,7 +270,7 @@ impl Owner {
             .map(Arc::new)
     }
 
-    pub fn try_as_object(&self) -> Option<Arc<ObjectId>> {
+    pub fn as_object_opt(&self) -> Option<Arc<ObjectId>> {
         self.0
             .as_object_opt()
             .cloned()
@@ -284,7 +278,7 @@ impl Owner {
             .map(Arc::new)
     }
 
-    pub fn try_as_shared(&self) -> Option<Version> {
+    pub fn as_shared_opt(&self) -> Option<Version> {
         self.0.as_shared_opt().copied()
     }
 }
@@ -312,7 +306,7 @@ impl ObjectType {
         self.0.is_struct()
     }
 
-    pub fn try_as_struct(&self) -> Option<Arc<StructTag>> {
+    pub fn as_struct_opt(&self) -> Option<Arc<StructTag>> {
         self.0
             .as_struct_opt()
             .cloned()
