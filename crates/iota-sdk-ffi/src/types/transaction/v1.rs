@@ -36,40 +36,31 @@ use crate::types::{
 pub struct TransactionEffectsV1 {
     /// The status of the execution
     pub status: ExecutionStatus,
-
     /// The epoch when this transaction was executed.
     pub epoch: u64,
-
     /// The gas used by this transaction
     pub gas_used: GasCostSummary,
-
     /// The transaction digest
     pub transaction_digest: Arc<TransactionDigest>,
     /// The updated gas object reference, as an index into the `changed_objects`
     /// vector. Having a dedicated field for convenient access.
     /// System transaction that don't require gas will leave this as None.
     pub gas_object_index: Option<u32>,
-
     /// The digest of the events emitted during execution,
     /// can be None if the transaction does not emit any event.
     pub events_digest: Option<Arc<TransactionEventsDigest>>,
-
     /// The set of transaction digests this transaction depends on.
     pub dependencies: Vec<Arc<TransactionDigest>>,
-
     /// The version number of all the written Move objects by this transaction.
     pub lamport_version: u64,
-
     /// Objects whose state are changed in the object store.
     pub changed_objects: Vec<ChangedObject>,
-
     /// Shared objects that are not mutated in this transaction. Unlike owned
     /// objects, read-only shared objects' version are not committed in the
     /// transaction, and in order for a node to catch up and execute it
     /// without consensus sequencing, the version needs to be committed in
     /// the effects.
     pub unchanged_shared_objects: Vec<UnchangedSharedObject>,
-
     /// Auxiliary data that are not protocol-critical, generated as part of the
     /// effects but are stored separately. Storing it separately allows us
     /// to avoid bloating the effects with data that are not critical.
@@ -139,13 +130,10 @@ impl From<TransactionEffectsV1> for iota_types::TransactionEffectsV1 {
 pub struct ChangedObject {
     /// Id of the object
     pub object_id: Arc<ObjectId>,
-
     /// State of the object in the store prior to this transaction.
     pub input_state: ObjectIn,
-
     /// State of the object in the store after this transaction.
     pub output_state: ObjectOut,
-
     /// Whether this object ID is created or deleted in this transaction.
     /// This information isn't required by the protocol but is useful for
     /// providing more detailed semantics on object changes.
@@ -235,7 +223,6 @@ pub enum UnchangedSharedKind {
         version: u64,
         digest: Arc<ObjectDigest>,
     },
-
     /// Deleted shared objects that appear mutably/owned in the input.
     MutateDeleted { version: u64 },
     /// Deleted shared objects that appear as read-only in the input.

@@ -60,7 +60,7 @@ impl From<TransactionMetadata> for iota_graphql_client::query_types::Transaction
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct TransactionDataEffects {
     pub tx: SignedTransaction,
     pub effects: Arc<TransactionEffects>,

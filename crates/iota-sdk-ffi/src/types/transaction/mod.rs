@@ -27,7 +27,7 @@ pub mod v1;
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct Transaction {
     pub kind: Arc<TransactionKind>,
     pub sender: Arc<Address>,
@@ -57,7 +57,7 @@ impl From<Transaction> for iota_types::Transaction {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct SignedTransaction {
     pub transaction: Transaction,
     pub signatures: Vec<Arc<UserSignature>>,
