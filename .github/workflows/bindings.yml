@@ -26,3 +26,5 @@ jobs:
         run: cp target/release/libiota_sdk_ffi.so bindings/python/lib/
       - name: git status (tmp)
         run: git status
+      - name: Checks for uncommitted changes
+        run: git diff --exit-code
