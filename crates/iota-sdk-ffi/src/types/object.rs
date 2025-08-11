@@ -10,6 +10,7 @@ use crate::{
     types::{
         address::Address,
         digest::{ObjectDigest, TransactionDigest},
+        struct_tag::StructTag,
     },
 };
 
@@ -333,9 +334,6 @@ impl MovePackage {
         }))
     }
 }
-
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct StructTag(pub iota_types::StructTag);
 
 /// A move struct
 ///
