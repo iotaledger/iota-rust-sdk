@@ -103,7 +103,6 @@ impl TypeTag {
         self.0.as_vector_type_tag().clone().into()
     }
 
-    // TODO cannot take self?
     #[inline]
     pub fn into_vector_type_tag_opt(&self) -> Option<Arc<TypeTag>> {
         self.clone()
@@ -113,7 +112,6 @@ impl TypeTag {
             .map(Arc::new)
     }
 
-    // TODO cannot take self?
     #[inline]
     pub fn into_vector_type_tag(&self) -> TypeTag {
         self.clone().0.into_vector_type_tag().into()
@@ -138,7 +136,6 @@ impl TypeTag {
         self.0.as_struct_tag().clone().into()
     }
 
-    // TODO cannot take self?
     #[inline]
     pub fn into_struct_tag_opt(&self) -> Option<Arc<super::struct_tag::StructTag>> {
         self.clone()
@@ -149,7 +146,6 @@ impl TypeTag {
             .map(Arc::new)
     }
 
-    // TODO cannot take self?
     #[inline]
     pub fn into_struct_tag(&self) -> super::struct_tag::StructTag {
         self.clone().0.into_struct_tag().into()
