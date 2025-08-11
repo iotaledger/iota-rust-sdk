@@ -30,6 +30,5 @@ async def main():
             print("Scheme: ", sig.scheme(), sig.scheme().value)
         print("Sender: ", txn.transaction().sender().to_hex())
 
-
 if __name__ == '__main__':
     asyncio.run(main())

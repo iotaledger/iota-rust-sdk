@@ -20,7 +20,7 @@ macro_rules! impl_digest_wrapper {
             derive_more::Deref,
             uniffi::Object,
         )]
-        pub struct $t(iota_types::$t);
+        pub struct $t(pub iota_types::$t);
 
         #[uniffi::export]
         impl $t {
