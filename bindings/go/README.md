@@ -1,20 +1,36 @@
 # IOTA SDK - Go Bindings
 
-First install [uniffi-bindgen-go](https://github.com/NordSecurity/uniffi-bindgen-go)
+# Install `uniffi-bindgen-go`
 
-Then compile the FFI crate to a dynamic library
+https://github.com/NordSecurity/uniffi-bindgen-go
+
+# Compile the FFI crate to a dynamic library
 
 ```sh
 cargo build --all-features -p iota-sdk-ffi --lib --release
 ```
 
-And finally, generate the Go bindings
+# Generate the Go bindings
+
+## MacOS
 
 ```sh
 uniffi-bindgen-go --library target/release/libiota_sdk_ffi.dylib --out-dir ./bindings/go --no-format
 ```
 
-To test it
+## Linux
+
+```sh
+uniffi-bindgen-go --library target/release/libiota_sdk_ffi.so --out-dir ./bindings/go --no-format
+```
+
+## Windows
+
+```sh
+uniffi-bindgen-go --library target/release/libiota_sdk_ffi.dll --out-dir ./bindings/go --no-format
+```
+
+# Test it
 
 ```sh
 CGO_LDFLAGS="-liota_sdk_ffi -L../../target/release" go run test.go
