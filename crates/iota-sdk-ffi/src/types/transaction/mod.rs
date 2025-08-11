@@ -27,46 +27,53 @@ pub mod v1;
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
-pub struct Transaction {
-    pub kind: Arc<TransactionKind>,
-    pub sender: Arc<Address>,
-    pub gas_payment: GasPayment,
-    pub expiration: TransactionExpiration,
-}
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct Transaction(pub iota_types::Transaction);
 
-impl From<iota_types::Transaction> for Transaction {
-    fn from(value: iota_types::Transaction) -> Self {
-        Self {
-            kind: Arc::new(value.kind.into()),
-            sender: Arc::new(value.sender.into()),
-            gas_payment: value.gas_payment.into(),
-            expiration: value.expiration,
-        }
+#[uniffi::export]
+impl Transaction {
+    #[uniffi::constructor]
+    pub fn new(
+        kind: &TransactionKind,
+        sender: &Address,
+        gas_payment: GasPayment,
+        expiration: TransactionExpiration,
+    ) -> Self {
+        Self(iota_types::Transaction {
+            kind: kind.0.clone(),
+            sender: **sender,
+            gas_payment: gas_payment.into(),
+            expiration,
+        })
     }
-}
 
-impl From<Transaction> for iota_types::Transaction {
-    fn from(value: Transaction) -> Self {
-        Self {
-            kind: value.kind.0.clone(),
-            sender: **value.sender,
-            gas_payment: value.gas_payment.into(),
-            expiration: value.expiration,
-        }
+    pub fn kind(&self) -> TransactionKind {
+        self.0.kind.clone().into()
+    }
+
+    pub fn sender(&self) -> Address {
+        self.0.sender.into()
+    }
+
+    pub fn gas_payment(&self) -> GasPayment {
+        self.0.gas_payment.clone().into()
+    }
+
+    pub fn expiration(&self) -> TransactionExpiration {
+        self.0.expiration.into()
     }
 }
 
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct SignedTransaction {
-    pub transaction: Transaction,
+    pub transaction: Arc<Transaction>,
     pub signatures: Vec<Arc<UserSignature>>,
 }
 
 impl From<iota_types::SignedTransaction> for SignedTransaction {
     fn from(value: iota_types::SignedTransaction) -> Self {
         Self {
-            transaction: value.transaction.into(),
+            transaction: Arc::new(value.transaction.into()),
             signatures: value
                 .signatures
                 .into_iter()
@@ -80,7 +87,7 @@ impl From<iota_types::SignedTransaction> for SignedTransaction {
 impl From<SignedTransaction> for iota_types::SignedTransaction {
     fn from(value: SignedTransaction) -> Self {
         Self {
-            transaction: value.transaction.into(),
+            transaction: value.transaction.0.clone(),
             signatures: value.signatures.into_iter().map(|v| v.0.clone()).collect(),
         }
     }
