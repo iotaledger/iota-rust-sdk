@@ -248,7 +248,7 @@ impl From<ObjectRef> for iota_graphql_client::query_types::ObjectRef {
     }
 }
 
-#[derive(Clone, Debug, uniffi::Object)]
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Epoch(pub iota_graphql_client::query_types::Epoch);
 
 #[derive(Clone, Debug, uniffi::Record)]
@@ -789,17 +789,17 @@ impl From<MoveObject> for iota_graphql_client::query_types::MoveObject {
     }
 }
 
-#[derive(Clone, Debug, uniffi::Object)]
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ProtocolConfigs(pub iota_graphql_client::query_types::ProtocolConfigs);
 
-#[derive(Clone, Debug, uniffi::Object)]
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct CoinMetadata(pub iota_graphql_client::query_types::CoinMetadata);
 
-#[derive(Debug, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
 pub struct MoveFunction(pub iota_graphql_client::query_types::MoveFunction);
 
-#[derive(Debug, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
 pub struct MoveModule(pub iota_graphql_client::query_types::MoveModule);
 
-#[derive(Clone, Debug, uniffi::Object)]
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ServiceConfig(pub iota_graphql_client::query_types::ServiceConfig);
