@@ -499,15 +499,14 @@ impl GraphQLClient {
     pub async fn transaction(
         &self,
         digest: &TransactionDigest,
-    ) -> Result<Option<Arc<SignedTransaction>>> {
+    ) -> Result<Option<SignedTransaction>> {
         Ok(self
             .0
             .read()
             .await
             .transaction(**digest)
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .map(Into::into))
     }
 
     /// Get a transaction's effects by its digest.
@@ -529,15 +528,14 @@ impl GraphQLClient {
     pub async fn transaction_data_effects(
         &self,
         digest: &TransactionDigest,
-    ) -> Result<Option<Arc<TransactionDataEffects>>> {
+    ) -> Result<Option<TransactionDataEffects>> {
         Ok(self
             .0
             .read()
             .await
             .transaction_data_effects(**digest)
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .map(Into::into))
     }
 
     /// Get a page of transactions based on the provided filters.

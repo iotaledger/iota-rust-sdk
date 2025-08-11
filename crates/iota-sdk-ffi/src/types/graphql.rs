@@ -1,15 +1,14 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
+use std::{str::FromStr, sync::Arc};
 
 use base64ct::Encoding;
 use iota_graphql_client::{
     pagination::{Direction, PaginationFilter},
-    query_types::{
-        Base64, GQLAddress, MoveObject, PageInfo, TransactionBlockKindInput, ValidatorCredentials,
-    },
+    query_types::{Base64, PageInfo, TransactionBlockKindInput, ValidatorCredentials},
 };
+use iota_types::{Identifier, StructTag, TransactionDigest};
 
 use crate::types::{
     address::Address,
@@ -23,7 +22,7 @@ pub struct TransactionMetadata {
     #[uniffi(default = None)]
     pub gas_budget: Option<u64>,
     #[uniffi(default = None)]
-    pub gas_objects: Option<Vec<Arc<ObjectRef>>>,
+    pub gas_objects: Option<Vec<ObjectRef>>,
     #[uniffi(default = None)]
     pub gas_price: Option<u64>,
     #[uniffi(default = None)]
@@ -38,7 +37,7 @@ impl From<iota_graphql_client::query_types::TransactionMetadata> for Transaction
             gas_budget: value.gas_budget,
             gas_objects: value
                 .gas_objects
-                .map(|v| v.into_iter().map(Into::into).map(Arc::new).collect()),
+                .map(|v| v.into_iter().map(Into::into).collect()),
             gas_price: value.gas_price,
             gas_sponsor: value.gas_sponsor.map(Into::into).map(Arc::new),
             sender: value.sender.map(Into::into).map(Arc::new),
@@ -52,7 +51,7 @@ impl From<TransactionMetadata> for iota_graphql_client::query_types::Transaction
             gas_budget: value.gas_budget,
             gas_objects: value
                 .gas_objects
-                .map(|v| v.into_iter().map(|o| o.0.clone()).collect()),
+                .map(|v| v.into_iter().map(Into::into).collect()),
             gas_price: value.gas_price,
             gas_sponsor: value.gas_sponsor.map(|a| **a),
             sender: value.sender.map(|a| **a),
@@ -60,25 +59,27 @@ impl From<TransactionMetadata> for iota_graphql_client::query_types::Transaction
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct TransactionDataEffects(pub iota_graphql_client::TransactionDataEffects);
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct TransactionDataEffects {
+    pub tx: SignedTransaction,
+    pub effects: Arc<TransactionEffects>,
+}
 
-#[uniffi::export]
-impl TransactionDataEffects {
-    #[uniffi::constructor]
-    pub fn new(tx: &SignedTransaction, effects: &TransactionEffects) -> Self {
-        Self(iota_graphql_client::TransactionDataEffects {
-            tx: tx.0.clone(),
-            effects: effects.0.clone(),
-        })
+impl From<iota_graphql_client::TransactionDataEffects> for TransactionDataEffects {
+    fn from(value: iota_graphql_client::TransactionDataEffects) -> Self {
+        Self {
+            tx: value.tx.into(),
+            effects: Arc::new(value.effects.into()),
+        }
     }
+}
 
-    pub fn tx(&self) -> SignedTransaction {
-        self.0.tx.clone().into()
-    }
-
-    pub fn effects(&self) -> TransactionEffects {
-        self.0.effects.clone().into()
+impl From<TransactionDataEffects> for iota_graphql_client::TransactionDataEffects {
+    fn from(value: TransactionDataEffects) -> Self {
+        Self {
+            tx: value.tx.into(),
+            effects: value.effects.0.clone(),
+        }
     }
 }
 
@@ -147,14 +148,108 @@ impl From<TransactionsFilter> for iota_graphql_client::query_types::Transactions
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct DryRunResult(pub iota_graphql_client::DryRunResult);
+/// The result of a dry run, which includes the effects of the transaction and
+/// any errors that may have occurred.
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct DryRunResult {
+    pub effects: Option<Arc<TransactionEffects>>,
+    pub error: Option<String>,
+}
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct Event(pub iota_types::Event);
+impl From<iota_graphql_client::DryRunResult> for DryRunResult {
+    fn from(value: iota_graphql_client::DryRunResult) -> Self {
+        DryRunResult {
+            effects: value.effects.map(|e| Arc::new(e.into())),
+            error: value.error,
+        }
+    }
+}
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct ObjectRef(pub iota_graphql_client::query_types::ObjectRef);
+impl From<DryRunResult> for iota_graphql_client::DryRunResult {
+    fn from(value: DryRunResult) -> Self {
+        iota_graphql_client::DryRunResult {
+            effects: value.effects.map(|e| e.0.clone()),
+            error: value.error,
+        }
+    }
+}
+
+/// An event
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// event = object-id identifier address struct-tag bytes
+/// ```
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct Event {
+    /// Package id of the top-level function invoked by a MoveCall command which
+    /// triggered this event to be emitted.
+    pub package_id: Arc<ObjectId>,
+    /// Module name of the top-level function invoked by a MoveCall command
+    /// which triggered this event to be emitted.
+    pub module: String,
+    /// Address of the account that sent the transaction where this event was
+    /// emitted.
+    pub sender: Arc<Address>,
+    /// The type of the event emitted
+    pub type_: String,
+    /// BCS serialized bytes of the event
+    pub contents: Vec<u8>,
+}
+
+impl From<iota_types::Event> for Event {
+    fn from(value: iota_types::Event) -> Self {
+        Self {
+            package_id: Arc::new(value.package_id.into()),
+            module: value.module.to_string(),
+            sender: Arc::new(value.sender.into()),
+            type_: value.type_.to_string(),
+            contents: value.contents,
+        }
+    }
+}
+
+impl From<Event> for iota_types::Event {
+    fn from(value: Event) -> Self {
+        Self {
+            package_id: (**value.package_id),
+            module: Identifier::from_str(&value.module).unwrap(),
+            sender: (**value.sender),
+            type_: StructTag::from_str(&value.type_).unwrap(),
+            contents: value.contents,
+        }
+    }
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct ObjectRef {
+    pub address: Arc<ObjectId>,
+    pub digest: String,
+    pub version: u64,
+}
+
+impl From<iota_graphql_client::query_types::ObjectRef> for ObjectRef {
+    fn from(value: iota_graphql_client::query_types::ObjectRef) -> Self {
+        Self {
+            address: Arc::new(value.address.into()),
+            digest: value.digest.to_string(),
+            version: value.version,
+        }
+    }
+}
+
+impl From<ObjectRef> for iota_graphql_client::query_types::ObjectRef {
+    fn from(value: ObjectRef) -> Self {
+        Self {
+            address: (**value.address),
+            digest: value.digest,
+            version: value.version,
+        }
+    }
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct Epoch(pub iota_graphql_client::query_types::Epoch);
@@ -418,8 +513,9 @@ impl From<Validator> for iota_graphql_client::query_types::Validator {
         Self {
             apy: value.apy,
             address: GQLAddress {
-                address: **value.address,
-            },
+                address: value.address.clone(),
+            }
+            .into(),
             commission_rate: value.commission_rate,
             credentials: value.credentials,
             description: value.description,
@@ -431,8 +527,11 @@ impl From<Validator> for iota_graphql_client::query_types::Validator {
             next_epoch_credentials: value.next_epoch_credentials,
             next_epoch_gas_price: value.next_epoch_gas_price.map(|v| v.to_string().into()),
             next_epoch_stake: value.next_epoch_stake.map(|v| v.to_string().into()),
-            operation_cap: value.operation_cap.map(|o| MoveObject {
-                bcs: Some(base64ct::Base64::encode_string(&o).into()),
+            operation_cap: value.operation_cap.map(|o| {
+                MoveObject {
+                    bcs: Some(base64ct::Base64::encode_string(&o)),
+                }
+                .into()
             }),
             pending_pool_token_withdraw: value
                 .pending_pool_token_withdraw
@@ -445,7 +544,7 @@ impl From<Validator> for iota_graphql_client::query_types::Validator {
             project_url: value.project_url,
             rewards_pool: value.rewards_pool.map(|v| v.to_string().into()),
             staking_pool_activation_epoch: value.staking_pool_activation_epoch,
-            staking_pool_id: **value.staking_pool_id,
+            staking_pool_id: (**value.staking_pool_id),
             staking_pool_iota_balance: value
                 .staking_pool_iota_balance
                 .map(|v| v.to_string().into()),
@@ -476,28 +575,162 @@ pub enum TransactionBlockKindInput {
     EndOfEpochTx,
 }
 
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct BigInt {
+    pub value: String,
+}
+
+impl From<iota_graphql_client::query_types::BigInt> for BigInt {
+    fn from(value: iota_graphql_client::query_types::BigInt) -> Self {
+        BigInt { value: value.0 }
+    }
+}
+
+impl From<BigInt> for iota_graphql_client::query_types::BigInt {
+    fn from(value: BigInt) -> Self {
+        iota_graphql_client::query_types::BigInt(value.value)
+    }
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct DateTime {
+    pub value: String,
+}
+
+impl From<iota_graphql_client::query_types::DateTime> for DateTime {
+    fn from(value: iota_graphql_client::query_types::DateTime) -> Self {
+        DateTime { value: value.0 }
+    }
+}
+
+impl From<DateTime> for iota_graphql_client::query_types::DateTime {
+    fn from(value: DateTime) -> Self {
+        iota_graphql_client::query_types::DateTime(value.value)
+    }
+}
+
+/// Information about pagination in a connection.
 #[uniffi::remote(Record)]
 pub struct PageInfo {
+    /// When paginating backwards, are there more items?
     pub has_previous_page: bool,
+    /// Are there more items when paginating forwards?
     pub has_next_page: bool,
+    /// When paginating backwards, the cursor to continue.
+    #[uniffi(default = None)]
     pub start_cursor: Option<String>,
+    /// When paginating forwards, the cursor to continue.
+    #[uniffi(default = None)]
     pub end_cursor: Option<String>,
 }
 
+/// Pagination options for querying the GraphQL server. It defaults to forward
+/// pagination with the GraphQL server's max page size.
 #[uniffi::remote(Record)]
 pub struct PaginationFilter {
     pub direction: Direction,
     #[uniffi(default = None)]
     pub cursor: Option<String>,
+    /// The maximum number of items to return. If this is omitted, it will
+    /// lazily query the service configuration for the max page size.
     #[uniffi(default = None)]
     pub limit: Option<i32>,
 }
 
+/// Pagination direction.
 #[uniffi::remote(Enum)]
 pub enum Direction {
     #[default]
     Forward,
     Backward,
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct ValidatorSet {
+    pub active_validators: ValidatorConnection,
+}
+
+impl From<iota_graphql_client::query_types::ValidatorSet> for ValidatorSet {
+    fn from(value: iota_graphql_client::query_types::ValidatorSet) -> Self {
+        ValidatorSet {
+            active_validators: value.active_validators.into(),
+        }
+    }
+}
+
+impl From<ValidatorSet> for iota_graphql_client::query_types::ValidatorSet {
+    fn from(value: ValidatorSet) -> Self {
+        iota_graphql_client::query_types::ValidatorSet {
+            active_validators: value.active_validators.into(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct ValidatorConnection {
+    pub page_info: PageInfo,
+    pub nodes: Vec<Validator>,
+}
+
+impl From<iota_graphql_client::query_types::ValidatorConnection> for ValidatorConnection {
+    fn from(value: iota_graphql_client::query_types::ValidatorConnection) -> Self {
+        ValidatorConnection {
+            page_info: value.page_info,
+            nodes: value.nodes.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl From<ValidatorConnection> for iota_graphql_client::query_types::ValidatorConnection {
+    fn from(value: ValidatorConnection) -> Self {
+        iota_graphql_client::query_types::ValidatorConnection {
+            page_info: value.page_info,
+            nodes: value.nodes.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct GQLAddress {
+    pub address: Arc<Address>,
+}
+
+impl From<iota_graphql_client::query_types::GQLAddress> for GQLAddress {
+    fn from(value: iota_graphql_client::query_types::GQLAddress) -> Self {
+        GQLAddress {
+            address: Arc::new(value.address.into()),
+        }
+    }
+}
+
+impl From<GQLAddress> for iota_graphql_client::query_types::GQLAddress {
+    fn from(value: GQLAddress) -> Self {
+        iota_graphql_client::query_types::GQLAddress {
+            address: (**value.address),
+        }
+    }
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct MoveObject {
+    #[uniffi(default = None)]
+    pub bcs: Option<String>,
+}
+
+impl From<iota_graphql_client::query_types::MoveObject> for MoveObject {
+    fn from(value: iota_graphql_client::query_types::MoveObject) -> Self {
+        MoveObject {
+            bcs: value.bcs.map(|v| v.0),
+        }
+    }
+}
+
+impl From<MoveObject> for iota_graphql_client::query_types::MoveObject {
+    fn from(value: MoveObject) -> Self {
+        iota_graphql_client::query_types::MoveObject {
+            bcs: value.bcs.map(iota_graphql_client::query_types::Base64),
+        }
+    }
 }
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]

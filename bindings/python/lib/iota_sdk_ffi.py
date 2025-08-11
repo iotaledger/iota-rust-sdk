@@ -499,7 +499,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 48442:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 62890:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 4408:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 47707:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -517,7 +517,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 41916:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 22929:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -561,9 +561,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_seq_num() != 18624:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction() != 54687:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction() != 35048:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_data_effects() != 57979:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_data_effects() != 7442:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_effects() != 56760:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -599,21 +599,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() != 21066:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_signedtransaction_signatures() != 59055:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_signedtransaction_transaction() != 60873:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration() != 4282:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_gas_payment() != 5316:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_kind() != 49492:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender() != 38190:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_effects() != 62613:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_tx() != 13303:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1() != 39808:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -681,11 +669,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_generate() != 49992:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_signedtransaction_new() != 6988:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new() != 36271:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondataeffects_new() != 30302:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1() != 6144:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1() != 37860:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1270,7 +1254,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins.argtypes = (
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx.argtypes = (
     ctypes.c_void_p,
-    ctypes.c_void_p,
+    _UniffiRustBuffer,
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx.restype = ctypes.c_uint64
@@ -1325,7 +1309,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_events.restype = ctypes.c
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
-    ctypes.c_void_p,
+    _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_latest_checkpoint_sequence_number.argtypes = (
@@ -1881,6 +1865,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactioneffects.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactioneffects.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactioneffectsdigest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -1901,16 +1900,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactioneventsdigest.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactioneventsdigest.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionexpiration.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionexpiration.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionexpiration.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionexpiration.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionkind.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2446,30 +2435,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes.resty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_signedtransaction_signatures.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_signedtransaction_signatures.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_signedtransaction_transaction.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_signedtransaction_transaction.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_gas_payment.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_gas_payment.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_kind.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_kind.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_effects.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_effects.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_tx.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_tx.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes.restype = ctypes.c_uint16
@@ -2569,15 +2540,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_str.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_generate.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signedtransaction_new.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signedtransaction_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondataeffects_new.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondataeffects_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1.restype = ctypes.c_uint16
@@ -2605,6 +2570,45 @@ _uniffi_check_contract_api_version(_UniffiLib)
 
 # Public interface members begin here.
 
+
+class _UniffiConverterUInt8(_UniffiConverterPrimitiveInt):
+    CLASS_NAME = "u8"
+    VALUE_MIN = 0
+    VALUE_MAX = 2**8
+
+    @staticmethod
+    def read(buf):
+        return buf.read_u8()
+
+    @staticmethod
+    def write(value, buf):
+        buf.write_u8(value)
+
+class _UniffiConverterUInt16(_UniffiConverterPrimitiveInt):
+    CLASS_NAME = "u16"
+    VALUE_MIN = 0
+    VALUE_MAX = 2**16
+
+    @staticmethod
+    def read(buf):
+        return buf.read_u16()
+
+    @staticmethod
+    def write(value, buf):
+        buf.write_u16(value)
+
+class _UniffiConverterUInt32(_UniffiConverterPrimitiveInt):
+    CLASS_NAME = "u32"
+    VALUE_MIN = 0
+    VALUE_MAX = 2**32
+
+    @staticmethod
+    def read(buf):
+        return buf.read_u32()
+
+    @staticmethod
+    def write(value, buf):
+        buf.write_u32(value)
 
 class _UniffiConverterInt32(_UniffiConverterPrimitiveInt):
     CLASS_NAME = "i32"
@@ -2819,12 +2823,84 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
 
 
 
+class ChangedObject:
+    """
+    Input/output state of an object that was changed during execution
 
+    # BCS
 
+    The BCS serialized form for this type is defined by the following ABNF:
 
+    ```text
+    changed-object = object-id object-in object-out id-operation
+    ```
+    """
 
+    object_id: "ObjectId"
+    """
+    Id of the object
+    """
 
+    input_state: "ObjectIn"
+    """
+    State of the object in the store prior to this transaction.
+    """
 
+    output_state: "ObjectOut"
+    """
+    State of the object in the store after this transaction.
+    """
+
+    id_operation: "IdOperation"
+    """
+    Whether this object ID is created or deleted in this transaction.
+    This information isn't required by the protocol but is useful for
+    providing more detailed semantics on object changes.
+    """
+
+    def __init__(self, *, object_id: "ObjectId", input_state: "ObjectIn", output_state: "ObjectOut", id_operation: "IdOperation"):
+        self.object_id = object_id
+        self.input_state = input_state
+        self.output_state = output_state
+        self.id_operation = id_operation
+
+    def __str__(self):
+        return "ChangedObject(object_id={}, input_state={}, output_state={}, id_operation={})".format(self.object_id, self.input_state, self.output_state, self.id_operation)
+
+    def __eq__(self, other):
+        if self.object_id != other.object_id:
+            return False
+        if self.input_state != other.input_state:
+            return False
+        if self.output_state != other.output_state:
+            return False
+        if self.id_operation != other.id_operation:
+            return False
+        return True
+
+class _UniffiConverterTypeChangedObject(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ChangedObject(
+            object_id=_UniffiConverterTypeObjectId.read(buf),
+            input_state=_UniffiConverterTypeObjectIn.read(buf),
+            output_state=_UniffiConverterTypeObjectOut.read(buf),
+            id_operation=_UniffiConverterTypeIdOperation.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeObjectId.check_lower(value.object_id)
+        _UniffiConverterTypeObjectIn.check_lower(value.input_state)
+        _UniffiConverterTypeObjectOut.check_lower(value.output_state)
+        _UniffiConverterTypeIdOperation.check_lower(value.id_operation)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeObjectId.write(value.object_id, buf)
+        _UniffiConverterTypeObjectIn.write(value.input_state, buf)
+        _UniffiConverterTypeObjectOut.write(value.output_state, buf)
+        _UniffiConverterTypeIdOperation.write(value.id_operation, buf)
 
 
 class CheckpointSummary:
@@ -4106,6 +4182,42 @@ class _UniffiConverterTypePaginationFilter(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalInt32.write(value.limit, buf)
 
 
+class SignedTransaction:
+    transaction: "Transaction"
+    signatures: "typing.List[UserSignature]"
+    def __init__(self, *, transaction: "Transaction", signatures: "typing.List[UserSignature]"):
+        self.transaction = transaction
+        self.signatures = signatures
+
+    def __str__(self):
+        return "SignedTransaction(transaction={}, signatures={})".format(self.transaction, self.signatures)
+
+    def __eq__(self, other):
+        if self.transaction != other.transaction:
+            return False
+        if self.signatures != other.signatures:
+            return False
+        return True
+
+class _UniffiConverterTypeSignedTransaction(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return SignedTransaction(
+            transaction=_UniffiConverterTypeTransaction.read(buf),
+            signatures=_UniffiConverterSequenceTypeUserSignature.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeTransaction.check_lower(value.transaction)
+        _UniffiConverterSequenceTypeUserSignature.check_lower(value.signatures)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeTransaction.write(value.transaction, buf)
+        _UniffiConverterSequenceTypeUserSignature.write(value.signatures, buf)
+
+
 class SignedTransactionPage:
     """
     A page of items returned by the GraphQL server.
@@ -4153,6 +4265,106 @@ class _UniffiConverterTypeSignedTransactionPage(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypePageInfo.write(value.page_info, buf)
         _UniffiConverterSequenceTypeSignedTransaction.write(value.data, buf)
+
+
+class Transaction:
+    """
+    A transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    transaction = %x00 transaction-v1
+
+    transaction-v1 = transaction-kind address gas-payment transaction-expiration
+    ```
+    """
+
+    kind: "TransactionKind"
+    sender: "Address"
+    gas_payment: "GasPayment"
+    expiration: "TransactionExpiration"
+    def __init__(self, *, kind: "TransactionKind", sender: "Address", gas_payment: "GasPayment", expiration: "TransactionExpiration"):
+        self.kind = kind
+        self.sender = sender
+        self.gas_payment = gas_payment
+        self.expiration = expiration
+
+    def __str__(self):
+        return "Transaction(kind={}, sender={}, gas_payment={}, expiration={})".format(self.kind, self.sender, self.gas_payment, self.expiration)
+
+    def __eq__(self, other):
+        if self.kind != other.kind:
+            return False
+        if self.sender != other.sender:
+            return False
+        if self.gas_payment != other.gas_payment:
+            return False
+        if self.expiration != other.expiration:
+            return False
+        return True
+
+class _UniffiConverterTypeTransaction(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return Transaction(
+            kind=_UniffiConverterTypeTransactionKind.read(buf),
+            sender=_UniffiConverterTypeAddress.read(buf),
+            gas_payment=_UniffiConverterTypeGasPayment.read(buf),
+            expiration=_UniffiConverterTypeTransactionExpiration.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeTransactionKind.check_lower(value.kind)
+        _UniffiConverterTypeAddress.check_lower(value.sender)
+        _UniffiConverterTypeGasPayment.check_lower(value.gas_payment)
+        _UniffiConverterTypeTransactionExpiration.check_lower(value.expiration)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeTransactionKind.write(value.kind, buf)
+        _UniffiConverterTypeAddress.write(value.sender, buf)
+        _UniffiConverterTypeGasPayment.write(value.gas_payment, buf)
+        _UniffiConverterTypeTransactionExpiration.write(value.expiration, buf)
+
+
+class TransactionDataEffects:
+    tx: "SignedTransaction"
+    effects: "TransactionEffects"
+    def __init__(self, *, tx: "SignedTransaction", effects: "TransactionEffects"):
+        self.tx = tx
+        self.effects = effects
+
+    def __str__(self):
+        return "TransactionDataEffects(tx={}, effects={})".format(self.tx, self.effects)
+
+    def __eq__(self, other):
+        if self.tx != other.tx:
+            return False
+        if self.effects != other.effects:
+            return False
+        return True
+
+class _UniffiConverterTypeTransactionDataEffects(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TransactionDataEffects(
+            tx=_UniffiConverterTypeSignedTransaction.read(buf),
+            effects=_UniffiConverterTypeTransactionEffects.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeSignedTransaction.check_lower(value.tx)
+        _UniffiConverterTypeTransactionEffects.check_lower(value.effects)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeSignedTransaction.write(value.tx, buf)
+        _UniffiConverterTypeTransactionEffects.write(value.effects, buf)
 
 
 class TransactionDataEffectsPage:
@@ -4251,6 +4463,181 @@ class _UniffiConverterTypeTransactionEffectsPage(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypePageInfo.write(value.page_info, buf)
         _UniffiConverterSequenceTypeTransactionEffects.write(value.data, buf)
+
+
+class TransactionEffectsV1:
+    """
+    Version 1 of TransactionEffects
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    effects-v1 = execution-status
+    u64                                ; epoch
+    gas-cost-summary
+    digest                             ; transaction digest
+    (option u32)                       ; gas object index
+    (option digest)                    ; events digest
+    (vector digest)                    ; list of transaction dependencies
+    u64                                ; lamport version
+    (vector changed-object)
+    (vector unchanged-shared-object)
+    (option digest)                    ; auxiliary data digest
+    ```
+    """
+
+    status: "ExecutionStatus"
+    """
+    The status of the execution
+    """
+
+    epoch: "int"
+    """
+    The epoch when this transaction was executed.
+    """
+
+    gas_used: "GasCostSummary"
+    """
+    The gas used by this transaction
+    """
+
+    transaction_digest: "TransactionDigest"
+    """
+    The transaction digest
+    """
+
+    gas_object_index: "typing.Optional[int]"
+    """
+    The updated gas object reference, as an index into the `changed_objects`
+    vector. Having a dedicated field for convenient access.
+    System transaction that don't require gas will leave this as None.
+    """
+
+    events_digest: "typing.Optional[TransactionEventsDigest]"
+    """
+    The digest of the events emitted during execution,
+    can be None if the transaction does not emit any event.
+    """
+
+    dependencies: "typing.List[TransactionDigest]"
+    """
+    The set of transaction digests this transaction depends on.
+    """
+
+    lamport_version: "int"
+    """
+    The version number of all the written Move objects by this transaction.
+    """
+
+    changed_objects: "typing.List[ChangedObject]"
+    """
+    Objects whose state are changed in the object store.
+    """
+
+    unchanged_shared_objects: "typing.List[UnchangedSharedObject]"
+    """
+    Shared objects that are not mutated in this transaction. Unlike owned
+    objects, read-only shared objects' version are not committed in the
+    transaction, and in order for a node to catch up and execute it
+    without consensus sequencing, the version needs to be committed in
+    the effects.
+    """
+
+    auxiliary_data_digest: "typing.Optional[EffectsAuxiliaryDataDigest]"
+    """
+    Auxiliary data that are not protocol-critical, generated as part of the
+    effects but are stored separately. Storing it separately allows us
+    to avoid bloating the effects with data that are not critical.
+    It also provides more flexibility on the format and type of the data.
+    """
+
+    def __init__(self, *, status: "ExecutionStatus", epoch: "int", gas_used: "GasCostSummary", transaction_digest: "TransactionDigest", gas_object_index: "typing.Optional[int]", events_digest: "typing.Optional[TransactionEventsDigest]", dependencies: "typing.List[TransactionDigest]", lamport_version: "int", changed_objects: "typing.List[ChangedObject]", unchanged_shared_objects: "typing.List[UnchangedSharedObject]", auxiliary_data_digest: "typing.Optional[EffectsAuxiliaryDataDigest]"):
+        self.status = status
+        self.epoch = epoch
+        self.gas_used = gas_used
+        self.transaction_digest = transaction_digest
+        self.gas_object_index = gas_object_index
+        self.events_digest = events_digest
+        self.dependencies = dependencies
+        self.lamport_version = lamport_version
+        self.changed_objects = changed_objects
+        self.unchanged_shared_objects = unchanged_shared_objects
+        self.auxiliary_data_digest = auxiliary_data_digest
+
+    def __str__(self):
+        return "TransactionEffectsV1(status={}, epoch={}, gas_used={}, transaction_digest={}, gas_object_index={}, events_digest={}, dependencies={}, lamport_version={}, changed_objects={}, unchanged_shared_objects={}, auxiliary_data_digest={})".format(self.status, self.epoch, self.gas_used, self.transaction_digest, self.gas_object_index, self.events_digest, self.dependencies, self.lamport_version, self.changed_objects, self.unchanged_shared_objects, self.auxiliary_data_digest)
+
+    def __eq__(self, other):
+        if self.status != other.status:
+            return False
+        if self.epoch != other.epoch:
+            return False
+        if self.gas_used != other.gas_used:
+            return False
+        if self.transaction_digest != other.transaction_digest:
+            return False
+        if self.gas_object_index != other.gas_object_index:
+            return False
+        if self.events_digest != other.events_digest:
+            return False
+        if self.dependencies != other.dependencies:
+            return False
+        if self.lamport_version != other.lamport_version:
+            return False
+        if self.changed_objects != other.changed_objects:
+            return False
+        if self.unchanged_shared_objects != other.unchanged_shared_objects:
+            return False
+        if self.auxiliary_data_digest != other.auxiliary_data_digest:
+            return False
+        return True
+
+class _UniffiConverterTypeTransactionEffectsV1(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TransactionEffectsV1(
+            status=_UniffiConverterTypeExecutionStatus.read(buf),
+            epoch=_UniffiConverterUInt64.read(buf),
+            gas_used=_UniffiConverterTypeGasCostSummary.read(buf),
+            transaction_digest=_UniffiConverterTypeTransactionDigest.read(buf),
+            gas_object_index=_UniffiConverterOptionalUInt32.read(buf),
+            events_digest=_UniffiConverterOptionalTypeTransactionEventsDigest.read(buf),
+            dependencies=_UniffiConverterSequenceTypeTransactionDigest.read(buf),
+            lamport_version=_UniffiConverterUInt64.read(buf),
+            changed_objects=_UniffiConverterSequenceTypeChangedObject.read(buf),
+            unchanged_shared_objects=_UniffiConverterSequenceTypeUnchangedSharedObject.read(buf),
+            auxiliary_data_digest=_UniffiConverterOptionalTypeEffectsAuxiliaryDataDigest.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeExecutionStatus.check_lower(value.status)
+        _UniffiConverterUInt64.check_lower(value.epoch)
+        _UniffiConverterTypeGasCostSummary.check_lower(value.gas_used)
+        _UniffiConverterTypeTransactionDigest.check_lower(value.transaction_digest)
+        _UniffiConverterOptionalUInt32.check_lower(value.gas_object_index)
+        _UniffiConverterOptionalTypeTransactionEventsDigest.check_lower(value.events_digest)
+        _UniffiConverterSequenceTypeTransactionDigest.check_lower(value.dependencies)
+        _UniffiConverterUInt64.check_lower(value.lamport_version)
+        _UniffiConverterSequenceTypeChangedObject.check_lower(value.changed_objects)
+        _UniffiConverterSequenceTypeUnchangedSharedObject.check_lower(value.unchanged_shared_objects)
+        _UniffiConverterOptionalTypeEffectsAuxiliaryDataDigest.check_lower(value.auxiliary_data_digest)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeExecutionStatus.write(value.status, buf)
+        _UniffiConverterUInt64.write(value.epoch, buf)
+        _UniffiConverterTypeGasCostSummary.write(value.gas_used, buf)
+        _UniffiConverterTypeTransactionDigest.write(value.transaction_digest, buf)
+        _UniffiConverterOptionalUInt32.write(value.gas_object_index, buf)
+        _UniffiConverterOptionalTypeTransactionEventsDigest.write(value.events_digest, buf)
+        _UniffiConverterSequenceTypeTransactionDigest.write(value.dependencies, buf)
+        _UniffiConverterUInt64.write(value.lamport_version, buf)
+        _UniffiConverterSequenceTypeChangedObject.write(value.changed_objects, buf)
+        _UniffiConverterSequenceTypeUnchangedSharedObject.write(value.unchanged_shared_objects, buf)
+        _UniffiConverterOptionalTypeEffectsAuxiliaryDataDigest.write(value.auxiliary_data_digest, buf)
 
 
 class TransactionMetadata:
@@ -5038,6 +5425,368 @@ class _UniffiConverterTypeValidatorPage(_UniffiConverterRustBuffer):
 
 
 
+class CommandArgumentError:
+    def __init__(self):
+        raise RuntimeError("CommandArgumentError cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class TYPE_MISMATCH:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "CommandArgumentError.TYPE_MISMATCH()".format()
+
+        def __eq__(self, other):
+            if not other.is_TYPE_MISMATCH():
+                return False
+            return True
+    
+    class INVALID_BCS_BYTES:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "CommandArgumentError.INVALID_BCS_BYTES()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_BCS_BYTES():
+                return False
+            return True
+    
+    class INVALID_USAGE_OF_PURE_ARGUMENT:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "CommandArgumentError.INVALID_USAGE_OF_PURE_ARGUMENT()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_USAGE_OF_PURE_ARGUMENT():
+                return False
+            return True
+    
+    class INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "CommandArgumentError.INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION():
+                return False
+            return True
+    
+    class INDEX_OUT_OF_BOUNDS:
+        index: "int"
+
+        def __init__(self,index: "int"):
+            self.index = index
+
+        def __str__(self):
+            return "CommandArgumentError.INDEX_OUT_OF_BOUNDS(index={})".format(self.index)
+
+        def __eq__(self, other):
+            if not other.is_INDEX_OUT_OF_BOUNDS():
+                return False
+            if self.index != other.index:
+                return False
+            return True
+    
+    class SECONDARY_INDEX_OUT_OF_BOUNDS:
+        result: "int"
+        subresult: "int"
+
+        def __init__(self,result: "int", subresult: "int"):
+            self.result = result
+            self.subresult = subresult
+
+        def __str__(self):
+            return "CommandArgumentError.SECONDARY_INDEX_OUT_OF_BOUNDS(result={}, subresult={})".format(self.result, self.subresult)
+
+        def __eq__(self, other):
+            if not other.is_SECONDARY_INDEX_OUT_OF_BOUNDS():
+                return False
+            if self.result != other.result:
+                return False
+            if self.subresult != other.subresult:
+                return False
+            return True
+    
+    class INVALID_RESULT_ARITY:
+        result: "int"
+
+        def __init__(self,result: "int"):
+            self.result = result
+
+        def __str__(self):
+            return "CommandArgumentError.INVALID_RESULT_ARITY(result={})".format(self.result)
+
+        def __eq__(self, other):
+            if not other.is_INVALID_RESULT_ARITY():
+                return False
+            if self.result != other.result:
+                return False
+            return True
+    
+    class INVALID_GAS_COIN_USAGE:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "CommandArgumentError.INVALID_GAS_COIN_USAGE()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_GAS_COIN_USAGE():
+                return False
+            return True
+    
+    class INVALID_VALUE_USAGE:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "CommandArgumentError.INVALID_VALUE_USAGE()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_VALUE_USAGE():
+                return False
+            return True
+    
+    class INVALID_OBJECT_BY_VALUE:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "CommandArgumentError.INVALID_OBJECT_BY_VALUE()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_OBJECT_BY_VALUE():
+                return False
+            return True
+    
+    class INVALID_OBJECT_BY_MUT_REF:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "CommandArgumentError.INVALID_OBJECT_BY_MUT_REF()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_OBJECT_BY_MUT_REF():
+                return False
+            return True
+    
+    class SHARED_OBJECT_OPERATION_NOT_ALLOWED:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED()".format()
+
+        def __eq__(self, other):
+            if not other.is_SHARED_OBJECT_OPERATION_NOT_ALLOWED():
+                return False
+            return True
+    
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_TYPE_MISMATCH(self) -> bool:
+        return isinstance(self, CommandArgumentError.TYPE_MISMATCH)
+    def is_type_mismatch(self) -> bool:
+        return isinstance(self, CommandArgumentError.TYPE_MISMATCH)
+    def is_INVALID_BCS_BYTES(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_BCS_BYTES)
+    def is_invalid_bcs_bytes(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_BCS_BYTES)
+    def is_INVALID_USAGE_OF_PURE_ARGUMENT(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_USAGE_OF_PURE_ARGUMENT)
+    def is_invalid_usage_of_pure_argument(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_USAGE_OF_PURE_ARGUMENT)
+    def is_INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION)
+    def is_invalid_argument_to_private_entry_function(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION)
+    def is_INDEX_OUT_OF_BOUNDS(self) -> bool:
+        return isinstance(self, CommandArgumentError.INDEX_OUT_OF_BOUNDS)
+    def is_index_out_of_bounds(self) -> bool:
+        return isinstance(self, CommandArgumentError.INDEX_OUT_OF_BOUNDS)
+    def is_SECONDARY_INDEX_OUT_OF_BOUNDS(self) -> bool:
+        return isinstance(self, CommandArgumentError.SECONDARY_INDEX_OUT_OF_BOUNDS)
+    def is_secondary_index_out_of_bounds(self) -> bool:
+        return isinstance(self, CommandArgumentError.SECONDARY_INDEX_OUT_OF_BOUNDS)
+    def is_INVALID_RESULT_ARITY(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_RESULT_ARITY)
+    def is_invalid_result_arity(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_RESULT_ARITY)
+    def is_INVALID_GAS_COIN_USAGE(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_GAS_COIN_USAGE)
+    def is_invalid_gas_coin_usage(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_GAS_COIN_USAGE)
+    def is_INVALID_VALUE_USAGE(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_VALUE_USAGE)
+    def is_invalid_value_usage(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_VALUE_USAGE)
+    def is_INVALID_OBJECT_BY_VALUE(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_OBJECT_BY_VALUE)
+    def is_invalid_object_by_value(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_OBJECT_BY_VALUE)
+    def is_INVALID_OBJECT_BY_MUT_REF(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_OBJECT_BY_MUT_REF)
+    def is_invalid_object_by_mut_ref(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_OBJECT_BY_MUT_REF)
+    def is_SHARED_OBJECT_OPERATION_NOT_ALLOWED(self) -> bool:
+        return isinstance(self, CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED)
+    def is_shared_object_operation_not_allowed(self) -> bool:
+        return isinstance(self, CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+CommandArgumentError.TYPE_MISMATCH = type("CommandArgumentError.TYPE_MISMATCH", (CommandArgumentError.TYPE_MISMATCH, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.INVALID_BCS_BYTES = type("CommandArgumentError.INVALID_BCS_BYTES", (CommandArgumentError.INVALID_BCS_BYTES, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.INVALID_USAGE_OF_PURE_ARGUMENT = type("CommandArgumentError.INVALID_USAGE_OF_PURE_ARGUMENT", (CommandArgumentError.INVALID_USAGE_OF_PURE_ARGUMENT, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION = type("CommandArgumentError.INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION", (CommandArgumentError.INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.INDEX_OUT_OF_BOUNDS = type("CommandArgumentError.INDEX_OUT_OF_BOUNDS", (CommandArgumentError.INDEX_OUT_OF_BOUNDS, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.SECONDARY_INDEX_OUT_OF_BOUNDS = type("CommandArgumentError.SECONDARY_INDEX_OUT_OF_BOUNDS", (CommandArgumentError.SECONDARY_INDEX_OUT_OF_BOUNDS, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.INVALID_RESULT_ARITY = type("CommandArgumentError.INVALID_RESULT_ARITY", (CommandArgumentError.INVALID_RESULT_ARITY, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.INVALID_GAS_COIN_USAGE = type("CommandArgumentError.INVALID_GAS_COIN_USAGE", (CommandArgumentError.INVALID_GAS_COIN_USAGE, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.INVALID_VALUE_USAGE = type("CommandArgumentError.INVALID_VALUE_USAGE", (CommandArgumentError.INVALID_VALUE_USAGE, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.INVALID_OBJECT_BY_VALUE = type("CommandArgumentError.INVALID_OBJECT_BY_VALUE", (CommandArgumentError.INVALID_OBJECT_BY_VALUE, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.INVALID_OBJECT_BY_MUT_REF = type("CommandArgumentError.INVALID_OBJECT_BY_MUT_REF", (CommandArgumentError.INVALID_OBJECT_BY_MUT_REF, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED = type("CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED", (CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED, CommandArgumentError,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeCommandArgumentError(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return CommandArgumentError.TYPE_MISMATCH(
+            )
+        if variant == 2:
+            return CommandArgumentError.INVALID_BCS_BYTES(
+            )
+        if variant == 3:
+            return CommandArgumentError.INVALID_USAGE_OF_PURE_ARGUMENT(
+            )
+        if variant == 4:
+            return CommandArgumentError.INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION(
+            )
+        if variant == 5:
+            return CommandArgumentError.INDEX_OUT_OF_BOUNDS(
+                _UniffiConverterUInt16.read(buf),
+            )
+        if variant == 6:
+            return CommandArgumentError.SECONDARY_INDEX_OUT_OF_BOUNDS(
+                _UniffiConverterUInt16.read(buf),
+                _UniffiConverterUInt16.read(buf),
+            )
+        if variant == 7:
+            return CommandArgumentError.INVALID_RESULT_ARITY(
+                _UniffiConverterUInt16.read(buf),
+            )
+        if variant == 8:
+            return CommandArgumentError.INVALID_GAS_COIN_USAGE(
+            )
+        if variant == 9:
+            return CommandArgumentError.INVALID_VALUE_USAGE(
+            )
+        if variant == 10:
+            return CommandArgumentError.INVALID_OBJECT_BY_VALUE(
+            )
+        if variant == 11:
+            return CommandArgumentError.INVALID_OBJECT_BY_MUT_REF(
+            )
+        if variant == 12:
+            return CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED(
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_TYPE_MISMATCH():
+            return
+        if value.is_INVALID_BCS_BYTES():
+            return
+        if value.is_INVALID_USAGE_OF_PURE_ARGUMENT():
+            return
+        if value.is_INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION():
+            return
+        if value.is_INDEX_OUT_OF_BOUNDS():
+            _UniffiConverterUInt16.check_lower(value.index)
+            return
+        if value.is_SECONDARY_INDEX_OUT_OF_BOUNDS():
+            _UniffiConverterUInt16.check_lower(value.result)
+            _UniffiConverterUInt16.check_lower(value.subresult)
+            return
+        if value.is_INVALID_RESULT_ARITY():
+            _UniffiConverterUInt16.check_lower(value.result)
+            return
+        if value.is_INVALID_GAS_COIN_USAGE():
+            return
+        if value.is_INVALID_VALUE_USAGE():
+            return
+        if value.is_INVALID_OBJECT_BY_VALUE():
+            return
+        if value.is_INVALID_OBJECT_BY_MUT_REF():
+            return
+        if value.is_SHARED_OBJECT_OPERATION_NOT_ALLOWED():
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_TYPE_MISMATCH():
+            buf.write_i32(1)
+        if value.is_INVALID_BCS_BYTES():
+            buf.write_i32(2)
+        if value.is_INVALID_USAGE_OF_PURE_ARGUMENT():
+            buf.write_i32(3)
+        if value.is_INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION():
+            buf.write_i32(4)
+        if value.is_INDEX_OUT_OF_BOUNDS():
+            buf.write_i32(5)
+            _UniffiConverterUInt16.write(value.index, buf)
+        if value.is_SECONDARY_INDEX_OUT_OF_BOUNDS():
+            buf.write_i32(6)
+            _UniffiConverterUInt16.write(value.result, buf)
+            _UniffiConverterUInt16.write(value.subresult, buf)
+        if value.is_INVALID_RESULT_ARITY():
+            buf.write_i32(7)
+            _UniffiConverterUInt16.write(value.result, buf)
+        if value.is_INVALID_GAS_COIN_USAGE():
+            buf.write_i32(8)
+        if value.is_INVALID_VALUE_USAGE():
+            buf.write_i32(9)
+        if value.is_INVALID_OBJECT_BY_VALUE():
+            buf.write_i32(10)
+        if value.is_INVALID_OBJECT_BY_MUT_REF():
+            buf.write_i32(11)
+        if value.is_SHARED_OBJECT_OPERATION_NOT_ALLOWED():
+            buf.write_i32(12)
+
+
+
+
+
+
+
 class Direction(enum.Enum):
     FORWARD = 0
     
@@ -5069,6 +5818,2197 @@ class _UniffiConverterTypeDirection(_UniffiConverterRustBuffer):
             buf.write_i32(1)
         if value == Direction.BACKWARD:
             buf.write_i32(2)
+
+
+
+
+
+
+
+class ExecutionError:
+    """
+    An error that can occur during the execution of a transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+
+    execution-error =  insufficient-gas
+    =/ invalid-gas-object
+    =/ invariant-violation
+    =/ feature-not-yet-supported
+    =/ object-too-big
+    =/ package-too-big
+    =/ circular-object-ownership
+    =/ insufficient-coin-balance
+    =/ coin-balance-overflow
+    =/ publish-error-non-zero-address
+    =/ iota-move-verification-error
+    =/ move-primitive-runtime-error
+    =/ move-abort
+    =/ vm-verification-or-deserialization-error
+    =/ vm-invariant-violation
+    =/ function-not-found
+    =/ arity-mismatch
+    =/ type-arity-mismatch
+    =/ non-entry-function-invoked
+    =/ command-argument-error
+    =/ type-argument-error
+    =/ unused-value-without-drop
+    =/ invalid-public-function-return-type
+    =/ invalid-transfer-object
+    =/ effects-too-large
+    =/ publish-upgrade-missing-dependency
+    =/ publish-upgrade-dependency-downgrade
+    =/ package-upgrade-error
+    =/ written-objects-too-large
+    =/ certificate-denied
+    =/ iota-move-verification-timeout
+    =/ shared-object-operation-not-allowed
+    =/ input-object-deleted
+    =/ execution-cancelled-due-to-shared-object-congestion
+    =/ address-denied-for-coin
+    =/ coin-type-global-pause
+    =/ execution-cancelled-due-to-randomness-unavailable
+
+    insufficient-gas                                    = %x00
+    invalid-gas-object                                  = %x01
+    invariant-violation                                 = %x02
+    feature-not-yet-supported                           = %x03
+    object-too-big                                      = %x04 u64 u64
+    package-too-big                                     = %x05 u64 u64
+    circular-object-ownership                           = %x06 object-id
+    insufficient-coin-balance                           = %x07
+    coin-balance-overflow                               = %x08
+    publish-error-non-zero-address                      = %x09
+    iota-move-verification-error                        = %x0a
+    move-primitive-runtime-error                        = %x0b (option move-location)
+    move-abort                                          = %x0c move-location u64
+    vm-verification-or-deserialization-error            = %x0d
+    vm-invariant-violation                              = %x0e
+    function-not-found                                  = %x0f
+    arity-mismatch                                      = %x10
+    type-arity-mismatch                                 = %x11
+    non-entry-function-invoked                          = %x12
+    command-argument-error                              = %x13 u16 command-argument-error
+    type-argument-error                                 = %x14 u16 type-argument-error
+    unused-value-without-drop                           = %x15 u16 u16
+    invalid-public-function-return-type                 = %x16 u16
+    invalid-transfer-object                             = %x17
+    effects-too-large                                   = %x18 u64 u64
+    publish-upgrade-missing-dependency                  = %x19
+    publish-upgrade-dependency-downgrade                = %x1a
+    package-upgrade-error                               = %x1b package-upgrade-error
+    written-objects-too-large                           = %x1c u64 u64
+    certificate-denied                                  = %x1d
+    iota-move-verification-timeout                      = %x1e
+    shared-object-operation-not-allowed                 = %x1f
+    input-object-deleted                                = %x20
+    execution-cancelled-due-to-shared-object-congestion = %x21 (vector object-id)
+    address-denied-for-coin                             = %x22 address string
+    coin-type-global-pause                              = %x23 string
+    execution-cancelled-due-to-randomness-unavailable   = %x24
+    ```
+    """
+
+    def __init__(self):
+        raise RuntimeError("ExecutionError cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class INSUFFICIENT_GAS:
+        """
+        Insufficient Gas
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.INSUFFICIENT_GAS()".format()
+
+        def __eq__(self, other):
+            if not other.is_INSUFFICIENT_GAS():
+                return False
+            return True
+    
+    class INVALID_GAS_OBJECT:
+        """
+        Invalid Gas Object.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.INVALID_GAS_OBJECT()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_GAS_OBJECT():
+                return False
+            return True
+    
+    class INVARIANT_VIOLATION:
+        """
+        Invariant Violation
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.INVARIANT_VIOLATION()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVARIANT_VIOLATION():
+                return False
+            return True
+    
+    class FEATURE_NOT_YET_SUPPORTED:
+        """
+        Attempted to used feature that is not supported yet
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.FEATURE_NOT_YET_SUPPORTED()".format()
+
+        def __eq__(self, other):
+            if not other.is_FEATURE_NOT_YET_SUPPORTED():
+                return False
+            return True
+    
+    class OBJECT_TOO_BIG:
+        """
+        Move object is larger than the maximum allowed size
+        """
+
+        object_size: "int"
+        max_object_size: "int"
+
+        def __init__(self,object_size: "int", max_object_size: "int"):
+            self.object_size = object_size
+            self.max_object_size = max_object_size
+
+        def __str__(self):
+            return "ExecutionError.OBJECT_TOO_BIG(object_size={}, max_object_size={})".format(self.object_size, self.max_object_size)
+
+        def __eq__(self, other):
+            if not other.is_OBJECT_TOO_BIG():
+                return False
+            if self.object_size != other.object_size:
+                return False
+            if self.max_object_size != other.max_object_size:
+                return False
+            return True
+    
+    class PACKAGE_TOO_BIG:
+        """
+        Package is larger than the maximum allowed size
+        """
+
+        object_size: "int"
+        max_object_size: "int"
+
+        def __init__(self,object_size: "int", max_object_size: "int"):
+            self.object_size = object_size
+            self.max_object_size = max_object_size
+
+        def __str__(self):
+            return "ExecutionError.PACKAGE_TOO_BIG(object_size={}, max_object_size={})".format(self.object_size, self.max_object_size)
+
+        def __eq__(self, other):
+            if not other.is_PACKAGE_TOO_BIG():
+                return False
+            if self.object_size != other.object_size:
+                return False
+            if self.max_object_size != other.max_object_size:
+                return False
+            return True
+    
+    class CIRCULAR_OBJECT_OWNERSHIP:
+        """
+        Circular Object Ownership
+        """
+
+        object: "ObjectId"
+
+        def __init__(self,object: "ObjectId"):
+            self.object = object
+
+        def __str__(self):
+            return "ExecutionError.CIRCULAR_OBJECT_OWNERSHIP(object={})".format(self.object)
+
+        def __eq__(self, other):
+            if not other.is_CIRCULAR_OBJECT_OWNERSHIP():
+                return False
+            if self.object != other.object:
+                return False
+            return True
+    
+    class INSUFFICIENT_COIN_BALANCE:
+        """
+        Insufficient coin balance for requested operation
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.INSUFFICIENT_COIN_BALANCE()".format()
+
+        def __eq__(self, other):
+            if not other.is_INSUFFICIENT_COIN_BALANCE():
+                return False
+            return True
+    
+    class COIN_BALANCE_OVERFLOW:
+        """
+        Coin balance overflowed an u64
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.COIN_BALANCE_OVERFLOW()".format()
+
+        def __eq__(self, other):
+            if not other.is_COIN_BALANCE_OVERFLOW():
+                return False
+            return True
+    
+    class PUBLISH_ERROR_NON_ZERO_ADDRESS:
+        """
+        Publish Error, Non-zero Address.
+        The modules in the package must have their self-addresses set to zero.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.PUBLISH_ERROR_NON_ZERO_ADDRESS()".format()
+
+        def __eq__(self, other):
+            if not other.is_PUBLISH_ERROR_NON_ZERO_ADDRESS():
+                return False
+            return True
+    
+    class IOTA_MOVE_VERIFICATION_ERROR:
+        """
+        IOTA Move Bytecode Verification Error.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.IOTA_MOVE_VERIFICATION_ERROR()".format()
+
+        def __eq__(self, other):
+            if not other.is_IOTA_MOVE_VERIFICATION_ERROR():
+                return False
+            return True
+    
+    class MOVE_PRIMITIVE_RUNTIME_ERROR:
+        """
+        Error from a non-abort instruction.
+        Possible causes:
+        Arithmetic error, stack overflow, max value depth, etc."
+        """
+
+        location: "typing.Optional[MoveLocation]"
+
+        def __init__(self,location: "typing.Optional[MoveLocation]"):
+            self.location = location
+
+        def __str__(self):
+            return "ExecutionError.MOVE_PRIMITIVE_RUNTIME_ERROR(location={})".format(self.location)
+
+        def __eq__(self, other):
+            if not other.is_MOVE_PRIMITIVE_RUNTIME_ERROR():
+                return False
+            if self.location != other.location:
+                return False
+            return True
+    
+    class MOVE_ABORT:
+        """
+        Move runtime abort
+        """
+
+        location: "MoveLocation"
+        code: "int"
+
+        def __init__(self,location: "MoveLocation", code: "int"):
+            self.location = location
+            self.code = code
+
+        def __str__(self):
+            return "ExecutionError.MOVE_ABORT(location={}, code={})".format(self.location, self.code)
+
+        def __eq__(self, other):
+            if not other.is_MOVE_ABORT():
+                return False
+            if self.location != other.location:
+                return False
+            if self.code != other.code:
+                return False
+            return True
+    
+    class VM_VERIFICATION_OR_DESERIALIZATION_ERROR:
+        """
+        Bytecode verification error.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.VM_VERIFICATION_OR_DESERIALIZATION_ERROR()".format()
+
+        def __eq__(self, other):
+            if not other.is_VM_VERIFICATION_OR_DESERIALIZATION_ERROR():
+                return False
+            return True
+    
+    class VM_INVARIANT_VIOLATION:
+        """
+        MoveVm invariant violation
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.VM_INVARIANT_VIOLATION()".format()
+
+        def __eq__(self, other):
+            if not other.is_VM_INVARIANT_VIOLATION():
+                return False
+            return True
+    
+    class FUNCTION_NOT_FOUND:
+        """
+        Function not found
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.FUNCTION_NOT_FOUND()".format()
+
+        def __eq__(self, other):
+            if not other.is_FUNCTION_NOT_FOUND():
+                return False
+            return True
+    
+    class ARITY_MISMATCH:
+        """
+        Arity mismatch for Move function.
+        The number of arguments does not match the number of parameters
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.ARITY_MISMATCH()".format()
+
+        def __eq__(self, other):
+            if not other.is_ARITY_MISMATCH():
+                return False
+            return True
+    
+    class TYPE_ARITY_MISMATCH:
+        """
+        Type arity mismatch for Move function.
+        Mismatch between the number of actual versus expected type arguments.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.TYPE_ARITY_MISMATCH()".format()
+
+        def __eq__(self, other):
+            if not other.is_TYPE_ARITY_MISMATCH():
+                return False
+            return True
+    
+    class NON_ENTRY_FUNCTION_INVOKED:
+        """
+        Non Entry Function Invoked. Move Call must start with an entry function.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.NON_ENTRY_FUNCTION_INVOKED()".format()
+
+        def __eq__(self, other):
+            if not other.is_NON_ENTRY_FUNCTION_INVOKED():
+                return False
+            return True
+    
+    class COMMAND_ARGUMENT_ERROR:
+        """
+        Invalid command argument
+        """
+
+        argument: "int"
+        kind: "CommandArgumentError"
+
+        def __init__(self,argument: "int", kind: "CommandArgumentError"):
+            self.argument = argument
+            self.kind = kind
+
+        def __str__(self):
+            return "ExecutionError.COMMAND_ARGUMENT_ERROR(argument={}, kind={})".format(self.argument, self.kind)
+
+        def __eq__(self, other):
+            if not other.is_COMMAND_ARGUMENT_ERROR():
+                return False
+            if self.argument != other.argument:
+                return False
+            if self.kind != other.kind:
+                return False
+            return True
+    
+    class TYPE_ARGUMENT_ERROR:
+        """
+        Type argument error
+        """
+
+        type_argument: "int"
+        """
+        Index of the problematic type argument
+        """
+
+        kind: "TypeArgumentError"
+
+        def __init__(self,type_argument: "int", kind: "TypeArgumentError"):
+            self.type_argument = type_argument
+            self.kind = kind
+
+        def __str__(self):
+            return "ExecutionError.TYPE_ARGUMENT_ERROR(type_argument={}, kind={})".format(self.type_argument, self.kind)
+
+        def __eq__(self, other):
+            if not other.is_TYPE_ARGUMENT_ERROR():
+                return False
+            if self.type_argument != other.type_argument:
+                return False
+            if self.kind != other.kind:
+                return False
+            return True
+    
+    class UNUSED_VALUE_WITHOUT_DROP:
+        """
+        Unused result without the drop ability.
+        """
+
+        result: "int"
+        subresult: "int"
+
+        def __init__(self,result: "int", subresult: "int"):
+            self.result = result
+            self.subresult = subresult
+
+        def __str__(self):
+            return "ExecutionError.UNUSED_VALUE_WITHOUT_DROP(result={}, subresult={})".format(self.result, self.subresult)
+
+        def __eq__(self, other):
+            if not other.is_UNUSED_VALUE_WITHOUT_DROP():
+                return False
+            if self.result != other.result:
+                return False
+            if self.subresult != other.subresult:
+                return False
+            return True
+    
+    class INVALID_PUBLIC_FUNCTION_RETURN_TYPE:
+        """
+        Invalid public Move function signature.
+        Unsupported return type for return value
+        """
+
+        index: "int"
+
+        def __init__(self,index: "int"):
+            self.index = index
+
+        def __str__(self):
+            return "ExecutionError.INVALID_PUBLIC_FUNCTION_RETURN_TYPE(index={})".format(self.index)
+
+        def __eq__(self, other):
+            if not other.is_INVALID_PUBLIC_FUNCTION_RETURN_TYPE():
+                return False
+            if self.index != other.index:
+                return False
+            return True
+    
+    class INVALID_TRANSFER_OBJECT:
+        """
+        Invalid Transfer Object, object does not have public transfer.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.INVALID_TRANSFER_OBJECT()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_TRANSFER_OBJECT():
+                return False
+            return True
+    
+    class EFFECTS_TOO_LARGE:
+        """
+        Effects from the transaction are too large
+        """
+
+        current_size: "int"
+        max_size: "int"
+
+        def __init__(self,current_size: "int", max_size: "int"):
+            self.current_size = current_size
+            self.max_size = max_size
+
+        def __str__(self):
+            return "ExecutionError.EFFECTS_TOO_LARGE(current_size={}, max_size={})".format(self.current_size, self.max_size)
+
+        def __eq__(self, other):
+            if not other.is_EFFECTS_TOO_LARGE():
+                return False
+            if self.current_size != other.current_size:
+                return False
+            if self.max_size != other.max_size:
+                return False
+            return True
+    
+    class PUBLISH_UPGRADE_MISSING_DEPENDENCY:
+        """
+        Publish or Upgrade is missing dependency
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.PUBLISH_UPGRADE_MISSING_DEPENDENCY()".format()
+
+        def __eq__(self, other):
+            if not other.is_PUBLISH_UPGRADE_MISSING_DEPENDENCY():
+                return False
+            return True
+    
+    class PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE:
+        """
+        Publish or Upgrade dependency downgrade.
+
+        Indirect (transitive) dependency of published or upgraded package has
+        been assigned an on-chain version that is less than the version
+        required by one of the package's transitive dependencies.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE()".format()
+
+        def __eq__(self, other):
+            if not other.is_PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE():
+                return False
+            return True
+    
+    class PACKAGE_UPGRADE_ERROR:
+        """
+        Invalid package upgrade
+        """
+
+        kind: "PackageUpgradeError"
+
+        def __init__(self,kind: "PackageUpgradeError"):
+            self.kind = kind
+
+        def __str__(self):
+            return "ExecutionError.PACKAGE_UPGRADE_ERROR(kind={})".format(self.kind)
+
+        def __eq__(self, other):
+            if not other.is_PACKAGE_UPGRADE_ERROR():
+                return False
+            if self.kind != other.kind:
+                return False
+            return True
+    
+    class WRITTEN_OBJECTS_TOO_LARGE:
+        """
+        Indicates the transaction tried to write objects too large to storage
+        """
+
+        object_size: "int"
+        max_object_size: "int"
+
+        def __init__(self,object_size: "int", max_object_size: "int"):
+            self.object_size = object_size
+            self.max_object_size = max_object_size
+
+        def __str__(self):
+            return "ExecutionError.WRITTEN_OBJECTS_TOO_LARGE(object_size={}, max_object_size={})".format(self.object_size, self.max_object_size)
+
+        def __eq__(self, other):
+            if not other.is_WRITTEN_OBJECTS_TOO_LARGE():
+                return False
+            if self.object_size != other.object_size:
+                return False
+            if self.max_object_size != other.max_object_size:
+                return False
+            return True
+    
+    class CERTIFICATE_DENIED:
+        """
+        Certificate is on the deny list
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.CERTIFICATE_DENIED()".format()
+
+        def __eq__(self, other):
+            if not other.is_CERTIFICATE_DENIED():
+                return False
+            return True
+    
+    class IOTA_MOVE_VERIFICATION_TIMEOUT:
+        """
+        IOTA Move Bytecode verification timed out.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.IOTA_MOVE_VERIFICATION_TIMEOUT()".format()
+
+        def __eq__(self, other):
+            if not other.is_IOTA_MOVE_VERIFICATION_TIMEOUT():
+                return False
+            return True
+    
+    class SHARED_OBJECT_OPERATION_NOT_ALLOWED:
+        """
+        The requested shared object operation is not allowed
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.SHARED_OBJECT_OPERATION_NOT_ALLOWED()".format()
+
+        def __eq__(self, other):
+            if not other.is_SHARED_OBJECT_OPERATION_NOT_ALLOWED():
+                return False
+            return True
+    
+    class INPUT_OBJECT_DELETED:
+        """
+        Requested shared object has been deleted
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.INPUT_OBJECT_DELETED()".format()
+
+        def __eq__(self, other):
+            if not other.is_INPUT_OBJECT_DELETED():
+                return False
+            return True
+    
+    class EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION:
+        """
+        Certificate is cancelled due to congestion on shared objects
+        """
+
+        congested_objects: "typing.List[ObjectId]"
+
+        def __init__(self,congested_objects: "typing.List[ObjectId]"):
+            self.congested_objects = congested_objects
+
+        def __str__(self):
+            return "ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION(congested_objects={})".format(self.congested_objects)
+
+        def __eq__(self, other):
+            if not other.is_EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION():
+                return False
+            if self.congested_objects != other.congested_objects:
+                return False
+            return True
+    
+    class EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2:
+        """
+        Certificate is cancelled due to congestion on shared objects;
+        suggested gas price can be used to give this certificate more priority.
+        """
+
+        congested_objects: "typing.List[ObjectId]"
+        suggested_gas_price: "int"
+
+        def __init__(self,congested_objects: "typing.List[ObjectId]", suggested_gas_price: "int"):
+            self.congested_objects = congested_objects
+            self.suggested_gas_price = suggested_gas_price
+
+        def __str__(self):
+            return "ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2(congested_objects={}, suggested_gas_price={})".format(self.congested_objects, self.suggested_gas_price)
+
+        def __eq__(self, other):
+            if not other.is_EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2():
+                return False
+            if self.congested_objects != other.congested_objects:
+                return False
+            if self.suggested_gas_price != other.suggested_gas_price:
+                return False
+            return True
+    
+    class ADDRESS_DENIED_FOR_COIN:
+        """
+        Address is denied for this coin type
+        """
+
+        address: "Address"
+        coin_type: "str"
+
+        def __init__(self,address: "Address", coin_type: "str"):
+            self.address = address
+            self.coin_type = coin_type
+
+        def __str__(self):
+            return "ExecutionError.ADDRESS_DENIED_FOR_COIN(address={}, coin_type={})".format(self.address, self.coin_type)
+
+        def __eq__(self, other):
+            if not other.is_ADDRESS_DENIED_FOR_COIN():
+                return False
+            if self.address != other.address:
+                return False
+            if self.coin_type != other.coin_type:
+                return False
+            return True
+    
+    class COIN_TYPE_GLOBAL_PAUSE:
+        """
+        Coin type is globally paused for use
+        """
+
+        coin_type: "str"
+
+        def __init__(self,coin_type: "str"):
+            self.coin_type = coin_type
+
+        def __str__(self):
+            return "ExecutionError.COIN_TYPE_GLOBAL_PAUSE(coin_type={})".format(self.coin_type)
+
+        def __eq__(self, other):
+            if not other.is_COIN_TYPE_GLOBAL_PAUSE():
+                return False
+            if self.coin_type != other.coin_type:
+                return False
+            return True
+    
+    class EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE:
+        """
+        Certificate is cancelled because randomness could not be generated this
+        epoch
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE()".format()
+
+        def __eq__(self, other):
+            if not other.is_EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE():
+                return False
+            return True
+    
+    class INVALID_LINKAGE:
+        """
+        A valid linkage was unable to be determined for the transaction or one
+        of its commands.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionError.INVALID_LINKAGE()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_LINKAGE():
+                return False
+            return True
+    
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_INSUFFICIENT_GAS(self) -> bool:
+        return isinstance(self, ExecutionError.INSUFFICIENT_GAS)
+    def is_insufficient_gas(self) -> bool:
+        return isinstance(self, ExecutionError.INSUFFICIENT_GAS)
+    def is_INVALID_GAS_OBJECT(self) -> bool:
+        return isinstance(self, ExecutionError.INVALID_GAS_OBJECT)
+    def is_invalid_gas_object(self) -> bool:
+        return isinstance(self, ExecutionError.INVALID_GAS_OBJECT)
+    def is_INVARIANT_VIOLATION(self) -> bool:
+        return isinstance(self, ExecutionError.INVARIANT_VIOLATION)
+    def is_invariant_violation(self) -> bool:
+        return isinstance(self, ExecutionError.INVARIANT_VIOLATION)
+    def is_FEATURE_NOT_YET_SUPPORTED(self) -> bool:
+        return isinstance(self, ExecutionError.FEATURE_NOT_YET_SUPPORTED)
+    def is_feature_not_yet_supported(self) -> bool:
+        return isinstance(self, ExecutionError.FEATURE_NOT_YET_SUPPORTED)
+    def is_OBJECT_TOO_BIG(self) -> bool:
+        return isinstance(self, ExecutionError.OBJECT_TOO_BIG)
+    def is_object_too_big(self) -> bool:
+        return isinstance(self, ExecutionError.OBJECT_TOO_BIG)
+    def is_PACKAGE_TOO_BIG(self) -> bool:
+        return isinstance(self, ExecutionError.PACKAGE_TOO_BIG)
+    def is_package_too_big(self) -> bool:
+        return isinstance(self, ExecutionError.PACKAGE_TOO_BIG)
+    def is_CIRCULAR_OBJECT_OWNERSHIP(self) -> bool:
+        return isinstance(self, ExecutionError.CIRCULAR_OBJECT_OWNERSHIP)
+    def is_circular_object_ownership(self) -> bool:
+        return isinstance(self, ExecutionError.CIRCULAR_OBJECT_OWNERSHIP)
+    def is_INSUFFICIENT_COIN_BALANCE(self) -> bool:
+        return isinstance(self, ExecutionError.INSUFFICIENT_COIN_BALANCE)
+    def is_insufficient_coin_balance(self) -> bool:
+        return isinstance(self, ExecutionError.INSUFFICIENT_COIN_BALANCE)
+    def is_COIN_BALANCE_OVERFLOW(self) -> bool:
+        return isinstance(self, ExecutionError.COIN_BALANCE_OVERFLOW)
+    def is_coin_balance_overflow(self) -> bool:
+        return isinstance(self, ExecutionError.COIN_BALANCE_OVERFLOW)
+    def is_PUBLISH_ERROR_NON_ZERO_ADDRESS(self) -> bool:
+        return isinstance(self, ExecutionError.PUBLISH_ERROR_NON_ZERO_ADDRESS)
+    def is_publish_error_non_zero_address(self) -> bool:
+        return isinstance(self, ExecutionError.PUBLISH_ERROR_NON_ZERO_ADDRESS)
+    def is_IOTA_MOVE_VERIFICATION_ERROR(self) -> bool:
+        return isinstance(self, ExecutionError.IOTA_MOVE_VERIFICATION_ERROR)
+    def is_iota_move_verification_error(self) -> bool:
+        return isinstance(self, ExecutionError.IOTA_MOVE_VERIFICATION_ERROR)
+    def is_MOVE_PRIMITIVE_RUNTIME_ERROR(self) -> bool:
+        return isinstance(self, ExecutionError.MOVE_PRIMITIVE_RUNTIME_ERROR)
+    def is_move_primitive_runtime_error(self) -> bool:
+        return isinstance(self, ExecutionError.MOVE_PRIMITIVE_RUNTIME_ERROR)
+    def is_MOVE_ABORT(self) -> bool:
+        return isinstance(self, ExecutionError.MOVE_ABORT)
+    def is_move_abort(self) -> bool:
+        return isinstance(self, ExecutionError.MOVE_ABORT)
+    def is_VM_VERIFICATION_OR_DESERIALIZATION_ERROR(self) -> bool:
+        return isinstance(self, ExecutionError.VM_VERIFICATION_OR_DESERIALIZATION_ERROR)
+    def is_vm_verification_or_deserialization_error(self) -> bool:
+        return isinstance(self, ExecutionError.VM_VERIFICATION_OR_DESERIALIZATION_ERROR)
+    def is_VM_INVARIANT_VIOLATION(self) -> bool:
+        return isinstance(self, ExecutionError.VM_INVARIANT_VIOLATION)
+    def is_vm_invariant_violation(self) -> bool:
+        return isinstance(self, ExecutionError.VM_INVARIANT_VIOLATION)
+    def is_FUNCTION_NOT_FOUND(self) -> bool:
+        return isinstance(self, ExecutionError.FUNCTION_NOT_FOUND)
+    def is_function_not_found(self) -> bool:
+        return isinstance(self, ExecutionError.FUNCTION_NOT_FOUND)
+    def is_ARITY_MISMATCH(self) -> bool:
+        return isinstance(self, ExecutionError.ARITY_MISMATCH)
+    def is_arity_mismatch(self) -> bool:
+        return isinstance(self, ExecutionError.ARITY_MISMATCH)
+    def is_TYPE_ARITY_MISMATCH(self) -> bool:
+        return isinstance(self, ExecutionError.TYPE_ARITY_MISMATCH)
+    def is_type_arity_mismatch(self) -> bool:
+        return isinstance(self, ExecutionError.TYPE_ARITY_MISMATCH)
+    def is_NON_ENTRY_FUNCTION_INVOKED(self) -> bool:
+        return isinstance(self, ExecutionError.NON_ENTRY_FUNCTION_INVOKED)
+    def is_non_entry_function_invoked(self) -> bool:
+        return isinstance(self, ExecutionError.NON_ENTRY_FUNCTION_INVOKED)
+    def is_COMMAND_ARGUMENT_ERROR(self) -> bool:
+        return isinstance(self, ExecutionError.COMMAND_ARGUMENT_ERROR)
+    def is_command_argument_error(self) -> bool:
+        return isinstance(self, ExecutionError.COMMAND_ARGUMENT_ERROR)
+    def is_TYPE_ARGUMENT_ERROR(self) -> bool:
+        return isinstance(self, ExecutionError.TYPE_ARGUMENT_ERROR)
+    def is_type_argument_error(self) -> bool:
+        return isinstance(self, ExecutionError.TYPE_ARGUMENT_ERROR)
+    def is_UNUSED_VALUE_WITHOUT_DROP(self) -> bool:
+        return isinstance(self, ExecutionError.UNUSED_VALUE_WITHOUT_DROP)
+    def is_unused_value_without_drop(self) -> bool:
+        return isinstance(self, ExecutionError.UNUSED_VALUE_WITHOUT_DROP)
+    def is_INVALID_PUBLIC_FUNCTION_RETURN_TYPE(self) -> bool:
+        return isinstance(self, ExecutionError.INVALID_PUBLIC_FUNCTION_RETURN_TYPE)
+    def is_invalid_public_function_return_type(self) -> bool:
+        return isinstance(self, ExecutionError.INVALID_PUBLIC_FUNCTION_RETURN_TYPE)
+    def is_INVALID_TRANSFER_OBJECT(self) -> bool:
+        return isinstance(self, ExecutionError.INVALID_TRANSFER_OBJECT)
+    def is_invalid_transfer_object(self) -> bool:
+        return isinstance(self, ExecutionError.INVALID_TRANSFER_OBJECT)
+    def is_EFFECTS_TOO_LARGE(self) -> bool:
+        return isinstance(self, ExecutionError.EFFECTS_TOO_LARGE)
+    def is_effects_too_large(self) -> bool:
+        return isinstance(self, ExecutionError.EFFECTS_TOO_LARGE)
+    def is_PUBLISH_UPGRADE_MISSING_DEPENDENCY(self) -> bool:
+        return isinstance(self, ExecutionError.PUBLISH_UPGRADE_MISSING_DEPENDENCY)
+    def is_publish_upgrade_missing_dependency(self) -> bool:
+        return isinstance(self, ExecutionError.PUBLISH_UPGRADE_MISSING_DEPENDENCY)
+    def is_PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE(self) -> bool:
+        return isinstance(self, ExecutionError.PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE)
+    def is_publish_upgrade_dependency_downgrade(self) -> bool:
+        return isinstance(self, ExecutionError.PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE)
+    def is_PACKAGE_UPGRADE_ERROR(self) -> bool:
+        return isinstance(self, ExecutionError.PACKAGE_UPGRADE_ERROR)
+    def is_package_upgrade_error(self) -> bool:
+        return isinstance(self, ExecutionError.PACKAGE_UPGRADE_ERROR)
+    def is_WRITTEN_OBJECTS_TOO_LARGE(self) -> bool:
+        return isinstance(self, ExecutionError.WRITTEN_OBJECTS_TOO_LARGE)
+    def is_written_objects_too_large(self) -> bool:
+        return isinstance(self, ExecutionError.WRITTEN_OBJECTS_TOO_LARGE)
+    def is_CERTIFICATE_DENIED(self) -> bool:
+        return isinstance(self, ExecutionError.CERTIFICATE_DENIED)
+    def is_certificate_denied(self) -> bool:
+        return isinstance(self, ExecutionError.CERTIFICATE_DENIED)
+    def is_IOTA_MOVE_VERIFICATION_TIMEOUT(self) -> bool:
+        return isinstance(self, ExecutionError.IOTA_MOVE_VERIFICATION_TIMEOUT)
+    def is_iota_move_verification_timeout(self) -> bool:
+        return isinstance(self, ExecutionError.IOTA_MOVE_VERIFICATION_TIMEOUT)
+    def is_SHARED_OBJECT_OPERATION_NOT_ALLOWED(self) -> bool:
+        return isinstance(self, ExecutionError.SHARED_OBJECT_OPERATION_NOT_ALLOWED)
+    def is_shared_object_operation_not_allowed(self) -> bool:
+        return isinstance(self, ExecutionError.SHARED_OBJECT_OPERATION_NOT_ALLOWED)
+    def is_INPUT_OBJECT_DELETED(self) -> bool:
+        return isinstance(self, ExecutionError.INPUT_OBJECT_DELETED)
+    def is_input_object_deleted(self) -> bool:
+        return isinstance(self, ExecutionError.INPUT_OBJECT_DELETED)
+    def is_EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION(self) -> bool:
+        return isinstance(self, ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION)
+    def is_execution_cancelled_due_to_shared_object_congestion(self) -> bool:
+        return isinstance(self, ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION)
+    def is_EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2(self) -> bool:
+        return isinstance(self, ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2)
+    def is_execution_cancelled_due_to_shared_object_congestion_v2(self) -> bool:
+        return isinstance(self, ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2)
+    def is_ADDRESS_DENIED_FOR_COIN(self) -> bool:
+        return isinstance(self, ExecutionError.ADDRESS_DENIED_FOR_COIN)
+    def is_address_denied_for_coin(self) -> bool:
+        return isinstance(self, ExecutionError.ADDRESS_DENIED_FOR_COIN)
+    def is_COIN_TYPE_GLOBAL_PAUSE(self) -> bool:
+        return isinstance(self, ExecutionError.COIN_TYPE_GLOBAL_PAUSE)
+    def is_coin_type_global_pause(self) -> bool:
+        return isinstance(self, ExecutionError.COIN_TYPE_GLOBAL_PAUSE)
+    def is_EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE(self) -> bool:
+        return isinstance(self, ExecutionError.EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE)
+    def is_execution_cancelled_due_to_randomness_unavailable(self) -> bool:
+        return isinstance(self, ExecutionError.EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE)
+    def is_INVALID_LINKAGE(self) -> bool:
+        return isinstance(self, ExecutionError.INVALID_LINKAGE)
+    def is_invalid_linkage(self) -> bool:
+        return isinstance(self, ExecutionError.INVALID_LINKAGE)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+ExecutionError.INSUFFICIENT_GAS = type("ExecutionError.INSUFFICIENT_GAS", (ExecutionError.INSUFFICIENT_GAS, ExecutionError,), {})  # type: ignore
+ExecutionError.INVALID_GAS_OBJECT = type("ExecutionError.INVALID_GAS_OBJECT", (ExecutionError.INVALID_GAS_OBJECT, ExecutionError,), {})  # type: ignore
+ExecutionError.INVARIANT_VIOLATION = type("ExecutionError.INVARIANT_VIOLATION", (ExecutionError.INVARIANT_VIOLATION, ExecutionError,), {})  # type: ignore
+ExecutionError.FEATURE_NOT_YET_SUPPORTED = type("ExecutionError.FEATURE_NOT_YET_SUPPORTED", (ExecutionError.FEATURE_NOT_YET_SUPPORTED, ExecutionError,), {})  # type: ignore
+ExecutionError.OBJECT_TOO_BIG = type("ExecutionError.OBJECT_TOO_BIG", (ExecutionError.OBJECT_TOO_BIG, ExecutionError,), {})  # type: ignore
+ExecutionError.PACKAGE_TOO_BIG = type("ExecutionError.PACKAGE_TOO_BIG", (ExecutionError.PACKAGE_TOO_BIG, ExecutionError,), {})  # type: ignore
+ExecutionError.CIRCULAR_OBJECT_OWNERSHIP = type("ExecutionError.CIRCULAR_OBJECT_OWNERSHIP", (ExecutionError.CIRCULAR_OBJECT_OWNERSHIP, ExecutionError,), {})  # type: ignore
+ExecutionError.INSUFFICIENT_COIN_BALANCE = type("ExecutionError.INSUFFICIENT_COIN_BALANCE", (ExecutionError.INSUFFICIENT_COIN_BALANCE, ExecutionError,), {})  # type: ignore
+ExecutionError.COIN_BALANCE_OVERFLOW = type("ExecutionError.COIN_BALANCE_OVERFLOW", (ExecutionError.COIN_BALANCE_OVERFLOW, ExecutionError,), {})  # type: ignore
+ExecutionError.PUBLISH_ERROR_NON_ZERO_ADDRESS = type("ExecutionError.PUBLISH_ERROR_NON_ZERO_ADDRESS", (ExecutionError.PUBLISH_ERROR_NON_ZERO_ADDRESS, ExecutionError,), {})  # type: ignore
+ExecutionError.IOTA_MOVE_VERIFICATION_ERROR = type("ExecutionError.IOTA_MOVE_VERIFICATION_ERROR", (ExecutionError.IOTA_MOVE_VERIFICATION_ERROR, ExecutionError,), {})  # type: ignore
+ExecutionError.MOVE_PRIMITIVE_RUNTIME_ERROR = type("ExecutionError.MOVE_PRIMITIVE_RUNTIME_ERROR", (ExecutionError.MOVE_PRIMITIVE_RUNTIME_ERROR, ExecutionError,), {})  # type: ignore
+ExecutionError.MOVE_ABORT = type("ExecutionError.MOVE_ABORT", (ExecutionError.MOVE_ABORT, ExecutionError,), {})  # type: ignore
+ExecutionError.VM_VERIFICATION_OR_DESERIALIZATION_ERROR = type("ExecutionError.VM_VERIFICATION_OR_DESERIALIZATION_ERROR", (ExecutionError.VM_VERIFICATION_OR_DESERIALIZATION_ERROR, ExecutionError,), {})  # type: ignore
+ExecutionError.VM_INVARIANT_VIOLATION = type("ExecutionError.VM_INVARIANT_VIOLATION", (ExecutionError.VM_INVARIANT_VIOLATION, ExecutionError,), {})  # type: ignore
+ExecutionError.FUNCTION_NOT_FOUND = type("ExecutionError.FUNCTION_NOT_FOUND", (ExecutionError.FUNCTION_NOT_FOUND, ExecutionError,), {})  # type: ignore
+ExecutionError.ARITY_MISMATCH = type("ExecutionError.ARITY_MISMATCH", (ExecutionError.ARITY_MISMATCH, ExecutionError,), {})  # type: ignore
+ExecutionError.TYPE_ARITY_MISMATCH = type("ExecutionError.TYPE_ARITY_MISMATCH", (ExecutionError.TYPE_ARITY_MISMATCH, ExecutionError,), {})  # type: ignore
+ExecutionError.NON_ENTRY_FUNCTION_INVOKED = type("ExecutionError.NON_ENTRY_FUNCTION_INVOKED", (ExecutionError.NON_ENTRY_FUNCTION_INVOKED, ExecutionError,), {})  # type: ignore
+ExecutionError.COMMAND_ARGUMENT_ERROR = type("ExecutionError.COMMAND_ARGUMENT_ERROR", (ExecutionError.COMMAND_ARGUMENT_ERROR, ExecutionError,), {})  # type: ignore
+ExecutionError.TYPE_ARGUMENT_ERROR = type("ExecutionError.TYPE_ARGUMENT_ERROR", (ExecutionError.TYPE_ARGUMENT_ERROR, ExecutionError,), {})  # type: ignore
+ExecutionError.UNUSED_VALUE_WITHOUT_DROP = type("ExecutionError.UNUSED_VALUE_WITHOUT_DROP", (ExecutionError.UNUSED_VALUE_WITHOUT_DROP, ExecutionError,), {})  # type: ignore
+ExecutionError.INVALID_PUBLIC_FUNCTION_RETURN_TYPE = type("ExecutionError.INVALID_PUBLIC_FUNCTION_RETURN_TYPE", (ExecutionError.INVALID_PUBLIC_FUNCTION_RETURN_TYPE, ExecutionError,), {})  # type: ignore
+ExecutionError.INVALID_TRANSFER_OBJECT = type("ExecutionError.INVALID_TRANSFER_OBJECT", (ExecutionError.INVALID_TRANSFER_OBJECT, ExecutionError,), {})  # type: ignore
+ExecutionError.EFFECTS_TOO_LARGE = type("ExecutionError.EFFECTS_TOO_LARGE", (ExecutionError.EFFECTS_TOO_LARGE, ExecutionError,), {})  # type: ignore
+ExecutionError.PUBLISH_UPGRADE_MISSING_DEPENDENCY = type("ExecutionError.PUBLISH_UPGRADE_MISSING_DEPENDENCY", (ExecutionError.PUBLISH_UPGRADE_MISSING_DEPENDENCY, ExecutionError,), {})  # type: ignore
+ExecutionError.PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE = type("ExecutionError.PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE", (ExecutionError.PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE, ExecutionError,), {})  # type: ignore
+ExecutionError.PACKAGE_UPGRADE_ERROR = type("ExecutionError.PACKAGE_UPGRADE_ERROR", (ExecutionError.PACKAGE_UPGRADE_ERROR, ExecutionError,), {})  # type: ignore
+ExecutionError.WRITTEN_OBJECTS_TOO_LARGE = type("ExecutionError.WRITTEN_OBJECTS_TOO_LARGE", (ExecutionError.WRITTEN_OBJECTS_TOO_LARGE, ExecutionError,), {})  # type: ignore
+ExecutionError.CERTIFICATE_DENIED = type("ExecutionError.CERTIFICATE_DENIED", (ExecutionError.CERTIFICATE_DENIED, ExecutionError,), {})  # type: ignore
+ExecutionError.IOTA_MOVE_VERIFICATION_TIMEOUT = type("ExecutionError.IOTA_MOVE_VERIFICATION_TIMEOUT", (ExecutionError.IOTA_MOVE_VERIFICATION_TIMEOUT, ExecutionError,), {})  # type: ignore
+ExecutionError.SHARED_OBJECT_OPERATION_NOT_ALLOWED = type("ExecutionError.SHARED_OBJECT_OPERATION_NOT_ALLOWED", (ExecutionError.SHARED_OBJECT_OPERATION_NOT_ALLOWED, ExecutionError,), {})  # type: ignore
+ExecutionError.INPUT_OBJECT_DELETED = type("ExecutionError.INPUT_OBJECT_DELETED", (ExecutionError.INPUT_OBJECT_DELETED, ExecutionError,), {})  # type: ignore
+ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION = type("ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION", (ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION, ExecutionError,), {})  # type: ignore
+ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2 = type("ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2", (ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2, ExecutionError,), {})  # type: ignore
+ExecutionError.ADDRESS_DENIED_FOR_COIN = type("ExecutionError.ADDRESS_DENIED_FOR_COIN", (ExecutionError.ADDRESS_DENIED_FOR_COIN, ExecutionError,), {})  # type: ignore
+ExecutionError.COIN_TYPE_GLOBAL_PAUSE = type("ExecutionError.COIN_TYPE_GLOBAL_PAUSE", (ExecutionError.COIN_TYPE_GLOBAL_PAUSE, ExecutionError,), {})  # type: ignore
+ExecutionError.EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE = type("ExecutionError.EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE", (ExecutionError.EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE, ExecutionError,), {})  # type: ignore
+ExecutionError.INVALID_LINKAGE = type("ExecutionError.INVALID_LINKAGE", (ExecutionError.INVALID_LINKAGE, ExecutionError,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeExecutionError(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return ExecutionError.INSUFFICIENT_GAS(
+            )
+        if variant == 2:
+            return ExecutionError.INVALID_GAS_OBJECT(
+            )
+        if variant == 3:
+            return ExecutionError.INVARIANT_VIOLATION(
+            )
+        if variant == 4:
+            return ExecutionError.FEATURE_NOT_YET_SUPPORTED(
+            )
+        if variant == 5:
+            return ExecutionError.OBJECT_TOO_BIG(
+                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 6:
+            return ExecutionError.PACKAGE_TOO_BIG(
+                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 7:
+            return ExecutionError.CIRCULAR_OBJECT_OWNERSHIP(
+                _UniffiConverterTypeObjectId.read(buf),
+            )
+        if variant == 8:
+            return ExecutionError.INSUFFICIENT_COIN_BALANCE(
+            )
+        if variant == 9:
+            return ExecutionError.COIN_BALANCE_OVERFLOW(
+            )
+        if variant == 10:
+            return ExecutionError.PUBLISH_ERROR_NON_ZERO_ADDRESS(
+            )
+        if variant == 11:
+            return ExecutionError.IOTA_MOVE_VERIFICATION_ERROR(
+            )
+        if variant == 12:
+            return ExecutionError.MOVE_PRIMITIVE_RUNTIME_ERROR(
+                _UniffiConverterOptionalTypeMoveLocation.read(buf),
+            )
+        if variant == 13:
+            return ExecutionError.MOVE_ABORT(
+                _UniffiConverterTypeMoveLocation.read(buf),
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 14:
+            return ExecutionError.VM_VERIFICATION_OR_DESERIALIZATION_ERROR(
+            )
+        if variant == 15:
+            return ExecutionError.VM_INVARIANT_VIOLATION(
+            )
+        if variant == 16:
+            return ExecutionError.FUNCTION_NOT_FOUND(
+            )
+        if variant == 17:
+            return ExecutionError.ARITY_MISMATCH(
+            )
+        if variant == 18:
+            return ExecutionError.TYPE_ARITY_MISMATCH(
+            )
+        if variant == 19:
+            return ExecutionError.NON_ENTRY_FUNCTION_INVOKED(
+            )
+        if variant == 20:
+            return ExecutionError.COMMAND_ARGUMENT_ERROR(
+                _UniffiConverterUInt16.read(buf),
+                _UniffiConverterTypeCommandArgumentError.read(buf),
+            )
+        if variant == 21:
+            return ExecutionError.TYPE_ARGUMENT_ERROR(
+                _UniffiConverterUInt16.read(buf),
+                _UniffiConverterTypeTypeArgumentError.read(buf),
+            )
+        if variant == 22:
+            return ExecutionError.UNUSED_VALUE_WITHOUT_DROP(
+                _UniffiConverterUInt16.read(buf),
+                _UniffiConverterUInt16.read(buf),
+            )
+        if variant == 23:
+            return ExecutionError.INVALID_PUBLIC_FUNCTION_RETURN_TYPE(
+                _UniffiConverterUInt16.read(buf),
+            )
+        if variant == 24:
+            return ExecutionError.INVALID_TRANSFER_OBJECT(
+            )
+        if variant == 25:
+            return ExecutionError.EFFECTS_TOO_LARGE(
+                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 26:
+            return ExecutionError.PUBLISH_UPGRADE_MISSING_DEPENDENCY(
+            )
+        if variant == 27:
+            return ExecutionError.PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE(
+            )
+        if variant == 28:
+            return ExecutionError.PACKAGE_UPGRADE_ERROR(
+                _UniffiConverterTypePackageUpgradeError.read(buf),
+            )
+        if variant == 29:
+            return ExecutionError.WRITTEN_OBJECTS_TOO_LARGE(
+                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 30:
+            return ExecutionError.CERTIFICATE_DENIED(
+            )
+        if variant == 31:
+            return ExecutionError.IOTA_MOVE_VERIFICATION_TIMEOUT(
+            )
+        if variant == 32:
+            return ExecutionError.SHARED_OBJECT_OPERATION_NOT_ALLOWED(
+            )
+        if variant == 33:
+            return ExecutionError.INPUT_OBJECT_DELETED(
+            )
+        if variant == 34:
+            return ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION(
+                _UniffiConverterSequenceTypeObjectId.read(buf),
+            )
+        if variant == 35:
+            return ExecutionError.EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2(
+                _UniffiConverterSequenceTypeObjectId.read(buf),
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 36:
+            return ExecutionError.ADDRESS_DENIED_FOR_COIN(
+                _UniffiConverterTypeAddress.read(buf),
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 37:
+            return ExecutionError.COIN_TYPE_GLOBAL_PAUSE(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 38:
+            return ExecutionError.EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE(
+            )
+        if variant == 39:
+            return ExecutionError.INVALID_LINKAGE(
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_INSUFFICIENT_GAS():
+            return
+        if value.is_INVALID_GAS_OBJECT():
+            return
+        if value.is_INVARIANT_VIOLATION():
+            return
+        if value.is_FEATURE_NOT_YET_SUPPORTED():
+            return
+        if value.is_OBJECT_TOO_BIG():
+            _UniffiConverterUInt64.check_lower(value.object_size)
+            _UniffiConverterUInt64.check_lower(value.max_object_size)
+            return
+        if value.is_PACKAGE_TOO_BIG():
+            _UniffiConverterUInt64.check_lower(value.object_size)
+            _UniffiConverterUInt64.check_lower(value.max_object_size)
+            return
+        if value.is_CIRCULAR_OBJECT_OWNERSHIP():
+            _UniffiConverterTypeObjectId.check_lower(value.object)
+            return
+        if value.is_INSUFFICIENT_COIN_BALANCE():
+            return
+        if value.is_COIN_BALANCE_OVERFLOW():
+            return
+        if value.is_PUBLISH_ERROR_NON_ZERO_ADDRESS():
+            return
+        if value.is_IOTA_MOVE_VERIFICATION_ERROR():
+            return
+        if value.is_MOVE_PRIMITIVE_RUNTIME_ERROR():
+            _UniffiConverterOptionalTypeMoveLocation.check_lower(value.location)
+            return
+        if value.is_MOVE_ABORT():
+            _UniffiConverterTypeMoveLocation.check_lower(value.location)
+            _UniffiConverterUInt64.check_lower(value.code)
+            return
+        if value.is_VM_VERIFICATION_OR_DESERIALIZATION_ERROR():
+            return
+        if value.is_VM_INVARIANT_VIOLATION():
+            return
+        if value.is_FUNCTION_NOT_FOUND():
+            return
+        if value.is_ARITY_MISMATCH():
+            return
+        if value.is_TYPE_ARITY_MISMATCH():
+            return
+        if value.is_NON_ENTRY_FUNCTION_INVOKED():
+            return
+        if value.is_COMMAND_ARGUMENT_ERROR():
+            _UniffiConverterUInt16.check_lower(value.argument)
+            _UniffiConverterTypeCommandArgumentError.check_lower(value.kind)
+            return
+        if value.is_TYPE_ARGUMENT_ERROR():
+            _UniffiConverterUInt16.check_lower(value.type_argument)
+            _UniffiConverterTypeTypeArgumentError.check_lower(value.kind)
+            return
+        if value.is_UNUSED_VALUE_WITHOUT_DROP():
+            _UniffiConverterUInt16.check_lower(value.result)
+            _UniffiConverterUInt16.check_lower(value.subresult)
+            return
+        if value.is_INVALID_PUBLIC_FUNCTION_RETURN_TYPE():
+            _UniffiConverterUInt16.check_lower(value.index)
+            return
+        if value.is_INVALID_TRANSFER_OBJECT():
+            return
+        if value.is_EFFECTS_TOO_LARGE():
+            _UniffiConverterUInt64.check_lower(value.current_size)
+            _UniffiConverterUInt64.check_lower(value.max_size)
+            return
+        if value.is_PUBLISH_UPGRADE_MISSING_DEPENDENCY():
+            return
+        if value.is_PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE():
+            return
+        if value.is_PACKAGE_UPGRADE_ERROR():
+            _UniffiConverterTypePackageUpgradeError.check_lower(value.kind)
+            return
+        if value.is_WRITTEN_OBJECTS_TOO_LARGE():
+            _UniffiConverterUInt64.check_lower(value.object_size)
+            _UniffiConverterUInt64.check_lower(value.max_object_size)
+            return
+        if value.is_CERTIFICATE_DENIED():
+            return
+        if value.is_IOTA_MOVE_VERIFICATION_TIMEOUT():
+            return
+        if value.is_SHARED_OBJECT_OPERATION_NOT_ALLOWED():
+            return
+        if value.is_INPUT_OBJECT_DELETED():
+            return
+        if value.is_EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION():
+            _UniffiConverterSequenceTypeObjectId.check_lower(value.congested_objects)
+            return
+        if value.is_EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2():
+            _UniffiConverterSequenceTypeObjectId.check_lower(value.congested_objects)
+            _UniffiConverterUInt64.check_lower(value.suggested_gas_price)
+            return
+        if value.is_ADDRESS_DENIED_FOR_COIN():
+            _UniffiConverterTypeAddress.check_lower(value.address)
+            _UniffiConverterString.check_lower(value.coin_type)
+            return
+        if value.is_COIN_TYPE_GLOBAL_PAUSE():
+            _UniffiConverterString.check_lower(value.coin_type)
+            return
+        if value.is_EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE():
+            return
+        if value.is_INVALID_LINKAGE():
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_INSUFFICIENT_GAS():
+            buf.write_i32(1)
+        if value.is_INVALID_GAS_OBJECT():
+            buf.write_i32(2)
+        if value.is_INVARIANT_VIOLATION():
+            buf.write_i32(3)
+        if value.is_FEATURE_NOT_YET_SUPPORTED():
+            buf.write_i32(4)
+        if value.is_OBJECT_TOO_BIG():
+            buf.write_i32(5)
+            _UniffiConverterUInt64.write(value.object_size, buf)
+            _UniffiConverterUInt64.write(value.max_object_size, buf)
+        if value.is_PACKAGE_TOO_BIG():
+            buf.write_i32(6)
+            _UniffiConverterUInt64.write(value.object_size, buf)
+            _UniffiConverterUInt64.write(value.max_object_size, buf)
+        if value.is_CIRCULAR_OBJECT_OWNERSHIP():
+            buf.write_i32(7)
+            _UniffiConverterTypeObjectId.write(value.object, buf)
+        if value.is_INSUFFICIENT_COIN_BALANCE():
+            buf.write_i32(8)
+        if value.is_COIN_BALANCE_OVERFLOW():
+            buf.write_i32(9)
+        if value.is_PUBLISH_ERROR_NON_ZERO_ADDRESS():
+            buf.write_i32(10)
+        if value.is_IOTA_MOVE_VERIFICATION_ERROR():
+            buf.write_i32(11)
+        if value.is_MOVE_PRIMITIVE_RUNTIME_ERROR():
+            buf.write_i32(12)
+            _UniffiConverterOptionalTypeMoveLocation.write(value.location, buf)
+        if value.is_MOVE_ABORT():
+            buf.write_i32(13)
+            _UniffiConverterTypeMoveLocation.write(value.location, buf)
+            _UniffiConverterUInt64.write(value.code, buf)
+        if value.is_VM_VERIFICATION_OR_DESERIALIZATION_ERROR():
+            buf.write_i32(14)
+        if value.is_VM_INVARIANT_VIOLATION():
+            buf.write_i32(15)
+        if value.is_FUNCTION_NOT_FOUND():
+            buf.write_i32(16)
+        if value.is_ARITY_MISMATCH():
+            buf.write_i32(17)
+        if value.is_TYPE_ARITY_MISMATCH():
+            buf.write_i32(18)
+        if value.is_NON_ENTRY_FUNCTION_INVOKED():
+            buf.write_i32(19)
+        if value.is_COMMAND_ARGUMENT_ERROR():
+            buf.write_i32(20)
+            _UniffiConverterUInt16.write(value.argument, buf)
+            _UniffiConverterTypeCommandArgumentError.write(value.kind, buf)
+        if value.is_TYPE_ARGUMENT_ERROR():
+            buf.write_i32(21)
+            _UniffiConverterUInt16.write(value.type_argument, buf)
+            _UniffiConverterTypeTypeArgumentError.write(value.kind, buf)
+        if value.is_UNUSED_VALUE_WITHOUT_DROP():
+            buf.write_i32(22)
+            _UniffiConverterUInt16.write(value.result, buf)
+            _UniffiConverterUInt16.write(value.subresult, buf)
+        if value.is_INVALID_PUBLIC_FUNCTION_RETURN_TYPE():
+            buf.write_i32(23)
+            _UniffiConverterUInt16.write(value.index, buf)
+        if value.is_INVALID_TRANSFER_OBJECT():
+            buf.write_i32(24)
+        if value.is_EFFECTS_TOO_LARGE():
+            buf.write_i32(25)
+            _UniffiConverterUInt64.write(value.current_size, buf)
+            _UniffiConverterUInt64.write(value.max_size, buf)
+        if value.is_PUBLISH_UPGRADE_MISSING_DEPENDENCY():
+            buf.write_i32(26)
+        if value.is_PUBLISH_UPGRADE_DEPENDENCY_DOWNGRADE():
+            buf.write_i32(27)
+        if value.is_PACKAGE_UPGRADE_ERROR():
+            buf.write_i32(28)
+            _UniffiConverterTypePackageUpgradeError.write(value.kind, buf)
+        if value.is_WRITTEN_OBJECTS_TOO_LARGE():
+            buf.write_i32(29)
+            _UniffiConverterUInt64.write(value.object_size, buf)
+            _UniffiConverterUInt64.write(value.max_object_size, buf)
+        if value.is_CERTIFICATE_DENIED():
+            buf.write_i32(30)
+        if value.is_IOTA_MOVE_VERIFICATION_TIMEOUT():
+            buf.write_i32(31)
+        if value.is_SHARED_OBJECT_OPERATION_NOT_ALLOWED():
+            buf.write_i32(32)
+        if value.is_INPUT_OBJECT_DELETED():
+            buf.write_i32(33)
+        if value.is_EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION():
+            buf.write_i32(34)
+            _UniffiConverterSequenceTypeObjectId.write(value.congested_objects, buf)
+        if value.is_EXECUTION_CANCELLED_DUE_TO_SHARED_OBJECT_CONGESTION_V2():
+            buf.write_i32(35)
+            _UniffiConverterSequenceTypeObjectId.write(value.congested_objects, buf)
+            _UniffiConverterUInt64.write(value.suggested_gas_price, buf)
+        if value.is_ADDRESS_DENIED_FOR_COIN():
+            buf.write_i32(36)
+            _UniffiConverterTypeAddress.write(value.address, buf)
+            _UniffiConverterString.write(value.coin_type, buf)
+        if value.is_COIN_TYPE_GLOBAL_PAUSE():
+            buf.write_i32(37)
+            _UniffiConverterString.write(value.coin_type, buf)
+        if value.is_EXECUTION_CANCELLED_DUE_TO_RANDOMNESS_UNAVAILABLE():
+            buf.write_i32(38)
+        if value.is_INVALID_LINKAGE():
+            buf.write_i32(39)
+
+
+
+
+
+
+
+class ExecutionStatus:
+    """
+    The status of an executed Transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    execution-status = success / failure
+    success = %x00
+    failure = %x01 execution-error (option u64)
+    ```xx
+    """
+
+    def __init__(self):
+        raise RuntimeError("ExecutionStatus cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class SUCCESS:
+        """
+        The Transaction successfully executed.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ExecutionStatus.SUCCESS()".format()
+
+        def __eq__(self, other):
+            if not other.is_SUCCESS():
+                return False
+            return True
+    
+    class FAILURE:
+        """
+        The Transaction didn't execute successfully.
+
+        Failed transactions are still committed to the blockchain but any
+        intended effects are rolled back to prior to this transaction
+        executing with the caveat that gas objects are still smashed and gas
+        usage is still charged.
+        """
+
+        error: "ExecutionError"
+        """
+        The error encountered during execution.
+        """
+
+        command: "typing.Optional[int]"
+        """
+        The command, if any, during which the error occurred.
+        """
+
+
+        def __init__(self,error: "ExecutionError", command: "typing.Optional[int]"):
+            self.error = error
+            self.command = command
+
+        def __str__(self):
+            return "ExecutionStatus.FAILURE(error={}, command={})".format(self.error, self.command)
+
+        def __eq__(self, other):
+            if not other.is_FAILURE():
+                return False
+            if self.error != other.error:
+                return False
+            if self.command != other.command:
+                return False
+            return True
+    
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_SUCCESS(self) -> bool:
+        return isinstance(self, ExecutionStatus.SUCCESS)
+    def is_success(self) -> bool:
+        return isinstance(self, ExecutionStatus.SUCCESS)
+    def is_FAILURE(self) -> bool:
+        return isinstance(self, ExecutionStatus.FAILURE)
+    def is_failure(self) -> bool:
+        return isinstance(self, ExecutionStatus.FAILURE)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+ExecutionStatus.SUCCESS = type("ExecutionStatus.SUCCESS", (ExecutionStatus.SUCCESS, ExecutionStatus,), {})  # type: ignore
+ExecutionStatus.FAILURE = type("ExecutionStatus.FAILURE", (ExecutionStatus.FAILURE, ExecutionStatus,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeExecutionStatus(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return ExecutionStatus.SUCCESS(
+            )
+        if variant == 2:
+            return ExecutionStatus.FAILURE(
+                _UniffiConverterTypeExecutionError.read(buf),
+                _UniffiConverterOptionalUInt64.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_SUCCESS():
+            return
+        if value.is_FAILURE():
+            _UniffiConverterTypeExecutionError.check_lower(value.error)
+            _UniffiConverterOptionalUInt64.check_lower(value.command)
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_SUCCESS():
+            buf.write_i32(1)
+        if value.is_FAILURE():
+            buf.write_i32(2)
+            _UniffiConverterTypeExecutionError.write(value.error, buf)
+            _UniffiConverterOptionalUInt64.write(value.command, buf)
+
+
+
+
+
+
+
+class IdOperation(enum.Enum):
+    NONE = 0
+    
+    CREATED = 1
+    
+    DELETED = 2
+    
+
+
+class _UniffiConverterTypeIdOperation(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return IdOperation.NONE
+        if variant == 2:
+            return IdOperation.CREATED
+        if variant == 3:
+            return IdOperation.DELETED
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == IdOperation.NONE:
+            return
+        if value == IdOperation.CREATED:
+            return
+        if value == IdOperation.DELETED:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == IdOperation.NONE:
+            buf.write_i32(1)
+        if value == IdOperation.CREATED:
+            buf.write_i32(2)
+        if value == IdOperation.DELETED:
+            buf.write_i32(3)
+
+
+
+
+
+
+
+class ObjectIn:
+    """
+    State of an object prior to execution
+
+    If an object exists (at root-level) in the store prior to this transaction,
+    it should be Exist, otherwise it's NonExist, e.g. wrapped objects should be
+    NonExist.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    object-in = object-in-not-exist / object-in-exist
+
+    object-in-not-exist = %x00
+    object-in-exist     = %x01 u64 digest owner
+    ```
+    """
+
+    def __init__(self):
+        raise RuntimeError("ObjectIn cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class NOT_EXIST:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ObjectIn.NOT_EXIST()".format()
+
+        def __eq__(self, other):
+            if not other.is_NOT_EXIST():
+                return False
+            return True
+    
+    class EXIST:
+        """
+        The old version, digest and owner.
+        """
+
+        version: "int"
+        digest: "ObjectDigest"
+        owner: "Owner"
+
+        def __init__(self,version: "int", digest: "ObjectDigest", owner: "Owner"):
+            self.version = version
+            self.digest = digest
+            self.owner = owner
+
+        def __str__(self):
+            return "ObjectIn.EXIST(version={}, digest={}, owner={})".format(self.version, self.digest, self.owner)
+
+        def __eq__(self, other):
+            if not other.is_EXIST():
+                return False
+            if self.version != other.version:
+                return False
+            if self.digest != other.digest:
+                return False
+            if self.owner != other.owner:
+                return False
+            return True
+    
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_NOT_EXIST(self) -> bool:
+        return isinstance(self, ObjectIn.NOT_EXIST)
+    def is_not_exist(self) -> bool:
+        return isinstance(self, ObjectIn.NOT_EXIST)
+    def is_EXIST(self) -> bool:
+        return isinstance(self, ObjectIn.EXIST)
+    def is_exist(self) -> bool:
+        return isinstance(self, ObjectIn.EXIST)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+ObjectIn.NOT_EXIST = type("ObjectIn.NOT_EXIST", (ObjectIn.NOT_EXIST, ObjectIn,), {})  # type: ignore
+ObjectIn.EXIST = type("ObjectIn.EXIST", (ObjectIn.EXIST, ObjectIn,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeObjectIn(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return ObjectIn.NOT_EXIST(
+            )
+        if variant == 2:
+            return ObjectIn.EXIST(
+                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterTypeObjectDigest.read(buf),
+                _UniffiConverterTypeOwner.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_NOT_EXIST():
+            return
+        if value.is_EXIST():
+            _UniffiConverterUInt64.check_lower(value.version)
+            _UniffiConverterTypeObjectDigest.check_lower(value.digest)
+            _UniffiConverterTypeOwner.check_lower(value.owner)
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_NOT_EXIST():
+            buf.write_i32(1)
+        if value.is_EXIST():
+            buf.write_i32(2)
+            _UniffiConverterUInt64.write(value.version, buf)
+            _UniffiConverterTypeObjectDigest.write(value.digest, buf)
+            _UniffiConverterTypeOwner.write(value.owner, buf)
+
+
+
+
+
+
+
+class ObjectOut:
+    """
+    State of an object after execution
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    object-out  =  object-out-not-exist
+    =/ object-out-object-write
+    =/ object-out-package-write
+
+
+    object-out-not-exist        = %x00
+    object-out-object-write     = %x01 digest owner
+    object-out-package-write    = %x02 version digest
+    ```
+    """
+
+    def __init__(self):
+        raise RuntimeError("ObjectOut cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class NOT_EXIST:
+        """
+        Same definition as in ObjectIn.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "ObjectOut.NOT_EXIST()".format()
+
+        def __eq__(self, other):
+            if not other.is_NOT_EXIST():
+                return False
+            return True
+    
+    class OBJECT_WRITE:
+        """
+        Any written object, including all of mutated, created, unwrapped today.
+        """
+
+        digest: "ObjectDigest"
+        owner: "Owner"
+
+        def __init__(self,digest: "ObjectDigest", owner: "Owner"):
+            self.digest = digest
+            self.owner = owner
+
+        def __str__(self):
+            return "ObjectOut.OBJECT_WRITE(digest={}, owner={})".format(self.digest, self.owner)
+
+        def __eq__(self, other):
+            if not other.is_OBJECT_WRITE():
+                return False
+            if self.digest != other.digest:
+                return False
+            if self.owner != other.owner:
+                return False
+            return True
+    
+    class PACKAGE_WRITE:
+        """
+        Packages writes need to be tracked separately with version because
+        we don't use lamport version for package publish and upgrades.
+        """
+
+        version: "int"
+        digest: "ObjectDigest"
+
+        def __init__(self,version: "int", digest: "ObjectDigest"):
+            self.version = version
+            self.digest = digest
+
+        def __str__(self):
+            return "ObjectOut.PACKAGE_WRITE(version={}, digest={})".format(self.version, self.digest)
+
+        def __eq__(self, other):
+            if not other.is_PACKAGE_WRITE():
+                return False
+            if self.version != other.version:
+                return False
+            if self.digest != other.digest:
+                return False
+            return True
+    
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_NOT_EXIST(self) -> bool:
+        return isinstance(self, ObjectOut.NOT_EXIST)
+    def is_not_exist(self) -> bool:
+        return isinstance(self, ObjectOut.NOT_EXIST)
+    def is_OBJECT_WRITE(self) -> bool:
+        return isinstance(self, ObjectOut.OBJECT_WRITE)
+    def is_object_write(self) -> bool:
+        return isinstance(self, ObjectOut.OBJECT_WRITE)
+    def is_PACKAGE_WRITE(self) -> bool:
+        return isinstance(self, ObjectOut.PACKAGE_WRITE)
+    def is_package_write(self) -> bool:
+        return isinstance(self, ObjectOut.PACKAGE_WRITE)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+ObjectOut.NOT_EXIST = type("ObjectOut.NOT_EXIST", (ObjectOut.NOT_EXIST, ObjectOut,), {})  # type: ignore
+ObjectOut.OBJECT_WRITE = type("ObjectOut.OBJECT_WRITE", (ObjectOut.OBJECT_WRITE, ObjectOut,), {})  # type: ignore
+ObjectOut.PACKAGE_WRITE = type("ObjectOut.PACKAGE_WRITE", (ObjectOut.PACKAGE_WRITE, ObjectOut,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeObjectOut(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return ObjectOut.NOT_EXIST(
+            )
+        if variant == 2:
+            return ObjectOut.OBJECT_WRITE(
+                _UniffiConverterTypeObjectDigest.read(buf),
+                _UniffiConverterTypeOwner.read(buf),
+            )
+        if variant == 3:
+            return ObjectOut.PACKAGE_WRITE(
+                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterTypeObjectDigest.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_NOT_EXIST():
+            return
+        if value.is_OBJECT_WRITE():
+            _UniffiConverterTypeObjectDigest.check_lower(value.digest)
+            _UniffiConverterTypeOwner.check_lower(value.owner)
+            return
+        if value.is_PACKAGE_WRITE():
+            _UniffiConverterUInt64.check_lower(value.version)
+            _UniffiConverterTypeObjectDigest.check_lower(value.digest)
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_NOT_EXIST():
+            buf.write_i32(1)
+        if value.is_OBJECT_WRITE():
+            buf.write_i32(2)
+            _UniffiConverterTypeObjectDigest.write(value.digest, buf)
+            _UniffiConverterTypeOwner.write(value.owner, buf)
+        if value.is_PACKAGE_WRITE():
+            buf.write_i32(3)
+            _UniffiConverterUInt64.write(value.version, buf)
+            _UniffiConverterTypeObjectDigest.write(value.digest, buf)
+
+
+
+
+
+
+
+class PackageUpgradeError:
+    """
+    An error with a upgrading a package
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    package-upgrade-error = unable-to-fetch-package /
+    not-a-package           /
+    incompatible-upgrade    /
+    digest-does-not-match   /
+    unknown-upgrade-policy  /
+    package-id-does-not-match
+
+    unable-to-fetch-package     = %x00 object-id
+    not-a-package               = %x01 object-id
+    incompatible-upgrade        = %x02
+    digest-does-not-match       = %x03 digest
+    unknown-upgrade-policy      = %x04 u8
+    package-id-does-not-match   = %x05 object-id object-id
+    ```
+    """
+
+    def __init__(self):
+        raise RuntimeError("PackageUpgradeError cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class UNABLE_TO_FETCH_PACKAGE:
+        """
+        Unable to fetch package
+        """
+
+        package_id: "ObjectId"
+
+        def __init__(self,package_id: "ObjectId"):
+            self.package_id = package_id
+
+        def __str__(self):
+            return "PackageUpgradeError.UNABLE_TO_FETCH_PACKAGE(package_id={})".format(self.package_id)
+
+        def __eq__(self, other):
+            if not other.is_UNABLE_TO_FETCH_PACKAGE():
+                return False
+            if self.package_id != other.package_id:
+                return False
+            return True
+    
+    class NOT_A_PACKAGE:
+        """
+        Object is not a package
+        """
+
+        object_id: "ObjectId"
+
+        def __init__(self,object_id: "ObjectId"):
+            self.object_id = object_id
+
+        def __str__(self):
+            return "PackageUpgradeError.NOT_A_PACKAGE(object_id={})".format(self.object_id)
+
+        def __eq__(self, other):
+            if not other.is_NOT_A_PACKAGE():
+                return False
+            if self.object_id != other.object_id:
+                return False
+            return True
+    
+    class INCOMPATIBLE_UPGRADE:
+        """
+        Package upgrade is incompatible with previous version
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "PackageUpgradeError.INCOMPATIBLE_UPGRADE()".format()
+
+        def __eq__(self, other):
+            if not other.is_INCOMPATIBLE_UPGRADE():
+                return False
+            return True
+    
+    class DIGEST_DOES_NOT_MATCH:
+        """
+        Digest in upgrade ticket and computed digest differ
+        """
+
+        digest: "Digest"
+
+        def __init__(self,digest: "Digest"):
+            self.digest = digest
+
+        def __str__(self):
+            return "PackageUpgradeError.DIGEST_DOES_NOT_MATCH(digest={})".format(self.digest)
+
+        def __eq__(self, other):
+            if not other.is_DIGEST_DOES_NOT_MATCH():
+                return False
+            if self.digest != other.digest:
+                return False
+            return True
+    
+    class UNKNOWN_UPGRADE_POLICY:
+        """
+        Upgrade policy is not valid
+        """
+
+        policy: "int"
+
+        def __init__(self,policy: "int"):
+            self.policy = policy
+
+        def __str__(self):
+            return "PackageUpgradeError.UNKNOWN_UPGRADE_POLICY(policy={})".format(self.policy)
+
+        def __eq__(self, other):
+            if not other.is_UNKNOWN_UPGRADE_POLICY():
+                return False
+            if self.policy != other.policy:
+                return False
+            return True
+    
+    class PACKAGE_ID_DOES_NOT_MATCH:
+        """
+        PackageId does not matach PackageId in upgrade ticket
+        """
+
+        package_id: "ObjectId"
+        ticket_id: "ObjectId"
+
+        def __init__(self,package_id: "ObjectId", ticket_id: "ObjectId"):
+            self.package_id = package_id
+            self.ticket_id = ticket_id
+
+        def __str__(self):
+            return "PackageUpgradeError.PACKAGE_ID_DOES_NOT_MATCH(package_id={}, ticket_id={})".format(self.package_id, self.ticket_id)
+
+        def __eq__(self, other):
+            if not other.is_PACKAGE_ID_DOES_NOT_MATCH():
+                return False
+            if self.package_id != other.package_id:
+                return False
+            if self.ticket_id != other.ticket_id:
+                return False
+            return True
+    
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_UNABLE_TO_FETCH_PACKAGE(self) -> bool:
+        return isinstance(self, PackageUpgradeError.UNABLE_TO_FETCH_PACKAGE)
+    def is_unable_to_fetch_package(self) -> bool:
+        return isinstance(self, PackageUpgradeError.UNABLE_TO_FETCH_PACKAGE)
+    def is_NOT_A_PACKAGE(self) -> bool:
+        return isinstance(self, PackageUpgradeError.NOT_A_PACKAGE)
+    def is_not_a_package(self) -> bool:
+        return isinstance(self, PackageUpgradeError.NOT_A_PACKAGE)
+    def is_INCOMPATIBLE_UPGRADE(self) -> bool:
+        return isinstance(self, PackageUpgradeError.INCOMPATIBLE_UPGRADE)
+    def is_incompatible_upgrade(self) -> bool:
+        return isinstance(self, PackageUpgradeError.INCOMPATIBLE_UPGRADE)
+    def is_DIGEST_DOES_NOT_MATCH(self) -> bool:
+        return isinstance(self, PackageUpgradeError.DIGEST_DOES_NOT_MATCH)
+    def is_digest_does_not_match(self) -> bool:
+        return isinstance(self, PackageUpgradeError.DIGEST_DOES_NOT_MATCH)
+    def is_UNKNOWN_UPGRADE_POLICY(self) -> bool:
+        return isinstance(self, PackageUpgradeError.UNKNOWN_UPGRADE_POLICY)
+    def is_unknown_upgrade_policy(self) -> bool:
+        return isinstance(self, PackageUpgradeError.UNKNOWN_UPGRADE_POLICY)
+    def is_PACKAGE_ID_DOES_NOT_MATCH(self) -> bool:
+        return isinstance(self, PackageUpgradeError.PACKAGE_ID_DOES_NOT_MATCH)
+    def is_package_id_does_not_match(self) -> bool:
+        return isinstance(self, PackageUpgradeError.PACKAGE_ID_DOES_NOT_MATCH)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+PackageUpgradeError.UNABLE_TO_FETCH_PACKAGE = type("PackageUpgradeError.UNABLE_TO_FETCH_PACKAGE", (PackageUpgradeError.UNABLE_TO_FETCH_PACKAGE, PackageUpgradeError,), {})  # type: ignore
+PackageUpgradeError.NOT_A_PACKAGE = type("PackageUpgradeError.NOT_A_PACKAGE", (PackageUpgradeError.NOT_A_PACKAGE, PackageUpgradeError,), {})  # type: ignore
+PackageUpgradeError.INCOMPATIBLE_UPGRADE = type("PackageUpgradeError.INCOMPATIBLE_UPGRADE", (PackageUpgradeError.INCOMPATIBLE_UPGRADE, PackageUpgradeError,), {})  # type: ignore
+PackageUpgradeError.DIGEST_DOES_NOT_MATCH = type("PackageUpgradeError.DIGEST_DOES_NOT_MATCH", (PackageUpgradeError.DIGEST_DOES_NOT_MATCH, PackageUpgradeError,), {})  # type: ignore
+PackageUpgradeError.UNKNOWN_UPGRADE_POLICY = type("PackageUpgradeError.UNKNOWN_UPGRADE_POLICY", (PackageUpgradeError.UNKNOWN_UPGRADE_POLICY, PackageUpgradeError,), {})  # type: ignore
+PackageUpgradeError.PACKAGE_ID_DOES_NOT_MATCH = type("PackageUpgradeError.PACKAGE_ID_DOES_NOT_MATCH", (PackageUpgradeError.PACKAGE_ID_DOES_NOT_MATCH, PackageUpgradeError,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypePackageUpgradeError(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return PackageUpgradeError.UNABLE_TO_FETCH_PACKAGE(
+                _UniffiConverterTypeObjectId.read(buf),
+            )
+        if variant == 2:
+            return PackageUpgradeError.NOT_A_PACKAGE(
+                _UniffiConverterTypeObjectId.read(buf),
+            )
+        if variant == 3:
+            return PackageUpgradeError.INCOMPATIBLE_UPGRADE(
+            )
+        if variant == 4:
+            return PackageUpgradeError.DIGEST_DOES_NOT_MATCH(
+                _UniffiConverterTypeDigest.read(buf),
+            )
+        if variant == 5:
+            return PackageUpgradeError.UNKNOWN_UPGRADE_POLICY(
+                _UniffiConverterUInt8.read(buf),
+            )
+        if variant == 6:
+            return PackageUpgradeError.PACKAGE_ID_DOES_NOT_MATCH(
+                _UniffiConverterTypeObjectId.read(buf),
+                _UniffiConverterTypeObjectId.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_UNABLE_TO_FETCH_PACKAGE():
+            _UniffiConverterTypeObjectId.check_lower(value.package_id)
+            return
+        if value.is_NOT_A_PACKAGE():
+            _UniffiConverterTypeObjectId.check_lower(value.object_id)
+            return
+        if value.is_INCOMPATIBLE_UPGRADE():
+            return
+        if value.is_DIGEST_DOES_NOT_MATCH():
+            _UniffiConverterTypeDigest.check_lower(value.digest)
+            return
+        if value.is_UNKNOWN_UPGRADE_POLICY():
+            _UniffiConverterUInt8.check_lower(value.policy)
+            return
+        if value.is_PACKAGE_ID_DOES_NOT_MATCH():
+            _UniffiConverterTypeObjectId.check_lower(value.package_id)
+            _UniffiConverterTypeObjectId.check_lower(value.ticket_id)
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_UNABLE_TO_FETCH_PACKAGE():
+            buf.write_i32(1)
+            _UniffiConverterTypeObjectId.write(value.package_id, buf)
+        if value.is_NOT_A_PACKAGE():
+            buf.write_i32(2)
+            _UniffiConverterTypeObjectId.write(value.object_id, buf)
+        if value.is_INCOMPATIBLE_UPGRADE():
+            buf.write_i32(3)
+        if value.is_DIGEST_DOES_NOT_MATCH():
+            buf.write_i32(4)
+            _UniffiConverterTypeDigest.write(value.digest, buf)
+        if value.is_UNKNOWN_UPGRADE_POLICY():
+            buf.write_i32(5)
+            _UniffiConverterUInt8.write(value.policy, buf)
+        if value.is_PACKAGE_ID_DOES_NOT_MATCH():
+            buf.write_i32(6)
+            _UniffiConverterTypeObjectId.write(value.package_id, buf)
+            _UniffiConverterTypeObjectId.write(value.ticket_id, buf)
 
 
 
@@ -5192,6 +8132,403 @@ class _UniffiConverterTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
             buf.write_i32(7)
 
 
+
+
+
+
+
+class TransactionExpiration:
+    def __init__(self):
+        raise RuntimeError("TransactionExpiration cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class NONE:
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "TransactionExpiration.NONE()".format()
+
+        def __eq__(self, other):
+            if not other.is_NONE():
+                return False
+            return True
+    
+    class EPOCH:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"TransactionExpiration.EPOCH{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_EPOCH():
+                return False
+            return self._values == other._values
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_NONE(self) -> bool:
+        return isinstance(self, TransactionExpiration.NONE)
+    def is_none(self) -> bool:
+        return isinstance(self, TransactionExpiration.NONE)
+    def is_EPOCH(self) -> bool:
+        return isinstance(self, TransactionExpiration.EPOCH)
+    def is_epoch(self) -> bool:
+        return isinstance(self, TransactionExpiration.EPOCH)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+TransactionExpiration.NONE = type("TransactionExpiration.NONE", (TransactionExpiration.NONE, TransactionExpiration,), {})  # type: ignore
+TransactionExpiration.EPOCH = type("TransactionExpiration.EPOCH", (TransactionExpiration.EPOCH, TransactionExpiration,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeTransactionExpiration(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return TransactionExpiration.NONE(
+            )
+        if variant == 2:
+            return TransactionExpiration.EPOCH(
+                _UniffiConverterUInt64.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_NONE():
+            return
+        if value.is_EPOCH():
+            _UniffiConverterUInt64.check_lower(value._values[0])
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_NONE():
+            buf.write_i32(1)
+        if value.is_EPOCH():
+            buf.write_i32(2)
+            _UniffiConverterUInt64.write(value._values[0], buf)
+
+
+
+
+
+
+
+class TypeArgumentError(enum.Enum):
+    TYPE_NOT_FOUND = 0
+    
+    CONSTRAINT_NOT_SATISFIED = 1
+    
+
+
+class _UniffiConverterTypeTypeArgumentError(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return TypeArgumentError.TYPE_NOT_FOUND
+        if variant == 2:
+            return TypeArgumentError.CONSTRAINT_NOT_SATISFIED
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == TypeArgumentError.TYPE_NOT_FOUND:
+            return
+        if value == TypeArgumentError.CONSTRAINT_NOT_SATISFIED:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == TypeArgumentError.TYPE_NOT_FOUND:
+            buf.write_i32(1)
+        if value == TypeArgumentError.CONSTRAINT_NOT_SATISFIED:
+            buf.write_i32(2)
+
+
+
+
+
+
+
+class UnchangedSharedKind:
+    """
+    Type of unchanged shared object
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    unchanged-shared-object-kind =  read-only-root
+    =/ mutate-deleted
+    =/ read-deleted
+    =/ cancelled
+    =/ per-epoch-config
+
+    read-only-root      = %x00 u64 digest
+    mutate-deleted      = %x01 u64
+    read-deleted        = %x02 u64
+    cancelled           = %x03 u64
+    per-epoch-config    = %x04
+    ```
+    """
+
+    def __init__(self):
+        raise RuntimeError("UnchangedSharedKind cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class READ_ONLY_ROOT:
+        """
+        Read-only shared objects from the input. We don't really need
+        ObjectDigest for protocol correctness, but it will make it easier to
+        verify untrusted read.
+        """
+
+        version: "int"
+        digest: "ObjectDigest"
+
+        def __init__(self,version: "int", digest: "ObjectDigest"):
+            self.version = version
+            self.digest = digest
+
+        def __str__(self):
+            return "UnchangedSharedKind.READ_ONLY_ROOT(version={}, digest={})".format(self.version, self.digest)
+
+        def __eq__(self, other):
+            if not other.is_READ_ONLY_ROOT():
+                return False
+            if self.version != other.version:
+                return False
+            if self.digest != other.digest:
+                return False
+            return True
+    
+    class MUTATE_DELETED:
+        """
+        Deleted shared objects that appear mutably/owned in the input.
+        """
+
+        version: "int"
+
+        def __init__(self,version: "int"):
+            self.version = version
+
+        def __str__(self):
+            return "UnchangedSharedKind.MUTATE_DELETED(version={})".format(self.version)
+
+        def __eq__(self, other):
+            if not other.is_MUTATE_DELETED():
+                return False
+            if self.version != other.version:
+                return False
+            return True
+    
+    class READ_DELETED:
+        """
+        Deleted shared objects that appear as read-only in the input.
+        """
+
+        version: "int"
+
+        def __init__(self,version: "int"):
+            self.version = version
+
+        def __str__(self):
+            return "UnchangedSharedKind.READ_DELETED(version={})".format(self.version)
+
+        def __eq__(self, other):
+            if not other.is_READ_DELETED():
+                return False
+            if self.version != other.version:
+                return False
+            return True
+    
+    class CANCELLED:
+        """
+        Shared objects in cancelled transaction. The sequence number embed
+        cancellation reason.
+        """
+
+        version: "int"
+
+        def __init__(self,version: "int"):
+            self.version = version
+
+        def __str__(self):
+            return "UnchangedSharedKind.CANCELLED(version={})".format(self.version)
+
+        def __eq__(self, other):
+            if not other.is_CANCELLED():
+                return False
+            if self.version != other.version:
+                return False
+            return True
+    
+    class PER_EPOCH_CONFIG:
+        """
+        Read of a per-epoch config object that should remain the same during an
+        epoch.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "UnchangedSharedKind.PER_EPOCH_CONFIG()".format()
+
+        def __eq__(self, other):
+            if not other.is_PER_EPOCH_CONFIG():
+                return False
+            return True
+    
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_READ_ONLY_ROOT(self) -> bool:
+        return isinstance(self, UnchangedSharedKind.READ_ONLY_ROOT)
+    def is_read_only_root(self) -> bool:
+        return isinstance(self, UnchangedSharedKind.READ_ONLY_ROOT)
+    def is_MUTATE_DELETED(self) -> bool:
+        return isinstance(self, UnchangedSharedKind.MUTATE_DELETED)
+    def is_mutate_deleted(self) -> bool:
+        return isinstance(self, UnchangedSharedKind.MUTATE_DELETED)
+    def is_READ_DELETED(self) -> bool:
+        return isinstance(self, UnchangedSharedKind.READ_DELETED)
+    def is_read_deleted(self) -> bool:
+        return isinstance(self, UnchangedSharedKind.READ_DELETED)
+    def is_CANCELLED(self) -> bool:
+        return isinstance(self, UnchangedSharedKind.CANCELLED)
+    def is_cancelled(self) -> bool:
+        return isinstance(self, UnchangedSharedKind.CANCELLED)
+    def is_PER_EPOCH_CONFIG(self) -> bool:
+        return isinstance(self, UnchangedSharedKind.PER_EPOCH_CONFIG)
+    def is_per_epoch_config(self) -> bool:
+        return isinstance(self, UnchangedSharedKind.PER_EPOCH_CONFIG)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+UnchangedSharedKind.READ_ONLY_ROOT = type("UnchangedSharedKind.READ_ONLY_ROOT", (UnchangedSharedKind.READ_ONLY_ROOT, UnchangedSharedKind,), {})  # type: ignore
+UnchangedSharedKind.MUTATE_DELETED = type("UnchangedSharedKind.MUTATE_DELETED", (UnchangedSharedKind.MUTATE_DELETED, UnchangedSharedKind,), {})  # type: ignore
+UnchangedSharedKind.READ_DELETED = type("UnchangedSharedKind.READ_DELETED", (UnchangedSharedKind.READ_DELETED, UnchangedSharedKind,), {})  # type: ignore
+UnchangedSharedKind.CANCELLED = type("UnchangedSharedKind.CANCELLED", (UnchangedSharedKind.CANCELLED, UnchangedSharedKind,), {})  # type: ignore
+UnchangedSharedKind.PER_EPOCH_CONFIG = type("UnchangedSharedKind.PER_EPOCH_CONFIG", (UnchangedSharedKind.PER_EPOCH_CONFIG, UnchangedSharedKind,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return UnchangedSharedKind.READ_ONLY_ROOT(
+                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterTypeObjectDigest.read(buf),
+            )
+        if variant == 2:
+            return UnchangedSharedKind.MUTATE_DELETED(
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 3:
+            return UnchangedSharedKind.READ_DELETED(
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 4:
+            return UnchangedSharedKind.CANCELLED(
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 5:
+            return UnchangedSharedKind.PER_EPOCH_CONFIG(
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_READ_ONLY_ROOT():
+            _UniffiConverterUInt64.check_lower(value.version)
+            _UniffiConverterTypeObjectDigest.check_lower(value.digest)
+            return
+        if value.is_MUTATE_DELETED():
+            _UniffiConverterUInt64.check_lower(value.version)
+            return
+        if value.is_READ_DELETED():
+            _UniffiConverterUInt64.check_lower(value.version)
+            return
+        if value.is_CANCELLED():
+            _UniffiConverterUInt64.check_lower(value.version)
+            return
+        if value.is_PER_EPOCH_CONFIG():
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_READ_ONLY_ROOT():
+            buf.write_i32(1)
+            _UniffiConverterUInt64.write(value.version, buf)
+            _UniffiConverterTypeObjectDigest.write(value.digest, buf)
+        if value.is_MUTATE_DELETED():
+            buf.write_i32(2)
+            _UniffiConverterUInt64.write(value.version, buf)
+        if value.is_READ_DELETED():
+            buf.write_i32(3)
+            _UniffiConverterUInt64.write(value.version, buf)
+        if value.is_CANCELLED():
+            buf.write_i32(4)
+            _UniffiConverterUInt64.write(value.version, buf)
+        if value.is_PER_EPOCH_CONFIG():
+            buf.write_i32(5)
+
+
+
+
+
+class _UniffiConverterOptionalUInt32(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterUInt32.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterUInt32.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterUInt32.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
 
 
 
@@ -5465,6 +8802,33 @@ class _UniffiConverterOptionalTypeCoinMetadata(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeEffectsAuxiliaryDataDigest(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeEffectsAuxiliaryDataDigest.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeEffectsAuxiliaryDataDigest.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeEffectsAuxiliaryDataDigest.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeEpoch(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -5681,60 +9045,6 @@ class _UniffiConverterOptionalTypeProtocolConfigs(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterOptionalTypeSignedTransaction(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeSignedTransaction.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeSignedTransaction.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeSignedTransaction.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
-class _UniffiConverterOptionalTypeTransactionDataEffects(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeTransactionDataEffects.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeTransactionDataEffects.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeTransactionDataEffects.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalTypeTransactionEffects(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -5757,6 +9067,33 @@ class _UniffiConverterOptionalTypeTransactionEffects(_UniffiConverterRustBuffer)
             return None
         elif flag == 1:
             return _UniffiConverterTypeTransactionEffects.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeTransactionEventsDigest(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeTransactionEventsDigest.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeTransactionEventsDigest.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeTransactionEventsDigest.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -5946,6 +9283,60 @@ class _UniffiConverterOptionalTypeObjectFilter(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeObjectFilter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeSignedTransaction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeSignedTransaction.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeSignedTransaction.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeSignedTransaction.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeTransactionDataEffects(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeTransactionDataEffects.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeTransactionDataEffects.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeTransactionDataEffects.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -6417,18 +9808,18 @@ class _UniffiConverterSequenceTypeObjectRef(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterSequenceTypeSignedTransaction(_UniffiConverterRustBuffer):
+class _UniffiConverterSequenceTypeTransactionDigest(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
         for item in value:
-            _UniffiConverterTypeSignedTransaction.check_lower(item)
+            _UniffiConverterTypeTransactionDigest.check_lower(item)
 
     @classmethod
     def write(cls, value, buf):
         items = len(value)
         buf.write_i32(items)
         for item in value:
-            _UniffiConverterTypeSignedTransaction.write(item, buf)
+            _UniffiConverterTypeTransactionDigest.write(item, buf)
 
     @classmethod
     def read(cls, buf):
@@ -6437,32 +9828,7 @@ class _UniffiConverterSequenceTypeSignedTransaction(_UniffiConverterRustBuffer):
             raise InternalError("Unexpected negative sequence length")
 
         return [
-            _UniffiConverterTypeSignedTransaction.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceTypeTransactionDataEffects(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeTransactionDataEffects.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeTransactionDataEffects.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeTransactionDataEffects.read(buf) for i in range(count)
+            _UniffiConverterTypeTransactionDigest.read(buf) for i in range(count)
         ]
 
 
@@ -6513,6 +9879,31 @@ class _UniffiConverterSequenceTypeUserSignature(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeUserSignature.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeChangedObject(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeChangedObject.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeChangedObject.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeChangedObject.read(buf) for i in range(count)
         ]
 
 
@@ -12398,7 +15789,10 @@ class _UniffiConverterTypeTransactionDigest:
     def write(cls, value: TransactionDigestProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class TransactionEffectsProtocol(typing.Protocol):
-    pass
+    def as_v1(self, ):
+        raise NotImplementedError
+    def is_v1(self, ):
+        raise NotImplementedError
 # TransactionEffects is a Rust-only trait - it's a wrapper around a Rust implementation.
 class TransactionEffects():
     _pointer: ctypes.c_void_p
@@ -12423,6 +15817,33 @@ class TransactionEffects():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+    @classmethod
+    def v1(cls, effects: "TransactionEffectsV1"):
+        _UniffiConverterTypeTransactionEffectsV1.check_lower(effects)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1,
+        _UniffiConverterTypeTransactionEffectsV1.lower(effects))
+        return cls._make_instance_(pointer)
+
+
+
+    def as_v1(self, ) -> "TransactionEffectsV1":
+        return _UniffiConverterTypeTransactionEffectsV1.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_v1(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -12564,62 +15985,6 @@ class _UniffiConverterTypeTransactionEventsDigest:
 
     @classmethod
     def write(cls, value: TransactionEventsDigestProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class TransactionExpirationProtocol(typing.Protocol):
-    pass
-# TransactionExpiration is a Rust-only trait - it's a wrapper around a Rust implementation.
-class TransactionExpiration():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionexpiration, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionexpiration, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeTransactionExpiration:
-
-    @staticmethod
-    def lift(value: int):
-        return TransactionExpiration._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: TransactionExpiration):
-        if not isinstance(value, TransactionExpiration):
-            raise TypeError("Expected TransactionExpiration instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: TransactionExpirationProtocol):
-        if not isinstance(value, TransactionExpiration):
-            raise TypeError("Expected TransactionExpiration instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: TransactionExpirationProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class TransactionKindProtocol(typing.Protocol):
     """
@@ -12952,9 +16317,20 @@ async def _uniffi_rust_call_async(rust_future, ffi_poll, ffi_complete, ffi_free,
 
 __all__ = [
     "InternalError",
+    "CommandArgumentError",
     "Direction",
+    "ExecutionError",
+    "ExecutionStatus",
+    "IdOperation",
+    "ObjectIn",
+    "ObjectOut",
+    "PackageUpgradeError",
     "SdkFfiError",
     "TransactionBlockKindInput",
+    "TransactionExpiration",
+    "TypeArgumentError",
+    "UnchangedSharedKind",
+    "ChangedObject",
     "CheckpointSummary",
     "CheckpointSummaryPage",
     "CoinPage",
@@ -12977,9 +16353,13 @@ __all__ = [
     "ObjectReference",
     "PageInfo",
     "PaginationFilter",
+    "SignedTransaction",
     "SignedTransactionPage",
+    "Transaction",
+    "TransactionDataEffects",
     "TransactionDataEffectsPage",
     "TransactionEffectsPage",
+    "TransactionEffectsV1",
     "TransactionMetadata",
     "TransactionsFilter",
     "TypeOrigin",
@@ -13038,7 +16418,6 @@ __all__ = [
     "TransactionEffects",
     "TransactionEffectsDigest",
     "TransactionEventsDigest",
-    "TransactionExpiration",
     "TransactionKind",
     "TypeTag",
     "UserSignature",
