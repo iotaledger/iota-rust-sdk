@@ -503,11 +503,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 47707:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 27370:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 29988:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 43452:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 61215:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 47284:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch() != 46788:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -535,7 +535,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 1970:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 2696:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 37555:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -573,7 +573,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 2687:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct() != 2473:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct() != 37303:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_data() != 4330:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -660,6 +660,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet() != 3613:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 47014:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_object_new() != 56232:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1509,16 +1511,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_movepackage.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_movepackage.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movestruct.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new.argtypes = (
     ctypes.c_void_p,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movestruct.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movestruct.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movestruct.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_object.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -1786,6 +1787,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_signedtransaction_transaction.argtypes 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_signedtransaction_transaction.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_structtag.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_structtag.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_structtag.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_structtag.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transaction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2528,6 +2539,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_object_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_object_new.restype = ctypes.c_uint16
@@ -3102,7 +3116,7 @@ class DynamicFieldName:
     representation.
     """
 
-    type: "TypeTag"
+    type_tag: "TypeTag"
     """
     The type name of this dynamic field name
     """
@@ -3117,16 +3131,16 @@ class DynamicFieldName:
     The json representation of the dynamic field name
     """
 
-    def __init__(self, *, type: "TypeTag", bcs: "bytes", json: "typing.Optional[Value]"):
-        self.type = type
+    def __init__(self, *, type_tag: "TypeTag", bcs: "bytes", json: "typing.Optional[Value]"):
+        self.type_tag = type_tag
         self.bcs = bcs
         self.json = json
 
     def __str__(self):
-        return "DynamicFieldName(type={}, bcs={}, json={})".format(self.type, self.bcs, self.json)
+        return "DynamicFieldName(type_tag={}, bcs={}, json={})".format(self.type_tag, self.bcs, self.json)
 
     def __eq__(self, other):
-        if self.type != other.type:
+        if self.type_tag != other.type_tag:
             return False
         if self.bcs != other.bcs:
             return False
@@ -3138,20 +3152,20 @@ class _UniffiConverterTypeDynamicFieldName(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return DynamicFieldName(
-            type=_UniffiConverterTypeTypeTag.read(buf),
+            type_tag=_UniffiConverterTypeTypeTag.read(buf),
             bcs=_UniffiConverterBytes.read(buf),
             json=_UniffiConverterOptionalTypeValue.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterTypeTypeTag.check_lower(value.type)
+        _UniffiConverterTypeTypeTag.check_lower(value.type_tag)
         _UniffiConverterBytes.check_lower(value.bcs)
         _UniffiConverterOptionalTypeValue.check_lower(value.json)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterTypeTypeTag.write(value.type, buf)
+        _UniffiConverterTypeTypeTag.write(value.type_tag, buf)
         _UniffiConverterBytes.write(value.bcs, buf)
         _UniffiConverterOptionalTypeValue.write(value.json, buf)
 
@@ -3270,17 +3284,17 @@ class DynamicFieldValue:
     The value part of a dynamic field.
     """
 
-    type: "TypeTag"
+    type_tag: "TypeTag"
     bcs: "bytes"
-    def __init__(self, *, type: "TypeTag", bcs: "bytes"):
-        self.type = type
+    def __init__(self, *, type_tag: "TypeTag", bcs: "bytes"):
+        self.type_tag = type_tag
         self.bcs = bcs
 
     def __str__(self):
-        return "DynamicFieldValue(type={}, bcs={})".format(self.type, self.bcs)
+        return "DynamicFieldValue(type_tag={}, bcs={})".format(self.type_tag, self.bcs)
 
     def __eq__(self, other):
-        if self.type != other.type:
+        if self.type_tag != other.type_tag:
             return False
         if self.bcs != other.bcs:
             return False
@@ -3290,18 +3304,18 @@ class _UniffiConverterTypeDynamicFieldValue(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return DynamicFieldValue(
-            type=_UniffiConverterTypeTypeTag.read(buf),
+            type_tag=_UniffiConverterTypeTypeTag.read(buf),
             bcs=_UniffiConverterBytes.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterTypeTypeTag.check_lower(value.type)
+        _UniffiConverterTypeTypeTag.check_lower(value.type_tag)
         _UniffiConverterBytes.check_lower(value.bcs)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterTypeTypeTag.write(value.type, buf)
+        _UniffiConverterTypeTypeTag.write(value.type_tag, buf)
         _UniffiConverterBytes.write(value.bcs, buf)
 
 
@@ -3637,6 +3651,46 @@ class _UniffiConverterTypeGasPayment(_UniffiConverterRustBuffer):
         _UniffiConverterUInt64.write(value.budget, buf)
 
 
+class IdentifierModuleMap:
+    """
+    A mapping between an identifier and a BCS encoded module.
+    """
+
+    id: "str"
+    module: "bytes"
+    def __init__(self, *, id: "str", module: "bytes"):
+        self.id = id
+        self.module = module
+
+    def __str__(self):
+        return "IdentifierModuleMap(id={}, module={})".format(self.id, self.module)
+
+    def __eq__(self, other):
+        if self.id != other.id:
+            return False
+        if self.module != other.module:
+            return False
+        return True
+
+class _UniffiConverterTypeIdentifierModuleMap(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return IdentifierModuleMap(
+            id=_UniffiConverterString.read(buf),
+            module=_UniffiConverterBytes.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.id)
+        _UniffiConverterBytes.check_lower(value.module)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.id, buf)
+        _UniffiConverterBytes.write(value.module, buf)
+
+
 class MovePackagePage:
     """
     A page of items returned by the GraphQL server.
@@ -3686,20 +3740,98 @@ class _UniffiConverterTypeMovePackagePage(_UniffiConverterRustBuffer):
         _UniffiConverterSequenceTypeMovePackage.write(value.data, buf)
 
 
+class MoveStruct:
+    """
+    A move struct
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    object-move-struct = compressed-struct-tag bool u64 object-contents
+
+    compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
+    other-struct-type     = %x00 struct-tag
+    gas-coin-type         = %x01
+    staked-iota-type      = %x02
+    coin-type             = %x03 type-tag
+
+    ; first 32 bytes of the contents are the object's object-id
+    object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+    ```
+    """
+
+    type_tag: "StructTag"
+    """
+    The type of this object
+    """
+
+    version: "int"
+    """
+    Number that increases each time a tx takes this object as a mutable
+    input This is a lamport timestamp, not a sequentially increasing
+    version
+    """
+
+    contents: "bytes"
+    """
+    BCS bytes of a Move struct value
+    """
+
+    def __init__(self, *, type_tag: "StructTag", version: "int", contents: "bytes"):
+        self.type_tag = type_tag
+        self.version = version
+        self.contents = contents
+
+    def __str__(self):
+        return "MoveStruct(type_tag={}, version={}, contents={})".format(self.type_tag, self.version, self.contents)
+
+    def __eq__(self, other):
+        if self.type_tag != other.type_tag:
+            return False
+        if self.version != other.version:
+            return False
+        if self.contents != other.contents:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveStruct(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveStruct(
+            type_tag=_UniffiConverterTypeStructTag.read(buf),
+            version=_UniffiConverterUInt64.read(buf),
+            contents=_UniffiConverterBytes.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeStructTag.check_lower(value.type_tag)
+        _UniffiConverterUInt64.check_lower(value.version)
+        _UniffiConverterBytes.check_lower(value.contents)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeStructTag.write(value.type_tag, buf)
+        _UniffiConverterUInt64.write(value.version, buf)
+        _UniffiConverterBytes.write(value.contents, buf)
+
+
 class ObjectFilter:
-    type: "typing.Optional[str]"
+    type_tag: "typing.Optional[str]"
     owner: "typing.Optional[Address]"
     object_ids: "typing.Optional[typing.List[ObjectId]]"
-    def __init__(self, *, type: "typing.Optional[str]", owner: "typing.Optional[Address]", object_ids: "typing.Optional[typing.List[ObjectId]]"):
-        self.type = type
+    def __init__(self, *, type_tag: "typing.Optional[str]", owner: "typing.Optional[Address]", object_ids: "typing.Optional[typing.List[ObjectId]]"):
+        self.type_tag = type_tag
         self.owner = owner
         self.object_ids = object_ids
 
     def __str__(self):
-        return "ObjectFilter(type={}, owner={}, object_ids={})".format(self.type, self.owner, self.object_ids)
+        return "ObjectFilter(type_tag={}, owner={}, object_ids={})".format(self.type_tag, self.owner, self.object_ids)
 
     def __eq__(self, other):
-        if self.type != other.type:
+        if self.type_tag != other.type_tag:
             return False
         if self.owner != other.owner:
             return False
@@ -3711,22 +3843,62 @@ class _UniffiConverterTypeObjectFilter(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return ObjectFilter(
-            type=_UniffiConverterOptionalString.read(buf),
+            type_tag=_UniffiConverterOptionalString.read(buf),
             owner=_UniffiConverterOptionalTypeAddress.read(buf),
             object_ids=_UniffiConverterOptionalSequenceTypeObjectId.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterOptionalString.check_lower(value.type)
+        _UniffiConverterOptionalString.check_lower(value.type_tag)
         _UniffiConverterOptionalTypeAddress.check_lower(value.owner)
         _UniffiConverterOptionalSequenceTypeObjectId.check_lower(value.object_ids)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterOptionalString.write(value.type, buf)
+        _UniffiConverterOptionalString.write(value.type_tag, buf)
         _UniffiConverterOptionalTypeAddress.write(value.owner, buf)
         _UniffiConverterOptionalSequenceTypeObjectId.write(value.object_ids, buf)
+
+
+class ObjectIdUpgradeInfoMap:
+    """
+    A mapping between an Object ID and a package upgrade info.
+    """
+
+    id: "ObjectId"
+    info: "UpgradeInfo"
+    def __init__(self, *, id: "ObjectId", info: "UpgradeInfo"):
+        self.id = id
+        self.info = info
+
+    def __str__(self):
+        return "ObjectIdUpgradeInfoMap(id={}, info={})".format(self.id, self.info)
+
+    def __eq__(self, other):
+        if self.id != other.id:
+            return False
+        if self.info != other.info:
+            return False
+        return True
+
+class _UniffiConverterTypeObjectIdUpgradeInfoMap(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ObjectIdUpgradeInfoMap(
+            id=_UniffiConverterTypeObjectId.read(buf),
+            info=_UniffiConverterTypeUpgradeInfo.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeObjectId.check_lower(value.id)
+        _UniffiConverterTypeUpgradeInfo.check_lower(value.info)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeObjectId.write(value.id, buf)
+        _UniffiConverterTypeUpgradeInfo.write(value.info, buf)
 
 
 class ObjectPage:
@@ -4283,6 +4455,117 @@ class _UniffiConverterTypeTransactionsFilter(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalTypeObjectId.write(value.changed_object, buf)
         _UniffiConverterOptionalSequenceString.write(value.transaction_ids, buf)
         _UniffiConverterOptionalTypeObjectId.write(value.wrapped_or_deleted_object, buf)
+
+
+class TypeOrigin:
+    """
+    Identifies a struct and the module it was defined in
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    type-origin = identifier identifier object-id
+    ```
+    """
+
+    module_name: "str"
+    struct_name: "str"
+    package: "ObjectId"
+    def __init__(self, *, module_name: "str", struct_name: "str", package: "ObjectId"):
+        self.module_name = module_name
+        self.struct_name = struct_name
+        self.package = package
+
+    def __str__(self):
+        return "TypeOrigin(module_name={}, struct_name={}, package={})".format(self.module_name, self.struct_name, self.package)
+
+    def __eq__(self, other):
+        if self.module_name != other.module_name:
+            return False
+        if self.struct_name != other.struct_name:
+            return False
+        if self.package != other.package:
+            return False
+        return True
+
+class _UniffiConverterTypeTypeOrigin(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TypeOrigin(
+            module_name=_UniffiConverterString.read(buf),
+            struct_name=_UniffiConverterString.read(buf),
+            package=_UniffiConverterTypeObjectId.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.module_name)
+        _UniffiConverterString.check_lower(value.struct_name)
+        _UniffiConverterTypeObjectId.check_lower(value.package)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.module_name, buf)
+        _UniffiConverterString.write(value.struct_name, buf)
+        _UniffiConverterTypeObjectId.write(value.package, buf)
+
+
+class UpgradeInfo:
+    """
+    Upgraded package info for the linkage table
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    upgrade-info = object-id u64
+    ```
+    """
+
+    upgraded_id: "ObjectId"
+    """
+    Id of the upgraded packages
+    """
+
+    upgraded_version: "int"
+    """
+    Version of the upgraded package
+    """
+
+    def __init__(self, *, upgraded_id: "ObjectId", upgraded_version: "int"):
+        self.upgraded_id = upgraded_id
+        self.upgraded_version = upgraded_version
+
+    def __str__(self):
+        return "UpgradeInfo(upgraded_id={}, upgraded_version={})".format(self.upgraded_id, self.upgraded_version)
+
+    def __eq__(self, other):
+        if self.upgraded_id != other.upgraded_id:
+            return False
+        if self.upgraded_version != other.upgraded_version:
+            return False
+        return True
+
+class _UniffiConverterTypeUpgradeInfo(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return UpgradeInfo(
+            upgraded_id=_UniffiConverterTypeObjectId.read(buf),
+            upgraded_version=_UniffiConverterUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeObjectId.check_lower(value.upgraded_id)
+        _UniffiConverterUInt64.check_lower(value.upgraded_version)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeObjectId.write(value.upgraded_id, buf)
+        _UniffiConverterUInt64.write(value.upgraded_version, buf)
 
 
 class Validator:
@@ -5317,33 +5600,6 @@ class _UniffiConverterOptionalTypeMovePackage(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterOptionalTypeMoveStruct(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeMoveStruct.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeMoveStruct.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeMoveStruct.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalTypeObject(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -5636,6 +5892,33 @@ class _UniffiConverterOptionalTypeEventFilter(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeEventFilter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveStruct(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveStruct.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveStruct.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveStruct.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -6284,6 +6567,56 @@ class _UniffiConverterSequenceTypeDynamicFieldOutput(_UniffiConverterRustBuffer)
 
 
 
+class _UniffiConverterSequenceTypeIdentifierModuleMap(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeIdentifierModuleMap.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeIdentifierModuleMap.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeIdentifierModuleMap.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeObjectIdUpgradeInfoMap(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeObjectIdUpgradeInfoMap.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeObjectIdUpgradeInfoMap.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeObjectIdUpgradeInfoMap.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeObjectReference(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -6305,6 +6638,31 @@ class _UniffiConverterSequenceTypeObjectReference(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeObjectReference.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeTypeOrigin(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeTypeOrigin.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeTypeOrigin.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeTypeOrigin.read(buf) for i in range(count)
         ]
 
 
@@ -8660,7 +9018,7 @@ class GraphQlClientProtocol(typing.Protocol):
 
         ```rust,ignore
         let filter = ObjectFilter {
-        type_: None,
+        type_tag: None,
         owner: Some(Address::from_str("test").unwrap().into()),
         object_ids: None,
         };
@@ -9697,7 +10055,7 @@ _UniffiConverterTypeSdkFfiError,
 
         ```rust,ignore
         let filter = ObjectFilter {
-        type_: None,
+        type_tag: None,
         owner: Some(Address::from_str("test").unwrap().into()),
         object_ids: None,
         };
@@ -10432,9 +10790,23 @@ class MovePackage():
     """
 
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, id: "ObjectId",version: "int",modules: "typing.List[IdentifierModuleMap]",type_origin_table: "typing.List[TypeOrigin]",linkage_table: "typing.List[ObjectIdUpgradeInfoMap]"):
+        _UniffiConverterTypeObjectId.check_lower(id)
+        
+        _UniffiConverterUInt64.check_lower(version)
+        
+        _UniffiConverterSequenceTypeIdentifierModuleMap.check_lower(modules)
+        
+        _UniffiConverterSequenceTypeTypeOrigin.check_lower(type_origin_table)
+        
+        _UniffiConverterSequenceTypeObjectIdUpgradeInfoMap.check_lower(linkage_table)
+        
+        self._pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new,
+        _UniffiConverterTypeObjectId.lower(id),
+        _UniffiConverterUInt64.lower(version),
+        _UniffiConverterSequenceTypeIdentifierModuleMap.lower(modules),
+        _UniffiConverterSequenceTypeTypeOrigin.lower(type_origin_table),
+        _UniffiConverterSequenceTypeObjectIdUpgradeInfoMap.lower(linkage_table))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -10482,62 +10854,6 @@ class _UniffiConverterTypeMovePackage:
 
     @classmethod
     def write(cls, value: MovePackageProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class MoveStructProtocol(typing.Protocol):
-    pass
-# MoveStruct is a Rust-only trait - it's a wrapper around a Rust implementation.
-class MoveStruct():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movestruct, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movestruct, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeMoveStruct:
-
-    @staticmethod
-    def lift(value: int):
-        return MoveStruct._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: MoveStruct):
-        if not isinstance(value, MoveStruct):
-            raise TypeError("Expected MoveStruct instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: MoveStructProtocol):
-        if not isinstance(value, MoveStruct):
-            raise TypeError("Expected MoveStruct instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: MoveStructProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ObjectProtocol(typing.Protocol):
     """
@@ -11749,6 +12065,62 @@ class _UniffiConverterTypeSignedTransaction:
     @classmethod
     def write(cls, value: SignedTransactionProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class StructTagProtocol(typing.Protocol):
+    pass
+# StructTag is a Rust-only trait - it's a wrapper around a Rust implementation.
+class StructTag():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_structtag, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_structtag, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+
+class _UniffiConverterTypeStructTag:
+
+    @staticmethod
+    def lift(value: int):
+        return StructTag._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: StructTag):
+        if not isinstance(value, StructTag):
+            raise TypeError("Expected StructTag instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: StructTagProtocol):
+        if not isinstance(value, StructTag):
+            raise TypeError("Expected StructTag instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: StructTagProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class TransactionProtocol(typing.Protocol):
     """
     A transaction
@@ -12596,8 +12968,11 @@ __all__ = [
     "EventPage",
     "GasCostSummary",
     "GasPayment",
+    "IdentifierModuleMap",
     "MovePackagePage",
+    "MoveStruct",
     "ObjectFilter",
+    "ObjectIdUpgradeInfoMap",
     "ObjectPage",
     "ObjectReference",
     "PageInfo",
@@ -12607,6 +12982,8 @@ __all__ = [
     "TransactionEffectsPage",
     "TransactionMetadata",
     "TransactionsFilter",
+    "TypeOrigin",
+    "UpgradeInfo",
     "Validator",
     "ValidatorCommitteeMember",
     "ValidatorCredentials",
@@ -12640,7 +13017,6 @@ __all__ = [
     "MoveFunction",
     "MoveModule",
     "MovePackage",
-    "MoveStruct",
     "Object",
     "ObjectData",
     "ObjectDigest",
@@ -12655,6 +13031,7 @@ __all__ = [
     "Secp256r1PublicKey",
     "ServiceConfig",
     "SignedTransaction",
+    "StructTag",
     "Transaction",
     "TransactionDataEffects",
     "TransactionDigest",
@@ -12666,3 +13043,4 @@ __all__ = [
     "TypeTag",
     "UserSignature",
 ]
+
