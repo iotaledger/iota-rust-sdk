@@ -1529,11 +1529,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1()
 	})
-	if checksum != 6144 {
+	if checksum != 63561 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7750,9 +7750,9 @@ type TransactionEffects struct {
 }
 
 
-func TransactionEffectsV1(effects TransactionEffectsV1) *TransactionEffects {
+func TransactionEffectsNewV1(effects TransactionEffectsV1) *TransactionEffects {
 	return FfiConverterTransactionEffectsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1(FfiConverterTransactionEffectsV1INSTANCE.Lower(effects),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_new_v1(FfiConverterTransactionEffectsV1INSTANCE.Lower(effects),_uniffiStatus)
 	}))
 }
 

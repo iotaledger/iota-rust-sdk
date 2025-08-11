@@ -1438,9 +1438,9 @@ void* uniffi_iota_sdk_ffi_fn_clone_transactioneffects(void* ptr, RustCallStatus 
 void uniffi_iota_sdk_ffi_fn_free_transactioneffects(void* ptr, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONEFFECTS_V1
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONEFFECTS_V1
-void* uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1(RustBuffer effects, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONEFFECTS_NEW_V1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONEFFECTS_NEW_V1
+void* uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_new_v1(RustBuffer effects, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONEFFECTS_AS_V1
@@ -2732,9 +2732,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transaction_new(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONEFFECTS_V1
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONEFFECTS_V1
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONEFFECTS_NEW_V1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONEFFECTS_NEW_V1
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1(void
     
 );
 #endif
