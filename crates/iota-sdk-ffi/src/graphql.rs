@@ -447,12 +447,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .package_versions(
-                **address,
-                pagination_filter,
-                after_version,
-                before_version,
-            )
+            .package_versions(**address, pagination_filter, after_version, before_version)
             .await?
             .map(Into::into)
             .into())
@@ -490,11 +485,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .packages(
-                pagination_filter,
-                after_checkpoint,
-                before_checkpoint,
-            )
+            .packages(pagination_filter, after_checkpoint, before_checkpoint)
             .await?
             .map(Into::into)
             .into())
