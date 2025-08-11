@@ -4453,7 +4453,7 @@ class MoveStruct:
     ```
     """
 
-    type_tag: "StructTag"
+    struct_type: "StructTag"
     """
     The type of this object
     """
@@ -4470,16 +4470,16 @@ class MoveStruct:
     BCS bytes of a Move struct value
     """
 
-    def __init__(self, *, type_tag: "StructTag", version: "int", contents: "bytes"):
-        self.type_tag = type_tag
+    def __init__(self, *, struct_type: "StructTag", version: "int", contents: "bytes"):
+        self.struct_type = struct_type
         self.version = version
         self.contents = contents
 
     def __str__(self):
-        return "MoveStruct(type_tag={}, version={}, contents={})".format(self.type_tag, self.version, self.contents)
+        return "MoveStruct(struct_type={}, version={}, contents={})".format(self.struct_type, self.version, self.contents)
 
     def __eq__(self, other):
-        if self.type_tag != other.type_tag:
+        if self.struct_type != other.struct_type:
             return False
         if self.version != other.version:
             return False
@@ -4491,20 +4491,20 @@ class _UniffiConverterTypeMoveStruct(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return MoveStruct(
-            type_tag=_UniffiConverterTypeStructTag.read(buf),
+            struct_type=_UniffiConverterTypeStructTag.read(buf),
             version=_UniffiConverterUInt64.read(buf),
             contents=_UniffiConverterBytes.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterTypeStructTag.check_lower(value.type_tag)
+        _UniffiConverterTypeStructTag.check_lower(value.struct_type)
         _UniffiConverterUInt64.check_lower(value.version)
         _UniffiConverterBytes.check_lower(value.contents)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterTypeStructTag.write(value.type_tag, buf)
+        _UniffiConverterTypeStructTag.write(value.struct_type, buf)
         _UniffiConverterUInt64.write(value.version, buf)
         _UniffiConverterBytes.write(value.contents, buf)
 

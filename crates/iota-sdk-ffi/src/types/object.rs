@@ -335,7 +335,7 @@ impl MovePackage {
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct MoveStruct {
     /// The type of this object
-    pub type_tag: Arc<StructTag>,
+    pub struct_type: Arc<StructTag>,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
@@ -347,7 +347,7 @@ pub struct MoveStruct {
 impl From<iota_types::MoveStruct> for MoveStruct {
     fn from(value: iota_types::MoveStruct) -> Self {
         Self {
-            type_tag: Arc::new(value.type_.into()),
+            struct_type: Arc::new(value.type_.into()),
             version: value.version,
             contents: value.contents,
         }
@@ -357,7 +357,7 @@ impl From<iota_types::MoveStruct> for MoveStruct {
 impl From<MoveStruct> for iota_types::MoveStruct {
     fn from(value: MoveStruct) -> Self {
         Self {
-            type_: value.type_tag.0.clone(),
+            type_: value.struct_type.0.clone(),
             version: value.version,
             contents: value.contents,
         }
