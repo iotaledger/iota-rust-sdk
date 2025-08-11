@@ -168,33 +168,28 @@ pub enum ExecutionError {
     },
     /// Circular Object Ownership
     CircularObjectOwnership { object: Arc<ObjectId> },
-
     // Coin errors
     /// Insufficient coin balance for requested operation
     InsufficientCoinBalance,
     /// Coin balance overflowed an u64
     CoinBalanceOverflow,
-
     // Publish/Upgrade errors
     /// Publish Error, Non-zero Address.
     /// The modules in the package must have their self-addresses set to zero.
     PublishErrorNonZeroAddress,
-
     /// IOTA Move Bytecode Verification Error.
-    IotaMoveVerificationError,
-
+    IotaMoveVerification,
     // MoveVm Errors
     /// Error from a non-abort instruction.
     /// Possible causes:
     ///     Arithmetic error, stack overflow, max value depth, etc."
-    MovePrimitiveRuntimeError { location: Option<MoveLocation> },
+    MovePrimitiveRuntime { location: Option<MoveLocation> },
     /// Move runtime abort
     MoveAbort { location: MoveLocation, code: u64 },
     /// Bytecode verification error.
-    VmVerificationOrDeserializationError,
+    VmVerificationOrDeserialization,
     /// MoveVm invariant violation
     VmInvariantViolation,
-
     // Programmable Transaction Errors
     /// Function not found
     FunctionNotFound,
@@ -207,12 +202,12 @@ pub enum ExecutionError {
     /// Non Entry Function Invoked. Move Call must start with an entry function.
     NonEntryFunctionInvoked,
     /// Invalid command argument
-    CommandArgumentError {
+    CommandArgument {
         argument: u16,
         kind: CommandArgumentError,
     },
     /// Type argument error
-    TypeArgumentError {
+    TypeArgument {
         /// Index of the problematic type argument
         type_argument: u16,
         kind: TypeArgumentError,
@@ -224,67 +219,52 @@ pub enum ExecutionError {
     InvalidPublicFunctionReturnType { index: u16 },
     /// Invalid Transfer Object, object does not have public transfer.
     InvalidTransferObject,
-
     // Post-execution errors
     /// Effects from the transaction are too large
     EffectsTooLarge { current_size: u64, max_size: u64 },
-
     /// Publish or Upgrade is missing dependency
     PublishUpgradeMissingDependency,
-
     /// Publish or Upgrade dependency downgrade.
     ///
     /// Indirect (transitive) dependency of published or upgraded package has
     /// been assigned an on-chain version that is less than the version
     /// required by one of the package's transitive dependencies.
     PublishUpgradeDependencyDowngrade,
-
     /// Invalid package upgrade
-    PackageUpgradeError { kind: PackageUpgradeError },
-
+    PackageUpgrade { kind: PackageUpgradeError },
     /// Indicates the transaction tried to write objects too large to storage
     WrittenObjectsTooLarge {
         object_size: u64,
         max_object_size: u64,
     },
-
     /// Certificate is on the deny list
     CertificateDenied,
-
     /// IOTA Move Bytecode verification timed out.
     IotaMoveVerificationTimeout,
-
     /// The requested shared object operation is not allowed
     SharedObjectOperationNotAllowed,
-
     /// Requested shared object has been deleted
     InputObjectDeleted,
-
     /// Certificate is cancelled due to congestion on shared objects
     ExecutionCancelledDueToSharedObjectCongestion {
         congested_objects: Vec<Arc<ObjectId>>,
     },
-
     /// Certificate is cancelled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
     ExecutionCancelledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<Arc<ObjectId>>,
         suggested_gas_price: u64,
     },
-
     /// Address is denied for this coin type
     AddressDeniedForCoin {
         address: Arc<Address>,
         coin_type: String,
     },
-
     /// Coin type is globally paused for use
     CoinTypeGlobalPause { coin_type: String },
-
     /// Certificate is cancelled because randomness could not be generated this
     /// epoch
     ExecutionCancelledDueToRandomnessUnavailable,
-
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
     InvalidLinkage,
@@ -321,11 +301,9 @@ impl From<iota_types::ExecutionError> for ExecutionError {
             iota_types::ExecutionError::PublishErrorNonZeroAddress => {
                 Self::PublishErrorNonZeroAddress
             }
-            iota_types::ExecutionError::IotaMoveVerificationError => {
-                Self::IotaMoveVerificationError
-            }
+            iota_types::ExecutionError::IotaMoveVerificationError => Self::IotaMoveVerification,
             iota_types::ExecutionError::MovePrimitiveRuntimeError { location } => {
-                Self::MovePrimitiveRuntimeError {
+                Self::MovePrimitiveRuntime {
                     location: location.map(Into::into),
                 }
             }
@@ -334,7 +312,7 @@ impl From<iota_types::ExecutionError> for ExecutionError {
                 code,
             },
             iota_types::ExecutionError::VmVerificationOrDeserializationError => {
-                Self::VmVerificationOrDeserializationError
+                Self::VmVerificationOrDeserialization
             }
             iota_types::ExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
             iota_types::ExecutionError::FunctionNotFound => Self::FunctionNotFound,
@@ -342,12 +320,12 @@ impl From<iota_types::ExecutionError> for ExecutionError {
             iota_types::ExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
             iota_types::ExecutionError::NonEntryFunctionInvoked => Self::NonEntryFunctionInvoked,
             iota_types::ExecutionError::CommandArgumentError { argument, kind } => {
-                Self::CommandArgumentError { argument, kind }
+                Self::CommandArgument { argument, kind }
             }
             iota_types::ExecutionError::TypeArgumentError {
                 type_argument,
                 kind,
-            } => Self::TypeArgumentError {
+            } => Self::TypeArgument {
                 type_argument,
                 kind,
             },
@@ -372,7 +350,7 @@ impl From<iota_types::ExecutionError> for ExecutionError {
                 Self::PublishUpgradeDependencyDowngrade
             }
             iota_types::ExecutionError::PackageUpgradeError { kind } => {
-                Self::PackageUpgradeError { kind: kind.into() }
+                Self::PackageUpgrade { kind: kind.into() }
             }
             iota_types::ExecutionError::WrittenObjectsTooLarge {
                 object_size,
@@ -453,17 +431,15 @@ impl From<ExecutionError> for iota_types::ExecutionError {
             ExecutionError::InsufficientCoinBalance => Self::InsufficientCoinBalance,
             ExecutionError::CoinBalanceOverflow => Self::CoinBalanceOverflow,
             ExecutionError::PublishErrorNonZeroAddress => Self::PublishErrorNonZeroAddress,
-            ExecutionError::IotaMoveVerificationError => Self::IotaMoveVerificationError,
-            ExecutionError::MovePrimitiveRuntimeError { location } => {
-                Self::MovePrimitiveRuntimeError {
-                    location: location.map(Into::into),
-                }
-            }
+            ExecutionError::IotaMoveVerification => Self::IotaMoveVerificationError,
+            ExecutionError::MovePrimitiveRuntime { location } => Self::MovePrimitiveRuntimeError {
+                location: location.map(Into::into),
+            },
             ExecutionError::MoveAbort { location, code } => Self::MoveAbort {
                 location: location.into(),
                 code,
             },
-            ExecutionError::VmVerificationOrDeserializationError => {
+            ExecutionError::VmVerificationOrDeserialization => {
                 Self::VmVerificationOrDeserializationError
             }
             ExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
@@ -471,10 +447,10 @@ impl From<ExecutionError> for iota_types::ExecutionError {
             ExecutionError::ArityMismatch => Self::ArityMismatch,
             ExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
             ExecutionError::NonEntryFunctionInvoked => Self::NonEntryFunctionInvoked,
-            ExecutionError::CommandArgumentError { argument, kind } => {
+            ExecutionError::CommandArgument { argument, kind } => {
                 Self::CommandArgumentError { argument, kind }
             }
-            ExecutionError::TypeArgumentError {
+            ExecutionError::TypeArgument {
                 type_argument,
                 kind,
             } => Self::TypeArgumentError {
@@ -501,7 +477,7 @@ impl From<ExecutionError> for iota_types::ExecutionError {
             ExecutionError::PublishUpgradeDependencyDowngrade => {
                 Self::PublishUpgradeDependencyDowngrade
             }
-            ExecutionError::PackageUpgradeError { kind } => {
+            ExecutionError::PackageUpgrade { kind } => {
                 Self::PackageUpgradeError { kind: kind.into() }
             }
             ExecutionError::WrittenObjectsTooLarge {
