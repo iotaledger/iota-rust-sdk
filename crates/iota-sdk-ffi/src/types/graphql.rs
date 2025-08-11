@@ -6,11 +6,9 @@ use std::{str::FromStr, sync::Arc};
 use base64ct::Encoding;
 use iota_graphql_client::{
     pagination::{Direction, PaginationFilter},
-    query_types::{Base64, PageInfo, TransactionBlockKindInput, ValidatorCredentials},
+    query_types::{Base64, BigInt, PageInfo, TransactionBlockKindInput, ValidatorCredentials},
 };
 use iota_types::{Identifier, StructTag, TransactionDigest};
-
-use iota_graphql_client::query_types::BigInt;
 
 use crate::types::{
     address::Address,
@@ -578,23 +576,6 @@ pub enum TransactionBlockKindInput {
 }
 
 #[derive(Clone, Debug, uniffi::Record)]
-pub struct BigInt {
-    pub value: String,
-}
-
-impl From<iota_graphql_client::query_types::BigInt> for BigInt {
-    fn from(value: iota_graphql_client::query_types::BigInt) -> Self {
-        BigInt { value: value.0 }
-    }
-}
-
-impl From<BigInt> for iota_graphql_client::query_types::BigInt {
-    fn from(value: BigInt) -> Self {
-        iota_graphql_client::query_types::BigInt(value.value)
-    }
-}
-
-#[derive(Clone, Debug, uniffi::Record)]
 pub struct DateTime {
     pub value: String,
 }
@@ -888,43 +869,35 @@ impl From<ServiceConfig> for CoreServiceConfig {
     }
 }
 
-type CoreFeature = iota_graphql_client::query_types::Feature;
-
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum Feature {
     Analytics,
     Coins,
     DynamicFields,
-    NameService,
     Subscriptions,
     SystemState,
-    MoveRegistry,
 }
 
-impl From<CoreFeature> for Feature {
-    fn from(value: CoreFeature) -> Self {
+impl From<iota_graphql_client::query_types::Feature> for Feature {
+    fn from(value: iota_graphql_client::query_types::Feature) -> Self {
         match value {
-            CoreFeature::Analytics => Self::Analytics,
-            CoreFeature::Coins => Self::Coins,
-            CoreFeature::DynamicFields => Self::DynamicFields,
-            CoreFeature::NameService => Self::NameService,
-            CoreFeature::Subscriptions => Self::Subscriptions,
-            CoreFeature::SystemState => Self::SystemState,
-            CoreFeature::MoveRegistry => Self::MoveRegistry,
+            iota_graphql_client::query_types::Feature::Analytics => Self::Analytics,
+            iota_graphql_client::query_types::Feature::Coins => Self::Coins,
+            iota_graphql_client::query_types::Feature::DynamicFields => Self::DynamicFields,
+            iota_graphql_client::query_types::Feature::Subscriptions => Self::Subscriptions,
+            iota_graphql_client::query_types::Feature::SystemState => Self::SystemState,
         }
     }
 }
 
-impl From<Feature> for CoreFeature {
+impl From<Feature> for iota_graphql_client::query_types::Feature {
     fn from(value: Feature) -> Self {
         match value {
             Feature::Analytics => Self::Analytics,
             Feature::Coins => Self::Coins,
             Feature::DynamicFields => Self::DynamicFields,
-            Feature::NameService => Self::NameService,
             Feature::Subscriptions => Self::Subscriptions,
             Feature::SystemState => Self::SystemState,
-            Feature::MoveRegistry => Self::MoveRegistry,
         }
     }
 }
