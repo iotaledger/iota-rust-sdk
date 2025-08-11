@@ -53,7 +53,7 @@ impl Identifier {
     }
 
     pub fn as_str(&self) -> &str {
-        &self.0.as_str()
+        self.0.as_str()
     }
 }
 
@@ -82,7 +82,7 @@ impl StructTag {
         type_params: Vec<Arc<TypeTag>>,
     ) -> Self {
         Self(iota_types::StructTag {
-            address: address.0.clone(),
+            address: address.0,
             module: module.0.clone(),
             name: name.0.clone(),
             type_params: type_params
