@@ -60,25 +60,27 @@ impl From<TransactionMetadata> for iota_graphql_client::query_types::Transaction
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct TransactionDataEffects(pub iota_graphql_client::TransactionDataEffects);
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct TransactionDataEffects {
+    pub tx: SignedTransaction,
+    pub effects: Arc<TransactionEffects>,
+}
 
-#[uniffi::export]
-impl TransactionDataEffects {
-    #[uniffi::constructor]
-    pub fn new(tx: &SignedTransaction, effects: &TransactionEffects) -> Self {
-        Self(iota_graphql_client::TransactionDataEffects {
-            tx: tx.0.clone(),
-            effects: effects.0.clone(),
-        })
+impl From<iota_graphql_client::TransactionDataEffects> for TransactionDataEffects {
+    fn from(value: iota_graphql_client::TransactionDataEffects) -> Self {
+        Self {
+            tx: value.tx.into(),
+            effects: Arc::new(value.effects.into()),
+        }
     }
+}
 
-    pub fn tx(&self) -> SignedTransaction {
-        self.0.tx.clone().into()
-    }
-
-    pub fn effects(&self) -> TransactionEffects {
-        self.0.effects.clone().into()
+impl From<TransactionDataEffects> for iota_graphql_client::TransactionDataEffects {
+    fn from(value: TransactionDataEffects) -> Self {
+        Self {
+            tx: value.tx.into(),
+            effects: value.effects.0.clone(),
+        }
     }
 }
 
