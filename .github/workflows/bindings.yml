@@ -28,3 +28,26 @@ jobs:
         run: git diff --exit-code
       - name: Run the example
         run: cd bindings/python && python3 test.py
+  kotlin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build the dynamic library
+        run: cargo build -p iota-sdk-ffi --lib --release
+      - name: Generate the bindings
+        run: cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi.so" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml
+      - name: Copy the dynamic library to the bindings directory
+        run: cp target/release/libiota_sdk_ffi.so bindings/kotlin/lib/
+      - name: Checks for uncommitted changes
+        run: git diff --exit-code
+      - name: Install Gradle
+        run: |
+          curl -s "https://get.sdkman.io" | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk install gradle
+      - name: Run the example
+        run: |
+          cd bindings/kotlin
+          ./gradlew build clean
+          LD_LIBRARY_PATH=./lib ./gradlew run -q
