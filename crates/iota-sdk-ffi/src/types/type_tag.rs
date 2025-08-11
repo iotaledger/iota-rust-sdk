@@ -3,6 +3,8 @@
 
 use std::sync::Arc;
 
+use crate::types::struct_tag::StructTag;
+
 /// Type of a move value
 ///
 /// # BCS
@@ -109,7 +111,7 @@ impl TypeTag {
     }
 
     #[inline]
-    pub fn as_struct_tag_opt(&self) -> Option<Arc<super::struct_tag::StructTag>> {
+    pub fn as_struct_tag_opt(&self) -> Option<Arc<StructTag>> {
         self.0
             .as_struct_tag_opt()
             .cloned()
@@ -118,7 +120,7 @@ impl TypeTag {
     }
 
     #[inline]
-    pub fn as_struct_tag(&self) -> super::struct_tag::StructTag {
+    pub fn as_struct_tag(&self) -> StructTag {
         self.0.as_struct_tag().clone().into()
     }
 
@@ -173,7 +175,7 @@ impl TypeTag {
     }
 
     #[uniffi::constructor]
-    pub fn struct_tag(struct_tag: &super::struct_tag::StructTag) -> Self {
+    pub fn struct_tag(struct_tag: &StructTag) -> Self {
         Self(iota_types::TypeTag::Struct(Box::new(struct_tag.0.clone())))
     }
 }
