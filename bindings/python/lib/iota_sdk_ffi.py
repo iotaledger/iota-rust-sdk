@@ -4225,9 +4225,9 @@ class IdentifierModuleMap:
     A mapping between an identifier and a BCS encoded module.
     """
 
-    id: "str"
+    id: "Identifier"
     module: "bytes"
-    def __init__(self, *, id: "str", module: "bytes"):
+    def __init__(self, *, id: "Identifier", module: "bytes"):
         self.id = id
         self.module = module
 
@@ -4245,18 +4245,18 @@ class _UniffiConverterTypeIdentifierModuleMap(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return IdentifierModuleMap(
-            id=_UniffiConverterString.read(buf),
+            id=_UniffiConverterTypeIdentifier.read(buf),
             module=_UniffiConverterBytes.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterString.check_lower(value.id)
+        _UniffiConverterTypeIdentifier.check_lower(value.id)
         _UniffiConverterBytes.check_lower(value.module)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterString.write(value.id, buf)
+        _UniffiConverterTypeIdentifier.write(value.id, buf)
         _UniffiConverterBytes.write(value.module, buf)
 
 
@@ -5487,10 +5487,10 @@ class TypeOrigin:
     ```
     """
 
-    module_name: "str"
-    struct_name: "str"
+    module_name: "Identifier"
+    struct_name: "Identifier"
     package: "ObjectId"
-    def __init__(self, *, module_name: "str", struct_name: "str", package: "ObjectId"):
+    def __init__(self, *, module_name: "Identifier", struct_name: "Identifier", package: "ObjectId"):
         self.module_name = module_name
         self.struct_name = struct_name
         self.package = package
@@ -5511,21 +5511,21 @@ class _UniffiConverterTypeTypeOrigin(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return TypeOrigin(
-            module_name=_UniffiConverterString.read(buf),
-            struct_name=_UniffiConverterString.read(buf),
+            module_name=_UniffiConverterTypeIdentifier.read(buf),
+            struct_name=_UniffiConverterTypeIdentifier.read(buf),
             package=_UniffiConverterTypeObjectId.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterString.check_lower(value.module_name)
-        _UniffiConverterString.check_lower(value.struct_name)
+        _UniffiConverterTypeIdentifier.check_lower(value.module_name)
+        _UniffiConverterTypeIdentifier.check_lower(value.struct_name)
         _UniffiConverterTypeObjectId.check_lower(value.package)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterString.write(value.module_name, buf)
-        _UniffiConverterString.write(value.struct_name, buf)
+        _UniffiConverterTypeIdentifier.write(value.module_name, buf)
+        _UniffiConverterTypeIdentifier.write(value.struct_name, buf)
         _UniffiConverterTypeObjectId.write(value.package, buf)
 
 

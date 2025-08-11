@@ -10,24 +10,9 @@ use crate::{
     types::{
         address::Address,
         digest::{ObjectDigest, TransactionDigest},
-        struct_tag::StructTag,
+        struct_tag::{Identifier, StructTag},
     },
 };
-
-/// A move identifier
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// identifier = %x01-80    ; length of the identifier
-///              (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
-///              (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
-///
-/// UNDERSCORE = %x95
-/// ```
-pub type Identifier = String;
 
 /// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 /// the IOTA blockchain.
@@ -210,37 +195,35 @@ pub struct ObjectData(pub iota_types::ObjectData);
 /// ```
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct TypeOrigin {
-    pub module_name: Identifier,
-    pub struct_name: Identifier,
+    pub module_name: Arc<Identifier>,
+    pub struct_name: Arc<Identifier>,
     pub package: Arc<ObjectId>,
 }
 
 impl From<iota_types::TypeOrigin> for TypeOrigin {
     fn from(value: iota_types::TypeOrigin) -> Self {
         Self {
-            module_name: value.module_name.into_inner().into_string(),
-            struct_name: value.struct_name.into_inner().into_string(),
+            module_name: Arc::new(value.module_name.into()),
+            struct_name: Arc::new(value.struct_name.into()),
             package: Arc::new(value.package.into()),
         }
     }
 }
 
-impl TryFrom<TypeOrigin> for iota_types::TypeOrigin {
-    type Error = TypeParseError;
-
-    fn try_from(value: TypeOrigin) -> Result<Self, Self::Error> {
-        Ok(Self {
-            module_name: value.module_name.parse()?,
-            struct_name: value.struct_name.parse()?,
+impl From<TypeOrigin> for iota_types::TypeOrigin {
+    fn from(value: TypeOrigin) -> Self {
+        Self {
+            module_name: value.module_name.0.clone(),
+            struct_name: value.struct_name.0.clone(),
             package: **value.package,
-        })
+        }
     }
 }
 
 /// A mapping between an identifier and a BCS encoded module.
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct IdentifierModuleMap {
-    id: Identifier,
+    id: Arc<Identifier>,
     module: Vec<u8>,
 }
 
@@ -317,12 +300,8 @@ impl MovePackage {
             version,
             modules: modules
                 .into_iter()
-                .map(|m| (iota_types::Identifier::from_str(&m.id), m.module))
-                .map(|(r, module)| match r {
-                    Ok(id) => Ok((id, module)),
-                    Err(err) => Err(err),
-                })
-                .collect::<Result<BTreeMap<_, _>, _>>()?,
+                .map(|m| (m.id.0.clone(), m.module))
+                .collect::<BTreeMap<_, _>>(),
             type_origin_table: type_origin_table
                 .into_iter()
                 .map(TryInto::try_into)

@@ -39,8 +39,8 @@ impl From<iota_types::TypeParseError> for TypeParseError {
 ///
 /// UNDERSCORE = %x95
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct Identifier(iota_types::Identifier);
+#[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq, derive_more::From, uniffi::Object)]
+pub struct Identifier(pub iota_types::Identifier);
 
 impl Identifier {
     #[uniffi::constructor]
