@@ -6,6 +6,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
+# TODO FFI crate filter
+
 concurrency:
   group: sdk-bindings-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
@@ -19,8 +21,8 @@ jobs:
       - name: Build the dynamic library
         run: cargo build -p iota-sdk-ffi --lib --release
       - name: Generate the bindings
-        run: cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi.dylib" --language python --out-dir bindings/python/lib --no-format
+        run: cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi.so" --language python --out-dir bindings/python/lib --no-format
       - name: Copy the dynamic library to the bindings directory
-        run: cp target/release/libiota_sdk_ffi.dylib bindings/python/lib/
+        run: cp target/release/libiota_sdk_ffi.so bindings/python/lib/
       - name: git status (tmp)
         run: git status
