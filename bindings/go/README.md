@@ -3,6 +3,7 @@
 # Install `uniffi-bindgen-go`
 
 https://github.com/NordSecurity/uniffi-bindgen-go
+`cargo install uniffi-bindgen-go --git https://github.com/filament-dm/uniffi-bindgen-go --rev ab7315502bd6b979207fdae854e87d531ee8764d` until https://github.com/NordSecurity/uniffi-bindgen-go/pull/77 is merged
 
 # Compile the FFI crate to a dynamic library
 
