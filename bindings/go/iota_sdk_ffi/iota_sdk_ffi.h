@@ -1044,6 +1044,16 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(v
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(void* ptr, RustBuffer pagination_filter, RustBuffer filter
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_IDENTIFIER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_IDENTIFIER
+void* uniffi_iota_sdk_ffi_fn_clone_identifier(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_IDENTIFIER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_IDENTIFIER
+void uniffi_iota_sdk_ffi_fn_free_identifier(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MOVEFUNCTION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MOVEFUNCTION
 void* uniffi_iota_sdk_ffi_fn_clone_movefunction(void* ptr, RustCallStatus *out_status
@@ -1326,29 +1336,51 @@ void* uniffi_iota_sdk_ffi_fn_clone_serviceconfig(void* ptr, RustCallStatus *out_
 void uniffi_iota_sdk_ffi_fn_free_serviceconfig(void* ptr, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SIGNEDTRANSACTION
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SIGNEDTRANSACTION
-void* uniffi_iota_sdk_ffi_fn_clone_signedtransaction(void* ptr, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_STRUCTTAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_STRUCTTAG
+void* uniffi_iota_sdk_ffi_fn_clone_structtag(void* ptr, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_SIGNEDTRANSACTION
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_SIGNEDTRANSACTION
-void uniffi_iota_sdk_ffi_fn_free_signedtransaction(void* ptr, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_STRUCTTAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_STRUCTTAG
+void uniffi_iota_sdk_ffi_fn_free_structtag(void* ptr, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNEDTRANSACTION_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNEDTRANSACTION_NEW
-void* uniffi_iota_sdk_ffi_fn_constructor_signedtransaction_new(void* transaction, RustBuffer signatures, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_COIN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_COIN
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_coin(void* type_tag, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SIGNEDTRANSACTION_SIGNATURES
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SIGNEDTRANSACTION_SIGNATURES
-RustBuffer uniffi_iota_sdk_ffi_fn_method_signedtransaction_signatures(void* ptr, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_GAS_COIN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_GAS_COIN
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_gas_coin(RustCallStatus *out_status
+    
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SIGNEDTRANSACTION_TRANSACTION
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SIGNEDTRANSACTION_TRANSACTION
-void* uniffi_iota_sdk_ffi_fn_method_signedtransaction_transaction(void* ptr, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new(void* address, void* module, void* name, RustBuffer type_params, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_STAKED_IOTA
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_STAKED_IOTA
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_staked_iota(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_ADDRESS
+void* uniffi_iota_sdk_ffi_fn_method_structtag_address(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_COIN_TYPE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_COIN_TYPE
+void* uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_COIN_TYPE_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_COIN_TYPE_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTION
@@ -1363,12 +1395,12 @@ void uniffi_iota_sdk_ffi_fn_free_transaction(void* ptr, RustCallStatus *out_stat
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTION_NEW
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTION_NEW
-void* uniffi_iota_sdk_ffi_fn_constructor_transaction_new(void* kind, void* sender, RustBuffer gas_payment, void* expiration, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_constructor_transaction_new(void* kind, void* sender, RustBuffer gas_payment, RustBuffer expiration, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_EXPIRATION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_EXPIRATION
-void* uniffi_iota_sdk_ffi_fn_method_transaction_expiration(void* ptr, RustCallStatus *out_status
+RustBuffer uniffi_iota_sdk_ffi_fn_method_transaction_expiration(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_GAS_PAYMENT
@@ -1384,31 +1416,6 @@ void* uniffi_iota_sdk_ffi_fn_method_transaction_kind(void* ptr, RustCallStatus *
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_SENDER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_SENDER
 void* uniffi_iota_sdk_ffi_fn_method_transaction_sender(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONDATAEFFECTS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONDATAEFFECTS
-void* uniffi_iota_sdk_ffi_fn_clone_transactiondataeffects(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONDATAEFFECTS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONDATAEFFECTS
-void uniffi_iota_sdk_ffi_fn_free_transactiondataeffects(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONDATAEFFECTS_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONDATAEFFECTS_NEW
-void* uniffi_iota_sdk_ffi_fn_constructor_transactiondataeffects_new(void* tx, void* effects, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONDATAEFFECTS_EFFECTS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONDATAEFFECTS_EFFECTS
-void* uniffi_iota_sdk_ffi_fn_method_transactiondataeffects_effects(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONDATAEFFECTS_TX
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONDATAEFFECTS_TX
-void* uniffi_iota_sdk_ffi_fn_method_transactiondataeffects_tx(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONDIGEST
@@ -1431,6 +1438,21 @@ void* uniffi_iota_sdk_ffi_fn_clone_transactioneffects(void* ptr, RustCallStatus 
 void uniffi_iota_sdk_ffi_fn_free_transactioneffects(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONEFFECTS_V1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONEFFECTS_V1
+void* uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1(RustBuffer effects, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONEFFECTS_AS_V1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONEFFECTS_AS_V1
+RustBuffer uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONEFFECTS_IS_V1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONEFFECTS_IS_V1
+int8_t uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONEFFECTSDIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONEFFECTSDIGEST
 void* uniffi_iota_sdk_ffi_fn_clone_transactioneffectsdigest(void* ptr, RustCallStatus *out_status
@@ -1449,16 +1471,6 @@ void* uniffi_iota_sdk_ffi_fn_clone_transactioneventsdigest(void* ptr, RustCallSt
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONEVENTSDIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONEVENTSDIGEST
 void uniffi_iota_sdk_ffi_fn_free_transactioneventsdigest(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONEXPIRATION
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONEXPIRATION
-void* uniffi_iota_sdk_ffi_fn_clone_transactionexpiration(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONEXPIRATION
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONEXPIRATION
-void uniffi_iota_sdk_ffi_fn_free_transactionexpiration(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONKIND
@@ -1509,6 +1521,145 @@ void* uniffi_iota_sdk_ffi_fn_clone_typetag(void* ptr, RustCallStatus *out_status
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TYPETAG
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TYPETAG
 void uniffi_iota_sdk_ffi_fn_free_typetag(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_ADDRESS
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_address(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_BOOL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_BOOL
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_bool(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_SIGNER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_SIGNER
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_signer(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_STRUCT_TAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_STRUCT_TAG
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_struct_tag(void* struct_tag, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U128
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U128
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_u128(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U16
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U16
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_u16(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U256
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U256
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_u256(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U32
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U32
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_u32(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U64
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_u64(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U8
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_U8
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_u8(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_VECTOR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TYPETAG_VECTOR
+void* uniffi_iota_sdk_ffi_fn_constructor_typetag_vector(void* type_tag, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_AS_STRUCT_TAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_AS_STRUCT_TAG
+void* uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_AS_STRUCT_TAG_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_AS_STRUCT_TAG_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_AS_VECTOR_TYPE_TAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_AS_VECTOR_TYPE_TAG
+void* uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_AS_VECTOR_TYPE_TAG_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_AS_VECTOR_TYPE_TAG_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_ADDRESS
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_address(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_BOOL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_BOOL
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_SIGNER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_SIGNER
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_STRUCT
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U128
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U128
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U16
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U16
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U256
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U256
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U32
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U32
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U64
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U8
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_U8
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_VECTOR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_VECTOR
+int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_USERSIGNATURE
@@ -2215,15 +2366,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SIGNEDTRANSACTION_SIGNATURES
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SIGNEDTRANSACTION_SIGNATURES
-uint16_t uniffi_iota_sdk_ffi_checksum_method_signedtransaction_signatures(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_address(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SIGNEDTRANSACTION_TRANSACTION
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SIGNEDTRANSACTION_TRANSACTION
-uint16_t uniffi_iota_sdk_ffi_checksum_method_signedtransaction_transaction(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_COIN_TYPE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_COIN_TYPE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_COIN_TYPE_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_COIN_TYPE_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt(void
     
 );
 #endif
@@ -2251,15 +2408,105 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_sender(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONDATAEFFECTS_EFFECTS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONDATAEFFECTS_EFFECTS
-uint16_t uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_effects(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONEFFECTS_AS_V1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONEFFECTS_AS_V1
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONDATAEFFECTS_TX
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONDATAEFFECTS_TX
-uint16_t uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_tx(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONEFFECTS_IS_V1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONEFFECTS_IS_V1
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_AS_STRUCT_TAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_AS_STRUCT_TAG
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_AS_STRUCT_TAG_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_AS_STRUCT_TAG_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_AS_VECTOR_TYPE_TAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_AS_VECTOR_TYPE_TAG
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_AS_VECTOR_TYPE_TAG_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_AS_VECTOR_TYPE_TAG_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_address(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_BOOL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_BOOL
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_SIGNER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_SIGNER
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_STRUCT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U128
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U128
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U16
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U16
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U256
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U256
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U32
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U32
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U64
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U8
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_U8
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_VECTOR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_VECTOR
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector(void
     
 );
 #endif
@@ -2455,9 +2702,27 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_generate(vo
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNEDTRANSACTION_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNEDTRANSACTION_NEW
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_signedtransaction_new(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_COIN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_COIN
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_coin(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_GAS_COIN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_GAS_COIN
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_STAKED_IOTA
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_STAKED_IOTA
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota(void
     
 );
 #endif
@@ -2467,9 +2732,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transaction_new(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONDATAEFFECTS_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONDATAEFFECTS_NEW
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactiondataeffects_new(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONEFFECTS_V1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONEFFECTS_V1
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1(void
     
 );
 #endif
@@ -2506,6 +2771,72 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_programmable_t
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONKIND_RANDOMNESS_STATE_UPDATE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONKIND_RANDOMNESS_STATE_UPDATE
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_randomness_state_update(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_address(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_BOOL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_BOOL
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_bool(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_SIGNER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_SIGNER
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_signer(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_STRUCT_TAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_STRUCT_TAG
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_struct_tag(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U128
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U128
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_u128(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U16
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U16
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_u16(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U256
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U256
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_u256(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U32
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U32
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_u32(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U64
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_u64(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U8
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_U8
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_u8(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_VECTOR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TYPETAG_VECTOR
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_vector(void
     
 );
 #endif
