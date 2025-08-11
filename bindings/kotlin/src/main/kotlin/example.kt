@@ -1,5 +1,11 @@
+import iota_sdk.Address
+import iota_sdk.Direction
+import iota_sdk.EventFilter
+import iota_sdk.GraphQlClient
+import iota_sdk.ObjectId
+import iota_sdk.PaginationFilter
+import iota_sdk.TransactionsFilter
 import kotlinx.coroutines.runBlocking
-import uniffi.iota_sdk_ffi.GraphQlClient
 
 fun main() = runBlocking {
     try {
@@ -8,15 +14,15 @@ fun main() = runBlocking {
         println("Chain ID: $chainId")
 
         val myAddress =
-                uniffi.iota_sdk_ffi.Address.fromHex(
+                Address.fromHex(
                         "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"
                 )
 
         val coins =
                 client.coins(
                         myAddress,
-                        uniffi.iota_sdk_ffi.PaginationFilter(
-                                direction = uniffi.iota_sdk_ffi.Direction.FORWARD,
+                        PaginationFilter(
+                                direction = Direction.FORWARD,
                                 cursor = null,
                                 limit = null
                         ),
@@ -26,22 +32,21 @@ fun main() = runBlocking {
             println("ID = 0x${coin.id().toHex()} Balance = ${coin.balance()}")
         }
 
-        // Replicate: balance = await client.balance(my_address)
         val balance = client.balance(myAddress, null)
         println("Total Balance = $balance")
 
         val _txFilter =
-                uniffi.iota_sdk_ffi.TransactionsFilter(
+                TransactionsFilter(
                         atCheckpoint = 3UL,
                         inputObject =
-                                uniffi.iota_sdk_ffi.ObjectId.fromHex(
+                                ObjectId.fromHex(
                                         "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"
                                 ),
                         // ...other fields as needed
                         )
 
         val _eventFilter =
-                uniffi.iota_sdk_ffi.EventFilter(
+                EventFilter(
                         sender = myAddress
                         // ...other fields as needed
                         )

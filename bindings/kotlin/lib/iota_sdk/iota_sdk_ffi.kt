@@ -3,7 +3,7 @@
 
 @file:Suppress("NAME_SHADOWING")
 
-package uniffi.iota_sdk_ffi
+package iota_sdk
 
 // Common helper code.
 //

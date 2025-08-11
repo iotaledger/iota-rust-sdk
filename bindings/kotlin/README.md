@@ -14,8 +14,8 @@ case "$(uname -s)" in
   MINGW*|MSYS*|CYGWIN*|Windows_NT) LIB_EXT=".dll" ;;
   *)        echo "Unsupported platform"; exit 1 ;;
 esac
-cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi${LIB_EXT}" --language $LANGUAGE --out-dir bindings/$LANGUAGE/lib --no-format
-#Finally, copy the library file to the output directory.
+cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi${LIB_EXT}" --language $LANGUAGE --out-dir bindings/$LANGUAGE/lib --no-format -c bindings/kotlin/uniffi.toml
+# Finally, copy the library file to the output directory.
 cp target/release/libiota_sdk_ffi${LIB_EXT} bindings/$LANGUAGE/lib/
 ```
 
