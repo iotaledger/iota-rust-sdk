@@ -1063,6 +1063,58 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -1216,9 +1268,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_signedtransaction_signatures(
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_address(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_signedtransaction_transaction(
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_expiration(
 ): Short
@@ -1228,9 +1282,39 @@ fun uniffi_iota_sdk_ffi_checksum_method_transaction_kind(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_sender(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_effects(
+fun uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_tx(
+fun uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(
 ): Short
@@ -1296,11 +1380,17 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_str(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_generate(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_signedtransaction_new(
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_transactiondataeffects_new(
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1(
 ): Short
@@ -1313,6 +1403,28 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_genesis(
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_programmable_transaction(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_randomness_state_update(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_bool(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_signer(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_struct_tag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_u128(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_u16(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_u256(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_u32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_u64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_u8(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_vector(
 ): Short
 fun ffi_iota_sdk_ffi_uniffi_contract_version(
 ): Int
@@ -1453,10 +1565,6 @@ fun uniffi_iota_sdk_ffi_fn_clone_digest(`ptr`: Pointer,uniffi_out_err: UniffiRus
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_clone_dryrunresult(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_dryrunresult(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519publickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ed25519publickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -1488,10 +1596,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_change_epoch_v2
 fun uniffi_iota_sdk_ffi_fn_clone_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_clone_event(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_event(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -1625,6 +1729,10 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(`ptr`:
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(`ptr`: Pointer,`paginationFilter`: RustBuffer.ByValue,`filter`: RustBuffer.ByValue,
 ): Long
+fun uniffi_iota_sdk_ffi_fn_clone_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_movefunction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_movefunction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -1685,10 +1793,6 @@ fun uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes(`ptr`: Pointer,uniffi_out_er
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_clone_objectref(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_objectref(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_objecttype(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objecttype(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -1737,39 +1841,37 @@ fun uniffi_iota_sdk_ffi_fn_clone_serviceconfig(`ptr`: Pointer,uniffi_out_err: Un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_serviceconfig(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_clone_signedtransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_clone_structtag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_signedtransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_free_structtag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_signedtransaction_new(`transaction`: Pointer,`signatures`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_coin(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_signedtransaction_signatures(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_gas_coin(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new(`address`: Pointer,`module`: Pointer,`name`: Pointer,`typeParams`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_structtag_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_signedtransaction_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_transaction_new(`kind`: Pointer,`sender`: Pointer,`gasPayment`: RustBuffer.ByValue,`expiration`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_transaction_new(`kind`: Pointer,`sender`: Pointer,`gasPayment`: RustBuffer.ByValue,`expiration`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transaction_expiration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transaction_gas_payment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transaction_kind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transaction_sender(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_clone_transactiondataeffects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_transactiondataeffects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_transactiondataeffects_new(`tx`: Pointer,`effects`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactiondataeffects_effects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactiondataeffects_tx(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_transactiondigest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -1779,6 +1881,12 @@ fun uniffi_iota_sdk_ffi_fn_clone_transactioneffects(`ptr`: Pointer,uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactioneffects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1(`effects`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_transactioneffectsdigest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactioneffectsdigest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -1786,10 +1894,6 @@ fun uniffi_iota_sdk_ffi_fn_free_transactioneffectsdigest(`ptr`: Pointer,uniffi_o
 fun uniffi_iota_sdk_ffi_fn_clone_transactioneventsdigest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactioneventsdigest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_clone_transactionexpiration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_transactionexpiration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_transactionkind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -1811,6 +1915,58 @@ fun uniffi_iota_sdk_ffi_fn_clone_typetag(`ptr`: Pointer,uniffi_out_err: UniffiRu
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_typetag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_address(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_bool(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_signer(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_struct_tag(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_u128(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_u16(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_u256(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_u32(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_u64(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_u8(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_typetag_vector(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_usersignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_usersignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -1998,10 +2154,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 48442.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 62890.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 12272.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 47707.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 29988.toShort()) {
@@ -2091,10 +2247,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_seq_num() != 18624.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction() != 54687.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction() != 35048.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_data_effects() != 57979.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_data_effects() != 7442.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_effects() != 56760.toShort()) {
@@ -2148,13 +2304,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() != 21066.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_signedtransaction_signatures() != 59055.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 18393.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_signedtransaction_transaction() != 60873.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 37745.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration() != 4282.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration() != 47752.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_gas_payment() != 5316.toShort()) {
@@ -2166,10 +2325,55 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender() != 38190.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_effects() != 62613.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactiondataeffects_tx() != 13303.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1() != 39808.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag() != 1715.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_struct_tag_opt() != 15734.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag() != 20180.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_as_vector_type_tag_opt() != 55130.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_address() != 38219.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_bool() != 30264.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_signer() != 57678.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_struct() != 39029.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u128() != 65460.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u16() != 34540.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u256() != 65130.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u32() != 40795.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64() != 28705.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 18761.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 49992.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901.toShort()) {
@@ -2268,13 +2472,22 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_generate() != 49992.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_signedtransaction_new() != 6988.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_coin() != 13756.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new() != 36271.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin() != 37848.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondataeffects_new() != 30302.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() != 20682.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota() != 30839.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new() != 4081.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1() != 6144.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1() != 37860.toShort()) {
@@ -2293,6 +2506,39 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_randomness_state_update() != 45772.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_address() != 44901.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_bool() != 19366.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_signer() != 12676.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_struct_tag() != 53303.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u128() != 41280.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u16() != 13801.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u256() != 13310.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u32() != 9870.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u64() != 59470.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u8() != 9403.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_vector() != 46548.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
 }
@@ -2476,6 +2722,75 @@ private class JavaLangRefCleanable(
     val cleanable: java.lang.ref.Cleaner.Cleanable
 ) : UniffiCleaner.Cleanable {
     override fun clean() = cleanable.clean()
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterUByte: FfiConverter<UByte, Byte> {
+    override fun lift(value: Byte): UByte {
+        return value.toUByte()
+    }
+
+    override fun read(buf: ByteBuffer): UByte {
+        return lift(buf.get())
+    }
+
+    override fun lower(value: UByte): Byte {
+        return value.toByte()
+    }
+
+    override fun allocationSize(value: UByte) = 1UL
+
+    override fun write(value: UByte, buf: ByteBuffer) {
+        buf.put(value.toByte())
+    }
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterUShort: FfiConverter<UShort, Short> {
+    override fun lift(value: Short): UShort {
+        return value.toUShort()
+    }
+
+    override fun read(buf: ByteBuffer): UShort {
+        return lift(buf.getShort())
+    }
+
+    override fun lower(value: UShort): Short {
+        return value.toShort()
+    }
+
+    override fun allocationSize(value: UShort) = 2UL
+
+    override fun write(value: UShort, buf: ByteBuffer) {
+        buf.putShort(value.toShort())
+    }
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterUInt: FfiConverter<UInt, Int> {
+    override fun lift(value: Int): UInt {
+        return value.toUInt()
+    }
+
+    override fun read(buf: ByteBuffer): UInt {
+        return lift(buf.getInt())
+    }
+
+    override fun lower(value: UInt): Int {
+        return value.toInt()
+    }
+
+    override fun allocationSize(value: UInt) = 4UL
+
+    override fun write(value: UInt, buf: ByteBuffer) {
+        buf.putInt(value.toInt())
+    }
 }
 
 /**
@@ -6439,228 +6754,6 @@ public object FfiConverterTypeDigest: FfiConverter<Digest, Pointer> {
 //
 
 
-public interface DryRunResultInterface {
-    
-    companion object
-}
-
-open class DryRunResult: Disposable, AutoCloseable, DryRunResultInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_dryrunresult(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_dryrunresult(pointer!!, status)
-        }
-    }
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeDryRunResult: FfiConverter<DryRunResult, Pointer> {
-
-    override fun lower(value: DryRunResult): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): DryRunResult {
-        return DryRunResult(value)
-    }
-
-    override fun read(buf: ByteBuffer): DryRunResult {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: DryRunResult) = 8UL
-
-    override fun write(value: DryRunResult, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
 /**
  * An ed25519 public key.
  *
@@ -7608,228 +7701,6 @@ public object FfiConverterTypeEpoch: FfiConverter<Epoch, Pointer> {
     override fun allocationSize(value: Epoch) = 8UL
 
     override fun write(value: Epoch, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-public interface EventInterface {
-    
-    companion object
-}
-
-open class Event: Disposable, AutoCloseable, EventInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_event(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_event(pointer!!, status)
-        }
-    }
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeEvent: FfiConverter<Event, Pointer> {
-
-    override fun lower(value: Event): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): Event {
-        return Event(value)
-    }
-
-    override fun read(buf: ByteBuffer): Event {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: Event) = 8UL
-
-    override fun write(value: Event, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -9620,9 +9491,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeTransaction.lower(`tx`),FfiConverterOptionalBoolean.lower(`skipChecks`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeDryRunResult.lift(it) },
         // Error FFI converter
@@ -9652,9 +9523,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeTransactionKind.lower(`txKind`),FfiConverterTypeTransactionMetadata.lower(`txMeta`),FfiConverterOptionalBoolean.lower(`skipChecks`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeDryRunResult.lift(it) },
         // Error FFI converter
@@ -10685,6 +10556,258 @@ public object FfiConverterTypeGraphQLClient: FfiConverter<GraphQlClient, Pointer
     override fun allocationSize(value: GraphQlClient) = 8UL
 
     override fun write(value: GraphQlClient, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * A move identifier
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * identifier = %x01-80    ; length of the identifier
+ * (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
+ * (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
+ *
+ * UNDERSCORE = %x95
+ * ```
+ */
+public interface IdentifierInterface {
+    
+    companion object
+}
+
+/**
+ * A move identifier
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * identifier = %x01-80    ; length of the identifier
+ * (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
+ * (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
+ *
+ * UNDERSCORE = %x95
+ * ```
+ */
+open class Identifier: Disposable, AutoCloseable, IdentifierInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_identifier(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_identifier(pointer!!, status)
+        }
+    }
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeIdentifier: FfiConverter<Identifier, Pointer> {
+
+    override fun lower(value: Identifier): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): Identifier {
+        return Identifier(value)
+    }
+
+    override fun read(buf: ByteBuffer): Identifier {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: Identifier) = 8UL
+
+    override fun write(value: Identifier, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -12866,228 +12989,6 @@ public object FfiConverterTypeObjectId: FfiConverter<ObjectId, Pointer> {
 //
 
 
-public interface ObjectRefInterface {
-    
-    companion object
-}
-
-open class ObjectRef: Disposable, AutoCloseable, ObjectRefInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_objectref(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_objectref(pointer!!, status)
-        }
-    }
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeObjectRef: FfiConverter<ObjectRef, Pointer> {
-
-    override fun lower(value: ObjectRef): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ObjectRef {
-        return ObjectRef(value)
-    }
-
-    override fun read(buf: ByteBuffer): ObjectRef {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ObjectRef) = 8UL
-
-    override fun write(value: ObjectRef, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
 public interface ObjectTypeInterface {
     
     companion object
@@ -15002,16 +14903,52 @@ public object FfiConverterTypeServiceConfig: FfiConverter<ServiceConfig, Pointer
 //
 
 
-public interface SignedTransactionInterface {
+/**
+ * Type information for a move struct
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * struct-tag = address            ; address of the package
+ * identifier         ; name of the module
+ * identifier         ; name of the type
+ * (vector type-tag)  ; type parameters
+ * ```
+ */
+public interface StructTagInterface {
     
-    fun `signatures`(): List<UserSignature>
+    fun `address`(): Address
     
-    fun `transaction`(): Transaction
+    /**
+     * Checks if this is a Coin type
+     */
+    fun `coinType`(): TypeTag
+    
+    /**
+     * Checks if this is a Coin type
+     */
+    fun `coinTypeOpt`(): TypeTag?
     
     companion object
 }
 
-open class SignedTransaction: Disposable, AutoCloseable, SignedTransactionInterface
+/**
+ * Type information for a move struct
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * struct-tag = address            ; address of the package
+ * identifier         ; name of the module
+ * identifier         ; name of the type
+ * (vector type-tag)  ; type parameters
+ * ```
+ */
+open class StructTag: Disposable, AutoCloseable, StructTagInterface
 {
 
     constructor(pointer: Pointer) {
@@ -15029,11 +14966,11 @@ open class SignedTransaction: Disposable, AutoCloseable, SignedTransactionInterf
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`transaction`: Transaction, `signatures`: List<UserSignature>) :
+    constructor(`address`: Address, `module`: Identifier, `name`: Identifier, `typeParams`: List<TypeTag>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_signedtransaction_new(
-        FfiConverterTypeTransaction.lower(`transaction`),FfiConverterSequenceTypeUserSignature.lower(`signatures`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new(
+        FfiConverterTypeAddress.lower(`address`),FfiConverterTypeIdentifier.lower(`module`),FfiConverterTypeIdentifier.lower(`name`),FfiConverterSequenceTypeTypeTag.lower(`typeParams`),_status)
 }
     )
 
@@ -15088,7 +15025,7 @@ open class SignedTransaction: Disposable, AutoCloseable, SignedTransactionInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_signedtransaction(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_structtag(ptr, status)
                 }
             }
         }
@@ -15096,27 +15033,15 @@ open class SignedTransaction: Disposable, AutoCloseable, SignedTransactionInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_signedtransaction(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_structtag(pointer!!, status)
         }
     }
 
-    override fun `signatures`(): List<UserSignature> {
-            return FfiConverterSequenceTypeUserSignature.lift(
+    override fun `address`(): Address {
+            return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_signedtransaction_signatures(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `transaction`(): Transaction {
-            return FfiConverterTypeTransaction.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_signedtransaction_transaction(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_address(
         it, _status)
 }
     }
@@ -15125,35 +15050,96 @@ open class SignedTransaction: Disposable, AutoCloseable, SignedTransactionInterf
     
 
     
+    /**
+     * Checks if this is a Coin type
+     */override fun `coinType`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     
+    /**
+     * Checks if this is a Coin type
+     */override fun `coinTypeOpt`(): TypeTag? {
+            return FfiConverterOptionalTypeTypeTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(
+        it, _status)
+}
+    }
+    )
+    }
     
-    companion object
+
+    
+
+    
+    companion object {
+         fun `coin`(`typeTag`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_coin(
+        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
+}
+    )
+    }
+    
+
+         fun `gasCoin`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_gas_coin(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stakedIota`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_staked_iota(
+        _status)
+}
+    )
+    }
+    
+
+        
+    }
     
 }
 
 /**
  * @suppress
  */
-public object FfiConverterTypeSignedTransaction: FfiConverter<SignedTransaction, Pointer> {
+public object FfiConverterTypeStructTag: FfiConverter<StructTag, Pointer> {
 
-    override fun lower(value: SignedTransaction): Pointer {
+    override fun lower(value: StructTag): Pointer {
         return value.uniffiClonePointer()
     }
 
-    override fun lift(value: Pointer): SignedTransaction {
-        return SignedTransaction(value)
+    override fun lift(value: Pointer): StructTag {
+        return StructTag(value)
     }
 
-    override fun read(buf: ByteBuffer): SignedTransaction {
+    override fun read(buf: ByteBuffer): StructTag {
         // The Rust code always writes pointers as 8 bytes, and will
         // fail to compile if they don't fit.
         return lift(Pointer(buf.getLong()))
     }
 
-    override fun allocationSize(value: SignedTransaction) = 8UL
+    override fun allocationSize(value: StructTag) = 8UL
 
-    override fun write(value: SignedTransaction, buf: ByteBuffer) {
+    override fun write(value: StructTag, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -15570,263 +15556,6 @@ public object FfiConverterTypeTransaction: FfiConverter<Transaction, Pointer> {
 //
 
 
-public interface TransactionDataEffectsInterface {
-    
-    fun `effects`(): TransactionEffects
-    
-    fun `tx`(): SignedTransaction
-    
-    companion object
-}
-
-open class TransactionDataEffects: Disposable, AutoCloseable, TransactionDataEffectsInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-    constructor(`tx`: SignedTransaction, `effects`: TransactionEffects) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactiondataeffects_new(
-        FfiConverterTypeSignedTransaction.lower(`tx`),FfiConverterTypeTransactionEffects.lower(`effects`),_status)
-}
-    )
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactiondataeffects(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactiondataeffects(pointer!!, status)
-        }
-    }
-
-    override fun `effects`(): TransactionEffects {
-            return FfiConverterTypeTransactionEffects.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactiondataeffects_effects(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `tx`(): SignedTransaction {
-            return FfiConverterTypeSignedTransaction.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactiondataeffects_tx(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeTransactionDataEffects: FfiConverter<TransactionDataEffects, Pointer> {
-
-    override fun lower(value: TransactionDataEffects): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): TransactionDataEffects {
-        return TransactionDataEffects(value)
-    }
-
-    override fun read(buf: ByteBuffer): TransactionDataEffects {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: TransactionDataEffects) = 8UL
-
-    override fun write(value: TransactionDataEffects, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
 public interface TransactionDigestInterface {
     
     companion object
@@ -16051,6 +15780,10 @@ public object FfiConverterTypeTransactionDigest: FfiConverter<TransactionDigest,
 
 public interface TransactionEffectsInterface {
     
+    fun `asV1`(): TransactionEffectsV1
+    
+    fun `isV1`(): kotlin.Boolean
+    
     companion object
 }
 
@@ -16136,11 +15869,46 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
         }
     }
 
+    override fun `asV1`(): TransactionEffectsV1 {
+            return FfiConverterTypeTransactionEffectsV1.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isV1`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1(
+        it, _status)
+}
+    }
+    )
+    }
     
 
     
+
     
-    companion object
+    companion object {
+         fun `v1`(`effects`: TransactionEffectsV1): TransactionEffects {
+            return FfiConverterTypeTransactionEffects.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1(
+        FfiConverterTypeTransactionEffectsV1.lower(`effects`),_status)
+}
+    )
+    }
+    
+
+        
+    }
     
 }
 
@@ -16715,228 +16483,6 @@ public object FfiConverterTypeTransactionEventsDigest: FfiConverter<TransactionE
 //
 
 
-public interface TransactionExpirationInterface {
-    
-    companion object
-}
-
-open class TransactionExpiration: Disposable, AutoCloseable, TransactionExpirationInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionexpiration(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionexpiration(pointer!!, status)
-        }
-    }
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeTransactionExpiration: FfiConverter<TransactionExpiration, Pointer> {
-
-    override fun lower(value: TransactionExpiration): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): TransactionExpiration {
-        return TransactionExpiration(value)
-    }
-
-    override fun read(buf: ByteBuffer): TransactionExpiration {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: TransactionExpiration) = 8UL
-
-    override fun write(value: TransactionExpiration, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
 /**
  * Transaction type
  *
@@ -17258,11 +16804,107 @@ public object FfiConverterTypeTransactionKind: FfiConverter<TransactionKind, Poi
 //
 
 
+/**
+ * Type of a move value
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * type-tag = type-tag-u8 \
+ * type-tag-u16 \
+ * type-tag-u32 \
+ * type-tag-u64 \
+ * type-tag-u128 \
+ * type-tag-u256 \
+ * type-tag-bool \
+ * type-tag-address \
+ * type-tag-signer \
+ * type-tag-vector \
+ * type-tag-struct
+ *
+ * type-tag-u8 = %x01
+ * type-tag-u16 = %x08
+ * type-tag-u32 = %x09
+ * type-tag-u64 = %x02
+ * type-tag-u128 = %x03
+ * type-tag-u256 = %x0a
+ * type-tag-bool = %x00
+ * type-tag-address = %x04
+ * type-tag-signer = %x05
+ * type-tag-vector = %x06 type-tag
+ * type-tag-struct = %x07 struct-tag
+ * ```
+ */
 public interface TypeTagInterface {
+    
+    fun `asStructTag`(): StructTag
+    
+    fun `asStructTagOpt`(): StructTag?
+    
+    fun `asVectorTypeTag`(): TypeTag
+    
+    fun `asVectorTypeTagOpt`(): TypeTag?
+    
+    fun `isAddress`(): kotlin.Boolean
+    
+    fun `isBool`(): kotlin.Boolean
+    
+    fun `isSigner`(): kotlin.Boolean
+    
+    fun `isStruct`(): kotlin.Boolean
+    
+    fun `isU128`(): kotlin.Boolean
+    
+    fun `isU16`(): kotlin.Boolean
+    
+    fun `isU256`(): kotlin.Boolean
+    
+    fun `isU32`(): kotlin.Boolean
+    
+    fun `isU64`(): kotlin.Boolean
+    
+    fun `isU8`(): kotlin.Boolean
+    
+    fun `isVector`(): kotlin.Boolean
     
     companion object
 }
 
+/**
+ * Type of a move value
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * type-tag = type-tag-u8 \
+ * type-tag-u16 \
+ * type-tag-u32 \
+ * type-tag-u64 \
+ * type-tag-u128 \
+ * type-tag-u256 \
+ * type-tag-bool \
+ * type-tag-address \
+ * type-tag-signer \
+ * type-tag-vector \
+ * type-tag-struct
+ *
+ * type-tag-u8 = %x01
+ * type-tag-u16 = %x08
+ * type-tag-u32 = %x09
+ * type-tag-u64 = %x02
+ * type-tag-u128 = %x03
+ * type-tag-u256 = %x0a
+ * type-tag-bool = %x00
+ * type-tag-address = %x04
+ * type-tag-signer = %x05
+ * type-tag-vector = %x06 type-tag
+ * type-tag-struct = %x07 struct-tag
+ * ```
+ */
 open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
 {
 
@@ -17345,11 +16987,302 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         }
     }
 
+    override fun `asStructTag`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asStructTagOpt`(): StructTag? {
+            return FfiConverterOptionalTypeStructTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asVectorTypeTag`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asVectorTypeTagOpt`(): TypeTag? {
+            return FfiConverterOptionalTypeTypeTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isAddress`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_address(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isBool`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isSigner`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isStruct`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isU128`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isU16`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isU256`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isU32`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isU64`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isU8`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isVector`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
+        it, _status)
+}
+    }
+    )
+    }
     
 
     
+
     
-    companion object
+    companion object {
+         fun `address`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_address(
+        _status)
+}
+    )
+    }
+    
+
+         fun `bool`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_bool(
+        _status)
+}
+    )
+    }
+    
+
+         fun `signer`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_signer(
+        _status)
+}
+    )
+    }
+    
+
+         fun `structTag`(`structTag`: StructTag): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_struct_tag(
+        FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+         fun `u128`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_u128(
+        _status)
+}
+    )
+    }
+    
+
+         fun `u16`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_u16(
+        _status)
+}
+    )
+    }
+    
+
+         fun `u256`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_u256(
+        _status)
+}
+    )
+    }
+    
+
+         fun `u32`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_u32(
+        _status)
+}
+    )
+    }
+    
+
+         fun `u64`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_u64(
+        _status)
+}
+    )
+    }
+    
+
+         fun `u8`(): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_u8(
+        _status)
+}
+    )
+    }
+    
+
+         fun `vector`(`typeTag`: TypeTag): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_vector(
+        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
+}
+    )
+    }
+    
+
+        
+    }
     
 }
 
@@ -17600,6 +17533,110 @@ public object FfiConverterTypeUserSignature: FfiConverter<UserSignature, Pointer
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+
+data class BigInt (
+    var `value`: kotlin.String
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeBigInt: FfiConverterRustBuffer<BigInt> {
+    override fun read(buf: ByteBuffer): BigInt {
+        return BigInt(
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: BigInt) = (
+            FfiConverterString.allocationSize(value.`value`)
+    )
+
+    override fun write(value: BigInt, buf: ByteBuffer) {
+            FfiConverterString.write(value.`value`, buf)
+    }
+}
+
+
+
+/**
+ * Input/output state of an object that was changed during execution
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * changed-object = object-id object-in object-out id-operation
+ * ```
+ */
+data class ChangedObject (
+    /**
+     * Id of the object
+     */
+    var `objectId`: ObjectId, 
+    /**
+     * State of the object in the store prior to this transaction.
+     */
+    var `inputState`: ObjectIn, 
+    /**
+     * State of the object in the store after this transaction.
+     */
+    var `outputState`: ObjectOut, 
+    /**
+     * Whether this object ID is created or deleted in this transaction.
+     * This information isn't required by the protocol but is useful for
+     * providing more detailed semantics on object changes.
+     */
+    var `idOperation`: IdOperation
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`objectId`,
+        this.`inputState`,
+        this.`outputState`,
+        this.`idOperation`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeChangedObject: FfiConverterRustBuffer<ChangedObject> {
+    override fun read(buf: ByteBuffer): ChangedObject {
+        return ChangedObject(
+            FfiConverterTypeObjectId.read(buf),
+            FfiConverterTypeObjectIn.read(buf),
+            FfiConverterTypeObjectOut.read(buf),
+            FfiConverterTypeIdOperation.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ChangedObject) = (
+            FfiConverterTypeObjectId.allocationSize(value.`objectId`) +
+            FfiConverterTypeObjectIn.allocationSize(value.`inputState`) +
+            FfiConverterTypeObjectOut.allocationSize(value.`outputState`) +
+            FfiConverterTypeIdOperation.allocationSize(value.`idOperation`)
+    )
+
+    override fun write(value: ChangedObject, buf: ByteBuffer) {
+            FfiConverterTypeObjectId.write(value.`objectId`, buf)
+            FfiConverterTypeObjectIn.write(value.`inputState`, buf)
+            FfiConverterTypeObjectOut.write(value.`outputState`, buf)
+            FfiConverterTypeIdOperation.write(value.`idOperation`, buf)
     }
 }
 
@@ -17865,6 +17902,79 @@ public object FfiConverterTypeCoinPage: FfiConverterRustBuffer<CoinPage> {
     override fun write(value: CoinPage, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
             FfiConverterSequenceTypeCoin.write(value.`data`, buf)
+    }
+}
+
+
+
+data class DateTime (
+    var `value`: kotlin.String
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDateTime: FfiConverterRustBuffer<DateTime> {
+    override fun read(buf: ByteBuffer): DateTime {
+        return DateTime(
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DateTime) = (
+            FfiConverterString.allocationSize(value.`value`)
+    )
+
+    override fun write(value: DateTime, buf: ByteBuffer) {
+            FfiConverterString.write(value.`value`, buf)
+    }
+}
+
+
+
+/**
+ * The result of a dry run, which includes the effects of the transaction and
+ * any errors that may have occurred.
+ */
+data class DryRunResult (
+    var `effects`: TransactionEffects?, 
+    var `error`: kotlin.String?
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`effects`,
+        this.`error`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDryRunResult: FfiConverterRustBuffer<DryRunResult> {
+    override fun read(buf: ByteBuffer): DryRunResult {
+        return DryRunResult(
+            FfiConverterOptionalTypeTransactionEffects.read(buf),
+            FfiConverterOptionalString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DryRunResult) = (
+            FfiConverterOptionalTypeTransactionEffects.allocationSize(value.`effects`) +
+            FfiConverterOptionalString.allocationSize(value.`error`)
+    )
+
+    override fun write(value: DryRunResult, buf: ByteBuffer) {
+            FfiConverterOptionalTypeTransactionEffects.write(value.`effects`, buf)
+            FfiConverterOptionalString.write(value.`error`, buf)
     }
 }
 
@@ -18185,6 +18295,91 @@ public object FfiConverterTypeEpochPage: FfiConverterRustBuffer<EpochPage> {
 
 
 
+/**
+ * An event
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * event = object-id identifier address struct-tag bytes
+ * ```
+ */
+data class Event (
+    /**
+     * Package id of the top-level function invoked by a MoveCall command which
+     * triggered this event to be emitted.
+     */
+    var `packageId`: ObjectId, 
+    /**
+     * Module name of the top-level function invoked by a MoveCall command
+     * which triggered this event to be emitted.
+     */
+    var `module`: kotlin.String, 
+    /**
+     * Address of the account that sent the transaction where this event was
+     * emitted.
+     */
+    var `sender`: Address, 
+    /**
+     * The type of the event emitted
+     */
+    var `type`: kotlin.String, 
+    /**
+     * BCS serialized bytes of the event
+     */
+    var `contents`: kotlin.ByteArray
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`packageId`,
+        this.`module`,
+        this.`sender`,
+        this.`type`,
+        this.`contents`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeEvent: FfiConverterRustBuffer<Event> {
+    override fun read(buf: ByteBuffer): Event {
+        return Event(
+            FfiConverterTypeObjectId.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterTypeAddress.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterByteArray.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: Event) = (
+            FfiConverterTypeObjectId.allocationSize(value.`packageId`) +
+            FfiConverterString.allocationSize(value.`module`) +
+            FfiConverterTypeAddress.allocationSize(value.`sender`) +
+            FfiConverterString.allocationSize(value.`type`) +
+            FfiConverterByteArray.allocationSize(value.`contents`)
+    )
+
+    override fun write(value: Event, buf: ByteBuffer) {
+            FfiConverterTypeObjectId.write(value.`packageId`, buf)
+            FfiConverterString.write(value.`module`, buf)
+            FfiConverterTypeAddress.write(value.`sender`, buf)
+            FfiConverterString.write(value.`type`, buf)
+            FfiConverterByteArray.write(value.`contents`, buf)
+    }
+}
+
+
+
 data class EventFilter (
     var `emittingModule`: kotlin.String? = null, 
     var `eventType`: kotlin.String? = null, 
@@ -18282,6 +18477,42 @@ public object FfiConverterTypeEventPage: FfiConverterRustBuffer<EventPage> {
     override fun write(value: EventPage, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
             FfiConverterSequenceTypeEvent.write(value.`data`, buf)
+    }
+}
+
+
+
+data class GqlAddress (
+    var `address`: Address
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`address`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeGQLAddress: FfiConverterRustBuffer<GqlAddress> {
+    override fun read(buf: ByteBuffer): GqlAddress {
+        return GqlAddress(
+            FfiConverterTypeAddress.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: GqlAddress) = (
+            FfiConverterTypeAddress.allocationSize(value.`address`)
+    )
+
+    override fun write(value: GqlAddress, buf: ByteBuffer) {
+            FfiConverterTypeAddress.write(value.`address`, buf)
     }
 }
 
@@ -18391,6 +18622,117 @@ public object FfiConverterTypeGasPayment: FfiConverterRustBuffer<GasPayment> {
             FfiConverterTypeAddress.write(value.`owner`, buf)
             FfiConverterULong.write(value.`price`, buf)
             FfiConverterULong.write(value.`budget`, buf)
+    }
+}
+
+
+
+/**
+ * Location in move bytecode where an error occurred
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * move-location = object-id identifier u16 u16 (option identifier)
+ * ```
+ */
+data class MoveLocation (
+    /**
+     * The package id
+     */
+    var `package`: ObjectId, 
+    /**
+     * The module name
+     */
+    var `module`: kotlin.String, 
+    /**
+     * The function index
+     */
+    var `function`: kotlin.UShort, 
+    /**
+     * Index into the code stream for a jump. The offset is relative to the
+     * beginning of the instruction stream.
+     */
+    var `instruction`: kotlin.UShort, 
+    /**
+     * The name of the function if available
+     */
+    var `functionName`: kotlin.String?
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`package`,
+        this.`module`,
+        this.`function`,
+        this.`instruction`,
+        this.`functionName`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveLocation: FfiConverterRustBuffer<MoveLocation> {
+    override fun read(buf: ByteBuffer): MoveLocation {
+        return MoveLocation(
+            FfiConverterTypeObjectId.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterUShort.read(buf),
+            FfiConverterUShort.read(buf),
+            FfiConverterOptionalString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveLocation) = (
+            FfiConverterTypeObjectId.allocationSize(value.`package`) +
+            FfiConverterString.allocationSize(value.`module`) +
+            FfiConverterUShort.allocationSize(value.`function`) +
+            FfiConverterUShort.allocationSize(value.`instruction`) +
+            FfiConverterOptionalString.allocationSize(value.`functionName`)
+    )
+
+    override fun write(value: MoveLocation, buf: ByteBuffer) {
+            FfiConverterTypeObjectId.write(value.`package`, buf)
+            FfiConverterString.write(value.`module`, buf)
+            FfiConverterUShort.write(value.`function`, buf)
+            FfiConverterUShort.write(value.`instruction`, buf)
+            FfiConverterOptionalString.write(value.`functionName`, buf)
+    }
+}
+
+
+
+data class MoveObject (
+    var `bcs`: kotlin.String? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveObject: FfiConverterRustBuffer<MoveObject> {
+    override fun read(buf: ByteBuffer): MoveObject {
+        return MoveObject(
+            FfiConverterOptionalString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveObject) = (
+            FfiConverterOptionalString.allocationSize(value.`bcs`)
+    )
+
+    override fun write(value: MoveObject, buf: ByteBuffer) {
+            FfiConverterOptionalString.write(value.`bcs`, buf)
     }
 }
 
@@ -18544,6 +18886,52 @@ public object FfiConverterTypeObjectPage: FfiConverterRustBuffer<ObjectPage> {
 
 
 
+data class ObjectRef (
+    var `address`: ObjectId, 
+    var `digest`: kotlin.String, 
+    var `version`: kotlin.ULong
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`address`,
+        this.`digest`,
+        this.`version`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeObjectRef: FfiConverterRustBuffer<ObjectRef> {
+    override fun read(buf: ByteBuffer): ObjectRef {
+        return ObjectRef(
+            FfiConverterTypeObjectId.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterULong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ObjectRef) = (
+            FfiConverterTypeObjectId.allocationSize(value.`address`) +
+            FfiConverterString.allocationSize(value.`digest`) +
+            FfiConverterULong.allocationSize(value.`version`)
+    )
+
+    override fun write(value: ObjectRef, buf: ByteBuffer) {
+            FfiConverterTypeObjectId.write(value.`address`, buf)
+            FfiConverterString.write(value.`digest`, buf)
+            FfiConverterULong.write(value.`version`, buf)
+    }
+}
+
+
+
 /**
  * Reference to an object
  *
@@ -18603,11 +18991,26 @@ public object FfiConverterTypeObjectReference: FfiConverterRustBuffer<ObjectRefe
 
 
 
+/**
+ * Information about pagination in a connection.
+ */
 data class PageInfo (
+    /**
+     * When paginating backwards, are there more items?
+     */
     var `hasPreviousPage`: kotlin.Boolean, 
+    /**
+     * Are there more items when paginating forwards?
+     */
     var `hasNextPage`: kotlin.Boolean, 
-    var `startCursor`: kotlin.String?, 
-    var `endCursor`: kotlin.String?
+    /**
+     * When paginating backwards, the cursor to continue.
+     */
+    var `startCursor`: kotlin.String? = null, 
+    /**
+     * When paginating forwards, the cursor to continue.
+     */
+    var `endCursor`: kotlin.String? = null
 ) {
     
     companion object
@@ -18643,9 +19046,17 @@ public object FfiConverterTypePageInfo: FfiConverterRustBuffer<PageInfo> {
 
 
 
+/**
+ * Pagination options for querying the GraphQL server. It defaults to forward
+ * pagination with the GraphQL server's max page size.
+ */
 data class PaginationFilter (
     var `direction`: Direction, 
     var `cursor`: kotlin.String? = null, 
+    /**
+     * The maximum number of items to return. If this is omitted, it will
+     * lazily query the service configuration for the max page size.
+     */
     var `limit`: kotlin.Int? = null
 ) {
     
@@ -18674,6 +19085,47 @@ public object FfiConverterTypePaginationFilter: FfiConverterRustBuffer<Paginatio
             FfiConverterTypeDirection.write(value.`direction`, buf)
             FfiConverterOptionalString.write(value.`cursor`, buf)
             FfiConverterOptionalInt.write(value.`limit`, buf)
+    }
+}
+
+
+
+data class SignedTransaction (
+    var `transaction`: Transaction, 
+    var `signatures`: List<UserSignature>
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`transaction`,
+        this.`signatures`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSignedTransaction: FfiConverterRustBuffer<SignedTransaction> {
+    override fun read(buf: ByteBuffer): SignedTransaction {
+        return SignedTransaction(
+            FfiConverterTypeTransaction.read(buf),
+            FfiConverterSequenceTypeUserSignature.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: SignedTransaction) = (
+            FfiConverterTypeTransaction.allocationSize(value.`transaction`) +
+            FfiConverterSequenceTypeUserSignature.allocationSize(value.`signatures`)
+    )
+
+    override fun write(value: SignedTransaction, buf: ByteBuffer) {
+            FfiConverterTypeTransaction.write(value.`transaction`, buf)
+            FfiConverterSequenceTypeUserSignature.write(value.`signatures`, buf)
     }
 }
 
@@ -18725,6 +19177,47 @@ public object FfiConverterTypeSignedTransactionPage: FfiConverterRustBuffer<Sign
     override fun write(value: SignedTransactionPage, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
             FfiConverterSequenceTypeSignedTransaction.write(value.`data`, buf)
+    }
+}
+
+
+
+data class TransactionDataEffects (
+    var `tx`: SignedTransaction, 
+    var `effects`: TransactionEffects
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`tx`,
+        this.`effects`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTransactionDataEffects: FfiConverterRustBuffer<TransactionDataEffects> {
+    override fun read(buf: ByteBuffer): TransactionDataEffects {
+        return TransactionDataEffects(
+            FfiConverterTypeSignedTransaction.read(buf),
+            FfiConverterTypeTransactionEffects.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: TransactionDataEffects) = (
+            FfiConverterTypeSignedTransaction.allocationSize(value.`tx`) +
+            FfiConverterTypeTransactionEffects.allocationSize(value.`effects`)
+    )
+
+    override fun write(value: TransactionDataEffects, buf: ByteBuffer) {
+            FfiConverterTypeSignedTransaction.write(value.`tx`, buf)
+            FfiConverterTypeTransactionEffects.write(value.`effects`, buf)
     }
 }
 
@@ -18827,6 +19320,156 @@ public object FfiConverterTypeTransactionEffectsPage: FfiConverterRustBuffer<Tra
     override fun write(value: TransactionEffectsPage, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
             FfiConverterSequenceTypeTransactionEffects.write(value.`data`, buf)
+    }
+}
+
+
+
+/**
+ * Version 1 of TransactionEffects
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * effects-v1 = execution-status
+ * u64                                ; epoch
+ * gas-cost-summary
+ * digest                             ; transaction digest
+ * (option u32)                       ; gas object index
+ * (option digest)                    ; events digest
+ * (vector digest)                    ; list of transaction dependencies
+ * u64                                ; lamport version
+ * (vector changed-object)
+ * (vector unchanged-shared-object)
+ * (option digest)                    ; auxiliary data digest
+ * ```
+ */
+data class TransactionEffectsV1 (
+    /**
+     * The status of the execution
+     */
+    var `status`: ExecutionStatus, 
+    /**
+     * The epoch when this transaction was executed.
+     */
+    var `epoch`: kotlin.ULong, 
+    /**
+     * The gas used by this transaction
+     */
+    var `gasUsed`: GasCostSummary, 
+    /**
+     * The transaction digest
+     */
+    var `transactionDigest`: TransactionDigest, 
+    /**
+     * The updated gas object reference, as an index into the `changed_objects`
+     * vector. Having a dedicated field for convenient access.
+     * System transaction that don't require gas will leave this as None.
+     */
+    var `gasObjectIndex`: kotlin.UInt?, 
+    /**
+     * The digest of the events emitted during execution,
+     * can be None if the transaction does not emit any event.
+     */
+    var `eventsDigest`: TransactionEventsDigest?, 
+    /**
+     * The set of transaction digests this transaction depends on.
+     */
+    var `dependencies`: List<TransactionDigest>, 
+    /**
+     * The version number of all the written Move objects by this transaction.
+     */
+    var `lamportVersion`: kotlin.ULong, 
+    /**
+     * Objects whose state are changed in the object store.
+     */
+    var `changedObjects`: List<ChangedObject>, 
+    /**
+     * Shared objects that are not mutated in this transaction. Unlike owned
+     * objects, read-only shared objects' version are not committed in the
+     * transaction, and in order for a node to catch up and execute it
+     * without consensus sequencing, the version needs to be committed in
+     * the effects.
+     */
+    var `unchangedSharedObjects`: List<UnchangedSharedObject>, 
+    /**
+     * Auxiliary data that are not protocol-critical, generated as part of the
+     * effects but are stored separately. Storing it separately allows us
+     * to avoid bloating the effects with data that are not critical.
+     * It also provides more flexibility on the format and type of the data.
+     */
+    var `auxiliaryDataDigest`: EffectsAuxiliaryDataDigest?
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`status`,
+        this.`epoch`,
+        this.`gasUsed`,
+        this.`transactionDigest`,
+        this.`gasObjectIndex`,
+        this.`eventsDigest`,
+        this.`dependencies`,
+        this.`lamportVersion`,
+        this.`changedObjects`,
+        this.`unchangedSharedObjects`,
+        this.`auxiliaryDataDigest`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer<TransactionEffectsV1> {
+    override fun read(buf: ByteBuffer): TransactionEffectsV1 {
+        return TransactionEffectsV1(
+            FfiConverterTypeExecutionStatus.read(buf),
+            FfiConverterULong.read(buf),
+            FfiConverterTypeGasCostSummary.read(buf),
+            FfiConverterTypeTransactionDigest.read(buf),
+            FfiConverterOptionalUInt.read(buf),
+            FfiConverterOptionalTypeTransactionEventsDigest.read(buf),
+            FfiConverterSequenceTypeTransactionDigest.read(buf),
+            FfiConverterULong.read(buf),
+            FfiConverterSequenceTypeChangedObject.read(buf),
+            FfiConverterSequenceTypeUnchangedSharedObject.read(buf),
+            FfiConverterOptionalTypeEffectsAuxiliaryDataDigest.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: TransactionEffectsV1) = (
+            FfiConverterTypeExecutionStatus.allocationSize(value.`status`) +
+            FfiConverterULong.allocationSize(value.`epoch`) +
+            FfiConverterTypeGasCostSummary.allocationSize(value.`gasUsed`) +
+            FfiConverterTypeTransactionDigest.allocationSize(value.`transactionDigest`) +
+            FfiConverterOptionalUInt.allocationSize(value.`gasObjectIndex`) +
+            FfiConverterOptionalTypeTransactionEventsDigest.allocationSize(value.`eventsDigest`) +
+            FfiConverterSequenceTypeTransactionDigest.allocationSize(value.`dependencies`) +
+            FfiConverterULong.allocationSize(value.`lamportVersion`) +
+            FfiConverterSequenceTypeChangedObject.allocationSize(value.`changedObjects`) +
+            FfiConverterSequenceTypeUnchangedSharedObject.allocationSize(value.`unchangedSharedObjects`) +
+            FfiConverterOptionalTypeEffectsAuxiliaryDataDigest.allocationSize(value.`auxiliaryDataDigest`)
+    )
+
+    override fun write(value: TransactionEffectsV1, buf: ByteBuffer) {
+            FfiConverterTypeExecutionStatus.write(value.`status`, buf)
+            FfiConverterULong.write(value.`epoch`, buf)
+            FfiConverterTypeGasCostSummary.write(value.`gasUsed`, buf)
+            FfiConverterTypeTransactionDigest.write(value.`transactionDigest`, buf)
+            FfiConverterOptionalUInt.write(value.`gasObjectIndex`, buf)
+            FfiConverterOptionalTypeTransactionEventsDigest.write(value.`eventsDigest`, buf)
+            FfiConverterSequenceTypeTransactionDigest.write(value.`dependencies`, buf)
+            FfiConverterULong.write(value.`lamportVersion`, buf)
+            FfiConverterSequenceTypeChangedObject.write(value.`changedObjects`, buf)
+            FfiConverterSequenceTypeUnchangedSharedObject.write(value.`unchangedSharedObjects`, buf)
+            FfiConverterOptionalTypeEffectsAuxiliaryDataDigest.write(value.`auxiliaryDataDigest`, buf)
     }
 }
 
@@ -18969,6 +19612,86 @@ public object FfiConverterTypeTransactionsFilter: FfiConverterRustBuffer<Transac
             FfiConverterOptionalTypeObjectId.write(value.`changedObject`, buf)
             FfiConverterOptionalSequenceString.write(value.`transactionIds`, buf)
             FfiConverterOptionalTypeObjectId.write(value.`wrappedOrDeletedObject`, buf)
+    }
+}
+
+
+
+data class TypeParseError (
+    var `source`: kotlin.String
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTypeParseError: FfiConverterRustBuffer<TypeParseError> {
+    override fun read(buf: ByteBuffer): TypeParseError {
+        return TypeParseError(
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: TypeParseError) = (
+            FfiConverterString.allocationSize(value.`source`)
+    )
+
+    override fun write(value: TypeParseError, buf: ByteBuffer) {
+            FfiConverterString.write(value.`source`, buf)
+    }
+}
+
+
+
+/**
+ * A shared object that wasn't changed during execution
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * unchanged-shared-object = object-id unchanged-shared-object-kind
+ * ```
+ */
+data class UnchangedSharedObject (
+    var `objectId`: ObjectId, 
+    var `kind`: UnchangedSharedKind
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`objectId`,
+        this.`kind`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeUnchangedSharedObject: FfiConverterRustBuffer<UnchangedSharedObject> {
+    override fun read(buf: ByteBuffer): UnchangedSharedObject {
+        return UnchangedSharedObject(
+            FfiConverterTypeObjectId.read(buf),
+            FfiConverterTypeUnchangedSharedKind.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: UnchangedSharedObject) = (
+            FfiConverterTypeObjectId.allocationSize(value.`objectId`) +
+            FfiConverterTypeUnchangedSharedKind.allocationSize(value.`kind`)
+    )
+
+    override fun write(value: UnchangedSharedObject, buf: ByteBuffer) {
+            FfiConverterTypeObjectId.write(value.`objectId`, buf)
+            FfiConverterTypeUnchangedSharedKind.write(value.`kind`, buf)
     }
 }
 
@@ -19261,6 +19984,47 @@ public object FfiConverterTypeValidatorCommitteeMember: FfiConverterRustBuffer<V
 
 
 
+data class ValidatorConnection (
+    var `pageInfo`: PageInfo, 
+    var `nodes`: List<Validator>
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`pageInfo`,
+        this.`nodes`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeValidatorConnection: FfiConverterRustBuffer<ValidatorConnection> {
+    override fun read(buf: ByteBuffer): ValidatorConnection {
+        return ValidatorConnection(
+            FfiConverterTypePageInfo.read(buf),
+            FfiConverterSequenceTypeValidator.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ValidatorConnection) = (
+            FfiConverterTypePageInfo.allocationSize(value.`pageInfo`) +
+            FfiConverterSequenceTypeValidator.allocationSize(value.`nodes`)
+    )
+
+    override fun write(value: ValidatorConnection, buf: ByteBuffer) {
+            FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
+            FfiConverterSequenceTypeValidator.write(value.`nodes`, buf)
+    }
+}
+
+
+
 data class ValidatorCredentials (
     var `authorityPubKey`: Base64?, 
     var `networkPubKey`: Base64?, 
@@ -19364,6 +20128,265 @@ public object FfiConverterTypeValidatorPage: FfiConverterRustBuffer<ValidatorPag
 
 
 
+data class ValidatorSet (
+    var `activeValidators`: ValidatorConnection
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`activeValidators`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet> {
+    override fun read(buf: ByteBuffer): ValidatorSet {
+        return ValidatorSet(
+            FfiConverterTypeValidatorConnection.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ValidatorSet) = (
+            FfiConverterTypeValidatorConnection.allocationSize(value.`activeValidators`)
+    )
+
+    override fun write(value: ValidatorSet, buf: ByteBuffer) {
+            FfiConverterTypeValidatorConnection.write(value.`activeValidators`, buf)
+    }
+}
+
+
+
+sealed class CommandArgumentError {
+    
+    object TypeMismatch : CommandArgumentError()
+    
+    
+    object InvalidBcsBytes : CommandArgumentError()
+    
+    
+    object InvalidUsageOfPureArgument : CommandArgumentError()
+    
+    
+    object InvalidArgumentToPrivateEntryFunction : CommandArgumentError()
+    
+    
+    data class IndexOutOfBounds(
+        val `index`: kotlin.UShort) : CommandArgumentError() {
+        companion object
+    }
+    
+    data class SecondaryIndexOutOfBounds(
+        val `result`: kotlin.UShort, 
+        val `subresult`: kotlin.UShort) : CommandArgumentError() {
+        companion object
+    }
+    
+    data class InvalidResultArity(
+        val `result`: kotlin.UShort) : CommandArgumentError() {
+        companion object
+    }
+    
+    object InvalidGasCoinUsage : CommandArgumentError()
+    
+    
+    object InvalidValueUsage : CommandArgumentError()
+    
+    
+    object InvalidObjectByValue : CommandArgumentError()
+    
+    
+    object InvalidObjectByMutRef : CommandArgumentError()
+    
+    
+    object SharedObjectOperationNotAllowed : CommandArgumentError()
+    
+    
+
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeCommandArgumentError : FfiConverterRustBuffer<CommandArgumentError>{
+    override fun read(buf: ByteBuffer): CommandArgumentError {
+        return when(buf.getInt()) {
+            1 -> CommandArgumentError.TypeMismatch
+            2 -> CommandArgumentError.InvalidBcsBytes
+            3 -> CommandArgumentError.InvalidUsageOfPureArgument
+            4 -> CommandArgumentError.InvalidArgumentToPrivateEntryFunction
+            5 -> CommandArgumentError.IndexOutOfBounds(
+                FfiConverterUShort.read(buf),
+                )
+            6 -> CommandArgumentError.SecondaryIndexOutOfBounds(
+                FfiConverterUShort.read(buf),
+                FfiConverterUShort.read(buf),
+                )
+            7 -> CommandArgumentError.InvalidResultArity(
+                FfiConverterUShort.read(buf),
+                )
+            8 -> CommandArgumentError.InvalidGasCoinUsage
+            9 -> CommandArgumentError.InvalidValueUsage
+            10 -> CommandArgumentError.InvalidObjectByValue
+            11 -> CommandArgumentError.InvalidObjectByMutRef
+            12 -> CommandArgumentError.SharedObjectOperationNotAllowed
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: CommandArgumentError) = when(value) {
+        is CommandArgumentError.TypeMismatch -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is CommandArgumentError.InvalidBcsBytes -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is CommandArgumentError.InvalidUsageOfPureArgument -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is CommandArgumentError.InvalidArgumentToPrivateEntryFunction -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is CommandArgumentError.IndexOutOfBounds -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUShort.allocationSize(value.`index`)
+            )
+        }
+        is CommandArgumentError.SecondaryIndexOutOfBounds -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUShort.allocationSize(value.`result`)
+                + FfiConverterUShort.allocationSize(value.`subresult`)
+            )
+        }
+        is CommandArgumentError.InvalidResultArity -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUShort.allocationSize(value.`result`)
+            )
+        }
+        is CommandArgumentError.InvalidGasCoinUsage -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is CommandArgumentError.InvalidValueUsage -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is CommandArgumentError.InvalidObjectByValue -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is CommandArgumentError.InvalidObjectByMutRef -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is CommandArgumentError.SharedObjectOperationNotAllowed -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+    }
+
+    override fun write(value: CommandArgumentError, buf: ByteBuffer) {
+        when(value) {
+            is CommandArgumentError.TypeMismatch -> {
+                buf.putInt(1)
+                Unit
+            }
+            is CommandArgumentError.InvalidBcsBytes -> {
+                buf.putInt(2)
+                Unit
+            }
+            is CommandArgumentError.InvalidUsageOfPureArgument -> {
+                buf.putInt(3)
+                Unit
+            }
+            is CommandArgumentError.InvalidArgumentToPrivateEntryFunction -> {
+                buf.putInt(4)
+                Unit
+            }
+            is CommandArgumentError.IndexOutOfBounds -> {
+                buf.putInt(5)
+                FfiConverterUShort.write(value.`index`, buf)
+                Unit
+            }
+            is CommandArgumentError.SecondaryIndexOutOfBounds -> {
+                buf.putInt(6)
+                FfiConverterUShort.write(value.`result`, buf)
+                FfiConverterUShort.write(value.`subresult`, buf)
+                Unit
+            }
+            is CommandArgumentError.InvalidResultArity -> {
+                buf.putInt(7)
+                FfiConverterUShort.write(value.`result`, buf)
+                Unit
+            }
+            is CommandArgumentError.InvalidGasCoinUsage -> {
+                buf.putInt(8)
+                Unit
+            }
+            is CommandArgumentError.InvalidValueUsage -> {
+                buf.putInt(9)
+                Unit
+            }
+            is CommandArgumentError.InvalidObjectByValue -> {
+                buf.putInt(10)
+                Unit
+            }
+            is CommandArgumentError.InvalidObjectByMutRef -> {
+                buf.putInt(11)
+                Unit
+            }
+            is CommandArgumentError.SharedObjectOperationNotAllowed -> {
+                buf.putInt(12)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
+/**
+ * Pagination direction.
+ */
 
 enum class Direction {
     
@@ -19387,6 +20410,1743 @@ public object FfiConverterTypeDirection: FfiConverterRustBuffer<Direction> {
 
     override fun write(value: Direction, buf: ByteBuffer) {
         buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+/**
+ * An error that can occur during the execution of a transaction
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ *
+ * execution-error =  insufficient-gas
+ * =/ invalid-gas-object
+ * =/ invariant-violation
+ * =/ feature-not-yet-supported
+ * =/ object-too-big
+ * =/ package-too-big
+ * =/ circular-object-ownership
+ * =/ insufficient-coin-balance
+ * =/ coin-balance-overflow
+ * =/ publish-error-non-zero-address
+ * =/ iota-move-verification-error
+ * =/ move-primitive-runtime-error
+ * =/ move-abort
+ * =/ vm-verification-or-deserialization-error
+ * =/ vm-invariant-violation
+ * =/ function-not-found
+ * =/ arity-mismatch
+ * =/ type-arity-mismatch
+ * =/ non-entry-function-invoked
+ * =/ command-argument-error
+ * =/ type-argument-error
+ * =/ unused-value-without-drop
+ * =/ invalid-public-function-return-type
+ * =/ invalid-transfer-object
+ * =/ effects-too-large
+ * =/ publish-upgrade-missing-dependency
+ * =/ publish-upgrade-dependency-downgrade
+ * =/ package-upgrade-error
+ * =/ written-objects-too-large
+ * =/ certificate-denied
+ * =/ iota-move-verification-timeout
+ * =/ shared-object-operation-not-allowed
+ * =/ input-object-deleted
+ * =/ execution-cancelled-due-to-shared-object-congestion
+ * =/ address-denied-for-coin
+ * =/ coin-type-global-pause
+ * =/ execution-cancelled-due-to-randomness-unavailable
+ *
+ * insufficient-gas                                    = %x00
+ * invalid-gas-object                                  = %x01
+ * invariant-violation                                 = %x02
+ * feature-not-yet-supported                           = %x03
+ * object-too-big                                      = %x04 u64 u64
+ * package-too-big                                     = %x05 u64 u64
+ * circular-object-ownership                           = %x06 object-id
+ * insufficient-coin-balance                           = %x07
+ * coin-balance-overflow                               = %x08
+ * publish-error-non-zero-address                      = %x09
+ * iota-move-verification-error                        = %x0a
+ * move-primitive-runtime-error                        = %x0b (option move-location)
+ * move-abort                                          = %x0c move-location u64
+ * vm-verification-or-deserialization-error            = %x0d
+ * vm-invariant-violation                              = %x0e
+ * function-not-found                                  = %x0f
+ * arity-mismatch                                      = %x10
+ * type-arity-mismatch                                 = %x11
+ * non-entry-function-invoked                          = %x12
+ * command-argument-error                              = %x13 u16 command-argument-error
+ * type-argument-error                                 = %x14 u16 type-argument-error
+ * unused-value-without-drop                           = %x15 u16 u16
+ * invalid-public-function-return-type                 = %x16 u16
+ * invalid-transfer-object                             = %x17
+ * effects-too-large                                   = %x18 u64 u64
+ * publish-upgrade-missing-dependency                  = %x19
+ * publish-upgrade-dependency-downgrade                = %x1a
+ * package-upgrade-error                               = %x1b package-upgrade-error
+ * written-objects-too-large                           = %x1c u64 u64
+ * certificate-denied                                  = %x1d
+ * iota-move-verification-timeout                      = %x1e
+ * shared-object-operation-not-allowed                 = %x1f
+ * input-object-deleted                                = %x20
+ * execution-cancelled-due-to-shared-object-congestion = %x21 (vector object-id)
+ * address-denied-for-coin                             = %x22 address string
+ * coin-type-global-pause                              = %x23 string
+ * execution-cancelled-due-to-randomness-unavailable   = %x24
+ * ```
+ */
+sealed class ExecutionError: Disposable  {
+    
+    /**
+     * Insufficient Gas
+     */
+    object InsufficientGas : ExecutionError()
+    
+    
+    /**
+     * Invalid Gas Object.
+     */
+    object InvalidGasObject : ExecutionError()
+    
+    
+    /**
+     * Invariant Violation
+     */
+    object InvariantViolation : ExecutionError()
+    
+    
+    /**
+     * Attempted to used feature that is not supported yet
+     */
+    object FeatureNotYetSupported : ExecutionError()
+    
+    
+    /**
+     * Move object is larger than the maximum allowed size
+     */
+    data class ObjectTooBig(
+        val `objectSize`: kotlin.ULong, 
+        val `maxObjectSize`: kotlin.ULong) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Package is larger than the maximum allowed size
+     */
+    data class PackageTooBig(
+        val `objectSize`: kotlin.ULong, 
+        val `maxObjectSize`: kotlin.ULong) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Circular Object Ownership
+     */
+    data class CircularObjectOwnership(
+        val `object`: ObjectId) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Insufficient coin balance for requested operation
+     */
+    object InsufficientCoinBalance : ExecutionError()
+    
+    
+    /**
+     * Coin balance overflowed an u64
+     */
+    object CoinBalanceOverflow : ExecutionError()
+    
+    
+    /**
+     * Publish Error, Non-zero Address.
+     * The modules in the package must have their self-addresses set to zero.
+     */
+    object PublishErrorNonZeroAddress : ExecutionError()
+    
+    
+    /**
+     * IOTA Move Bytecode Verification Error.
+     */
+    object IotaMoveVerification : ExecutionError()
+    
+    
+    /**
+     * Error from a non-abort instruction.
+     * Possible causes:
+     * Arithmetic error, stack overflow, max value depth, etc."
+     */
+    data class MovePrimitiveRuntime(
+        val `location`: MoveLocation?) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Move runtime abort
+     */
+    data class MoveAbort(
+        val `location`: MoveLocation, 
+        val `code`: kotlin.ULong) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Bytecode verification error.
+     */
+    object VmVerificationOrDeserialization : ExecutionError()
+    
+    
+    /**
+     * MoveVm invariant violation
+     */
+    object VmInvariantViolation : ExecutionError()
+    
+    
+    /**
+     * Function not found
+     */
+    object FunctionNotFound : ExecutionError()
+    
+    
+    /**
+     * Arity mismatch for Move function.
+     * The number of arguments does not match the number of parameters
+     */
+    object ArityMismatch : ExecutionError()
+    
+    
+    /**
+     * Type arity mismatch for Move function.
+     * Mismatch between the number of actual versus expected type arguments.
+     */
+    object TypeArityMismatch : ExecutionError()
+    
+    
+    /**
+     * Non Entry Function Invoked. Move Call must start with an entry function.
+     */
+    object NonEntryFunctionInvoked : ExecutionError()
+    
+    
+    /**
+     * Invalid command argument
+     */
+    data class CommandArgument(
+        val `argument`: kotlin.UShort, 
+        val `kind`: CommandArgumentError) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Type argument error
+     */
+    data class TypeArgument(
+        /**
+         * Index of the problematic type argument
+         */
+        val `typeArgument`: kotlin.UShort, 
+        val `kind`: TypeArgumentError) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Unused result without the drop ability.
+     */
+    data class UnusedValueWithoutDrop(
+        val `result`: kotlin.UShort, 
+        val `subresult`: kotlin.UShort) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Invalid public Move function signature.
+     * Unsupported return type for return value
+     */
+    data class InvalidPublicFunctionReturnType(
+        val `index`: kotlin.UShort) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Invalid Transfer Object, object does not have public transfer.
+     */
+    object InvalidTransferObject : ExecutionError()
+    
+    
+    /**
+     * Effects from the transaction are too large
+     */
+    data class EffectsTooLarge(
+        val `currentSize`: kotlin.ULong, 
+        val `maxSize`: kotlin.ULong) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Publish or Upgrade is missing dependency
+     */
+    object PublishUpgradeMissingDependency : ExecutionError()
+    
+    
+    /**
+     * Publish or Upgrade dependency downgrade.
+     *
+     * Indirect (transitive) dependency of published or upgraded package has
+     * been assigned an on-chain version that is less than the version
+     * required by one of the package's transitive dependencies.
+     */
+    object PublishUpgradeDependencyDowngrade : ExecutionError()
+    
+    
+    /**
+     * Invalid package upgrade
+     */
+    data class PackageUpgrade(
+        val `kind`: PackageUpgradeError) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Indicates the transaction tried to write objects too large to storage
+     */
+    data class WrittenObjectsTooLarge(
+        val `objectSize`: kotlin.ULong, 
+        val `maxObjectSize`: kotlin.ULong) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Certificate is on the deny list
+     */
+    object CertificateDenied : ExecutionError()
+    
+    
+    /**
+     * IOTA Move Bytecode verification timed out.
+     */
+    object IotaMoveVerificationTimeout : ExecutionError()
+    
+    
+    /**
+     * The requested shared object operation is not allowed
+     */
+    object SharedObjectOperationNotAllowed : ExecutionError()
+    
+    
+    /**
+     * Requested shared object has been deleted
+     */
+    object InputObjectDeleted : ExecutionError()
+    
+    
+    /**
+     * Certificate is cancelled due to congestion on shared objects
+     */
+    data class ExecutionCancelledDueToSharedObjectCongestion(
+        val `congestedObjects`: List<ObjectId>) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Certificate is cancelled due to congestion on shared objects;
+     * suggested gas price can be used to give this certificate more priority.
+     */
+    data class ExecutionCancelledDueToSharedObjectCongestionV2(
+        val `congestedObjects`: List<ObjectId>, 
+        val `suggestedGasPrice`: kotlin.ULong) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Address is denied for this coin type
+     */
+    data class AddressDeniedForCoin(
+        val `address`: Address, 
+        val `coinType`: kotlin.String) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Coin type is globally paused for use
+     */
+    data class CoinTypeGlobalPause(
+        val `coinType`: kotlin.String) : ExecutionError() {
+        companion object
+    }
+    
+    /**
+     * Certificate is cancelled because randomness could not be generated this
+     * epoch
+     */
+    object ExecutionCancelledDueToRandomnessUnavailable : ExecutionError()
+    
+    
+    /**
+     * A valid linkage was unable to be determined for the transaction or one
+     * of its commands.
+     */
+    object InvalidLinkage : ExecutionError()
+    
+    
+
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        when(this) {
+            is ExecutionError.InsufficientGas -> {// Nothing to destroy
+            }
+            is ExecutionError.InvalidGasObject -> {// Nothing to destroy
+            }
+            is ExecutionError.InvariantViolation -> {// Nothing to destroy
+            }
+            is ExecutionError.FeatureNotYetSupported -> {// Nothing to destroy
+            }
+            is ExecutionError.ObjectTooBig -> {
+                
+    Disposable.destroy(
+        this.`objectSize`,
+        this.`maxObjectSize`
+    )
+                
+            }
+            is ExecutionError.PackageTooBig -> {
+                
+    Disposable.destroy(
+        this.`objectSize`,
+        this.`maxObjectSize`
+    )
+                
+            }
+            is ExecutionError.CircularObjectOwnership -> {
+                
+    Disposable.destroy(
+        this.`object`
+    )
+                
+            }
+            is ExecutionError.InsufficientCoinBalance -> {// Nothing to destroy
+            }
+            is ExecutionError.CoinBalanceOverflow -> {// Nothing to destroy
+            }
+            is ExecutionError.PublishErrorNonZeroAddress -> {// Nothing to destroy
+            }
+            is ExecutionError.IotaMoveVerification -> {// Nothing to destroy
+            }
+            is ExecutionError.MovePrimitiveRuntime -> {
+                
+    Disposable.destroy(
+        this.`location`
+    )
+                
+            }
+            is ExecutionError.MoveAbort -> {
+                
+    Disposable.destroy(
+        this.`location`,
+        this.`code`
+    )
+                
+            }
+            is ExecutionError.VmVerificationOrDeserialization -> {// Nothing to destroy
+            }
+            is ExecutionError.VmInvariantViolation -> {// Nothing to destroy
+            }
+            is ExecutionError.FunctionNotFound -> {// Nothing to destroy
+            }
+            is ExecutionError.ArityMismatch -> {// Nothing to destroy
+            }
+            is ExecutionError.TypeArityMismatch -> {// Nothing to destroy
+            }
+            is ExecutionError.NonEntryFunctionInvoked -> {// Nothing to destroy
+            }
+            is ExecutionError.CommandArgument -> {
+                
+    Disposable.destroy(
+        this.`argument`,
+        this.`kind`
+    )
+                
+            }
+            is ExecutionError.TypeArgument -> {
+                
+    Disposable.destroy(
+        this.`typeArgument`,
+        this.`kind`
+    )
+                
+            }
+            is ExecutionError.UnusedValueWithoutDrop -> {
+                
+    Disposable.destroy(
+        this.`result`,
+        this.`subresult`
+    )
+                
+            }
+            is ExecutionError.InvalidPublicFunctionReturnType -> {
+                
+    Disposable.destroy(
+        this.`index`
+    )
+                
+            }
+            is ExecutionError.InvalidTransferObject -> {// Nothing to destroy
+            }
+            is ExecutionError.EffectsTooLarge -> {
+                
+    Disposable.destroy(
+        this.`currentSize`,
+        this.`maxSize`
+    )
+                
+            }
+            is ExecutionError.PublishUpgradeMissingDependency -> {// Nothing to destroy
+            }
+            is ExecutionError.PublishUpgradeDependencyDowngrade -> {// Nothing to destroy
+            }
+            is ExecutionError.PackageUpgrade -> {
+                
+    Disposable.destroy(
+        this.`kind`
+    )
+                
+            }
+            is ExecutionError.WrittenObjectsTooLarge -> {
+                
+    Disposable.destroy(
+        this.`objectSize`,
+        this.`maxObjectSize`
+    )
+                
+            }
+            is ExecutionError.CertificateDenied -> {// Nothing to destroy
+            }
+            is ExecutionError.IotaMoveVerificationTimeout -> {// Nothing to destroy
+            }
+            is ExecutionError.SharedObjectOperationNotAllowed -> {// Nothing to destroy
+            }
+            is ExecutionError.InputObjectDeleted -> {// Nothing to destroy
+            }
+            is ExecutionError.ExecutionCancelledDueToSharedObjectCongestion -> {
+                
+    Disposable.destroy(
+        this.`congestedObjects`
+    )
+                
+            }
+            is ExecutionError.ExecutionCancelledDueToSharedObjectCongestionV2 -> {
+                
+    Disposable.destroy(
+        this.`congestedObjects`,
+        this.`suggestedGasPrice`
+    )
+                
+            }
+            is ExecutionError.AddressDeniedForCoin -> {
+                
+    Disposable.destroy(
+        this.`address`,
+        this.`coinType`
+    )
+                
+            }
+            is ExecutionError.CoinTypeGlobalPause -> {
+                
+    Disposable.destroy(
+        this.`coinType`
+    )
+                
+            }
+            is ExecutionError.ExecutionCancelledDueToRandomnessUnavailable -> {// Nothing to destroy
+            }
+            is ExecutionError.InvalidLinkage -> {// Nothing to destroy
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeExecutionError : FfiConverterRustBuffer<ExecutionError>{
+    override fun read(buf: ByteBuffer): ExecutionError {
+        return when(buf.getInt()) {
+            1 -> ExecutionError.InsufficientGas
+            2 -> ExecutionError.InvalidGasObject
+            3 -> ExecutionError.InvariantViolation
+            4 -> ExecutionError.FeatureNotYetSupported
+            5 -> ExecutionError.ObjectTooBig(
+                FfiConverterULong.read(buf),
+                FfiConverterULong.read(buf),
+                )
+            6 -> ExecutionError.PackageTooBig(
+                FfiConverterULong.read(buf),
+                FfiConverterULong.read(buf),
+                )
+            7 -> ExecutionError.CircularObjectOwnership(
+                FfiConverterTypeObjectId.read(buf),
+                )
+            8 -> ExecutionError.InsufficientCoinBalance
+            9 -> ExecutionError.CoinBalanceOverflow
+            10 -> ExecutionError.PublishErrorNonZeroAddress
+            11 -> ExecutionError.IotaMoveVerification
+            12 -> ExecutionError.MovePrimitiveRuntime(
+                FfiConverterOptionalTypeMoveLocation.read(buf),
+                )
+            13 -> ExecutionError.MoveAbort(
+                FfiConverterTypeMoveLocation.read(buf),
+                FfiConverterULong.read(buf),
+                )
+            14 -> ExecutionError.VmVerificationOrDeserialization
+            15 -> ExecutionError.VmInvariantViolation
+            16 -> ExecutionError.FunctionNotFound
+            17 -> ExecutionError.ArityMismatch
+            18 -> ExecutionError.TypeArityMismatch
+            19 -> ExecutionError.NonEntryFunctionInvoked
+            20 -> ExecutionError.CommandArgument(
+                FfiConverterUShort.read(buf),
+                FfiConverterTypeCommandArgumentError.read(buf),
+                )
+            21 -> ExecutionError.TypeArgument(
+                FfiConverterUShort.read(buf),
+                FfiConverterTypeTypeArgumentError.read(buf),
+                )
+            22 -> ExecutionError.UnusedValueWithoutDrop(
+                FfiConverterUShort.read(buf),
+                FfiConverterUShort.read(buf),
+                )
+            23 -> ExecutionError.InvalidPublicFunctionReturnType(
+                FfiConverterUShort.read(buf),
+                )
+            24 -> ExecutionError.InvalidTransferObject
+            25 -> ExecutionError.EffectsTooLarge(
+                FfiConverterULong.read(buf),
+                FfiConverterULong.read(buf),
+                )
+            26 -> ExecutionError.PublishUpgradeMissingDependency
+            27 -> ExecutionError.PublishUpgradeDependencyDowngrade
+            28 -> ExecutionError.PackageUpgrade(
+                FfiConverterTypePackageUpgradeError.read(buf),
+                )
+            29 -> ExecutionError.WrittenObjectsTooLarge(
+                FfiConverterULong.read(buf),
+                FfiConverterULong.read(buf),
+                )
+            30 -> ExecutionError.CertificateDenied
+            31 -> ExecutionError.IotaMoveVerificationTimeout
+            32 -> ExecutionError.SharedObjectOperationNotAllowed
+            33 -> ExecutionError.InputObjectDeleted
+            34 -> ExecutionError.ExecutionCancelledDueToSharedObjectCongestion(
+                FfiConverterSequenceTypeObjectId.read(buf),
+                )
+            35 -> ExecutionError.ExecutionCancelledDueToSharedObjectCongestionV2(
+                FfiConverterSequenceTypeObjectId.read(buf),
+                FfiConverterULong.read(buf),
+                )
+            36 -> ExecutionError.AddressDeniedForCoin(
+                FfiConverterTypeAddress.read(buf),
+                FfiConverterString.read(buf),
+                )
+            37 -> ExecutionError.CoinTypeGlobalPause(
+                FfiConverterString.read(buf),
+                )
+            38 -> ExecutionError.ExecutionCancelledDueToRandomnessUnavailable
+            39 -> ExecutionError.InvalidLinkage
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: ExecutionError) = when(value) {
+        is ExecutionError.InsufficientGas -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.InvalidGasObject -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.InvariantViolation -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.FeatureNotYetSupported -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.ObjectTooBig -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`objectSize`)
+                + FfiConverterULong.allocationSize(value.`maxObjectSize`)
+            )
+        }
+        is ExecutionError.PackageTooBig -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`objectSize`)
+                + FfiConverterULong.allocationSize(value.`maxObjectSize`)
+            )
+        }
+        is ExecutionError.CircularObjectOwnership -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeObjectId.allocationSize(value.`object`)
+            )
+        }
+        is ExecutionError.InsufficientCoinBalance -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.CoinBalanceOverflow -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.PublishErrorNonZeroAddress -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.IotaMoveVerification -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.MovePrimitiveRuntime -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterOptionalTypeMoveLocation.allocationSize(value.`location`)
+            )
+        }
+        is ExecutionError.MoveAbort -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeMoveLocation.allocationSize(value.`location`)
+                + FfiConverterULong.allocationSize(value.`code`)
+            )
+        }
+        is ExecutionError.VmVerificationOrDeserialization -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.VmInvariantViolation -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.FunctionNotFound -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.ArityMismatch -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.TypeArityMismatch -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.NonEntryFunctionInvoked -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.CommandArgument -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUShort.allocationSize(value.`argument`)
+                + FfiConverterTypeCommandArgumentError.allocationSize(value.`kind`)
+            )
+        }
+        is ExecutionError.TypeArgument -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUShort.allocationSize(value.`typeArgument`)
+                + FfiConverterTypeTypeArgumentError.allocationSize(value.`kind`)
+            )
+        }
+        is ExecutionError.UnusedValueWithoutDrop -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUShort.allocationSize(value.`result`)
+                + FfiConverterUShort.allocationSize(value.`subresult`)
+            )
+        }
+        is ExecutionError.InvalidPublicFunctionReturnType -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUShort.allocationSize(value.`index`)
+            )
+        }
+        is ExecutionError.InvalidTransferObject -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.EffectsTooLarge -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`currentSize`)
+                + FfiConverterULong.allocationSize(value.`maxSize`)
+            )
+        }
+        is ExecutionError.PublishUpgradeMissingDependency -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.PublishUpgradeDependencyDowngrade -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.PackageUpgrade -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypePackageUpgradeError.allocationSize(value.`kind`)
+            )
+        }
+        is ExecutionError.WrittenObjectsTooLarge -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`objectSize`)
+                + FfiConverterULong.allocationSize(value.`maxObjectSize`)
+            )
+        }
+        is ExecutionError.CertificateDenied -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.IotaMoveVerificationTimeout -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.SharedObjectOperationNotAllowed -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.InputObjectDeleted -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.ExecutionCancelledDueToSharedObjectCongestion -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterSequenceTypeObjectId.allocationSize(value.`congestedObjects`)
+            )
+        }
+        is ExecutionError.ExecutionCancelledDueToSharedObjectCongestionV2 -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterSequenceTypeObjectId.allocationSize(value.`congestedObjects`)
+                + FfiConverterULong.allocationSize(value.`suggestedGasPrice`)
+            )
+        }
+        is ExecutionError.AddressDeniedForCoin -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeAddress.allocationSize(value.`address`)
+                + FfiConverterString.allocationSize(value.`coinType`)
+            )
+        }
+        is ExecutionError.CoinTypeGlobalPause -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.`coinType`)
+            )
+        }
+        is ExecutionError.ExecutionCancelledDueToRandomnessUnavailable -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionError.InvalidLinkage -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+    }
+
+    override fun write(value: ExecutionError, buf: ByteBuffer) {
+        when(value) {
+            is ExecutionError.InsufficientGas -> {
+                buf.putInt(1)
+                Unit
+            }
+            is ExecutionError.InvalidGasObject -> {
+                buf.putInt(2)
+                Unit
+            }
+            is ExecutionError.InvariantViolation -> {
+                buf.putInt(3)
+                Unit
+            }
+            is ExecutionError.FeatureNotYetSupported -> {
+                buf.putInt(4)
+                Unit
+            }
+            is ExecutionError.ObjectTooBig -> {
+                buf.putInt(5)
+                FfiConverterULong.write(value.`objectSize`, buf)
+                FfiConverterULong.write(value.`maxObjectSize`, buf)
+                Unit
+            }
+            is ExecutionError.PackageTooBig -> {
+                buf.putInt(6)
+                FfiConverterULong.write(value.`objectSize`, buf)
+                FfiConverterULong.write(value.`maxObjectSize`, buf)
+                Unit
+            }
+            is ExecutionError.CircularObjectOwnership -> {
+                buf.putInt(7)
+                FfiConverterTypeObjectId.write(value.`object`, buf)
+                Unit
+            }
+            is ExecutionError.InsufficientCoinBalance -> {
+                buf.putInt(8)
+                Unit
+            }
+            is ExecutionError.CoinBalanceOverflow -> {
+                buf.putInt(9)
+                Unit
+            }
+            is ExecutionError.PublishErrorNonZeroAddress -> {
+                buf.putInt(10)
+                Unit
+            }
+            is ExecutionError.IotaMoveVerification -> {
+                buf.putInt(11)
+                Unit
+            }
+            is ExecutionError.MovePrimitiveRuntime -> {
+                buf.putInt(12)
+                FfiConverterOptionalTypeMoveLocation.write(value.`location`, buf)
+                Unit
+            }
+            is ExecutionError.MoveAbort -> {
+                buf.putInt(13)
+                FfiConverterTypeMoveLocation.write(value.`location`, buf)
+                FfiConverterULong.write(value.`code`, buf)
+                Unit
+            }
+            is ExecutionError.VmVerificationOrDeserialization -> {
+                buf.putInt(14)
+                Unit
+            }
+            is ExecutionError.VmInvariantViolation -> {
+                buf.putInt(15)
+                Unit
+            }
+            is ExecutionError.FunctionNotFound -> {
+                buf.putInt(16)
+                Unit
+            }
+            is ExecutionError.ArityMismatch -> {
+                buf.putInt(17)
+                Unit
+            }
+            is ExecutionError.TypeArityMismatch -> {
+                buf.putInt(18)
+                Unit
+            }
+            is ExecutionError.NonEntryFunctionInvoked -> {
+                buf.putInt(19)
+                Unit
+            }
+            is ExecutionError.CommandArgument -> {
+                buf.putInt(20)
+                FfiConverterUShort.write(value.`argument`, buf)
+                FfiConverterTypeCommandArgumentError.write(value.`kind`, buf)
+                Unit
+            }
+            is ExecutionError.TypeArgument -> {
+                buf.putInt(21)
+                FfiConverterUShort.write(value.`typeArgument`, buf)
+                FfiConverterTypeTypeArgumentError.write(value.`kind`, buf)
+                Unit
+            }
+            is ExecutionError.UnusedValueWithoutDrop -> {
+                buf.putInt(22)
+                FfiConverterUShort.write(value.`result`, buf)
+                FfiConverterUShort.write(value.`subresult`, buf)
+                Unit
+            }
+            is ExecutionError.InvalidPublicFunctionReturnType -> {
+                buf.putInt(23)
+                FfiConverterUShort.write(value.`index`, buf)
+                Unit
+            }
+            is ExecutionError.InvalidTransferObject -> {
+                buf.putInt(24)
+                Unit
+            }
+            is ExecutionError.EffectsTooLarge -> {
+                buf.putInt(25)
+                FfiConverterULong.write(value.`currentSize`, buf)
+                FfiConverterULong.write(value.`maxSize`, buf)
+                Unit
+            }
+            is ExecutionError.PublishUpgradeMissingDependency -> {
+                buf.putInt(26)
+                Unit
+            }
+            is ExecutionError.PublishUpgradeDependencyDowngrade -> {
+                buf.putInt(27)
+                Unit
+            }
+            is ExecutionError.PackageUpgrade -> {
+                buf.putInt(28)
+                FfiConverterTypePackageUpgradeError.write(value.`kind`, buf)
+                Unit
+            }
+            is ExecutionError.WrittenObjectsTooLarge -> {
+                buf.putInt(29)
+                FfiConverterULong.write(value.`objectSize`, buf)
+                FfiConverterULong.write(value.`maxObjectSize`, buf)
+                Unit
+            }
+            is ExecutionError.CertificateDenied -> {
+                buf.putInt(30)
+                Unit
+            }
+            is ExecutionError.IotaMoveVerificationTimeout -> {
+                buf.putInt(31)
+                Unit
+            }
+            is ExecutionError.SharedObjectOperationNotAllowed -> {
+                buf.putInt(32)
+                Unit
+            }
+            is ExecutionError.InputObjectDeleted -> {
+                buf.putInt(33)
+                Unit
+            }
+            is ExecutionError.ExecutionCancelledDueToSharedObjectCongestion -> {
+                buf.putInt(34)
+                FfiConverterSequenceTypeObjectId.write(value.`congestedObjects`, buf)
+                Unit
+            }
+            is ExecutionError.ExecutionCancelledDueToSharedObjectCongestionV2 -> {
+                buf.putInt(35)
+                FfiConverterSequenceTypeObjectId.write(value.`congestedObjects`, buf)
+                FfiConverterULong.write(value.`suggestedGasPrice`, buf)
+                Unit
+            }
+            is ExecutionError.AddressDeniedForCoin -> {
+                buf.putInt(36)
+                FfiConverterTypeAddress.write(value.`address`, buf)
+                FfiConverterString.write(value.`coinType`, buf)
+                Unit
+            }
+            is ExecutionError.CoinTypeGlobalPause -> {
+                buf.putInt(37)
+                FfiConverterString.write(value.`coinType`, buf)
+                Unit
+            }
+            is ExecutionError.ExecutionCancelledDueToRandomnessUnavailable -> {
+                buf.putInt(38)
+                Unit
+            }
+            is ExecutionError.InvalidLinkage -> {
+                buf.putInt(39)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
+/**
+ * The status of an executed Transaction
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * execution-status = success / failure
+ * success = %x00
+ * failure = %x01 execution-error (option u64)
+ * ```xx
+ */
+sealed class ExecutionStatus: Disposable  {
+    
+    /**
+     * The Transaction successfully executed.
+     */
+    object Success : ExecutionStatus()
+    
+    
+    /**
+     * The Transaction didn't execute successfully.
+     *
+     * Failed transactions are still committed to the blockchain but any
+     * intended effects are rolled back to prior to this transaction
+     * executing with the caveat that gas objects are still smashed and gas
+     * usage is still charged.
+     */
+    data class Failure(
+        /**
+         * The error encountered during execution.
+         */
+        val `error`: ExecutionError, 
+        /**
+         * The command, if any, during which the error occurred.
+         */
+        val `command`: kotlin.ULong?) : ExecutionStatus() {
+        companion object
+    }
+    
+
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        when(this) {
+            is ExecutionStatus.Success -> {// Nothing to destroy
+            }
+            is ExecutionStatus.Failure -> {
+                
+    Disposable.destroy(
+        this.`error`,
+        this.`command`
+    )
+                
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeExecutionStatus : FfiConverterRustBuffer<ExecutionStatus>{
+    override fun read(buf: ByteBuffer): ExecutionStatus {
+        return when(buf.getInt()) {
+            1 -> ExecutionStatus.Success
+            2 -> ExecutionStatus.Failure(
+                FfiConverterTypeExecutionError.read(buf),
+                FfiConverterOptionalULong.read(buf),
+                )
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: ExecutionStatus) = when(value) {
+        is ExecutionStatus.Success -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ExecutionStatus.Failure -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeExecutionError.allocationSize(value.`error`)
+                + FfiConverterOptionalULong.allocationSize(value.`command`)
+            )
+        }
+    }
+
+    override fun write(value: ExecutionStatus, buf: ByteBuffer) {
+        when(value) {
+            is ExecutionStatus.Success -> {
+                buf.putInt(1)
+                Unit
+            }
+            is ExecutionStatus.Failure -> {
+                buf.putInt(2)
+                FfiConverterTypeExecutionError.write(value.`error`, buf)
+                FfiConverterOptionalULong.write(value.`command`, buf)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
+
+enum class IdOperation {
+    
+    NONE,
+    CREATED,
+    DELETED;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeIdOperation: FfiConverterRustBuffer<IdOperation> {
+    override fun read(buf: ByteBuffer) = try {
+        IdOperation.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: IdOperation) = 4UL
+
+    override fun write(value: IdOperation, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+/**
+ * State of an object prior to execution
+ *
+ * If an object exists (at root-level) in the store prior to this transaction,
+ * it should be Exist, otherwise it's NonExist, e.g. wrapped objects should be
+ * NonExist.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * object-in = object-in-not-exist / object-in-exist
+ *
+ * object-in-not-exist = %x00
+ * object-in-exist     = %x01 u64 digest owner
+ * ```
+ */
+sealed class ObjectIn: Disposable  {
+    
+    object NotExist : ObjectIn()
+    
+    
+    /**
+     * The old version, digest and owner.
+     */
+    data class Exist(
+        val `version`: kotlin.ULong, 
+        val `digest`: ObjectDigest, 
+        val `owner`: Owner) : ObjectIn() {
+        companion object
+    }
+    
+
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        when(this) {
+            is ObjectIn.NotExist -> {// Nothing to destroy
+            }
+            is ObjectIn.Exist -> {
+                
+    Disposable.destroy(
+        this.`version`,
+        this.`digest`,
+        this.`owner`
+    )
+                
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
+    override fun read(buf: ByteBuffer): ObjectIn {
+        return when(buf.getInt()) {
+            1 -> ObjectIn.NotExist
+            2 -> ObjectIn.Exist(
+                FfiConverterULong.read(buf),
+                FfiConverterTypeObjectDigest.read(buf),
+                FfiConverterTypeOwner.read(buf),
+                )
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: ObjectIn) = when(value) {
+        is ObjectIn.NotExist -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ObjectIn.Exist -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeObjectDigest.allocationSize(value.`digest`)
+                + FfiConverterTypeOwner.allocationSize(value.`owner`)
+            )
+        }
+    }
+
+    override fun write(value: ObjectIn, buf: ByteBuffer) {
+        when(value) {
+            is ObjectIn.NotExist -> {
+                buf.putInt(1)
+                Unit
+            }
+            is ObjectIn.Exist -> {
+                buf.putInt(2)
+                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeObjectDigest.write(value.`digest`, buf)
+                FfiConverterTypeOwner.write(value.`owner`, buf)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
+/**
+ * State of an object after execution
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * object-out  =  object-out-not-exist
+ * =/ object-out-object-write
+ * =/ object-out-package-write
+ *
+ *
+ * object-out-not-exist        = %x00
+ * object-out-object-write     = %x01 digest owner
+ * object-out-package-write    = %x02 version digest
+ * ```
+ */
+sealed class ObjectOut: Disposable  {
+    
+    /**
+     * Same definition as in ObjectIn.
+     */
+    object NotExist : ObjectOut()
+    
+    
+    /**
+     * Any written object, including all of mutated, created, unwrapped today.
+     */
+    data class ObjectWrite(
+        val `digest`: ObjectDigest, 
+        val `owner`: Owner) : ObjectOut() {
+        companion object
+    }
+    
+    /**
+     * Packages writes need to be tracked separately with version because
+     * we don't use lamport version for package publish and upgrades.
+     */
+    data class PackageWrite(
+        val `version`: kotlin.ULong, 
+        val `digest`: ObjectDigest) : ObjectOut() {
+        companion object
+    }
+    
+
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        when(this) {
+            is ObjectOut.NotExist -> {// Nothing to destroy
+            }
+            is ObjectOut.ObjectWrite -> {
+                
+    Disposable.destroy(
+        this.`digest`,
+        this.`owner`
+    )
+                
+            }
+            is ObjectOut.PackageWrite -> {
+                
+    Disposable.destroy(
+        this.`version`,
+        this.`digest`
+    )
+                
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
+    override fun read(buf: ByteBuffer): ObjectOut {
+        return when(buf.getInt()) {
+            1 -> ObjectOut.NotExist
+            2 -> ObjectOut.ObjectWrite(
+                FfiConverterTypeObjectDigest.read(buf),
+                FfiConverterTypeOwner.read(buf),
+                )
+            3 -> ObjectOut.PackageWrite(
+                FfiConverterULong.read(buf),
+                FfiConverterTypeObjectDigest.read(buf),
+                )
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: ObjectOut) = when(value) {
+        is ObjectOut.NotExist -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is ObjectOut.ObjectWrite -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeObjectDigest.allocationSize(value.`digest`)
+                + FfiConverterTypeOwner.allocationSize(value.`owner`)
+            )
+        }
+        is ObjectOut.PackageWrite -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeObjectDigest.allocationSize(value.`digest`)
+            )
+        }
+    }
+
+    override fun write(value: ObjectOut, buf: ByteBuffer) {
+        when(value) {
+            is ObjectOut.NotExist -> {
+                buf.putInt(1)
+                Unit
+            }
+            is ObjectOut.ObjectWrite -> {
+                buf.putInt(2)
+                FfiConverterTypeObjectDigest.write(value.`digest`, buf)
+                FfiConverterTypeOwner.write(value.`owner`, buf)
+                Unit
+            }
+            is ObjectOut.PackageWrite -> {
+                buf.putInt(3)
+                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeObjectDigest.write(value.`digest`, buf)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
+/**
+ * An error with a upgrading a package
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * package-upgrade-error = unable-to-fetch-package /
+ * not-a-package           /
+ * incompatible-upgrade    /
+ * digest-does-not-match   /
+ * unknown-upgrade-policy  /
+ * package-id-does-not-match
+ *
+ * unable-to-fetch-package     = %x00 object-id
+ * not-a-package               = %x01 object-id
+ * incompatible-upgrade        = %x02
+ * digest-does-not-match       = %x03 digest
+ * unknown-upgrade-policy      = %x04 u8
+ * package-id-does-not-match   = %x05 object-id object-id
+ * ```
+ */
+sealed class PackageUpgradeError: Disposable  {
+    
+    /**
+     * Unable to fetch package
+     */
+    data class UnableToFetchPackage(
+        val `packageId`: ObjectId) : PackageUpgradeError() {
+        companion object
+    }
+    
+    /**
+     * Object is not a package
+     */
+    data class NotAPackage(
+        val `objectId`: ObjectId) : PackageUpgradeError() {
+        companion object
+    }
+    
+    /**
+     * Package upgrade is incompatible with previous version
+     */
+    object IncompatibleUpgrade : PackageUpgradeError()
+    
+    
+    /**
+     * Digest in upgrade ticket and computed digest differ
+     */
+    data class DigestDoesNotMatch(
+        val `digest`: Digest) : PackageUpgradeError() {
+        companion object
+    }
+    
+    /**
+     * Upgrade policy is not valid
+     */
+    data class UnknownUpgradePolicy(
+        val `policy`: kotlin.UByte) : PackageUpgradeError() {
+        companion object
+    }
+    
+    /**
+     * PackageId does not matach PackageId in upgrade ticket
+     */
+    data class PackageIdDoesNotMatch(
+        val `packageId`: ObjectId, 
+        val `ticketId`: ObjectId) : PackageUpgradeError() {
+        companion object
+    }
+    
+
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        when(this) {
+            is PackageUpgradeError.UnableToFetchPackage -> {
+                
+    Disposable.destroy(
+        this.`packageId`
+    )
+                
+            }
+            is PackageUpgradeError.NotAPackage -> {
+                
+    Disposable.destroy(
+        this.`objectId`
+    )
+                
+            }
+            is PackageUpgradeError.IncompatibleUpgrade -> {// Nothing to destroy
+            }
+            is PackageUpgradeError.DigestDoesNotMatch -> {
+                
+    Disposable.destroy(
+        this.`digest`
+    )
+                
+            }
+            is PackageUpgradeError.UnknownUpgradePolicy -> {
+                
+    Disposable.destroy(
+        this.`policy`
+    )
+                
+            }
+            is PackageUpgradeError.PackageIdDoesNotMatch -> {
+                
+    Disposable.destroy(
+        this.`packageId`,
+        this.`ticketId`
+    )
+                
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypePackageUpgradeError : FfiConverterRustBuffer<PackageUpgradeError>{
+    override fun read(buf: ByteBuffer): PackageUpgradeError {
+        return when(buf.getInt()) {
+            1 -> PackageUpgradeError.UnableToFetchPackage(
+                FfiConverterTypeObjectId.read(buf),
+                )
+            2 -> PackageUpgradeError.NotAPackage(
+                FfiConverterTypeObjectId.read(buf),
+                )
+            3 -> PackageUpgradeError.IncompatibleUpgrade
+            4 -> PackageUpgradeError.DigestDoesNotMatch(
+                FfiConverterTypeDigest.read(buf),
+                )
+            5 -> PackageUpgradeError.UnknownUpgradePolicy(
+                FfiConverterUByte.read(buf),
+                )
+            6 -> PackageUpgradeError.PackageIdDoesNotMatch(
+                FfiConverterTypeObjectId.read(buf),
+                FfiConverterTypeObjectId.read(buf),
+                )
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: PackageUpgradeError) = when(value) {
+        is PackageUpgradeError.UnableToFetchPackage -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeObjectId.allocationSize(value.`packageId`)
+            )
+        }
+        is PackageUpgradeError.NotAPackage -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeObjectId.allocationSize(value.`objectId`)
+            )
+        }
+        is PackageUpgradeError.IncompatibleUpgrade -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is PackageUpgradeError.DigestDoesNotMatch -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeDigest.allocationSize(value.`digest`)
+            )
+        }
+        is PackageUpgradeError.UnknownUpgradePolicy -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUByte.allocationSize(value.`policy`)
+            )
+        }
+        is PackageUpgradeError.PackageIdDoesNotMatch -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeObjectId.allocationSize(value.`packageId`)
+                + FfiConverterTypeObjectId.allocationSize(value.`ticketId`)
+            )
+        }
+    }
+
+    override fun write(value: PackageUpgradeError, buf: ByteBuffer) {
+        when(value) {
+            is PackageUpgradeError.UnableToFetchPackage -> {
+                buf.putInt(1)
+                FfiConverterTypeObjectId.write(value.`packageId`, buf)
+                Unit
+            }
+            is PackageUpgradeError.NotAPackage -> {
+                buf.putInt(2)
+                FfiConverterTypeObjectId.write(value.`objectId`, buf)
+                Unit
+            }
+            is PackageUpgradeError.IncompatibleUpgrade -> {
+                buf.putInt(3)
+                Unit
+            }
+            is PackageUpgradeError.DigestDoesNotMatch -> {
+                buf.putInt(4)
+                FfiConverterTypeDigest.write(value.`digest`, buf)
+                Unit
+            }
+            is PackageUpgradeError.UnknownUpgradePolicy -> {
+                buf.putInt(5)
+                FfiConverterUByte.write(value.`policy`, buf)
+                Unit
+            }
+            is PackageUpgradeError.PackageIdDoesNotMatch -> {
+                buf.putInt(6)
+                FfiConverterTypeObjectId.write(value.`packageId`, buf)
+                FfiConverterTypeObjectId.write(value.`ticketId`, buf)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
     }
 }
 
@@ -19468,6 +22228,337 @@ public object FfiConverterTypeTransactionBlockKindInput: FfiConverterRustBuffer<
 }
 
 
+
+
+
+sealed class TransactionExpiration {
+    
+    object None : TransactionExpiration()
+    
+    
+    data class Epoch(
+        val v1: kotlin.ULong) : TransactionExpiration() {
+        companion object
+    }
+    
+
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTransactionExpiration : FfiConverterRustBuffer<TransactionExpiration>{
+    override fun read(buf: ByteBuffer): TransactionExpiration {
+        return when(buf.getInt()) {
+            1 -> TransactionExpiration.None
+            2 -> TransactionExpiration.Epoch(
+                FfiConverterULong.read(buf),
+                )
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: TransactionExpiration) = when(value) {
+        is TransactionExpiration.None -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is TransactionExpiration.Epoch -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.v1)
+            )
+        }
+    }
+
+    override fun write(value: TransactionExpiration, buf: ByteBuffer) {
+        when(value) {
+            is TransactionExpiration.None -> {
+                buf.putInt(1)
+                Unit
+            }
+            is TransactionExpiration.Epoch -> {
+                buf.putInt(2)
+                FfiConverterULong.write(value.v1, buf)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
+
+enum class TypeArgumentError {
+    
+    TYPE_NOT_FOUND,
+    CONSTRAINT_NOT_SATISFIED;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTypeArgumentError: FfiConverterRustBuffer<TypeArgumentError> {
+    override fun read(buf: ByteBuffer) = try {
+        TypeArgumentError.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: TypeArgumentError) = 4UL
+
+    override fun write(value: TypeArgumentError, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+/**
+ * Type of unchanged shared object
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * unchanged-shared-object-kind =  read-only-root
+ * =/ mutate-deleted
+ * =/ read-deleted
+ * =/ cancelled
+ * =/ per-epoch-config
+ *
+ * read-only-root      = %x00 u64 digest
+ * mutate-deleted      = %x01 u64
+ * read-deleted        = %x02 u64
+ * cancelled           = %x03 u64
+ * per-epoch-config    = %x04
+ * ```
+ */
+sealed class UnchangedSharedKind: Disposable  {
+    
+    /**
+     * Read-only shared objects from the input. We don't really need
+     * ObjectDigest for protocol correctness, but it will make it easier to
+     * verify untrusted read.
+     */
+    data class ReadOnlyRoot(
+        val `version`: kotlin.ULong, 
+        val `digest`: ObjectDigest) : UnchangedSharedKind() {
+        companion object
+    }
+    
+    /**
+     * Deleted shared objects that appear mutably/owned in the input.
+     */
+    data class MutateDeleted(
+        val `version`: kotlin.ULong) : UnchangedSharedKind() {
+        companion object
+    }
+    
+    /**
+     * Deleted shared objects that appear as read-only in the input.
+     */
+    data class ReadDeleted(
+        val `version`: kotlin.ULong) : UnchangedSharedKind() {
+        companion object
+    }
+    
+    /**
+     * Shared objects in cancelled transaction. The sequence number embed
+     * cancellation reason.
+     */
+    data class Cancelled(
+        val `version`: kotlin.ULong) : UnchangedSharedKind() {
+        companion object
+    }
+    
+    /**
+     * Read of a per-epoch config object that should remain the same during an
+     * epoch.
+     */
+    object PerEpochConfig : UnchangedSharedKind()
+    
+    
+
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        when(this) {
+            is UnchangedSharedKind.ReadOnlyRoot -> {
+                
+    Disposable.destroy(
+        this.`version`,
+        this.`digest`
+    )
+                
+            }
+            is UnchangedSharedKind.MutateDeleted -> {
+                
+    Disposable.destroy(
+        this.`version`
+    )
+                
+            }
+            is UnchangedSharedKind.ReadDeleted -> {
+                
+    Disposable.destroy(
+        this.`version`
+    )
+                
+            }
+            is UnchangedSharedKind.Cancelled -> {
+                
+    Disposable.destroy(
+        this.`version`
+    )
+                
+            }
+            is UnchangedSharedKind.PerEpochConfig -> {// Nothing to destroy
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<UnchangedSharedKind>{
+    override fun read(buf: ByteBuffer): UnchangedSharedKind {
+        return when(buf.getInt()) {
+            1 -> UnchangedSharedKind.ReadOnlyRoot(
+                FfiConverterULong.read(buf),
+                FfiConverterTypeObjectDigest.read(buf),
+                )
+            2 -> UnchangedSharedKind.MutateDeleted(
+                FfiConverterULong.read(buf),
+                )
+            3 -> UnchangedSharedKind.ReadDeleted(
+                FfiConverterULong.read(buf),
+                )
+            4 -> UnchangedSharedKind.Cancelled(
+                FfiConverterULong.read(buf),
+                )
+            5 -> UnchangedSharedKind.PerEpochConfig
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: UnchangedSharedKind) = when(value) {
+        is UnchangedSharedKind.ReadOnlyRoot -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeObjectDigest.allocationSize(value.`digest`)
+            )
+        }
+        is UnchangedSharedKind.MutateDeleted -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`version`)
+            )
+        }
+        is UnchangedSharedKind.ReadDeleted -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`version`)
+            )
+        }
+        is UnchangedSharedKind.Cancelled -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`version`)
+            )
+        }
+        is UnchangedSharedKind.PerEpochConfig -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+    }
+
+    override fun write(value: UnchangedSharedKind, buf: ByteBuffer) {
+        when(value) {
+            is UnchangedSharedKind.ReadOnlyRoot -> {
+                buf.putInt(1)
+                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeObjectDigest.write(value.`digest`, buf)
+                Unit
+            }
+            is UnchangedSharedKind.MutateDeleted -> {
+                buf.putInt(2)
+                FfiConverterULong.write(value.`version`, buf)
+                Unit
+            }
+            is UnchangedSharedKind.ReadDeleted -> {
+                buf.putInt(3)
+                FfiConverterULong.write(value.`version`, buf)
+                Unit
+            }
+            is UnchangedSharedKind.Cancelled -> {
+                buf.putInt(4)
+                FfiConverterULong.write(value.`version`, buf)
+                Unit
+            }
+            is UnchangedSharedKind.PerEpochConfig -> {
+                buf.putInt(5)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalUInt: FfiConverterRustBuffer<kotlin.UInt?> {
+    override fun read(buf: ByteBuffer): kotlin.UInt? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterUInt.read(buf)
+    }
+
+    override fun allocationSize(value: kotlin.UInt?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterUInt.allocationSize(value)
+        }
+    }
+
+    override fun write(value: kotlin.UInt?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterUInt.write(value, buf)
+        }
+    }
+}
 
 
 
@@ -19795,6 +22886,38 @@ public object FfiConverterOptionalTypeCoinMetadata: FfiConverterRustBuffer<CoinM
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeEffectsAuxiliaryDataDigest: FfiConverterRustBuffer<EffectsAuxiliaryDataDigest?> {
+    override fun read(buf: ByteBuffer): EffectsAuxiliaryDataDigest? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeEffectsAuxiliaryDataDigest.read(buf)
+    }
+
+    override fun allocationSize(value: EffectsAuxiliaryDataDigest?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeEffectsAuxiliaryDataDigest.allocationSize(value)
+        }
+    }
+
+    override fun write(value: EffectsAuxiliaryDataDigest?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeEffectsAuxiliaryDataDigest.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeEpoch: FfiConverterRustBuffer<Epoch?> {
     override fun read(buf: ByteBuffer): Epoch? {
         if (buf.get().toInt() == 0) {
@@ -20083,60 +23206,28 @@ public object FfiConverterOptionalTypeProtocolConfigs: FfiConverterRustBuffer<Pr
 /**
  * @suppress
  */
-public object FfiConverterOptionalTypeSignedTransaction: FfiConverterRustBuffer<SignedTransaction?> {
-    override fun read(buf: ByteBuffer): SignedTransaction? {
+public object FfiConverterOptionalTypeStructTag: FfiConverterRustBuffer<StructTag?> {
+    override fun read(buf: ByteBuffer): StructTag? {
         if (buf.get().toInt() == 0) {
             return null
         }
-        return FfiConverterTypeSignedTransaction.read(buf)
+        return FfiConverterTypeStructTag.read(buf)
     }
 
-    override fun allocationSize(value: SignedTransaction?): ULong {
+    override fun allocationSize(value: StructTag?): ULong {
         if (value == null) {
             return 1UL
         } else {
-            return 1UL + FfiConverterTypeSignedTransaction.allocationSize(value)
+            return 1UL + FfiConverterTypeStructTag.allocationSize(value)
         }
     }
 
-    override fun write(value: SignedTransaction?, buf: ByteBuffer) {
+    override fun write(value: StructTag?, buf: ByteBuffer) {
         if (value == null) {
             buf.put(0)
         } else {
             buf.put(1)
-            FfiConverterTypeSignedTransaction.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalTypeTransactionDataEffects: FfiConverterRustBuffer<TransactionDataEffects?> {
-    override fun read(buf: ByteBuffer): TransactionDataEffects? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeTransactionDataEffects.read(buf)
-    }
-
-    override fun allocationSize(value: TransactionDataEffects?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeTransactionDataEffects.allocationSize(value)
-        }
-    }
-
-    override fun write(value: TransactionDataEffects?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeTransactionDataEffects.write(value, buf)
+            FfiConverterTypeStructTag.write(value, buf)
         }
     }
 }
@@ -20169,6 +23260,70 @@ public object FfiConverterOptionalTypeTransactionEffects: FfiConverterRustBuffer
         } else {
             buf.put(1)
             FfiConverterTypeTransactionEffects.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeTransactionEventsDigest: FfiConverterRustBuffer<TransactionEventsDigest?> {
+    override fun read(buf: ByteBuffer): TransactionEventsDigest? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeTransactionEventsDigest.read(buf)
+    }
+
+    override fun allocationSize(value: TransactionEventsDigest?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeTransactionEventsDigest.allocationSize(value)
+        }
+    }
+
+    override fun write(value: TransactionEventsDigest?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeTransactionEventsDigest.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeTypeTag: FfiConverterRustBuffer<TypeTag?> {
+    override fun read(buf: ByteBuffer): TypeTag? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeTypeTag.read(buf)
+    }
+
+    override fun allocationSize(value: TypeTag?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeTypeTag.allocationSize(value)
+        }
+    }
+
+    override fun write(value: TypeTag?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeTypeTag.write(value, buf)
         }
     }
 }
@@ -20339,6 +23494,38 @@ public object FfiConverterOptionalTypeEventFilter: FfiConverterRustBuffer<EventF
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeMoveLocation: FfiConverterRustBuffer<MoveLocation?> {
+    override fun read(buf: ByteBuffer): MoveLocation? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMoveLocation.read(buf)
+    }
+
+    override fun allocationSize(value: MoveLocation?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMoveLocation.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MoveLocation?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMoveLocation.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeObjectFilter: FfiConverterRustBuffer<ObjectFilter?> {
     override fun read(buf: ByteBuffer): ObjectFilter? {
         if (buf.get().toInt() == 0) {
@@ -20361,6 +23548,70 @@ public object FfiConverterOptionalTypeObjectFilter: FfiConverterRustBuffer<Objec
         } else {
             buf.put(1)
             FfiConverterTypeObjectFilter.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeSignedTransaction: FfiConverterRustBuffer<SignedTransaction?> {
+    override fun read(buf: ByteBuffer): SignedTransaction? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeSignedTransaction.read(buf)
+    }
+
+    override fun allocationSize(value: SignedTransaction?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeSignedTransaction.allocationSize(value)
+        }
+    }
+
+    override fun write(value: SignedTransaction?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeSignedTransaction.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeTransactionDataEffects: FfiConverterRustBuffer<TransactionDataEffects?> {
+    override fun read(buf: ByteBuffer): TransactionDataEffects? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeTransactionDataEffects.read(buf)
+    }
+
+    override fun allocationSize(value: TransactionDataEffects?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeTransactionDataEffects.allocationSize(value)
+        }
+    }
+
+    override fun write(value: TransactionDataEffects?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeTransactionDataEffects.write(value, buf)
         }
     }
 }
@@ -20767,34 +24018,6 @@ public object FfiConverterSequenceTypeEpoch: FfiConverterRustBuffer<List<Epoch>>
 /**
  * @suppress
  */
-public object FfiConverterSequenceTypeEvent: FfiConverterRustBuffer<List<Event>> {
-    override fun read(buf: ByteBuffer): List<Event> {
-        val len = buf.getInt()
-        return List<Event>(len) {
-            FfiConverterTypeEvent.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<Event>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeEvent.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<Event>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterTypeEvent.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
 public object FfiConverterSequenceTypeMovePackage: FfiConverterRustBuffer<List<MovePackage>> {
     override fun read(buf: ByteBuffer): List<MovePackage> {
         val len = buf.getInt()
@@ -20879,80 +24102,24 @@ public object FfiConverterSequenceTypeObjectId: FfiConverterRustBuffer<List<Obje
 /**
  * @suppress
  */
-public object FfiConverterSequenceTypeObjectRef: FfiConverterRustBuffer<List<ObjectRef>> {
-    override fun read(buf: ByteBuffer): List<ObjectRef> {
+public object FfiConverterSequenceTypeTransactionDigest: FfiConverterRustBuffer<List<TransactionDigest>> {
+    override fun read(buf: ByteBuffer): List<TransactionDigest> {
         val len = buf.getInt()
-        return List<ObjectRef>(len) {
-            FfiConverterTypeObjectRef.read(buf)
+        return List<TransactionDigest>(len) {
+            FfiConverterTypeTransactionDigest.read(buf)
         }
     }
 
-    override fun allocationSize(value: List<ObjectRef>): ULong {
+    override fun allocationSize(value: List<TransactionDigest>): ULong {
         val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeObjectRef.allocationSize(it) }.sum()
+        val sizeForItems = value.map { FfiConverterTypeTransactionDigest.allocationSize(it) }.sum()
         return sizeForLength + sizeForItems
     }
 
-    override fun write(value: List<ObjectRef>, buf: ByteBuffer) {
+    override fun write(value: List<TransactionDigest>, buf: ByteBuffer) {
         buf.putInt(value.size)
         value.iterator().forEach {
-            FfiConverterTypeObjectRef.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterSequenceTypeSignedTransaction: FfiConverterRustBuffer<List<SignedTransaction>> {
-    override fun read(buf: ByteBuffer): List<SignedTransaction> {
-        val len = buf.getInt()
-        return List<SignedTransaction>(len) {
-            FfiConverterTypeSignedTransaction.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<SignedTransaction>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeSignedTransaction.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<SignedTransaction>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterTypeSignedTransaction.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterSequenceTypeTransactionDataEffects: FfiConverterRustBuffer<List<TransactionDataEffects>> {
-    override fun read(buf: ByteBuffer): List<TransactionDataEffects> {
-        val len = buf.getInt()
-        return List<TransactionDataEffects>(len) {
-            FfiConverterTypeTransactionDataEffects.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<TransactionDataEffects>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeTransactionDataEffects.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<TransactionDataEffects>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterTypeTransactionDataEffects.write(it, buf)
+            FfiConverterTypeTransactionDigest.write(it, buf)
         }
     }
 }
@@ -20991,6 +24158,34 @@ public object FfiConverterSequenceTypeTransactionEffects: FfiConverterRustBuffer
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypeTypeTag: FfiConverterRustBuffer<List<TypeTag>> {
+    override fun read(buf: ByteBuffer): List<TypeTag> {
+        val len = buf.getInt()
+        return List<TypeTag>(len) {
+            FfiConverterTypeTypeTag.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<TypeTag>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeTypeTag.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<TypeTag>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeTypeTag.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceTypeUserSignature: FfiConverterRustBuffer<List<UserSignature>> {
     override fun read(buf: ByteBuffer): List<UserSignature> {
         val len = buf.getInt()
@@ -21009,6 +24204,34 @@ public object FfiConverterSequenceTypeUserSignature: FfiConverterRustBuffer<List
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeUserSignature.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeChangedObject: FfiConverterRustBuffer<List<ChangedObject>> {
+    override fun read(buf: ByteBuffer): List<ChangedObject> {
+        val len = buf.getInt()
+        return List<ChangedObject>(len) {
+            FfiConverterTypeChangedObject.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<ChangedObject>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeChangedObject.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<ChangedObject>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeChangedObject.write(it, buf)
         }
     }
 }
@@ -21075,6 +24298,62 @@ public object FfiConverterSequenceTypeDynamicFieldOutput: FfiConverterRustBuffer
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypeEvent: FfiConverterRustBuffer<List<Event>> {
+    override fun read(buf: ByteBuffer): List<Event> {
+        val len = buf.getInt()
+        return List<Event>(len) {
+            FfiConverterTypeEvent.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<Event>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeEvent.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<Event>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeEvent.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeObjectRef: FfiConverterRustBuffer<List<ObjectRef>> {
+    override fun read(buf: ByteBuffer): List<ObjectRef> {
+        val len = buf.getInt()
+        return List<ObjectRef>(len) {
+            FfiConverterTypeObjectRef.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<ObjectRef>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeObjectRef.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<ObjectRef>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeObjectRef.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceTypeObjectReference: FfiConverterRustBuffer<List<ObjectReference>> {
     override fun read(buf: ByteBuffer): List<ObjectReference> {
         val len = buf.getInt()
@@ -21093,6 +24372,90 @@ public object FfiConverterSequenceTypeObjectReference: FfiConverterRustBuffer<Li
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeObjectReference.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeSignedTransaction: FfiConverterRustBuffer<List<SignedTransaction>> {
+    override fun read(buf: ByteBuffer): List<SignedTransaction> {
+        val len = buf.getInt()
+        return List<SignedTransaction>(len) {
+            FfiConverterTypeSignedTransaction.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<SignedTransaction>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeSignedTransaction.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<SignedTransaction>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeSignedTransaction.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeTransactionDataEffects: FfiConverterRustBuffer<List<TransactionDataEffects>> {
+    override fun read(buf: ByteBuffer): List<TransactionDataEffects> {
+        val len = buf.getInt()
+        return List<TransactionDataEffects>(len) {
+            FfiConverterTypeTransactionDataEffects.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<TransactionDataEffects>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeTransactionDataEffects.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<TransactionDataEffects>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeTransactionDataEffects.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeUnchangedSharedObject: FfiConverterRustBuffer<List<UnchangedSharedObject>> {
+    override fun read(buf: ByteBuffer): List<UnchangedSharedObject> {
+        val len = buf.getInt()
+        return List<UnchangedSharedObject>(len) {
+            FfiConverterTypeUnchangedSharedObject.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<UnchangedSharedObject>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeUnchangedSharedObject.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<UnchangedSharedObject>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeUnchangedSharedObject.write(it, buf)
         }
     }
 }
