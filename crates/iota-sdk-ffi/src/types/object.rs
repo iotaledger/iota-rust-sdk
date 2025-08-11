@@ -10,7 +10,7 @@ use crate::{
     types::{
         address::Address,
         digest::{ObjectDigest, TransactionDigest},
-        tag::StructTag,
+        struct_tag::StructTag,
     },
 };
 

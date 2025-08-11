@@ -5,7 +5,7 @@ use crate::{
     error::Result,
     types::{
         object::{Object, ObjectId},
-        tag::TypeTag,
+        type_tag::TypeTag,
     },
 };
 
