@@ -3,9 +3,18 @@
 
 use std::sync::Arc;
 
+use iota_types::{GasCostSummary, TransactionExpiration};
+
 use crate::types::{
-    address::Address, digest::CheckpointDigest, object::ObjectReference, signature::UserSignature,
+    address::Address,
+    digest::{CheckpointDigest, TransactionDigest, TransactionEventsDigest},
+    execution_status::ExecutionStatus,
+    object::ObjectReference,
+    signature::UserSignature,
+    transaction::v1::TransactionEffectsV1,
 };
+
+pub mod v1;
 
 /// A transaction
 ///
@@ -28,13 +37,13 @@ impl Transaction {
         kind: &TransactionKind,
         sender: &Address,
         gas_payment: GasPayment,
-        expiration: &TransactionExpiration,
+        expiration: TransactionExpiration,
     ) -> Self {
         Self(iota_types::Transaction {
             kind: kind.0.clone(),
             sender: **sender,
             gas_payment: gas_payment.into(),
-            expiration: expiration.0,
+            expiration,
         })
     }
 
@@ -51,35 +60,36 @@ impl Transaction {
     }
 
     pub fn expiration(&self) -> TransactionExpiration {
-        self.0.expiration.into()
+        self.0.expiration
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct SignedTransaction(pub iota_types::SignedTransaction);
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct SignedTransaction {
+    pub transaction: Arc<Transaction>,
+    pub signatures: Vec<Arc<UserSignature>>,
+}
 
-#[uniffi::export]
-impl SignedTransaction {
-    #[uniffi::constructor]
-    pub fn new(transaction: &Transaction, signatures: Vec<Arc<UserSignature>>) -> Self {
-        Self(iota_types::SignedTransaction {
-            transaction: transaction.0.clone(),
-            signatures: signatures.into_iter().map(|s| s.0.clone()).collect(),
-        })
+impl From<iota_types::SignedTransaction> for SignedTransaction {
+    fn from(value: iota_types::SignedTransaction) -> Self {
+        Self {
+            transaction: Arc::new(value.transaction.into()),
+            signatures: value
+                .signatures
+                .into_iter()
+                .map(Into::into)
+                .map(Arc::new)
+                .collect(),
+        }
     }
+}
 
-    pub fn transaction(&self) -> Transaction {
-        self.0.transaction.clone().into()
-    }
-
-    pub fn signatures(&self) -> Vec<Arc<UserSignature>> {
-        self.0
-            .signatures
-            .iter()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-            .collect()
+impl From<SignedTransaction> for iota_types::SignedTransaction {
+    fn from(value: SignedTransaction) -> Self {
+        Self {
+            transaction: value.transaction.0.clone(),
+            signatures: value.signatures.into_iter().map(|v| v.0.clone()).collect(),
+        }
     }
 }
 
@@ -273,5 +283,25 @@ impl From<GasPayment> for iota_types::GasPayment {
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct TransactionEffects(pub iota_types::TransactionEffects);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct TransactionExpiration(pub iota_types::TransactionExpiration);
+#[uniffi::export]
+impl TransactionEffects {
+    #[uniffi::constructor]
+    pub fn v1(effects: TransactionEffectsV1) -> Self {
+        Self(iota_types::TransactionEffects::V1(Box::new(effects.into())))
+    }
+
+    pub fn is_v1(&self) -> bool {
+        matches!(self.0, iota_types::TransactionEffects::V1(_))
+    }
+
+    pub fn as_v1(&self) -> TransactionEffectsV1 {
+        let iota_types::TransactionEffects::V1(inner) = self.0.clone();
+        (*inner).into()
+    }
+}
+
+#[uniffi::remote(Enum)]
+pub enum TransactionExpiration {
+    None,
+    Epoch(u64),
+}
