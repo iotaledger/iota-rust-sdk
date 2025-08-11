@@ -772,8 +772,6 @@ pub struct MoveFunction(pub iota_graphql_client::query_types::MoveFunction);
 #[derive(Debug, derive_more::From, uniffi::Object)]
 pub struct MoveModule(pub iota_graphql_client::query_types::MoveModule);
 
-type CoreServiceConfig = iota_graphql_client::query_types::ServiceConfig;
-
 /// Information about the configuration of the GraphQL service.
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct ServiceConfig {
@@ -829,8 +827,8 @@ pub struct ServiceConfig {
     pub request_timeout_ms: i32,
 }
 
-impl From<CoreServiceConfig> for ServiceConfig {
-    fn from(value: CoreServiceConfig) -> Self {
+impl From<iota_graphql_client::query_types::ServiceConfig> for ServiceConfig {
+    fn from(value: iota_graphql_client::query_types::ServiceConfig) -> Self {
         Self {
             default_page_size: value.default_page_size,
             enabled_features: value.enabled_features.into_iter().map(Into::into).collect(),
@@ -849,7 +847,7 @@ impl From<CoreServiceConfig> for ServiceConfig {
     }
 }
 
-impl From<ServiceConfig> for CoreServiceConfig {
+impl From<ServiceConfig> for iota_graphql_client::query_types::ServiceConfig {
     fn from(value: ServiceConfig) -> Self {
         Self {
             default_page_size: value.default_page_size,
