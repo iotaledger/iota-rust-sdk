@@ -70,9 +70,6 @@ macro_rules! define_paged_object {
     };
 }
 
-define_paged_object!(EventPage, Event);
-define_paged_object!(SignedTransactionPage, SignedTransaction);
-define_paged_object!(TransactionDataEffectsPage, TransactionDataEffects);
 define_paged_object!(CoinPage, Coin);
 define_paged_object!(ObjectPage, Object);
 define_paged_object!(TransactionEffectsPage, TransactionEffects);
