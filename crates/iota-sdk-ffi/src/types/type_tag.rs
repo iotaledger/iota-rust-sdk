@@ -3,8 +3,6 @@
 
 use std::sync::Arc;
 
-use iota_types::StructTag;
-
 /// Type of a move value
 ///
 /// # BCS
