@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::query_types::{Base64, PageInfo};
+use iota_graphql_client::query_types::{Base64, BigInt, PageInfo};
 use serde_json::Value;
 
 use crate::types::{
@@ -86,4 +86,10 @@ uniffi::custom_type!(Base64, String, {
     remote,
     lower: |val| val.0,
     try_lift: |s| Ok(Base64(s)),
+});
+
+uniffi::custom_type!(BigInt, String, {
+    remote,
+    lower: |val| val.0,
+    try_lift: |s| Ok(BigInt(s)),
 });

@@ -7,8 +7,8 @@ use base64ct::Encoding;
 use iota_graphql_client::{
     pagination::{Direction, PaginationFilter},
     query_types::{
-        Base64, BigInt, Feature, PageInfo, ServiceConfig, TransactionBlockKindInput,
-        ValidatorCredentials,
+        Base64, BigInt, CoinMetadata, Feature, MoveObject, PageInfo, ServiceConfig,
+        TransactionBlockKindInput, ValidatorCredentials,
     },
 };
 use iota_types::{Identifier, StructTag, TransactionDigest};
@@ -530,11 +530,8 @@ impl From<Validator> for iota_graphql_client::query_types::Validator {
             next_epoch_credentials: value.next_epoch_credentials,
             next_epoch_gas_price: value.next_epoch_gas_price.map(|v| v.to_string().into()),
             next_epoch_stake: value.next_epoch_stake.map(|v| v.to_string().into()),
-            operation_cap: value.operation_cap.map(|o| {
-                MoveObject {
-                    bcs: Some(base64ct::Base64::encode_string(&o)),
-                }
-                .into()
+            operation_cap: value.operation_cap.map(|o| MoveObject {
+                bcs: Some(Base64(base64ct::Base64::encode_string(&o))),
             }),
             pending_pool_token_withdraw: value
                 .pending_pool_token_withdraw
@@ -578,47 +575,21 @@ pub enum TransactionBlockKindInput {
     EndOfEpochTx,
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
-pub struct DateTime {
-    pub value: String,
-}
-
-impl From<iota_graphql_client::query_types::DateTime> for DateTime {
-    fn from(value: iota_graphql_client::query_types::DateTime) -> Self {
-        DateTime { value: value.0 }
-    }
-}
-
-impl From<DateTime> for iota_graphql_client::query_types::DateTime {
-    fn from(value: DateTime) -> Self {
-        iota_graphql_client::query_types::DateTime(value.value)
-    }
-}
-
-/// Information about pagination in a connection.
 #[uniffi::remote(Record)]
 pub struct PageInfo {
-    /// When paginating backwards, are there more items?
     pub has_previous_page: bool,
-    /// Are there more items when paginating forwards?
     pub has_next_page: bool,
-    /// When paginating backwards, the cursor to continue.
     #[uniffi(default = None)]
     pub start_cursor: Option<String>,
-    /// When paginating forwards, the cursor to continue.
     #[uniffi(default = None)]
     pub end_cursor: Option<String>,
 }
 
-/// Pagination options for querying the GraphQL server. It defaults to forward
-/// pagination with the GraphQL server's max page size.
 #[uniffi::remote(Record)]
 pub struct PaginationFilter {
     pub direction: Direction,
     #[uniffi(default = None)]
     pub cursor: Option<String>,
-    /// The maximum number of items to return. If this is omitted, it will
-    /// lazily query the service configuration for the max page size.
     #[uniffi(default = None)]
     pub limit: Option<i32>,
 }
@@ -697,76 +668,24 @@ impl From<GQLAddress> for iota_graphql_client::query_types::GQLAddress {
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[uniffi::remote(Record)]
 pub struct MoveObject {
     #[uniffi(default = None)]
-    pub bcs: Option<String>,
-}
-
-impl From<iota_graphql_client::query_types::MoveObject> for MoveObject {
-    fn from(value: iota_graphql_client::query_types::MoveObject) -> Self {
-        MoveObject {
-            bcs: value.bcs.map(|v| v.0),
-        }
-    }
-}
-
-impl From<MoveObject> for iota_graphql_client::query_types::MoveObject {
-    fn from(value: MoveObject) -> Self {
-        iota_graphql_client::query_types::MoveObject {
-            bcs: value.bcs.map(iota_graphql_client::query_types::Base64),
-        }
-    }
+    pub bcs: Option<Base64>,
 }
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ProtocolConfigs(pub iota_graphql_client::query_types::ProtocolConfigs);
 
-/// The coin metadata associated with the given coin type.
-#[derive(Clone, Debug, uniffi::Record)]
+#[uniffi::remote(Record)]
 pub struct CoinMetadata {
-    /// The number of decimal places used to represent the token.
     pub decimals: Option<i32>,
-    /// Optional description of the token, provided by the creator of the token.
     pub description: Option<String>,
-    /// Icon URL of the coin.
     pub icon_url: Option<String>,
-    /// Full, official name of the token.
     pub name: Option<String>,
-    /// The token's identifying abbreviation.
     pub symbol: Option<String>,
-    /// The overall quantity of tokens that will be issued.
-    pub supply: Option<String>,
-    /// Version of the token.
+    pub supply: Option<BigInt>,
     pub version: u64,
-}
-
-impl From<iota_graphql_client::query_types::CoinMetadata> for CoinMetadata {
-    fn from(value: iota_graphql_client::query_types::CoinMetadata) -> Self {
-        Self {
-            decimals: value.decimals,
-            description: value.description,
-            icon_url: value.icon_url,
-            name: value.name,
-            symbol: value.symbol,
-            supply: value.supply.map(|s| s.0),
-            version: value.version,
-        }
-    }
-}
-
-impl From<CoinMetadata> for iota_graphql_client::query_types::CoinMetadata {
-    fn from(value: CoinMetadata) -> Self {
-        Self {
-            decimals: value.decimals,
-            description: value.description,
-            icon_url: value.icon_url,
-            name: value.name,
-            symbol: value.symbol,
-            supply: value.supply.map(BigInt),
-            version: value.version,
-        }
-    }
 }
 
 #[derive(Debug, derive_more::From, uniffi::Object)]
