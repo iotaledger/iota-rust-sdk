@@ -605,16 +605,6 @@ void* uniffi_iota_sdk_ffi_fn_clone_digest(void* ptr, RustCallStatus *out_status
 void uniffi_iota_sdk_ffi_fn_free_digest(void* ptr, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_DRYRUNRESULT
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_DRYRUNRESULT
-void* uniffi_iota_sdk_ffi_fn_clone_dryrunresult(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_DRYRUNRESULT
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_DRYRUNRESULT
-void uniffi_iota_sdk_ffi_fn_free_dryrunresult(void* ptr, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ED25519PUBLICKEY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ED25519PUBLICKEY
 void* uniffi_iota_sdk_ffi_fn_clone_ed25519publickey(void* ptr, RustCallStatus *out_status
@@ -695,16 +685,6 @@ void* uniffi_iota_sdk_ffi_fn_clone_epoch(void* ptr, RustCallStatus *out_status
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_EPOCH
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_EPOCH
 void uniffi_iota_sdk_ffi_fn_free_epoch(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_EVENT
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_EVENT
-void* uniffi_iota_sdk_ffi_fn_clone_event(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_EVENT
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_EVENT
-void uniffi_iota_sdk_ffi_fn_free_event(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_EXECUTIONTIMEOBSERVATIONS
@@ -1202,16 +1182,6 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes(void* ptr, RustCallSt
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_HEX
 RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OBJECTREF
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OBJECTREF
-void* uniffi_iota_sdk_ffi_fn_clone_objectref(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_OBJECTREF
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_OBJECTREF
-void uniffi_iota_sdk_ffi_fn_free_objectref(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OBJECTTYPE
