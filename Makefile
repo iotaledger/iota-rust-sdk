@@ -100,14 +100,12 @@ python: ## Build Python bindings
 	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
 
-# Test Go bindings
 .PHONY: test-go
 test-go: ## Test Go bindings
 	cd bindings/go/; \
 	LD_LIBRARY_PATH="../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../target/release" go run test.go \
 	cd -
 
-# Test Kotlin bindings
 .PHONY: test-kotlin
 test-kotlin: ## Test Kotlin bindings
 	cd bindings/kotlin; \
@@ -115,7 +113,6 @@ test-kotlin: ## Test Kotlin bindings
 	LD_LIBRARY_PATH=./lib ./gradlew run -q; \
 	cd -
 
-# Test Python bindings
 .PHONY: test-python
 test-python: ## Test Python bindings
 	python3 bindings/python/test.py
