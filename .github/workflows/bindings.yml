@@ -44,7 +44,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install uniffi-bindgen-go
-        uses: cargo install uniffi-bindgen-go --git https://github.com/filament-dm/uniffi-bindgen-go --rev ab7315502bd6b979207fdae854e87d531ee8764d
+        run: cargo install uniffi-bindgen-go --git https://github.com/filament-dm/uniffi-bindgen-go --rev ab7315502bd6b979207fdae854e87d531ee8764d
       - name: Build the dynamic library
         run: cargo build -p iota-sdk-ffi --lib --release
       - name: Generate the bindings
