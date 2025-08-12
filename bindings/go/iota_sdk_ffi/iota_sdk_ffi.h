@@ -713,16 +713,6 @@ void* uniffi_iota_sdk_ffi_fn_method_coin_coin_type(void* ptr, RustCallStatus *ou
 void* uniffi_iota_sdk_ffi_fn_method_coin_id(void* ptr, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_COINMETADATA
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_COINMETADATA
-void* uniffi_iota_sdk_ffi_fn_clone_coinmetadata(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_COINMETADATA
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_COINMETADATA
-void uniffi_iota_sdk_ffi_fn_free_coinmetadata(void* ptr, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_CONSENSUSCOMMITDIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_CONSENSUSCOMMITDIGEST
 void* uniffi_iota_sdk_ffi_fn_clone_consensuscommitdigest(void* ptr, RustCallStatus *out_status
@@ -1904,16 +1894,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(RustCallSta
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1SIGNATURE_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1SIGNATURE_TO_BYTES
 RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SERVICECONFIG
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SERVICECONFIG
-void* uniffi_iota_sdk_ffi_fn_clone_serviceconfig(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_SERVICECONFIG
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_SERVICECONFIG
-void uniffi_iota_sdk_ffi_fn_free_serviceconfig(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SIMPLESIGNATURE

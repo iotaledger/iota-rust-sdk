@@ -1467,10 +1467,6 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
-
-
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2285,10 +2281,6 @@ fun uniffi_iota_sdk_ffi_fn_method_coin_coin_type(`ptr`: Pointer,uniffi_out_err: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_coin_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_clone_coinmetadata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_coinmetadata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_consensuscommitdigest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_consensuscommitdigest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -2755,10 +2747,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_clone_serviceconfig(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_serviceconfig(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_simplesignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_simplesignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3258,7 +3246,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 8422.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 34454.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 48442.toShort()) {
@@ -3339,7 +3327,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 24210.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 31958.toShort()) {
@@ -8636,228 +8624,6 @@ public object FfiConverterTypeCoin: FfiConverter<Coin, Pointer> {
 //
 
 
-public interface CoinMetadataInterface {
-    
-    companion object
-}
-
-open class CoinMetadata: Disposable, AutoCloseable, CoinMetadataInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_coinmetadata(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_coinmetadata(pointer!!, status)
-        }
-    }
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeCoinMetadata: FfiConverter<CoinMetadata, Pointer> {
-
-    override fun lower(value: CoinMetadata): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): CoinMetadata {
-        return CoinMetadata(value)
-    }
-
-    override fun read(buf: ByteBuffer): CoinMetadata {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: CoinMetadata) = 8UL
-
-    override fun write(value: CoinMetadata, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
 public interface ConsensusCommitDigestInterface {
     
     fun `toBase58`(): kotlin.String
@@ -13465,9 +13231,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeServiceConfig.lift(it) },
         // Error FFI converter
@@ -20674,228 +20440,6 @@ public object FfiConverterTypeSecp256r1Signature: FfiConverter<Secp256r1Signatur
 //
 
 
-public interface ServiceConfigInterface {
-    
-    companion object
-}
-
-open class ServiceConfig: Disposable, AutoCloseable, ServiceConfigInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_serviceconfig(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_serviceconfig(pointer!!, status)
-        }
-    }
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeServiceConfig: FfiConverter<ServiceConfig, Pointer> {
-
-    override fun lower(value: ServiceConfig): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): ServiceConfig {
-        return ServiceConfig(value)
-    }
-
-    override fun read(buf: ByteBuffer): ServiceConfig {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: ServiceConfig) = 8UL
-
-    override fun write(value: ServiceConfig, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
 /**
  * A basic signature
  *
@@ -25789,34 +25333,6 @@ public object FfiConverterTypeZkLoginPublicIdentifier: FfiConverter<ZkLoginPubli
 
 
 
-data class BigInt (
-    var `value`: kotlin.String
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeBigInt: FfiConverterRustBuffer<BigInt> {
-    override fun read(buf: ByteBuffer): BigInt {
-        return BigInt(
-            FfiConverterString.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: BigInt) = (
-            FfiConverterString.allocationSize(value.`value`)
-    )
-
-    override fun write(value: BigInt, buf: ByteBuffer) {
-            FfiConverterString.write(value.`value`, buf)
-    }
-}
-
-
-
 /**
  * Input/output state of an object that was changed during execution
  *
@@ -26107,6 +25623,58 @@ public object FfiConverterTypeCheckpointSummaryPage: FfiConverterRustBuffer<Chec
 
 
 
+data class CoinMetadata (
+    var `decimals`: kotlin.Int? = null, 
+    var `description`: kotlin.String? = null, 
+    var `iconUrl`: kotlin.String? = null, 
+    var `name`: kotlin.String? = null, 
+    var `symbol`: kotlin.String? = null, 
+    var `supply`: BigInt? = null, 
+    var `version`: kotlin.ULong
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeCoinMetadata: FfiConverterRustBuffer<CoinMetadata> {
+    override fun read(buf: ByteBuffer): CoinMetadata {
+        return CoinMetadata(
+            FfiConverterOptionalInt.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalTypeBigInt.read(buf),
+            FfiConverterULong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: CoinMetadata) = (
+            FfiConverterOptionalInt.allocationSize(value.`decimals`) +
+            FfiConverterOptionalString.allocationSize(value.`description`) +
+            FfiConverterOptionalString.allocationSize(value.`iconUrl`) +
+            FfiConverterOptionalString.allocationSize(value.`name`) +
+            FfiConverterOptionalString.allocationSize(value.`symbol`) +
+            FfiConverterOptionalTypeBigInt.allocationSize(value.`supply`) +
+            FfiConverterULong.allocationSize(value.`version`)
+    )
+
+    override fun write(value: CoinMetadata, buf: ByteBuffer) {
+            FfiConverterOptionalInt.write(value.`decimals`, buf)
+            FfiConverterOptionalString.write(value.`description`, buf)
+            FfiConverterOptionalString.write(value.`iconUrl`, buf)
+            FfiConverterOptionalString.write(value.`name`, buf)
+            FfiConverterOptionalString.write(value.`symbol`, buf)
+            FfiConverterOptionalTypeBigInt.write(value.`supply`, buf)
+            FfiConverterULong.write(value.`version`, buf)
+    }
+}
+
+
+
 /**
  * A page of items returned by the GraphQL server.
  */
@@ -26153,34 +25721,6 @@ public object FfiConverterTypeCoinPage: FfiConverterRustBuffer<CoinPage> {
     override fun write(value: CoinPage, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
             FfiConverterSequenceTypeCoin.write(value.`data`, buf)
-    }
-}
-
-
-
-data class DateTime (
-    var `value`: kotlin.String
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeDateTime: FfiConverterRustBuffer<DateTime> {
-    override fun read(buf: ByteBuffer): DateTime {
-        return DateTime(
-            FfiConverterString.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: DateTime) = (
-            FfiConverterString.allocationSize(value.`value`)
-    )
-
-    override fun write(value: DateTime, buf: ByteBuffer) {
-            FfiConverterString.write(value.`value`, buf)
     }
 }
 
@@ -26962,7 +26502,7 @@ public object FfiConverterTypeMoveLocation: FfiConverterRustBuffer<MoveLocation>
 
 
 data class MoveObject (
-    var `bcs`: kotlin.String? = null
+    var `bcs`: Base64? = null
 ) {
     
     companion object
@@ -26974,16 +26514,16 @@ data class MoveObject (
 public object FfiConverterTypeMoveObject: FfiConverterRustBuffer<MoveObject> {
     override fun read(buf: ByteBuffer): MoveObject {
         return MoveObject(
-            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalTypeBase64.read(buf),
         )
     }
 
     override fun allocationSize(value: MoveObject) = (
-            FfiConverterOptionalString.allocationSize(value.`bcs`)
+            FfiConverterOptionalTypeBase64.allocationSize(value.`bcs`)
     )
 
     override fun write(value: MoveObject, buf: ByteBuffer) {
-            FfiConverterOptionalString.write(value.`bcs`, buf)
+            FfiConverterOptionalTypeBase64.write(value.`bcs`, buf)
     }
 }
 
@@ -27319,25 +26859,10 @@ public object FfiConverterTypeObjectReference: FfiConverterRustBuffer<ObjectRefe
 
 
 
-/**
- * Information about pagination in a connection.
- */
 data class PageInfo (
-    /**
-     * When paginating backwards, are there more items?
-     */
     var `hasPreviousPage`: kotlin.Boolean, 
-    /**
-     * Are there more items when paginating forwards?
-     */
     var `hasNextPage`: kotlin.Boolean, 
-    /**
-     * When paginating backwards, the cursor to continue.
-     */
     var `startCursor`: kotlin.String? = null, 
-    /**
-     * When paginating forwards, the cursor to continue.
-     */
     var `endCursor`: kotlin.String? = null
 ) {
     
@@ -27374,17 +26899,9 @@ public object FfiConverterTypePageInfo: FfiConverterRustBuffer<PageInfo> {
 
 
 
-/**
- * Pagination options for querying the GraphQL server. It defaults to forward
- * pagination with the GraphQL server's max page size.
- */
 data class PaginationFilter (
     var `direction`: Direction, 
     var `cursor`: kotlin.String? = null, 
-    /**
-     * The maximum number of items to return. If this is omitted, it will
-     * lazily query the service configuration for the max page size.
-     */
     var `limit`: kotlin.Int? = null
 ) {
     
@@ -27413,6 +26930,82 @@ public object FfiConverterTypePaginationFilter: FfiConverterRustBuffer<Paginatio
             FfiConverterTypeDirection.write(value.`direction`, buf)
             FfiConverterOptionalString.write(value.`cursor`, buf)
             FfiConverterOptionalInt.write(value.`limit`, buf)
+    }
+}
+
+
+
+data class ServiceConfig (
+    var `defaultPageSize`: kotlin.Int, 
+    var `enabledFeatures`: List<Feature>, 
+    var `maxMoveValueDepth`: kotlin.Int, 
+    var `maxOutputNodes`: kotlin.Int, 
+    var `maxPageSize`: kotlin.Int, 
+    var `maxQueryDepth`: kotlin.Int, 
+    var `maxQueryNodes`: kotlin.Int, 
+    var `maxQueryPayloadSize`: kotlin.Int, 
+    var `maxTypeArgumentDepth`: kotlin.Int, 
+    var `maxTypeArgumentWidth`: kotlin.Int, 
+    var `maxTypeNodes`: kotlin.Int, 
+    var `mutationTimeoutMs`: kotlin.Int, 
+    var `requestTimeoutMs`: kotlin.Int
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeServiceConfig: FfiConverterRustBuffer<ServiceConfig> {
+    override fun read(buf: ByteBuffer): ServiceConfig {
+        return ServiceConfig(
+            FfiConverterInt.read(buf),
+            FfiConverterSequenceTypeFeature.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterInt.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ServiceConfig) = (
+            FfiConverterInt.allocationSize(value.`defaultPageSize`) +
+            FfiConverterSequenceTypeFeature.allocationSize(value.`enabledFeatures`) +
+            FfiConverterInt.allocationSize(value.`maxMoveValueDepth`) +
+            FfiConverterInt.allocationSize(value.`maxOutputNodes`) +
+            FfiConverterInt.allocationSize(value.`maxPageSize`) +
+            FfiConverterInt.allocationSize(value.`maxQueryDepth`) +
+            FfiConverterInt.allocationSize(value.`maxQueryNodes`) +
+            FfiConverterInt.allocationSize(value.`maxQueryPayloadSize`) +
+            FfiConverterInt.allocationSize(value.`maxTypeArgumentDepth`) +
+            FfiConverterInt.allocationSize(value.`maxTypeArgumentWidth`) +
+            FfiConverterInt.allocationSize(value.`maxTypeNodes`) +
+            FfiConverterInt.allocationSize(value.`mutationTimeoutMs`) +
+            FfiConverterInt.allocationSize(value.`requestTimeoutMs`)
+    )
+
+    override fun write(value: ServiceConfig, buf: ByteBuffer) {
+            FfiConverterInt.write(value.`defaultPageSize`, buf)
+            FfiConverterSequenceTypeFeature.write(value.`enabledFeatures`, buf)
+            FfiConverterInt.write(value.`maxMoveValueDepth`, buf)
+            FfiConverterInt.write(value.`maxOutputNodes`, buf)
+            FfiConverterInt.write(value.`maxPageSize`, buf)
+            FfiConverterInt.write(value.`maxQueryDepth`, buf)
+            FfiConverterInt.write(value.`maxQueryNodes`, buf)
+            FfiConverterInt.write(value.`maxQueryPayloadSize`, buf)
+            FfiConverterInt.write(value.`maxTypeArgumentDepth`, buf)
+            FfiConverterInt.write(value.`maxTypeArgumentWidth`, buf)
+            FfiConverterInt.write(value.`maxTypeNodes`, buf)
+            FfiConverterInt.write(value.`mutationTimeoutMs`, buf)
+            FfiConverterInt.write(value.`requestTimeoutMs`, buf)
     }
 }
 
@@ -30084,6 +29677,39 @@ public object FfiConverterTypeExecutionStatus : FfiConverterRustBuffer<Execution
 
 
 
+enum class Feature {
+    
+    ANALYTICS,
+    COINS,
+    DYNAMIC_FIELDS,
+    SUBSCRIPTIONS,
+    SYSTEM_STATE;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeFeature: FfiConverterRustBuffer<Feature> {
+    override fun read(buf: ByteBuffer) = try {
+        Feature.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: Feature) = 4UL
+
+    override fun write(value: Feature, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
 enum class IdOperation {
     
     NONE,
@@ -31336,38 +30962,6 @@ public object FfiConverterOptionalTypeCheckpointDigest: FfiConverterRustBuffer<C
 /**
  * @suppress
  */
-public object FfiConverterOptionalTypeCoinMetadata: FfiConverterRustBuffer<CoinMetadata?> {
-    override fun read(buf: ByteBuffer): CoinMetadata? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeCoinMetadata.read(buf)
-    }
-
-    override fun allocationSize(value: CoinMetadata?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeCoinMetadata.allocationSize(value)
-        }
-    }
-
-    override fun write(value: CoinMetadata?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeCoinMetadata.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
 public object FfiConverterOptionalTypeEd25519PublicKey: FfiConverterRustBuffer<Ed25519PublicKey?> {
     override fun read(buf: ByteBuffer): Ed25519PublicKey? {
         if (buf.get().toInt() == 0) {
@@ -32168,6 +31762,38 @@ public object FfiConverterOptionalTypeCheckpointSummary: FfiConverterRustBuffer<
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeCoinMetadata: FfiConverterRustBuffer<CoinMetadata?> {
+    override fun read(buf: ByteBuffer): CoinMetadata? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeCoinMetadata.read(buf)
+    }
+
+    override fun allocationSize(value: CoinMetadata?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeCoinMetadata.allocationSize(value)
+        }
+    }
+
+    override fun write(value: CoinMetadata?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeCoinMetadata.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeDynamicFieldOutput: FfiConverterRustBuffer<DynamicFieldOutput?> {
     override fun read(buf: ByteBuffer): DynamicFieldOutput? {
         if (buf.get().toInt() == 0) {
@@ -32670,6 +32296,38 @@ public object FfiConverterOptionalTypeBase64: FfiConverterRustBuffer<Base64?> {
         } else {
             buf.put(1)
             FfiConverterTypeBase64.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeBigInt: FfiConverterRustBuffer<BigInt?> {
+    override fun read(buf: ByteBuffer): BigInt? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeBigInt.read(buf)
+    }
+
+    override fun allocationSize(value: BigInt?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeBigInt.allocationSize(value)
+        }
+    }
+
+    override fun write(value: BigInt?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeBigInt.write(value, buf)
         }
     }
 }
@@ -33440,6 +33098,34 @@ public object FfiConverterSequenceTypeValidatorCommitteeMember: FfiConverterRust
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypeFeature: FfiConverterRustBuffer<List<Feature>> {
+    override fun read(buf: ByteBuffer): List<Feature> {
+        val len = buf.getInt()
+        return List<Feature>(len) {
+            FfiConverterTypeFeature.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<Feature>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeFeature.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<Feature>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeFeature.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterMapTypeIdentifierByteArray: FfiConverterRustBuffer<Map<Identifier, kotlin.ByteArray>> {
     override fun read(buf: ByteBuffer): Map<Identifier, kotlin.ByteArray> {
         val len = buf.getInt()
@@ -33521,6 +33207,16 @@ public object FfiConverterMapTypeObjectIdTypeUpgradeInfo: FfiConverterRustBuffer
  */
 public typealias Base64 = kotlin.String
 public typealias FfiConverterTypeBase64 = FfiConverterString
+
+
+
+/**
+ * Typealias from the type name used in the UDL file to the builtin type.  This
+ * is needed because the UDL type name is used in function/method signatures.
+ * It's also what we have an external type that references a custom type.
+ */
+public typealias BigInt = kotlin.String
+public typealias FfiConverterTypeBigInt = FfiConverterString
 
 
 

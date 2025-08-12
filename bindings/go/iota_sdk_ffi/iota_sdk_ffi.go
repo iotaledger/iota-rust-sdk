@@ -640,7 +640,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata()
 	})
-	if checksum != 34454 {
+	if checksum != 10872 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata: UniFFI API checksum mismatch")
 	}
@@ -883,7 +883,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config()
 	})
-	if checksum != 24210 {
+	if checksum != 11931 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config: UniFFI API checksum mismatch")
 	}
@@ -4988,66 +4988,6 @@ func (_ FfiDestroyerCoin) Destroy(value *Coin) {
 
 
 
-type CoinMetadataInterface interface {
-}
-type CoinMetadata struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *CoinMetadata) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterCoinMetadata struct {}
-
-var FfiConverterCoinMetadataINSTANCE = FfiConverterCoinMetadata{}
-
-
-func (c FfiConverterCoinMetadata) Lift(pointer unsafe.Pointer) *CoinMetadata {
-	result := &CoinMetadata {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_coinmetadata(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_coinmetadata(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*CoinMetadata).Destroy)
-	return result
-}
-
-func (c FfiConverterCoinMetadata) Read(reader io.Reader) *CoinMetadata {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterCoinMetadata) Lower(value *CoinMetadata) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*CoinMetadata")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterCoinMetadata) Write(writer io.Writer, value *CoinMetadata) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerCoinMetadata struct {}
-
-func (_ FfiDestroyerCoinMetadata) Destroy(value *CoinMetadata) {
-		value.Destroy()
-}
-
-
-
 type ConsensusCommitDigestInterface interface {
 	ToBase58() string
 	ToBytes() []byte
@@ -6325,7 +6265,7 @@ type GraphQlClientInterface interface {
 	// Get a page of [`CheckpointSummary`] for the provided parameters.
 	Checkpoints(paginationFilter PaginationFilter) (CheckpointSummaryPage, error)
 	// Get the coin metadata for the coin type.
-	CoinMetadata(coinType string) (**CoinMetadata, error)
+	CoinMetadata(coinType string) (*CoinMetadata, error)
 	// Get the list of coins for the specified address.
 	//
 	// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
@@ -6487,7 +6427,7 @@ type GraphQlClientInterface interface {
 	ReferenceGasPrice(epoch *uint64) (*uint64, error)
 	// Get the GraphQL service configuration, including complexity limits, read
 	// and mutation limits, supported versions, and others.
-	ServiceConfig() (*ServiceConfig, error)
+	ServiceConfig() (ServiceConfig, error)
 	// Set the server address for the GraphQL GraphQL client. It should be a
 	// valid URL with a host and optionally a port number.
 	SetRpcServer(server string) error
@@ -6734,7 +6674,7 @@ func (_self *GraphQlClient) Checkpoints(paginationFilter PaginationFilter) (Chec
 }
 
 // Get the coin metadata for the coin type.
-func (_self *GraphQlClient) CoinMetadata(coinType string) (**CoinMetadata, error) {
+func (_self *GraphQlClient) CoinMetadata(coinType string) (*CoinMetadata, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -6747,7 +6687,7 @@ func (_self *GraphQlClient) CoinMetadata(coinType string) (**CoinMetadata, error
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) **CoinMetadata {
+		func(ffi RustBufferI) *CoinMetadata {
 			return FfiConverterOptionalCoinMetadataINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(
@@ -7704,29 +7644,31 @@ func (_self *GraphQlClient) ReferenceGasPrice(epoch *uint64) (*uint64, error) {
 
 // Get the GraphQL service configuration, including complexity limits, read
 // and mutation limits, supported versions, and others.
-func (_self *GraphQlClient) ServiceConfig() (*ServiceConfig, error) {
+func (_self *GraphQlClient) ServiceConfig() (ServiceConfig, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *ServiceConfig {
+		func(ffi RustBufferI) ServiceConfig {
 			return FfiConverterServiceConfigINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(
 		_pointer,),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
 
@@ -10824,66 +10766,6 @@ func (_ FfiDestroyerSecp256r1Signature) Destroy(value *Secp256r1Signature) {
 
 
 
-type ServiceConfigInterface interface {
-}
-type ServiceConfig struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *ServiceConfig) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterServiceConfig struct {}
-
-var FfiConverterServiceConfigINSTANCE = FfiConverterServiceConfig{}
-
-
-func (c FfiConverterServiceConfig) Lift(pointer unsafe.Pointer) *ServiceConfig {
-	result := &ServiceConfig {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_serviceconfig(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_serviceconfig(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ServiceConfig).Destroy)
-	return result
-}
-
-func (c FfiConverterServiceConfig) Read(reader io.Reader) *ServiceConfig {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterServiceConfig) Lower(value *ServiceConfig) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ServiceConfig")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterServiceConfig) Write(writer io.Writer, value *ServiceConfig) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerServiceConfig struct {}
-
-func (_ FfiDestroyerServiceConfig) Destroy(value *ServiceConfig) {
-		value.Destroy()
-}
-
-
-
 // A basic signature
 //
 // This enumeration defines the set of simple or basic signature schemes
@@ -13216,41 +13098,6 @@ func (_ FfiDestroyerZkLoginPublicIdentifier) Destroy(value *ZkLoginPublicIdentif
 
 
 
-type BigInt struct {
-	Value string
-}
-
-func (r *BigInt) Destroy() {
-		FfiDestroyerString{}.Destroy(r.Value);
-}
-
-type FfiConverterBigInt struct {}
-
-var FfiConverterBigIntINSTANCE = FfiConverterBigInt{}
-
-func (c FfiConverterBigInt) Lift(rb RustBufferI) BigInt {
-	return LiftFromRustBuffer[BigInt](c, rb)
-}
-
-func (c FfiConverterBigInt) Read(reader io.Reader) BigInt {
-	return BigInt {
-			FfiConverterStringINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterBigInt) Lower(value BigInt) C.RustBuffer {
-	return LowerIntoRustBuffer[BigInt](c, value)
-}
-
-func (c FfiConverterBigInt) Write(writer io.Writer, value BigInt) {
-		FfiConverterStringINSTANCE.Write(writer, value.Value);
-}
-
-type FfiDestroyerBigInt struct {}
-
-func (_ FfiDestroyerBigInt) Destroy(value BigInt) {
-	value.Destroy()
-}
 // Input/output state of an object that was changed during execution
 //
 // # BCS
@@ -13487,6 +13334,65 @@ type FfiDestroyerCheckpointSummaryPage struct {}
 func (_ FfiDestroyerCheckpointSummaryPage) Destroy(value CheckpointSummaryPage) {
 	value.Destroy()
 }
+type CoinMetadata struct {
+	Decimals *int32
+	Description *string
+	IconUrl *string
+	Name *string
+	Symbol *string
+	Supply *BigInt
+	Version uint64
+}
+
+func (r *CoinMetadata) Destroy() {
+		FfiDestroyerOptionalInt32{}.Destroy(r.Decimals);
+		FfiDestroyerOptionalString{}.Destroy(r.Description);
+		FfiDestroyerOptionalString{}.Destroy(r.IconUrl);
+		FfiDestroyerOptionalString{}.Destroy(r.Name);
+		FfiDestroyerOptionalString{}.Destroy(r.Symbol);
+		FfiDestroyerOptionalTypeBigInt{}.Destroy(r.Supply);
+		FfiDestroyerUint64{}.Destroy(r.Version);
+}
+
+type FfiConverterCoinMetadata struct {}
+
+var FfiConverterCoinMetadataINSTANCE = FfiConverterCoinMetadata{}
+
+func (c FfiConverterCoinMetadata) Lift(rb RustBufferI) CoinMetadata {
+	return LiftFromRustBuffer[CoinMetadata](c, rb)
+}
+
+func (c FfiConverterCoinMetadata) Read(reader io.Reader) CoinMetadata {
+	return CoinMetadata {
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalTypeBigIntINSTANCE.Read(reader),
+			FfiConverterUint64INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterCoinMetadata) Lower(value CoinMetadata) C.RustBuffer {
+	return LowerIntoRustBuffer[CoinMetadata](c, value)
+}
+
+func (c FfiConverterCoinMetadata) Write(writer io.Writer, value CoinMetadata) {
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.Decimals);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.Description);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.IconUrl);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.Name);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.Symbol);
+		FfiConverterOptionalTypeBigIntINSTANCE.Write(writer, value.Supply);
+		FfiConverterUint64INSTANCE.Write(writer, value.Version);
+}
+
+type FfiDestroyerCoinMetadata struct {}
+
+func (_ FfiDestroyerCoinMetadata) Destroy(value CoinMetadata) {
+	value.Destroy()
+}
 // A page of items returned by the GraphQL server.
 type CoinPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -13528,41 +13434,6 @@ func (c FfiConverterCoinPage) Write(writer io.Writer, value CoinPage) {
 type FfiDestroyerCoinPage struct {}
 
 func (_ FfiDestroyerCoinPage) Destroy(value CoinPage) {
-	value.Destroy()
-}
-type DateTime struct {
-	Value string
-}
-
-func (r *DateTime) Destroy() {
-		FfiDestroyerString{}.Destroy(r.Value);
-}
-
-type FfiConverterDateTime struct {}
-
-var FfiConverterDateTimeINSTANCE = FfiConverterDateTime{}
-
-func (c FfiConverterDateTime) Lift(rb RustBufferI) DateTime {
-	return LiftFromRustBuffer[DateTime](c, rb)
-}
-
-func (c FfiConverterDateTime) Read(reader io.Reader) DateTime {
-	return DateTime {
-			FfiConverterStringINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterDateTime) Lower(value DateTime) C.RustBuffer {
-	return LowerIntoRustBuffer[DateTime](c, value)
-}
-
-func (c FfiConverterDateTime) Write(writer io.Writer, value DateTime) {
-		FfiConverterStringINSTANCE.Write(writer, value.Value);
-}
-
-type FfiDestroyerDateTime struct {}
-
-func (_ FfiDestroyerDateTime) Destroy(value DateTime) {
 	value.Destroy()
 }
 // The result of a dry run, which includes the effects of the transaction and
@@ -14245,11 +14116,11 @@ func (_ FfiDestroyerMoveLocation) Destroy(value MoveLocation) {
 	value.Destroy()
 }
 type MoveObject struct {
-	Bcs *string
+	Bcs *Base64
 }
 
 func (r *MoveObject) Destroy() {
-		FfiDestroyerOptionalString{}.Destroy(r.Bcs);
+		FfiDestroyerOptionalTypeBase64{}.Destroy(r.Bcs);
 }
 
 type FfiConverterMoveObject struct {}
@@ -14262,7 +14133,7 @@ func (c FfiConverterMoveObject) Lift(rb RustBufferI) MoveObject {
 
 func (c FfiConverterMoveObject) Read(reader io.Reader) MoveObject {
 	return MoveObject {
-			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalTypeBase64INSTANCE.Read(reader),
 	}
 }
 
@@ -14271,7 +14142,7 @@ func (c FfiConverterMoveObject) Lower(value MoveObject) C.RustBuffer {
 }
 
 func (c FfiConverterMoveObject) Write(writer io.Writer, value MoveObject) {
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.Bcs);
+		FfiConverterOptionalTypeBase64INSTANCE.Write(writer, value.Bcs);
 }
 
 type FfiDestroyerMoveObject struct {}
@@ -14571,15 +14442,10 @@ type FfiDestroyerObjectReference struct {}
 func (_ FfiDestroyerObjectReference) Destroy(value ObjectReference) {
 	value.Destroy()
 }
-// Information about pagination in a connection.
 type PageInfo struct {
-	// When paginating backwards, are there more items?
 	HasPreviousPage bool
-	// Are there more items when paginating forwards?
 	HasNextPage bool
-	// When paginating backwards, the cursor to continue.
 	StartCursor *string
-	// When paginating forwards, the cursor to continue.
 	EndCursor *string
 }
 
@@ -14623,13 +14489,9 @@ type FfiDestroyerPageInfo struct {}
 func (_ FfiDestroyerPageInfo) Destroy(value PageInfo) {
 	value.Destroy()
 }
-// Pagination options for querying the GraphQL server. It defaults to forward
-// pagination with the GraphQL server's max page size.
 type PaginationFilter struct {
 	Direction Direction
 	Cursor *string
-	// The maximum number of items to return. If this is omitted, it will
-	// lazily query the service configuration for the max page size.
 	Limit *int32
 }
 
@@ -14668,6 +14530,89 @@ func (c FfiConverterPaginationFilter) Write(writer io.Writer, value PaginationFi
 type FfiDestroyerPaginationFilter struct {}
 
 func (_ FfiDestroyerPaginationFilter) Destroy(value PaginationFilter) {
+	value.Destroy()
+}
+type ServiceConfig struct {
+	DefaultPageSize int32
+	EnabledFeatures []Feature
+	MaxMoveValueDepth int32
+	MaxOutputNodes int32
+	MaxPageSize int32
+	MaxQueryDepth int32
+	MaxQueryNodes int32
+	MaxQueryPayloadSize int32
+	MaxTypeArgumentDepth int32
+	MaxTypeArgumentWidth int32
+	MaxTypeNodes int32
+	MutationTimeoutMs int32
+	RequestTimeoutMs int32
+}
+
+func (r *ServiceConfig) Destroy() {
+		FfiDestroyerInt32{}.Destroy(r.DefaultPageSize);
+		FfiDestroyerSequenceFeature{}.Destroy(r.EnabledFeatures);
+		FfiDestroyerInt32{}.Destroy(r.MaxMoveValueDepth);
+		FfiDestroyerInt32{}.Destroy(r.MaxOutputNodes);
+		FfiDestroyerInt32{}.Destroy(r.MaxPageSize);
+		FfiDestroyerInt32{}.Destroy(r.MaxQueryDepth);
+		FfiDestroyerInt32{}.Destroy(r.MaxQueryNodes);
+		FfiDestroyerInt32{}.Destroy(r.MaxQueryPayloadSize);
+		FfiDestroyerInt32{}.Destroy(r.MaxTypeArgumentDepth);
+		FfiDestroyerInt32{}.Destroy(r.MaxTypeArgumentWidth);
+		FfiDestroyerInt32{}.Destroy(r.MaxTypeNodes);
+		FfiDestroyerInt32{}.Destroy(r.MutationTimeoutMs);
+		FfiDestroyerInt32{}.Destroy(r.RequestTimeoutMs);
+}
+
+type FfiConverterServiceConfig struct {}
+
+var FfiConverterServiceConfigINSTANCE = FfiConverterServiceConfig{}
+
+func (c FfiConverterServiceConfig) Lift(rb RustBufferI) ServiceConfig {
+	return LiftFromRustBuffer[ServiceConfig](c, rb)
+}
+
+func (c FfiConverterServiceConfig) Read(reader io.Reader) ServiceConfig {
+	return ServiceConfig {
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterSequenceFeatureINSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterInt32INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterServiceConfig) Lower(value ServiceConfig) C.RustBuffer {
+	return LowerIntoRustBuffer[ServiceConfig](c, value)
+}
+
+func (c FfiConverterServiceConfig) Write(writer io.Writer, value ServiceConfig) {
+		FfiConverterInt32INSTANCE.Write(writer, value.DefaultPageSize);
+		FfiConverterSequenceFeatureINSTANCE.Write(writer, value.EnabledFeatures);
+		FfiConverterInt32INSTANCE.Write(writer, value.MaxMoveValueDepth);
+		FfiConverterInt32INSTANCE.Write(writer, value.MaxOutputNodes);
+		FfiConverterInt32INSTANCE.Write(writer, value.MaxPageSize);
+		FfiConverterInt32INSTANCE.Write(writer, value.MaxQueryDepth);
+		FfiConverterInt32INSTANCE.Write(writer, value.MaxQueryNodes);
+		FfiConverterInt32INSTANCE.Write(writer, value.MaxQueryPayloadSize);
+		FfiConverterInt32INSTANCE.Write(writer, value.MaxTypeArgumentDepth);
+		FfiConverterInt32INSTANCE.Write(writer, value.MaxTypeArgumentWidth);
+		FfiConverterInt32INSTANCE.Write(writer, value.MaxTypeNodes);
+		FfiConverterInt32INSTANCE.Write(writer, value.MutationTimeoutMs);
+		FfiConverterInt32INSTANCE.Write(writer, value.RequestTimeoutMs);
+}
+
+type FfiDestroyerServiceConfig struct {}
+
+func (_ FfiDestroyerServiceConfig) Destroy(value ServiceConfig) {
 	value.Destroy()
 }
 type SignedTransaction struct {
@@ -16654,6 +16599,42 @@ func (_ FfiDestroyerExecutionStatus) Destroy(value ExecutionStatus) {
 }
 
 
+type Feature uint
+
+const (
+	FeatureAnalytics Feature = 1
+	FeatureCoins Feature = 2
+	FeatureDynamicFields Feature = 3
+	FeatureSubscriptions Feature = 4
+	FeatureSystemState Feature = 5
+)
+
+type FfiConverterFeature struct {}
+
+var FfiConverterFeatureINSTANCE = FfiConverterFeature{}
+
+func (c FfiConverterFeature) Lift(rb RustBufferI) Feature {
+	return LiftFromRustBuffer[Feature](c, rb)
+}
+
+func (c FfiConverterFeature) Lower(value Feature) C.RustBuffer {
+	return LowerIntoRustBuffer[Feature](c, value)
+}
+func (FfiConverterFeature) Read(reader io.Reader) Feature {
+	id := readInt32(reader)
+	return Feature(id)
+}
+
+func (FfiConverterFeature) Write(writer io.Writer, value Feature) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerFeature struct {}
+
+func (_ FfiDestroyerFeature) Destroy(value Feature) {
+}
+
+
 type IdOperation uint
 
 const (
@@ -17798,43 +17779,6 @@ func (_ FfiDestroyerOptionalCheckpointDigest) Destroy(value **CheckpointDigest) 
 	}
 }
 
-type FfiConverterOptionalCoinMetadata struct{}
-
-var FfiConverterOptionalCoinMetadataINSTANCE = FfiConverterOptionalCoinMetadata{}
-
-func (c FfiConverterOptionalCoinMetadata) Lift(rb RustBufferI) **CoinMetadata {
-	return LiftFromRustBuffer[**CoinMetadata](c, rb)
-}
-
-func (_ FfiConverterOptionalCoinMetadata) Read(reader io.Reader) **CoinMetadata {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterCoinMetadataINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalCoinMetadata) Lower(value **CoinMetadata) C.RustBuffer {
-	return LowerIntoRustBuffer[**CoinMetadata](c, value)
-}
-
-func (_ FfiConverterOptionalCoinMetadata) Write(writer io.Writer, value **CoinMetadata) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterCoinMetadataINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalCoinMetadata struct {}
-
-func (_ FfiDestroyerOptionalCoinMetadata) Destroy(value **CoinMetadata) {
-	if value != nil {
-		FfiDestroyerCoinMetadata{}.Destroy(*value)
-	}
-}
-
 type FfiConverterOptionalEd25519PublicKey struct{}
 
 var FfiConverterOptionalEd25519PublicKeyINSTANCE = FfiConverterOptionalEd25519PublicKey{}
@@ -18760,6 +18704,43 @@ func (_ FfiDestroyerOptionalCheckpointSummary) Destroy(value *CheckpointSummary)
 	}
 }
 
+type FfiConverterOptionalCoinMetadata struct{}
+
+var FfiConverterOptionalCoinMetadataINSTANCE = FfiConverterOptionalCoinMetadata{}
+
+func (c FfiConverterOptionalCoinMetadata) Lift(rb RustBufferI) *CoinMetadata {
+	return LiftFromRustBuffer[*CoinMetadata](c, rb)
+}
+
+func (_ FfiConverterOptionalCoinMetadata) Read(reader io.Reader) *CoinMetadata {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterCoinMetadataINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalCoinMetadata) Lower(value *CoinMetadata) C.RustBuffer {
+	return LowerIntoRustBuffer[*CoinMetadata](c, value)
+}
+
+func (_ FfiConverterOptionalCoinMetadata) Write(writer io.Writer, value *CoinMetadata) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterCoinMetadataINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalCoinMetadata struct {}
+
+func (_ FfiDestroyerOptionalCoinMetadata) Destroy(value *CoinMetadata) {
+	if value != nil {
+		FfiDestroyerCoinMetadata{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalDynamicFieldOutput struct{}
 
 var FfiConverterOptionalDynamicFieldOutputINSTANCE = FfiConverterOptionalDynamicFieldOutput{}
@@ -19349,6 +19330,43 @@ type FfiDestroyerOptionalTypeBase64 struct {}
 func (_ FfiDestroyerOptionalTypeBase64) Destroy(value *Base64) {
 	if value != nil {
 		FfiDestroyerTypeBase64{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalTypeBigInt struct{}
+
+var FfiConverterOptionalTypeBigIntINSTANCE = FfiConverterOptionalTypeBigInt{}
+
+func (c FfiConverterOptionalTypeBigInt) Lift(rb RustBufferI) *BigInt {
+	return LiftFromRustBuffer[*BigInt](c, rb)
+}
+
+func (_ FfiConverterOptionalTypeBigInt) Read(reader io.Reader) *BigInt {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterTypeBigIntINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalTypeBigInt) Lower(value *BigInt) C.RustBuffer {
+	return LowerIntoRustBuffer[*BigInt](c, value)
+}
+
+func (_ FfiConverterOptionalTypeBigInt) Write(writer io.Writer, value *BigInt) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterTypeBigIntINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalTypeBigInt struct {}
+
+func (_ FfiDestroyerOptionalTypeBigInt) Destroy(value *BigInt) {
+	if value != nil {
+		FfiDestroyerTypeBigInt{}.Destroy(*value)
 	}
 }
 
@@ -20507,6 +20525,49 @@ func (FfiDestroyerSequenceValidatorCommitteeMember) Destroy(sequence []Validator
 	}
 }
 
+type FfiConverterSequenceFeature struct{}
+
+var FfiConverterSequenceFeatureINSTANCE = FfiConverterSequenceFeature{}
+
+func (c FfiConverterSequenceFeature) Lift(rb RustBufferI) []Feature {
+	return LiftFromRustBuffer[[]Feature](c, rb)
+}
+
+func (c FfiConverterSequenceFeature) Read(reader io.Reader) []Feature {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]Feature, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterFeatureINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceFeature) Lower(value []Feature) C.RustBuffer {
+	return LowerIntoRustBuffer[[]Feature](c, value)
+}
+
+func (c FfiConverterSequenceFeature) Write(writer io.Writer, value []Feature) {
+	if len(value) > math.MaxInt32 {
+		panic("[]Feature is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterFeatureINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceFeature struct {}
+
+func (FfiDestroyerSequenceFeature) Destroy(sequence []Feature) {
+	for _, value := range sequence {
+		FfiDestroyerFeature{}.Destroy(value)
+	}
+}
+
 type FfiConverterMapIdentifierBytes struct {}
 
 var FfiConverterMapIdentifierBytesINSTANCE = FfiConverterMapIdentifierBytes{}
@@ -20603,6 +20664,15 @@ type Base64 = string
 type FfiConverterTypeBase64 = FfiConverterString
 type FfiDestroyerTypeBase64 = FfiDestroyerString
 var FfiConverterTypeBase64INSTANCE = FfiConverterString{}
+/**
+ * Typealias from the type name used in the UDL file to the builtin type.  This
+ * is needed because the UDL type name is used in function/method signatures.
+ * It's also what we have an external type that references a custom type.
+ */
+type BigInt = string
+type FfiConverterTypeBigInt = FfiConverterString
+type FfiDestroyerTypeBigInt = FfiDestroyerString
+var FfiConverterTypeBigIntINSTANCE = FfiConverterString{}
 /**
  * Typealias from the type name used in the UDL file to the builtin type.  This
  * is needed because the UDL type name is used in function/method signatures.
