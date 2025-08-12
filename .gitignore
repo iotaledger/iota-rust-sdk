@@ -2,4 +2,6 @@
 Cargo.lock
 .idea
 *.dylib
+*.so
+*.dll
 __pycache__

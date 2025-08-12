@@ -58,6 +58,63 @@ clean: ## Clean build artifacts
 clean-all: clean ## Clean all generated files, including those ignored by Git. Force removal.
 	git clean -dXf
 
+.PHONY: bindings
+bindings: ## Build all bindings
+	$(MAKE) go
+	$(MAKE) kotlin
+	$(MAKE) python
+
+.PHONY: test-bindings
+test-bindings: ## Test all bindings
+	$(MAKE) test-go
+	$(MAKE) test-kotlin
+	$(MAKE) test-python
+
+# Build ffi crate and detect platform
+define build_binding
+cargo build -p iota-sdk-ffi --lib --release; \
+case "$$(uname -s)" in \
+	Darwin)   LIB_EXT=".dylib" ;; \
+	Linux)    LIB_EXT=".so" ;; \
+	MINGW*|MSYS*|CYGWIN*|Windows_NT) LIB_EXT=".dll" ;; \
+	*)        echo "Unsupported platform"; exit 1 ;; \
+esac;
+endef
+
+.PHONY: go
+go: ## Build Go bindings
+	$(build_binding) \
+	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format
+
+.PHONY: kotlin
+kotlin: ## Build Kotlin bindings
+	$(build_binding) \
+	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
+
+.PHONY: python
+python: ## Build Python bindings
+	$(build_binding) \
+	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
+
+.PHONY: test-go
+test-go: ## Test Go bindings
+	cd bindings/go/; \
+	LD_LIBRARY_PATH="../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../target/release" go run test.go \
+	cd -
+
+.PHONY: test-kotlin
+test-kotlin: ## Test Kotlin bindings
+	cd bindings/kotlin; \
+	./gradlew build clean; \
+	LD_LIBRARY_PATH=./lib ./gradlew run -q; \
+	cd -
+
+.PHONY: test-python
+test-python: ## Test Python bindings
+	python3 bindings/python/test.py
+
 .PHONY: help
 help: ## Show this help
 	@echo "Available targets:"
