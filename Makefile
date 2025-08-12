@@ -58,6 +58,78 @@ clean: ## Clean build artifacts
 clean-all: clean ## Clean all generated files, including those ignored by Git. Force removal.
 	git clean -dXf
 
+# Build all bindings
+.PHONY: bindings
+bindings: ## Build all bindings
+	$(MAKE) go
+	$(MAKE) kotlin
+	$(MAKE) python
+
+# Test all bindings
+.PHONY: test-bindings
+test-bindings: ## Test all bindings
+	$(MAKE) test-go
+	$(MAKE) test-kotlin
+	$(MAKE) test-python
+
+# Build Go bindings
+.PHONY: go
+go: ## Build Go bindings
+	cargo build -p iota-sdk-ffi --lib --release;
+	case "$$(uname -s)" in \
+	  Darwin)   LIB_EXT=".dylib" ;; \
+	  Linux)    LIB_EXT=".so" ;; \
+	  MINGW*|MSYS*|CYGWIN*|Windows_NT) LIB_EXT=".dll" ;; \
+	  *)        echo "Unsupported platform"; exit 1 ;; \
+	esac; \
+	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format
+
+# Test Go bindings
+.PHONY: test-go
+test-go: ## Test Go bindings
+	cd bindings/go/; \
+	LD_LIBRARY_PATH="../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../target/release" go run test.go \
+	cd -
+
+# Build Kotlin bindings
+.PHONY: kotlin
+kotlin: ## Build Kotlin bindings
+	cargo build -p iota-sdk-ffi --lib --release; \
+	case "$$(uname -s)" in \
+	  Darwin)   LIB_EXT=".dylib" ;; \
+	  Linux)    LIB_EXT=".so" ;; \
+	  MINGW*|MSYS*|CYGWIN*|Windows_NT) LIB_EXT=".dll" ;; \
+	  *)        echo "Unsupported platform"; exit 1 ;; \
+	esac; \
+	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
+
+# Test Kotlin bindings
+.PHONY: test-kotlin
+test-kotlin: ## Test Kotlin bindings
+	cd bindings/kotlin; \
+	./gradlew build clean; \
+	LD_LIBRARY_PATH=./lib ./gradlew run -q; \
+	cd -
+
+# Build Python bindings
+.PHONY: python
+python: ## Build Python bindings
+	cargo build -p iota-sdk-ffi --lib --release; \
+	case "$$(uname -s)" in \
+	  Darwin)   LIB_EXT=".dylib" ;; \
+	  Linux)    LIB_EXT=".so" ;; \
+	  MINGW*|MSYS*|CYGWIN*|Windows_NT) LIB_EXT=".dll" ;; \
+	  *)        echo "Unsupported platform"; exit 1 ;; \
+	esac; \
+	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
+
+# Test Python bindings
+.PHONY: test-python
+test-python: ## Test Python bindings
+	python3 bindings/python/test.py
+
 .PHONY: help
 help: ## Show this help
 	@echo "Available targets:"
