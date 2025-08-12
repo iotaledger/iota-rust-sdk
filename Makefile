@@ -58,14 +58,12 @@ clean: ## Clean build artifacts
 clean-all: clean ## Clean all generated files, including those ignored by Git. Force removal.
 	git clean -dXf
 
-# Build all bindings
 .PHONY: bindings
 bindings: ## Build all bindings
 	$(MAKE) go
 	$(MAKE) kotlin
 	$(MAKE) python
 
-# Test all bindings
 .PHONY: test-bindings
 test-bindings: ## Test all bindings
 	$(MAKE) test-go
