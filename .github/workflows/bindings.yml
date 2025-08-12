@@ -1,0 +1,57 @@
+name: Bindings
+
+on:
+  push:
+    branches: [develop, sdk-bindings]
+    paths:
+      - ".github/workflow/bindings.yml"
+      - "bindings/**"
+      - "crates/iota-sdk-ffi/**"
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: sdk-bindings-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install uniffi-bindgen-go
+        run: cargo install uniffi-bindgen-go --git https://github.com/filament-dm/uniffi-bindgen-go --rev ab7315502bd6b979207fdae854e87d531ee8764d
+      - name: Build the bindings
+        run: make go
+      - name: Checks for uncommitted changes
+        run: git diff --exit-code
+      - name: Run the example
+        run: make test-go
+  kotlin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build the bindings
+        run: make kotlin
+      - name: Checks for uncommitted changes
+        run: git diff --exit-code
+      - name: Install Gradle
+        run: |
+          curl -s "https://get.sdkman.io" | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk install gradle
+      - name: Run the example
+        run: make test-kotlin
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build the bindings
+        run: make python
+      - name: Checks for uncommitted changes
+        run: git diff --exit-code
+      - name: Run the example
+        run: make test-python
