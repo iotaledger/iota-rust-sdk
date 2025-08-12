@@ -47,9 +47,9 @@ async def main():
     )
 
     if txn is not None:
-        for sig in txn.signatures():
+        for sig in txn.signatures:
             print("Scheme: ", sig.scheme(), sig.scheme().value)
-        print("Sender: ", txn.transaction().sender().to_hex())
+        print("Sender: ", txn.transaction.sender().to_hex())
 
     service_config = ServiceConfig(
         default_page_size=2,
