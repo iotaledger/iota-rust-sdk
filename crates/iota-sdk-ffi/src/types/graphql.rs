@@ -679,11 +679,17 @@ pub struct ProtocolConfigs(pub iota_graphql_client::query_types::ProtocolConfigs
 
 #[uniffi::remote(Record)]
 pub struct CoinMetadata {
+    #[uniffi(default = None)]
     pub decimals: Option<i32>,
+    #[uniffi(default = None)]
     pub description: Option<String>,
+    #[uniffi(default = None)]
     pub icon_url: Option<String>,
+    #[uniffi(default = None)]
     pub name: Option<String>,
+    #[uniffi(default = None)]
     pub symbol: Option<String>,
+    #[uniffi(default = None)]
     pub supply: Option<BigInt>,
     pub version: u64,
 }
