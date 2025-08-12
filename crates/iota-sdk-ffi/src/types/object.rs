@@ -182,13 +182,13 @@ pub struct ObjectData(pub iota_types::ObjectData);
 impl ObjectData {
     /// Create an `ObjectData` from a `MoveStruct`
     #[uniffi::constructor]
-    pub fn from_move_struct(move_struct: MoveStruct) -> Self {
+    pub fn new_move_struct(move_struct: MoveStruct) -> Self {
         Self(iota_types::ObjectData::Struct(move_struct.into()))
     }
 
     /// Create an `ObjectData` from  `MovePackage`
     #[uniffi::constructor]
-    pub fn from_move_package(move_package: &MovePackage) -> Self {
+    pub fn new_move_package(move_package: &MovePackage) -> Self {
         Self(iota_types::ObjectData::Package(move_package.0.clone()))
     }
 
