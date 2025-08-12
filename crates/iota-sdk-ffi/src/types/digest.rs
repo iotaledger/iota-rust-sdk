@@ -22,6 +22,7 @@ macro_rules! impl_digest_wrapper {
         )]
         pub struct $t(pub iota_types::$t);
 
+        #[uniffi::export]
         impl $t {
             #[uniffi::constructor]
             pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
@@ -29,8 +30,8 @@ macro_rules! impl_digest_wrapper {
             }
 
             #[uniffi::constructor]
-            pub fn from_base58(hex: &str) -> Result<Self> {
-                Ok(Self(iota_types::$t::from_base58(hex)?))
+            pub fn from_base58(base58: &str) -> Result<Self> {
+                Ok(Self(iota_types::$t::from_base58(base58)?))
             }
 
             #[uniffi::constructor]

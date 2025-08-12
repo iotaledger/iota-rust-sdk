@@ -218,7 +218,7 @@ mod serialization {
     use crate::crypto::SignatureFromBytesError;
 
     impl SimpleSignature {
-        fn to_bytes(&self) -> Vec<u8> {
+        pub fn to_bytes(&self) -> Vec<u8> {
             let mut buf = Vec::new();
             match self {
                 SimpleSignature::Ed25519 {
