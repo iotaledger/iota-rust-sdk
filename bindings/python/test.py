@@ -1,15 +1,5 @@
-from lib.iota_sdk_ffi import (
-    GraphQlClient,
-    PaginationFilter,
-    Address,
-    Direction,
-    TransactionsFilter,
-    ObjectId,
-    EventFilter,
-    ServiceConfig,
-    CoinMetadata,
-    TransactionDigest,
-)
+from lib.iota_sdk_ffi import *
+
 import asyncio
 
 
@@ -75,6 +65,29 @@ async def main():
         symbol=None,
         supply="1000",
         version=0,
+    )
+
+    move_struct = MoveStruct(
+        struct_type=StructTag.coin(TypeTag.vector(TypeTag.u8())),
+        version=1,
+        contents=bytes(),
+    )
+
+    id = ObjectId.from_hex(
+        "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"
+    )
+    type_origin = TypeOrigin(
+        module_name=Identifier("module_name"),
+        struct_name=Identifier("struct_name"),
+        package=id,
+    )
+    upgrade_info = UpgradeInfo(upgraded_id=id, upgraded_version=43)
+    move_package = MovePackage(
+        id,
+        version=42,
+        modules={Identifier("some_id"): bytes.fromhex("48656c6c6f")},
+        type_origin_table=[type_origin],
+        linkage_table={id: upgrade_info},
     )
 
 
