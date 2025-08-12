@@ -83,15 +83,18 @@ case "$$(uname -s)" in \
 esac;
 endef
 
+.PHONY: go
 go: ## Build Go bindings
 	$(build_binding) \
 	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format
 
+.PHONY: kotlin
 kotlin: ## Build Kotlin bindings
 	$(build_binding) \
 	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
 
+.PHONY: python
 python: ## Build Python bindings
 	$(build_binding) \
 	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format; \
