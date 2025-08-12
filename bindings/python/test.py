@@ -32,6 +32,15 @@ async def main():
 
     filter = EventFilter(sender=my_address)
 
+    txn = await client.transaction(
+        TransactionDigest.from_base58("HT1wvebXV4LUisLa4aJQEyoxt1HEMqznjf5UtStmdxyM")
+    )
+
+    if txn is not None:
+        for sig in txn.signatures():
+            print("Scheme: ", sig.scheme(), sig.scheme().value)
+        print("Sender: ", txn.transaction().sender().to_hex())
+
     move_struct = MoveStruct(
         struct_type=StructTag.coin(TypeTag.vector(TypeTag.u8())),
         version=1,
