@@ -74,12 +74,6 @@ impl From<&iota_types::ObjectId> for ObjectId {
     }
 }
 
-impl From<&ObjectId> for iota_types::ObjectId {
-    fn from(value: &ObjectId) -> Self {
-        (*value.0.as_address()).into()
-    }
-}
-
 /// Reference to an object
 ///
 /// Contains sufficient information to uniquely identify a specific object.
@@ -288,7 +282,7 @@ impl MovePackage {
         linkage_table: HashMap<Arc<ObjectId>, UpgradeInfo>,
     ) -> Result<Self> {
         Ok(Self(iota_types::MovePackage {
-            id: id.into(),
+            id: **id,
             version,
             modules: modules.into_iter().map(|(k, v)| (k.0.clone(), v)).collect(),
             type_origin_table: type_origin_table
