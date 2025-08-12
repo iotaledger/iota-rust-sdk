@@ -38,6 +38,21 @@ jobs:
           cd bindings/kotlin
           ./gradlew build clean
           LD_LIBRARY_PATH=./lib ./gradlew run -q
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install uniffi-bindgen-go
+        uses: cargo install uniffi-bindgen-go --git https://github.com/filament-dm/uniffi-bindgen-go --rev ab7315502bd6b979207fdae854e87d531ee8764d
+      - name: Build the dynamic library
+        run: cargo build -p iota-sdk-ffi --lib --release
+      - name: Generate the bindings
+        run: uniffi-bindgen-go --library target/release/libiota_sdk_ffi.so --out-dir ./bindings/go --no-format
+      - name: Checks for uncommitted changes
+        run: git diff --exit-code
+      - name: Run the example
+        run: cd bindings/go && LD_LIBRARY_PATH="../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../target/release" go run test.go
   python:
     runs-on: ubuntu-latest
     steps:
