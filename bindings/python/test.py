@@ -1,49 +1,82 @@
-from lib.iota_sdk_ffi import GraphQlClient, PaginationFilter, Address, Direction, TransactionsFilter, ObjectId, EventFilter, ServiceConfig, CoinMetadata
+from lib.iota_sdk_ffi import (
+    GraphQlClient,
+    PaginationFilter,
+    Address,
+    Direction,
+    TransactionsFilter,
+    ObjectId,
+    EventFilter,
+    ServiceConfig,
+    CoinMetadata,
+    TransactionDigest,
+)
 import asyncio
+
 
 async def main():
     client = GraphQlClient.new_devnet()
     chain_id = await client.chain_id()
     print(chain_id)
-    
-    my_address=Address.from_hex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")
+
+    my_address = Address.from_hex(
+        "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"
+    )
 
     coins = await client.coins(
-        my_address, 
-        PaginationFilter(direction=Direction.FORWARD, cursor=None, limit=None)
+        my_address,
+        PaginationFilter(direction=Direction.FORWARD, cursor=None, limit=None),
     )
     for coin in coins.data:
-        print(f'ID = 0x{coin.id().to_hex()} Balance = {coin.balance()}')
+        print(f"ID = 0x{coin.id().to_hex()} Balance = {coin.balance()}")
 
     balance = await client.balance(my_address)
 
-    print(f'Total Balance = {balance}')
+    print(f"Total Balance = {balance}")
 
-    filter=TransactionsFilter(at_checkpoint=3, input_object=ObjectId.from_hex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"))
+    filter = TransactionsFilter(
+        at_checkpoint=3,
+        input_object=ObjectId.from_hex(
+            "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"
+        ),
+    )
 
-    filter=EventFilter(sender=my_address)
+    filter = EventFilter(sender=my_address)
 
-    service_config=ServiceConfig(default_page_size=2,
-                                 enabled_features=[],
-                                 max_move_value_depth=0,
-                                 max_output_nodes=0,
-                                 max_page_size=0,
-                                 max_query_depth=0,
-                                 max_query_nodes=0,
-                                 max_query_payload_size=0,
-                                 max_type_argument_depth=0,
-                                 max_type_argument_width=0,
-                                 max_type_nodes=0,
-                                 mutation_timeout_ms=0,
-                                 request_timeout_ms=0)
+    txn = await client.transaction(
+        TransactionDigest.from_base58("HT1wvebXV4LUisLa4aJQEyoxt1HEMqznjf5UtStmdxyM")
+    )
 
-    coin_metadata=CoinMetadata(decimals=2,
-                               description="test",
-                               icon_url=None,
-                               name="test",
-                               symbol=None,
-                               supply="1000",
-                               version=0)
+    if txn is not None:
+        for sig in txn.signatures():
+            print("Scheme: ", sig.scheme(), sig.scheme().value)
+        print("Sender: ", txn.transaction().sender().to_hex())
 
-if __name__ == '__main__':
+    service_config = ServiceConfig(
+        default_page_size=2,
+        enabled_features=[],
+        max_move_value_depth=0,
+        max_output_nodes=0,
+        max_page_size=0,
+        max_query_depth=0,
+        max_query_nodes=0,
+        max_query_payload_size=0,
+        max_type_argument_depth=0,
+        max_type_argument_width=0,
+        max_type_nodes=0,
+        mutation_timeout_ms=0,
+        request_timeout_ms=0,
+    )
+
+    coin_metadata = CoinMetadata(
+        decimals=2,
+        description="test",
+        icon_url=None,
+        name="test",
+        symbol=None,
+        supply="1000",
+        version=0,
+    )
+
+
+if __name__ == "__main__":
     asyncio.run(main())
