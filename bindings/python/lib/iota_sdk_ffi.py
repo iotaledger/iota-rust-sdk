@@ -1019,7 +1019,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_generate() != 14578:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1() != 6144:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() != 63561:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_from_base58() != 63406:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2950,11 +2950,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactioneffects.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactioneffects.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_new_v1.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_new_v1.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4532,9 +4532,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_from_bytes
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_generate.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_v1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_from_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_from_base58.restype = ctypes.c_uint16
@@ -7269,35 +7269,6 @@ class _UniffiConverterTypeTypeOrigin(_UniffiConverterRustBuffer):
         _UniffiConverterTypeIdentifier.write(value.module_name, buf)
         _UniffiConverterTypeIdentifier.write(value.struct_name, buf)
         _UniffiConverterTypeObjectId.write(value.package, buf)
-
-
-class TypeParseError:
-    source: "str"
-    def __init__(self, *, source: "str"):
-        self.source = source
-
-    def __str__(self):
-        return "TypeParseError(source={})".format(self.source)
-
-    def __eq__(self, other):
-        if self.source != other.source:
-            return False
-        return True
-
-class _UniffiConverterTypeTypeParseError(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return TypeParseError(
-            source=_UniffiConverterString.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterString.check_lower(value.source)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterString.write(value.source, buf)
 
 
 class UnchangedSharedObject:
@@ -21437,11 +21408,11 @@ class TransactionEffects():
         inst._pointer = pointer
         return inst
     @classmethod
-    def v1(cls, effects: "TransactionEffectsV1"):
+    def new_v1(cls, effects: "TransactionEffectsV1"):
         _UniffiConverterTypeTransactionEffectsV1.check_lower(effects)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_v1,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_new_v1,
         _UniffiConverterTypeTransactionEffectsV1.lower(effects))
         return cls._make_instance_(pointer)
 
@@ -23210,7 +23181,6 @@ __all__ = [
     "TransactionMetadata",
     "TransactionsFilter",
     "TypeOrigin",
-    "TypeParseError",
     "UnchangedSharedObject",
     "UpgradeInfo",
     "Validator",
