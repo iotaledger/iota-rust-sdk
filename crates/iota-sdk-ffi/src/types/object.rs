@@ -7,7 +7,7 @@ use std::{
     sync::Arc,
 };
 
-use iota_types::{TypeParseError, Version};
+use iota_types::Version;
 
 use crate::{
     error::Result,

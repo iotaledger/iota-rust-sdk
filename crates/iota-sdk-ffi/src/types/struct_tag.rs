@@ -8,27 +8,6 @@ use crate::{
     types::{address::Address, type_tag::TypeTag},
 };
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
-pub struct TypeParseError {
-    source: String,
-}
-
-impl From<TypeParseError> for iota_types::TypeParseError {
-    fn from(value: TypeParseError) -> Self {
-        iota_types::TypeParseError {
-            source: value.source,
-        }
-    }
-}
-
-impl From<iota_types::TypeParseError> for TypeParseError {
-    fn from(value: iota_types::TypeParseError) -> Self {
-        TypeParseError {
-            source: value.source,
-        }
-    }
-}
-
 /// A move identifier
 ///
 /// # BCS
