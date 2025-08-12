@@ -3,7 +3,10 @@
 
 use std::sync::Arc;
 
-use crate::types::{address::Address, type_tag::TypeTag};
+use crate::{
+    error::Result,
+    types::{address::Address, type_tag::TypeTag},
+};
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Record)]
 pub struct TypeParseError {
@@ -42,18 +45,15 @@ impl From<iota_types::TypeParseError> for TypeParseError {
 #[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq, derive_more::From, uniffi::Object)]
 pub struct Identifier(pub iota_types::Identifier);
 
+#[uniffi::export]
 impl Identifier {
     #[uniffi::constructor]
-    pub fn new(identifier: impl AsRef<str>) -> Result<Self, TypeParseError> {
+    pub fn new(identifier: String) -> Result<Self> {
         Ok(Self(iota_types::Identifier::new(identifier)?))
     }
 
-    pub fn into_inner(self) -> Box<str> {
-        self.0.into_inner()
-    }
-
-    pub fn as_str(&self) -> &str {
-        self.0.as_str()
+    pub fn as_str(&self) -> String {
+        self.0.as_str().to_owned()
     }
 }
 
