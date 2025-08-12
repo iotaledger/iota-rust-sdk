@@ -286,7 +286,7 @@ pub struct TransactionEffects(pub iota_types::TransactionEffects);
 #[uniffi::export]
 impl TransactionEffects {
     #[uniffi::constructor]
-    pub fn v1(effects: TransactionEffectsV1) -> Self {
+    pub fn new_v1(effects: TransactionEffectsV1) -> Self {
         Self(iota_types::TransactionEffects::V1(Box::new(effects.into())))
     }
 
