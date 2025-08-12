@@ -68,12 +68,6 @@ impl ObjectId {
     }
 }
 
-impl From<&iota_types::ObjectId> for ObjectId {
-    fn from(value: &iota_types::ObjectId) -> Self {
-        Self(*value)
-    }
-}
-
 /// Reference to an object
 ///
 /// Contains sufficient information to uniquely identify a specific object.
@@ -95,7 +89,7 @@ pub struct ObjectReference {
 impl From<iota_types::ObjectReference> for ObjectReference {
     fn from(value: iota_types::ObjectReference) -> Self {
         Self {
-            object_id: Arc::new(value.object_id().into()),
+            object_id: Arc::new((*value.object_id()).into()),
             version: value.version(),
             digest: Arc::new(value.digest().into()),
         }
