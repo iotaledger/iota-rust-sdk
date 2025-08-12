@@ -1,7 +1,11 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{str::FromStr, sync::Arc};
+use std::{
+    collections::{BTreeMap, HashMap},
+    str::FromStr,
+    sync::Arc,
+};
 
 use iota_types::Version;
 
@@ -10,7 +14,7 @@ use crate::{
     types::{
         address::Address,
         digest::{ObjectDigest, TransactionDigest},
-        struct_tag::StructTag,
+        struct_tag::{Identifier, StructTag},
     },
 };
 
@@ -32,7 +36,9 @@ use crate::{
 /// ```text
 /// object-id = 32*OCTET
 /// ```
-#[derive(Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[derive(
+    Clone, Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Deref, uniffi::Object,
+)]
 pub struct ObjectId(pub iota_types::ObjectId);
 
 #[uniffi::export]
@@ -141,8 +147,8 @@ impl Object {
     }
 
     /// Try to interpret this object as a move struct
-    pub fn as_struct(&self) -> Option<Arc<MoveStruct>> {
-        self.0.as_struct().cloned().map(Into::into).map(Arc::new)
+    pub fn as_struct(&self) -> Option<MoveStruct> {
+        self.0.as_struct().cloned().map(Into::into)
     }
 
     /// Return this object's owner
@@ -176,8 +182,8 @@ pub struct ObjectData(pub iota_types::ObjectData);
 impl ObjectData {
     /// Create an `ObjectData` from a `MoveStruct`
     #[uniffi::constructor]
-    pub fn from_move_struct(move_struct: &MoveStruct) -> Self {
-        Self(iota_types::ObjectData::Struct(move_struct.0.clone()))
+    pub fn from_move_struct(move_struct: MoveStruct) -> Self {
+        Self(iota_types::ObjectData::Struct(move_struct.into()))
     }
 
     /// Create an `ObjectData` from  `MovePackage`
@@ -197,12 +203,8 @@ impl ObjectData {
     }
 
     /// Try to interpret this object as a `MoveStruct`
-    pub fn as_struct_opt(&self) -> Option<Arc<MoveStruct>> {
-        self.0
-            .as_struct_opt()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
+    pub fn as_struct_opt(&self) -> Option<MoveStruct> {
+        self.0.as_struct_opt().cloned().map(Into::into)
     }
 
     /// Try to interpret this object as a `MovePackage`
@@ -215,11 +217,168 @@ impl ObjectData {
     }
 }
 
+/// Identifies a struct and the module it was defined in
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// type-origin = identifier identifier object-id
+/// ```
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct TypeOrigin {
+    pub module_name: Arc<Identifier>,
+    pub struct_name: Arc<Identifier>,
+    pub package: Arc<ObjectId>,
+}
+
+impl From<iota_types::TypeOrigin> for TypeOrigin {
+    fn from(value: iota_types::TypeOrigin) -> Self {
+        Self {
+            module_name: Arc::new(value.module_name.into()),
+            struct_name: Arc::new(value.struct_name.into()),
+            package: Arc::new(value.package.into()),
+        }
+    }
+}
+
+impl From<TypeOrigin> for iota_types::TypeOrigin {
+    fn from(value: TypeOrigin) -> Self {
+        Self {
+            module_name: value.module_name.0.clone(),
+            struct_name: value.struct_name.0.clone(),
+            package: **value.package,
+        }
+    }
+}
+
+/// Upgraded package info for the linkage table
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// upgrade-info = object-id u64
+/// ```
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct UpgradeInfo {
+    /// Id of the upgraded packages
+    pub upgraded_id: Arc<ObjectId>,
+    /// Version of the upgraded package
+    pub upgraded_version: Version,
+}
+
+impl From<iota_types::UpgradeInfo> for UpgradeInfo {
+    fn from(value: iota_types::UpgradeInfo) -> Self {
+        Self {
+            upgraded_id: Arc::new(value.upgraded_id.into()),
+            upgraded_version: value.upgraded_version,
+        }
+    }
+}
+
+impl From<UpgradeInfo> for iota_types::UpgradeInfo {
+    fn from(value: UpgradeInfo) -> Self {
+        Self {
+            upgraded_id: **value.upgraded_id,
+            upgraded_version: value.upgraded_version,
+        }
+    }
+}
+
+/// A move package
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-move-package = object-id u64 move-modules type-origin-table linkage-table
+///
+/// move-modules = map (identifier bytes)
+/// type-origin-table = vector type-origin
+/// linkage-table = map (object-id upgrade-info)
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct MovePackage(pub iota_types::MovePackage);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct MoveStruct(pub iota_types::MoveStruct);
+#[uniffi::export]
+impl MovePackage {
+    #[uniffi::constructor]
+    pub fn new(
+        id: &ObjectId,
+        version: Version,
+        modules: HashMap<Arc<Identifier>, Vec<u8>>,
+        type_origin_table: Vec<TypeOrigin>,
+        linkage_table: HashMap<Arc<ObjectId>, UpgradeInfo>,
+    ) -> Result<Self> {
+        Ok(Self(iota_types::MovePackage {
+            id: **id,
+            version,
+            modules: modules.into_iter().map(|(k, v)| (k.0.clone(), v)).collect(),
+            type_origin_table: type_origin_table
+                .into_iter()
+                .map(TryInto::try_into)
+                .collect::<Result<Vec<_>, _>>()?,
+            linkage_table: linkage_table
+                .into_iter()
+                .map(|(k, v)| (**k, v.into()))
+                .collect(),
+        }))
+    }
+}
+
+/// A move struct
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-move-struct = compressed-struct-tag bool u64 object-contents
+///
+/// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
+/// other-struct-type     = %x00 struct-tag
+/// gas-coin-type         = %x01
+/// staked-iota-type      = %x02
+/// coin-type             = %x03 type-tag
+///
+/// ; first 32 bytes of the contents are the object's object-id
+/// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+/// ```
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct MoveStruct {
+    /// The type of this object
+    pub struct_type: Arc<StructTag>,
+    /// Number that increases each time a tx takes this object as a mutable
+    /// input This is a lamport timestamp, not a sequentially increasing
+    /// version
+    pub version: Version,
+    /// BCS bytes of a Move struct value
+    pub contents: Vec<u8>,
+}
+
+impl From<iota_types::MoveStruct> for MoveStruct {
+    fn from(value: iota_types::MoveStruct) -> Self {
+        Self {
+            struct_type: Arc::new(value.type_.into()),
+            version: value.version,
+            contents: value.contents,
+        }
+    }
+}
+
+impl From<MoveStruct> for iota_types::MoveStruct {
+    fn from(value: MoveStruct) -> Self {
+        Self {
+            type_: value.struct_type.0.clone(),
+            version: value.version,
+            contents: value.contents,
+        }
+    }
+}
 
 #[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Owner(pub iota_types::Owner);

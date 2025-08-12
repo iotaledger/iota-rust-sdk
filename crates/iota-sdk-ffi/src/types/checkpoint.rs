@@ -6,7 +6,7 @@ use std::sync::Arc;
 use iota_types::GasCostSummary;
 
 use crate::types::{
-    crypto::ValidatorCommitteeMember,
+    crypto::validator::ValidatorCommitteeMember,
     digest::{CheckpointContentsDigest, CheckpointDigest, Digest},
 };
 
