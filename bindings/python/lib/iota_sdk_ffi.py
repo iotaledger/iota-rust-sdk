@@ -555,9 +555,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 49066:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 15206:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 6413:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 46991:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 51508:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2111,26 +2111,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_as_str.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_as_str.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movefunction.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movefunction.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movefunction.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movefunction.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movemodule.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movemodule.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movemodule.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movemodule.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movepackage.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4914,10 +4894,6 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
 
 
 
-
-
-
-
 class BigInt:
     value: "str"
     def __init__(self, *, value: "str"):
@@ -6042,6 +6018,317 @@ class _UniffiConverterTypeGqlAddress(_UniffiConverterRustBuffer):
         _UniffiConverterTypeAddress.write(value.address, buf)
 
 
+class MoveEnum:
+    abilities: "typing.Optional[typing.List[MoveAbility]]"
+    name: "str"
+    type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]"
+    variants: "typing.Optional[typing.List[MoveEnumVariant]]"
+    def __init__(self, *, abilities: "typing.Optional[typing.List[MoveAbility]]" = _DEFAULT, name: "str", type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]" = _DEFAULT, variants: "typing.Optional[typing.List[MoveEnumVariant]]" = _DEFAULT):
+        if abilities is _DEFAULT:
+            self.abilities = None
+        else:
+            self.abilities = abilities
+        self.name = name
+        if type_parameters is _DEFAULT:
+            self.type_parameters = None
+        else:
+            self.type_parameters = type_parameters
+        if variants is _DEFAULT:
+            self.variants = None
+        else:
+            self.variants = variants
+
+    def __str__(self):
+        return "MoveEnum(abilities={}, name={}, type_parameters={}, variants={})".format(self.abilities, self.name, self.type_parameters, self.variants)
+
+    def __eq__(self, other):
+        if self.abilities != other.abilities:
+            return False
+        if self.name != other.name:
+            return False
+        if self.type_parameters != other.type_parameters:
+            return False
+        if self.variants != other.variants:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveEnum(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveEnum(
+            abilities=_UniffiConverterOptionalSequenceTypeMoveAbility.read(buf),
+            name=_UniffiConverterString.read(buf),
+            type_parameters=_UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.read(buf),
+            variants=_UniffiConverterOptionalSequenceTypeMoveEnumVariant.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalSequenceTypeMoveAbility.check_lower(value.abilities)
+        _UniffiConverterString.check_lower(value.name)
+        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.check_lower(value.type_parameters)
+        _UniffiConverterOptionalSequenceTypeMoveEnumVariant.check_lower(value.variants)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalSequenceTypeMoveAbility.write(value.abilities, buf)
+        _UniffiConverterString.write(value.name, buf)
+        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.write(value.type_parameters, buf)
+        _UniffiConverterOptionalSequenceTypeMoveEnumVariant.write(value.variants, buf)
+
+
+class MoveEnumConnection:
+    nodes: "typing.List[MoveEnum]"
+    page_info: "PageInfo"
+    def __init__(self, *, nodes: "typing.List[MoveEnum]", page_info: "PageInfo"):
+        self.nodes = nodes
+        self.page_info = page_info
+
+    def __str__(self):
+        return "MoveEnumConnection(nodes={}, page_info={})".format(self.nodes, self.page_info)
+
+    def __eq__(self, other):
+        if self.nodes != other.nodes:
+            return False
+        if self.page_info != other.page_info:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveEnumConnection(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveEnumConnection(
+            nodes=_UniffiConverterSequenceTypeMoveEnum.read(buf),
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeMoveEnum.check_lower(value.nodes)
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeMoveEnum.write(value.nodes, buf)
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+
+
+class MoveEnumVariant:
+    fields: "typing.Optional[typing.List[MoveField]]"
+    name: "str"
+    def __init__(self, *, fields: "typing.Optional[typing.List[MoveField]]", name: "str"):
+        self.fields = fields
+        self.name = name
+
+    def __str__(self):
+        return "MoveEnumVariant(fields={}, name={})".format(self.fields, self.name)
+
+    def __eq__(self, other):
+        if self.fields != other.fields:
+            return False
+        if self.name != other.name:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveEnumVariant(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveEnumVariant(
+            fields=_UniffiConverterOptionalSequenceTypeMoveField.read(buf),
+            name=_UniffiConverterString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalSequenceTypeMoveField.check_lower(value.fields)
+        _UniffiConverterString.check_lower(value.name)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalSequenceTypeMoveField.write(value.fields, buf)
+        _UniffiConverterString.write(value.name, buf)
+
+
+class MoveField:
+    name: "str"
+    type: "typing.Optional[OpenMoveType]"
+    def __init__(self, *, name: "str", type: "typing.Optional[OpenMoveType]"):
+        self.name = name
+        self.type = type
+
+    def __str__(self):
+        return "MoveField(name={}, type={})".format(self.name, self.type)
+
+    def __eq__(self, other):
+        if self.name != other.name:
+            return False
+        if self.type != other.type:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveField(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveField(
+            name=_UniffiConverterString.read(buf),
+            type=_UniffiConverterOptionalTypeOpenMoveType.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.name)
+        _UniffiConverterOptionalTypeOpenMoveType.check_lower(value.type)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.name, buf)
+        _UniffiConverterOptionalTypeOpenMoveType.write(value.type, buf)
+
+
+class MoveFunction:
+    is_entry: "typing.Optional[bool]"
+    name: "str"
+    parameters: "typing.Optional[typing.List[OpenMoveType]]"
+    _return: "typing.Optional[typing.List[OpenMoveType]]"
+    type_parameters: "typing.Optional[typing.List[MoveFunctionTypeParameter]]"
+    visibility: "typing.Optional[MoveVisibility]"
+    def __init__(self, *, is_entry: "typing.Optional[bool]" = _DEFAULT, name: "str", parameters: "typing.Optional[typing.List[OpenMoveType]]" = _DEFAULT, _return: "typing.Optional[typing.List[OpenMoveType]]" = _DEFAULT, type_parameters: "typing.Optional[typing.List[MoveFunctionTypeParameter]]" = _DEFAULT, visibility: "typing.Optional[MoveVisibility]" = _DEFAULT):
+        if is_entry is _DEFAULT:
+            self.is_entry = None
+        else:
+            self.is_entry = is_entry
+        self.name = name
+        if parameters is _DEFAULT:
+            self.parameters = None
+        else:
+            self.parameters = parameters
+        if _return is _DEFAULT:
+            self._return = None
+        else:
+            self._return = _return
+        if type_parameters is _DEFAULT:
+            self.type_parameters = None
+        else:
+            self.type_parameters = type_parameters
+        if visibility is _DEFAULT:
+            self.visibility = None
+        else:
+            self.visibility = visibility
+
+    def __str__(self):
+        return "MoveFunction(is_entry={}, name={}, parameters={}, _return={}, type_parameters={}, visibility={})".format(self.is_entry, self.name, self.parameters, self._return, self.type_parameters, self.visibility)
+
+    def __eq__(self, other):
+        if self.is_entry != other.is_entry:
+            return False
+        if self.name != other.name:
+            return False
+        if self.parameters != other.parameters:
+            return False
+        if self._return != other._return:
+            return False
+        if self.type_parameters != other.type_parameters:
+            return False
+        if self.visibility != other.visibility:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveFunction(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveFunction(
+            is_entry=_UniffiConverterOptionalBool.read(buf),
+            name=_UniffiConverterString.read(buf),
+            parameters=_UniffiConverterOptionalSequenceTypeOpenMoveType.read(buf),
+            _return=_UniffiConverterOptionalSequenceTypeOpenMoveType.read(buf),
+            type_parameters=_UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter.read(buf),
+            visibility=_UniffiConverterOptionalTypeMoveVisibility.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalBool.check_lower(value.is_entry)
+        _UniffiConverterString.check_lower(value.name)
+        _UniffiConverterOptionalSequenceTypeOpenMoveType.check_lower(value.parameters)
+        _UniffiConverterOptionalSequenceTypeOpenMoveType.check_lower(value._return)
+        _UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter.check_lower(value.type_parameters)
+        _UniffiConverterOptionalTypeMoveVisibility.check_lower(value.visibility)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalBool.write(value.is_entry, buf)
+        _UniffiConverterString.write(value.name, buf)
+        _UniffiConverterOptionalSequenceTypeOpenMoveType.write(value.parameters, buf)
+        _UniffiConverterOptionalSequenceTypeOpenMoveType.write(value._return, buf)
+        _UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter.write(value.type_parameters, buf)
+        _UniffiConverterOptionalTypeMoveVisibility.write(value.visibility, buf)
+
+
+class MoveFunctionConnection:
+    nodes: "typing.List[MoveFunction]"
+    page_info: "PageInfo"
+    def __init__(self, *, nodes: "typing.List[MoveFunction]", page_info: "PageInfo"):
+        self.nodes = nodes
+        self.page_info = page_info
+
+    def __str__(self):
+        return "MoveFunctionConnection(nodes={}, page_info={})".format(self.nodes, self.page_info)
+
+    def __eq__(self, other):
+        if self.nodes != other.nodes:
+            return False
+        if self.page_info != other.page_info:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveFunctionConnection(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveFunctionConnection(
+            nodes=_UniffiConverterSequenceTypeMoveFunction.read(buf),
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeMoveFunction.check_lower(value.nodes)
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeMoveFunction.write(value.nodes, buf)
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+
+
+class MoveFunctionTypeParameter:
+    constraints: "typing.List[MoveAbility]"
+    def __init__(self, *, constraints: "typing.List[MoveAbility]"):
+        self.constraints = constraints
+
+    def __str__(self):
+        return "MoveFunctionTypeParameter(constraints={})".format(self.constraints)
+
+    def __eq__(self, other):
+        if self.constraints != other.constraints:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveFunctionTypeParameter(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveFunctionTypeParameter(
+            constraints=_UniffiConverterSequenceTypeMoveAbility.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeMoveAbility.check_lower(value.constraints)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeMoveAbility.write(value.constraints, buf)
+
+
 class MoveLocation:
     """
     Location in move bytecode where an error occurred
@@ -6132,6 +6419,144 @@ class _UniffiConverterTypeMoveLocation(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalString.write(value.function_name, buf)
 
 
+class MoveModule:
+    file_format_version: "int"
+    enums: "typing.Optional[MoveEnumConnection]"
+    friends: "MoveModuleConnection"
+    functions: "typing.Optional[MoveFunctionConnection]"
+    structs: "typing.Optional[MoveStructConnection]"
+    def __init__(self, *, file_format_version: "int", enums: "typing.Optional[MoveEnumConnection]" = _DEFAULT, friends: "MoveModuleConnection", functions: "typing.Optional[MoveFunctionConnection]" = _DEFAULT, structs: "typing.Optional[MoveStructConnection]" = _DEFAULT):
+        self.file_format_version = file_format_version
+        if enums is _DEFAULT:
+            self.enums = None
+        else:
+            self.enums = enums
+        self.friends = friends
+        if functions is _DEFAULT:
+            self.functions = None
+        else:
+            self.functions = functions
+        if structs is _DEFAULT:
+            self.structs = None
+        else:
+            self.structs = structs
+
+    def __str__(self):
+        return "MoveModule(file_format_version={}, enums={}, friends={}, functions={}, structs={})".format(self.file_format_version, self.enums, self.friends, self.functions, self.structs)
+
+    def __eq__(self, other):
+        if self.file_format_version != other.file_format_version:
+            return False
+        if self.enums != other.enums:
+            return False
+        if self.friends != other.friends:
+            return False
+        if self.functions != other.functions:
+            return False
+        if self.structs != other.structs:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveModule(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveModule(
+            file_format_version=_UniffiConverterInt32.read(buf),
+            enums=_UniffiConverterOptionalTypeMoveEnumConnection.read(buf),
+            friends=_UniffiConverterTypeMoveModuleConnection.read(buf),
+            functions=_UniffiConverterOptionalTypeMoveFunctionConnection.read(buf),
+            structs=_UniffiConverterOptionalTypeMoveStructConnection.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterInt32.check_lower(value.file_format_version)
+        _UniffiConverterOptionalTypeMoveEnumConnection.check_lower(value.enums)
+        _UniffiConverterTypeMoveModuleConnection.check_lower(value.friends)
+        _UniffiConverterOptionalTypeMoveFunctionConnection.check_lower(value.functions)
+        _UniffiConverterOptionalTypeMoveStructConnection.check_lower(value.structs)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterInt32.write(value.file_format_version, buf)
+        _UniffiConverterOptionalTypeMoveEnumConnection.write(value.enums, buf)
+        _UniffiConverterTypeMoveModuleConnection.write(value.friends, buf)
+        _UniffiConverterOptionalTypeMoveFunctionConnection.write(value.functions, buf)
+        _UniffiConverterOptionalTypeMoveStructConnection.write(value.structs, buf)
+
+
+class MoveModuleConnection:
+    nodes: "typing.List[MoveModuleQuery]"
+    page_info: "PageInfo"
+    def __init__(self, *, nodes: "typing.List[MoveModuleQuery]", page_info: "PageInfo"):
+        self.nodes = nodes
+        self.page_info = page_info
+
+    def __str__(self):
+        return "MoveModuleConnection(nodes={}, page_info={})".format(self.nodes, self.page_info)
+
+    def __eq__(self, other):
+        if self.nodes != other.nodes:
+            return False
+        if self.page_info != other.page_info:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveModuleConnection(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveModuleConnection(
+            nodes=_UniffiConverterSequenceTypeMoveModuleQuery.read(buf),
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeMoveModuleQuery.check_lower(value.nodes)
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeMoveModuleQuery.write(value.nodes, buf)
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+
+
+class MoveModuleQuery:
+    package: "MovePackageQuery"
+    name: "str"
+    def __init__(self, *, package: "MovePackageQuery", name: "str"):
+        self.package = package
+        self.name = name
+
+    def __str__(self):
+        return "MoveModuleQuery(package={}, name={})".format(self.package, self.name)
+
+    def __eq__(self, other):
+        if self.package != other.package:
+            return False
+        if self.name != other.name:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveModuleQuery(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveModuleQuery(
+            package=_UniffiConverterTypeMovePackageQuery.read(buf),
+            name=_UniffiConverterString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeMovePackageQuery.check_lower(value.package)
+        _UniffiConverterString.check_lower(value.name)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeMovePackageQuery.write(value.package, buf)
+        _UniffiConverterString.write(value.name, buf)
+
+
 class MoveObject:
     bcs: "typing.Optional[str]"
     def __init__(self, *, bcs: "typing.Optional[str]" = _DEFAULT):
@@ -6213,6 +6638,42 @@ class _UniffiConverterTypeMovePackagePage(_UniffiConverterRustBuffer):
         _UniffiConverterSequenceTypeMovePackage.write(value.data, buf)
 
 
+class MovePackageQuery:
+    address: "Address"
+    bcs: "typing.Optional[Base64]"
+    def __init__(self, *, address: "Address", bcs: "typing.Optional[Base64]"):
+        self.address = address
+        self.bcs = bcs
+
+    def __str__(self):
+        return "MovePackageQuery(address={}, bcs={})".format(self.address, self.bcs)
+
+    def __eq__(self, other):
+        if self.address != other.address:
+            return False
+        if self.bcs != other.bcs:
+            return False
+        return True
+
+class _UniffiConverterTypeMovePackageQuery(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MovePackageQuery(
+            address=_UniffiConverterTypeAddress.read(buf),
+            bcs=_UniffiConverterOptionalTypeBase64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeAddress.check_lower(value.address)
+        _UniffiConverterOptionalTypeBase64.check_lower(value.bcs)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeAddress.write(value.address, buf)
+        _UniffiConverterOptionalTypeBase64.write(value.bcs, buf)
+
+
 class MoveStruct:
     """
     A move struct
@@ -6289,6 +6750,128 @@ class _UniffiConverterTypeMoveStruct(_UniffiConverterRustBuffer):
         _UniffiConverterTypeStructTag.write(value.struct_type, buf)
         _UniffiConverterUInt64.write(value.version, buf)
         _UniffiConverterBytes.write(value.contents, buf)
+
+
+class MoveStructConnection:
+    page_info: "PageInfo"
+    nodes: "typing.List[MoveStructQuery]"
+    def __init__(self, *, page_info: "PageInfo", nodes: "typing.List[MoveStructQuery]"):
+        self.page_info = page_info
+        self.nodes = nodes
+
+    def __str__(self):
+        return "MoveStructConnection(page_info={}, nodes={})".format(self.page_info, self.nodes)
+
+    def __eq__(self, other):
+        if self.page_info != other.page_info:
+            return False
+        if self.nodes != other.nodes:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveStructConnection(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveStructConnection(
+            page_info=_UniffiConverterTypePageInfo.read(buf),
+            nodes=_UniffiConverterSequenceTypeMoveStructQuery.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypePageInfo.check_lower(value.page_info)
+        _UniffiConverterSequenceTypeMoveStructQuery.check_lower(value.nodes)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypePageInfo.write(value.page_info, buf)
+        _UniffiConverterSequenceTypeMoveStructQuery.write(value.nodes, buf)
+
+
+class MoveStructQuery:
+    abilities: "typing.Optional[typing.List[MoveAbility]]"
+    name: "str"
+    fields: "typing.Optional[typing.List[MoveField]]"
+    type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]"
+    def __init__(self, *, abilities: "typing.Optional[typing.List[MoveAbility]]", name: "str", fields: "typing.Optional[typing.List[MoveField]]", type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]"):
+        self.abilities = abilities
+        self.name = name
+        self.fields = fields
+        self.type_parameters = type_parameters
+
+    def __str__(self):
+        return "MoveStructQuery(abilities={}, name={}, fields={}, type_parameters={})".format(self.abilities, self.name, self.fields, self.type_parameters)
+
+    def __eq__(self, other):
+        if self.abilities != other.abilities:
+            return False
+        if self.name != other.name:
+            return False
+        if self.fields != other.fields:
+            return False
+        if self.type_parameters != other.type_parameters:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveStructQuery(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveStructQuery(
+            abilities=_UniffiConverterOptionalSequenceTypeMoveAbility.read(buf),
+            name=_UniffiConverterString.read(buf),
+            fields=_UniffiConverterOptionalSequenceTypeMoveField.read(buf),
+            type_parameters=_UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalSequenceTypeMoveAbility.check_lower(value.abilities)
+        _UniffiConverterString.check_lower(value.name)
+        _UniffiConverterOptionalSequenceTypeMoveField.check_lower(value.fields)
+        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.check_lower(value.type_parameters)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalSequenceTypeMoveAbility.write(value.abilities, buf)
+        _UniffiConverterString.write(value.name, buf)
+        _UniffiConverterOptionalSequenceTypeMoveField.write(value.fields, buf)
+        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.write(value.type_parameters, buf)
+
+
+class MoveStructTypeParameter:
+    constraints: "typing.List[MoveAbility]"
+    is_phantom: "bool"
+    def __init__(self, *, constraints: "typing.List[MoveAbility]", is_phantom: "bool"):
+        self.constraints = constraints
+        self.is_phantom = is_phantom
+
+    def __str__(self):
+        return "MoveStructTypeParameter(constraints={}, is_phantom={})".format(self.constraints, self.is_phantom)
+
+    def __eq__(self, other):
+        if self.constraints != other.constraints:
+            return False
+        if self.is_phantom != other.is_phantom:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveStructTypeParameter(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveStructTypeParameter(
+            constraints=_UniffiConverterSequenceTypeMoveAbility.read(buf),
+            is_phantom=_UniffiConverterBool.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeMoveAbility.check_lower(value.constraints)
+        _UniffiConverterBool.check_lower(value.is_phantom)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeMoveAbility.write(value.constraints, buf)
+        _UniffiConverterBool.write(value.is_phantom, buf)
 
 
 class ObjectFilter:
@@ -6481,6 +7064,35 @@ class _UniffiConverterTypeObjectReference(_UniffiConverterRustBuffer):
         _UniffiConverterTypeObjectId.write(value.object_id, buf)
         _UniffiConverterUInt64.write(value.version, buf)
         _UniffiConverterTypeObjectDigest.write(value.digest, buf)
+
+
+class OpenMoveType:
+    repr: "str"
+    def __init__(self, *, repr: "str"):
+        self.repr = repr
+
+    def __str__(self):
+        return "OpenMoveType(repr={})".format(self.repr)
+
+    def __eq__(self, other):
+        if self.repr != other.repr:
+            return False
+        return True
+
+class _UniffiConverterTypeOpenMoveType(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return OpenMoveType(
+            repr=_UniffiConverterString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.repr)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.repr, buf)
 
 
 class PageInfo:
@@ -9969,6 +10581,106 @@ class _UniffiConverterTypeIdOperation(_UniffiConverterRustBuffer):
 
 
 
+class MoveAbility(enum.Enum):
+    COPY = 0
+    
+    DROP = 1
+    
+    KEY = 2
+    
+    STORE = 3
+    
+
+
+class _UniffiConverterTypeMoveAbility(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return MoveAbility.COPY
+        if variant == 2:
+            return MoveAbility.DROP
+        if variant == 3:
+            return MoveAbility.KEY
+        if variant == 4:
+            return MoveAbility.STORE
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == MoveAbility.COPY:
+            return
+        if value == MoveAbility.DROP:
+            return
+        if value == MoveAbility.KEY:
+            return
+        if value == MoveAbility.STORE:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == MoveAbility.COPY:
+            buf.write_i32(1)
+        if value == MoveAbility.DROP:
+            buf.write_i32(2)
+        if value == MoveAbility.KEY:
+            buf.write_i32(3)
+        if value == MoveAbility.STORE:
+            buf.write_i32(4)
+
+
+
+
+
+
+
+class MoveVisibility(enum.Enum):
+    PUBLIC = 0
+    
+    PRIVATE = 1
+    
+    FRIEND = 2
+    
+
+
+class _UniffiConverterTypeMoveVisibility(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return MoveVisibility.PUBLIC
+        if variant == 2:
+            return MoveVisibility.PRIVATE
+        if variant == 3:
+            return MoveVisibility.FRIEND
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == MoveVisibility.PUBLIC:
+            return
+        if value == MoveVisibility.PRIVATE:
+            return
+        if value == MoveVisibility.FRIEND:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == MoveVisibility.PUBLIC:
+            buf.write_i32(1)
+        if value == MoveVisibility.PRIVATE:
+            buf.write_i32(2)
+        if value == MoveVisibility.FRIEND:
+            buf.write_i32(3)
+
+
+
+
+
+
+
 class ObjectIn:
     """
     State of an object prior to execution
@@ -11540,60 +12252,6 @@ class _UniffiConverterOptionalTypeFaucetReceipt(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterOptionalTypeMoveFunction(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeMoveFunction.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeMoveFunction.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeMoveFunction.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
-class _UniffiConverterOptionalTypeMoveModule(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeMoveModule.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeMoveModule.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeMoveModule.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalTypeMovePackage(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -12188,6 +12846,87 @@ class _UniffiConverterOptionalTypeEventFilter(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeMoveEnumConnection(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveEnumConnection.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveEnumConnection.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveEnumConnection.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveFunction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveFunction.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveFunction.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveFunction.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveFunctionConnection(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveFunctionConnection.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveFunctionConnection.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveFunctionConnection.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeMoveLocation(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -12210,6 +12949,33 @@ class _UniffiConverterOptionalTypeMoveLocation(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeMoveLocation.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveModule(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveModule.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveModule.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveModule.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -12242,6 +13008,33 @@ class _UniffiConverterOptionalTypeMoveStruct(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeMoveStructConnection(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveStructConnection.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveStructConnection.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveStructConnection.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeObjectFilter(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -12264,6 +13057,33 @@ class _UniffiConverterOptionalTypeObjectFilter(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeObjectFilter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeOpenMoveType(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeOpenMoveType.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeOpenMoveType.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeOpenMoveType.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -12377,6 +13197,33 @@ class _UniffiConverterOptionalTypeValidatorCredentials(_UniffiConverterRustBuffe
 
 
 
+class _UniffiConverterOptionalTypeMoveVisibility(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveVisibility.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveVisibility.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveVisibility.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -12458,6 +13305,114 @@ class _UniffiConverterOptionalSequenceTypeObjectId(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalSequenceTypeMoveEnumVariant(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveEnumVariant.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveEnumVariant.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveEnumVariant.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeMoveField(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveField.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveField.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveField.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveFunctionTypeParameter.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveFunctionTypeParameter.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveFunctionTypeParameter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveStructTypeParameter.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveStructTypeParameter.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveStructTypeParameter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalSequenceTypeObjectRef(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -12480,6 +13435,60 @@ class _UniffiConverterOptionalSequenceTypeObjectRef(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterSequenceTypeObjectRef.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeOpenMoveType(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeOpenMoveType.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeOpenMoveType.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeOpenMoveType.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveAbility.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveAbility.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveAbility.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -12989,6 +13998,206 @@ class _UniffiConverterSequenceTypeEvent(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeMoveEnum(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveEnum.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveEnum.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveEnum.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveEnumVariant(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveEnumVariant.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveEnumVariant.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveEnumVariant.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveField(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveField.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveField.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveField.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveFunction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveFunction.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveFunction.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveFunction.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveFunctionTypeParameter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveFunctionTypeParameter.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveFunctionTypeParameter.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveFunctionTypeParameter.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveModuleQuery(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveModuleQuery.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveModuleQuery.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveModuleQuery.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveStructQuery(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveStructQuery.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveStructQuery.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveStructQuery.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveStructTypeParameter(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveStructTypeParameter.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveStructTypeParameter.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveStructTypeParameter.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeObjectRef(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -13035,6 +14244,31 @@ class _UniffiConverterSequenceTypeObjectReference(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeObjectReference.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeOpenMoveType(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeOpenMoveType.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeOpenMoveType.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeOpenMoveType.read(buf) for i in range(count)
         ]
 
 
@@ -13185,6 +14419,31 @@ class _UniffiConverterSequenceTypeValidatorCommitteeMember(_UniffiConverterRustB
 
         return [
             _UniffiConverterTypeValidatorCommitteeMember.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveAbility.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveAbility.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveAbility.read(buf) for i in range(count)
         ]
 
 
@@ -17962,118 +19221,6 @@ class _UniffiConverterTypeIdentifier:
 
     @classmethod
     def write(cls, value: IdentifierProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class MoveFunctionProtocol(typing.Protocol):
-    pass
-# MoveFunction is a Rust-only trait - it's a wrapper around a Rust implementation.
-class MoveFunction():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movefunction, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movefunction, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeMoveFunction:
-
-    @staticmethod
-    def lift(value: int):
-        return MoveFunction._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: MoveFunction):
-        if not isinstance(value, MoveFunction):
-            raise TypeError("Expected MoveFunction instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: MoveFunctionProtocol):
-        if not isinstance(value, MoveFunction):
-            raise TypeError("Expected MoveFunction instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: MoveFunctionProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class MoveModuleProtocol(typing.Protocol):
-    pass
-# MoveModule is a Rust-only trait - it's a wrapper around a Rust implementation.
-class MoveModule():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movemodule, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movemodule, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeMoveModule:
-
-    @staticmethod
-    def lift(value: int):
-        return MoveModule._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: MoveModule):
-        if not isinstance(value, MoveModule):
-            raise TypeError("Expected MoveModule instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: MoveModuleProtocol):
-        if not isinstance(value, MoveModule):
-            raise TypeError("Expected MoveModule instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: MoveModuleProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class MovePackageProtocol(typing.Protocol):
     """
@@ -23134,6 +24281,8 @@ __all__ = [
     "ExecutionError",
     "ExecutionStatus",
     "IdOperation",
+    "MoveAbility",
+    "MoveVisibility",
     "ObjectIn",
     "ObjectOut",
     "PackageUpgradeError",
@@ -23162,14 +24311,29 @@ __all__ = [
     "GasCostSummary",
     "GasPayment",
     "GqlAddress",
+    "MoveEnum",
+    "MoveEnumConnection",
+    "MoveEnumVariant",
+    "MoveField",
+    "MoveFunction",
+    "MoveFunctionConnection",
+    "MoveFunctionTypeParameter",
     "MoveLocation",
+    "MoveModule",
+    "MoveModuleConnection",
+    "MoveModuleQuery",
     "MoveObject",
     "MovePackagePage",
+    "MovePackageQuery",
     "MoveStruct",
+    "MoveStructConnection",
+    "MoveStructQuery",
+    "MoveStructTypeParameter",
     "ObjectFilter",
     "ObjectPage",
     "ObjectRef",
     "ObjectReference",
+    "OpenMoveType",
     "PageInfo",
     "PaginationFilter",
     "SignedTransaction",
@@ -23220,8 +24384,6 @@ __all__ = [
     "GenesisTransaction",
     "GraphQlClient",
     "Identifier",
-    "MoveFunction",
-    "MoveModule",
     "MovePackage",
     "MultisigAggregatedSignature",
     "MultisigCommittee",

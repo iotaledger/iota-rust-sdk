@@ -1467,10 +1467,6 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
-
-
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2515,14 +2511,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_identifier_new(`identifier`: RustBuffer.B
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_identifier_as_str(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_clone_movefunction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_movefunction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_clone_movemodule(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_movemodule(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_movepackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_movepackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3306,10 +3294,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 49066.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 15206.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 6413.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 46991.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 51508.toShort()) {
@@ -14105,450 +14093,6 @@ public object FfiConverterTypeIdentifier: FfiConverter<Identifier, Pointer> {
     override fun allocationSize(value: Identifier) = 8UL
 
     override fun write(value: Identifier, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-public interface MoveFunctionInterface {
-    
-    companion object
-}
-
-open class MoveFunction: Disposable, AutoCloseable, MoveFunctionInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_movefunction(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_movefunction(pointer!!, status)
-        }
-    }
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeMoveFunction: FfiConverter<MoveFunction, Pointer> {
-
-    override fun lower(value: MoveFunction): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): MoveFunction {
-        return MoveFunction(value)
-    }
-
-    override fun read(buf: ByteBuffer): MoveFunction {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: MoveFunction) = 8UL
-
-    override fun write(value: MoveFunction, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-public interface MoveModuleInterface {
-    
-    companion object
-}
-
-open class MoveModule: Disposable, AutoCloseable, MoveModuleInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_movemodule(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_movemodule(pointer!!, status)
-        }
-    }
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeMoveModule: FfiConverter<MoveModule, Pointer> {
-
-    override fun lower(value: MoveModule): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): MoveModule {
-        return MoveModule(value)
-    }
-
-    override fun read(buf: ByteBuffer): MoveModule {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: MoveModule) = 8UL
-
-    override fun write(value: MoveModule, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -26878,6 +26422,250 @@ public object FfiConverterTypeGasPayment: FfiConverterRustBuffer<GasPayment> {
 
 
 
+data class MoveEnum (
+    var `abilities`: List<MoveAbility>? = null, 
+    var `name`: kotlin.String, 
+    var `typeParameters`: List<MoveStructTypeParameter>? = null, 
+    var `variants`: List<MoveEnumVariant>? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveEnum: FfiConverterRustBuffer<MoveEnum> {
+    override fun read(buf: ByteBuffer): MoveEnum {
+        return MoveEnum(
+            FfiConverterOptionalSequenceTypeMoveAbility.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.read(buf),
+            FfiConverterOptionalSequenceTypeMoveEnumVariant.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveEnum) = (
+            FfiConverterOptionalSequenceTypeMoveAbility.allocationSize(value.`abilities`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.allocationSize(value.`typeParameters`) +
+            FfiConverterOptionalSequenceTypeMoveEnumVariant.allocationSize(value.`variants`)
+    )
+
+    override fun write(value: MoveEnum, buf: ByteBuffer) {
+            FfiConverterOptionalSequenceTypeMoveAbility.write(value.`abilities`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.write(value.`typeParameters`, buf)
+            FfiConverterOptionalSequenceTypeMoveEnumVariant.write(value.`variants`, buf)
+    }
+}
+
+
+
+data class MoveEnumConnection (
+    var `nodes`: List<MoveEnum>, 
+    var `pageInfo`: PageInfo
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveEnumConnection: FfiConverterRustBuffer<MoveEnumConnection> {
+    override fun read(buf: ByteBuffer): MoveEnumConnection {
+        return MoveEnumConnection(
+            FfiConverterSequenceTypeMoveEnum.read(buf),
+            FfiConverterTypePageInfo.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveEnumConnection) = (
+            FfiConverterSequenceTypeMoveEnum.allocationSize(value.`nodes`) +
+            FfiConverterTypePageInfo.allocationSize(value.`pageInfo`)
+    )
+
+    override fun write(value: MoveEnumConnection, buf: ByteBuffer) {
+            FfiConverterSequenceTypeMoveEnum.write(value.`nodes`, buf)
+            FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
+    }
+}
+
+
+
+data class MoveEnumVariant (
+    var `fields`: List<MoveField>?, 
+    var `name`: kotlin.String
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveEnumVariant: FfiConverterRustBuffer<MoveEnumVariant> {
+    override fun read(buf: ByteBuffer): MoveEnumVariant {
+        return MoveEnumVariant(
+            FfiConverterOptionalSequenceTypeMoveField.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveEnumVariant) = (
+            FfiConverterOptionalSequenceTypeMoveField.allocationSize(value.`fields`) +
+            FfiConverterString.allocationSize(value.`name`)
+    )
+
+    override fun write(value: MoveEnumVariant, buf: ByteBuffer) {
+            FfiConverterOptionalSequenceTypeMoveField.write(value.`fields`, buf)
+            FfiConverterString.write(value.`name`, buf)
+    }
+}
+
+
+
+data class MoveField (
+    var `name`: kotlin.String, 
+    var `type`: OpenMoveType?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveField: FfiConverterRustBuffer<MoveField> {
+    override fun read(buf: ByteBuffer): MoveField {
+        return MoveField(
+            FfiConverterString.read(buf),
+            FfiConverterOptionalTypeOpenMoveType.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveField) = (
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterOptionalTypeOpenMoveType.allocationSize(value.`type`)
+    )
+
+    override fun write(value: MoveField, buf: ByteBuffer) {
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterOptionalTypeOpenMoveType.write(value.`type`, buf)
+    }
+}
+
+
+
+data class MoveFunction (
+    var `isEntry`: kotlin.Boolean? = null, 
+    var `name`: kotlin.String, 
+    var `parameters`: List<OpenMoveType>? = null, 
+    var `return`: List<OpenMoveType>? = null, 
+    var `typeParameters`: List<MoveFunctionTypeParameter>? = null, 
+    var `visibility`: MoveVisibility? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveFunction: FfiConverterRustBuffer<MoveFunction> {
+    override fun read(buf: ByteBuffer): MoveFunction {
+        return MoveFunction(
+            FfiConverterOptionalBoolean.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalSequenceTypeOpenMoveType.read(buf),
+            FfiConverterOptionalSequenceTypeOpenMoveType.read(buf),
+            FfiConverterOptionalSequenceTypeMoveFunctionTypeParameter.read(buf),
+            FfiConverterOptionalTypeMoveVisibility.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveFunction) = (
+            FfiConverterOptionalBoolean.allocationSize(value.`isEntry`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterOptionalSequenceTypeOpenMoveType.allocationSize(value.`parameters`) +
+            FfiConverterOptionalSequenceTypeOpenMoveType.allocationSize(value.`return`) +
+            FfiConverterOptionalSequenceTypeMoveFunctionTypeParameter.allocationSize(value.`typeParameters`) +
+            FfiConverterOptionalTypeMoveVisibility.allocationSize(value.`visibility`)
+    )
+
+    override fun write(value: MoveFunction, buf: ByteBuffer) {
+            FfiConverterOptionalBoolean.write(value.`isEntry`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterOptionalSequenceTypeOpenMoveType.write(value.`parameters`, buf)
+            FfiConverterOptionalSequenceTypeOpenMoveType.write(value.`return`, buf)
+            FfiConverterOptionalSequenceTypeMoveFunctionTypeParameter.write(value.`typeParameters`, buf)
+            FfiConverterOptionalTypeMoveVisibility.write(value.`visibility`, buf)
+    }
+}
+
+
+
+data class MoveFunctionConnection (
+    var `nodes`: List<MoveFunction>, 
+    var `pageInfo`: PageInfo
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveFunctionConnection: FfiConverterRustBuffer<MoveFunctionConnection> {
+    override fun read(buf: ByteBuffer): MoveFunctionConnection {
+        return MoveFunctionConnection(
+            FfiConverterSequenceTypeMoveFunction.read(buf),
+            FfiConverterTypePageInfo.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveFunctionConnection) = (
+            FfiConverterSequenceTypeMoveFunction.allocationSize(value.`nodes`) +
+            FfiConverterTypePageInfo.allocationSize(value.`pageInfo`)
+    )
+
+    override fun write(value: MoveFunctionConnection, buf: ByteBuffer) {
+            FfiConverterSequenceTypeMoveFunction.write(value.`nodes`, buf)
+            FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
+    }
+}
+
+
+
+data class MoveFunctionTypeParameter (
+    var `constraints`: List<MoveAbility>
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveFunctionTypeParameter: FfiConverterRustBuffer<MoveFunctionTypeParameter> {
+    override fun read(buf: ByteBuffer): MoveFunctionTypeParameter {
+        return MoveFunctionTypeParameter(
+            FfiConverterSequenceTypeMoveAbility.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveFunctionTypeParameter) = (
+            FfiConverterSequenceTypeMoveAbility.allocationSize(value.`constraints`)
+    )
+
+    override fun write(value: MoveFunctionTypeParameter, buf: ByteBuffer) {
+            FfiConverterSequenceTypeMoveAbility.write(value.`constraints`, buf)
+    }
+}
+
+
+
 /**
  * Location in move bytecode where an error occurred
  *
@@ -26956,6 +26744,144 @@ public object FfiConverterTypeMoveLocation: FfiConverterRustBuffer<MoveLocation>
             FfiConverterUShort.write(value.`function`, buf)
             FfiConverterUShort.write(value.`instruction`, buf)
             FfiConverterOptionalString.write(value.`functionName`, buf)
+    }
+}
+
+
+
+data class MoveModule (
+    var `fileFormatVersion`: kotlin.Int, 
+    var `enums`: MoveEnumConnection? = null, 
+    var `friends`: MoveModuleConnection, 
+    var `functions`: MoveFunctionConnection? = null, 
+    var `structs`: MoveStructConnection? = null
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`fileFormatVersion`,
+        this.`enums`,
+        this.`friends`,
+        this.`functions`,
+        this.`structs`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveModule: FfiConverterRustBuffer<MoveModule> {
+    override fun read(buf: ByteBuffer): MoveModule {
+        return MoveModule(
+            FfiConverterInt.read(buf),
+            FfiConverterOptionalTypeMoveEnumConnection.read(buf),
+            FfiConverterTypeMoveModuleConnection.read(buf),
+            FfiConverterOptionalTypeMoveFunctionConnection.read(buf),
+            FfiConverterOptionalTypeMoveStructConnection.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveModule) = (
+            FfiConverterInt.allocationSize(value.`fileFormatVersion`) +
+            FfiConverterOptionalTypeMoveEnumConnection.allocationSize(value.`enums`) +
+            FfiConverterTypeMoveModuleConnection.allocationSize(value.`friends`) +
+            FfiConverterOptionalTypeMoveFunctionConnection.allocationSize(value.`functions`) +
+            FfiConverterOptionalTypeMoveStructConnection.allocationSize(value.`structs`)
+    )
+
+    override fun write(value: MoveModule, buf: ByteBuffer) {
+            FfiConverterInt.write(value.`fileFormatVersion`, buf)
+            FfiConverterOptionalTypeMoveEnumConnection.write(value.`enums`, buf)
+            FfiConverterTypeMoveModuleConnection.write(value.`friends`, buf)
+            FfiConverterOptionalTypeMoveFunctionConnection.write(value.`functions`, buf)
+            FfiConverterOptionalTypeMoveStructConnection.write(value.`structs`, buf)
+    }
+}
+
+
+
+data class MoveModuleConnection (
+    var `nodes`: List<MoveModuleQuery>, 
+    var `pageInfo`: PageInfo
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`nodes`,
+        this.`pageInfo`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveModuleConnection: FfiConverterRustBuffer<MoveModuleConnection> {
+    override fun read(buf: ByteBuffer): MoveModuleConnection {
+        return MoveModuleConnection(
+            FfiConverterSequenceTypeMoveModuleQuery.read(buf),
+            FfiConverterTypePageInfo.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveModuleConnection) = (
+            FfiConverterSequenceTypeMoveModuleQuery.allocationSize(value.`nodes`) +
+            FfiConverterTypePageInfo.allocationSize(value.`pageInfo`)
+    )
+
+    override fun write(value: MoveModuleConnection, buf: ByteBuffer) {
+            FfiConverterSequenceTypeMoveModuleQuery.write(value.`nodes`, buf)
+            FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
+    }
+}
+
+
+
+data class MoveModuleQuery (
+    var `package`: MovePackageQuery, 
+    var `name`: kotlin.String
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`package`,
+        this.`name`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveModuleQuery: FfiConverterRustBuffer<MoveModuleQuery> {
+    override fun read(buf: ByteBuffer): MoveModuleQuery {
+        return MoveModuleQuery(
+            FfiConverterTypeMovePackageQuery.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveModuleQuery) = (
+            FfiConverterTypeMovePackageQuery.allocationSize(value.`package`) +
+            FfiConverterString.allocationSize(value.`name`)
+    )
+
+    override fun write(value: MoveModuleQuery, buf: ByteBuffer) {
+            FfiConverterTypeMovePackageQuery.write(value.`package`, buf)
+            FfiConverterString.write(value.`name`, buf)
     }
 }
 
@@ -27040,6 +26966,47 @@ public object FfiConverterTypeMovePackagePage: FfiConverterRustBuffer<MovePackag
 
 
 
+data class MovePackageQuery (
+    var `address`: Address, 
+    var `bcs`: Base64?
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`address`,
+        this.`bcs`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMovePackageQuery: FfiConverterRustBuffer<MovePackageQuery> {
+    override fun read(buf: ByteBuffer): MovePackageQuery {
+        return MovePackageQuery(
+            FfiConverterTypeAddress.read(buf),
+            FfiConverterOptionalTypeBase64.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MovePackageQuery) = (
+            FfiConverterTypeAddress.allocationSize(value.`address`) +
+            FfiConverterOptionalTypeBase64.allocationSize(value.`bcs`)
+    )
+
+    override fun write(value: MovePackageQuery, buf: ByteBuffer) {
+            FfiConverterTypeAddress.write(value.`address`, buf)
+            FfiConverterOptionalTypeBase64.write(value.`bcs`, buf)
+    }
+}
+
+
+
 /**
  * A move struct
  *
@@ -27112,6 +27079,110 @@ public object FfiConverterTypeMoveStruct: FfiConverterRustBuffer<MoveStruct> {
             FfiConverterTypeStructTag.write(value.`structType`, buf)
             FfiConverterULong.write(value.`version`, buf)
             FfiConverterByteArray.write(value.`contents`, buf)
+    }
+}
+
+
+
+data class MoveStructConnection (
+    var `pageInfo`: PageInfo, 
+    var `nodes`: List<MoveStructQuery>
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveStructConnection: FfiConverterRustBuffer<MoveStructConnection> {
+    override fun read(buf: ByteBuffer): MoveStructConnection {
+        return MoveStructConnection(
+            FfiConverterTypePageInfo.read(buf),
+            FfiConverterSequenceTypeMoveStructQuery.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveStructConnection) = (
+            FfiConverterTypePageInfo.allocationSize(value.`pageInfo`) +
+            FfiConverterSequenceTypeMoveStructQuery.allocationSize(value.`nodes`)
+    )
+
+    override fun write(value: MoveStructConnection, buf: ByteBuffer) {
+            FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
+            FfiConverterSequenceTypeMoveStructQuery.write(value.`nodes`, buf)
+    }
+}
+
+
+
+data class MoveStructQuery (
+    var `abilities`: List<MoveAbility>?, 
+    var `name`: kotlin.String, 
+    var `fields`: List<MoveField>?, 
+    var `typeParameters`: List<MoveStructTypeParameter>?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveStructQuery: FfiConverterRustBuffer<MoveStructQuery> {
+    override fun read(buf: ByteBuffer): MoveStructQuery {
+        return MoveStructQuery(
+            FfiConverterOptionalSequenceTypeMoveAbility.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalSequenceTypeMoveField.read(buf),
+            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveStructQuery) = (
+            FfiConverterOptionalSequenceTypeMoveAbility.allocationSize(value.`abilities`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterOptionalSequenceTypeMoveField.allocationSize(value.`fields`) +
+            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.allocationSize(value.`typeParameters`)
+    )
+
+    override fun write(value: MoveStructQuery, buf: ByteBuffer) {
+            FfiConverterOptionalSequenceTypeMoveAbility.write(value.`abilities`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterOptionalSequenceTypeMoveField.write(value.`fields`, buf)
+            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.write(value.`typeParameters`, buf)
+    }
+}
+
+
+
+data class MoveStructTypeParameter (
+    var `constraints`: List<MoveAbility>, 
+    var `isPhantom`: kotlin.Boolean
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveStructTypeParameter: FfiConverterRustBuffer<MoveStructTypeParameter> {
+    override fun read(buf: ByteBuffer): MoveStructTypeParameter {
+        return MoveStructTypeParameter(
+            FfiConverterSequenceTypeMoveAbility.read(buf),
+            FfiConverterBoolean.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveStructTypeParameter) = (
+            FfiConverterSequenceTypeMoveAbility.allocationSize(value.`constraints`) +
+            FfiConverterBoolean.allocationSize(value.`isPhantom`)
+    )
+
+    override fun write(value: MoveStructTypeParameter, buf: ByteBuffer) {
+            FfiConverterSequenceTypeMoveAbility.write(value.`constraints`, buf)
+            FfiConverterBoolean.write(value.`isPhantom`, buf)
     }
 }
 
@@ -27314,6 +27385,34 @@ public object FfiConverterTypeObjectReference: FfiConverterRustBuffer<ObjectRefe
             FfiConverterTypeObjectId.write(value.`objectId`, buf)
             FfiConverterULong.write(value.`version`, buf)
             FfiConverterTypeObjectDigest.write(value.`digest`, buf)
+    }
+}
+
+
+
+data class OpenMoveType (
+    var `repr`: kotlin.String
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeOpenMoveType: FfiConverterRustBuffer<OpenMoveType> {
+    override fun read(buf: ByteBuffer): OpenMoveType {
+        return OpenMoveType(
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: OpenMoveType) = (
+            FfiConverterString.allocationSize(value.`repr`)
+    )
+
+    override fun write(value: OpenMoveType, buf: ByteBuffer) {
+            FfiConverterString.write(value.`repr`, buf)
     }
 }
 
@@ -30114,6 +30213,69 @@ public object FfiConverterTypeIdOperation: FfiConverterRustBuffer<IdOperation> {
 
 
 
+
+enum class MoveAbility {
+    
+    COPY,
+    DROP,
+    KEY,
+    STORE;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveAbility: FfiConverterRustBuffer<MoveAbility> {
+    override fun read(buf: ByteBuffer) = try {
+        MoveAbility.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: MoveAbility) = 4UL
+
+    override fun write(value: MoveAbility, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
+enum class MoveVisibility {
+    
+    PUBLIC,
+    PRIVATE,
+    FRIEND;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveVisibility: FfiConverterRustBuffer<MoveVisibility> {
+    override fun read(buf: ByteBuffer) = try {
+        MoveVisibility.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: MoveVisibility) = 4UL
+
+    override fun write(value: MoveVisibility, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
 /**
  * State of an object prior to execution
  *
@@ -31528,70 +31690,6 @@ public object FfiConverterOptionalTypeFaucetReceipt: FfiConverterRustBuffer<Fauc
 /**
  * @suppress
  */
-public object FfiConverterOptionalTypeMoveFunction: FfiConverterRustBuffer<MoveFunction?> {
-    override fun read(buf: ByteBuffer): MoveFunction? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeMoveFunction.read(buf)
-    }
-
-    override fun allocationSize(value: MoveFunction?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeMoveFunction.allocationSize(value)
-        }
-    }
-
-    override fun write(value: MoveFunction?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeMoveFunction.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalTypeMoveModule: FfiConverterRustBuffer<MoveModule?> {
-    override fun read(buf: ByteBuffer): MoveModule? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeMoveModule.read(buf)
-    }
-
-    override fun allocationSize(value: MoveModule?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeMoveModule.allocationSize(value)
-        }
-    }
-
-    override fun write(value: MoveModule?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeMoveModule.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
 public object FfiConverterOptionalTypeMovePackage: FfiConverterRustBuffer<MovePackage?> {
     override fun read(buf: ByteBuffer): MovePackage? {
         if (buf.get().toInt() == 0) {
@@ -32296,6 +32394,102 @@ public object FfiConverterOptionalTypeEventFilter: FfiConverterRustBuffer<EventF
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeMoveEnumConnection: FfiConverterRustBuffer<MoveEnumConnection?> {
+    override fun read(buf: ByteBuffer): MoveEnumConnection? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMoveEnumConnection.read(buf)
+    }
+
+    override fun allocationSize(value: MoveEnumConnection?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMoveEnumConnection.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MoveEnumConnection?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMoveEnumConnection.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeMoveFunction: FfiConverterRustBuffer<MoveFunction?> {
+    override fun read(buf: ByteBuffer): MoveFunction? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMoveFunction.read(buf)
+    }
+
+    override fun allocationSize(value: MoveFunction?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMoveFunction.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MoveFunction?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMoveFunction.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeMoveFunctionConnection: FfiConverterRustBuffer<MoveFunctionConnection?> {
+    override fun read(buf: ByteBuffer): MoveFunctionConnection? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMoveFunctionConnection.read(buf)
+    }
+
+    override fun allocationSize(value: MoveFunctionConnection?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMoveFunctionConnection.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MoveFunctionConnection?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMoveFunctionConnection.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeMoveLocation: FfiConverterRustBuffer<MoveLocation?> {
     override fun read(buf: ByteBuffer): MoveLocation? {
         if (buf.get().toInt() == 0) {
@@ -32318,6 +32512,38 @@ public object FfiConverterOptionalTypeMoveLocation: FfiConverterRustBuffer<MoveL
         } else {
             buf.put(1)
             FfiConverterTypeMoveLocation.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeMoveModule: FfiConverterRustBuffer<MoveModule?> {
+    override fun read(buf: ByteBuffer): MoveModule? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMoveModule.read(buf)
+    }
+
+    override fun allocationSize(value: MoveModule?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMoveModule.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MoveModule?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMoveModule.write(value, buf)
         }
     }
 }
@@ -32360,6 +32586,38 @@ public object FfiConverterOptionalTypeMoveStruct: FfiConverterRustBuffer<MoveStr
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeMoveStructConnection: FfiConverterRustBuffer<MoveStructConnection?> {
+    override fun read(buf: ByteBuffer): MoveStructConnection? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMoveStructConnection.read(buf)
+    }
+
+    override fun allocationSize(value: MoveStructConnection?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMoveStructConnection.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MoveStructConnection?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMoveStructConnection.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeObjectFilter: FfiConverterRustBuffer<ObjectFilter?> {
     override fun read(buf: ByteBuffer): ObjectFilter? {
         if (buf.get().toInt() == 0) {
@@ -32382,6 +32640,38 @@ public object FfiConverterOptionalTypeObjectFilter: FfiConverterRustBuffer<Objec
         } else {
             buf.put(1)
             FfiConverterTypeObjectFilter.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeOpenMoveType: FfiConverterRustBuffer<OpenMoveType?> {
+    override fun read(buf: ByteBuffer): OpenMoveType? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeOpenMoveType.read(buf)
+    }
+
+    override fun allocationSize(value: OpenMoveType?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeOpenMoveType.allocationSize(value)
+        }
+    }
+
+    override fun write(value: OpenMoveType?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeOpenMoveType.write(value, buf)
         }
     }
 }
@@ -32520,6 +32810,38 @@ public object FfiConverterOptionalTypeValidatorCredentials: FfiConverterRustBuff
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeMoveVisibility: FfiConverterRustBuffer<MoveVisibility?> {
+    override fun read(buf: ByteBuffer): MoveVisibility? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMoveVisibility.read(buf)
+    }
+
+    override fun allocationSize(value: MoveVisibility?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMoveVisibility.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MoveVisibility?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMoveVisibility.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeTransactionBlockKindInput: FfiConverterRustBuffer<TransactionBlockKindInput?> {
     override fun read(buf: ByteBuffer): TransactionBlockKindInput? {
         if (buf.get().toInt() == 0) {
@@ -32616,6 +32938,134 @@ public object FfiConverterOptionalSequenceTypeObjectId: FfiConverterRustBuffer<L
 /**
  * @suppress
  */
+public object FfiConverterOptionalSequenceTypeMoveEnumVariant: FfiConverterRustBuffer<List<MoveEnumVariant>?> {
+    override fun read(buf: ByteBuffer): List<MoveEnumVariant>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeMoveEnumVariant.read(buf)
+    }
+
+    override fun allocationSize(value: List<MoveEnumVariant>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeMoveEnumVariant.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<MoveEnumVariant>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeMoveEnumVariant.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalSequenceTypeMoveField: FfiConverterRustBuffer<List<MoveField>?> {
+    override fun read(buf: ByteBuffer): List<MoveField>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeMoveField.read(buf)
+    }
+
+    override fun allocationSize(value: List<MoveField>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeMoveField.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<MoveField>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeMoveField.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalSequenceTypeMoveFunctionTypeParameter: FfiConverterRustBuffer<List<MoveFunctionTypeParameter>?> {
+    override fun read(buf: ByteBuffer): List<MoveFunctionTypeParameter>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeMoveFunctionTypeParameter.read(buf)
+    }
+
+    override fun allocationSize(value: List<MoveFunctionTypeParameter>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeMoveFunctionTypeParameter.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<MoveFunctionTypeParameter>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeMoveFunctionTypeParameter.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalSequenceTypeMoveStructTypeParameter: FfiConverterRustBuffer<List<MoveStructTypeParameter>?> {
+    override fun read(buf: ByteBuffer): List<MoveStructTypeParameter>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeMoveStructTypeParameter.read(buf)
+    }
+
+    override fun allocationSize(value: List<MoveStructTypeParameter>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeMoveStructTypeParameter.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<MoveStructTypeParameter>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeMoveStructTypeParameter.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalSequenceTypeObjectRef: FfiConverterRustBuffer<List<ObjectRef>?> {
     override fun read(buf: ByteBuffer): List<ObjectRef>? {
         if (buf.get().toInt() == 0) {
@@ -32638,6 +33088,70 @@ public object FfiConverterOptionalSequenceTypeObjectRef: FfiConverterRustBuffer<
         } else {
             buf.put(1)
             FfiConverterSequenceTypeObjectRef.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalSequenceTypeOpenMoveType: FfiConverterRustBuffer<List<OpenMoveType>?> {
+    override fun read(buf: ByteBuffer): List<OpenMoveType>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeOpenMoveType.read(buf)
+    }
+
+    override fun allocationSize(value: List<OpenMoveType>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeOpenMoveType.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<OpenMoveType>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeOpenMoveType.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalSequenceTypeMoveAbility: FfiConverterRustBuffer<List<MoveAbility>?> {
+    override fun read(buf: ByteBuffer): List<MoveAbility>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeMoveAbility.read(buf)
+    }
+
+    override fun allocationSize(value: List<MoveAbility>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeMoveAbility.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<MoveAbility>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeMoveAbility.write(value, buf)
         }
     }
 }
@@ -33216,6 +33730,230 @@ public object FfiConverterSequenceTypeEvent: FfiConverterRustBuffer<List<Event>>
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypeMoveEnum: FfiConverterRustBuffer<List<MoveEnum>> {
+    override fun read(buf: ByteBuffer): List<MoveEnum> {
+        val len = buf.getInt()
+        return List<MoveEnum>(len) {
+            FfiConverterTypeMoveEnum.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveEnum>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveEnum.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveEnum>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveEnum.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveEnumVariant: FfiConverterRustBuffer<List<MoveEnumVariant>> {
+    override fun read(buf: ByteBuffer): List<MoveEnumVariant> {
+        val len = buf.getInt()
+        return List<MoveEnumVariant>(len) {
+            FfiConverterTypeMoveEnumVariant.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveEnumVariant>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveEnumVariant.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveEnumVariant>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveEnumVariant.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveField: FfiConverterRustBuffer<List<MoveField>> {
+    override fun read(buf: ByteBuffer): List<MoveField> {
+        val len = buf.getInt()
+        return List<MoveField>(len) {
+            FfiConverterTypeMoveField.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveField>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveField.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveField>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveField.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveFunction: FfiConverterRustBuffer<List<MoveFunction>> {
+    override fun read(buf: ByteBuffer): List<MoveFunction> {
+        val len = buf.getInt()
+        return List<MoveFunction>(len) {
+            FfiConverterTypeMoveFunction.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveFunction>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveFunction.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveFunction>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveFunction.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveFunctionTypeParameter: FfiConverterRustBuffer<List<MoveFunctionTypeParameter>> {
+    override fun read(buf: ByteBuffer): List<MoveFunctionTypeParameter> {
+        val len = buf.getInt()
+        return List<MoveFunctionTypeParameter>(len) {
+            FfiConverterTypeMoveFunctionTypeParameter.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveFunctionTypeParameter>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveFunctionTypeParameter.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveFunctionTypeParameter>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveFunctionTypeParameter.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveModuleQuery: FfiConverterRustBuffer<List<MoveModuleQuery>> {
+    override fun read(buf: ByteBuffer): List<MoveModuleQuery> {
+        val len = buf.getInt()
+        return List<MoveModuleQuery>(len) {
+            FfiConverterTypeMoveModuleQuery.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveModuleQuery>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveModuleQuery.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveModuleQuery>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveModuleQuery.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveStructQuery: FfiConverterRustBuffer<List<MoveStructQuery>> {
+    override fun read(buf: ByteBuffer): List<MoveStructQuery> {
+        val len = buf.getInt()
+        return List<MoveStructQuery>(len) {
+            FfiConverterTypeMoveStructQuery.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveStructQuery>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveStructQuery.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveStructQuery>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveStructQuery.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveStructTypeParameter: FfiConverterRustBuffer<List<MoveStructTypeParameter>> {
+    override fun read(buf: ByteBuffer): List<MoveStructTypeParameter> {
+        val len = buf.getInt()
+        return List<MoveStructTypeParameter>(len) {
+            FfiConverterTypeMoveStructTypeParameter.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveStructTypeParameter>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveStructTypeParameter.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveStructTypeParameter>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveStructTypeParameter.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceTypeObjectRef: FfiConverterRustBuffer<List<ObjectRef>> {
     override fun read(buf: ByteBuffer): List<ObjectRef> {
         val len = buf.getInt()
@@ -33262,6 +34000,34 @@ public object FfiConverterSequenceTypeObjectReference: FfiConverterRustBuffer<Li
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeObjectReference.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeOpenMoveType: FfiConverterRustBuffer<List<OpenMoveType>> {
+    override fun read(buf: ByteBuffer): List<OpenMoveType> {
+        val len = buf.getInt()
+        return List<OpenMoveType>(len) {
+            FfiConverterTypeOpenMoveType.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<OpenMoveType>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeOpenMoveType.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<OpenMoveType>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeOpenMoveType.write(it, buf)
         }
     }
 }
@@ -33430,6 +34196,34 @@ public object FfiConverterSequenceTypeValidatorCommitteeMember: FfiConverterRust
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeValidatorCommitteeMember.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveAbility: FfiConverterRustBuffer<List<MoveAbility>> {
+    override fun read(buf: ByteBuffer): List<MoveAbility> {
+        val len = buf.getInt()
+        return List<MoveAbility>(len) {
+            FfiConverterTypeMoveAbility.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveAbility>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveAbility.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveAbility>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveAbility.write(it, buf)
         }
     }
 }
