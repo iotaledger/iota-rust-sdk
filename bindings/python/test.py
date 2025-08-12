@@ -37,9 +37,9 @@ async def main():
     )
 
     if txn is not None:
-        for sig in txn.signatures():
+        for sig in txn.signatures:
             print("Scheme: ", sig.scheme(), sig.scheme().value)
-        print("Sender: ", txn.transaction().sender().to_hex())
+        print("Sender: ", txn.transaction.sender().to_hex())
 
     move_struct = MoveStruct(
         struct_type=StructTag.coin(TypeTag.vector(TypeTag.u8())),
