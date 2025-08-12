@@ -3,10 +3,12 @@ name: Bindings
 on:
   push:
     branches: [develop, sdk-bindings]
+    paths:
+      - ".github/workflow/bindings.yml"
+      - "bindings/**"
+      - "crates/iota-sdk-ffi/**"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-
-# TODO FFI crate filter
 
 concurrency:
   group: sdk-bindings-${{ github.event.pull_request.number || github.ref }}
