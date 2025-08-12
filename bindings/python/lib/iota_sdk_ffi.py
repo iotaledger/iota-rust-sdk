@@ -601,6 +601,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 2687:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap() != 41489:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_committee() != 17432:
@@ -667,7 +669,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin() != 65193:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct() != 2473:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct() != 37303:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_data() != 4330:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -954,6 +956,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet() != 3613:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new() != 9398:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 17506:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 3396:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2095,6 +2101,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_identifier.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_identifier.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_new.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_as_str.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_as_str.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movefunction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2125,16 +2141,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_movepackage.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_movepackage.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movestruct.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new.argtypes = (
     ctypes.c_void_p,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movestruct.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movestruct.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movestruct.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigaggregatedsignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3890,6 +3905,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_e
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap.restype = ctypes.c_uint16
@@ -4421,6 +4439,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new.restype = ctypes.c_uint16
@@ -4758,8 +4782,6 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
     def write(value, buf):
         buf.write_i32(len(value))
         buf.write(value)
-
-
 
 
 
@@ -6191,6 +6213,84 @@ class _UniffiConverterTypeMovePackagePage(_UniffiConverterRustBuffer):
         _UniffiConverterSequenceTypeMovePackage.write(value.data, buf)
 
 
+class MoveStruct:
+    """
+    A move struct
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    object-move-struct = compressed-struct-tag bool u64 object-contents
+
+    compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
+    other-struct-type     = %x00 struct-tag
+    gas-coin-type         = %x01
+    staked-iota-type      = %x02
+    coin-type             = %x03 type-tag
+
+    ; first 32 bytes of the contents are the object's object-id
+    object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+    ```
+    """
+
+    struct_type: "StructTag"
+    """
+    The type of this object
+    """
+
+    version: "int"
+    """
+    Number that increases each time a tx takes this object as a mutable
+    input This is a lamport timestamp, not a sequentially increasing
+    version
+    """
+
+    contents: "bytes"
+    """
+    BCS bytes of a Move struct value
+    """
+
+    def __init__(self, *, struct_type: "StructTag", version: "int", contents: "bytes"):
+        self.struct_type = struct_type
+        self.version = version
+        self.contents = contents
+
+    def __str__(self):
+        return "MoveStruct(struct_type={}, version={}, contents={})".format(self.struct_type, self.version, self.contents)
+
+    def __eq__(self, other):
+        if self.struct_type != other.struct_type:
+            return False
+        if self.version != other.version:
+            return False
+        if self.contents != other.contents:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveStruct(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveStruct(
+            struct_type=_UniffiConverterTypeStructTag.read(buf),
+            version=_UniffiConverterUInt64.read(buf),
+            contents=_UniffiConverterBytes.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeStructTag.check_lower(value.struct_type)
+        _UniffiConverterUInt64.check_lower(value.version)
+        _UniffiConverterBytes.check_lower(value.contents)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeStructTag.write(value.struct_type, buf)
+        _UniffiConverterUInt64.write(value.version, buf)
+        _UniffiConverterBytes.write(value.contents, buf)
+
+
 class ObjectFilter:
     type_tag: "typing.Optional[str]"
     owner: "typing.Optional[Address]"
@@ -7116,6 +7216,61 @@ class _UniffiConverterTypeTransactionsFilter(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalTypeObjectId.write(value.wrapped_or_deleted_object, buf)
 
 
+class TypeOrigin:
+    """
+    Identifies a struct and the module it was defined in
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    type-origin = identifier identifier object-id
+    ```
+    """
+
+    module_name: "Identifier"
+    struct_name: "Identifier"
+    package: "ObjectId"
+    def __init__(self, *, module_name: "Identifier", struct_name: "Identifier", package: "ObjectId"):
+        self.module_name = module_name
+        self.struct_name = struct_name
+        self.package = package
+
+    def __str__(self):
+        return "TypeOrigin(module_name={}, struct_name={}, package={})".format(self.module_name, self.struct_name, self.package)
+
+    def __eq__(self, other):
+        if self.module_name != other.module_name:
+            return False
+        if self.struct_name != other.struct_name:
+            return False
+        if self.package != other.package:
+            return False
+        return True
+
+class _UniffiConverterTypeTypeOrigin(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TypeOrigin(
+            module_name=_UniffiConverterTypeIdentifier.read(buf),
+            struct_name=_UniffiConverterTypeIdentifier.read(buf),
+            package=_UniffiConverterTypeObjectId.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeIdentifier.check_lower(value.module_name)
+        _UniffiConverterTypeIdentifier.check_lower(value.struct_name)
+        _UniffiConverterTypeObjectId.check_lower(value.package)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeIdentifier.write(value.module_name, buf)
+        _UniffiConverterTypeIdentifier.write(value.struct_name, buf)
+        _UniffiConverterTypeObjectId.write(value.package, buf)
+
+
 class TypeParseError:
     source: "str"
     def __init__(self, *, source: "str"):
@@ -7191,6 +7346,62 @@ class _UniffiConverterTypeUnchangedSharedObject(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypeObjectId.write(value.object_id, buf)
         _UniffiConverterTypeUnchangedSharedKind.write(value.kind, buf)
+
+
+class UpgradeInfo:
+    """
+    Upgraded package info for the linkage table
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    upgrade-info = object-id u64
+    ```
+    """
+
+    upgraded_id: "ObjectId"
+    """
+    Id of the upgraded packages
+    """
+
+    upgraded_version: "int"
+    """
+    Version of the upgraded package
+    """
+
+    def __init__(self, *, upgraded_id: "ObjectId", upgraded_version: "int"):
+        self.upgraded_id = upgraded_id
+        self.upgraded_version = upgraded_version
+
+    def __str__(self):
+        return "UpgradeInfo(upgraded_id={}, upgraded_version={})".format(self.upgraded_id, self.upgraded_version)
+
+    def __eq__(self, other):
+        if self.upgraded_id != other.upgraded_id:
+            return False
+        if self.upgraded_version != other.upgraded_version:
+            return False
+        return True
+
+class _UniffiConverterTypeUpgradeInfo(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return UpgradeInfo(
+            upgraded_id=_UniffiConverterTypeObjectId.read(buf),
+            upgraded_version=_UniffiConverterUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeObjectId.check_lower(value.upgraded_id)
+        _UniffiConverterUInt64.check_lower(value.upgraded_version)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeObjectId.write(value.upgraded_id, buf)
+        _UniffiConverterUInt64.write(value.upgraded_version, buf)
 
 
 class Validator:
@@ -11439,33 +11650,6 @@ class _UniffiConverterOptionalTypeMovePackage(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterOptionalTypeMoveStruct(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeMoveStruct.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeMoveStruct.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeMoveStruct.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalTypeMultisigAggregatedSignature(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -12055,6 +12239,33 @@ class _UniffiConverterOptionalTypeMoveLocation(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeMoveLocation.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMoveStruct(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveStruct.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveStruct.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveStruct.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -12907,6 +13118,31 @@ class _UniffiConverterSequenceTypeTransactionDataEffects(_UniffiConverterRustBuf
 
 
 
+class _UniffiConverterSequenceTypeTypeOrigin(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeTypeOrigin.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeTypeOrigin.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeTypeOrigin.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeUnchangedSharedObject(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -12979,6 +13215,72 @@ class _UniffiConverterSequenceTypeValidatorCommitteeMember(_UniffiConverterRustB
         return [
             _UniffiConverterTypeValidatorCommitteeMember.read(buf) for i in range(count)
         ]
+
+
+
+class _UniffiConverterMapTypeIdentifierBytes(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, items):
+        for (key, value) in items.items():
+            _UniffiConverterTypeIdentifier.check_lower(key)
+            _UniffiConverterBytes.check_lower(value)
+
+    @classmethod
+    def write(cls, items, buf):
+        buf.write_i32(len(items))
+        for (key, value) in items.items():
+            _UniffiConverterTypeIdentifier.write(key, buf)
+            _UniffiConverterBytes.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative map size")
+
+        # It would be nice to use a dict comprehension,
+        # but in Python 3.7 and before the evaluation order is not according to spec,
+        # so we we're reading the value before the key.
+        # This loop makes the order explicit: first reading the key, then the value.
+        d = {}
+        for i in range(count):
+            key = _UniffiConverterTypeIdentifier.read(buf)
+            val = _UniffiConverterBytes.read(buf)
+            d[key] = val
+        return d
+
+
+
+class _UniffiConverterMapTypeObjectIdTypeUpgradeInfo(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, items):
+        for (key, value) in items.items():
+            _UniffiConverterTypeObjectId.check_lower(key)
+            _UniffiConverterTypeUpgradeInfo.check_lower(value)
+
+    @classmethod
+    def write(cls, items, buf):
+        buf.write_i32(len(items))
+        for (key, value) in items.items():
+            _UniffiConverterTypeObjectId.write(key, buf)
+            _UniffiConverterTypeUpgradeInfo.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative map size")
+
+        # It would be nice to use a dict comprehension,
+        # but in Python 3.7 and before the evaluation order is not according to spec,
+        # so we we're reading the value before the key.
+        # This loop makes the order explicit: first reading the key, then the value.
+        d = {}
+        for i in range(count):
+            key = _UniffiConverterTypeObjectId.read(buf)
+            val = _UniffiConverterTypeUpgradeInfo.read(buf)
+            d[key] = val
+        return d
 
 
 class _UniffiConverterTypeBase64:
@@ -17607,7 +17909,8 @@ class IdentifierProtocol(typing.Protocol):
     ```
     """
 
-    pass
+    def as_str(self, ):
+        raise NotImplementedError
 # Identifier is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Identifier():
     """
@@ -17627,9 +17930,11 @@ class Identifier():
     """
 
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, identifier: "str"):
+        _UniffiConverterString.check_lower(identifier)
+        
+        self._pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_new,
+        _UniffiConverterString.lower(identifier))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -17648,6 +17953,15 @@ class Identifier():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def as_str(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_as_str,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -17791,13 +18105,59 @@ class _UniffiConverterTypeMoveModule:
     def write(cls, value: MoveModuleProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class MovePackageProtocol(typing.Protocol):
+    """
+    A move package
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    object-move-package = object-id u64 move-modules type-origin-table linkage-table
+
+    move-modules = map (identifier bytes)
+    type-origin-table = vector type-origin
+    linkage-table = map (object-id upgrade-info)
+    ```
+    """
+
     pass
 # MovePackage is a Rust-only trait - it's a wrapper around a Rust implementation.
 class MovePackage():
+    """
+    A move package
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    object-move-package = object-id u64 move-modules type-origin-table linkage-table
+
+    move-modules = map (identifier bytes)
+    type-origin-table = vector type-origin
+    linkage-table = map (object-id upgrade-info)
+    ```
+    """
+
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, id: "ObjectId",version: "int",modules: "dict[Identifier, bytes]",type_origin_table: "typing.List[TypeOrigin]",linkage_table: "dict[ObjectId, UpgradeInfo]"):
+        _UniffiConverterTypeObjectId.check_lower(id)
+        
+        _UniffiConverterUInt64.check_lower(version)
+        
+        _UniffiConverterMapTypeIdentifierBytes.check_lower(modules)
+        
+        _UniffiConverterSequenceTypeTypeOrigin.check_lower(type_origin_table)
+        
+        _UniffiConverterMapTypeObjectIdTypeUpgradeInfo.check_lower(linkage_table)
+        
+        self._pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new,
+        _UniffiConverterTypeObjectId.lower(id),
+        _UniffiConverterUInt64.lower(version),
+        _UniffiConverterMapTypeIdentifierBytes.lower(modules),
+        _UniffiConverterSequenceTypeTypeOrigin.lower(type_origin_table),
+        _UniffiConverterMapTypeObjectIdTypeUpgradeInfo.lower(linkage_table))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -17845,62 +18205,6 @@ class _UniffiConverterTypeMovePackage:
 
     @classmethod
     def write(cls, value: MovePackageProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class MoveStructProtocol(typing.Protocol):
-    pass
-# MoveStruct is a Rust-only trait - it's a wrapper around a Rust implementation.
-class MoveStruct():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movestruct, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movestruct, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeMoveStruct:
-
-    @staticmethod
-    def lift(value: int):
-        return MoveStruct._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: MoveStruct):
-        if not isinstance(value, MoveStruct):
-            raise TypeError("Expected MoveStruct instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: MoveStructProtocol):
-        if not isinstance(value, MoveStruct):
-            raise TypeError("Expected MoveStruct instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: MoveStructProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class MultisigAggregatedSignatureProtocol(typing.Protocol):
     """
@@ -22890,6 +23194,7 @@ __all__ = [
     "MoveLocation",
     "MoveObject",
     "MovePackagePage",
+    "MoveStruct",
     "ObjectFilter",
     "ObjectPage",
     "ObjectRef",
@@ -22904,8 +23209,10 @@ __all__ = [
     "TransactionEffectsV1",
     "TransactionMetadata",
     "TransactionsFilter",
+    "TypeOrigin",
     "TypeParseError",
     "UnchangedSharedObject",
+    "UpgradeInfo",
     "Validator",
     "ValidatorCommitteeMember",
     "ValidatorConnection",
@@ -22946,7 +23253,6 @@ __all__ = [
     "MoveFunction",
     "MoveModule",
     "MovePackage",
-    "MoveStruct",
     "MultisigAggregatedSignature",
     "MultisigCommittee",
     "MultisigMember",
