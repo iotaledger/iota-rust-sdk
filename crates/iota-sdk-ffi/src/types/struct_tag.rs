@@ -3,28 +3,10 @@
 
 use std::sync::Arc;
 
-use crate::types::{address::Address, type_tag::TypeTag};
-
-#[derive(Clone, Debug, derive_more::From, uniffi::Record)]
-pub struct TypeParseError {
-    source: String,
-}
-
-impl From<TypeParseError> for iota_types::TypeParseError {
-    fn from(value: TypeParseError) -> Self {
-        iota_types::TypeParseError {
-            source: value.source,
-        }
-    }
-}
-
-impl From<iota_types::TypeParseError> for TypeParseError {
-    fn from(value: iota_types::TypeParseError) -> Self {
-        TypeParseError {
-            source: value.source,
-        }
-    }
-}
+use crate::{
+    error::Result,
+    types::{address::Address, type_tag::TypeTag},
+};
 
 /// A move identifier
 ///
@@ -39,21 +21,18 @@ impl From<iota_types::TypeParseError> for TypeParseError {
 ///
 /// UNDERSCORE = %x95
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct Identifier(iota_types::Identifier);
+#[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash, derive_more::From, uniffi::Object)]
+pub struct Identifier(pub iota_types::Identifier);
 
+#[uniffi::export]
 impl Identifier {
     #[uniffi::constructor]
-    pub fn new(identifier: impl AsRef<str>) -> Result<Self, TypeParseError> {
+    pub fn new(identifier: String) -> Result<Self> {
         Ok(Self(iota_types::Identifier::new(identifier)?))
     }
 
-    pub fn into_inner(self) -> Box<str> {
-        self.0.into_inner()
-    }
-
-    pub fn as_str(&self) -> &str {
-        self.0.as_str()
+    pub fn as_str(&self) -> String {
+        self.0.as_str().to_owned()
     }
 }
 
