@@ -42,7 +42,7 @@ impl From<iota_types::TypeParseError> for TypeParseError {
 ///
 /// UNDERSCORE = %x95
 /// ```
-#[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq, derive_more::From, uniffi::Object)]
+#[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash, derive_more::From, uniffi::Object)]
 pub struct Identifier(pub iota_types::Identifier);
 
 #[uniffi::export]

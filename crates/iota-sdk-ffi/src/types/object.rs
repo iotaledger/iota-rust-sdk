@@ -1,7 +1,11 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{collections::BTreeMap, str::FromStr, sync::Arc};
+use std::{
+    collections::{BTreeMap, HashMap},
+    str::FromStr,
+    sync::Arc,
+};
 
 use iota_types::{TypeParseError, Version};
 
@@ -32,7 +36,9 @@ use crate::{
 /// ```text
 /// object-id = 32*OCTET
 /// ```
-#[derive(Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[derive(
+    Clone, Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Deref, uniffi::Object,
+)]
 pub struct ObjectId(pub iota_types::ObjectId);
 
 #[uniffi::export]
@@ -220,20 +226,6 @@ impl From<TypeOrigin> for iota_types::TypeOrigin {
     }
 }
 
-/// A mapping between an identifier and a BCS encoded module.
-#[derive(Clone, Debug, uniffi::Record)]
-pub struct IdentifierModuleMap {
-    id: Arc<Identifier>,
-    module: Vec<u8>,
-}
-
-/// A mapping between an Object ID and a package upgrade info.
-#[derive(Clone, Debug, uniffi::Record)]
-pub struct ObjectIdUpgradeInfoMap {
-    id: Arc<ObjectId>,
-    info: UpgradeInfo,
-}
-
 /// Upgraded package info for the linkage table
 ///
 /// # BCS
@@ -291,24 +283,21 @@ impl MovePackage {
     pub fn new(
         id: &ObjectId,
         version: Version,
-        modules: Vec<IdentifierModuleMap>,
+        modules: HashMap<Arc<Identifier>, Vec<u8>>,
         type_origin_table: Vec<TypeOrigin>,
-        linkage_table: Vec<ObjectIdUpgradeInfoMap>,
+        linkage_table: HashMap<Arc<ObjectId>, UpgradeInfo>,
     ) -> Result<Self> {
         Ok(Self(iota_types::MovePackage {
             id: id.into(),
             version,
-            modules: modules
-                .into_iter()
-                .map(|m| (m.id.0.clone(), m.module))
-                .collect::<BTreeMap<_, _>>(),
+            modules: modules.into_iter().map(|(k, v)| (k.0.clone(), v)).collect(),
             type_origin_table: type_origin_table
                 .into_iter()
                 .map(TryInto::try_into)
                 .collect::<Result<Vec<_>, _>>()?,
             linkage_table: linkage_table
                 .into_iter()
-                .map(|m| (m.id.0, m.info.into()))
+                .map(|(k, v)| (**k, v.into()))
                 .collect(),
         }))
     }

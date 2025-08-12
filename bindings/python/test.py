@@ -56,16 +56,12 @@ async def main():
         package=id,
     )
     upgrade_info = UpgradeInfo(upgraded_id=id, upgraded_version=43)
-    id_module = IdentifierModuleMap(
-        id=Identifier("some_id"), module=bytes.fromhex("48656c6c6f")
-    )
-    object_id_upgrade_info = ObjectIdUpgradeInfoMap(id=id, info=upgrade_info)
     move_package = MovePackage(
         id,
         version=42,
-        modules=[id_module],
+        modules={Identifier("some_id"): bytes.fromhex("48656c6c6f")},
         type_origin_table=[type_origin],
-        linkage_table=[object_id_upgrade_info],
+        linkage_table={id: upgrade_info},
     )
 
 

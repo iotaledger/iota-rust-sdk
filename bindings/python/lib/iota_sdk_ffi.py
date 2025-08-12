@@ -959,7 +959,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new() != 9398:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 47014:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 17506:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 3396:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6042,46 +6042,6 @@ class _UniffiConverterTypeGqlAddress(_UniffiConverterRustBuffer):
         _UniffiConverterTypeAddress.write(value.address, buf)
 
 
-class IdentifierModuleMap:
-    """
-    A mapping between an identifier and a BCS encoded module.
-    """
-
-    id: "Identifier"
-    module: "bytes"
-    def __init__(self, *, id: "Identifier", module: "bytes"):
-        self.id = id
-        self.module = module
-
-    def __str__(self):
-        return "IdentifierModuleMap(id={}, module={})".format(self.id, self.module)
-
-    def __eq__(self, other):
-        if self.id != other.id:
-            return False
-        if self.module != other.module:
-            return False
-        return True
-
-class _UniffiConverterTypeIdentifierModuleMap(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return IdentifierModuleMap(
-            id=_UniffiConverterTypeIdentifier.read(buf),
-            module=_UniffiConverterBytes.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterTypeIdentifier.check_lower(value.id)
-        _UniffiConverterBytes.check_lower(value.module)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterTypeIdentifier.write(value.id, buf)
-        _UniffiConverterBytes.write(value.module, buf)
-
-
 class MoveLocation:
     """
     Location in move bytecode where an error occurred
@@ -6372,46 +6332,6 @@ class _UniffiConverterTypeObjectFilter(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalString.write(value.type_tag, buf)
         _UniffiConverterOptionalTypeAddress.write(value.owner, buf)
         _UniffiConverterOptionalSequenceTypeObjectId.write(value.object_ids, buf)
-
-
-class ObjectIdUpgradeInfoMap:
-    """
-    A mapping between an Object ID and a package upgrade info.
-    """
-
-    id: "ObjectId"
-    info: "UpgradeInfo"
-    def __init__(self, *, id: "ObjectId", info: "UpgradeInfo"):
-        self.id = id
-        self.info = info
-
-    def __str__(self):
-        return "ObjectIdUpgradeInfoMap(id={}, info={})".format(self.id, self.info)
-
-    def __eq__(self, other):
-        if self.id != other.id:
-            return False
-        if self.info != other.info:
-            return False
-        return True
-
-class _UniffiConverterTypeObjectIdUpgradeInfoMap(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return ObjectIdUpgradeInfoMap(
-            id=_UniffiConverterTypeObjectId.read(buf),
-            info=_UniffiConverterTypeUpgradeInfo.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterTypeObjectId.check_lower(value.id)
-        _UniffiConverterTypeUpgradeInfo.check_lower(value.info)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterTypeObjectId.write(value.id, buf)
-        _UniffiConverterTypeUpgradeInfo.write(value.info, buf)
 
 
 class ObjectPage:
@@ -13098,56 +13018,6 @@ class _UniffiConverterSequenceTypeEvent(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterSequenceTypeIdentifierModuleMap(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeIdentifierModuleMap.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeIdentifierModuleMap.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeIdentifierModuleMap.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceTypeObjectIdUpgradeInfoMap(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeObjectIdUpgradeInfoMap.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeObjectIdUpgradeInfoMap.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeObjectIdUpgradeInfoMap.read(buf) for i in range(count)
-        ]
-
-
-
 class _UniffiConverterSequenceTypeObjectRef(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -13345,6 +13215,72 @@ class _UniffiConverterSequenceTypeValidatorCommitteeMember(_UniffiConverterRustB
         return [
             _UniffiConverterTypeValidatorCommitteeMember.read(buf) for i in range(count)
         ]
+
+
+
+class _UniffiConverterMapTypeIdentifierBytes(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, items):
+        for (key, value) in items.items():
+            _UniffiConverterTypeIdentifier.check_lower(key)
+            _UniffiConverterBytes.check_lower(value)
+
+    @classmethod
+    def write(cls, items, buf):
+        buf.write_i32(len(items))
+        for (key, value) in items.items():
+            _UniffiConverterTypeIdentifier.write(key, buf)
+            _UniffiConverterBytes.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative map size")
+
+        # It would be nice to use a dict comprehension,
+        # but in Python 3.7 and before the evaluation order is not according to spec,
+        # so we we're reading the value before the key.
+        # This loop makes the order explicit: first reading the key, then the value.
+        d = {}
+        for i in range(count):
+            key = _UniffiConverterTypeIdentifier.read(buf)
+            val = _UniffiConverterBytes.read(buf)
+            d[key] = val
+        return d
+
+
+
+class _UniffiConverterMapTypeObjectIdTypeUpgradeInfo(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, items):
+        for (key, value) in items.items():
+            _UniffiConverterTypeObjectId.check_lower(key)
+            _UniffiConverterTypeUpgradeInfo.check_lower(value)
+
+    @classmethod
+    def write(cls, items, buf):
+        buf.write_i32(len(items))
+        for (key, value) in items.items():
+            _UniffiConverterTypeObjectId.write(key, buf)
+            _UniffiConverterTypeUpgradeInfo.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative map size")
+
+        # It would be nice to use a dict comprehension,
+        # but in Python 3.7 and before the evaluation order is not according to spec,
+        # so we we're reading the value before the key.
+        # This loop makes the order explicit: first reading the key, then the value.
+        d = {}
+        for i in range(count):
+            key = _UniffiConverterTypeObjectId.read(buf)
+            val = _UniffiConverterTypeUpgradeInfo.read(buf)
+            d[key] = val
+        return d
 
 
 class _UniffiConverterTypeBase64:
@@ -18205,23 +18141,23 @@ class MovePackage():
     """
 
     _pointer: ctypes.c_void_p
-    def __init__(self, id: "ObjectId",version: "int",modules: "typing.List[IdentifierModuleMap]",type_origin_table: "typing.List[TypeOrigin]",linkage_table: "typing.List[ObjectIdUpgradeInfoMap]"):
+    def __init__(self, id: "ObjectId",version: "int",modules: "dict[Identifier, bytes]",type_origin_table: "typing.List[TypeOrigin]",linkage_table: "dict[ObjectId, UpgradeInfo]"):
         _UniffiConverterTypeObjectId.check_lower(id)
         
         _UniffiConverterUInt64.check_lower(version)
         
-        _UniffiConverterSequenceTypeIdentifierModuleMap.check_lower(modules)
+        _UniffiConverterMapTypeIdentifierBytes.check_lower(modules)
         
         _UniffiConverterSequenceTypeTypeOrigin.check_lower(type_origin_table)
         
-        _UniffiConverterSequenceTypeObjectIdUpgradeInfoMap.check_lower(linkage_table)
+        _UniffiConverterMapTypeObjectIdTypeUpgradeInfo.check_lower(linkage_table)
         
         self._pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new,
         _UniffiConverterTypeObjectId.lower(id),
         _UniffiConverterUInt64.lower(version),
-        _UniffiConverterSequenceTypeIdentifierModuleMap.lower(modules),
+        _UniffiConverterMapTypeIdentifierBytes.lower(modules),
         _UniffiConverterSequenceTypeTypeOrigin.lower(type_origin_table),
-        _UniffiConverterSequenceTypeObjectIdUpgradeInfoMap.lower(linkage_table))
+        _UniffiConverterMapTypeObjectIdTypeUpgradeInfo.lower(linkage_table))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -23255,13 +23191,11 @@ __all__ = [
     "GasCostSummary",
     "GasPayment",
     "GqlAddress",
-    "IdentifierModuleMap",
     "MoveLocation",
     "MoveObject",
     "MovePackagePage",
     "MoveStruct",
     "ObjectFilter",
-    "ObjectIdUpgradeInfoMap",
     "ObjectPage",
     "ObjectRef",
     "ObjectReference",
