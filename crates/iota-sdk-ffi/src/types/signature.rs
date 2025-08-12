@@ -51,12 +51,7 @@ pub struct UserSignature(pub iota_types::UserSignature);
 impl UserSignature {
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
-        match &self.0 {
-            iota_types::UserSignature::Simple(simple) => simple.scheme(),
-            iota_types::UserSignature::Multisig(_) => SignatureScheme::Multisig,
-            iota_types::UserSignature::ZkLogin(_) => SignatureScheme::ZkLogin,
-            iota_types::UserSignature::Passkey(_) => SignatureScheme::Passkey,
-        }
+        self.0.scheme()
     }
 
     fn to_bytes(&self) -> Vec<u8> {
