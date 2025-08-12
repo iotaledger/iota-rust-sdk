@@ -43,9 +43,9 @@ use iota_types::{Address, ObjectId};
 pub use normalized_move::{
     MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunction,
     MoveFunctionConnection, MoveFunctionTypeParameter, MoveModule, MoveModuleConnection,
-    MoveModuleQuery, MoveStruct, MoveStructConnection, MoveStructTypeParameter, MoveVisibility,
-    NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
-    NormalizedMoveModuleQueryArgs, OpenMoveType,
+    MoveModuleQuery, MoveStructConnection, MoveStructQuery, MoveStructTypeParameter,
+    MoveVisibility, NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs,
+    NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, OpenMoveType,
 };
 pub use object::{
     ObjectFilter, ObjectKey, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs,

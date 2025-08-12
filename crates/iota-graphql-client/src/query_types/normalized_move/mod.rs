@@ -8,7 +8,7 @@ mod module;
 pub use function::{NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs};
 pub use module::{
     MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunctionConnection, MoveModule,
-    MoveModuleConnection, MoveModuleQuery, MoveStruct, MoveStructConnection,
+    MoveModuleConnection, MoveModuleQuery, MoveStructConnection, MoveStructQuery,
     MoveStructTypeParameter, NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs,
 };
 

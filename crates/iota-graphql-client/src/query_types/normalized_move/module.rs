@@ -73,12 +73,12 @@ pub struct MoveModule {
 #[cynic(schema = "rpc", graphql_type = "MoveStructConnection")]
 pub struct MoveStructConnection {
     pub page_info: PageInfo,
-    pub nodes: Vec<MoveStruct>,
+    pub nodes: Vec<MoveStructQuery>,
 }
 
 #[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MoveStruct")]
-pub struct MoveStruct {
+pub struct MoveStructQuery {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
     pub fields: Option<Vec<MoveField>>,

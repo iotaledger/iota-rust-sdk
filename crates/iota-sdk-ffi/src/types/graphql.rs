@@ -8,8 +8,8 @@ use iota_graphql_client::{
     pagination::{Direction, PaginationFilter},
     query_types::{
         Base64, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField,
-        MoveFunction, MoveFunctionConnection, MoveFunctionTypeParameter, MoveStruct,
-        MoveStructConnection, MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo,
+        MoveFunction, MoveFunctionConnection, MoveFunctionTypeParameter, MoveStructConnection,
+        MoveStructQuery, MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo,
         TransactionBlockKindInput, ValidatorCredentials,
     },
 };
@@ -906,7 +906,7 @@ pub struct MoveField {
 }
 
 #[uniffi::remote(Record)]
-pub struct MoveStruct {
+pub struct MoveStructQuery {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
     pub fields: Option<Vec<MoveField>>,
@@ -916,7 +916,7 @@ pub struct MoveStruct {
 #[uniffi::remote(Record)]
 pub struct MoveStructConnection {
     pub page_info: PageInfo,
-    pub nodes: Vec<MoveStruct>,
+    pub nodes: Vec<MoveStructQuery>,
 }
 
 #[uniffi::remote(Record)]
