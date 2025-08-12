@@ -2066,9 +2066,9 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_object_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_package(
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_struct(
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58(
 ): Short
@@ -2735,9 +2735,9 @@ fun uniffi_iota_sdk_ffi_fn_clone_objectdata(`ptr`: Pointer,uniffi_out_err: Uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objectdata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_package(`movePackage`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package(`movePackage`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_struct(`moveStruct`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct(`moveStruct`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -4101,10 +4101,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_object_new() != 56232.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_package() != 31176.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package() != 5274.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_struct() != 4484.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() != 1861.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58() != 57967.toShort()) {
@@ -17562,10 +17562,10 @@ open class ObjectData: Disposable, AutoCloseable, ObjectDataInterface
         
     /**
      * Create an `ObjectData` from  `MovePackage`
-     */ fun `fromMovePackage`(`movePackage`: MovePackage): ObjectData {
+     */ fun `newMovePackage`(`movePackage`: MovePackage): ObjectData {
             return FfiConverterTypeObjectData.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_package(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package(
         FfiConverterTypeMovePackage.lower(`movePackage`),_status)
 }
     )
@@ -17575,10 +17575,10 @@ open class ObjectData: Disposable, AutoCloseable, ObjectDataInterface
         
     /**
      * Create an `ObjectData` from a `MoveStruct`
-     */ fun `fromMoveStruct`(`moveStruct`: MoveStruct): ObjectData {
+     */ fun `newMoveStruct`(`moveStruct`: MoveStruct): ObjectData {
             return FfiConverterTypeObjectData.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_struct(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct(
         FfiConverterTypeMoveStruct.lower(`moveStruct`),_status)
 }
     )

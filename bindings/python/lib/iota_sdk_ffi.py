@@ -997,9 +997,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_object_new() != 56232:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_package() != 31176:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package() != 5274:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_struct() != 4484:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() != 1861:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58() != 57967:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2496,16 +2496,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_objectdata.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_objectdata.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_package.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_package.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_struct.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_struct.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4651,12 +4651,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_object_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_object_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_package.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_package.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_struct.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_struct.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58.restype = ctypes.c_uint16
@@ -19643,7 +19643,7 @@ class ObjectData():
         inst._pointer = pointer
         return inst
     @classmethod
-    def from_move_package(cls, move_package: "MovePackage"):
+    def new_move_package(cls, move_package: "MovePackage"):
         """
         Create an `ObjectData` from  `MovePackage`
         """
@@ -19651,12 +19651,12 @@ class ObjectData():
         _UniffiConverterTypeMovePackage.check_lower(move_package)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_package,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package,
         _UniffiConverterTypeMovePackage.lower(move_package))
         return cls._make_instance_(pointer)
 
     @classmethod
-    def from_move_struct(cls, move_struct: "MoveStruct"):
+    def new_move_struct(cls, move_struct: "MoveStruct"):
         """
         Create an `ObjectData` from a `MoveStruct`
         """
@@ -19664,7 +19664,7 @@ class ObjectData():
         _UniffiConverterTypeMoveStruct.check_lower(move_struct)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_struct,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct,
         _UniffiConverterTypeMoveStruct.lower(move_struct))
         return cls._make_instance_(pointer)
 

@@ -2771,20 +2771,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_package()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package()
 	})
-	if checksum != 31176 {
+	if checksum != 5274 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_package: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_struct()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct()
 	})
-	if checksum != 4484 {
+	if checksum != 1861 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_struct: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9744,16 +9744,16 @@ type ObjectData struct {
 
 
 // Create an `ObjectData` from  `MovePackage`
-func ObjectDataFromMovePackage(movePackage *MovePackage) *ObjectData {
+func ObjectDataNewMovePackage(movePackage *MovePackage) *ObjectData {
 	return FfiConverterObjectDataINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_package(FfiConverterMovePackageINSTANCE.Lower(movePackage),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package(FfiConverterMovePackageINSTANCE.Lower(movePackage),_uniffiStatus)
 	}))
 }
 
 // Create an `ObjectData` from a `MoveStruct`
-func ObjectDataFromMoveStruct(moveStruct MoveStruct) *ObjectData {
+func ObjectDataNewMoveStruct(moveStruct MoveStruct) *ObjectData {
 	return FfiConverterObjectDataINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_struct(FfiConverterMoveStructINSTANCE.Lower(moveStruct),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct(FfiConverterMoveStructINSTANCE.Lower(moveStruct),_uniffiStatus)
 	}))
 }
 
