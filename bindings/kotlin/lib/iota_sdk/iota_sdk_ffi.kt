@@ -1471,6 +1471,50 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -1710,6 +1754,14 @@ fun uniffi_iota_sdk_ffi_checksum_method_object_storage_rebate(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_version(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_bytes(
@@ -1719,6 +1771,26 @@ fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_address(
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_is_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_is_object(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_is_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data(
 ): Short
@@ -1994,6 +2066,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_object_new(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_package(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_struct(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_bytes(
@@ -2003,6 +2079,18 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_generate(
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_struct(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_immutable(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes(
 ): Short
@@ -2647,6 +2735,18 @@ fun uniffi_iota_sdk_ffi_fn_clone_objectdata(`ptr`: Pointer,uniffi_out_err: Uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objectdata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_package(`movePackage`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_struct(`moveStruct`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectdata_is_package(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_objectdigest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objectdigest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -2679,10 +2779,42 @@ fun uniffi_iota_sdk_ffi_fn_clone_objecttype(`ptr`: Pointer,uniffi_out_err: Uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objecttype(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objecttype_is_package(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_owner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_owner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_address(`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(`version`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_owner_is_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_owner_is_immutable(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_owner_is_object(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_owner_is_shared(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_passkeyauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_passkeyauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3501,6 +3633,18 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_object_version() != 18433.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt() != 50334.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt() != 8956.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package() != 11147.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct() != 58579.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58() != 2414.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -3514,6 +3658,36 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt() != 14701.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package() != 40585.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 36265.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 4209.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 23542.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 29892.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 6506.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 55474.toShort()) {
@@ -3927,6 +4101,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_object_new() != 56232.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_package() != 31176.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_from_move_struct() != 4484.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58() != 57967.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -3940,6 +4120,24 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package() != 63533.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_struct() != 65488.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_address() != 6008.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_immutable() != 51786.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object() != 381.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes() != 20339.toShort()) {
@@ -17192,6 +17390,26 @@ public object FfiConverterTypeObject: FfiConverter<Object, Pointer> {
 
 public interface ObjectDataInterface {
     
+    /**
+     * Try to interpret this object as a `MovePackage`
+     */
+    fun `asPackageOpt`(): MovePackage?
+    
+    /**
+     * Try to interpret this object as a `MoveStruct`
+     */
+    fun `asStructOpt`(): MoveStruct?
+    
+    /**
+     * Return whether this object is a `MovePackage`
+     */
+    fun `isPackage`(): kotlin.Boolean
+    
+    /**
+     * Return whether this object is a `MoveStruct`
+     */
+    fun `isStruct`(): kotlin.Boolean
+    
     companion object
 }
 
@@ -17278,10 +17496,97 @@ open class ObjectData: Disposable, AutoCloseable, ObjectDataInterface
     }
 
     
+    /**
+     * Try to interpret this object as a `MovePackage`
+     */override fun `asPackageOpt`(): MovePackage? {
+            return FfiConverterOptionalTypeMovePackage.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     
+    /**
+     * Try to interpret this object as a `MoveStruct`
+     */override fun `asStructOpt`(): MoveStruct? {
+            return FfiConverterOptionalTypeMoveStruct.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt(
+        it, _status)
+}
+    }
+    )
+    }
     
-    companion object
+
+    
+    /**
+     * Return whether this object is a `MovePackage`
+     */override fun `isPackage`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectdata_is_package(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Return whether this object is a `MoveStruct`
+     */override fun `isStruct`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    companion object {
+        
+    /**
+     * Create an `ObjectData` from  `MovePackage`
+     */ fun `fromMovePackage`(`movePackage`: MovePackage): ObjectData {
+            return FfiConverterTypeObjectData.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_package(
+        FfiConverterTypeMovePackage.lower(`movePackage`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create an `ObjectData` from a `MoveStruct`
+     */ fun `fromMoveStruct`(`moveStruct`: MoveStruct): ObjectData {
+            return FfiConverterTypeObjectData.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectdata_from_move_struct(
+        FfiConverterTypeMoveStruct.lower(`moveStruct`),_status)
+}
+    )
+    }
+    
+
+        
+    }
     
 }
 
@@ -18024,6 +18329,12 @@ public object FfiConverterTypeObjectId: FfiConverter<ObjectId, Pointer> {
 
 public interface ObjectTypeInterface {
     
+    fun `asStructOpt`(): StructTag?
+    
+    fun `isPackage`(): kotlin.Boolean
+    
+    fun `isStruct`(): kotlin.Boolean
+    
     companion object
 }
 
@@ -18109,11 +18420,68 @@ open class ObjectType: Disposable, AutoCloseable, ObjectTypeInterface
         }
     }
 
+    override fun `asStructOpt`(): StructTag? {
+            return FfiConverterOptionalTypeStructTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isPackage`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objecttype_is_package(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isStruct`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct(
+        it, _status)
+}
+    }
+    )
+    }
     
 
     
+
     
-    companion object
+    companion object {
+         fun `newPackage`(): ObjectType {
+            return FfiConverterTypeObjectType.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newStruct`(`structTag`: StructTag): ObjectType {
+            return FfiConverterTypeObjectType.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct(
+        FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+        
+    }
     
 }
 
@@ -18246,6 +18614,20 @@ public object FfiConverterTypeObjectType: FfiConverter<ObjectType, Pointer> {
 
 public interface OwnerInterface {
     
+    fun `asAddressOpt`(): Address?
+    
+    fun `asObjectOpt`(): ObjectId?
+    
+    fun `asSharedOpt`(): kotlin.ULong?
+    
+    fun `isAddress`(): kotlin.Boolean
+    
+    fun `isImmutable`(): kotlin.Boolean
+    
+    fun `isObject`(): kotlin.Boolean
+    
+    fun `isShared`(): kotlin.Boolean
+    
     companion object
 }
 
@@ -18331,11 +18713,136 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
         }
     }
 
+    override fun `asAddressOpt`(): Address? {
+            return FfiConverterOptionalTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asObjectOpt`(): ObjectId? {
+            return FfiConverterOptionalTypeObjectId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asSharedOpt`(): kotlin.ULong? {
+            return FfiConverterOptionalULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isAddress`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_is_address(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isImmutable`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_is_immutable(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isObject`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_is_object(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isShared`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_is_shared(
+        it, _status)
+}
+    }
+    )
+    }
     
 
     
+
     
-    companion object
+    companion object {
+         fun `newAddress`(`address`: Address): Owner {
+            return FfiConverterTypeOwner.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_owner_new_address(
+        FfiConverterTypeAddress.lower(`address`),_status)
+}
+    )
+    }
+    
+
+         fun `newImmutable`(): Owner {
+            return FfiConverterTypeOwner.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newObject`(`id`: ObjectId): Owner {
+            return FfiConverterTypeOwner.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(
+        FfiConverterTypeObjectId.lower(`id`),_status)
+}
+    )
+    }
+    
+
+         fun `newShared`(`version`: kotlin.ULong): Owner {
+            return FfiConverterTypeOwner.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(
+        FfiConverterULong.lower(`version`),_status)
+}
+    )
+    }
+    
+
+        
+    }
     
 }
 
