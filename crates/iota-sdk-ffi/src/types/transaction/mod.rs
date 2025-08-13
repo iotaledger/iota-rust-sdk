@@ -176,11 +176,42 @@ pub struct ProgrammableTransaction(pub iota_types::ProgrammableTransaction);
 #[uniffi::export]
 impl ProgrammableTransaction {
     #[uniffi::constructor]
-    pub fn new(inputs: Vec<Input>, commands: Vec<Command>) -> Self {
+    pub fn new(inputs: Vec<Arc<Input>>, commands: Vec<Arc<Command>>) -> Self {
         Self(iota_types::ProgrammableTransaction {
-            inputs: inputs.iter().cloned().map(|input| input.0).collect(),
-            commands,
+            inputs: inputs
+                .iter()
+                .cloned()
+                .map(|input| input.0.clone())
+                .collect(),
+            commands: commands
+                .iter()
+                .cloned()
+                .map(|command| command.0.clone())
+                .collect(),
         })
+    }
+
+    /// Input objects or primitive values
+    pub fn inputs(&self) -> Vec<Arc<Input>> {
+        self.0
+            .inputs
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+
+    /// The commands to be executed sequentially. A failure in any command will
+    /// result in the failure of the entire transaction.
+    pub fn commands(&self) -> Vec<Arc<Command>> {
+        self.0
+            .commands
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
     }
 }
 
@@ -313,7 +344,9 @@ impl Command {
     /// 4. An argument holding the `UpgradeTicket` that must have been produced
     ///    from an earlier command in the same programmable transaction.
     #[uniffi::constructor]
-    pub fn new_upgrade(upgrade: Upgrade) -> Self {}
+    pub fn new_upgrade(upgrade: &Upgrade) -> Self {
+        Self(iota_types::Command::Upgrade(upgrade.0.clone()))
+    }
 }
 
 /// Command to transfer ownership of a set of objects to an address
@@ -517,6 +550,65 @@ impl MakeMoveVector {
             .map(Into::into)
             .map(Arc::new)
             .collect()
+    }
+}
+
+/// Command to upgrade an already published package
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// upgrade = (vector bytes)        ; move modules
+///           (vector object-id)    ; dependencies
+///           object-id             ; package-id of the package
+///           argument              ; upgrade ticket
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct Upgrade(pub iota_types::Upgrade);
+
+#[uniffi::export]
+impl Upgrade {
+    #[uniffi::constructor]
+    pub fn new(
+        modules: Vec<Vec<u8>>,
+        dependencies: Vec<Arc<ObjectId>>,
+        package: Arc<ObjectId>,
+        ticket: Arc<Argument>,
+    ) -> Self {
+        Self(iota_types::Upgrade {
+            modules,
+            dependencies: dependencies.iter().map(|dependency| dependency.0).collect(),
+            package: package.0.into(),
+            ticket: ticket.0.into(),
+        })
+    }
+
+    /// The serialized move modules
+    pub fn modules(&self) -> Vec<Vec<u8>> {
+        self.0.modules.clone()
+    }
+
+    /// Set of packages that the to-be published package depends on
+    pub fn dependencies(&self) -> Vec<Arc<ObjectId>> {
+        self.0
+            .dependencies
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+
+    /// Package id of the package to upgrade
+    pub fn package(&self) -> ObjectId {
+        self.0.package.clone().into()
+    }
+
+    /// Ticket authorizing the upgrade
+    pub fn ticket(&self) -> Argument {
+        self.0.ticket.clone().into()
     }
 }
 
