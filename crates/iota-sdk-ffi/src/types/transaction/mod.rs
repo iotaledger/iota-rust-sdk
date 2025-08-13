@@ -9,9 +9,11 @@ use crate::types::{
     address::Address,
     digest::{CheckpointDigest, TransactionDigest, TransactionEventsDigest},
     execution_status::ExecutionStatus,
-    object::ObjectReference,
+    object::{ObjectId, ObjectReference},
     signature::UserSignature,
+    struct_tag::Identifier,
     transaction::v1::TransactionEffectsV1,
+    type_tag::TypeTag,
 };
 
 pub mod v1;
@@ -156,8 +158,147 @@ impl TransactionKind {
     }
 }
 
+/// A user transaction
+///
+/// Contains a series of native commands and move calls where the results of one
+/// command can be used in future commands.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// ptb = (vector input) (vector command)
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ProgrammableTransaction(pub iota_types::ProgrammableTransaction);
+
+#[uniffi::export]
+impl ProgrammableTransaction {
+    #[uniffi::constructor]
+    pub fn new(inputs: Vec<Input>, commands: Vec<Command>) -> Self {
+        Self(iota_types::ProgrammableTransaction {
+            inputs: inputs.iter().cloned().map(|input| input.0).collect(),
+            commands,
+        })
+    }
+}
+
+/// An input to a user transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// input = input-pure / input-immutable-or-owned / input-shared / input-receiving
+///
+/// input-pure                  = %x00 bytes
+/// input-immutable-or-owned    = %x01 object-ref
+/// input-shared                = %x02 object-id u64 bool
+/// input-receiving             = %x04 object-ref
+/// ```
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct Input(pub iota_types::Input);
+
+#[uniffi::export]
+impl Input {
+    /// For normal operations this is required to be a move primitive type and
+    /// not contain structs or objects.
+    #[uniffi::constructor]
+    pub fn new_pure(value: Vec<u8>) -> Self {
+        Self(iota_types::Input::Pure { value })
+    }
+
+    /// A move object that is either immutable or address owned
+    #[uniffi::constructor]
+    pub fn new_immutable_or_owned(object_ref: ObjectReference) -> Self {
+        Self(iota_types::Input::ImmutableOrOwned(object_ref.into()))
+    }
+
+    /// A move object whose owner is "Shared"
+    #[uniffi::constructor]
+    pub fn new_shared(object_id: &ObjectId, initial_shared_version: u64, mutable: bool) -> Self {
+        Self(iota_types::Input::Shared {
+            object_id: object_id.0,
+            initial_shared_version,
+            mutable,
+        })
+    }
+
+    #[uniffi::constructor]
+    pub fn new_receiving(object_ref: ObjectReference) -> Self {
+        Self(iota_types::Input::Receiving(object_ref.into()))
+    }
+}
+
+/// A single command in a programmable transaction.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// command =  command-move-call
+///         =/ command-transfer-objects
+///         =/ command-split-coins
+///         =/ command-merge-coins
+///         =/ command-publish
+///         =/ command-make-move-vector
+///         =/ command-upgrade
+///
+/// command-move-call           = %x00 move-call
+/// command-transfer-objects    = %x01 transfer-objects
+/// command-split-coins         = %x02 split-coins
+/// command-merge-coins         = %x03 merge-coins
+/// command-publish             = %x04 publish
+/// command-make-move-vector    = %x05 make-move-vector
+/// command-upgrade             = %x06 upgrade
+/// ```
+#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+pub struct Command(pub iota_types::Command);
+
+#[uniffi::export]
+impl Command {
+    /// A call to either an entry or a public Move function
+    #[uniffi::constructor]
+    pub fn new_move_call(move_call: MoveCall) -> Self {}
+
+    /// It sends n-objects to the specified address. These objects must have
+    /// store (public transfer) and either the previous owner must be an
+    /// address or the object must be newly created.
+    #[uniffi::constructor]
+    pub fn new_transfer_objects(transfer_objects: TransferObjects) -> Self {}
+
+    /// It splits off some amounts into a new coins with those amounts
+    #[uniffi::constructor]
+    pub fn new_split_coins(split_coins: SplitCoins) -> Self {}
+
+    /// It merges n-coins into the first coin
+    #[uniffi::constructor]
+    pub fn new_merge_coins(merge_coins: MergeCoins) -> Self {}
+
+    /// Publishes a Move package. It takes the package bytes and a list of the
+    /// package's transitive dependencies to link against on-chain.
+    #[uniffi::constructor]
+    pub fn new_publish(publish: Publish) -> Self {}
+
+    /// Given n-values of the same type, it constructs a vector. For non objects
+    /// or an empty vector, the type tag must be specified.
+    #[uniffi::constructor]
+    pub fn new_make_move_vector(make_move_vector: MakeMoveVector) -> Self {}
+
+    /// Upgrades a Move package
+    /// Takes (in order):
+    /// 1. A vector of serialized modules for the package.
+    /// 2. A vector of object ids for the transitive dependencies of the new
+    ///    package.
+    /// 3. The object ID of the package being upgraded.
+    /// 4. An argument holding the `UpgradeTicket` that must have been produced
+    ///    from an earlier command in the same programmable transaction.
+    #[uniffi::constructor]
+    pub fn new_upgrade(upgrade: Upgrade) -> Self {}
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ConsensusCommitPrologueV1(pub iota_types::ConsensusCommitPrologueV1);
@@ -304,4 +445,149 @@ impl TransactionEffects {
 pub enum TransactionExpiration {
     None,
     Epoch(u64),
+}
+
+/// An argument to a programmable transaction command
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// argument    =  argument-gas
+///             =/ argument-input
+///             =/ argument-result
+///             =/ argument-nested-result
+///
+/// argument-gas            = %x00
+/// argument-input          = %x01 u16
+/// argument-result         = %x02 u16
+/// argument-nested-result  = %x03 u16 u16
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct Argument(iota_types::Argument);
+
+#[uniffi::export]
+impl Argument {
+    /// The gas coin. The gas coin can only be used by-ref, except for with
+    /// `TransferObjects`, which can use it by-value.
+    #[uniffi::constructor]
+    pub fn new_gas() -> Self {
+        Self(iota_types::Argument::Gas)
+    }
+
+    /// One of the input objects or primitive values (from
+    /// `ProgrammableTransaction` inputs)
+    #[uniffi::constructor]
+    pub fn new_input(input: u16) -> Self {
+        Self(iota_types::Argument::Input(input))
+    }
+
+    /// The result of another command (from `ProgrammableTransaction` commands)
+    #[uniffi::constructor]
+    pub fn new_result(result: u16) -> Self {
+        Self(iota_types::Argument::Result(result))
+    }
+
+    /// Like a `Result` but it accesses a nested result. Currently, the only
+    /// usage of this is to access a value from a Move call with multiple
+    /// return values.
+    // (command index, subresult index)
+    #[uniffi::constructor]
+    pub fn new_nested_result(command_index: u16, subresult_index: u16) -> Self {
+        Self(iota_types::Argument::NestedResult(
+            command_index,
+            subresult_index,
+        ))
+    }
+
+    /// Turn a Result into a NestedResult. If the argument is not a Result,
+    /// returns None.
+    pub fn nested(&self, ix: u16) -> Option<Arc<Argument>> {
+        self.0.nested(ix).map(Self).map(Arc::new)
+    }
+}
+
+/// Command to call a move function
+///
+/// Functions that can be called by a `MoveCall` command are those that have a
+/// function signature that is either `entry` or `public` (which don't have a
+/// reference return type).
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// move-call = object-id           ; package id
+///             identifier          ; module name
+///             identifier          ; function name
+///             (vector type-tag)   ; type arguments, if any
+///             (vector argument)   ; input arguments
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct MoveCall(iota_types::MoveCall);
+
+#[uniffi::export]
+impl MoveCall {
+    #[uniffi::constructor]
+    pub fn new(
+        package: &ObjectId,
+        module: &Identifier,
+        function: &Identifier,
+        type_arguments: Vec<Arc<TypeTag>>,
+        arguments: Vec<Arc<Argument>>,
+    ) -> Self {
+        Self(iota_types::MoveCall {
+            package: package.0.clone(),
+            module: module.0.clone(),
+            function: function.0.clone(),
+            type_arguments: type_arguments
+                .iter()
+                .map(|type_argument| type_argument.0.clone())
+                .collect(),
+            arguments: arguments
+                .iter()
+                .cloned()
+                .map(|argument| argument.0)
+                .collect(),
+        })
+    }
+
+    /// The package containing the module and function.
+    pub fn package(&self) -> ObjectId {
+        self.0.package.into()
+    }
+
+    /// The specific module in the package containing the function.
+    pub fn module(&self) -> Identifier {
+        self.0.module.clone().into()
+    }
+
+    /// The function to be called.
+    pub fn function(&self) -> Identifier {
+        self.0.function.clone().into()
+    }
+
+    /// The type arguments to the function.
+    pub fn type_arguments(&self) -> Vec<Arc<TypeTag>> {
+        self.0
+            .type_arguments
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+
+    /// The arguments to the function.
+    pub fn arguments(&self) -> Vec<Arc<Argument>> {
+        self.0
+            .arguments
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
 }
