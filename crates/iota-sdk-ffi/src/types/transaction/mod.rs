@@ -298,7 +298,11 @@ impl Command {
     /// Given n-values of the same type, it constructs a vector. For non objects
     /// or an empty vector, the type tag must be specified.
     #[uniffi::constructor]
-    pub fn new_make_move_vector(make_move_vector: MakeMoveVector) -> Self {}
+    pub fn new_make_move_vector(make_move_vector: &MakeMoveVector) -> Self {
+        Self(iota_types::Command::MakeMoveVector(
+            make_move_vector.0.clone(),
+        ))
+    }
 
     /// Upgrades a Move package
     /// Takes (in order):
@@ -466,6 +470,48 @@ impl Publish {
     pub fn dependencies(&self) -> Vec<Arc<ObjectId>> {
         self.0
             .dependencies
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+}
+
+/// Command to build a move vector out of a set of individual elements
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// make-move-vector = (option type-tag) (vector argument)
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct MakeMoveVector(pub iota_types::MakeMoveVector);
+
+#[uniffi::export]
+impl MakeMoveVector {
+    #[uniffi::constructor]
+    pub fn new(type_tag: Option<Arc<TypeTag>>, elements: Vec<Arc<Argument>>) -> Self {
+        Self(iota_types::MakeMoveVector {
+            type_: type_tag.map(|type_tag| type_tag.0.clone()),
+            elements: elements.iter().map(|element| element.0).collect(),
+        })
+    }
+
+    /// Type of the individual elements
+    ///
+    /// This is required to be set when the type can't be inferred, for example
+    /// when the set of provided arguments are all pure input values.
+    pub fn type_tag(&self) -> Option<Arc<TypeTag>> {
+        self.0.type_.clone().map(Into::into).map(Arc::new)
+    }
+
+    /// The set individual elements to build the vector with
+    pub fn elements(&self) -> Vec<Arc<Argument>> {
+        self.0
+            .elements
             .iter()
             .cloned()
             .map(Into::into)
