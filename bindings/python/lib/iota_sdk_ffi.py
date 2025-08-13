@@ -5427,13 +5427,45 @@ class _UniffiConverterTypeCheckpointSummaryPage(_UniffiConverterRustBuffer):
 
 
 class CoinMetadata:
+    """
+    The coin metadata associated with the given coin type.
+    """
+
     decimals: "typing.Optional[int]"
+    """
+    The number of decimal places used to represent the token.
+    """
+
     description: "typing.Optional[str]"
+    """
+    Optional description of the token, provided by the creator of the token.
+    """
+
     icon_url: "typing.Optional[str]"
+    """
+    Icon URL of the coin.
+    """
+
     name: "typing.Optional[str]"
+    """
+    Full, official name of the token.
+    """
+
     symbol: "typing.Optional[str]"
+    """
+    The token's identifying abbreviation.
+    """
+
     supply: "typing.Optional[BigInt]"
+    """
+    The overall quantity of tokens that will be issued.
+    """
+
     version: "int"
+    """
+    Version of the token.
+    """
+
     def __init__(self, *, decimals: "typing.Optional[int]" = _DEFAULT, description: "typing.Optional[str]" = _DEFAULT, icon_url: "typing.Optional[str]" = _DEFAULT, name: "typing.Optional[str]" = _DEFAULT, symbol: "typing.Optional[str]" = _DEFAULT, supply: "typing.Optional[BigInt]" = _DEFAULT, version: "int"):
         if decimals is _DEFAULT:
             self.decimals = None
@@ -6709,10 +6741,30 @@ class _UniffiConverterTypeObjectReference(_UniffiConverterRustBuffer):
 
 
 class PageInfo:
+    """
+    Information about pagination in a connection.
+    """
+
     has_previous_page: "bool"
+    """
+    When paginating backwards, are there more items?
+    """
+
     has_next_page: "bool"
+    """
+    Are there more items when paginating forwards?
+    """
+
     start_cursor: "typing.Optional[str]"
+    """
+    When paginating backwards, the cursor to continue.
+    """
+
     end_cursor: "typing.Optional[str]"
+    """
+    When paginating forwards, the cursor to continue.
+    """
+
     def __init__(self, *, has_previous_page: "bool", has_next_page: "bool", start_cursor: "typing.Optional[str]" = _DEFAULT, end_cursor: "typing.Optional[str]" = _DEFAULT):
         self.has_previous_page = has_previous_page
         self.has_next_page = has_next_page
@@ -6765,9 +6817,27 @@ class _UniffiConverterTypePageInfo(_UniffiConverterRustBuffer):
 
 
 class PaginationFilter:
+    """
+    Pagination options for querying the GraphQL server. It defaults to forward
+    pagination with the GraphQL server's max page size.
+    """
+
     direction: "Direction"
+    """
+    The direction of pagination.
+    """
+
     cursor: "typing.Optional[str]"
+    """
+    An opaque cursor used for pagination.
+    """
+
     limit: "typing.Optional[int]"
+    """
+    The maximum number of items to return. If this is ommitted, it will
+    lazily query the service configuration for the max page size.
+    """
+
     def __init__(self, *, direction: "Direction", cursor: "typing.Optional[str]" = _DEFAULT, limit: "typing.Optional[int]" = _DEFAULT):
         self.direction = direction
         if cursor is _DEFAULT:
@@ -6815,18 +6885,92 @@ class _UniffiConverterTypePaginationFilter(_UniffiConverterRustBuffer):
 
 class ServiceConfig:
     default_page_size: "int"
+    """
+    Default number of elements allowed on a single page of a connection.
+    """
+
     enabled_features: "typing.List[Feature]"
+    """
+    List of all features that are enabled on this RPC service.
+    """
+
     max_move_value_depth: "int"
+    """
+    Maximum estimated cost of a database query used to serve a GraphQL
+    request.  This is measured in the same units that the database uses
+    in EXPLAIN queries.
+    Maximum nesting allowed in struct fields when calculating the layout of
+    a single Move Type.
+    """
+
     max_output_nodes: "int"
+    """
+    The maximum number of output nodes in a GraphQL response.
+    Non-connection nodes have a count of 1, while connection nodes are
+    counted as the specified 'first' or 'last' number of items, or the
+    default_page_size as set by the server if those arguments are not
+    set. Counts accumulate multiplicatively down the query tree. For
+    example, if a query starts with a connection of first: 10 and has a
+    field to a connection with last: 20, the count at the second level
+    would be 200 nodes. This is then summed to the count of 10 nodes
+    at the first level, for a total of 210 nodes.
+    """
+
     max_page_size: "int"
+    """
+    Maximum number of elements allowed on a single page of a connection.
+    """
+
     max_query_depth: "int"
+    """
+    The maximum depth a GraphQL query can be to be accepted by this service.
+    """
+
     max_query_nodes: "int"
+    """
+    The maximum number of nodes (field names) the service will accept in a
+    single query.
+    """
+
     max_query_payload_size: "int"
+    """
+    Maximum length of a query payload string.
+    """
+
     max_type_argument_depth: "int"
+    """
+    Maximum nesting allowed in type arguments in Move Types resolved by this
+    service.
+    """
+
     max_type_argument_width: "int"
+    """
+    Maximum number of type arguments passed into a generic instantiation of
+    a Move Type resolved by this service.
+    """
+
     max_type_nodes: "int"
+    """
+    Maximum number of structs that need to be processed when calculating the
+    layout of a single Move Type.
+    """
+
     mutation_timeout_ms: "int"
+    """
+    Maximum time in milliseconds spent waiting for a response from fullnode
+    after issuing a a transaction to execute. Note that the transaction
+    may still succeed even in the case of a timeout. Transactions are
+    idempotent, so a transaction that times out should be resubmitted
+    until the network returns a definite response (success or failure, not
+    timeout).
+    """
+
     request_timeout_ms: "int"
+    """
+    Maximum time in milliseconds that will be spent to serve one query
+    request.
+    """
+
     def __init__(self, *, default_page_size: "int", enabled_features: "typing.List[Feature]", max_move_value_depth: "int", max_output_nodes: "int", max_page_size: "int", max_query_depth: "int", max_query_nodes: "int", max_query_payload_size: "int", max_type_argument_depth: "int", max_type_argument_width: "int", max_type_nodes: "int", mutation_timeout_ms: "int", request_timeout_ms: "int"):
         self.default_page_size = default_page_size
         self.enabled_features = enabled_features

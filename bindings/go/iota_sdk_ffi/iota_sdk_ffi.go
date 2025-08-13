@@ -13742,13 +13742,21 @@ type FfiDestroyerCheckpointSummaryPage struct {}
 func (_ FfiDestroyerCheckpointSummaryPage) Destroy(value CheckpointSummaryPage) {
 	value.Destroy()
 }
+// The coin metadata associated with the given coin type.
 type CoinMetadata struct {
+	// The number of decimal places used to represent the token.
 	Decimals *int32
+	// Optional description of the token, provided by the creator of the token.
 	Description *string
+	// Icon URL of the coin.
 	IconUrl *string
+	// Full, official name of the token.
 	Name *string
+	// The token's identifying abbreviation.
 	Symbol *string
+	// The overall quantity of tokens that will be issued.
 	Supply *BigInt
+	// Version of the token.
 	Version uint64
 }
 
@@ -14850,10 +14858,15 @@ type FfiDestroyerObjectReference struct {}
 func (_ FfiDestroyerObjectReference) Destroy(value ObjectReference) {
 	value.Destroy()
 }
+// Information about pagination in a connection.
 type PageInfo struct {
+	// When paginating backwards, are there more items?
 	HasPreviousPage bool
+	// Are there more items when paginating forwards?
 	HasNextPage bool
+	// When paginating backwards, the cursor to continue.
 	StartCursor *string
+	// When paginating forwards, the cursor to continue.
 	EndCursor *string
 }
 
@@ -14897,9 +14910,15 @@ type FfiDestroyerPageInfo struct {}
 func (_ FfiDestroyerPageInfo) Destroy(value PageInfo) {
 	value.Destroy()
 }
+// Pagination options for querying the GraphQL server. It defaults to forward
+// pagination with the GraphQL server's max page size.
 type PaginationFilter struct {
+	// The direction of pagination.
 	Direction Direction
+	// An opaque cursor used for pagination.
 	Cursor *string
+	// The maximum number of items to return. If this is ommitted, it will
+	// lazily query the service configuration for the max page size.
 	Limit *int32
 }
 
@@ -14941,18 +14960,53 @@ func (_ FfiDestroyerPaginationFilter) Destroy(value PaginationFilter) {
 	value.Destroy()
 }
 type ServiceConfig struct {
+	// Default number of elements allowed on a single page of a connection.
 	DefaultPageSize int32
+	// List of all features that are enabled on this RPC service.
 	EnabledFeatures []Feature
+	// Maximum estimated cost of a database query used to serve a GraphQL
+	// request.  This is measured in the same units that the database uses
+	// in EXPLAIN queries.
+	// Maximum nesting allowed in struct fields when calculating the layout of
+	// a single Move Type.
 	MaxMoveValueDepth int32
+	// The maximum number of output nodes in a GraphQL response.
+	// Non-connection nodes have a count of 1, while connection nodes are
+	// counted as the specified 'first' or 'last' number of items, or the
+	// default_page_size as set by the server if those arguments are not
+	// set. Counts accumulate multiplicatively down the query tree. For
+	// example, if a query starts with a connection of first: 10 and has a
+	// field to a connection with last: 20, the count at the second level
+	// would be 200 nodes. This is then summed to the count of 10 nodes
+	// at the first level, for a total of 210 nodes.
 	MaxOutputNodes int32
+	// Maximum number of elements allowed on a single page of a connection.
 	MaxPageSize int32
+	// The maximum depth a GraphQL query can be to be accepted by this service.
 	MaxQueryDepth int32
+	// The maximum number of nodes (field names) the service will accept in a
+	// single query.
 	MaxQueryNodes int32
+	// Maximum length of a query payload string.
 	MaxQueryPayloadSize int32
+	// Maximum nesting allowed in type arguments in Move Types resolved by this
+	// service.
 	MaxTypeArgumentDepth int32
+	// Maximum number of type arguments passed into a generic instantiation of
+	// a Move Type resolved by this service.
 	MaxTypeArgumentWidth int32
+	// Maximum number of structs that need to be processed when calculating the
+	// layout of a single Move Type.
 	MaxTypeNodes int32
+	// Maximum time in milliseconds spent waiting for a response from fullnode
+	// after issuing a a transaction to execute. Note that the transaction
+	// may still succeed even in the case of a timeout. Transactions are
+	// idempotent, so a transaction that times out should be resubmitted
+	// until the network returns a definite response (success or failure, not
+	// timeout).
 	MutationTimeoutMs int32
+	// Maximum time in milliseconds that will be spent to serve one query
+	// request.
 	RequestTimeoutMs int32
 }
 

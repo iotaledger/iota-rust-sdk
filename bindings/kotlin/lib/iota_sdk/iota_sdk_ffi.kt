@@ -26130,13 +26130,37 @@ public object FfiConverterTypeCheckpointSummaryPage: FfiConverterRustBuffer<Chec
 
 
 
+/**
+ * The coin metadata associated with the given coin type.
+ */
 data class CoinMetadata (
+    /**
+     * The number of decimal places used to represent the token.
+     */
     var `decimals`: kotlin.Int? = null, 
+    /**
+     * Optional description of the token, provided by the creator of the token.
+     */
     var `description`: kotlin.String? = null, 
+    /**
+     * Icon URL of the coin.
+     */
     var `iconUrl`: kotlin.String? = null, 
+    /**
+     * Full, official name of the token.
+     */
     var `name`: kotlin.String? = null, 
+    /**
+     * The token's identifying abbreviation.
+     */
     var `symbol`: kotlin.String? = null, 
+    /**
+     * The overall quantity of tokens that will be issued.
+     */
     var `supply`: BigInt? = null, 
+    /**
+     * Version of the token.
+     */
     var `version`: kotlin.ULong
 ) {
     
@@ -27366,10 +27390,25 @@ public object FfiConverterTypeObjectReference: FfiConverterRustBuffer<ObjectRefe
 
 
 
+/**
+ * Information about pagination in a connection.
+ */
 data class PageInfo (
+    /**
+     * When paginating backwards, are there more items?
+     */
     var `hasPreviousPage`: kotlin.Boolean, 
+    /**
+     * Are there more items when paginating forwards?
+     */
     var `hasNextPage`: kotlin.Boolean, 
+    /**
+     * When paginating backwards, the cursor to continue.
+     */
     var `startCursor`: kotlin.String? = null, 
+    /**
+     * When paginating forwards, the cursor to continue.
+     */
     var `endCursor`: kotlin.String? = null
 ) {
     
@@ -27406,9 +27445,23 @@ public object FfiConverterTypePageInfo: FfiConverterRustBuffer<PageInfo> {
 
 
 
+/**
+ * Pagination options for querying the GraphQL server. It defaults to forward
+ * pagination with the GraphQL server's max page size.
+ */
 data class PaginationFilter (
+    /**
+     * The direction of pagination.
+     */
     var `direction`: Direction, 
+    /**
+     * An opaque cursor used for pagination.
+     */
     var `cursor`: kotlin.String? = null, 
+    /**
+     * The maximum number of items to return. If this is ommitted, it will
+     * lazily query the service configuration for the max page size.
+     */
     var `limit`: kotlin.Int? = null
 ) {
     
@@ -27443,18 +27496,79 @@ public object FfiConverterTypePaginationFilter: FfiConverterRustBuffer<Paginatio
 
 
 data class ServiceConfig (
+    /**
+     * Default number of elements allowed on a single page of a connection.
+     */
     var `defaultPageSize`: kotlin.Int, 
+    /**
+     * List of all features that are enabled on this RPC service.
+     */
     var `enabledFeatures`: List<Feature>, 
+    /**
+     * Maximum estimated cost of a database query used to serve a GraphQL
+     * request.  This is measured in the same units that the database uses
+     * in EXPLAIN queries.
+     * Maximum nesting allowed in struct fields when calculating the layout of
+     * a single Move Type.
+     */
     var `maxMoveValueDepth`: kotlin.Int, 
+    /**
+     * The maximum number of output nodes in a GraphQL response.
+     * Non-connection nodes have a count of 1, while connection nodes are
+     * counted as the specified 'first' or 'last' number of items, or the
+     * default_page_size as set by the server if those arguments are not
+     * set. Counts accumulate multiplicatively down the query tree. For
+     * example, if a query starts with a connection of first: 10 and has a
+     * field to a connection with last: 20, the count at the second level
+     * would be 200 nodes. This is then summed to the count of 10 nodes
+     * at the first level, for a total of 210 nodes.
+     */
     var `maxOutputNodes`: kotlin.Int, 
+    /**
+     * Maximum number of elements allowed on a single page of a connection.
+     */
     var `maxPageSize`: kotlin.Int, 
+    /**
+     * The maximum depth a GraphQL query can be to be accepted by this service.
+     */
     var `maxQueryDepth`: kotlin.Int, 
+    /**
+     * The maximum number of nodes (field names) the service will accept in a
+     * single query.
+     */
     var `maxQueryNodes`: kotlin.Int, 
+    /**
+     * Maximum length of a query payload string.
+     */
     var `maxQueryPayloadSize`: kotlin.Int, 
+    /**
+     * Maximum nesting allowed in type arguments in Move Types resolved by this
+     * service.
+     */
     var `maxTypeArgumentDepth`: kotlin.Int, 
+    /**
+     * Maximum number of type arguments passed into a generic instantiation of
+     * a Move Type resolved by this service.
+     */
     var `maxTypeArgumentWidth`: kotlin.Int, 
+    /**
+     * Maximum number of structs that need to be processed when calculating the
+     * layout of a single Move Type.
+     */
     var `maxTypeNodes`: kotlin.Int, 
+    /**
+     * Maximum time in milliseconds spent waiting for a response from fullnode
+     * after issuing a a transaction to execute. Note that the transaction
+     * may still succeed even in the case of a timeout. Transactions are
+     * idempotent, so a transaction that times out should be resubmitted
+     * until the network returns a definite response (success or failure, not
+     * timeout).
+     */
     var `mutationTimeoutMs`: kotlin.Int, 
+    /**
+     * Maximum time in milliseconds that will be spent to serve one query
+     * request.
+     */
     var `requestTimeoutMs`: kotlin.Int
 ) {
     
