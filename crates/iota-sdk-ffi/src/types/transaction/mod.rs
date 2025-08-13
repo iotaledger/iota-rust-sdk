@@ -291,7 +291,9 @@ impl Command {
     /// Publishes a Move package. It takes the package bytes and a list of the
     /// package's transitive dependencies to link against on-chain.
     #[uniffi::constructor]
-    pub fn new_publish(publish: Publish) -> Self {}
+    pub fn new_publish(publish: &Publish) -> Self {
+        Self(iota_types::Command::Publish(publish.0.clone()))
+    }
 
     /// Given n-values of the same type, it constructs a vector. For non objects
     /// or an empty vector, the type tag must be specified.
@@ -421,6 +423,49 @@ impl MergeCoins {
     pub fn coins_to_merge(&self) -> Vec<Arc<Argument>> {
         self.0
             .coins_to_merge
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+}
+
+/// Command to publish a new move package
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// publish = (vector bytes)        ; the serialized move modules
+///           (vector object-id)    ; the set of package dependencies
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct Publish(pub iota_types::Publish);
+
+#[uniffi::export]
+impl Publish {
+    #[uniffi::constructor]
+    pub fn new(modules: Vec<Vec<u8>>, dependencies: Vec<Arc<ObjectId>>) -> Self {
+        Self(iota_types::Publish {
+            modules,
+            dependencies: dependencies
+                .iter()
+                .map(|object_id| object_id.0.clone())
+                .collect(),
+        })
+    }
+
+    /// The serialized move modules
+    pub fn modules(&self) -> Vec<Vec<u8>> {
+        self.0.modules.clone()
+    }
+
+    /// Set of packages that the to-be published package depends on
+    pub fn dependencies(&self) -> Vec<Arc<ObjectId>> {
+        self.0
+            .dependencies
             .iter()
             .cloned()
             .map(Into::into)
