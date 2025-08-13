@@ -2336,7 +2336,10 @@ mod tests {
             .await
             .unwrap()
             .unwrap();
-        assert_eq!(total_transaction_blocks, total_transaction_blocks_by_digest);
+        assert_eq!(
+            total_transaction_blocks_by_seq_num,
+            total_transaction_blocks_by_digest
+        );
     }
 
     #[tokio::test]
