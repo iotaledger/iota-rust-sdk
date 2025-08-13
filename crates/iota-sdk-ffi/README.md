@@ -1,6 +1,6 @@
 # IOTA SDK FFI
 
-This crate can generate bindings for various languages (Go, Kotlin, Python, etc.) using [UniFFI](https://github.com/mozilla/uniffi-rs).
+This crate can generate bindings for various languages using [UniFFI](https://github.com/mozilla/uniffi-rs).
 
 ## Supported languages
 
