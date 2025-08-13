@@ -367,7 +367,7 @@ impl TransferObjects {
     pub fn new(objects: Vec<Arc<Argument>>, address: Arc<Argument>) -> Self {
         Self(iota_types::TransferObjects {
             objects: objects.iter().map(|argument| argument.0).collect(),
-            address: address.0.clone(),
+            address: address.0,
         })
     }
 
@@ -405,8 +405,8 @@ impl SplitCoins {
     #[uniffi::constructor]
     pub fn new(coin: &Argument, amounts: Vec<Arc<Argument>>) -> Self {
         Self(iota_types::SplitCoins {
-            coin: coin.0.clone(),
-            amounts: amounts.iter().map(|amount| amount.0.clone()).collect(),
+            coin: coin.0,
+            amounts: amounts.iter().map(|amount| amount.0).collect(),
         })
     }
 
@@ -444,8 +444,8 @@ impl MergeCoins {
     #[uniffi::constructor]
     pub fn new(coin: &Argument, coins_to_merge: Vec<Arc<Argument>>) -> Self {
         Self(iota_types::MergeCoins {
-            coin: coin.0.clone(),
-            coins_to_merge: coins_to_merge.iter().map(|coin| coin.0.clone()).collect(),
+            coin: coin.0,
+            coins_to_merge: coins_to_merge.iter().map(|coin| coin.0).collect(),
         })
     }
 
@@ -487,10 +487,7 @@ impl Publish {
     pub fn new(modules: Vec<Vec<u8>>, dependencies: Vec<Arc<ObjectId>>) -> Self {
         Self(iota_types::Publish {
             modules,
-            dependencies: dependencies
-                .iter()
-                .map(|object_id| object_id.0.clone())
-                .collect(),
+            dependencies: dependencies.iter().map(|object_id| object_id.0).collect(),
         })
     }
 
@@ -580,8 +577,8 @@ impl Upgrade {
         Self(iota_types::Upgrade {
             modules,
             dependencies: dependencies.iter().map(|dependency| dependency.0).collect(),
-            package: package.0.into(),
-            ticket: ticket.0.into(),
+            package: package.0,
+            ticket: ticket.0,
         })
     }
 
@@ -603,12 +600,12 @@ impl Upgrade {
 
     /// Package id of the package to upgrade
     pub fn package(&self) -> ObjectId {
-        self.0.package.clone().into()
+        self.0.package.into()
     }
 
     /// Ticket authorizing the upgrade
     pub fn ticket(&self) -> Argument {
-        self.0.ticket.clone().into()
+        self.0.ticket.into()
     }
 }
 
@@ -851,7 +848,7 @@ impl MoveCall {
         arguments: Vec<Arc<Argument>>,
     ) -> Self {
         Self(iota_types::MoveCall {
-            package: package.0.clone(),
+            package: package.0,
             module: module.0.clone(),
             function: function.0.clone(),
             type_arguments: type_arguments
