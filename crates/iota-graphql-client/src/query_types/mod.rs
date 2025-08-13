@@ -41,9 +41,11 @@ pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryAr
 pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
 use iota_types::{Address, ObjectId};
 pub use normalized_move::{
-    MoveAbility, MoveFunction, MoveFunctionTypeParameter, MoveModule, MoveVisibility,
-    NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
-    NormalizedMoveModuleQueryArgs, OpenMoveType,
+    MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunction,
+    MoveFunctionConnection, MoveFunctionTypeParameter, MoveModule, MoveModuleConnection,
+    MoveModuleQuery, MoveStructConnection, MoveStructQuery, MoveStructTypeParameter,
+    MoveVisibility, NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs,
+    NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, OpenMoveType,
 };
 pub use object::{
     ObjectFilter, ObjectKey, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs,

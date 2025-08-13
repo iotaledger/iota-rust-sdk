@@ -6,7 +6,12 @@ use std::{str::FromStr, sync::Arc};
 use base64ct::Encoding;
 use iota_graphql_client::{
     pagination::{Direction, PaginationFilter},
-    query_types::{Base64, PageInfo, TransactionBlockKindInput, ValidatorCredentials},
+    query_types::{
+        Base64, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField,
+        MoveFunction, MoveFunctionConnection, MoveFunctionTypeParameter, MoveStructConnection,
+        MoveStructQuery, MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo,
+        TransactionBlockKindInput, ValidatorCredentials,
+    },
 };
 use iota_types::{Identifier, StructTag, TransactionDigest};
 
@@ -739,11 +744,209 @@ pub struct ProtocolConfigs(pub iota_graphql_client::query_types::ProtocolConfigs
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct CoinMetadata(pub iota_graphql_client::query_types::CoinMetadata);
 
-#[derive(Debug, derive_more::From, uniffi::Object)]
-pub struct MoveFunction(pub iota_graphql_client::query_types::MoveFunction);
+#[uniffi::remote(Record)]
+pub struct MoveFunction {
+    #[uniffi(default = None)]
+    pub is_entry: Option<bool>,
+    pub name: String,
+    #[uniffi(default = None)]
+    pub parameters: Option<Vec<OpenMoveType>>,
+    #[uniffi(default = None)]
+    pub return_: Option<Vec<OpenMoveType>>,
+    #[uniffi(default = None)]
+    pub type_parameters: Option<Vec<MoveFunctionTypeParameter>>,
+    #[uniffi(default = None)]
+    pub visibility: Option<MoveVisibility>,
+}
 
-#[derive(Debug, derive_more::From, uniffi::Object)]
-pub struct MoveModule(pub iota_graphql_client::query_types::MoveModule);
+#[uniffi::remote(Enum)]
+pub enum MoveVisibility {
+    Public,
+    Private,
+    Friend,
+}
+
+#[uniffi::remote(Enum)]
+pub enum MoveAbility {
+    Copy,
+    Drop,
+    Key,
+    Store,
+}
+
+#[uniffi::remote(Record)]
+pub struct MoveFunctionTypeParameter {
+    pub constraints: Vec<MoveAbility>,
+}
+
+#[uniffi::remote(Record)]
+pub struct OpenMoveType {
+    pub repr: String,
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct MoveModule {
+    pub file_format_version: i32,
+    #[uniffi(default = None)]
+    pub enums: Option<MoveEnumConnection>,
+    pub friends: MoveModuleConnection,
+    #[uniffi(default = None)]
+    pub functions: Option<MoveFunctionConnection>,
+    #[uniffi(default = None)]
+    pub structs: Option<MoveStructConnection>,
+}
+
+impl From<iota_graphql_client::query_types::MoveModule> for MoveModule {
+    fn from(value: iota_graphql_client::query_types::MoveModule) -> Self {
+        Self {
+            file_format_version: value.file_format_version,
+            enums: value.enums,
+            friends: value.friends.into(),
+            functions: value.functions,
+            structs: value.structs,
+        }
+    }
+}
+
+impl From<MoveModule> for iota_graphql_client::query_types::MoveModule {
+    fn from(value: MoveModule) -> Self {
+        Self {
+            file_format_version: value.file_format_version,
+            enums: value.enums,
+            friends: value.friends.into(),
+            functions: value.functions,
+            structs: value.structs,
+        }
+    }
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct MoveModuleConnection {
+    pub nodes: Vec<MoveModuleQuery>,
+    pub page_info: PageInfo,
+}
+
+impl From<iota_graphql_client::query_types::MoveModuleConnection> for MoveModuleConnection {
+    fn from(value: iota_graphql_client::query_types::MoveModuleConnection) -> Self {
+        Self {
+            nodes: value.nodes.into_iter().map(Into::into).collect(),
+            page_info: value.page_info,
+        }
+    }
+}
+
+impl From<MoveModuleConnection> for iota_graphql_client::query_types::MoveModuleConnection {
+    fn from(value: MoveModuleConnection) -> Self {
+        Self {
+            nodes: value.nodes.into_iter().map(Into::into).collect(),
+            page_info: value.page_info,
+        }
+    }
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct MovePackageQuery {
+    pub address: Arc<Address>,
+    pub bcs: Option<Base64>,
+}
+
+impl From<iota_graphql_client::query_types::MovePackageQuery> for MovePackageQuery {
+    fn from(value: iota_graphql_client::query_types::MovePackageQuery) -> Self {
+        Self {
+            address: Arc::new(value.address.into()),
+            bcs: value.bcs,
+        }
+    }
+}
+
+impl From<MovePackageQuery> for iota_graphql_client::query_types::MovePackageQuery {
+    fn from(value: MovePackageQuery) -> Self {
+        Self {
+            address: (**value.address),
+            bcs: value.bcs,
+        }
+    }
+}
+
+#[derive(Clone, Debug, uniffi::Record)]
+pub struct MoveModuleQuery {
+    pub package: MovePackageQuery,
+    pub name: String,
+}
+
+impl From<iota_graphql_client::query_types::MoveModuleQuery> for MoveModuleQuery {
+    fn from(value: iota_graphql_client::query_types::MoveModuleQuery) -> Self {
+        Self {
+            package: value.package.into(),
+            name: value.name,
+        }
+    }
+}
+
+impl From<MoveModuleQuery> for iota_graphql_client::query_types::MoveModuleQuery {
+    fn from(value: MoveModuleQuery) -> Self {
+        Self {
+            package: value.package.into(),
+            name: value.name,
+        }
+    }
+}
+
+#[uniffi::remote(Record)]
+pub struct MoveStructTypeParameter {
+    pub constraints: Vec<MoveAbility>,
+    pub is_phantom: bool,
+}
+
+#[uniffi::remote(Record)]
+pub struct MoveField {
+    pub name: String,
+    #[uniffi::field(name = "type")]
+    pub type_: Option<OpenMoveType>,
+}
+
+#[uniffi::remote(Record)]
+pub struct MoveStructQuery {
+    pub abilities: Option<Vec<MoveAbility>>,
+    pub name: String,
+    pub fields: Option<Vec<MoveField>>,
+    pub type_parameters: Option<Vec<MoveStructTypeParameter>>,
+}
+
+#[uniffi::remote(Record)]
+pub struct MoveStructConnection {
+    pub page_info: PageInfo,
+    pub nodes: Vec<MoveStructQuery>,
+}
+
+#[uniffi::remote(Record)]
+pub struct MoveFunctionConnection {
+    pub nodes: Vec<MoveFunction>,
+    pub page_info: PageInfo,
+}
+
+#[uniffi::remote(Record)]
+pub struct MoveEnumConnection {
+    pub nodes: Vec<MoveEnum>,
+    pub page_info: PageInfo,
+}
+
+#[uniffi::remote(Record)]
+pub struct MoveEnumVariant {
+    pub fields: Option<Vec<MoveField>>,
+    pub name: String,
+}
+
+#[uniffi::remote(Record)]
+pub struct MoveEnum {
+    #[uniffi(default = None)]
+    pub abilities: Option<Vec<MoveAbility>>,
+    pub name: String,
+    #[uniffi(default = None)]
+    pub type_parameters: Option<Vec<MoveStructTypeParameter>>,
+    #[uniffi(default = None)]
+    pub variants: Option<Vec<MoveEnumVariant>>,
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ServiceConfig(pub iota_graphql_client::query_types::ServiceConfig);

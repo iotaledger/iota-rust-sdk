@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_graphql_client::pagination::PaginationFilter;
+use iota_graphql_client::{pagination::PaginationFilter, query_types::MoveFunction};
 use iota_types::CheckpointSequenceNumber;
 use tokio::sync::RwLock;
 
@@ -14,8 +14,8 @@ use crate::{
         checkpoint::CheckpointSummary,
         digest::{CheckpointContentsDigest, CheckpointDigest, TransactionDigest},
         graphql::{
-            CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveFunction,
-            MoveModule, ObjectFilter, ProtocolConfigs, ServiceConfig, TransactionDataEffects,
+            CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveModule,
+            ObjectFilter, ProtocolConfigs, ServiceConfig, TransactionDataEffects,
             TransactionMetadata, TransactionsFilter,
         },
         object::{MovePackage, Object, ObjectId},
@@ -624,15 +624,13 @@ impl GraphQLClient {
         module: &str,
         function: &str,
         version: Option<u64>,
-    ) -> Result<Option<Arc<MoveFunction>>> {
+    ) -> Result<Option<MoveFunction>> {
         Ok(self
             .0
             .read()
             .await
             .normalized_move_function(package, module, function, version)
-            .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .await?)
     }
 
     /// Return the contents' JSON of an object that is a Move object.
@@ -668,7 +666,7 @@ impl GraphQLClient {
         pagination_filter_functions: PaginationFilter,
         pagination_filter_structs: PaginationFilter,
         version: Option<u64>,
-    ) -> Result<Option<Arc<MoveModule>>> {
+    ) -> Result<Option<MoveModule>> {
         Ok(self
             .0
             .read()
@@ -683,8 +681,7 @@ impl GraphQLClient {
                 pagination_filter_structs,
             )
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .map(Into::into))
     }
 
     // ===========================================================================

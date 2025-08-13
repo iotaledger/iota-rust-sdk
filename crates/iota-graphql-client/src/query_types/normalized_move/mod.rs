@@ -7,12 +7,14 @@ mod module;
 
 pub use function::{NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs};
 pub use module::{
-    MoveModule, MoveModuleQuery, NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs,
+    MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunctionConnection, MoveModule,
+    MoveModuleConnection, MoveModuleQuery, MoveStructConnection, MoveStructQuery,
+    MoveStructTypeParameter, NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs,
 };
 
 use crate::query_types::schema;
 
-#[derive(cynic::Enum, Clone, Copy, Debug)]
+#[derive(cynic::Enum, Copy, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MoveAbility")]
 pub enum MoveAbility {
     Copy,
@@ -21,7 +23,7 @@ pub enum MoveAbility {
     Store,
 }
 
-#[derive(cynic::Enum, Clone, Copy, Debug)]
+#[derive(cynic::Enum, Copy, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MoveVisibility")]
 pub enum MoveVisibility {
     Public,
@@ -29,7 +31,7 @@ pub enum MoveVisibility {
     Friend,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MoveFunction")]
 pub struct MoveFunction {
     pub is_entry: Option<bool>,
@@ -41,13 +43,13 @@ pub struct MoveFunction {
     pub visibility: Option<MoveVisibility>,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MoveFunctionTypeParameter")]
 pub struct MoveFunctionTypeParameter {
     pub constraints: Vec<MoveAbility>,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "OpenMoveType")]
 pub struct OpenMoveType {
     pub repr: String,
