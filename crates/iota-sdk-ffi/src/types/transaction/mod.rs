@@ -284,7 +284,9 @@ impl Command {
 
     /// It merges n-coins into the first coin
     #[uniffi::constructor]
-    pub fn new_merge_coins(merge_coins: MergeCoins) -> Self {}
+    pub fn new_merge_coins(merge_coins: &MergeCoins) -> Self {
+        Self(iota_types::Command::MergeCoins(merge_coins.0.clone()))
+    }
 
     /// Publishes a Move package. It takes the package bytes and a list of the
     /// package's transitive dependencies to link against on-chain.
@@ -378,6 +380,47 @@ impl SplitCoins {
     pub fn amounts(&self) -> Vec<Arc<Argument>> {
         self.0
             .amounts
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+}
+
+/// Command to merge multiple coins of the same type into a single coin
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// merge-coins = argument (vector argument)
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct MergeCoins(pub iota_types::MergeCoins);
+
+#[uniffi::export]
+impl MergeCoins {
+    #[uniffi::constructor]
+    pub fn new(coin: &Argument, coins_to_merge: Vec<Arc<Argument>>) -> Self {
+        Self(iota_types::MergeCoins {
+            coin: coin.0.clone(),
+            coins_to_merge: coins_to_merge.iter().map(|coin| coin.0.clone()).collect(),
+        })
+    }
+
+    /// Coin to merge coins into
+    pub fn coin(&self) -> Argument {
+        self.0.coin.into()
+    }
+
+    /// Set of coins to merge into `coin`
+    ///
+    /// All listed coins must be of the same type and be the same type as `coin`
+    pub fn coins_to_merge(&self) -> Vec<Arc<Argument>> {
+        self.0
+            .coins_to_merge
             .iter()
             .cloned()
             .map(Into::into)
