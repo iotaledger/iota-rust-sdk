@@ -116,6 +116,12 @@ pub enum Owner {
     Immutable,
 }
 
+impl Owner {
+    crate::def_is!(Immutable);
+
+    crate::def_is_as_into_opt!(Address => Address, Object => ObjectId, Shared => Version);
+}
+
 /// Object data, either a package or struct
 ///
 /// # BCS
