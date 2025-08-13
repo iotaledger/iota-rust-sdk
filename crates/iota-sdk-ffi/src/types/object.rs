@@ -178,6 +178,45 @@ impl Object {
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectData(pub iota_types::ObjectData);
 
+#[uniffi::export]
+impl ObjectData {
+    /// Create an `ObjectData` from a `MoveStruct`
+    #[uniffi::constructor]
+    pub fn new_move_struct(move_struct: MoveStruct) -> Self {
+        Self(iota_types::ObjectData::Struct(move_struct.into()))
+    }
+
+    /// Create an `ObjectData` from  `MovePackage`
+    #[uniffi::constructor]
+    pub fn new_move_package(move_package: &MovePackage) -> Self {
+        Self(iota_types::ObjectData::Package(move_package.0.clone()))
+    }
+
+    /// Return whether this object is a `MoveStruct`
+    pub fn is_struct(&self) -> bool {
+        self.0.is_struct()
+    }
+
+    /// Return whether this object is a `MovePackage`
+    pub fn is_package(&self) -> bool {
+        self.0.is_package()
+    }
+
+    /// Try to interpret this object as a `MoveStruct`
+    pub fn as_struct_opt(&self) -> Option<MoveStruct> {
+        self.0.as_struct_opt().cloned().map(Into::into)
+    }
+
+    /// Try to interpret this object as a `MovePackage`
+    pub fn as_package_opt(&self) -> Option<Arc<MovePackage>> {
+        self.0
+            .as_package_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+    }
+}
+
 /// Identifies a struct and the module it was defined in
 ///
 /// # BCS
@@ -344,5 +383,93 @@ impl From<MoveStruct> for iota_types::MoveStruct {
 #[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Owner(pub iota_types::Owner);
 
+#[uniffi::export]
+impl Owner {
+    #[uniffi::constructor]
+    pub fn new_address(address: &Address) -> Self {
+        Self(iota_types::Owner::Address(address.0))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_object(id: &ObjectId) -> Self {
+        Self(iota_types::Owner::Object(id.0))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_shared(version: Version) -> Self {
+        Self(iota_types::Owner::Shared(version))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_immutable() -> Self {
+        Self(iota_types::Owner::Immutable)
+    }
+
+    pub fn is_address(&self) -> bool {
+        self.0.is_address()
+    }
+
+    pub fn is_object(&self) -> bool {
+        self.0.is_object()
+    }
+
+    pub fn is_shared(&self) -> bool {
+        self.0.is_shared()
+    }
+
+    pub fn is_immutable(&self) -> bool {
+        self.0.is_immutable()
+    }
+
+    pub fn as_address_opt(&self) -> Option<Arc<Address>> {
+        self.0
+            .as_address_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+    }
+
+    pub fn as_object_opt(&self) -> Option<Arc<ObjectId>> {
+        self.0
+            .as_object_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+    }
+
+    pub fn as_shared_opt(&self) -> Option<Version> {
+        self.0.as_shared_opt().copied()
+    }
+}
+
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectType(pub iota_types::ObjectType);
+
+#[uniffi::export]
+impl ObjectType {
+    #[uniffi::constructor]
+    pub fn new_package() -> Self {
+        Self(iota_types::ObjectType::Package)
+    }
+
+    #[uniffi::constructor]
+    pub fn new_struct(struct_tag: &StructTag) -> Self {
+        Self(iota_types::ObjectType::Struct(struct_tag.0.clone()))
+    }
+
+    pub fn is_package(&self) -> bool {
+        self.0.is_package()
+    }
+
+    pub fn is_struct(&self) -> bool {
+        self.0.is_struct()
+    }
+
+    pub fn as_struct_opt(&self) -> Option<Arc<StructTag>> {
+        self.0
+            .as_struct_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+    }
+}

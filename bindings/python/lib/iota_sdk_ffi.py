@@ -685,6 +685,14 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_version() != 18433:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt() != 50334:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt() != 8956:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package() != 11147:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct() != 58579:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58() != 2414:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_bytes() != 31732:
@@ -694,6 +702,26 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes() != 38367:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt() != 14701:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package() != 40585:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 36265:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 4209:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable() != 23542:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object() != 29892:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 6506:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 55474:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -969,6 +997,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_object_new() != 56232:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package() != 5274:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() != 1861:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58() != 57967:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_bytes() != 62288:
@@ -978,6 +1010,18 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package() != 63533:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_struct() != 65488:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_address() != 6008:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_immutable() != 51786:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object() != 381:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes() != 20339:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2432,6 +2476,36 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_objectdata.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_objectdata.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_is_package.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_is_package.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_objectdigest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2511,6 +2585,30 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_objecttype.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_objecttype.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_package.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_package.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_owner.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2521,6 +2619,60 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_owner.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_owner.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_object.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_object.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared.argtypes = (
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_address.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_immutable.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_immutable.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_object.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_object.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_shared.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_shared.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_passkeyauthenticator.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4011,6 +4163,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_storage_rebate.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_version.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_version.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58.restype = ctypes.c_uint16
@@ -4026,6 +4190,36 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes.restype = ctype
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_is_object.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data.restype = ctypes.c_uint16
@@ -4437,6 +4631,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_object_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_object_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58.restype = ctypes.c_uint16
@@ -4452,6 +4652,24 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_struct.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_struct.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_immutable.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_immutable.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes.restype = ctypes.c_uint16
@@ -20523,7 +20741,30 @@ class _UniffiConverterTypeObject:
     def write(cls, value: ObjectProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ObjectDataProtocol(typing.Protocol):
-    pass
+    def as_package_opt(self, ):
+        """
+        Try to interpret this object as a `MovePackage`
+        """
+
+        raise NotImplementedError
+    def as_struct_opt(self, ):
+        """
+        Try to interpret this object as a `MoveStruct`
+        """
+
+        raise NotImplementedError
+    def is_package(self, ):
+        """
+        Return whether this object is a `MovePackage`
+        """
+
+        raise NotImplementedError
+    def is_struct(self, ):
+        """
+        Return whether this object is a `MoveStruct`
+        """
+
+        raise NotImplementedError
 # ObjectData is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ObjectData():
     _pointer: ctypes.c_void_p
@@ -20548,6 +20789,84 @@ class ObjectData():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+    @classmethod
+    def new_move_package(cls, move_package: "MovePackage"):
+        """
+        Create an `ObjectData` from  `MovePackage`
+        """
+
+        _UniffiConverterTypeMovePackage.check_lower(move_package)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package,
+        _UniffiConverterTypeMovePackage.lower(move_package))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_move_struct(cls, move_struct: "MoveStruct"):
+        """
+        Create an `ObjectData` from a `MoveStruct`
+        """
+
+        _UniffiConverterTypeMoveStruct.check_lower(move_struct)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct,
+        _UniffiConverterTypeMoveStruct.lower(move_struct))
+        return cls._make_instance_(pointer)
+
+
+
+    def as_package_opt(self, ) -> "typing.Optional[MovePackage]":
+        """
+        Try to interpret this object as a `MovePackage`
+        """
+
+        return _UniffiConverterOptionalTypeMovePackage.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_struct_opt(self, ) -> "typing.Optional[MoveStruct]":
+        """
+        Try to interpret this object as a `MoveStruct`
+        """
+
+        return _UniffiConverterOptionalTypeMoveStruct.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_package(self, ) -> "bool":
+        """
+        Return whether this object is a `MovePackage`
+        """
+
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_is_package,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_struct(self, ) -> "bool":
+        """
+        Return whether this object is a `MoveStruct`
+        """
+
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -20828,7 +21147,12 @@ class _UniffiConverterTypeObjectId:
     def write(cls, value: ObjectIdProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ObjectTypeProtocol(typing.Protocol):
-    pass
+    def as_struct_opt(self, ):
+        raise NotImplementedError
+    def is_package(self, ):
+        raise NotImplementedError
+    def is_struct(self, ):
+        raise NotImplementedError
 # ObjectType is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ObjectType():
     _pointer: ctypes.c_void_p
@@ -20853,6 +21177,48 @@ class ObjectType():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+    @classmethod
+    def new_package(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_struct(cls, struct_tag: "StructTag"):
+        _UniffiConverterTypeStructTag.check_lower(struct_tag)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct,
+        _UniffiConverterTypeStructTag.lower(struct_tag))
+        return cls._make_instance_(pointer)
+
+
+
+    def as_struct_opt(self, ) -> "typing.Optional[StructTag]":
+        return _UniffiConverterOptionalTypeStructTag.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_package(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_package,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_struct(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -20884,7 +21250,20 @@ class _UniffiConverterTypeObjectType:
     def write(cls, value: ObjectTypeProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class OwnerProtocol(typing.Protocol):
-    pass
+    def as_address_opt(self, ):
+        raise NotImplementedError
+    def as_object_opt(self, ):
+        raise NotImplementedError
+    def as_shared_opt(self, ):
+        raise NotImplementedError
+    def is_address(self, ):
+        raise NotImplementedError
+    def is_immutable(self, ):
+        raise NotImplementedError
+    def is_object(self, ):
+        raise NotImplementedError
+    def is_shared(self, ):
+        raise NotImplementedError
 # Owner is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Owner():
     _pointer: ctypes.c_void_p
@@ -20909,6 +21288,102 @@ class Owner():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+    @classmethod
+    def new_address(cls, address: "Address"):
+        _UniffiConverterTypeAddress.check_lower(address)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_address,
+        _UniffiConverterTypeAddress.lower(address))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_immutable(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_object(cls, id: "ObjectId"):
+        _UniffiConverterTypeObjectId.check_lower(id)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_object,
+        _UniffiConverterTypeObjectId.lower(id))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_shared(cls, version: "int"):
+        _UniffiConverterUInt64.check_lower(version)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared,
+        _UniffiConverterUInt64.lower(version))
+        return cls._make_instance_(pointer)
+
+
+
+    def as_address_opt(self, ) -> "typing.Optional[Address]":
+        return _UniffiConverterOptionalTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_object_opt(self, ) -> "typing.Optional[ObjectId]":
+        return _UniffiConverterOptionalTypeObjectId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_shared_opt(self, ) -> "typing.Optional[int]":
+        return _UniffiConverterOptionalUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_address(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_immutable(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_immutable,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_object(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_object,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_shared(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_shared,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 

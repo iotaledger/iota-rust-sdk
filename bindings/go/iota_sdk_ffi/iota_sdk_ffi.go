@@ -1367,6 +1367,42 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt()
+	})
+	if checksum != 50334 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt()
+	})
+	if checksum != 8956 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package()
+	})
+	if checksum != 11147 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct()
+	})
+	if checksum != 58579 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58()
 	})
 	if checksum != 2414 {
@@ -1408,6 +1444,96 @@ func uniffiCheckChecksums() {
 	if checksum != 4418 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt()
+	})
+	if checksum != 14701 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package()
+	})
+	if checksum != 40585 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct()
+	})
+	if checksum != 33698 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt()
+	})
+	if checksum != 36265 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt()
+	})
+	if checksum != 17159 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt()
+	})
+	if checksum != 4209 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_address()
+	})
+	if checksum != 26982 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable()
+	})
+	if checksum != 23542 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_object()
+	})
+	if checksum != 29892 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_object: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared()
+	})
+	if checksum != 6506 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_is_shared: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2645,6 +2771,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package()
+	})
+	if checksum != 5274 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct()
+	})
+	if checksum != 1861 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58()
 	})
 	if checksum != 57967 {
@@ -2686,6 +2830,60 @@ func uniffiCheckChecksums() {
 	if checksum != 30954 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package()
+	})
+	if checksum != 63533 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_struct()
+	})
+	if checksum != 65488 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_struct: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_address()
+	})
+	if checksum != 6008 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_owner_new_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_immutable()
+	})
+	if checksum != 51786 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_owner_new_immutable: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object()
+	})
+	if checksum != 381 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared()
+	})
+	if checksum != 36753 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9411,13 +9609,79 @@ func (_ FfiDestroyerObject) Destroy(value *Object) {
 
 
 type ObjectDataInterface interface {
+	// Try to interpret this object as a `MovePackage`
+	AsPackageOpt() **MovePackage
+	// Try to interpret this object as a `MoveStruct`
+	AsStructOpt() *MoveStruct
+	// Return whether this object is a `MovePackage`
+	IsPackage() bool
+	// Return whether this object is a `MoveStruct`
+	IsStruct() bool
 }
 type ObjectData struct {
 	ffiObject FfiObject
 }
 
 
+// Create an `ObjectData` from  `MovePackage`
+func ObjectDataNewMovePackage(movePackage *MovePackage) *ObjectData {
+	return FfiConverterObjectDataINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package(FfiConverterMovePackageINSTANCE.Lower(movePackage),_uniffiStatus)
+	}))
+}
 
+// Create an `ObjectData` from a `MoveStruct`
+func ObjectDataNewMoveStruct(moveStruct MoveStruct) *ObjectData {
+	return FfiConverterObjectDataINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct(FfiConverterMoveStructINSTANCE.Lower(moveStruct),_uniffiStatus)
+	}))
+}
+
+
+
+// Try to interpret this object as a `MovePackage`
+func (_self *ObjectData) AsPackageOpt() **MovePackage {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalMovePackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Try to interpret this object as a `MoveStruct`
+func (_self *ObjectData) AsStructOpt() *MoveStruct {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalMoveStructINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Return whether this object is a `MovePackage`
+func (_self *ObjectData) IsPackage() bool {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectdata_is_package(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Return whether this object is a `MoveStruct`
+func (_self *ObjectData) IsStruct() bool {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct(
+		_pointer,_uniffiStatus)
+	}))
+}
 func (object *ObjectData) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -9739,13 +10003,57 @@ func (_ FfiDestroyerObjectId) Destroy(value *ObjectId) {
 
 
 type ObjectTypeInterface interface {
+	AsStructOpt() **StructTag
+	IsPackage() bool
+	IsStruct() bool
 }
 type ObjectType struct {
 	ffiObject FfiObject
 }
 
 
+func ObjectTypeNewPackage() *ObjectType {
+	return FfiConverterObjectTypeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(_uniffiStatus)
+	}))
+}
 
+func ObjectTypeNewStruct(structTag *StructTag) *ObjectType {
+	return FfiConverterObjectTypeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct(FfiConverterStructTagINSTANCE.Lower(structTag),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *ObjectType) AsStructOpt() **StructTag {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *ObjectType) IsPackage() bool {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objecttype_is_package(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *ObjectType) IsStruct() bool {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct(
+		_pointer,_uniffiStatus)
+	}))
+}
 func (object *ObjectType) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -9799,13 +10107,113 @@ func (_ FfiDestroyerObjectType) Destroy(value *ObjectType) {
 
 
 type OwnerInterface interface {
+	AsAddressOpt() **Address
+	AsObjectOpt() **ObjectId
+	AsSharedOpt() *uint64
+	IsAddress() bool
+	IsImmutable() bool
+	IsObject() bool
+	IsShared() bool
 }
 type Owner struct {
 	ffiObject FfiObject
 }
 
 
+func OwnerNewAddress(address *Address) *Owner {
+	return FfiConverterOwnerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_owner_new_address(FfiConverterAddressINSTANCE.Lower(address),_uniffiStatus)
+	}))
+}
 
+func OwnerNewImmutable() *Owner {
+	return FfiConverterOwnerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable(_uniffiStatus)
+	}))
+}
+
+func OwnerNewObject(id *ObjectId) *Owner {
+	return FfiConverterOwnerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(FfiConverterObjectIdINSTANCE.Lower(id),_uniffiStatus)
+	}))
+}
+
+func OwnerNewShared(version uint64) *Owner {
+	return FfiConverterOwnerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(FfiConverterUint64INSTANCE.Lower(version),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Owner) AsAddressOpt() **Address {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *Owner) AsObjectOpt() **ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *Owner) AsSharedOpt() *uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *Owner) IsAddress() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_is_address(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *Owner) IsImmutable() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_is_immutable(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *Owner) IsObject() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_is_object(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *Owner) IsShared() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_is_shared(
+		_pointer,_uniffiStatus)
+	}))
+}
 func (object *Owner) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()

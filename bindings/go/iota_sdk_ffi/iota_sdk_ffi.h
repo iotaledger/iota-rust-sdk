@@ -1611,6 +1611,36 @@ void* uniffi_iota_sdk_ffi_fn_clone_objectdata(void* ptr, RustCallStatus *out_sta
 void uniffi_iota_sdk_ffi_fn_free_objectdata(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTDATA_NEW_MOVE_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTDATA_NEW_MOVE_PACKAGE
+void* uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_package(void* move_package, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTDATA_NEW_MOVE_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTDATA_NEW_MOVE_STRUCT
+void* uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct(RustBuffer move_struct, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTDATA_AS_PACKAGE_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTDATA_AS_PACKAGE_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_objectdata_as_package_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTDATA_AS_STRUCT_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTDATA_AS_STRUCT_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTDATA_IS_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTDATA_IS_PACKAGE
+int8_t uniffi_iota_sdk_ffi_fn_method_objectdata_is_package(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTDATA_IS_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTDATA_IS_STRUCT
+int8_t uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OBJECTDIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OBJECTDIGEST
 void* uniffi_iota_sdk_ffi_fn_clone_objectdigest(void* ptr, RustCallStatus *out_status
@@ -1692,6 +1722,32 @@ void* uniffi_iota_sdk_ffi_fn_clone_objecttype(void* ptr, RustCallStatus *out_sta
 void uniffi_iota_sdk_ffi_fn_free_objecttype(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTTYPE_NEW_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTTYPE_NEW_PACKAGE
+void* uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTTYPE_NEW_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTTYPE_NEW_STRUCT
+void* uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct(void* struct_tag, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_AS_STRUCT_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_AS_STRUCT_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_IS_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_IS_PACKAGE
+int8_t uniffi_iota_sdk_ffi_fn_method_objecttype_is_package(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_IS_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_IS_STRUCT
+int8_t uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OWNER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OWNER
 void* uniffi_iota_sdk_ffi_fn_clone_owner(void* ptr, RustCallStatus *out_status
@@ -1700,6 +1756,62 @@ void* uniffi_iota_sdk_ffi_fn_clone_owner(void* ptr, RustCallStatus *out_status
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_OWNER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_OWNER
 void uniffi_iota_sdk_ffi_fn_free_owner(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OWNER_NEW_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OWNER_NEW_ADDRESS
+void* uniffi_iota_sdk_ffi_fn_constructor_owner_new_address(void* address, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OWNER_NEW_IMMUTABLE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OWNER_NEW_IMMUTABLE
+void* uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OWNER_NEW_OBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OWNER_NEW_OBJECT
+void* uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(void* id, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OWNER_NEW_SHARED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OWNER_NEW_SHARED
+void* uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(uint64_t version, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_OBJECT_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_OBJECT_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_SHARED_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_SHARED_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_IS_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_IS_ADDRESS
+int8_t uniffi_iota_sdk_ffi_fn_method_owner_is_address(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_IS_IMMUTABLE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_IS_IMMUTABLE
+int8_t uniffi_iota_sdk_ffi_fn_method_owner_is_immutable(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_IS_OBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_IS_OBJECT
+int8_t uniffi_iota_sdk_ffi_fn_method_owner_is_object(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_IS_SHARED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_IS_SHARED
+int8_t uniffi_iota_sdk_ffi_fn_method_owner_is_shared(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_PASSKEYAUTHENTICATOR
@@ -3562,6 +3674,30 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_object_version(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTDATA_AS_PACKAGE_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTDATA_AS_PACKAGE_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTDATA_AS_STRUCT_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTDATA_AS_STRUCT_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTDATA_IS_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTDATA_IS_PACKAGE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTDATA_IS_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTDATA_IS_STRUCT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTDIGEST_TO_BASE58
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTDIGEST_TO_BASE58
 uint16_t uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58(void
@@ -3589,6 +3725,66 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_HEX
 uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_AS_STRUCT_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_AS_STRUCT_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_IS_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_IS_PACKAGE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_IS_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_IS_STRUCT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_ADDRESS_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_ADDRESS_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_OBJECT_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_OBJECT_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_SHARED_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_SHARED_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_IS_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_IS_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_is_address(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_IS_IMMUTABLE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_IS_IMMUTABLE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_is_immutable(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_IS_OBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_IS_OBJECT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_is_object(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_IS_SHARED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_IS_SHARED
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_is_shared(void
     
 );
 #endif
@@ -4414,6 +4610,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_object_new(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTDATA_NEW_MOVE_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTDATA_NEW_MOVE_PACKAGE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTDATA_NEW_MOVE_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTDATA_NEW_MOVE_STRUCT
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTDIGEST_FROM_BASE58
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTDIGEST_FROM_BASE58
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58(void
@@ -4441,6 +4649,42 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_FROM_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_FROM_HEX
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTTYPE_NEW_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTTYPE_NEW_PACKAGE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTTYPE_NEW_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTTYPE_NEW_STRUCT
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_struct(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_owner_new_address(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_IMMUTABLE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_IMMUTABLE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_owner_new_immutable(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_OBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_OBJECT
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_SHARED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_SHARED
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared(void
     
 );
 #endif
