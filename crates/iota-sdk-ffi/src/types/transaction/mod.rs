@@ -278,7 +278,9 @@ impl Command {
 
     /// It splits off some amounts into a new coins with those amounts
     #[uniffi::constructor]
-    pub fn new_split_coins(split_coins: SplitCoins) -> Self {}
+    pub fn new_split_coins(split_coins: &SplitCoins) -> Self {
+        Self(iota_types::Command::SplitCoins(split_coins.0.clone()))
+    }
 
     /// It merges n-coins into the first coin
     #[uniffi::constructor]
@@ -340,8 +342,47 @@ impl TransferObjects {
     }
 
     /// The address to transfer ownership to
-    pub fn address(&self) -> Arc<Argument> {
-        Arc::new(self.0.address.into())
+    pub fn address(&self) -> Argument {
+        self.0.address.into()
+    }
+}
+
+/// Command to split a single coin object into multiple coins
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// split-coins = argument (vector argument)
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct SplitCoins(pub iota_types::SplitCoins);
+
+#[uniffi::export]
+impl SplitCoins {
+    #[uniffi::constructor]
+    pub fn new(coin: &Argument, amounts: Vec<Arc<Argument>>) -> Self {
+        Self(iota_types::SplitCoins {
+            coin: coin.0.clone(),
+            amounts: amounts.iter().map(|amount| amount.0.clone()).collect(),
+        })
+    }
+
+    /// The coin to split
+    pub fn coin(&self) -> Argument {
+        self.0.coin.into()
+    }
+
+    /// The amounts to split off
+    pub fn amounts(&self) -> Vec<Arc<Argument>> {
+        self.0
+            .amounts
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
     }
 }
 
