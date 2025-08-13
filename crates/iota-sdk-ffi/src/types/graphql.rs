@@ -599,7 +599,7 @@ pub struct PaginationFilter {
     /// An opaque cursor used for pagination.
     #[uniffi(default = None)]
     pub cursor: Option<String>,
-    /// The maximum number of items to return. If this is ommitted, it will
+    /// The maximum number of items to return. If this is omitted, it will
     /// lazily query the service configuration for the max page size.
     #[uniffi(default = None)]
     pub limit: Option<i32>,
