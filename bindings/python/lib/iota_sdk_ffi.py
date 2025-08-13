@@ -573,7 +573,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 3319:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 23389:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 62867:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2703,16 +2703,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_programmabletransaction.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_programmabletransaction.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_protocolconfigs.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_protocolconfigs.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_protocolconfigs.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_protocolconfigs.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_randomnessstateupdate.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4960,8 +4950,6 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
     def write(value, buf):
         buf.write_i32(len(value))
         buf.write(value)
-
-
 
 
 
@@ -7493,6 +7481,157 @@ class _UniffiConverterTypePaginationFilter(_UniffiConverterRustBuffer):
         _UniffiConverterTypeDirection.write(value.direction, buf)
         _UniffiConverterOptionalString.write(value.cursor, buf)
         _UniffiConverterOptionalInt32.write(value.limit, buf)
+
+
+class ProtocolConfigAttr:
+    """
+    A key-value protocol configuration attribute.
+    """
+
+    key: "str"
+    value: "typing.Optional[str]"
+    def __init__(self, *, key: "str", value: "typing.Optional[str]"):
+        self.key = key
+        self.value = value
+
+    def __str__(self):
+        return "ProtocolConfigAttr(key={}, value={})".format(self.key, self.value)
+
+    def __eq__(self, other):
+        if self.key != other.key:
+            return False
+        if self.value != other.value:
+            return False
+        return True
+
+class _UniffiConverterTypeProtocolConfigAttr(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ProtocolConfigAttr(
+            key=_UniffiConverterString.read(buf),
+            value=_UniffiConverterOptionalString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.key)
+        _UniffiConverterOptionalString.check_lower(value.value)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.key, buf)
+        _UniffiConverterOptionalString.write(value.value, buf)
+
+
+class ProtocolConfigFeatureFlag:
+    """
+    Feature flags are a form of boolean configuration that are usually used to
+    gate features while they are in development. Once a lag has been enabled, it
+    is rare for it to be disabled.
+    """
+
+    key: "str"
+    value: "bool"
+    def __init__(self, *, key: "str", value: "bool"):
+        self.key = key
+        self.value = value
+
+    def __str__(self):
+        return "ProtocolConfigFeatureFlag(key={}, value={})".format(self.key, self.value)
+
+    def __eq__(self, other):
+        if self.key != other.key:
+            return False
+        if self.value != other.value:
+            return False
+        return True
+
+class _UniffiConverterTypeProtocolConfigFeatureFlag(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ProtocolConfigFeatureFlag(
+            key=_UniffiConverterString.read(buf),
+            value=_UniffiConverterBool.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.key)
+        _UniffiConverterBool.check_lower(value.value)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.key, buf)
+        _UniffiConverterBool.write(value.value, buf)
+
+
+class ProtocolConfigs:
+    """
+    Information about the configuration of the protocol.
+    Constants that control how the chain operates.
+    These can only change during protocol upgrades which happen on epoch
+    boundaries.
+    """
+
+    protocol_version: "int"
+    """
+    The protocol is not required to change on every epoch boundary, so the
+    protocol version tracks which change to the protocol these configs
+    are from.
+    """
+
+    feature_flags: "typing.List[ProtocolConfigFeatureFlag]"
+    """
+    List all available feature flags and their values. Feature flags are a
+    form of boolean configuration that are usually used to gate features
+    while they are in development. Once a flag has been enabled, it is
+    rare for it to be disabled.
+    """
+
+    configs: "typing.List[ProtocolConfigAttr]"
+    """
+    List all available configurations and their values. These configurations
+    can take any value (but they will all be represented in string
+    form), and do not include feature flags.
+    """
+
+    def __init__(self, *, protocol_version: "int", feature_flags: "typing.List[ProtocolConfigFeatureFlag]", configs: "typing.List[ProtocolConfigAttr]"):
+        self.protocol_version = protocol_version
+        self.feature_flags = feature_flags
+        self.configs = configs
+
+    def __str__(self):
+        return "ProtocolConfigs(protocol_version={}, feature_flags={}, configs={})".format(self.protocol_version, self.feature_flags, self.configs)
+
+    def __eq__(self, other):
+        if self.protocol_version != other.protocol_version:
+            return False
+        if self.feature_flags != other.feature_flags:
+            return False
+        if self.configs != other.configs:
+            return False
+        return True
+
+class _UniffiConverterTypeProtocolConfigs(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ProtocolConfigs(
+            protocol_version=_UniffiConverterUInt64.read(buf),
+            feature_flags=_UniffiConverterSequenceTypeProtocolConfigFeatureFlag.read(buf),
+            configs=_UniffiConverterSequenceTypeProtocolConfigAttr.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterUInt64.check_lower(value.protocol_version)
+        _UniffiConverterSequenceTypeProtocolConfigFeatureFlag.check_lower(value.feature_flags)
+        _UniffiConverterSequenceTypeProtocolConfigAttr.check_lower(value.configs)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterUInt64.write(value.protocol_version, buf)
+        _UniffiConverterSequenceTypeProtocolConfigFeatureFlag.write(value.feature_flags, buf)
+        _UniffiConverterSequenceTypeProtocolConfigAttr.write(value.configs, buf)
 
 
 class ServiceConfig:
@@ -12874,33 +13013,6 @@ class _UniffiConverterOptionalTypePasskeyAuthenticator(_UniffiConverterRustBuffe
 
 
 
-class _UniffiConverterOptionalTypeProtocolConfigs(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeProtocolConfigs.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeProtocolConfigs.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeProtocolConfigs.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalTypeSecp256k1PublicKey(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -13598,6 +13710,33 @@ class _UniffiConverterOptionalTypeOpenMoveType(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeOpenMoveType.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeProtocolConfigs(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeProtocolConfigs.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeProtocolConfigs.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeProtocolConfigs.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -14810,6 +14949,56 @@ class _UniffiConverterSequenceTypeOpenMoveType(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeOpenMoveType.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeProtocolConfigAttr(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeProtocolConfigAttr.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeProtocolConfigAttr.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeProtocolConfigAttr.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeProtocolConfigFeatureFlag(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeProtocolConfigFeatureFlag.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeProtocolConfigFeatureFlag.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeProtocolConfigFeatureFlag.read(buf) for i in range(count)
         ]
 
 
@@ -21993,62 +22182,6 @@ class _UniffiConverterTypeProgrammableTransaction:
     @classmethod
     def write(cls, value: ProgrammableTransactionProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
-class ProtocolConfigsProtocol(typing.Protocol):
-    pass
-# ProtocolConfigs is a Rust-only trait - it's a wrapper around a Rust implementation.
-class ProtocolConfigs():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_protocolconfigs, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_protocolconfigs, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeProtocolConfigs:
-
-    @staticmethod
-    def lift(value: int):
-        return ProtocolConfigs._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: ProtocolConfigs):
-        if not isinstance(value, ProtocolConfigs):
-            raise TypeError("Expected ProtocolConfigs instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: ProtocolConfigsProtocol):
-        if not isinstance(value, ProtocolConfigs):
-            raise TypeError("Expected ProtocolConfigs instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: ProtocolConfigsProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
 class RandomnessStateUpdateProtocol(typing.Protocol):
     pass
 # RandomnessStateUpdate is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -25070,6 +25203,9 @@ __all__ = [
     "OpenMoveType",
     "PageInfo",
     "PaginationFilter",
+    "ProtocolConfigAttr",
+    "ProtocolConfigFeatureFlag",
+    "ProtocolConfigs",
     "ServiceConfig",
     "SignedTransaction",
     "SignedTransactionPage",
@@ -25132,7 +25268,6 @@ __all__ = [
     "Owner",
     "PasskeyAuthenticator",
     "ProgrammableTransaction",
-    "ProtocolConfigs",
     "RandomnessStateUpdate",
     "Secp256k1PublicKey",
     "Secp256k1Signature",

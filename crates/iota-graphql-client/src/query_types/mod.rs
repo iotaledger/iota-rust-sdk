@@ -55,7 +55,10 @@ pub use packages::{
     PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery,
     PackagesQuery, PackagesQueryArgs,
 };
-pub use protocol_config::{ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionArgs};
+pub use protocol_config::{
+    ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQuery, ProtocolConfigs,
+    ProtocolVersionArgs,
+};
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
 pub use transaction::{

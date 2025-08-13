@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use iota_graphql_client::{
     pagination::PaginationFilter,
-    query_types::{CoinMetadata, MoveFunction, ServiceConfig},
+    query_types::{CoinMetadata, MoveFunction, ProtocolConfigs, ServiceConfig},
 };
 use iota_types::CheckpointSequenceNumber;
 use tokio::sync::RwLock;
@@ -18,7 +18,7 @@ use crate::{
         digest::{CheckpointContentsDigest, CheckpointDigest, TransactionDigest},
         graphql::{
             DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveModule, ObjectFilter,
-            ProtocolConfigs, TransactionDataEffects, TransactionMetadata, TransactionsFilter,
+            TransactionDataEffects, TransactionMetadata, TransactionsFilter,
         },
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
@@ -103,18 +103,8 @@ impl GraphQLClient {
 
     /// Get the protocol configuration.
     #[uniffi::method(default(version = None))]
-    pub async fn protocol_config(
-        &self,
-        version: Option<u64>,
-    ) -> Result<Option<Arc<ProtocolConfigs>>> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .protocol_config(version)
-            .await?
-            .map(Into::into)
-            .map(Arc::new))
+    pub async fn protocol_config(&self, version: Option<u64>) -> Result<Option<ProtocolConfigs>> {
+        Ok(self.0.read().await.protocol_config(version).await?)
     }
 
     /// Get the list of active validators for the provided epoch, including
