@@ -784,7 +784,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function()
 	})
-	if checksum != 49066 {
+	if checksum != 15206 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function: UniFFI API checksum mismatch")
 	}
@@ -793,7 +793,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module()
 	})
-	if checksum != 6413 {
+	if checksum != 46991 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module: UniFFI API checksum mismatch")
 	}
@@ -6558,9 +6558,9 @@ type GraphQlClientInterface interface {
 	MoveObjectContentsBcs(objectId *ObjectId, version *uint64) (*[]byte, error)
 	// Return the normalized Move function data for the provided package,
 	// module, and function.
-	NormalizedMoveFunction(varPackage string, module string, function string, version *uint64) (**MoveFunction, error)
+	NormalizedMoveFunction(varPackage string, module string, function string, version *uint64) (*MoveFunction, error)
 	// Return the normalized Move module data for the provided module.
-	NormalizedMoveModule(varPackage string, module string, paginationFilterEnums PaginationFilter, paginationFilterFriends PaginationFilter, paginationFilterFunctions PaginationFilter, paginationFilterStructs PaginationFilter, version *uint64) (**MoveModule, error)
+	NormalizedMoveModule(varPackage string, module string, paginationFilterEnums PaginationFilter, paginationFilterFriends PaginationFilter, paginationFilterFunctions PaginationFilter, paginationFilterStructs PaginationFilter, version *uint64) (*MoveModule, error)
 	// Return an object based on the provided [`Address`].
 	//
 	// If the object does not exist (e.g., due to pruning), this will return
@@ -7445,7 +7445,7 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 
 // Return the normalized Move function data for the provided package,
 // module, and function.
-func (_self *GraphQlClient) NormalizedMoveFunction(varPackage string, module string, function string, version *uint64) (**MoveFunction, error) {
+func (_self *GraphQlClient) NormalizedMoveFunction(varPackage string, module string, function string, version *uint64) (*MoveFunction, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -7458,7 +7458,7 @@ func (_self *GraphQlClient) NormalizedMoveFunction(varPackage string, module str
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) **MoveFunction {
+		func(ffi RustBufferI) *MoveFunction {
 			return FfiConverterOptionalMoveFunctionINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
@@ -7477,7 +7477,7 @@ func (_self *GraphQlClient) NormalizedMoveFunction(varPackage string, module str
 }
 
 // Return the normalized Move module data for the provided module.
-func (_self *GraphQlClient) NormalizedMoveModule(varPackage string, module string, paginationFilterEnums PaginationFilter, paginationFilterFriends PaginationFilter, paginationFilterFunctions PaginationFilter, paginationFilterStructs PaginationFilter, version *uint64) (**MoveModule, error) {
+func (_self *GraphQlClient) NormalizedMoveModule(varPackage string, module string, paginationFilterEnums PaginationFilter, paginationFilterFriends PaginationFilter, paginationFilterFunctions PaginationFilter, paginationFilterStructs PaginationFilter, version *uint64) (*MoveModule, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -7490,7 +7490,7 @@ func (_self *GraphQlClient) NormalizedMoveModule(varPackage string, module strin
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) **MoveModule {
+		func(ffi RustBufferI) *MoveModule {
 			return FfiConverterOptionalMoveModuleINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
@@ -8381,126 +8381,6 @@ func (c FfiConverterIdentifier) Write(writer io.Writer, value *Identifier) {
 type FfiDestroyerIdentifier struct {}
 
 func (_ FfiDestroyerIdentifier) Destroy(value *Identifier) {
-		value.Destroy()
-}
-
-
-
-type MoveFunctionInterface interface {
-}
-type MoveFunction struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *MoveFunction) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterMoveFunction struct {}
-
-var FfiConverterMoveFunctionINSTANCE = FfiConverterMoveFunction{}
-
-
-func (c FfiConverterMoveFunction) Lift(pointer unsafe.Pointer) *MoveFunction {
-	result := &MoveFunction {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_movefunction(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_movefunction(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*MoveFunction).Destroy)
-	return result
-}
-
-func (c FfiConverterMoveFunction) Read(reader io.Reader) *MoveFunction {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterMoveFunction) Lower(value *MoveFunction) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*MoveFunction")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterMoveFunction) Write(writer io.Writer, value *MoveFunction) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerMoveFunction struct {}
-
-func (_ FfiDestroyerMoveFunction) Destroy(value *MoveFunction) {
-		value.Destroy()
-}
-
-
-
-type MoveModuleInterface interface {
-}
-type MoveModule struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *MoveModule) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterMoveModule struct {}
-
-var FfiConverterMoveModuleINSTANCE = FfiConverterMoveModule{}
-
-
-func (c FfiConverterMoveModule) Lift(pointer unsafe.Pointer) *MoveModule {
-	result := &MoveModule {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_movemodule(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_movemodule(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*MoveModule).Destroy)
-	return result
-}
-
-func (c FfiConverterMoveModule) Read(reader io.Reader) *MoveModule {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterMoveModule) Lower(value *MoveModule) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*MoveModule")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterMoveModule) Write(writer io.Writer, value *MoveModule) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerMoveModule struct {}
-
-func (_ FfiDestroyerMoveModule) Destroy(value *MoveModule) {
 		value.Destroy()
 }
 
@@ -14465,6 +14345,299 @@ type FfiDestroyerGasPayment struct {}
 func (_ FfiDestroyerGasPayment) Destroy(value GasPayment) {
 	value.Destroy()
 }
+type MoveEnum struct {
+	Abilities *[]MoveAbility
+	Name string
+	TypeParameters *[]MoveStructTypeParameter
+	Variants *[]MoveEnumVariant
+}
+
+func (r *MoveEnum) Destroy() {
+		FfiDestroyerOptionalSequenceMoveAbility{}.Destroy(r.Abilities);
+		FfiDestroyerString{}.Destroy(r.Name);
+		FfiDestroyerOptionalSequenceMoveStructTypeParameter{}.Destroy(r.TypeParameters);
+		FfiDestroyerOptionalSequenceMoveEnumVariant{}.Destroy(r.Variants);
+}
+
+type FfiConverterMoveEnum struct {}
+
+var FfiConverterMoveEnumINSTANCE = FfiConverterMoveEnum{}
+
+func (c FfiConverterMoveEnum) Lift(rb RustBufferI) MoveEnum {
+	return LiftFromRustBuffer[MoveEnum](c, rb)
+}
+
+func (c FfiConverterMoveEnum) Read(reader io.Reader) MoveEnum {
+	return MoveEnum {
+			FfiConverterOptionalSequenceMoveAbilityINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalSequenceMoveStructTypeParameterINSTANCE.Read(reader),
+			FfiConverterOptionalSequenceMoveEnumVariantINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveEnum) Lower(value MoveEnum) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveEnum](c, value)
+}
+
+func (c FfiConverterMoveEnum) Write(writer io.Writer, value MoveEnum) {
+		FfiConverterOptionalSequenceMoveAbilityINSTANCE.Write(writer, value.Abilities);
+		FfiConverterStringINSTANCE.Write(writer, value.Name);
+		FfiConverterOptionalSequenceMoveStructTypeParameterINSTANCE.Write(writer, value.TypeParameters);
+		FfiConverterOptionalSequenceMoveEnumVariantINSTANCE.Write(writer, value.Variants);
+}
+
+type FfiDestroyerMoveEnum struct {}
+
+func (_ FfiDestroyerMoveEnum) Destroy(value MoveEnum) {
+	value.Destroy()
+}
+type MoveEnumConnection struct {
+	Nodes []MoveEnum
+	PageInfo PageInfo
+}
+
+func (r *MoveEnumConnection) Destroy() {
+		FfiDestroyerSequenceMoveEnum{}.Destroy(r.Nodes);
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+}
+
+type FfiConverterMoveEnumConnection struct {}
+
+var FfiConverterMoveEnumConnectionINSTANCE = FfiConverterMoveEnumConnection{}
+
+func (c FfiConverterMoveEnumConnection) Lift(rb RustBufferI) MoveEnumConnection {
+	return LiftFromRustBuffer[MoveEnumConnection](c, rb)
+}
+
+func (c FfiConverterMoveEnumConnection) Read(reader io.Reader) MoveEnumConnection {
+	return MoveEnumConnection {
+			FfiConverterSequenceMoveEnumINSTANCE.Read(reader),
+			FfiConverterPageInfoINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveEnumConnection) Lower(value MoveEnumConnection) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveEnumConnection](c, value)
+}
+
+func (c FfiConverterMoveEnumConnection) Write(writer io.Writer, value MoveEnumConnection) {
+		FfiConverterSequenceMoveEnumINSTANCE.Write(writer, value.Nodes);
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+}
+
+type FfiDestroyerMoveEnumConnection struct {}
+
+func (_ FfiDestroyerMoveEnumConnection) Destroy(value MoveEnumConnection) {
+	value.Destroy()
+}
+type MoveEnumVariant struct {
+	Fields *[]MoveField
+	Name string
+}
+
+func (r *MoveEnumVariant) Destroy() {
+		FfiDestroyerOptionalSequenceMoveField{}.Destroy(r.Fields);
+		FfiDestroyerString{}.Destroy(r.Name);
+}
+
+type FfiConverterMoveEnumVariant struct {}
+
+var FfiConverterMoveEnumVariantINSTANCE = FfiConverterMoveEnumVariant{}
+
+func (c FfiConverterMoveEnumVariant) Lift(rb RustBufferI) MoveEnumVariant {
+	return LiftFromRustBuffer[MoveEnumVariant](c, rb)
+}
+
+func (c FfiConverterMoveEnumVariant) Read(reader io.Reader) MoveEnumVariant {
+	return MoveEnumVariant {
+			FfiConverterOptionalSequenceMoveFieldINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveEnumVariant) Lower(value MoveEnumVariant) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveEnumVariant](c, value)
+}
+
+func (c FfiConverterMoveEnumVariant) Write(writer io.Writer, value MoveEnumVariant) {
+		FfiConverterOptionalSequenceMoveFieldINSTANCE.Write(writer, value.Fields);
+		FfiConverterStringINSTANCE.Write(writer, value.Name);
+}
+
+type FfiDestroyerMoveEnumVariant struct {}
+
+func (_ FfiDestroyerMoveEnumVariant) Destroy(value MoveEnumVariant) {
+	value.Destroy()
+}
+type MoveField struct {
+	Name string
+	Type *OpenMoveType
+}
+
+func (r *MoveField) Destroy() {
+		FfiDestroyerString{}.Destroy(r.Name);
+		FfiDestroyerOptionalOpenMoveType{}.Destroy(r.Type);
+}
+
+type FfiConverterMoveField struct {}
+
+var FfiConverterMoveFieldINSTANCE = FfiConverterMoveField{}
+
+func (c FfiConverterMoveField) Lift(rb RustBufferI) MoveField {
+	return LiftFromRustBuffer[MoveField](c, rb)
+}
+
+func (c FfiConverterMoveField) Read(reader io.Reader) MoveField {
+	return MoveField {
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalOpenMoveTypeINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveField) Lower(value MoveField) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveField](c, value)
+}
+
+func (c FfiConverterMoveField) Write(writer io.Writer, value MoveField) {
+		FfiConverterStringINSTANCE.Write(writer, value.Name);
+		FfiConverterOptionalOpenMoveTypeINSTANCE.Write(writer, value.Type);
+}
+
+type FfiDestroyerMoveField struct {}
+
+func (_ FfiDestroyerMoveField) Destroy(value MoveField) {
+	value.Destroy()
+}
+type MoveFunction struct {
+	IsEntry *bool
+	Name string
+	Parameters *[]OpenMoveType
+	Return *[]OpenMoveType
+	TypeParameters *[]MoveFunctionTypeParameter
+	Visibility *MoveVisibility
+}
+
+func (r *MoveFunction) Destroy() {
+		FfiDestroyerOptionalBool{}.Destroy(r.IsEntry);
+		FfiDestroyerString{}.Destroy(r.Name);
+		FfiDestroyerOptionalSequenceOpenMoveType{}.Destroy(r.Parameters);
+		FfiDestroyerOptionalSequenceOpenMoveType{}.Destroy(r.Return);
+		FfiDestroyerOptionalSequenceMoveFunctionTypeParameter{}.Destroy(r.TypeParameters);
+		FfiDestroyerOptionalMoveVisibility{}.Destroy(r.Visibility);
+}
+
+type FfiConverterMoveFunction struct {}
+
+var FfiConverterMoveFunctionINSTANCE = FfiConverterMoveFunction{}
+
+func (c FfiConverterMoveFunction) Lift(rb RustBufferI) MoveFunction {
+	return LiftFromRustBuffer[MoveFunction](c, rb)
+}
+
+func (c FfiConverterMoveFunction) Read(reader io.Reader) MoveFunction {
+	return MoveFunction {
+			FfiConverterOptionalBoolINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalSequenceOpenMoveTypeINSTANCE.Read(reader),
+			FfiConverterOptionalSequenceOpenMoveTypeINSTANCE.Read(reader),
+			FfiConverterOptionalSequenceMoveFunctionTypeParameterINSTANCE.Read(reader),
+			FfiConverterOptionalMoveVisibilityINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveFunction) Lower(value MoveFunction) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveFunction](c, value)
+}
+
+func (c FfiConverterMoveFunction) Write(writer io.Writer, value MoveFunction) {
+		FfiConverterOptionalBoolINSTANCE.Write(writer, value.IsEntry);
+		FfiConverterStringINSTANCE.Write(writer, value.Name);
+		FfiConverterOptionalSequenceOpenMoveTypeINSTANCE.Write(writer, value.Parameters);
+		FfiConverterOptionalSequenceOpenMoveTypeINSTANCE.Write(writer, value.Return);
+		FfiConverterOptionalSequenceMoveFunctionTypeParameterINSTANCE.Write(writer, value.TypeParameters);
+		FfiConverterOptionalMoveVisibilityINSTANCE.Write(writer, value.Visibility);
+}
+
+type FfiDestroyerMoveFunction struct {}
+
+func (_ FfiDestroyerMoveFunction) Destroy(value MoveFunction) {
+	value.Destroy()
+}
+type MoveFunctionConnection struct {
+	Nodes []MoveFunction
+	PageInfo PageInfo
+}
+
+func (r *MoveFunctionConnection) Destroy() {
+		FfiDestroyerSequenceMoveFunction{}.Destroy(r.Nodes);
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+}
+
+type FfiConverterMoveFunctionConnection struct {}
+
+var FfiConverterMoveFunctionConnectionINSTANCE = FfiConverterMoveFunctionConnection{}
+
+func (c FfiConverterMoveFunctionConnection) Lift(rb RustBufferI) MoveFunctionConnection {
+	return LiftFromRustBuffer[MoveFunctionConnection](c, rb)
+}
+
+func (c FfiConverterMoveFunctionConnection) Read(reader io.Reader) MoveFunctionConnection {
+	return MoveFunctionConnection {
+			FfiConverterSequenceMoveFunctionINSTANCE.Read(reader),
+			FfiConverterPageInfoINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveFunctionConnection) Lower(value MoveFunctionConnection) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveFunctionConnection](c, value)
+}
+
+func (c FfiConverterMoveFunctionConnection) Write(writer io.Writer, value MoveFunctionConnection) {
+		FfiConverterSequenceMoveFunctionINSTANCE.Write(writer, value.Nodes);
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+}
+
+type FfiDestroyerMoveFunctionConnection struct {}
+
+func (_ FfiDestroyerMoveFunctionConnection) Destroy(value MoveFunctionConnection) {
+	value.Destroy()
+}
+type MoveFunctionTypeParameter struct {
+	Constraints []MoveAbility
+}
+
+func (r *MoveFunctionTypeParameter) Destroy() {
+		FfiDestroyerSequenceMoveAbility{}.Destroy(r.Constraints);
+}
+
+type FfiConverterMoveFunctionTypeParameter struct {}
+
+var FfiConverterMoveFunctionTypeParameterINSTANCE = FfiConverterMoveFunctionTypeParameter{}
+
+func (c FfiConverterMoveFunctionTypeParameter) Lift(rb RustBufferI) MoveFunctionTypeParameter {
+	return LiftFromRustBuffer[MoveFunctionTypeParameter](c, rb)
+}
+
+func (c FfiConverterMoveFunctionTypeParameter) Read(reader io.Reader) MoveFunctionTypeParameter {
+	return MoveFunctionTypeParameter {
+			FfiConverterSequenceMoveAbilityINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveFunctionTypeParameter) Lower(value MoveFunctionTypeParameter) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveFunctionTypeParameter](c, value)
+}
+
+func (c FfiConverterMoveFunctionTypeParameter) Write(writer io.Writer, value MoveFunctionTypeParameter) {
+		FfiConverterSequenceMoveAbilityINSTANCE.Write(writer, value.Constraints);
+}
+
+type FfiDestroyerMoveFunctionTypeParameter struct {}
+
+func (_ FfiDestroyerMoveFunctionTypeParameter) Destroy(value MoveFunctionTypeParameter) {
+	value.Destroy()
+}
 // Location in move bytecode where an error occurred
 //
 // # BCS
@@ -14529,6 +14702,135 @@ func (c FfiConverterMoveLocation) Write(writer io.Writer, value MoveLocation) {
 type FfiDestroyerMoveLocation struct {}
 
 func (_ FfiDestroyerMoveLocation) Destroy(value MoveLocation) {
+	value.Destroy()
+}
+type MoveModule struct {
+	FileFormatVersion int32
+	Enums *MoveEnumConnection
+	Friends MoveModuleConnection
+	Functions *MoveFunctionConnection
+	Structs *MoveStructConnection
+}
+
+func (r *MoveModule) Destroy() {
+		FfiDestroyerInt32{}.Destroy(r.FileFormatVersion);
+		FfiDestroyerOptionalMoveEnumConnection{}.Destroy(r.Enums);
+		FfiDestroyerMoveModuleConnection{}.Destroy(r.Friends);
+		FfiDestroyerOptionalMoveFunctionConnection{}.Destroy(r.Functions);
+		FfiDestroyerOptionalMoveStructConnection{}.Destroy(r.Structs);
+}
+
+type FfiConverterMoveModule struct {}
+
+var FfiConverterMoveModuleINSTANCE = FfiConverterMoveModule{}
+
+func (c FfiConverterMoveModule) Lift(rb RustBufferI) MoveModule {
+	return LiftFromRustBuffer[MoveModule](c, rb)
+}
+
+func (c FfiConverterMoveModule) Read(reader io.Reader) MoveModule {
+	return MoveModule {
+			FfiConverterInt32INSTANCE.Read(reader),
+			FfiConverterOptionalMoveEnumConnectionINSTANCE.Read(reader),
+			FfiConverterMoveModuleConnectionINSTANCE.Read(reader),
+			FfiConverterOptionalMoveFunctionConnectionINSTANCE.Read(reader),
+			FfiConverterOptionalMoveStructConnectionINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveModule) Lower(value MoveModule) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveModule](c, value)
+}
+
+func (c FfiConverterMoveModule) Write(writer io.Writer, value MoveModule) {
+		FfiConverterInt32INSTANCE.Write(writer, value.FileFormatVersion);
+		FfiConverterOptionalMoveEnumConnectionINSTANCE.Write(writer, value.Enums);
+		FfiConverterMoveModuleConnectionINSTANCE.Write(writer, value.Friends);
+		FfiConverterOptionalMoveFunctionConnectionINSTANCE.Write(writer, value.Functions);
+		FfiConverterOptionalMoveStructConnectionINSTANCE.Write(writer, value.Structs);
+}
+
+type FfiDestroyerMoveModule struct {}
+
+func (_ FfiDestroyerMoveModule) Destroy(value MoveModule) {
+	value.Destroy()
+}
+type MoveModuleConnection struct {
+	Nodes []MoveModuleQuery
+	PageInfo PageInfo
+}
+
+func (r *MoveModuleConnection) Destroy() {
+		FfiDestroyerSequenceMoveModuleQuery{}.Destroy(r.Nodes);
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+}
+
+type FfiConverterMoveModuleConnection struct {}
+
+var FfiConverterMoveModuleConnectionINSTANCE = FfiConverterMoveModuleConnection{}
+
+func (c FfiConverterMoveModuleConnection) Lift(rb RustBufferI) MoveModuleConnection {
+	return LiftFromRustBuffer[MoveModuleConnection](c, rb)
+}
+
+func (c FfiConverterMoveModuleConnection) Read(reader io.Reader) MoveModuleConnection {
+	return MoveModuleConnection {
+			FfiConverterSequenceMoveModuleQueryINSTANCE.Read(reader),
+			FfiConverterPageInfoINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveModuleConnection) Lower(value MoveModuleConnection) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveModuleConnection](c, value)
+}
+
+func (c FfiConverterMoveModuleConnection) Write(writer io.Writer, value MoveModuleConnection) {
+		FfiConverterSequenceMoveModuleQueryINSTANCE.Write(writer, value.Nodes);
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+}
+
+type FfiDestroyerMoveModuleConnection struct {}
+
+func (_ FfiDestroyerMoveModuleConnection) Destroy(value MoveModuleConnection) {
+	value.Destroy()
+}
+type MoveModuleQuery struct {
+	Package MovePackageQuery
+	Name string
+}
+
+func (r *MoveModuleQuery) Destroy() {
+		FfiDestroyerMovePackageQuery{}.Destroy(r.Package);
+		FfiDestroyerString{}.Destroy(r.Name);
+}
+
+type FfiConverterMoveModuleQuery struct {}
+
+var FfiConverterMoveModuleQueryINSTANCE = FfiConverterMoveModuleQuery{}
+
+func (c FfiConverterMoveModuleQuery) Lift(rb RustBufferI) MoveModuleQuery {
+	return LiftFromRustBuffer[MoveModuleQuery](c, rb)
+}
+
+func (c FfiConverterMoveModuleQuery) Read(reader io.Reader) MoveModuleQuery {
+	return MoveModuleQuery {
+			FfiConverterMovePackageQueryINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveModuleQuery) Lower(value MoveModuleQuery) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveModuleQuery](c, value)
+}
+
+func (c FfiConverterMoveModuleQuery) Write(writer io.Writer, value MoveModuleQuery) {
+		FfiConverterMovePackageQueryINSTANCE.Write(writer, value.Package);
+		FfiConverterStringINSTANCE.Write(writer, value.Name);
+}
+
+type FfiDestroyerMoveModuleQuery struct {}
+
+func (_ FfiDestroyerMoveModuleQuery) Destroy(value MoveModuleQuery) {
 	value.Destroy()
 }
 type MoveObject struct {
@@ -14609,6 +14911,45 @@ type FfiDestroyerMovePackagePage struct {}
 func (_ FfiDestroyerMovePackagePage) Destroy(value MovePackagePage) {
 	value.Destroy()
 }
+type MovePackageQuery struct {
+	Address *Address
+	Bcs *Base64
+}
+
+func (r *MovePackageQuery) Destroy() {
+		FfiDestroyerAddress{}.Destroy(r.Address);
+		FfiDestroyerOptionalTypeBase64{}.Destroy(r.Bcs);
+}
+
+type FfiConverterMovePackageQuery struct {}
+
+var FfiConverterMovePackageQueryINSTANCE = FfiConverterMovePackageQuery{}
+
+func (c FfiConverterMovePackageQuery) Lift(rb RustBufferI) MovePackageQuery {
+	return LiftFromRustBuffer[MovePackageQuery](c, rb)
+}
+
+func (c FfiConverterMovePackageQuery) Read(reader io.Reader) MovePackageQuery {
+	return MovePackageQuery {
+			FfiConverterAddressINSTANCE.Read(reader),
+			FfiConverterOptionalTypeBase64INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMovePackageQuery) Lower(value MovePackageQuery) C.RustBuffer {
+	return LowerIntoRustBuffer[MovePackageQuery](c, value)
+}
+
+func (c FfiConverterMovePackageQuery) Write(writer io.Writer, value MovePackageQuery) {
+		FfiConverterAddressINSTANCE.Write(writer, value.Address);
+		FfiConverterOptionalTypeBase64INSTANCE.Write(writer, value.Bcs);
+}
+
+type FfiDestroyerMovePackageQuery struct {}
+
+func (_ FfiDestroyerMovePackageQuery) Destroy(value MovePackageQuery) {
+	value.Destroy()
+}
 // A move struct
 //
 // # BCS
@@ -14673,6 +15014,131 @@ func (c FfiConverterMoveStruct) Write(writer io.Writer, value MoveStruct) {
 type FfiDestroyerMoveStruct struct {}
 
 func (_ FfiDestroyerMoveStruct) Destroy(value MoveStruct) {
+	value.Destroy()
+}
+type MoveStructConnection struct {
+	PageInfo PageInfo
+	Nodes []MoveStructQuery
+}
+
+func (r *MoveStructConnection) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceMoveStructQuery{}.Destroy(r.Nodes);
+}
+
+type FfiConverterMoveStructConnection struct {}
+
+var FfiConverterMoveStructConnectionINSTANCE = FfiConverterMoveStructConnection{}
+
+func (c FfiConverterMoveStructConnection) Lift(rb RustBufferI) MoveStructConnection {
+	return LiftFromRustBuffer[MoveStructConnection](c, rb)
+}
+
+func (c FfiConverterMoveStructConnection) Read(reader io.Reader) MoveStructConnection {
+	return MoveStructConnection {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceMoveStructQueryINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveStructConnection) Lower(value MoveStructConnection) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveStructConnection](c, value)
+}
+
+func (c FfiConverterMoveStructConnection) Write(writer io.Writer, value MoveStructConnection) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceMoveStructQueryINSTANCE.Write(writer, value.Nodes);
+}
+
+type FfiDestroyerMoveStructConnection struct {}
+
+func (_ FfiDestroyerMoveStructConnection) Destroy(value MoveStructConnection) {
+	value.Destroy()
+}
+type MoveStructQuery struct {
+	Abilities *[]MoveAbility
+	Name string
+	Fields *[]MoveField
+	TypeParameters *[]MoveStructTypeParameter
+}
+
+func (r *MoveStructQuery) Destroy() {
+		FfiDestroyerOptionalSequenceMoveAbility{}.Destroy(r.Abilities);
+		FfiDestroyerString{}.Destroy(r.Name);
+		FfiDestroyerOptionalSequenceMoveField{}.Destroy(r.Fields);
+		FfiDestroyerOptionalSequenceMoveStructTypeParameter{}.Destroy(r.TypeParameters);
+}
+
+type FfiConverterMoveStructQuery struct {}
+
+var FfiConverterMoveStructQueryINSTANCE = FfiConverterMoveStructQuery{}
+
+func (c FfiConverterMoveStructQuery) Lift(rb RustBufferI) MoveStructQuery {
+	return LiftFromRustBuffer[MoveStructQuery](c, rb)
+}
+
+func (c FfiConverterMoveStructQuery) Read(reader io.Reader) MoveStructQuery {
+	return MoveStructQuery {
+			FfiConverterOptionalSequenceMoveAbilityINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalSequenceMoveFieldINSTANCE.Read(reader),
+			FfiConverterOptionalSequenceMoveStructTypeParameterINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveStructQuery) Lower(value MoveStructQuery) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveStructQuery](c, value)
+}
+
+func (c FfiConverterMoveStructQuery) Write(writer io.Writer, value MoveStructQuery) {
+		FfiConverterOptionalSequenceMoveAbilityINSTANCE.Write(writer, value.Abilities);
+		FfiConverterStringINSTANCE.Write(writer, value.Name);
+		FfiConverterOptionalSequenceMoveFieldINSTANCE.Write(writer, value.Fields);
+		FfiConverterOptionalSequenceMoveStructTypeParameterINSTANCE.Write(writer, value.TypeParameters);
+}
+
+type FfiDestroyerMoveStructQuery struct {}
+
+func (_ FfiDestroyerMoveStructQuery) Destroy(value MoveStructQuery) {
+	value.Destroy()
+}
+type MoveStructTypeParameter struct {
+	Constraints []MoveAbility
+	IsPhantom bool
+}
+
+func (r *MoveStructTypeParameter) Destroy() {
+		FfiDestroyerSequenceMoveAbility{}.Destroy(r.Constraints);
+		FfiDestroyerBool{}.Destroy(r.IsPhantom);
+}
+
+type FfiConverterMoveStructTypeParameter struct {}
+
+var FfiConverterMoveStructTypeParameterINSTANCE = FfiConverterMoveStructTypeParameter{}
+
+func (c FfiConverterMoveStructTypeParameter) Lift(rb RustBufferI) MoveStructTypeParameter {
+	return LiftFromRustBuffer[MoveStructTypeParameter](c, rb)
+}
+
+func (c FfiConverterMoveStructTypeParameter) Read(reader io.Reader) MoveStructTypeParameter {
+	return MoveStructTypeParameter {
+			FfiConverterSequenceMoveAbilityINSTANCE.Read(reader),
+			FfiConverterBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveStructTypeParameter) Lower(value MoveStructTypeParameter) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveStructTypeParameter](c, value)
+}
+
+func (c FfiConverterMoveStructTypeParameter) Write(writer io.Writer, value MoveStructTypeParameter) {
+		FfiConverterSequenceMoveAbilityINSTANCE.Write(writer, value.Constraints);
+		FfiConverterBoolINSTANCE.Write(writer, value.IsPhantom);
+}
+
+type FfiDestroyerMoveStructTypeParameter struct {}
+
+func (_ FfiDestroyerMoveStructTypeParameter) Destroy(value MoveStructTypeParameter) {
 	value.Destroy()
 }
 type ObjectFilter struct {
@@ -14858,6 +15324,41 @@ type FfiDestroyerObjectReference struct {}
 func (_ FfiDestroyerObjectReference) Destroy(value ObjectReference) {
 	value.Destroy()
 }
+type OpenMoveType struct {
+	Repr string
+}
+
+func (r *OpenMoveType) Destroy() {
+		FfiDestroyerString{}.Destroy(r.Repr);
+}
+
+type FfiConverterOpenMoveType struct {}
+
+var FfiConverterOpenMoveTypeINSTANCE = FfiConverterOpenMoveType{}
+
+func (c FfiConverterOpenMoveType) Lift(rb RustBufferI) OpenMoveType {
+	return LiftFromRustBuffer[OpenMoveType](c, rb)
+}
+
+func (c FfiConverterOpenMoveType) Read(reader io.Reader) OpenMoveType {
+	return OpenMoveType {
+			FfiConverterStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterOpenMoveType) Lower(value OpenMoveType) C.RustBuffer {
+	return LowerIntoRustBuffer[OpenMoveType](c, value)
+}
+
+func (c FfiConverterOpenMoveType) Write(writer io.Writer, value OpenMoveType) {
+		FfiConverterStringINSTANCE.Write(writer, value.Repr);
+}
+
+type FfiDestroyerOpenMoveType struct {}
+
+func (_ FfiDestroyerOpenMoveType) Destroy(value OpenMoveType) {
+	value.Destroy()
+}
 // Information about pagination in a connection.
 type PageInfo struct {
 	// When paginating backwards, are there more items?
@@ -14917,7 +15418,7 @@ type PaginationFilter struct {
 	Direction Direction
 	// An opaque cursor used for pagination.
 	Cursor *string
-	// The maximum number of items to return. If this is ommitted, it will
+	// The maximum number of items to return. If this is omitted, it will
 	// lazily query the service configuration for the max page size.
 	Limit *int32
 }
@@ -17131,6 +17632,75 @@ func (_ FfiDestroyerIdOperation) Destroy(value IdOperation) {
 }
 
 
+type MoveAbility uint
+
+const (
+	MoveAbilityCopy MoveAbility = 1
+	MoveAbilityDrop MoveAbility = 2
+	MoveAbilityKey MoveAbility = 3
+	MoveAbilityStore MoveAbility = 4
+)
+
+type FfiConverterMoveAbility struct {}
+
+var FfiConverterMoveAbilityINSTANCE = FfiConverterMoveAbility{}
+
+func (c FfiConverterMoveAbility) Lift(rb RustBufferI) MoveAbility {
+	return LiftFromRustBuffer[MoveAbility](c, rb)
+}
+
+func (c FfiConverterMoveAbility) Lower(value MoveAbility) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveAbility](c, value)
+}
+func (FfiConverterMoveAbility) Read(reader io.Reader) MoveAbility {
+	id := readInt32(reader)
+	return MoveAbility(id)
+}
+
+func (FfiConverterMoveAbility) Write(writer io.Writer, value MoveAbility) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerMoveAbility struct {}
+
+func (_ FfiDestroyerMoveAbility) Destroy(value MoveAbility) {
+}
+
+
+type MoveVisibility uint
+
+const (
+	MoveVisibilityPublic MoveVisibility = 1
+	MoveVisibilityPrivate MoveVisibility = 2
+	MoveVisibilityFriend MoveVisibility = 3
+)
+
+type FfiConverterMoveVisibility struct {}
+
+var FfiConverterMoveVisibilityINSTANCE = FfiConverterMoveVisibility{}
+
+func (c FfiConverterMoveVisibility) Lift(rb RustBufferI) MoveVisibility {
+	return LiftFromRustBuffer[MoveVisibility](c, rb)
+}
+
+func (c FfiConverterMoveVisibility) Lower(value MoveVisibility) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveVisibility](c, value)
+}
+func (FfiConverterMoveVisibility) Read(reader io.Reader) MoveVisibility {
+	id := readInt32(reader)
+	return MoveVisibility(id)
+}
+
+func (FfiConverterMoveVisibility) Write(writer io.Writer, value MoveVisibility) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerMoveVisibility struct {}
+
+func (_ FfiDestroyerMoveVisibility) Destroy(value MoveVisibility) {
+}
+
+
 // State of an object prior to execution
 //
 // If an object exists (at root-level) in the store prior to this transaction,
@@ -18426,80 +18996,6 @@ func (_ FfiDestroyerOptionalFaucetReceipt) Destroy(value **FaucetReceipt) {
 	}
 }
 
-type FfiConverterOptionalMoveFunction struct{}
-
-var FfiConverterOptionalMoveFunctionINSTANCE = FfiConverterOptionalMoveFunction{}
-
-func (c FfiConverterOptionalMoveFunction) Lift(rb RustBufferI) **MoveFunction {
-	return LiftFromRustBuffer[**MoveFunction](c, rb)
-}
-
-func (_ FfiConverterOptionalMoveFunction) Read(reader io.Reader) **MoveFunction {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterMoveFunctionINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalMoveFunction) Lower(value **MoveFunction) C.RustBuffer {
-	return LowerIntoRustBuffer[**MoveFunction](c, value)
-}
-
-func (_ FfiConverterOptionalMoveFunction) Write(writer io.Writer, value **MoveFunction) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterMoveFunctionINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalMoveFunction struct {}
-
-func (_ FfiDestroyerOptionalMoveFunction) Destroy(value **MoveFunction) {
-	if value != nil {
-		FfiDestroyerMoveFunction{}.Destroy(*value)
-	}
-}
-
-type FfiConverterOptionalMoveModule struct{}
-
-var FfiConverterOptionalMoveModuleINSTANCE = FfiConverterOptionalMoveModule{}
-
-func (c FfiConverterOptionalMoveModule) Lift(rb RustBufferI) **MoveModule {
-	return LiftFromRustBuffer[**MoveModule](c, rb)
-}
-
-func (_ FfiConverterOptionalMoveModule) Read(reader io.Reader) **MoveModule {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterMoveModuleINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalMoveModule) Lower(value **MoveModule) C.RustBuffer {
-	return LowerIntoRustBuffer[**MoveModule](c, value)
-}
-
-func (_ FfiConverterOptionalMoveModule) Write(writer io.Writer, value **MoveModule) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterMoveModuleINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalMoveModule struct {}
-
-func (_ FfiDestroyerOptionalMoveModule) Destroy(value **MoveModule) {
-	if value != nil {
-		FfiDestroyerMoveModule{}.Destroy(*value)
-	}
-}
-
 type FfiConverterOptionalMovePackage struct{}
 
 var FfiConverterOptionalMovePackageINSTANCE = FfiConverterOptionalMovePackage{}
@@ -19351,6 +19847,117 @@ func (_ FfiDestroyerOptionalEventFilter) Destroy(value *EventFilter) {
 	}
 }
 
+type FfiConverterOptionalMoveEnumConnection struct{}
+
+var FfiConverterOptionalMoveEnumConnectionINSTANCE = FfiConverterOptionalMoveEnumConnection{}
+
+func (c FfiConverterOptionalMoveEnumConnection) Lift(rb RustBufferI) *MoveEnumConnection {
+	return LiftFromRustBuffer[*MoveEnumConnection](c, rb)
+}
+
+func (_ FfiConverterOptionalMoveEnumConnection) Read(reader io.Reader) *MoveEnumConnection {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMoveEnumConnectionINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMoveEnumConnection) Lower(value *MoveEnumConnection) C.RustBuffer {
+	return LowerIntoRustBuffer[*MoveEnumConnection](c, value)
+}
+
+func (_ FfiConverterOptionalMoveEnumConnection) Write(writer io.Writer, value *MoveEnumConnection) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMoveEnumConnectionINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMoveEnumConnection struct {}
+
+func (_ FfiDestroyerOptionalMoveEnumConnection) Destroy(value *MoveEnumConnection) {
+	if value != nil {
+		FfiDestroyerMoveEnumConnection{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalMoveFunction struct{}
+
+var FfiConverterOptionalMoveFunctionINSTANCE = FfiConverterOptionalMoveFunction{}
+
+func (c FfiConverterOptionalMoveFunction) Lift(rb RustBufferI) *MoveFunction {
+	return LiftFromRustBuffer[*MoveFunction](c, rb)
+}
+
+func (_ FfiConverterOptionalMoveFunction) Read(reader io.Reader) *MoveFunction {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMoveFunctionINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMoveFunction) Lower(value *MoveFunction) C.RustBuffer {
+	return LowerIntoRustBuffer[*MoveFunction](c, value)
+}
+
+func (_ FfiConverterOptionalMoveFunction) Write(writer io.Writer, value *MoveFunction) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMoveFunctionINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMoveFunction struct {}
+
+func (_ FfiDestroyerOptionalMoveFunction) Destroy(value *MoveFunction) {
+	if value != nil {
+		FfiDestroyerMoveFunction{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalMoveFunctionConnection struct{}
+
+var FfiConverterOptionalMoveFunctionConnectionINSTANCE = FfiConverterOptionalMoveFunctionConnection{}
+
+func (c FfiConverterOptionalMoveFunctionConnection) Lift(rb RustBufferI) *MoveFunctionConnection {
+	return LiftFromRustBuffer[*MoveFunctionConnection](c, rb)
+}
+
+func (_ FfiConverterOptionalMoveFunctionConnection) Read(reader io.Reader) *MoveFunctionConnection {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMoveFunctionConnectionINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMoveFunctionConnection) Lower(value *MoveFunctionConnection) C.RustBuffer {
+	return LowerIntoRustBuffer[*MoveFunctionConnection](c, value)
+}
+
+func (_ FfiConverterOptionalMoveFunctionConnection) Write(writer io.Writer, value *MoveFunctionConnection) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMoveFunctionConnectionINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMoveFunctionConnection struct {}
+
+func (_ FfiDestroyerOptionalMoveFunctionConnection) Destroy(value *MoveFunctionConnection) {
+	if value != nil {
+		FfiDestroyerMoveFunctionConnection{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalMoveLocation struct{}
 
 var FfiConverterOptionalMoveLocationINSTANCE = FfiConverterOptionalMoveLocation{}
@@ -19385,6 +19992,43 @@ type FfiDestroyerOptionalMoveLocation struct {}
 func (_ FfiDestroyerOptionalMoveLocation) Destroy(value *MoveLocation) {
 	if value != nil {
 		FfiDestroyerMoveLocation{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalMoveModule struct{}
+
+var FfiConverterOptionalMoveModuleINSTANCE = FfiConverterOptionalMoveModule{}
+
+func (c FfiConverterOptionalMoveModule) Lift(rb RustBufferI) *MoveModule {
+	return LiftFromRustBuffer[*MoveModule](c, rb)
+}
+
+func (_ FfiConverterOptionalMoveModule) Read(reader io.Reader) *MoveModule {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMoveModuleINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMoveModule) Lower(value *MoveModule) C.RustBuffer {
+	return LowerIntoRustBuffer[*MoveModule](c, value)
+}
+
+func (_ FfiConverterOptionalMoveModule) Write(writer io.Writer, value *MoveModule) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMoveModuleINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMoveModule struct {}
+
+func (_ FfiDestroyerOptionalMoveModule) Destroy(value *MoveModule) {
+	if value != nil {
+		FfiDestroyerMoveModule{}.Destroy(*value)
 	}
 }
 
@@ -19425,6 +20069,43 @@ func (_ FfiDestroyerOptionalMoveStruct) Destroy(value *MoveStruct) {
 	}
 }
 
+type FfiConverterOptionalMoveStructConnection struct{}
+
+var FfiConverterOptionalMoveStructConnectionINSTANCE = FfiConverterOptionalMoveStructConnection{}
+
+func (c FfiConverterOptionalMoveStructConnection) Lift(rb RustBufferI) *MoveStructConnection {
+	return LiftFromRustBuffer[*MoveStructConnection](c, rb)
+}
+
+func (_ FfiConverterOptionalMoveStructConnection) Read(reader io.Reader) *MoveStructConnection {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMoveStructConnectionINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMoveStructConnection) Lower(value *MoveStructConnection) C.RustBuffer {
+	return LowerIntoRustBuffer[*MoveStructConnection](c, value)
+}
+
+func (_ FfiConverterOptionalMoveStructConnection) Write(writer io.Writer, value *MoveStructConnection) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMoveStructConnectionINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMoveStructConnection struct {}
+
+func (_ FfiDestroyerOptionalMoveStructConnection) Destroy(value *MoveStructConnection) {
+	if value != nil {
+		FfiDestroyerMoveStructConnection{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalObjectFilter struct{}
 
 var FfiConverterOptionalObjectFilterINSTANCE = FfiConverterOptionalObjectFilter{}
@@ -19459,6 +20140,43 @@ type FfiDestroyerOptionalObjectFilter struct {}
 func (_ FfiDestroyerOptionalObjectFilter) Destroy(value *ObjectFilter) {
 	if value != nil {
 		FfiDestroyerObjectFilter{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalOpenMoveType struct{}
+
+var FfiConverterOptionalOpenMoveTypeINSTANCE = FfiConverterOptionalOpenMoveType{}
+
+func (c FfiConverterOptionalOpenMoveType) Lift(rb RustBufferI) *OpenMoveType {
+	return LiftFromRustBuffer[*OpenMoveType](c, rb)
+}
+
+func (_ FfiConverterOptionalOpenMoveType) Read(reader io.Reader) *OpenMoveType {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterOpenMoveTypeINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalOpenMoveType) Lower(value *OpenMoveType) C.RustBuffer {
+	return LowerIntoRustBuffer[*OpenMoveType](c, value)
+}
+
+func (_ FfiConverterOptionalOpenMoveType) Write(writer io.Writer, value *OpenMoveType) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterOpenMoveTypeINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalOpenMoveType struct {}
+
+func (_ FfiDestroyerOptionalOpenMoveType) Destroy(value *OpenMoveType) {
+	if value != nil {
+		FfiDestroyerOpenMoveType{}.Destroy(*value)
 	}
 }
 
@@ -19610,6 +20328,43 @@ func (_ FfiDestroyerOptionalValidatorCredentials) Destroy(value *ValidatorCreden
 	}
 }
 
+type FfiConverterOptionalMoveVisibility struct{}
+
+var FfiConverterOptionalMoveVisibilityINSTANCE = FfiConverterOptionalMoveVisibility{}
+
+func (c FfiConverterOptionalMoveVisibility) Lift(rb RustBufferI) *MoveVisibility {
+	return LiftFromRustBuffer[*MoveVisibility](c, rb)
+}
+
+func (_ FfiConverterOptionalMoveVisibility) Read(reader io.Reader) *MoveVisibility {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMoveVisibilityINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMoveVisibility) Lower(value *MoveVisibility) C.RustBuffer {
+	return LowerIntoRustBuffer[*MoveVisibility](c, value)
+}
+
+func (_ FfiConverterOptionalMoveVisibility) Write(writer io.Writer, value *MoveVisibility) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMoveVisibilityINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMoveVisibility struct {}
+
+func (_ FfiDestroyerOptionalMoveVisibility) Destroy(value *MoveVisibility) {
+	if value != nil {
+		FfiDestroyerMoveVisibility{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalTransactionBlockKindInput struct{}
 
 var FfiConverterOptionalTransactionBlockKindInputINSTANCE = FfiConverterOptionalTransactionBlockKindInput{}
@@ -19721,6 +20476,154 @@ func (_ FfiDestroyerOptionalSequenceObjectId) Destroy(value *[]*ObjectId) {
 	}
 }
 
+type FfiConverterOptionalSequenceMoveEnumVariant struct{}
+
+var FfiConverterOptionalSequenceMoveEnumVariantINSTANCE = FfiConverterOptionalSequenceMoveEnumVariant{}
+
+func (c FfiConverterOptionalSequenceMoveEnumVariant) Lift(rb RustBufferI) *[]MoveEnumVariant {
+	return LiftFromRustBuffer[*[]MoveEnumVariant](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceMoveEnumVariant) Read(reader io.Reader) *[]MoveEnumVariant {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceMoveEnumVariantINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceMoveEnumVariant) Lower(value *[]MoveEnumVariant) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]MoveEnumVariant](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceMoveEnumVariant) Write(writer io.Writer, value *[]MoveEnumVariant) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceMoveEnumVariantINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceMoveEnumVariant struct {}
+
+func (_ FfiDestroyerOptionalSequenceMoveEnumVariant) Destroy(value *[]MoveEnumVariant) {
+	if value != nil {
+		FfiDestroyerSequenceMoveEnumVariant{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSequenceMoveField struct{}
+
+var FfiConverterOptionalSequenceMoveFieldINSTANCE = FfiConverterOptionalSequenceMoveField{}
+
+func (c FfiConverterOptionalSequenceMoveField) Lift(rb RustBufferI) *[]MoveField {
+	return LiftFromRustBuffer[*[]MoveField](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceMoveField) Read(reader io.Reader) *[]MoveField {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceMoveFieldINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceMoveField) Lower(value *[]MoveField) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]MoveField](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceMoveField) Write(writer io.Writer, value *[]MoveField) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceMoveFieldINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceMoveField struct {}
+
+func (_ FfiDestroyerOptionalSequenceMoveField) Destroy(value *[]MoveField) {
+	if value != nil {
+		FfiDestroyerSequenceMoveField{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSequenceMoveFunctionTypeParameter struct{}
+
+var FfiConverterOptionalSequenceMoveFunctionTypeParameterINSTANCE = FfiConverterOptionalSequenceMoveFunctionTypeParameter{}
+
+func (c FfiConverterOptionalSequenceMoveFunctionTypeParameter) Lift(rb RustBufferI) *[]MoveFunctionTypeParameter {
+	return LiftFromRustBuffer[*[]MoveFunctionTypeParameter](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceMoveFunctionTypeParameter) Read(reader io.Reader) *[]MoveFunctionTypeParameter {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceMoveFunctionTypeParameterINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceMoveFunctionTypeParameter) Lower(value *[]MoveFunctionTypeParameter) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]MoveFunctionTypeParameter](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceMoveFunctionTypeParameter) Write(writer io.Writer, value *[]MoveFunctionTypeParameter) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceMoveFunctionTypeParameterINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceMoveFunctionTypeParameter struct {}
+
+func (_ FfiDestroyerOptionalSequenceMoveFunctionTypeParameter) Destroy(value *[]MoveFunctionTypeParameter) {
+	if value != nil {
+		FfiDestroyerSequenceMoveFunctionTypeParameter{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSequenceMoveStructTypeParameter struct{}
+
+var FfiConverterOptionalSequenceMoveStructTypeParameterINSTANCE = FfiConverterOptionalSequenceMoveStructTypeParameter{}
+
+func (c FfiConverterOptionalSequenceMoveStructTypeParameter) Lift(rb RustBufferI) *[]MoveStructTypeParameter {
+	return LiftFromRustBuffer[*[]MoveStructTypeParameter](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceMoveStructTypeParameter) Read(reader io.Reader) *[]MoveStructTypeParameter {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceMoveStructTypeParameterINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceMoveStructTypeParameter) Lower(value *[]MoveStructTypeParameter) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]MoveStructTypeParameter](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceMoveStructTypeParameter) Write(writer io.Writer, value *[]MoveStructTypeParameter) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceMoveStructTypeParameterINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceMoveStructTypeParameter struct {}
+
+func (_ FfiDestroyerOptionalSequenceMoveStructTypeParameter) Destroy(value *[]MoveStructTypeParameter) {
+	if value != nil {
+		FfiDestroyerSequenceMoveStructTypeParameter{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalSequenceObjectRef struct{}
 
 var FfiConverterOptionalSequenceObjectRefINSTANCE = FfiConverterOptionalSequenceObjectRef{}
@@ -19755,6 +20658,80 @@ type FfiDestroyerOptionalSequenceObjectRef struct {}
 func (_ FfiDestroyerOptionalSequenceObjectRef) Destroy(value *[]ObjectRef) {
 	if value != nil {
 		FfiDestroyerSequenceObjectRef{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSequenceOpenMoveType struct{}
+
+var FfiConverterOptionalSequenceOpenMoveTypeINSTANCE = FfiConverterOptionalSequenceOpenMoveType{}
+
+func (c FfiConverterOptionalSequenceOpenMoveType) Lift(rb RustBufferI) *[]OpenMoveType {
+	return LiftFromRustBuffer[*[]OpenMoveType](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceOpenMoveType) Read(reader io.Reader) *[]OpenMoveType {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceOpenMoveTypeINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceOpenMoveType) Lower(value *[]OpenMoveType) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]OpenMoveType](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceOpenMoveType) Write(writer io.Writer, value *[]OpenMoveType) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceOpenMoveTypeINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceOpenMoveType struct {}
+
+func (_ FfiDestroyerOptionalSequenceOpenMoveType) Destroy(value *[]OpenMoveType) {
+	if value != nil {
+		FfiDestroyerSequenceOpenMoveType{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSequenceMoveAbility struct{}
+
+var FfiConverterOptionalSequenceMoveAbilityINSTANCE = FfiConverterOptionalSequenceMoveAbility{}
+
+func (c FfiConverterOptionalSequenceMoveAbility) Lift(rb RustBufferI) *[]MoveAbility {
+	return LiftFromRustBuffer[*[]MoveAbility](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceMoveAbility) Read(reader io.Reader) *[]MoveAbility {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceMoveAbilityINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceMoveAbility) Lower(value *[]MoveAbility) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]MoveAbility](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceMoveAbility) Write(writer io.Writer, value *[]MoveAbility) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceMoveAbilityINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceMoveAbility struct {}
+
+func (_ FfiDestroyerOptionalSequenceMoveAbility) Destroy(value *[]MoveAbility) {
+	if value != nil {
+		FfiDestroyerSequenceMoveAbility{}.Destroy(*value)
 	}
 }
 
@@ -20643,6 +21620,350 @@ func (FfiDestroyerSequenceEvent) Destroy(sequence []Event) {
 	}
 }
 
+type FfiConverterSequenceMoveEnum struct{}
+
+var FfiConverterSequenceMoveEnumINSTANCE = FfiConverterSequenceMoveEnum{}
+
+func (c FfiConverterSequenceMoveEnum) Lift(rb RustBufferI) []MoveEnum {
+	return LiftFromRustBuffer[[]MoveEnum](c, rb)
+}
+
+func (c FfiConverterSequenceMoveEnum) Read(reader io.Reader) []MoveEnum {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]MoveEnum, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterMoveEnumINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceMoveEnum) Lower(value []MoveEnum) C.RustBuffer {
+	return LowerIntoRustBuffer[[]MoveEnum](c, value)
+}
+
+func (c FfiConverterSequenceMoveEnum) Write(writer io.Writer, value []MoveEnum) {
+	if len(value) > math.MaxInt32 {
+		panic("[]MoveEnum is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterMoveEnumINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceMoveEnum struct {}
+
+func (FfiDestroyerSequenceMoveEnum) Destroy(sequence []MoveEnum) {
+	for _, value := range sequence {
+		FfiDestroyerMoveEnum{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceMoveEnumVariant struct{}
+
+var FfiConverterSequenceMoveEnumVariantINSTANCE = FfiConverterSequenceMoveEnumVariant{}
+
+func (c FfiConverterSequenceMoveEnumVariant) Lift(rb RustBufferI) []MoveEnumVariant {
+	return LiftFromRustBuffer[[]MoveEnumVariant](c, rb)
+}
+
+func (c FfiConverterSequenceMoveEnumVariant) Read(reader io.Reader) []MoveEnumVariant {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]MoveEnumVariant, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterMoveEnumVariantINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceMoveEnumVariant) Lower(value []MoveEnumVariant) C.RustBuffer {
+	return LowerIntoRustBuffer[[]MoveEnumVariant](c, value)
+}
+
+func (c FfiConverterSequenceMoveEnumVariant) Write(writer io.Writer, value []MoveEnumVariant) {
+	if len(value) > math.MaxInt32 {
+		panic("[]MoveEnumVariant is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterMoveEnumVariantINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceMoveEnumVariant struct {}
+
+func (FfiDestroyerSequenceMoveEnumVariant) Destroy(sequence []MoveEnumVariant) {
+	for _, value := range sequence {
+		FfiDestroyerMoveEnumVariant{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceMoveField struct{}
+
+var FfiConverterSequenceMoveFieldINSTANCE = FfiConverterSequenceMoveField{}
+
+func (c FfiConverterSequenceMoveField) Lift(rb RustBufferI) []MoveField {
+	return LiftFromRustBuffer[[]MoveField](c, rb)
+}
+
+func (c FfiConverterSequenceMoveField) Read(reader io.Reader) []MoveField {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]MoveField, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterMoveFieldINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceMoveField) Lower(value []MoveField) C.RustBuffer {
+	return LowerIntoRustBuffer[[]MoveField](c, value)
+}
+
+func (c FfiConverterSequenceMoveField) Write(writer io.Writer, value []MoveField) {
+	if len(value) > math.MaxInt32 {
+		panic("[]MoveField is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterMoveFieldINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceMoveField struct {}
+
+func (FfiDestroyerSequenceMoveField) Destroy(sequence []MoveField) {
+	for _, value := range sequence {
+		FfiDestroyerMoveField{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceMoveFunction struct{}
+
+var FfiConverterSequenceMoveFunctionINSTANCE = FfiConverterSequenceMoveFunction{}
+
+func (c FfiConverterSequenceMoveFunction) Lift(rb RustBufferI) []MoveFunction {
+	return LiftFromRustBuffer[[]MoveFunction](c, rb)
+}
+
+func (c FfiConverterSequenceMoveFunction) Read(reader io.Reader) []MoveFunction {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]MoveFunction, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterMoveFunctionINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceMoveFunction) Lower(value []MoveFunction) C.RustBuffer {
+	return LowerIntoRustBuffer[[]MoveFunction](c, value)
+}
+
+func (c FfiConverterSequenceMoveFunction) Write(writer io.Writer, value []MoveFunction) {
+	if len(value) > math.MaxInt32 {
+		panic("[]MoveFunction is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterMoveFunctionINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceMoveFunction struct {}
+
+func (FfiDestroyerSequenceMoveFunction) Destroy(sequence []MoveFunction) {
+	for _, value := range sequence {
+		FfiDestroyerMoveFunction{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceMoveFunctionTypeParameter struct{}
+
+var FfiConverterSequenceMoveFunctionTypeParameterINSTANCE = FfiConverterSequenceMoveFunctionTypeParameter{}
+
+func (c FfiConverterSequenceMoveFunctionTypeParameter) Lift(rb RustBufferI) []MoveFunctionTypeParameter {
+	return LiftFromRustBuffer[[]MoveFunctionTypeParameter](c, rb)
+}
+
+func (c FfiConverterSequenceMoveFunctionTypeParameter) Read(reader io.Reader) []MoveFunctionTypeParameter {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]MoveFunctionTypeParameter, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterMoveFunctionTypeParameterINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceMoveFunctionTypeParameter) Lower(value []MoveFunctionTypeParameter) C.RustBuffer {
+	return LowerIntoRustBuffer[[]MoveFunctionTypeParameter](c, value)
+}
+
+func (c FfiConverterSequenceMoveFunctionTypeParameter) Write(writer io.Writer, value []MoveFunctionTypeParameter) {
+	if len(value) > math.MaxInt32 {
+		panic("[]MoveFunctionTypeParameter is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterMoveFunctionTypeParameterINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceMoveFunctionTypeParameter struct {}
+
+func (FfiDestroyerSequenceMoveFunctionTypeParameter) Destroy(sequence []MoveFunctionTypeParameter) {
+	for _, value := range sequence {
+		FfiDestroyerMoveFunctionTypeParameter{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceMoveModuleQuery struct{}
+
+var FfiConverterSequenceMoveModuleQueryINSTANCE = FfiConverterSequenceMoveModuleQuery{}
+
+func (c FfiConverterSequenceMoveModuleQuery) Lift(rb RustBufferI) []MoveModuleQuery {
+	return LiftFromRustBuffer[[]MoveModuleQuery](c, rb)
+}
+
+func (c FfiConverterSequenceMoveModuleQuery) Read(reader io.Reader) []MoveModuleQuery {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]MoveModuleQuery, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterMoveModuleQueryINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceMoveModuleQuery) Lower(value []MoveModuleQuery) C.RustBuffer {
+	return LowerIntoRustBuffer[[]MoveModuleQuery](c, value)
+}
+
+func (c FfiConverterSequenceMoveModuleQuery) Write(writer io.Writer, value []MoveModuleQuery) {
+	if len(value) > math.MaxInt32 {
+		panic("[]MoveModuleQuery is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterMoveModuleQueryINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceMoveModuleQuery struct {}
+
+func (FfiDestroyerSequenceMoveModuleQuery) Destroy(sequence []MoveModuleQuery) {
+	for _, value := range sequence {
+		FfiDestroyerMoveModuleQuery{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceMoveStructQuery struct{}
+
+var FfiConverterSequenceMoveStructQueryINSTANCE = FfiConverterSequenceMoveStructQuery{}
+
+func (c FfiConverterSequenceMoveStructQuery) Lift(rb RustBufferI) []MoveStructQuery {
+	return LiftFromRustBuffer[[]MoveStructQuery](c, rb)
+}
+
+func (c FfiConverterSequenceMoveStructQuery) Read(reader io.Reader) []MoveStructQuery {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]MoveStructQuery, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterMoveStructQueryINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceMoveStructQuery) Lower(value []MoveStructQuery) C.RustBuffer {
+	return LowerIntoRustBuffer[[]MoveStructQuery](c, value)
+}
+
+func (c FfiConverterSequenceMoveStructQuery) Write(writer io.Writer, value []MoveStructQuery) {
+	if len(value) > math.MaxInt32 {
+		panic("[]MoveStructQuery is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterMoveStructQueryINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceMoveStructQuery struct {}
+
+func (FfiDestroyerSequenceMoveStructQuery) Destroy(sequence []MoveStructQuery) {
+	for _, value := range sequence {
+		FfiDestroyerMoveStructQuery{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceMoveStructTypeParameter struct{}
+
+var FfiConverterSequenceMoveStructTypeParameterINSTANCE = FfiConverterSequenceMoveStructTypeParameter{}
+
+func (c FfiConverterSequenceMoveStructTypeParameter) Lift(rb RustBufferI) []MoveStructTypeParameter {
+	return LiftFromRustBuffer[[]MoveStructTypeParameter](c, rb)
+}
+
+func (c FfiConverterSequenceMoveStructTypeParameter) Read(reader io.Reader) []MoveStructTypeParameter {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]MoveStructTypeParameter, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterMoveStructTypeParameterINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceMoveStructTypeParameter) Lower(value []MoveStructTypeParameter) C.RustBuffer {
+	return LowerIntoRustBuffer[[]MoveStructTypeParameter](c, value)
+}
+
+func (c FfiConverterSequenceMoveStructTypeParameter) Write(writer io.Writer, value []MoveStructTypeParameter) {
+	if len(value) > math.MaxInt32 {
+		panic("[]MoveStructTypeParameter is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterMoveStructTypeParameterINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceMoveStructTypeParameter struct {}
+
+func (FfiDestroyerSequenceMoveStructTypeParameter) Destroy(sequence []MoveStructTypeParameter) {
+	for _, value := range sequence {
+		FfiDestroyerMoveStructTypeParameter{}.Destroy(value)
+	}
+}
+
 type FfiConverterSequenceObjectRef struct{}
 
 var FfiConverterSequenceObjectRefINSTANCE = FfiConverterSequenceObjectRef{}
@@ -20726,6 +22047,49 @@ type FfiDestroyerSequenceObjectReference struct {}
 func (FfiDestroyerSequenceObjectReference) Destroy(sequence []ObjectReference) {
 	for _, value := range sequence {
 		FfiDestroyerObjectReference{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceOpenMoveType struct{}
+
+var FfiConverterSequenceOpenMoveTypeINSTANCE = FfiConverterSequenceOpenMoveType{}
+
+func (c FfiConverterSequenceOpenMoveType) Lift(rb RustBufferI) []OpenMoveType {
+	return LiftFromRustBuffer[[]OpenMoveType](c, rb)
+}
+
+func (c FfiConverterSequenceOpenMoveType) Read(reader io.Reader) []OpenMoveType {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]OpenMoveType, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterOpenMoveTypeINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceOpenMoveType) Lower(value []OpenMoveType) C.RustBuffer {
+	return LowerIntoRustBuffer[[]OpenMoveType](c, value)
+}
+
+func (c FfiConverterSequenceOpenMoveType) Write(writer io.Writer, value []OpenMoveType) {
+	if len(value) > math.MaxInt32 {
+		panic("[]OpenMoveType is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterOpenMoveTypeINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceOpenMoveType struct {}
+
+func (FfiDestroyerSequenceOpenMoveType) Destroy(sequence []OpenMoveType) {
+	for _, value := range sequence {
+		FfiDestroyerOpenMoveType{}.Destroy(value)
 	}
 }
 
@@ -21027,6 +22391,49 @@ type FfiDestroyerSequenceFeature struct {}
 func (FfiDestroyerSequenceFeature) Destroy(sequence []Feature) {
 	for _, value := range sequence {
 		FfiDestroyerFeature{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceMoveAbility struct{}
+
+var FfiConverterSequenceMoveAbilityINSTANCE = FfiConverterSequenceMoveAbility{}
+
+func (c FfiConverterSequenceMoveAbility) Lift(rb RustBufferI) []MoveAbility {
+	return LiftFromRustBuffer[[]MoveAbility](c, rb)
+}
+
+func (c FfiConverterSequenceMoveAbility) Read(reader io.Reader) []MoveAbility {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]MoveAbility, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterMoveAbilityINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceMoveAbility) Lower(value []MoveAbility) C.RustBuffer {
+	return LowerIntoRustBuffer[[]MoveAbility](c, value)
+}
+
+func (c FfiConverterSequenceMoveAbility) Write(writer io.Writer, value []MoveAbility) {
+	if len(value) > math.MaxInt32 {
+		panic("[]MoveAbility is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterMoveAbilityINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceMoveAbility struct {}
+
+func (FfiDestroyerSequenceMoveAbility) Destroy(sequence []MoveAbility) {
+	for _, value := range sequence {
+		FfiDestroyerMoveAbility{}.Destroy(value)
 	}
 }
 
