@@ -865,7 +865,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config()
 	})
-	if checksum != 23389 {
+	if checksum != 62867 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config: UniFFI API checksum mismatch")
 	}
@@ -6616,7 +6616,7 @@ type GraphQlClientInterface interface {
 	// versions of system packages.
 	Packages(paginationFilter PaginationFilter, afterCheckpoint *uint64, beforeCheckpoint *uint64) (MovePackagePage, error)
 	// Get the protocol configuration.
-	ProtocolConfig(version *uint64) (**ProtocolConfigs, error)
+	ProtocolConfig(version *uint64) (*ProtocolConfigs, error)
 	// Get the reference gas price for the provided epoch or the last known one
 	// if no epoch is provided.
 	//
@@ -7773,7 +7773,7 @@ func (_self *GraphQlClient) Packages(paginationFilter PaginationFilter, afterChe
 }
 
 // Get the protocol configuration.
-func (_self *GraphQlClient) ProtocolConfig(version *uint64) (**ProtocolConfigs, error) {
+func (_self *GraphQlClient) ProtocolConfig(version *uint64) (*ProtocolConfigs, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -7786,7 +7786,7 @@ func (_self *GraphQlClient) ProtocolConfig(version *uint64) (**ProtocolConfigs, 
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) **ProtocolConfigs {
+		func(ffi RustBufferI) *ProtocolConfigs {
 			return FfiConverterOptionalProtocolConfigsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(
@@ -10449,66 +10449,6 @@ func (c FfiConverterProgrammableTransaction) Write(writer io.Writer, value *Prog
 type FfiDestroyerProgrammableTransaction struct {}
 
 func (_ FfiDestroyerProgrammableTransaction) Destroy(value *ProgrammableTransaction) {
-		value.Destroy()
-}
-
-
-
-type ProtocolConfigsInterface interface {
-}
-type ProtocolConfigs struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *ProtocolConfigs) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterProtocolConfigs struct {}
-
-var FfiConverterProtocolConfigsINSTANCE = FfiConverterProtocolConfigs{}
-
-
-func (c FfiConverterProtocolConfigs) Lift(pointer unsafe.Pointer) *ProtocolConfigs {
-	result := &ProtocolConfigs {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_protocolconfigs(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_protocolconfigs(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ProtocolConfigs).Destroy)
-	return result
-}
-
-func (c FfiConverterProtocolConfigs) Read(reader io.Reader) *ProtocolConfigs {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterProtocolConfigs) Lower(value *ProtocolConfigs) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ProtocolConfigs")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterProtocolConfigs) Write(writer io.Writer, value *ProtocolConfigs) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerProtocolConfigs struct {}
-
-func (_ FfiDestroyerProtocolConfigs) Destroy(value *ProtocolConfigs) {
 		value.Destroy()
 }
 
@@ -15460,6 +15400,145 @@ type FfiDestroyerPaginationFilter struct {}
 func (_ FfiDestroyerPaginationFilter) Destroy(value PaginationFilter) {
 	value.Destroy()
 }
+// A key-value protocol configuration attribute.
+type ProtocolConfigAttr struct {
+	Key string
+	Value *string
+}
+
+func (r *ProtocolConfigAttr) Destroy() {
+		FfiDestroyerString{}.Destroy(r.Key);
+		FfiDestroyerOptionalString{}.Destroy(r.Value);
+}
+
+type FfiConverterProtocolConfigAttr struct {}
+
+var FfiConverterProtocolConfigAttrINSTANCE = FfiConverterProtocolConfigAttr{}
+
+func (c FfiConverterProtocolConfigAttr) Lift(rb RustBufferI) ProtocolConfigAttr {
+	return LiftFromRustBuffer[ProtocolConfigAttr](c, rb)
+}
+
+func (c FfiConverterProtocolConfigAttr) Read(reader io.Reader) ProtocolConfigAttr {
+	return ProtocolConfigAttr {
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterProtocolConfigAttr) Lower(value ProtocolConfigAttr) C.RustBuffer {
+	return LowerIntoRustBuffer[ProtocolConfigAttr](c, value)
+}
+
+func (c FfiConverterProtocolConfigAttr) Write(writer io.Writer, value ProtocolConfigAttr) {
+		FfiConverterStringINSTANCE.Write(writer, value.Key);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.Value);
+}
+
+type FfiDestroyerProtocolConfigAttr struct {}
+
+func (_ FfiDestroyerProtocolConfigAttr) Destroy(value ProtocolConfigAttr) {
+	value.Destroy()
+}
+// Feature flags are a form of boolean configuration that are usually used to
+// gate features while they are in development. Once a lag has been enabled, it
+// is rare for it to be disabled.
+type ProtocolConfigFeatureFlag struct {
+	Key string
+	Value bool
+}
+
+func (r *ProtocolConfigFeatureFlag) Destroy() {
+		FfiDestroyerString{}.Destroy(r.Key);
+		FfiDestroyerBool{}.Destroy(r.Value);
+}
+
+type FfiConverterProtocolConfigFeatureFlag struct {}
+
+var FfiConverterProtocolConfigFeatureFlagINSTANCE = FfiConverterProtocolConfigFeatureFlag{}
+
+func (c FfiConverterProtocolConfigFeatureFlag) Lift(rb RustBufferI) ProtocolConfigFeatureFlag {
+	return LiftFromRustBuffer[ProtocolConfigFeatureFlag](c, rb)
+}
+
+func (c FfiConverterProtocolConfigFeatureFlag) Read(reader io.Reader) ProtocolConfigFeatureFlag {
+	return ProtocolConfigFeatureFlag {
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterProtocolConfigFeatureFlag) Lower(value ProtocolConfigFeatureFlag) C.RustBuffer {
+	return LowerIntoRustBuffer[ProtocolConfigFeatureFlag](c, value)
+}
+
+func (c FfiConverterProtocolConfigFeatureFlag) Write(writer io.Writer, value ProtocolConfigFeatureFlag) {
+		FfiConverterStringINSTANCE.Write(writer, value.Key);
+		FfiConverterBoolINSTANCE.Write(writer, value.Value);
+}
+
+type FfiDestroyerProtocolConfigFeatureFlag struct {}
+
+func (_ FfiDestroyerProtocolConfigFeatureFlag) Destroy(value ProtocolConfigFeatureFlag) {
+	value.Destroy()
+}
+// Information about the configuration of the protocol.
+// Constants that control how the chain operates.
+// These can only change during protocol upgrades which happen on epoch
+// boundaries.
+type ProtocolConfigs struct {
+	// The protocol is not required to change on every epoch boundary, so the
+	// protocol version tracks which change to the protocol these configs
+	// are from.
+	ProtocolVersion uint64
+	// List all available feature flags and their values. Feature flags are a
+	// form of boolean configuration that are usually used to gate features
+	// while they are in development. Once a flag has been enabled, it is
+	// rare for it to be disabled.
+	FeatureFlags []ProtocolConfigFeatureFlag
+	// List all available configurations and their values. These configurations
+	// can take any value (but they will all be represented in string
+	// form), and do not include feature flags.
+	Configs []ProtocolConfigAttr
+}
+
+func (r *ProtocolConfigs) Destroy() {
+		FfiDestroyerUint64{}.Destroy(r.ProtocolVersion);
+		FfiDestroyerSequenceProtocolConfigFeatureFlag{}.Destroy(r.FeatureFlags);
+		FfiDestroyerSequenceProtocolConfigAttr{}.Destroy(r.Configs);
+}
+
+type FfiConverterProtocolConfigs struct {}
+
+var FfiConverterProtocolConfigsINSTANCE = FfiConverterProtocolConfigs{}
+
+func (c FfiConverterProtocolConfigs) Lift(rb RustBufferI) ProtocolConfigs {
+	return LiftFromRustBuffer[ProtocolConfigs](c, rb)
+}
+
+func (c FfiConverterProtocolConfigs) Read(reader io.Reader) ProtocolConfigs {
+	return ProtocolConfigs {
+			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterSequenceProtocolConfigFeatureFlagINSTANCE.Read(reader),
+			FfiConverterSequenceProtocolConfigAttrINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterProtocolConfigs) Lower(value ProtocolConfigs) C.RustBuffer {
+	return LowerIntoRustBuffer[ProtocolConfigs](c, value)
+}
+
+func (c FfiConverterProtocolConfigs) Write(writer io.Writer, value ProtocolConfigs) {
+		FfiConverterUint64INSTANCE.Write(writer, value.ProtocolVersion);
+		FfiConverterSequenceProtocolConfigFeatureFlagINSTANCE.Write(writer, value.FeatureFlags);
+		FfiConverterSequenceProtocolConfigAttrINSTANCE.Write(writer, value.Configs);
+}
+
+type FfiDestroyerProtocolConfigs struct {}
+
+func (_ FfiDestroyerProtocolConfigs) Destroy(value ProtocolConfigs) {
+	value.Destroy()
+}
 type ServiceConfig struct {
 	// Default number of elements allowed on a single page of a connection.
 	DefaultPageSize int32
@@ -19181,43 +19260,6 @@ func (_ FfiDestroyerOptionalPasskeyAuthenticator) Destroy(value **PasskeyAuthent
 	}
 }
 
-type FfiConverterOptionalProtocolConfigs struct{}
-
-var FfiConverterOptionalProtocolConfigsINSTANCE = FfiConverterOptionalProtocolConfigs{}
-
-func (c FfiConverterOptionalProtocolConfigs) Lift(rb RustBufferI) **ProtocolConfigs {
-	return LiftFromRustBuffer[**ProtocolConfigs](c, rb)
-}
-
-func (_ FfiConverterOptionalProtocolConfigs) Read(reader io.Reader) **ProtocolConfigs {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterProtocolConfigsINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalProtocolConfigs) Lower(value **ProtocolConfigs) C.RustBuffer {
-	return LowerIntoRustBuffer[**ProtocolConfigs](c, value)
-}
-
-func (_ FfiConverterOptionalProtocolConfigs) Write(writer io.Writer, value **ProtocolConfigs) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterProtocolConfigsINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalProtocolConfigs struct {}
-
-func (_ FfiDestroyerOptionalProtocolConfigs) Destroy(value **ProtocolConfigs) {
-	if value != nil {
-		FfiDestroyerProtocolConfigs{}.Destroy(*value)
-	}
-}
-
 type FfiConverterOptionalSecp256k1PublicKey struct{}
 
 var FfiConverterOptionalSecp256k1PublicKeyINSTANCE = FfiConverterOptionalSecp256k1PublicKey{}
@@ -20177,6 +20219,43 @@ type FfiDestroyerOptionalOpenMoveType struct {}
 func (_ FfiDestroyerOptionalOpenMoveType) Destroy(value *OpenMoveType) {
 	if value != nil {
 		FfiDestroyerOpenMoveType{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalProtocolConfigs struct{}
+
+var FfiConverterOptionalProtocolConfigsINSTANCE = FfiConverterOptionalProtocolConfigs{}
+
+func (c FfiConverterOptionalProtocolConfigs) Lift(rb RustBufferI) *ProtocolConfigs {
+	return LiftFromRustBuffer[*ProtocolConfigs](c, rb)
+}
+
+func (_ FfiConverterOptionalProtocolConfigs) Read(reader io.Reader) *ProtocolConfigs {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterProtocolConfigsINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalProtocolConfigs) Lower(value *ProtocolConfigs) C.RustBuffer {
+	return LowerIntoRustBuffer[*ProtocolConfigs](c, value)
+}
+
+func (_ FfiConverterOptionalProtocolConfigs) Write(writer io.Writer, value *ProtocolConfigs) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterProtocolConfigsINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalProtocolConfigs struct {}
+
+func (_ FfiDestroyerOptionalProtocolConfigs) Destroy(value *ProtocolConfigs) {
+	if value != nil {
+		FfiDestroyerProtocolConfigs{}.Destroy(*value)
 	}
 }
 
@@ -22090,6 +22169,92 @@ type FfiDestroyerSequenceOpenMoveType struct {}
 func (FfiDestroyerSequenceOpenMoveType) Destroy(sequence []OpenMoveType) {
 	for _, value := range sequence {
 		FfiDestroyerOpenMoveType{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceProtocolConfigAttr struct{}
+
+var FfiConverterSequenceProtocolConfigAttrINSTANCE = FfiConverterSequenceProtocolConfigAttr{}
+
+func (c FfiConverterSequenceProtocolConfigAttr) Lift(rb RustBufferI) []ProtocolConfigAttr {
+	return LiftFromRustBuffer[[]ProtocolConfigAttr](c, rb)
+}
+
+func (c FfiConverterSequenceProtocolConfigAttr) Read(reader io.Reader) []ProtocolConfigAttr {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]ProtocolConfigAttr, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterProtocolConfigAttrINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceProtocolConfigAttr) Lower(value []ProtocolConfigAttr) C.RustBuffer {
+	return LowerIntoRustBuffer[[]ProtocolConfigAttr](c, value)
+}
+
+func (c FfiConverterSequenceProtocolConfigAttr) Write(writer io.Writer, value []ProtocolConfigAttr) {
+	if len(value) > math.MaxInt32 {
+		panic("[]ProtocolConfigAttr is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterProtocolConfigAttrINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceProtocolConfigAttr struct {}
+
+func (FfiDestroyerSequenceProtocolConfigAttr) Destroy(sequence []ProtocolConfigAttr) {
+	for _, value := range sequence {
+		FfiDestroyerProtocolConfigAttr{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceProtocolConfigFeatureFlag struct{}
+
+var FfiConverterSequenceProtocolConfigFeatureFlagINSTANCE = FfiConverterSequenceProtocolConfigFeatureFlag{}
+
+func (c FfiConverterSequenceProtocolConfigFeatureFlag) Lift(rb RustBufferI) []ProtocolConfigFeatureFlag {
+	return LiftFromRustBuffer[[]ProtocolConfigFeatureFlag](c, rb)
+}
+
+func (c FfiConverterSequenceProtocolConfigFeatureFlag) Read(reader io.Reader) []ProtocolConfigFeatureFlag {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]ProtocolConfigFeatureFlag, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterProtocolConfigFeatureFlagINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceProtocolConfigFeatureFlag) Lower(value []ProtocolConfigFeatureFlag) C.RustBuffer {
+	return LowerIntoRustBuffer[[]ProtocolConfigFeatureFlag](c, value)
+}
+
+func (c FfiConverterSequenceProtocolConfigFeatureFlag) Write(writer io.Writer, value []ProtocolConfigFeatureFlag) {
+	if len(value) > math.MaxInt32 {
+		panic("[]ProtocolConfigFeatureFlag is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterProtocolConfigFeatureFlagINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceProtocolConfigFeatureFlag struct {}
+
+func (FfiDestroyerSequenceProtocolConfigFeatureFlag) Destroy(sequence []ProtocolConfigFeatureFlag) {
+	for _, value := range sequence {
+		FfiDestroyerProtocolConfigFeatureFlag{}.Destroy(value)
 	}
 }
 

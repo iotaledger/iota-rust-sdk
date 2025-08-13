@@ -1844,16 +1844,6 @@ void* uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(void* ptr, RustCallSt
 void uniffi_iota_sdk_ffi_fn_free_programmabletransaction(void* ptr, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_PROTOCOLCONFIGS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_PROTOCOLCONFIGS
-void* uniffi_iota_sdk_ffi_fn_clone_protocolconfigs(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_PROTOCOLCONFIGS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_PROTOCOLCONFIGS
-void uniffi_iota_sdk_ffi_fn_free_protocolconfigs(void* ptr, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_RANDOMNESSSTATEUPDATE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_RANDOMNESSSTATEUPDATE
 void* uniffi_iota_sdk_ffi_fn_clone_randomnessstateupdate(void* ptr, RustCallStatus *out_status
