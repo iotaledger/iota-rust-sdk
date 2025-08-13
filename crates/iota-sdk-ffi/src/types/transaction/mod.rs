@@ -262,13 +262,19 @@ pub struct Command(pub iota_types::Command);
 impl Command {
     /// A call to either an entry or a public Move function
     #[uniffi::constructor]
-    pub fn new_move_call(move_call: MoveCall) -> Self {}
+    pub fn new_move_call(move_call: &MoveCall) -> Self {
+        Self(iota_types::Command::MoveCall(move_call.0.clone()))
+    }
 
     /// It sends n-objects to the specified address. These objects must have
     /// store (public transfer) and either the previous owner must be an
     /// address or the object must be newly created.
     #[uniffi::constructor]
-    pub fn new_transfer_objects(transfer_objects: TransferObjects) -> Self {}
+    pub fn new_transfer_objects(transfer_objects: &TransferObjects) -> Self {
+        Self(iota_types::Command::TransferObjects(
+            transfer_objects.0.clone(),
+        ))
+    }
 
     /// It splits off some amounts into a new coins with those amounts
     #[uniffi::constructor]
@@ -298,6 +304,45 @@ impl Command {
     ///    from an earlier command in the same programmable transaction.
     #[uniffi::constructor]
     pub fn new_upgrade(upgrade: Upgrade) -> Self {}
+}
+
+/// Command to transfer ownership of a set of objects to an address
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transfer-objects = (vector argument) argument
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct TransferObjects(pub iota_types::TransferObjects);
+
+#[uniffi::export]
+impl TransferObjects {
+    #[uniffi::constructor]
+    pub fn new(objects: Vec<Arc<Argument>>, address: Arc<Argument>) -> Self {
+        Self(iota_types::TransferObjects {
+            objects: objects.iter().map(|argument| argument.0).collect(),
+            address: address.0.clone(),
+        })
+    }
+
+    /// Set of objects to transfer
+    pub fn objects(&self) -> Vec<Arc<Argument>> {
+        self.0
+            .objects
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+
+    /// The address to transfer ownership to
+    pub fn address(&self) -> Arc<Argument> {
+        Arc::new(self.0.address.into())
+    }
 }
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
