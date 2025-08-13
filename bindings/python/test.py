@@ -41,6 +41,32 @@ async def main():
             print("Scheme: ", sig.scheme(), sig.scheme().value)
         print("Sender: ", txn.transaction.sender().to_hex())
 
+    service_config = ServiceConfig(
+        default_page_size=2,
+        enabled_features=[],
+        max_move_value_depth=0,
+        max_output_nodes=0,
+        max_page_size=0,
+        max_query_depth=0,
+        max_query_nodes=0,
+        max_query_payload_size=0,
+        max_type_argument_depth=0,
+        max_type_argument_width=0,
+        max_type_nodes=0,
+        mutation_timeout_ms=0,
+        request_timeout_ms=0,
+    )
+
+    coin_metadata = CoinMetadata(
+        decimals=2,
+        description="test",
+        icon_url=None,
+        name="test",
+        symbol=None,
+        supply="1000",
+        version=0,
+    )
+
     move_struct = MoveStruct(
         struct_type=StructTag.coin(TypeTag.vector(TypeTag.u8())),
         version=1,

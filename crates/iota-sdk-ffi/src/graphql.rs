@@ -3,7 +3,10 @@
 
 use std::sync::Arc;
 
-use iota_graphql_client::{pagination::PaginationFilter, query_types::MoveFunction};
+use iota_graphql_client::{
+    pagination::PaginationFilter,
+    query_types::{CoinMetadata, MoveFunction, ServiceConfig},
+};
 use iota_types::CheckpointSequenceNumber;
 use tokio::sync::RwLock;
 
@@ -14,9 +17,8 @@ use crate::{
         checkpoint::CheckpointSummary,
         digest::{CheckpointContentsDigest, CheckpointDigest, TransactionDigest},
         graphql::{
-            CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveModule,
-            ObjectFilter, ProtocolConfigs, ServiceConfig, TransactionDataEffects,
-            TransactionMetadata, TransactionsFilter,
+            DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveModule, ObjectFilter,
+            ProtocolConfigs, TransactionDataEffects, TransactionMetadata, TransactionsFilter,
         },
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
@@ -192,15 +194,8 @@ impl GraphQLClient {
     }
 
     /// Get the coin metadata for the coin type.
-    pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<Arc<CoinMetadata>>> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .coin_metadata(coin_type)
-            .await?
-            .map(Into::into)
-            .map(Arc::new))
+    pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
+        Ok(self.0.read().await.coin_metadata(coin_type).await?)
     }
 
     /// Get total supply for the coin type.
@@ -774,7 +769,7 @@ impl GraphQLClient {
     /// Get the GraphQL service configuration, including complexity limits, read
     /// and mutation limits, supported versions, and others.
     pub async fn service_config(&self) -> Result<ServiceConfig> {
-        Ok(self.0.read().await.service_config().await?.clone().into())
+        Ok(self.0.read().await.service_config().await?.clone())
     }
 
     // ===========================================================================

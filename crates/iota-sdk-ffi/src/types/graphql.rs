@@ -7,9 +7,10 @@ use base64ct::Encoding;
 use iota_graphql_client::{
     pagination::{Direction, PaginationFilter},
     query_types::{
-        Base64, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField,
-        MoveFunction, MoveFunctionConnection, MoveFunctionTypeParameter, MoveStructConnection,
-        MoveStructQuery, MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo,
+        Base64, BigInt, CoinMetadata, Feature, MoveAbility, MoveEnum, MoveEnumConnection,
+        MoveEnumVariant, MoveField, MoveFunction, MoveFunctionConnection,
+        MoveFunctionTypeParameter, MoveObject, MoveStructConnection, MoveStructQuery,
+        MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo, ServiceConfig,
         TransactionBlockKindInput, ValidatorCredentials,
     },
 };
@@ -532,11 +533,8 @@ impl From<Validator> for iota_graphql_client::query_types::Validator {
             next_epoch_credentials: value.next_epoch_credentials,
             next_epoch_gas_price: value.next_epoch_gas_price.map(|v| v.to_string().into()),
             next_epoch_stake: value.next_epoch_stake.map(|v| v.to_string().into()),
-            operation_cap: value.operation_cap.map(|o| {
-                MoveObject {
-                    bcs: Some(base64ct::Base64::encode_string(&o)),
-                }
-                .into()
+            operation_cap: value.operation_cap.map(|o| MoveObject {
+                bcs: Some(Base64(base64ct::Base64::encode_string(&o))),
             }),
             pending_pool_token_withdraw: value
                 .pending_pool_token_withdraw
@@ -580,40 +578,6 @@ pub enum TransactionBlockKindInput {
     EndOfEpochTx,
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
-pub struct BigInt {
-    pub value: String,
-}
-
-impl From<iota_graphql_client::query_types::BigInt> for BigInt {
-    fn from(value: iota_graphql_client::query_types::BigInt) -> Self {
-        BigInt { value: value.0 }
-    }
-}
-
-impl From<BigInt> for iota_graphql_client::query_types::BigInt {
-    fn from(value: BigInt) -> Self {
-        iota_graphql_client::query_types::BigInt(value.value)
-    }
-}
-
-#[derive(Clone, Debug, uniffi::Record)]
-pub struct DateTime {
-    pub value: String,
-}
-
-impl From<iota_graphql_client::query_types::DateTime> for DateTime {
-    fn from(value: iota_graphql_client::query_types::DateTime) -> Self {
-        DateTime { value: value.0 }
-    }
-}
-
-impl From<DateTime> for iota_graphql_client::query_types::DateTime {
-    fn from(value: DateTime) -> Self {
-        iota_graphql_client::query_types::DateTime(value.value)
-    }
-}
-
 /// Information about pagination in a connection.
 #[uniffi::remote(Record)]
 pub struct PageInfo {
@@ -633,7 +597,9 @@ pub struct PageInfo {
 /// pagination with the GraphQL server's max page size.
 #[uniffi::remote(Record)]
 pub struct PaginationFilter {
+    /// The direction of pagination.
     pub direction: Direction,
+    /// An opaque cursor used for pagination.
     #[uniffi(default = None)]
     pub cursor: Option<String>,
     /// The maximum number of items to return. If this is omitted, it will
@@ -716,33 +682,39 @@ impl From<GQLAddress> for iota_graphql_client::query_types::GQLAddress {
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[uniffi::remote(Record)]
 pub struct MoveObject {
     #[uniffi(default = None)]
-    pub bcs: Option<String>,
-}
-
-impl From<iota_graphql_client::query_types::MoveObject> for MoveObject {
-    fn from(value: iota_graphql_client::query_types::MoveObject) -> Self {
-        MoveObject {
-            bcs: value.bcs.map(|v| v.0),
-        }
-    }
-}
-
-impl From<MoveObject> for iota_graphql_client::query_types::MoveObject {
-    fn from(value: MoveObject) -> Self {
-        iota_graphql_client::query_types::MoveObject {
-            bcs: value.bcs.map(iota_graphql_client::query_types::Base64),
-        }
-    }
+    pub bcs: Option<Base64>,
 }
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ProtocolConfigs(pub iota_graphql_client::query_types::ProtocolConfigs);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct CoinMetadata(pub iota_graphql_client::query_types::CoinMetadata);
+/// The coin metadata associated with the given coin type.
+#[uniffi::remote(Record)]
+pub struct CoinMetadata {
+    /// The number of decimal places used to represent the token.
+    #[uniffi(default = None)]
+    pub decimals: Option<i32>,
+    /// Optional description of the token, provided by the creator of the token.
+    #[uniffi(default = None)]
+    pub description: Option<String>,
+    /// Icon URL of the coin.
+    #[uniffi(default = None)]
+    pub icon_url: Option<String>,
+    /// Full, official name of the token.
+    #[uniffi(default = None)]
+    pub name: Option<String>,
+    /// The token's identifying abbreviation.
+    #[uniffi(default = None)]
+    pub symbol: Option<String>,
+    /// The overall quantity of tokens that will be issued.
+    #[uniffi(default = None)]
+    pub supply: Option<BigInt>,
+    /// Version of the token.
+    pub version: u64,
+}
 
 #[uniffi::remote(Record)]
 pub struct MoveFunction {
@@ -948,5 +920,66 @@ pub struct MoveEnum {
     pub variants: Option<Vec<MoveEnumVariant>>,
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct ServiceConfig(pub iota_graphql_client::query_types::ServiceConfig);
+// Information about the configuration of the GraphQL service.
+#[uniffi::remote(Record)]
+pub struct ServiceConfig {
+    /// Default number of elements allowed on a single page of a connection.
+    pub default_page_size: i32,
+    /// List of all features that are enabled on this RPC service.
+    pub enabled_features: Vec<Feature>,
+    // TODO This field is retrieved as a string, instead of i32
+    /// Maximum estimated cost of a database query used to serve a GraphQL
+    /// request.  This is measured in the same units that the database uses
+    /// in EXPLAIN queries.
+    // pub max_db_query_cost: i32,
+    /// Maximum nesting allowed in struct fields when calculating the layout of
+    /// a single Move Type.
+    pub max_move_value_depth: i32,
+    /// The maximum number of output nodes in a GraphQL response.
+    /// Non-connection nodes have a count of 1, while connection nodes are
+    /// counted as the specified 'first' or 'last' number of items, or the
+    /// default_page_size as set by the server if those arguments are not
+    /// set. Counts accumulate multiplicatively down the query tree. For
+    /// example, if a query starts with a connection of first: 10 and has a
+    /// field to a connection with last: 20, the count at the second level
+    /// would be 200 nodes. This is then summed to the count of 10 nodes
+    /// at the first level, for a total of 210 nodes.
+    pub max_output_nodes: i32,
+    /// Maximum number of elements allowed on a single page of a connection.
+    pub max_page_size: i32,
+    /// The maximum depth a GraphQL query can be to be accepted by this service.
+    pub max_query_depth: i32,
+    /// The maximum number of nodes (field names) the service will accept in a
+    /// single query.
+    pub max_query_nodes: i32,
+    /// Maximum length of a query payload string.
+    pub max_query_payload_size: i32,
+    /// Maximum nesting allowed in type arguments in Move Types resolved by this
+    /// service.
+    pub max_type_argument_depth: i32,
+    /// Maximum number of type arguments passed into a generic instantiation of
+    /// a Move Type resolved by this service.
+    pub max_type_argument_width: i32,
+    /// Maximum number of structs that need to be processed when calculating the
+    /// layout of a single Move Type.
+    pub max_type_nodes: i32,
+    /// Maximum time in milliseconds spent waiting for a response from fullnode
+    /// after issuing a a transaction to execute. Note that the transaction
+    /// may still succeed even in the case of a timeout. Transactions are
+    /// idempotent, so a transaction that times out should be resubmitted
+    /// until the network returns a definite response (success or failure, not
+    /// timeout).
+    pub mutation_timeout_ms: i32,
+    /// Maximum time in milliseconds that will be spent to serve one query
+    /// request.
+    pub request_timeout_ms: i32,
+}
+
+#[uniffi::remote(Enum)]
+pub enum Feature {
+    Analytics,
+    Coins,
+    DynamicFields,
+    Subscriptions,
+    SystemState,
+}

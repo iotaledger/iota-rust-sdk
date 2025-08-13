@@ -523,7 +523,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 8422:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 34454:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 48442:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -577,7 +577,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 24210:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 31958:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1561,16 +1561,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_coin_id.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_coin_id.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_coinmetadata.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_coinmetadata.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_coinmetadata.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_coinmetadata.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_consensuscommitdigest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2849,16 +2839,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_serviceconfig.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_serviceconfig.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_serviceconfig.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_serviceconfig.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_simplesignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5108,39 +5088,6 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
 
 
 
-
-
-
-
-class BigInt:
-    value: "str"
-    def __init__(self, *, value: "str"):
-        self.value = value
-
-    def __str__(self):
-        return "BigInt(value={})".format(self.value)
-
-    def __eq__(self, other):
-        if self.value != other.value:
-            return False
-        return True
-
-class _UniffiConverterTypeBigInt(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return BigInt(
-            value=_UniffiConverterString.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterString.check_lower(value.value)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterString.write(value.value, buf)
-
-
 class ChangedObject:
     """
     Input/output state of an object that was changed during execution
@@ -5455,6 +5402,127 @@ class _UniffiConverterTypeCheckpointSummaryPage(_UniffiConverterRustBuffer):
         _UniffiConverterSequenceTypeCheckpointSummary.write(value.data, buf)
 
 
+class CoinMetadata:
+    """
+    The coin metadata associated with the given coin type.
+    """
+
+    decimals: "typing.Optional[int]"
+    """
+    The number of decimal places used to represent the token.
+    """
+
+    description: "typing.Optional[str]"
+    """
+    Optional description of the token, provided by the creator of the token.
+    """
+
+    icon_url: "typing.Optional[str]"
+    """
+    Icon URL of the coin.
+    """
+
+    name: "typing.Optional[str]"
+    """
+    Full, official name of the token.
+    """
+
+    symbol: "typing.Optional[str]"
+    """
+    The token's identifying abbreviation.
+    """
+
+    supply: "typing.Optional[BigInt]"
+    """
+    The overall quantity of tokens that will be issued.
+    """
+
+    version: "int"
+    """
+    Version of the token.
+    """
+
+    def __init__(self, *, decimals: "typing.Optional[int]" = _DEFAULT, description: "typing.Optional[str]" = _DEFAULT, icon_url: "typing.Optional[str]" = _DEFAULT, name: "typing.Optional[str]" = _DEFAULT, symbol: "typing.Optional[str]" = _DEFAULT, supply: "typing.Optional[BigInt]" = _DEFAULT, version: "int"):
+        if decimals is _DEFAULT:
+            self.decimals = None
+        else:
+            self.decimals = decimals
+        if description is _DEFAULT:
+            self.description = None
+        else:
+            self.description = description
+        if icon_url is _DEFAULT:
+            self.icon_url = None
+        else:
+            self.icon_url = icon_url
+        if name is _DEFAULT:
+            self.name = None
+        else:
+            self.name = name
+        if symbol is _DEFAULT:
+            self.symbol = None
+        else:
+            self.symbol = symbol
+        if supply is _DEFAULT:
+            self.supply = None
+        else:
+            self.supply = supply
+        self.version = version
+
+    def __str__(self):
+        return "CoinMetadata(decimals={}, description={}, icon_url={}, name={}, symbol={}, supply={}, version={})".format(self.decimals, self.description, self.icon_url, self.name, self.symbol, self.supply, self.version)
+
+    def __eq__(self, other):
+        if self.decimals != other.decimals:
+            return False
+        if self.description != other.description:
+            return False
+        if self.icon_url != other.icon_url:
+            return False
+        if self.name != other.name:
+            return False
+        if self.symbol != other.symbol:
+            return False
+        if self.supply != other.supply:
+            return False
+        if self.version != other.version:
+            return False
+        return True
+
+class _UniffiConverterTypeCoinMetadata(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return CoinMetadata(
+            decimals=_UniffiConverterOptionalInt32.read(buf),
+            description=_UniffiConverterOptionalString.read(buf),
+            icon_url=_UniffiConverterOptionalString.read(buf),
+            name=_UniffiConverterOptionalString.read(buf),
+            symbol=_UniffiConverterOptionalString.read(buf),
+            supply=_UniffiConverterOptionalTypeBigInt.read(buf),
+            version=_UniffiConverterUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalInt32.check_lower(value.decimals)
+        _UniffiConverterOptionalString.check_lower(value.description)
+        _UniffiConverterOptionalString.check_lower(value.icon_url)
+        _UniffiConverterOptionalString.check_lower(value.name)
+        _UniffiConverterOptionalString.check_lower(value.symbol)
+        _UniffiConverterOptionalTypeBigInt.check_lower(value.supply)
+        _UniffiConverterUInt64.check_lower(value.version)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalInt32.write(value.decimals, buf)
+        _UniffiConverterOptionalString.write(value.description, buf)
+        _UniffiConverterOptionalString.write(value.icon_url, buf)
+        _UniffiConverterOptionalString.write(value.name, buf)
+        _UniffiConverterOptionalString.write(value.symbol, buf)
+        _UniffiConverterOptionalTypeBigInt.write(value.supply, buf)
+        _UniffiConverterUInt64.write(value.version, buf)
+
+
 class CoinPage:
     """
     A page of items returned by the GraphQL server.
@@ -5502,35 +5570,6 @@ class _UniffiConverterTypeCoinPage(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypePageInfo.write(value.page_info, buf)
         _UniffiConverterSequenceTypeCoin.write(value.data, buf)
-
-
-class DateTime:
-    value: "str"
-    def __init__(self, *, value: "str"):
-        self.value = value
-
-    def __str__(self):
-        return "DateTime(value={})".format(self.value)
-
-    def __eq__(self, other):
-        if self.value != other.value:
-            return False
-        return True
-
-class _UniffiConverterTypeDateTime(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return DateTime(
-            value=_UniffiConverterString.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterString.check_lower(value.value)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterString.write(value.value, buf)
 
 
 class DryRunResult:
@@ -6776,8 +6815,8 @@ class _UniffiConverterTypeMoveModuleQuery(_UniffiConverterRustBuffer):
 
 
 class MoveObject:
-    bcs: "typing.Optional[str]"
-    def __init__(self, *, bcs: "typing.Optional[str]" = _DEFAULT):
+    bcs: "typing.Optional[Base64]"
+    def __init__(self, *, bcs: "typing.Optional[Base64]" = _DEFAULT):
         if bcs is _DEFAULT:
             self.bcs = None
         else:
@@ -6795,16 +6834,16 @@ class _UniffiConverterTypeMoveObject(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return MoveObject(
-            bcs=_UniffiConverterOptionalString.read(buf),
+            bcs=_UniffiConverterOptionalTypeBase64.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterOptionalString.check_lower(value.bcs)
+        _UniffiConverterOptionalTypeBase64.check_lower(value.bcs)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterOptionalString.write(value.bcs, buf)
+        _UniffiConverterOptionalTypeBase64.write(value.bcs, buf)
 
 
 class MovePackagePage:
@@ -7396,7 +7435,15 @@ class PaginationFilter:
     """
 
     direction: "Direction"
+    """
+    The direction of pagination.
+    """
+
     cursor: "typing.Optional[str]"
+    """
+    An opaque cursor used for pagination.
+    """
+
     limit: "typing.Optional[int]"
     """
     The maximum number of items to return. If this is omitted, it will
@@ -7446,6 +7493,193 @@ class _UniffiConverterTypePaginationFilter(_UniffiConverterRustBuffer):
         _UniffiConverterTypeDirection.write(value.direction, buf)
         _UniffiConverterOptionalString.write(value.cursor, buf)
         _UniffiConverterOptionalInt32.write(value.limit, buf)
+
+
+class ServiceConfig:
+    default_page_size: "int"
+    """
+    Default number of elements allowed on a single page of a connection.
+    """
+
+    enabled_features: "typing.List[Feature]"
+    """
+    List of all features that are enabled on this RPC service.
+    """
+
+    max_move_value_depth: "int"
+    """
+    Maximum estimated cost of a database query used to serve a GraphQL
+    request.  This is measured in the same units that the database uses
+    in EXPLAIN queries.
+    Maximum nesting allowed in struct fields when calculating the layout of
+    a single Move Type.
+    """
+
+    max_output_nodes: "int"
+    """
+    The maximum number of output nodes in a GraphQL response.
+    Non-connection nodes have a count of 1, while connection nodes are
+    counted as the specified 'first' or 'last' number of items, or the
+    default_page_size as set by the server if those arguments are not
+    set. Counts accumulate multiplicatively down the query tree. For
+    example, if a query starts with a connection of first: 10 and has a
+    field to a connection with last: 20, the count at the second level
+    would be 200 nodes. This is then summed to the count of 10 nodes
+    at the first level, for a total of 210 nodes.
+    """
+
+    max_page_size: "int"
+    """
+    Maximum number of elements allowed on a single page of a connection.
+    """
+
+    max_query_depth: "int"
+    """
+    The maximum depth a GraphQL query can be to be accepted by this service.
+    """
+
+    max_query_nodes: "int"
+    """
+    The maximum number of nodes (field names) the service will accept in a
+    single query.
+    """
+
+    max_query_payload_size: "int"
+    """
+    Maximum length of a query payload string.
+    """
+
+    max_type_argument_depth: "int"
+    """
+    Maximum nesting allowed in type arguments in Move Types resolved by this
+    service.
+    """
+
+    max_type_argument_width: "int"
+    """
+    Maximum number of type arguments passed into a generic instantiation of
+    a Move Type resolved by this service.
+    """
+
+    max_type_nodes: "int"
+    """
+    Maximum number of structs that need to be processed when calculating the
+    layout of a single Move Type.
+    """
+
+    mutation_timeout_ms: "int"
+    """
+    Maximum time in milliseconds spent waiting for a response from fullnode
+    after issuing a a transaction to execute. Note that the transaction
+    may still succeed even in the case of a timeout. Transactions are
+    idempotent, so a transaction that times out should be resubmitted
+    until the network returns a definite response (success or failure, not
+    timeout).
+    """
+
+    request_timeout_ms: "int"
+    """
+    Maximum time in milliseconds that will be spent to serve one query
+    request.
+    """
+
+    def __init__(self, *, default_page_size: "int", enabled_features: "typing.List[Feature]", max_move_value_depth: "int", max_output_nodes: "int", max_page_size: "int", max_query_depth: "int", max_query_nodes: "int", max_query_payload_size: "int", max_type_argument_depth: "int", max_type_argument_width: "int", max_type_nodes: "int", mutation_timeout_ms: "int", request_timeout_ms: "int"):
+        self.default_page_size = default_page_size
+        self.enabled_features = enabled_features
+        self.max_move_value_depth = max_move_value_depth
+        self.max_output_nodes = max_output_nodes
+        self.max_page_size = max_page_size
+        self.max_query_depth = max_query_depth
+        self.max_query_nodes = max_query_nodes
+        self.max_query_payload_size = max_query_payload_size
+        self.max_type_argument_depth = max_type_argument_depth
+        self.max_type_argument_width = max_type_argument_width
+        self.max_type_nodes = max_type_nodes
+        self.mutation_timeout_ms = mutation_timeout_ms
+        self.request_timeout_ms = request_timeout_ms
+
+    def __str__(self):
+        return "ServiceConfig(default_page_size={}, enabled_features={}, max_move_value_depth={}, max_output_nodes={}, max_page_size={}, max_query_depth={}, max_query_nodes={}, max_query_payload_size={}, max_type_argument_depth={}, max_type_argument_width={}, max_type_nodes={}, mutation_timeout_ms={}, request_timeout_ms={})".format(self.default_page_size, self.enabled_features, self.max_move_value_depth, self.max_output_nodes, self.max_page_size, self.max_query_depth, self.max_query_nodes, self.max_query_payload_size, self.max_type_argument_depth, self.max_type_argument_width, self.max_type_nodes, self.mutation_timeout_ms, self.request_timeout_ms)
+
+    def __eq__(self, other):
+        if self.default_page_size != other.default_page_size:
+            return False
+        if self.enabled_features != other.enabled_features:
+            return False
+        if self.max_move_value_depth != other.max_move_value_depth:
+            return False
+        if self.max_output_nodes != other.max_output_nodes:
+            return False
+        if self.max_page_size != other.max_page_size:
+            return False
+        if self.max_query_depth != other.max_query_depth:
+            return False
+        if self.max_query_nodes != other.max_query_nodes:
+            return False
+        if self.max_query_payload_size != other.max_query_payload_size:
+            return False
+        if self.max_type_argument_depth != other.max_type_argument_depth:
+            return False
+        if self.max_type_argument_width != other.max_type_argument_width:
+            return False
+        if self.max_type_nodes != other.max_type_nodes:
+            return False
+        if self.mutation_timeout_ms != other.mutation_timeout_ms:
+            return False
+        if self.request_timeout_ms != other.request_timeout_ms:
+            return False
+        return True
+
+class _UniffiConverterTypeServiceConfig(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ServiceConfig(
+            default_page_size=_UniffiConverterInt32.read(buf),
+            enabled_features=_UniffiConverterSequenceTypeFeature.read(buf),
+            max_move_value_depth=_UniffiConverterInt32.read(buf),
+            max_output_nodes=_UniffiConverterInt32.read(buf),
+            max_page_size=_UniffiConverterInt32.read(buf),
+            max_query_depth=_UniffiConverterInt32.read(buf),
+            max_query_nodes=_UniffiConverterInt32.read(buf),
+            max_query_payload_size=_UniffiConverterInt32.read(buf),
+            max_type_argument_depth=_UniffiConverterInt32.read(buf),
+            max_type_argument_width=_UniffiConverterInt32.read(buf),
+            max_type_nodes=_UniffiConverterInt32.read(buf),
+            mutation_timeout_ms=_UniffiConverterInt32.read(buf),
+            request_timeout_ms=_UniffiConverterInt32.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterInt32.check_lower(value.default_page_size)
+        _UniffiConverterSequenceTypeFeature.check_lower(value.enabled_features)
+        _UniffiConverterInt32.check_lower(value.max_move_value_depth)
+        _UniffiConverterInt32.check_lower(value.max_output_nodes)
+        _UniffiConverterInt32.check_lower(value.max_page_size)
+        _UniffiConverterInt32.check_lower(value.max_query_depth)
+        _UniffiConverterInt32.check_lower(value.max_query_nodes)
+        _UniffiConverterInt32.check_lower(value.max_query_payload_size)
+        _UniffiConverterInt32.check_lower(value.max_type_argument_depth)
+        _UniffiConverterInt32.check_lower(value.max_type_argument_width)
+        _UniffiConverterInt32.check_lower(value.max_type_nodes)
+        _UniffiConverterInt32.check_lower(value.mutation_timeout_ms)
+        _UniffiConverterInt32.check_lower(value.request_timeout_ms)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterInt32.write(value.default_page_size, buf)
+        _UniffiConverterSequenceTypeFeature.write(value.enabled_features, buf)
+        _UniffiConverterInt32.write(value.max_move_value_depth, buf)
+        _UniffiConverterInt32.write(value.max_output_nodes, buf)
+        _UniffiConverterInt32.write(value.max_page_size, buf)
+        _UniffiConverterInt32.write(value.max_query_depth, buf)
+        _UniffiConverterInt32.write(value.max_query_nodes, buf)
+        _UniffiConverterInt32.write(value.max_query_payload_size, buf)
+        _UniffiConverterInt32.write(value.max_type_argument_depth, buf)
+        _UniffiConverterInt32.write(value.max_type_argument_width, buf)
+        _UniffiConverterInt32.write(value.max_type_nodes, buf)
+        _UniffiConverterInt32.write(value.mutation_timeout_ms, buf)
+        _UniffiConverterInt32.write(value.request_timeout_ms, buf)
 
 
 class SignedTransaction:
@@ -10753,6 +10987,68 @@ class _UniffiConverterTypeExecutionStatus(_UniffiConverterRustBuffer):
 
 
 
+class Feature(enum.Enum):
+    ANALYTICS = 0
+    
+    COINS = 1
+    
+    DYNAMIC_FIELDS = 2
+    
+    SUBSCRIPTIONS = 3
+    
+    SYSTEM_STATE = 4
+    
+
+
+class _UniffiConverterTypeFeature(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return Feature.ANALYTICS
+        if variant == 2:
+            return Feature.COINS
+        if variant == 3:
+            return Feature.DYNAMIC_FIELDS
+        if variant == 4:
+            return Feature.SUBSCRIPTIONS
+        if variant == 5:
+            return Feature.SYSTEM_STATE
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == Feature.ANALYTICS:
+            return
+        if value == Feature.COINS:
+            return
+        if value == Feature.DYNAMIC_FIELDS:
+            return
+        if value == Feature.SUBSCRIPTIONS:
+            return
+        if value == Feature.SYSTEM_STATE:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == Feature.ANALYTICS:
+            buf.write_i32(1)
+        if value == Feature.COINS:
+            buf.write_i32(2)
+        if value == Feature.DYNAMIC_FIELDS:
+            buf.write_i32(3)
+        if value == Feature.SUBSCRIPTIONS:
+            buf.write_i32(4)
+        if value == Feature.SYSTEM_STATE:
+            buf.write_i32(5)
+
+
+
+
+
+
+
 class IdOperation(enum.Enum):
     NONE = 0
     
@@ -12308,33 +12604,6 @@ class _UniffiConverterOptionalTypeCheckpointDigest(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterOptionalTypeCoinMetadata(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeCoinMetadata.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeCoinMetadata.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeCoinMetadata.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalTypeEd25519PublicKey(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -12951,6 +13220,33 @@ class _UniffiConverterOptionalTypeCheckpointSummary(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeCheckpointSummary.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeCoinMetadata(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeCoinMetadata.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeCoinMetadata.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeCoinMetadata.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -13734,6 +14030,33 @@ class _UniffiConverterOptionalTypeBase64(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeBase64.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeBigInt(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeBigInt.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeBigInt.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeBigInt.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -14641,6 +14964,31 @@ class _UniffiConverterSequenceTypeValidatorCommitteeMember(_UniffiConverterRustB
 
 
 
+class _UniffiConverterSequenceTypeFeature(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeFeature.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeFeature.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeFeature.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -14732,6 +15080,28 @@ class _UniffiConverterMapTypeObjectIdTypeUpgradeInfo(_UniffiConverterRustBuffer)
 
 
 class _UniffiConverterTypeBase64:
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value, buf)
+
+    @staticmethod
+    def read(buf):
+        return _UniffiConverterString.read(buf)
+
+    @staticmethod
+    def lift(value):
+        return _UniffiConverterString.lift(value)
+
+    @staticmethod
+    def check_lower(value):
+        return _UniffiConverterString.check_lower(value)
+
+    @staticmethod
+    def lower(value):
+        return _UniffiConverterString.lower(value)
+
+
+class _UniffiConverterTypeBigInt:
     @staticmethod
     def write(value, buf):
         _UniffiConverterString.write(value, buf)
@@ -16224,62 +16594,6 @@ class _UniffiConverterTypeCoin:
 
     @classmethod
     def write(cls, value: CoinProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class CoinMetadataProtocol(typing.Protocol):
-    pass
-# CoinMetadata is a Rust-only trait - it's a wrapper around a Rust implementation.
-class CoinMetadata():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_coinmetadata, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_coinmetadata, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeCoinMetadata:
-
-    @staticmethod
-    def lift(value: int):
-        return CoinMetadata._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: CoinMetadata):
-        if not isinstance(value, CoinMetadata):
-            raise TypeError("Expected CoinMetadata instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: CoinMetadataProtocol):
-        if not isinstance(value, CoinMetadata):
-            raise TypeError("Expected CoinMetadata instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: CoinMetadataProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ConsensusCommitDigestProtocol(typing.Protocol):
     def to_base58(self, ):
@@ -19004,9 +19318,9 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(
                 self._uniffi_clone_pointer(), 
             ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
             _UniffiConverterTypeServiceConfig.lift,
             
@@ -22247,62 +22561,6 @@ class _UniffiConverterTypeSecp256r1Signature:
     @classmethod
     def write(cls, value: Secp256r1SignatureProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
-class ServiceConfigProtocol(typing.Protocol):
-    pass
-# ServiceConfig is a Rust-only trait - it's a wrapper around a Rust implementation.
-class ServiceConfig():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_serviceconfig, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_serviceconfig, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeServiceConfig:
-
-    @staticmethod
-    def lift(value: int):
-        return ServiceConfig._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: ServiceConfig):
-        if not isinstance(value, ServiceConfig):
-            raise TypeError("Expected ServiceConfig instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: ServiceConfigProtocol):
-        if not isinstance(value, ServiceConfig):
-            raise TypeError("Expected ServiceConfig instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: ServiceConfigProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
 class SimpleSignatureProtocol(typing.Protocol):
     """
     A basic signature
@@ -24683,6 +24941,7 @@ class _UniffiConverterTypeZkLoginPublicIdentifier:
     def write(cls, value: ZkLoginPublicIdentifierProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 Base64 = str
+BigInt = str
 Value = str
 
 # Async support# RustFuturePoll values
@@ -24755,6 +25014,7 @@ __all__ = [
     "Direction",
     "ExecutionError",
     "ExecutionStatus",
+    "Feature",
     "IdOperation",
     "MoveAbility",
     "MoveVisibility",
@@ -24767,12 +25027,11 @@ __all__ = [
     "TransactionExpiration",
     "TypeArgumentError",
     "UnchangedSharedKind",
-    "BigInt",
     "ChangedObject",
     "CheckpointSummary",
     "CheckpointSummaryPage",
+    "CoinMetadata",
     "CoinPage",
-    "DateTime",
     "DryRunResult",
     "DynamicFieldName",
     "DynamicFieldOutput",
@@ -24811,6 +25070,7 @@ __all__ = [
     "OpenMoveType",
     "PageInfo",
     "PaginationFilter",
+    "ServiceConfig",
     "SignedTransaction",
     "SignedTransactionPage",
     "TransactionDataEffects",
@@ -24844,7 +25104,6 @@ __all__ = [
     "CircomG1",
     "CircomG2",
     "Coin",
-    "CoinMetadata",
     "ConsensusCommitDigest",
     "ConsensusCommitPrologueV1",
     "Digest",
@@ -24879,7 +25138,6 @@ __all__ = [
     "Secp256k1Signature",
     "Secp256r1PublicKey",
     "Secp256r1Signature",
-    "ServiceConfig",
     "SimpleSignature",
     "StructTag",
     "Transaction",
