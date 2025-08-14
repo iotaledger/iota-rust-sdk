@@ -7,7 +7,7 @@ use std::{
     sync::Arc,
 };
 
-use iota_types::Version;
+pub type Version = iota_types::Version;
 
 use crate::{
     error::Result,

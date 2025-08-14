@@ -7,9 +7,10 @@ use iota_types::{GasCostSummary, TransactionExpiration};
 
 use crate::types::{
     address::Address,
-    digest::{CheckpointDigest, TransactionDigest, TransactionEventsDigest},
+    checkpoint::CheckpointTimestamp,
+    digest::{CheckpointDigest, ConsensusCommitDigest, TransactionDigest, TransactionEventsDigest},
     execution_status::ExecutionStatus,
-    object::{ObjectId, ObjectReference},
+    object::{ObjectId, ObjectReference, Version},
     signature::UserSignature,
     struct_tag::Identifier,
     transaction::v1::TransactionEffectsV1,
@@ -609,8 +610,201 @@ impl Upgrade {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+/// V1 of the consensus commit prologue system transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 digest
+///                                consensus-determined-version-assignments
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 pub struct ConsensusCommitPrologueV1(pub iota_types::ConsensusCommitPrologueV1);
+
+#[uniffi::export]
+impl ConsensusCommitPrologueV1 {
+    #[uniffi::constructor]
+    pub fn new(
+        epoch: u64,
+        round: u64,
+        sub_dag_index: Option<u64>,
+        commit_timestamp_ms: CheckpointTimestamp,
+        consensus_commit_digest: &ConsensusCommitDigest,
+        consensus_determined_version_assignments: &ConsensusDeterminedVersionAssignments,
+    ) -> Self {
+        Self(iota_types::ConsensusCommitPrologueV1 {
+            epoch,
+            round,
+            sub_dag_index,
+            commit_timestamp_ms,
+            consensus_commit_digest: consensus_commit_digest.0,
+            consensus_determined_version_assignments: consensus_determined_version_assignments
+                .0
+                .clone(),
+        })
+    }
+
+    /// Epoch of the commit prologue transaction
+    pub fn epoch(&self) -> u64 {
+        self.0.epoch
+    }
+
+    /// Consensus round of the commit
+    pub fn round(&self) -> u64 {
+        self.0.round
+    }
+
+    /// The sub DAG index of the consensus commit. This field will be populated
+    /// if there are multiple consensus commits per round.
+    pub fn sub_dag_index(&self) -> Option<u64> {
+        self.0.sub_dag_index
+    }
+
+    /// Unix timestamp from consensus
+    pub fn commit_timestamp_ms(&self) -> CheckpointTimestamp {
+        self.0.commit_timestamp_ms
+    }
+
+    /// Digest of consensus output
+    pub fn consensus_commit_digest(&self) -> ConsensusCommitDigest {
+        self.0.consensus_commit_digest.into()
+    }
+
+    /// Stores consensus handler determined shared object version assignments.
+    pub fn consensus_determined_version_assignments(
+        &self,
+    ) -> ConsensusDeterminedVersionAssignments {
+        self.0
+            .consensus_determined_version_assignments
+            .clone()
+            .into()
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct ConsensusDeterminedVersionAssignments(
+    pub iota_types::ConsensusDeterminedVersionAssignments,
+);
+
+#[uniffi::export]
+impl ConsensusDeterminedVersionAssignments {
+    #[uniffi::constructor]
+    pub fn new_cancelled_transactions(
+        cancelled_transactions: Vec<Arc<CancelledTransaction>>,
+    ) -> Self {
+        Self(
+            iota_types::ConsensusDeterminedVersionAssignments::CancelledTransactions {
+                cancelled_transactions: cancelled_transactions
+                    .into_iter()
+                    .map(|v| v.0.clone())
+                    .collect(),
+            },
+        )
+    }
+
+    pub fn is_cancelled_transactions(&self) -> bool {
+        matches!(
+            self.0,
+            iota_types::ConsensusDeterminedVersionAssignments::CancelledTransactions { .. }
+        )
+    }
+
+    pub fn as_cancelled_transactions_opt(&self) -> Option<Vec<Arc<CancelledTransaction>>> {
+        let iota_types::ConsensusDeterminedVersionAssignments::CancelledTransactions {
+            cancelled_transactions,
+        } = &self.0;
+
+        Some(
+            cancelled_transactions
+                .iter()
+                .cloned()
+                .map(Into::into)
+                .map(Arc::new)
+                .collect(),
+        )
+    }
+
+    pub fn as_cancelled_transactions(&self) -> Vec<Arc<CancelledTransaction>> {
+        self.as_cancelled_transactions_opt()
+            .expect("not a CancelledTransactions")
+    }
+}
+
+/// A transaction that was cancelled
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// cancelled-transaction = digest (vector version-assignment)
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct CancelledTransaction(pub iota_types::CancelledTransaction);
+
+#[uniffi::export]
+impl CancelledTransaction {
+    #[uniffi::constructor]
+    pub fn new(
+        digest: &TransactionDigest,
+        version_assignments: Vec<Arc<VersionAssignment>>,
+    ) -> Self {
+        Self(iota_types::CancelledTransaction {
+            digest: digest.0,
+            version_assignments: version_assignments
+                .into_iter()
+                .map(|v| v.0.clone())
+                .collect(),
+        })
+    }
+
+    pub fn digest(&self) -> TransactionDigest {
+        self.0.digest.into()
+    }
+
+    pub fn version_assignments(&self) -> Vec<Arc<VersionAssignment>> {
+        self.0
+            .version_assignments
+            .clone()
+            .into_iter()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+}
+
+/// Object version assignment from consensus
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// version-assignment = object-id u64
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct VersionAssignment(iota_types::VersionAssignment);
+
+#[uniffi::export]
+impl VersionAssignment {
+    #[uniffi::constructor]
+    pub fn new(object_id: &ObjectId, version: u64) -> Self {
+        Self(iota_types::VersionAssignment {
+            object_id: object_id.0,
+            version,
+        })
+    }
+
+    pub fn object_id(&self) -> ObjectId {
+        self.0.object_id.into()
+    }
+
+    pub fn version(&self) -> Version {
+        self.0.version
+    }
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct GenesisTransaction(pub iota_types::GenesisTransaction);
