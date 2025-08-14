@@ -77,7 +77,7 @@ pub struct TransactionDataEffects {
 
 /// The name part of a dynamic field, including its type, bcs, and json
 /// representation.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct DynamicFieldName {
     /// The type name of this dynamic field name
     pub type_: TypeTag,
