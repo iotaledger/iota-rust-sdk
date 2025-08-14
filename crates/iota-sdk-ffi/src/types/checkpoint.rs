@@ -10,6 +10,12 @@ use crate::types::{
     digest::{CheckpointContentsDigest, CheckpointDigest, Digest},
 };
 
+pub type CheckpointSequenceNumber = u64;
+pub type CheckpointTimestamp = u64;
+pub type EpochId = u64;
+pub type StakeUnit = u64;
+pub type ProtocolVersion = u64;
+
 /// A header for a Checkpoint on the IOTA blockchain.
 ///
 /// On the IOTA network, checkpoints define the history of the blockchain. They

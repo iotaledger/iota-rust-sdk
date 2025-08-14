@@ -47,7 +47,7 @@ func main() {
 	if !isNilError(err) {
 		log.Fatalf("Failed to get balance: %v", err)
 	}
-	fmt.Printf("Total Balance = %d\n", balance)
+	fmt.Printf("Total Balance = %d\n", *balance)
 
 	atCheckpoint := uint64(3)
 	inputObject, err := sdk.ObjectIdFromHex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")
