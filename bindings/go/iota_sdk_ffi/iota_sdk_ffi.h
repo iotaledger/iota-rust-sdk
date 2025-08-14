@@ -1173,6 +1173,46 @@ void* uniffi_iota_sdk_ffi_fn_clone_faucetreceipt(void* ptr, RustCallStatus *out_
 void uniffi_iota_sdk_ffi_fn_free_faucetreceipt(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_GENESISOBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_GENESISOBJECT
+void* uniffi_iota_sdk_ffi_fn_clone_genesisobject(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_GENESISOBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_GENESISOBJECT
+void uniffi_iota_sdk_ffi_fn_free_genesisobject(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_GENESISOBJECT_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_GENESISOBJECT_NEW
+void* uniffi_iota_sdk_ffi_fn_constructor_genesisobject_new(void* data, void* owner, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISOBJECT_DATA
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISOBJECT_DATA
+void* uniffi_iota_sdk_ffi_fn_method_genesisobject_data(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISOBJECT_OBJECT_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISOBJECT_OBJECT_ID
+void* uniffi_iota_sdk_ffi_fn_method_genesisobject_object_id(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISOBJECT_OBJECT_TYPE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISOBJECT_OBJECT_TYPE
+void* uniffi_iota_sdk_ffi_fn_method_genesisobject_object_type(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISOBJECT_OWNER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISOBJECT_OWNER
+void* uniffi_iota_sdk_ffi_fn_method_genesisobject_owner(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISOBJECT_VERSION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISOBJECT_VERSION
+uint64_t uniffi_iota_sdk_ffi_fn_method_genesisobject_version(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_GENESISTRANSACTION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_GENESISTRANSACTION
 void* uniffi_iota_sdk_ffi_fn_clone_genesistransaction(void* ptr, RustCallStatus *out_status
@@ -1181,6 +1221,21 @@ void* uniffi_iota_sdk_ffi_fn_clone_genesistransaction(void* ptr, RustCallStatus 
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_GENESISTRANSACTION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_GENESISTRANSACTION
 void uniffi_iota_sdk_ffi_fn_free_genesistransaction(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_GENESISTRANSACTION_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_GENESISTRANSACTION_NEW
+void* uniffi_iota_sdk_ffi_fn_constructor_genesistransaction_new(RustBuffer objects, RustBuffer events, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISTRANSACTION_EVENTS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISTRANSACTION_EVENTS
+RustBuffer uniffi_iota_sdk_ffi_fn_method_genesistransaction_events(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISTRANSACTION_OBJECTS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GENESISTRANSACTION_OBJECTS
+RustBuffer uniffi_iota_sdk_ffi_fn_method_genesistransaction_objects(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_GRAPHQLCLIENT
@@ -3641,6 +3696,48 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISOBJECT_DATA
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISOBJECT_DATA
+uint16_t uniffi_iota_sdk_ffi_checksum_method_genesisobject_data(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISOBJECT_OBJECT_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISOBJECT_OBJECT_ID
+uint16_t uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_id(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISOBJECT_OBJECT_TYPE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISOBJECT_OBJECT_TYPE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_type(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISOBJECT_OWNER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISOBJECT_OWNER
+uint16_t uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISOBJECT_VERSION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISOBJECT_VERSION
+uint16_t uniffi_iota_sdk_ffi_checksum_method_genesisobject_version(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISTRANSACTION_EVENTS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISTRANSACTION_EVENTS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISTRANSACTION_OBJECTS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GENESISTRANSACTION_OBJECTS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_genesistransaction_objects(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_ACTIVE_VALIDATORS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_ACTIVE_VALIDATORS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators(void
@@ -5246,6 +5343,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_FAUCETCLIENT_TESTNET
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_FAUCETCLIENT_TESTNET
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_testnet(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_GENESISOBJECT_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_GENESISOBJECT_NEW
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_genesisobject_new(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_GENESISTRANSACTION_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_GENESISTRANSACTION_NEW
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_genesistransaction_new(void
     
 );
 #endif

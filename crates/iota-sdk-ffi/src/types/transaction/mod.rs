@@ -9,8 +9,9 @@ use crate::types::{
     address::Address,
     checkpoint::CheckpointTimestamp,
     digest::{CheckpointDigest, ConsensusCommitDigest, TransactionDigest, TransactionEventsDigest},
+    events::Event,
     execution_status::ExecutionStatus,
-    object::{ObjectId, ObjectReference, Version},
+    object::{GenesisObject, ObjectId, ObjectReference, Version},
     signature::UserSignature,
     struct_tag::Identifier,
     transaction::v1::TransactionEffectsV1,
@@ -806,8 +807,41 @@ impl VersionAssignment {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct GenesisTransaction(pub iota_types::GenesisTransaction);
+/// The genesis transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// genesis-transaction = (vector genesis-object)
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct GenesisTransaction(iota_types::GenesisTransaction);
+
+#[uniffi::export]
+impl GenesisTransaction {
+    #[uniffi::constructor]
+    pub fn new(objects: Vec<Arc<GenesisObject>>, events: Vec<Event>) -> Self {
+        Self(iota_types::GenesisTransaction {
+            objects: objects.iter().map(|object| object.0.clone()).collect(),
+            events: events.iter().cloned().map(Into::into).collect(),
+        })
+    }
+
+    pub fn objects(&self) -> Vec<Arc<GenesisObject>> {
+        self.0
+            .objects
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+    pub fn events(&self) -> Vec<Event> {
+        self.0.events.iter().cloned().map(Into::into).collect()
+    }
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ChangeEpoch(pub iota_types::ChangeEpoch);

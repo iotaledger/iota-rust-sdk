@@ -6,6 +6,7 @@ pub mod checkpoint;
 pub mod coin;
 pub mod crypto;
 pub mod digest;
+pub mod events;
 pub mod execution_status;
 pub mod gas;
 pub mod graphql;
