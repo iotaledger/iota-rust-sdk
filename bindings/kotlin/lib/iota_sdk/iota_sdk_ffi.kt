@@ -1723,6 +1723,52 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -1738,11 +1784,29 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 // when the library is loaded.
 internal interface IntegrityCheckingUniffiLib : Library {
     // Integrity check functions only
-    fun uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
+    fun uniffi_iota_sdk_ffi_checksum_method_activejwk_epoch(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_argument_nested(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_authenticator_obj_initial_shared_version(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_min_epoch(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_epoch(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_new_active_jwks(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_round(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes(
 ): Short
@@ -1951,6 +2015,18 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects(
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_identifier_as_str(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_jwk_alg(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_jwk_e(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_jwk_kty(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_jwk_n(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_jwkid_iss(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_jwkid_kid(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements(
 ): Short
@@ -2288,6 +2364,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_activejwk_new(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex(
@@ -2301,6 +2379,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_argument_new_input(
 fun uniffi_iota_sdk_ffi_checksum_constructor_argument_new_nested_result(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateexpire_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateupdatev1_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes(
 ): Short
@@ -2431,6 +2513,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_pure(
 fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_jwk_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_jwkid_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new(
 ): Short
@@ -2637,7 +2723,19 @@ internal interface UniffiLib : Library {
     }
 
     // FFI functions
-    fun uniffi_iota_sdk_ffi_fn_clone_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    fun uniffi_iota_sdk_ffi_fn_clone_activejwk(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_activejwk(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_activejwk_new(`jwkId`: Pointer,`jwk`: Pointer,`epoch`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_activejwk_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_activejwk_jwk(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_activejwk_jwk_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_clone_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
@@ -2669,10 +2767,26 @@ fun uniffi_iota_sdk_ffi_fn_clone_authenticatorstateexpire(`ptr`: Pointer,uniffi_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_authenticatorstateexpire(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateexpire_new(`minEpoch`: Long,`authenticatorObjInitialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_authenticator_obj_initial_shared_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_min_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_authenticatorstateupdatev1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_authenticatorstateupdatev1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateupdatev1_new(`epoch`: Long,`round`: Long,`newActiveJwks`: RustBuffer.ByValue,`authenticatorObjInitialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_new_active_jwks(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_round(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_batchsendstatus(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_batchsendstatus(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3135,6 +3249,30 @@ fun uniffi_iota_sdk_ffi_fn_constructor_input_new_receiving(`objectRef`: RustBuff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(`objectId`: Pointer,`initialSharedVersion`: Long,`mutable`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_clone_jwk(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_jwk(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_jwk_new(`kty`: RustBuffer.ByValue,`e`: RustBuffer.ByValue,`n`: RustBuffer.ByValue,`alg`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_jwk_alg(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_jwk_e(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_jwk_kty(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_jwk_n(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_clone_jwkid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_jwkid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_jwkid_new(`iss`: RustBuffer.ByValue,`kid`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_jwkid_iss(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_jwkid_kid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_makemovevector(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_makemovevector(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3921,6 +4059,15 @@ private fun uniffiCheckContractApiVersion(lib: IntegrityCheckingUniffiLib) {
 }
 @Suppress("UNUSED_PARAMETER")
 private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_activejwk_epoch() != 7817.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk() != 50919.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk_id() != 12234.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -3928,6 +4075,24 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_argument_nested() != 44576.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_authenticator_obj_initial_shared_version() != 52191.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_min_epoch() != 51226.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version() != 48312.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_epoch() != 24448.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_new_active_jwks() != 64383.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_round() != 9474.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() != 9890.toShort()) {
@@ -4240,6 +4405,24 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_jwk_alg() != 6678.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_jwk_e() != 12949.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_jwk_kty() != 36134.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_jwk_n() != 36069.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_jwkid_iss() != 38189.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_jwkid_kid() != 8708.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements() != 20773.toShort()) {
@@ -4746,6 +4929,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss() != 58864.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_activejwk_new() != 58763.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -4765,6 +4951,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result() != 44025.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateexpire_new() != 20741.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateupdatev1_new() != 23114.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes() != 6069.toShort()) {
@@ -4960,6 +5152,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_jwk_new() != 2136.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_jwkid_new() != 5425.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new() != 20934.toShort()) {
@@ -5613,6 +5811,317 @@ public object FfiConverterByteArray: FfiConverterRustBuffer<ByteArray> {
     override fun write(value: ByteArray, buf: ByteBuffer) {
         buf.putInt(value.size)
         buf.put(value)
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * A new Jwk
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * active-jwk = jwk-id jwk u64
+ * ```
+ */
+public interface ActiveJwkInterface {
+    
+    /**
+     * Most recent epoch in which the jwk was validated
+     */
+    fun `epoch`(): kotlin.ULong
+    
+    /**
+     * The Jwk
+     */
+    fun `jwk`(): Jwk
+    
+    /**
+     * Identifier used to uniquely identify a Jwk
+     */
+    fun `jwkId`(): JwkId
+    
+    companion object
+}
+
+/**
+ * A new Jwk
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * active-jwk = jwk-id jwk u64
+ * ```
+ */
+open class ActiveJwk: Disposable, AutoCloseable, ActiveJwkInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`jwkId`: JwkId, `jwk`: Jwk, `epoch`: kotlin.ULong) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_activejwk_new(
+        FfiConverterTypeJwkId.lower(`jwkId`),FfiConverterTypeJwk.lower(`jwk`),FfiConverterULong.lower(`epoch`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_activejwk(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_activejwk(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * Most recent epoch in which the jwk was validated
+     */override fun `epoch`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_activejwk_epoch(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The Jwk
+     */override fun `jwk`(): Jwk {
+            return FfiConverterTypeJwk.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_activejwk_jwk(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Identifier used to uniquely identify a Jwk
+     */override fun `jwkId`(): JwkId {
+            return FfiConverterTypeJwkId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_activejwk_jwk_id(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeActiveJwk: FfiConverter<ActiveJwk, Pointer> {
+
+    override fun lower(value: ActiveJwk): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): ActiveJwk {
+        return ActiveJwk(value)
+    }
+
+    override fun read(buf: ByteBuffer): ActiveJwk {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: ActiveJwk) = 8UL
+
+    override fun write(value: ActiveJwk, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
     }
 }
 
@@ -6447,11 +6956,43 @@ public object FfiConverterTypeArgument: FfiConverter<Argument, Pointer> {
 //
 
 
+/**
+ * Expire old JWKs
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * authenticator-state-expire = u64 u64
+ * ```
+ */
 public interface AuthenticatorStateExpireInterface {
+    
+    /**
+     * The initial version of the authenticator object that it was shared at.
+     */
+    fun `authenticatorObjInitialSharedVersion`(): kotlin.ULong
+    
+    /**
+     * Expire JWKs that have a lower epoch than this
+     */
+    fun `minEpoch`(): kotlin.ULong
     
     companion object
 }
 
+/**
+ * Expire old JWKs
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * authenticator-state-expire = u64 u64
+ * ```
+ */
 open class AuthenticatorStateExpire: Disposable, AutoCloseable, AuthenticatorStateExpireInterface
 {
 
@@ -6470,6 +7011,13 @@ open class AuthenticatorStateExpire: Disposable, AutoCloseable, AuthenticatorSta
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
+    constructor(`minEpoch`: kotlin.ULong, `authenticatorObjInitialSharedVersion`: kotlin.ULong) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateexpire_new(
+        FfiConverterULong.lower(`minEpoch`),FfiConverterULong.lower(`authenticatorObjInitialSharedVersion`),_status)
+}
+    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -6533,6 +7081,36 @@ open class AuthenticatorStateExpire: Disposable, AutoCloseable, AuthenticatorSta
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateexpire(pointer!!, status)
         }
     }
+
+    
+    /**
+     * The initial version of the authenticator object that it was shared at.
+     */override fun `authenticatorObjInitialSharedVersion`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_authenticator_obj_initial_shared_version(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Expire JWKs that have a lower epoch than this
+     */override fun `minEpoch`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_min_epoch(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     
 
@@ -6669,11 +7247,59 @@ public object FfiConverterTypeAuthenticatorStateExpire: FfiConverter<Authenticat
 //
 
 
+/**
+ * Update the set of valid JWKs
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * authenticator-state-update = u64 ; epoch
+ * u64 ; round
+ * (vector active-jwk)
+ * u64 ; initial version of the authenticator object
+ * ```
+ */
 public interface AuthenticatorStateUpdateV1Interface {
+    
+    /**
+     * The initial version of the authenticator object that it was shared at.
+     */
+    fun `authenticatorObjInitialSharedVersion`(): kotlin.ULong
+    
+    /**
+     * Epoch of the authenticator state update transaction
+     */
+    fun `epoch`(): kotlin.ULong
+    
+    /**
+     * newly active jwks
+     */
+    fun `newActiveJwks`(): List<ActiveJwk>
+    
+    /**
+     * Consensus round of the authenticator state update
+     */
+    fun `round`(): kotlin.ULong
     
     companion object
 }
 
+/**
+ * Update the set of valid JWKs
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * authenticator-state-update = u64 ; epoch
+ * u64 ; round
+ * (vector active-jwk)
+ * u64 ; initial version of the authenticator object
+ * ```
+ */
 open class AuthenticatorStateUpdateV1: Disposable, AutoCloseable, AuthenticatorStateUpdateV1Interface
 {
 
@@ -6692,6 +7318,13 @@ open class AuthenticatorStateUpdateV1: Disposable, AutoCloseable, AuthenticatorS
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
+    constructor(`epoch`: kotlin.ULong, `round`: kotlin.ULong, `newActiveJwks`: List<ActiveJwk>, `authenticatorObjInitialSharedVersion`: kotlin.ULong) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateupdatev1_new(
+        FfiConverterULong.lower(`epoch`),FfiConverterULong.lower(`round`),FfiConverterSequenceTypeActiveJwk.lower(`newActiveJwks`),FfiConverterULong.lower(`authenticatorObjInitialSharedVersion`),_status)
+}
+    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -6755,6 +7388,66 @@ open class AuthenticatorStateUpdateV1: Disposable, AutoCloseable, AuthenticatorS
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateupdatev1(pointer!!, status)
         }
     }
+
+    
+    /**
+     * The initial version of the authenticator object that it was shared at.
+     */override fun `authenticatorObjInitialSharedVersion`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Epoch of the authenticator state update transaction
+     */override fun `epoch`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_epoch(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * newly active jwks
+     */override fun `newActiveJwks`(): List<ActiveJwk> {
+            return FfiConverterSequenceTypeActiveJwk.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_new_active_jwks(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Consensus round of the authenticator state update
+     */override fun `round`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_round(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     
 
@@ -17529,6 +18222,636 @@ public object FfiConverterTypeInput: FfiConverter<Input, Pointer> {
     override fun allocationSize(value: Input) = 8UL
 
     override fun write(value: Input, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * A JSON Web Key
+ *
+ * Struct that contains info for a JWK. A list of them for different kids can
+ * be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
+ * The JWK is used to verify the JWT token.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * jwk = string string string string
+ * ```
+ */
+public interface JwkInterface {
+    
+    /**
+     * Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
+     */
+    fun `alg`(): kotlin.String
+    
+    /**
+     * RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+     */
+    fun `e`(): kotlin.String
+    
+    /**
+     * Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
+     */
+    fun `kty`(): kotlin.String
+    
+    /**
+     * RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+     */
+    fun `n`(): kotlin.String
+    
+    companion object
+}
+
+/**
+ * A JSON Web Key
+ *
+ * Struct that contains info for a JWK. A list of them for different kids can
+ * be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
+ * The JWK is used to verify the JWT token.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * jwk = string string string string
+ * ```
+ */
+open class Jwk: Disposable, AutoCloseable, JwkInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`kty`: kotlin.String, `e`: kotlin.String, `n`: kotlin.String, `alg`: kotlin.String) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_jwk_new(
+        FfiConverterString.lower(`kty`),FfiConverterString.lower(`e`),FfiConverterString.lower(`n`),FfiConverterString.lower(`alg`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_jwk(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_jwk(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
+     */override fun `alg`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_jwk_alg(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+     */override fun `e`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_jwk_e(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
+     */override fun `kty`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_jwk_kty(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+     */override fun `n`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_jwk_n(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeJwk: FfiConverter<Jwk, Pointer> {
+
+    override fun lower(value: Jwk): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): Jwk {
+        return Jwk(value)
+    }
+
+    override fun read(buf: ByteBuffer): Jwk {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: Jwk) = 8UL
+
+    override fun write(value: Jwk, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * Key to uniquely identify a JWK
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * jwk-id = string string
+ * ```
+ */
+public interface JwkIdInterface {
+    
+    /**
+     * The issuer or identity of the OIDC provider.
+     */
+    fun `iss`(): kotlin.String
+    
+    /**
+     * A key id use to uniquely identify a key from an OIDC provider.
+     */
+    fun `kid`(): kotlin.String
+    
+    companion object
+}
+
+/**
+ * Key to uniquely identify a JWK
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * jwk-id = string string
+ * ```
+ */
+open class JwkId: Disposable, AutoCloseable, JwkIdInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`iss`: kotlin.String, `kid`: kotlin.String) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_jwkid_new(
+        FfiConverterString.lower(`iss`),FfiConverterString.lower(`kid`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_jwkid(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_jwkid(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * The issuer or identity of the OIDC provider.
+     */override fun `iss`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_jwkid_iss(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * A key id use to uniquely identify a key from an OIDC provider.
+     */override fun `kid`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_jwkid_kid(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeJwkId: FfiConverter<JwkId, Pointer> {
+
+    override fun lower(value: JwkId): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): JwkId {
+        return JwkId(value)
+    }
+
+    override fun read(buf: ByteBuffer): JwkId {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: JwkId) = 8UL
+
+    override fun write(value: JwkId, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -39819,6 +41142,34 @@ public object FfiConverterSequenceByteArray: FfiConverterRustBuffer<List<kotlin.
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterByteArray.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeActiveJwk: FfiConverterRustBuffer<List<ActiveJwk>> {
+    override fun read(buf: ByteBuffer): List<ActiveJwk> {
+        val len = buf.getInt()
+        return List<ActiveJwk>(len) {
+            FfiConverterTypeActiveJwk.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<ActiveJwk>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeActiveJwk.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<ActiveJwk>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeActiveJwk.write(it, buf)
         }
     }
 }

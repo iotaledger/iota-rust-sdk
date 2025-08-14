@@ -461,11 +461,29 @@ def _uniffi_check_contract_api_version(lib):
         raise InternalError("UniFFI contract version mismatch: try cleaning and rebuilding your project")
 
 def _uniffi_check_api_checksums(lib):
+    if lib.uniffi_iota_sdk_ffi_checksum_method_activejwk_epoch() != 7817:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk() != 50919:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk_id() != 12234:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_argument_nested() != 44576:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_authenticator_obj_initial_shared_version() != 52191:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_min_epoch() != 51226:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version() != 48312:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_epoch() != 24448:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_new_active_jwks() != 64383:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_round() != 9474:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() != 9890:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -674,6 +692,18 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 2687:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_jwk_alg() != 6678:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_jwk_e() != 12949:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_jwk_kty() != 36134:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_jwk_n() != 36069:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_jwkid_iss() != 38189:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_jwkid_kid() != 8708:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements() != 20773:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1011,6 +1041,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss() != 58864:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_activejwk_new() != 58763:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 63442:
@@ -1024,6 +1056,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_argument_new_nested_result() != 57666:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result() != 44025:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateexpire_new() != 20741:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateupdatev1_new() != 23114:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes() != 6069:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1154,6 +1190,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving() != 28060:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_jwk_new() != 2136:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_jwkid_new() != 5425:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new() != 20934:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1417,6 +1457,38 @@ class _UniffiForeignFutureStructVoid(ctypes.Structure):
     ]
 _UNIFFI_FOREIGN_FUTURE_COMPLETE_VOID = ctypes.CFUNCTYPE(None,ctypes.c_uint64,_UniffiForeignFutureStructVoid,
 )
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_activejwk.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_activejwk.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_activejwk.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_activejwk.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_activejwk_new.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_activejwk_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_activejwk_epoch.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_activejwk_epoch.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_activejwk_jwk.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_activejwk_jwk.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_activejwk_jwk_id.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_activejwk_jwk_id.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_address.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -1497,6 +1569,22 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_authenticatorstateexpire.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_authenticatorstateexpire.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateexpire_new.argtypes = (
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateexpire_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_authenticator_obj_initial_shared_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_authenticator_obj_initial_shared_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_min_epoch.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_min_epoch.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateupdatev1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -1507,6 +1595,34 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_authenticatorstateupdatev1.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_authenticatorstateupdatev1.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateupdatev1_new.argtypes = (
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateupdatev1_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_epoch.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_epoch.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_new_active_jwks.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_new_active_jwks.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_round.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_round.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_batchsendstatus.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2709,6 +2825,70 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_jwk.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_jwk.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_jwk.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_jwk.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_jwk_new.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_jwk_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_alg.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_alg.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_e.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_e.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_kty.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_kty.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_n.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_n.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_jwkid.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_jwkid.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_jwkid.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_jwkid.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_jwkid_new.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_jwkid_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwkid_iss.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwkid_iss.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwkid_kid.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwkid_kid.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_makemovevector.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4647,6 +4827,15 @@ _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_void.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_void.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_activejwk_epoch.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_activejwk_epoch.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk_id.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk_id.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.restype = ctypes.c_uint16
@@ -4656,6 +4845,24 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.restype = ctypes.c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_nested.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_nested.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_authenticator_obj_initial_shared_version.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_authenticator_obj_initial_shared_version.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_min_epoch.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_min_epoch.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_epoch.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_epoch.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_new_active_jwks.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_new_active_jwks.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_round.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_round.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes.restype = ctypes.c_uint16
@@ -4968,6 +5175,24 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effect
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwk_alg.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwk_alg.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwk_e.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwk_e.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwk_kty.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwk_kty.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwk_n.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwk_n.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwkid_iss.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwkid_iss.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwkid_kid.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_jwkid_kid.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements.restype = ctypes.c_uint16
@@ -5472,6 +5697,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_s
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_activejwk_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_activejwk_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes.restype = ctypes.c_uint16
@@ -5493,6 +5721,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_argument_new_nested_result.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateexpire_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateexpire_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateupdatev1_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateupdatev1_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes.restype = ctypes.c_uint16
@@ -5688,6 +5922,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_jwk_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_jwk_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_jwkid_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_jwkid_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new.restype = ctypes.c_uint16
@@ -6082,6 +6322,12 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
     def write(value, buf):
         buf.write_i32(len(value))
         buf.write(value)
+
+
+
+
+
+
 
 
 
@@ -15494,6 +15740,31 @@ class _UniffiConverterSequenceBytes(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeActiveJwk(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeActiveJwk.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeActiveJwk.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeActiveJwk.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeArgument(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -16750,6 +17021,150 @@ class _UniffiConverterTypeValue:
         return _UniffiConverterString.lower(value)
 
 # objects.
+class ActiveJwkProtocol(typing.Protocol):
+    """
+    A new Jwk
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    active-jwk = jwk-id jwk u64
+    ```
+    """
+
+    def epoch(self, ):
+        """
+        Most recent epoch in which the jwk was validated
+        """
+
+        raise NotImplementedError
+    def jwk(self, ):
+        """
+        The Jwk
+        """
+
+        raise NotImplementedError
+    def jwk_id(self, ):
+        """
+        Identifier used to uniquely identify a Jwk
+        """
+
+        raise NotImplementedError
+# ActiveJwk is a Rust-only trait - it's a wrapper around a Rust implementation.
+class ActiveJwk():
+    """
+    A new Jwk
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    active-jwk = jwk-id jwk u64
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, jwk_id: "JwkId",jwk: "Jwk",epoch: "int"):
+        _UniffiConverterTypeJwkId.check_lower(jwk_id)
+        
+        _UniffiConverterTypeJwk.check_lower(jwk)
+        
+        _UniffiConverterUInt64.check_lower(epoch)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_activejwk_new,
+        _UniffiConverterTypeJwkId.lower(jwk_id),
+        _UniffiConverterTypeJwk.lower(jwk),
+        _UniffiConverterUInt64.lower(epoch))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_activejwk, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_activejwk, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def epoch(self, ) -> "int":
+        """
+        Most recent epoch in which the jwk was validated
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_activejwk_epoch,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def jwk(self, ) -> "Jwk":
+        """
+        The Jwk
+        """
+
+        return _UniffiConverterTypeJwk.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_activejwk_jwk,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def jwk_id(self, ) -> "JwkId":
+        """
+        Identifier used to uniquely identify a Jwk
+        """
+
+        return _UniffiConverterTypeJwkId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_activejwk_jwk_id,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeActiveJwk:
+
+    @staticmethod
+    def lift(value: int):
+        return ActiveJwk._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: ActiveJwk):
+        if not isinstance(value, ActiveJwk):
+            raise TypeError("Expected ActiveJwk instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: ActiveJwkProtocol):
+        if not isinstance(value, ActiveJwk):
+            raise TypeError("Expected ActiveJwk instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: ActiveJwkProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class AddressProtocol(typing.Protocol):
     """
     Unique identifier for an Account on the IOTA blockchain.
@@ -17139,13 +17554,53 @@ class _UniffiConverterTypeArgument:
     def write(cls, value: ArgumentProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class AuthenticatorStateExpireProtocol(typing.Protocol):
-    pass
+    """
+    Expire old JWKs
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    authenticator-state-expire = u64 u64
+    ```
+    """
+
+    def authenticator_obj_initial_shared_version(self, ):
+        """
+        The initial version of the authenticator object that it was shared at.
+        """
+
+        raise NotImplementedError
+    def min_epoch(self, ):
+        """
+        Expire JWKs that have a lower epoch than this
+        """
+
+        raise NotImplementedError
 # AuthenticatorStateExpire is a Rust-only trait - it's a wrapper around a Rust implementation.
 class AuthenticatorStateExpire():
+    """
+    Expire old JWKs
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    authenticator-state-expire = u64 u64
+    ```
+    """
+
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, min_epoch: "int",authenticator_obj_initial_shared_version: "int"):
+        _UniffiConverterUInt64.check_lower(min_epoch)
+        
+        _UniffiConverterUInt64.check_lower(authenticator_obj_initial_shared_version)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateexpire_new,
+        _UniffiConverterUInt64.lower(min_epoch),
+        _UniffiConverterUInt64.lower(authenticator_obj_initial_shared_version))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -17164,6 +17619,32 @@ class AuthenticatorStateExpire():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def authenticator_obj_initial_shared_version(self, ) -> "int":
+        """
+        The initial version of the authenticator object that it was shared at.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_authenticator_obj_initial_shared_version,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def min_epoch(self, ) -> "int":
+        """
+        Expire JWKs that have a lower epoch than this
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_min_epoch,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -17195,13 +17676,77 @@ class _UniffiConverterTypeAuthenticatorStateExpire:
     def write(cls, value: AuthenticatorStateExpireProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class AuthenticatorStateUpdateV1Protocol(typing.Protocol):
-    pass
+    """
+    Update the set of valid JWKs
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    authenticator-state-update = u64 ; epoch
+    u64 ; round
+    (vector active-jwk)
+    u64 ; initial version of the authenticator object
+    ```
+    """
+
+    def authenticator_obj_initial_shared_version(self, ):
+        """
+        The initial version of the authenticator object that it was shared at.
+        """
+
+        raise NotImplementedError
+    def epoch(self, ):
+        """
+        Epoch of the authenticator state update transaction
+        """
+
+        raise NotImplementedError
+    def new_active_jwks(self, ):
+        """
+        newly active jwks
+        """
+
+        raise NotImplementedError
+    def round(self, ):
+        """
+        Consensus round of the authenticator state update
+        """
+
+        raise NotImplementedError
 # AuthenticatorStateUpdateV1 is a Rust-only trait - it's a wrapper around a Rust implementation.
 class AuthenticatorStateUpdateV1():
+    """
+    Update the set of valid JWKs
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    authenticator-state-update = u64 ; epoch
+    u64 ; round
+    (vector active-jwk)
+    u64 ; initial version of the authenticator object
+    ```
+    """
+
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, epoch: "int",round: "int",new_active_jwks: "typing.List[ActiveJwk]",authenticator_obj_initial_shared_version: "int"):
+        _UniffiConverterUInt64.check_lower(epoch)
+        
+        _UniffiConverterUInt64.check_lower(round)
+        
+        _UniffiConverterSequenceTypeActiveJwk.check_lower(new_active_jwks)
+        
+        _UniffiConverterUInt64.check_lower(authenticator_obj_initial_shared_version)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateupdatev1_new,
+        _UniffiConverterUInt64.lower(epoch),
+        _UniffiConverterUInt64.lower(round),
+        _UniffiConverterSequenceTypeActiveJwk.lower(new_active_jwks),
+        _UniffiConverterUInt64.lower(authenticator_obj_initial_shared_version))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -17220,6 +17765,58 @@ class AuthenticatorStateUpdateV1():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def authenticator_obj_initial_shared_version(self, ) -> "int":
+        """
+        The initial version of the authenticator object that it was shared at.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def epoch(self, ) -> "int":
+        """
+        Epoch of the authenticator state update transaction
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_epoch,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def new_active_jwks(self, ) -> "typing.List[ActiveJwk]":
+        """
+        newly active jwks
+        """
+
+        return _UniffiConverterSequenceTypeActiveJwk.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_new_active_jwks,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def round(self, ) -> "int":
+        """
+        Consensus round of the authenticator state update
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_round,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -22896,6 +23493,302 @@ class _UniffiConverterTypeInput:
 
     @classmethod
     def write(cls, value: InputProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class JwkProtocol(typing.Protocol):
+    """
+    A JSON Web Key
+
+    Struct that contains info for a JWK. A list of them for different kids can
+    be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
+    The JWK is used to verify the JWT token.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    jwk = string string string string
+    ```
+    """
+
+    def alg(self, ):
+        """
+        Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
+        """
+
+        raise NotImplementedError
+    def e(self, ):
+        """
+        RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+        """
+
+        raise NotImplementedError
+    def kty(self, ):
+        """
+        Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
+        """
+
+        raise NotImplementedError
+    def n(self, ):
+        """
+        RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+        """
+
+        raise NotImplementedError
+# Jwk is a Rust-only trait - it's a wrapper around a Rust implementation.
+class Jwk():
+    """
+    A JSON Web Key
+
+    Struct that contains info for a JWK. A list of them for different kids can
+    be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
+    The JWK is used to verify the JWT token.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    jwk = string string string string
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, kty: "str",e: "str",n: "str",alg: "str"):
+        _UniffiConverterString.check_lower(kty)
+        
+        _UniffiConverterString.check_lower(e)
+        
+        _UniffiConverterString.check_lower(n)
+        
+        _UniffiConverterString.check_lower(alg)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_jwk_new,
+        _UniffiConverterString.lower(kty),
+        _UniffiConverterString.lower(e),
+        _UniffiConverterString.lower(n),
+        _UniffiConverterString.lower(alg))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_jwk, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_jwk, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def alg(self, ) -> "str":
+        """
+        Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_alg,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def e(self, ) -> "str":
+        """
+        RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_e,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def kty(self, ) -> "str":
+        """
+        Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_kty,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def n(self, ) -> "str":
+        """
+        RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwk_n,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeJwk:
+
+    @staticmethod
+    def lift(value: int):
+        return Jwk._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: Jwk):
+        if not isinstance(value, Jwk):
+            raise TypeError("Expected Jwk instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: JwkProtocol):
+        if not isinstance(value, Jwk):
+            raise TypeError("Expected Jwk instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: JwkProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class JwkIdProtocol(typing.Protocol):
+    """
+    Key to uniquely identify a JWK
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    jwk-id = string string
+    ```
+    """
+
+    def iss(self, ):
+        """
+        The issuer or identity of the OIDC provider.
+        """
+
+        raise NotImplementedError
+    def kid(self, ):
+        """
+        A key id use to uniquely identify a key from an OIDC provider.
+        """
+
+        raise NotImplementedError
+# JwkId is a Rust-only trait - it's a wrapper around a Rust implementation.
+class JwkId():
+    """
+    Key to uniquely identify a JWK
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    jwk-id = string string
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, iss: "str",kid: "str"):
+        _UniffiConverterString.check_lower(iss)
+        
+        _UniffiConverterString.check_lower(kid)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_jwkid_new,
+        _UniffiConverterString.lower(iss),
+        _UniffiConverterString.lower(kid))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_jwkid, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_jwkid, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def iss(self, ) -> "str":
+        """
+        The issuer or identity of the OIDC provider.
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwkid_iss,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def kid(self, ) -> "str":
+        """
+        A key id use to uniquely identify a key from an OIDC provider.
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_jwkid_kid,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeJwkId:
+
+    @staticmethod
+    def lift(value: int):
+        return JwkId._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: JwkId):
+        if not isinstance(value, JwkId):
+            raise TypeError("Expected JwkId instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: JwkIdProtocol):
+        if not isinstance(value, JwkId):
+            raise TypeError("Expected JwkId instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: JwkIdProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class MakeMoveVectorProtocol(typing.Protocol):
     """
@@ -29481,6 +30374,7 @@ __all__ = [
     "ValidatorPage",
     "ValidatorSet",
     "ZkLoginClaim",
+    "ActiveJwk",
     "Address",
     "Argument",
     "AuthenticatorStateExpire",
@@ -29516,6 +30410,8 @@ __all__ = [
     "GraphQlClient",
     "Identifier",
     "Input",
+    "Jwk",
+    "JwkId",
     "MakeMoveVector",
     "MergeCoins",
     "MoveCall",
