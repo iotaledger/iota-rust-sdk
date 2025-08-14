@@ -838,6 +838,7 @@ impl GenesisTransaction {
             .map(Arc::new)
             .collect()
     }
+
     pub fn events(&self) -> Vec<Event> {
         self.0.events.iter().cloned().map(Into::into).collect()
     }
