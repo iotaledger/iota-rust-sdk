@@ -844,6 +844,22 @@ impl GenesisTransaction {
     }
 }
 
+/// System transaction used to change the epoch
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// change-epoch = u64  ; next epoch
+///                u64  ; protocol version
+///                u64  ; storage charge
+///                u64  ; computation charge
+///                u64  ; storage rebate
+///                u64  ; non-refundable storage fee
+///                u64  ; epoch start timestamp
+///                (vector system-package)
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ChangeEpoch(pub iota_types::ChangeEpoch);
 
@@ -924,6 +940,17 @@ impl ChangeEpoch {
     }
 }
 
+/// System package
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// system-package = u64                ; version
+///                  (vector bytes)     ; modules
+///                  (vector object-id) ; dependencies
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 pub struct SystemPackage(pub iota_types::SystemPackage);
 
@@ -957,6 +984,23 @@ impl SystemPackage {
     }
 }
 
+/// System transaction used to change the epoch
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// change-epoch = u64  ; next epoch
+///                u64  ; protocol version
+///                u64  ; storage charge
+///                u64  ; computation charge
+///                u64  ; computation charge burned
+///                u64  ; storage rebate
+///                u64  ; non-refundable storage fee
+///                u64  ; epoch start timestamp
+///                (vector system-package)
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ChangeEpochV2(pub iota_types::ChangeEpochV2);
 

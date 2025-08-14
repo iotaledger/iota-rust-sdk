@@ -8308,6 +8308,24 @@ public object FfiConverterTypeCancelledTransaction: FfiConverter<CancelledTransa
 //
 
 
+/**
+ * System transaction used to change the epoch
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * change-epoch = u64  ; next epoch
+ * u64  ; protocol version
+ * u64  ; storage charge
+ * u64  ; computation charge
+ * u64  ; storage rebate
+ * u64  ; non-refundable storage fee
+ * u64  ; epoch start timestamp
+ * (vector system-package)
+ * ```
+ */
 public interface ChangeEpochInterface {
     
     /**
@@ -8354,6 +8372,24 @@ public interface ChangeEpochInterface {
     companion object
 }
 
+/**
+ * System transaction used to change the epoch
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * change-epoch = u64  ; next epoch
+ * u64  ; protocol version
+ * u64  ; storage charge
+ * u64  ; computation charge
+ * u64  ; storage rebate
+ * u64  ; non-refundable storage fee
+ * u64  ; epoch start timestamp
+ * (vector system-package)
+ * ```
+ */
 open class ChangeEpoch: Disposable, AutoCloseable, ChangeEpochInterface
 {
 
@@ -8699,6 +8735,25 @@ public object FfiConverterTypeChangeEpoch: FfiConverter<ChangeEpoch, Pointer> {
 //
 
 
+/**
+ * System transaction used to change the epoch
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * change-epoch = u64  ; next epoch
+ * u64  ; protocol version
+ * u64  ; storage charge
+ * u64  ; computation charge
+ * u64  ; computation charge burned
+ * u64  ; storage rebate
+ * u64  ; non-refundable storage fee
+ * u64  ; epoch start timestamp
+ * (vector system-package)
+ * ```
+ */
 public interface ChangeEpochV2Interface {
     
     /**
@@ -8750,6 +8805,25 @@ public interface ChangeEpochV2Interface {
     companion object
 }
 
+/**
+ * System transaction used to change the epoch
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * change-epoch = u64  ; next epoch
+ * u64  ; protocol version
+ * u64  ; storage charge
+ * u64  ; computation charge
+ * u64  ; computation charge burned
+ * u64  ; storage rebate
+ * u64  ; non-refundable storage fee
+ * u64  ; epoch start timestamp
+ * (vector system-package)
+ * ```
+ */
 open class ChangeEpochV2: Disposable, AutoCloseable, ChangeEpochV2Interface
 {
 
@@ -26137,6 +26211,19 @@ public object FfiConverterTypeStructTag: FfiConverter<StructTag, Pointer> {
 //
 
 
+/**
+ * System package
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * system-package = u64                ; version
+ * (vector bytes)     ; modules
+ * (vector object-id) ; dependencies
+ * ```
+ */
 public interface SystemPackageInterface {
     
     fun `dependencies`(): List<ObjectId>
@@ -26148,6 +26235,19 @@ public interface SystemPackageInterface {
     companion object
 }
 
+/**
+ * System package
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * system-package = u64                ; version
+ * (vector bytes)     ; modules
+ * (vector object-id) ; dependencies
+ * ```
+ */
 open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
 {
 

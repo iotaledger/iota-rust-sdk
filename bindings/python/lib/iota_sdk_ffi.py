@@ -17797,6 +17797,25 @@ class _UniffiConverterTypeCancelledTransaction:
     def write(cls, value: CancelledTransactionProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ChangeEpochProtocol(typing.Protocol):
+    """
+    System transaction used to change the epoch
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    change-epoch = u64  ; next epoch
+    u64  ; protocol version
+    u64  ; storage charge
+    u64  ; computation charge
+    u64  ; storage rebate
+    u64  ; non-refundable storage fee
+    u64  ; epoch start timestamp
+    (vector system-package)
+    ```
+    """
+
     def computation_charge(self, ):
         """
         The total amount of gas charged for computation during the epoch.
@@ -17848,6 +17867,25 @@ class ChangeEpochProtocol(typing.Protocol):
         raise NotImplementedError
 # ChangeEpoch is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ChangeEpoch():
+    """
+    System transaction used to change the epoch
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    change-epoch = u64  ; next epoch
+    u64  ; protocol version
+    u64  ; storage charge
+    u64  ; computation charge
+    u64  ; storage rebate
+    u64  ; non-refundable storage fee
+    u64  ; epoch start timestamp
+    (vector system-package)
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     def __init__(self, epoch: "int",protocol_version: "int",storage_charge: "int",computation_charge: "int",storage_rebate: "int",non_refundable_storage_fee: "int",epoch_start_timestamp_ms: "int",system_packages: "typing.List[SystemPackage]"):
         _UniffiConverterUInt64.check_lower(epoch)
@@ -18029,6 +18067,26 @@ class _UniffiConverterTypeChangeEpoch:
     def write(cls, value: ChangeEpochProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ChangeEpochV2Protocol(typing.Protocol):
+    """
+    System transaction used to change the epoch
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    change-epoch = u64  ; next epoch
+    u64  ; protocol version
+    u64  ; storage charge
+    u64  ; computation charge
+    u64  ; computation charge burned
+    u64  ; storage rebate
+    u64  ; non-refundable storage fee
+    u64  ; epoch start timestamp
+    (vector system-package)
+    ```
+    """
+
     def computation_charge(self, ):
         """
         The total amount of gas charged for computation during the epoch.
@@ -18086,6 +18144,26 @@ class ChangeEpochV2Protocol(typing.Protocol):
         raise NotImplementedError
 # ChangeEpochV2 is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ChangeEpochV2():
+    """
+    System transaction used to change the epoch
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    change-epoch = u64  ; next epoch
+    u64  ; protocol version
+    u64  ; storage charge
+    u64  ; computation charge
+    u64  ; computation charge burned
+    u64  ; storage rebate
+    u64  ; non-refundable storage fee
+    u64  ; epoch start timestamp
+    (vector system-package)
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     def __init__(self, epoch: "int",protocol_version: "int",storage_charge: "int",computation_charge: "int",computation_charge_burned: "int",storage_rebate: "int",non_refundable_storage_fee: "int",epoch_start_timestamp_ms: "int",system_packages: "typing.List[SystemPackage]"):
         _UniffiConverterUInt64.check_lower(epoch)
@@ -26807,6 +26885,20 @@ class _UniffiConverterTypeStructTag:
     def write(cls, value: StructTagProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class SystemPackageProtocol(typing.Protocol):
+    """
+    System package
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    system-package = u64                ; version
+    (vector bytes)     ; modules
+    (vector object-id) ; dependencies
+    ```
+    """
+
     def dependencies(self, ):
         raise NotImplementedError
     def modules(self, ):
@@ -26815,6 +26907,20 @@ class SystemPackageProtocol(typing.Protocol):
         raise NotImplementedError
 # SystemPackage is a Rust-only trait - it's a wrapper around a Rust implementation.
 class SystemPackage():
+    """
+    System package
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    system-package = u64                ; version
+    (vector bytes)     ; modules
+    (vector object-id) ; dependencies
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     def __init__(self, version: "int",modules: "typing.List[bytes]",dependencies: "typing.List[ObjectId]"):
         _UniffiConverterUInt64.check_lower(version)

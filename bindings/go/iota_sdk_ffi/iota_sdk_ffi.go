@@ -5571,6 +5571,22 @@ func (_ FfiDestroyerCancelledTransaction) Destroy(value *CancelledTransaction) {
 
 
 
+// System transaction used to change the epoch
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// change-epoch = u64  ; next epoch
+// u64  ; protocol version
+// u64  ; storage charge
+// u64  ; computation charge
+// u64  ; storage rebate
+// u64  ; non-refundable storage fee
+// u64  ; epoch start timestamp
+// (vector system-package)
+// ```
 type ChangeEpochInterface interface {
 	// The total amount of gas charged for computation during the epoch.
 	ComputationCharge() uint64
@@ -5590,6 +5606,22 @@ type ChangeEpochInterface interface {
 	// written before the new epoch starts.
 	SystemPackages() []*SystemPackage
 }
+// System transaction used to change the epoch
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// change-epoch = u64  ; next epoch
+// u64  ; protocol version
+// u64  ; storage charge
+// u64  ; computation charge
+// u64  ; storage rebate
+// u64  ; non-refundable storage fee
+// u64  ; epoch start timestamp
+// (vector system-package)
+// ```
 type ChangeEpoch struct {
 	ffiObject FfiObject
 }
@@ -5736,6 +5768,23 @@ func (_ FfiDestroyerChangeEpoch) Destroy(value *ChangeEpoch) {
 
 
 
+// System transaction used to change the epoch
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// change-epoch = u64  ; next epoch
+// u64  ; protocol version
+// u64  ; storage charge
+// u64  ; computation charge
+// u64  ; computation charge burned
+// u64  ; storage rebate
+// u64  ; non-refundable storage fee
+// u64  ; epoch start timestamp
+// (vector system-package)
+// ```
 type ChangeEpochV2Interface interface {
 	// The total amount of gas charged for computation during the epoch.
 	ComputationCharge() uint64
@@ -5757,6 +5806,23 @@ type ChangeEpochV2Interface interface {
 	// written before the new epoch starts.
 	SystemPackages() []*SystemPackage
 }
+// System transaction used to change the epoch
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// change-epoch = u64  ; next epoch
+// u64  ; protocol version
+// u64  ; storage charge
+// u64  ; computation charge
+// u64  ; computation charge burned
+// u64  ; storage rebate
+// u64  ; non-refundable storage fee
+// u64  ; epoch start timestamp
+// (vector system-package)
+// ```
 type ChangeEpochV2 struct {
 	ffiObject FfiObject
 }
@@ -14085,11 +14151,33 @@ func (_ FfiDestroyerStructTag) Destroy(value *StructTag) {
 
 
 
+// System package
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// system-package = u64                ; version
+// (vector bytes)     ; modules
+// (vector object-id) ; dependencies
+// ```
 type SystemPackageInterface interface {
 	Dependencies() []*ObjectId
 	Modules() [][]byte
 	Version() uint64
 }
+// System package
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// system-package = u64                ; version
+// (vector bytes)     ; modules
+// (vector object-id) ; dependencies
+// ```
 type SystemPackage struct {
 	ffiObject FfiObject
 }
