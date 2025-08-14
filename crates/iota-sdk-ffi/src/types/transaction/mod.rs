@@ -7,7 +7,7 @@ use iota_types::{GasCostSummary, TransactionExpiration};
 
 use crate::types::{
     address::Address,
-    checkpoint::CheckpointTimestamp,
+    checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
     digest::{CheckpointDigest, ConsensusCommitDigest, TransactionDigest, TransactionEventsDigest},
     events::Event,
     execution_status::ExecutionStatus,
@@ -847,8 +847,202 @@ impl GenesisTransaction {
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ChangeEpoch(pub iota_types::ChangeEpoch);
 
+#[uniffi::export]
+impl ChangeEpoch {
+    #[uniffi::constructor]
+    #[expect(clippy::too_many_arguments)]
+    pub fn new(
+        epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<Arc<SystemPackage>>,
+    ) -> Self {
+        Self(iota_types::ChangeEpoch {
+            epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages: system_packages
+                .into_iter()
+                .map(|package| package.0.clone())
+                .collect(),
+        })
+    }
+
+    /// The next (to become) epoch ID.
+    pub fn epoch(&self) -> EpochId {
+        self.0.epoch
+    }
+
+    /// The protocol version in effect in the new epoch.
+    pub fn protocol_version(&self) -> ProtocolVersion {
+        self.0.protocol_version
+    }
+
+    /// The total amount of gas charged for storage during the epoch.
+    pub fn storage_charge(&self) -> u64 {
+        self.0.storage_charge
+    }
+
+    /// The total amount of gas charged for computation during the epoch.
+    pub fn computation_charge(&self) -> u64 {
+        self.0.computation_charge
+    }
+
+    /// The amount of storage rebate refunded to the txn senders.
+    pub fn storage_rebate(&self) -> u64 {
+        self.0.storage_rebate
+    }
+
+    /// The non-refundable storage fee.
+    pub fn non_refundable_storage_fee(&self) -> u64 {
+        self.0.non_refundable_storage_fee
+    }
+
+    /// Unix timestamp when epoch started
+    pub fn epoch_start_timestamp_ms(&self) -> u64 {
+        self.0.epoch_start_timestamp_ms
+    }
+
+    /// System packages (specifically framework and move stdlib) that are
+    /// written before the new epoch starts.
+    pub fn system_packages(&self) -> Vec<Arc<SystemPackage>> {
+        self.0
+            .system_packages
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct SystemPackage(pub iota_types::SystemPackage);
+
+#[uniffi::export]
+impl SystemPackage {
+    #[uniffi::constructor]
+    pub fn new(version: Version, modules: Vec<Vec<u8>>, dependencies: Vec<Arc<ObjectId>>) -> Self {
+        Self(iota_types::SystemPackage {
+            version,
+            modules,
+            dependencies: dependencies.into_iter().map(|dep| dep.0).collect(),
+        })
+    }
+
+    pub fn version(&self) -> Version {
+        self.0.version
+    }
+
+    pub fn modules(&self) -> Vec<Vec<u8>> {
+        self.0.modules.clone()
+    }
+
+    pub fn dependencies(&self) -> Vec<Arc<ObjectId>> {
+        self.0
+            .dependencies
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+}
+
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ChangeEpochV2(pub iota_types::ChangeEpochV2);
+
+#[uniffi::export]
+impl ChangeEpochV2 {
+    #[uniffi::constructor]
+    #[expect(clippy::too_many_arguments)]
+    pub fn new(
+        epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<Arc<SystemPackage>>,
+    ) -> Self {
+        Self(iota_types::ChangeEpochV2 {
+            epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages: system_packages
+                .into_iter()
+                .map(|package| package.0.clone())
+                .collect(),
+        })
+    }
+
+    /// The next (to become) epoch ID.
+    pub fn epoch(&self) -> EpochId {
+        self.0.epoch
+    }
+
+    /// The protocol version in effect in the new epoch.
+    pub fn protocol_version(&self) -> ProtocolVersion {
+        self.0.protocol_version
+    }
+
+    /// The total amount of gas charged for storage during the epoch.
+    pub fn storage_charge(&self) -> u64 {
+        self.0.storage_charge
+    }
+
+    /// The total amount of gas charged for computation during the epoch.
+    pub fn computation_charge(&self) -> u64 {
+        self.0.computation_charge
+    }
+
+    /// The total amount of gas burned for computation during the epoch.
+    pub fn computation_charge_burned(&self) -> u64 {
+        self.0.computation_charge_burned
+    }
+
+    /// The amount of storage rebate refunded to the txn senders.
+    pub fn storage_rebate(&self) -> u64 {
+        self.0.storage_rebate
+    }
+
+    /// The non-refundable storage fee.
+    pub fn non_refundable_storage_fee(&self) -> u64 {
+        self.0.non_refundable_storage_fee
+    }
+
+    /// Unix timestamp when epoch started
+    pub fn epoch_start_timestamp_ms(&self) -> u64 {
+        self.0.epoch_start_timestamp_ms
+    }
+
+    /// System packages (specifically framework and move stdlib) that are
+    /// written before the new epoch starts.
+    pub fn system_packages(&self) -> Vec<Arc<SystemPackage>> {
+        self.0
+            .system_packages
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct AuthenticatorStateExpire(pub iota_types::AuthenticatorStateExpire);
