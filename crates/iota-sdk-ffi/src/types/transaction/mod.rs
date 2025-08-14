@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{io, sync::Arc};
+use std::sync::Arc;
 
 use iota_types::{GasCostSummary, TransactionExpiration};
 

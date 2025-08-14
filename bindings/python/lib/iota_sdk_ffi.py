@@ -475,6 +475,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded() != 33350:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest() != 3583:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments() != 52539:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest() != 41616:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set() != 22589:
@@ -496,6 +500,18 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitdigest_to_base58() != 7053:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitdigest_to_bytes() != 5048:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_commit_timestamp_ms() != 14198:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_commit_digest() != 44291:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_determined_version_assignments() != 32713:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_epoch() != 1832:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round() != 6355:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index() != 56426:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -907,6 +923,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes() != 58893:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id() != 50440:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 51219:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs() != 1512:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_max_epoch() != 9769:
@@ -963,6 +983,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10() != 17556:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new() != 21959:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58() != 33027:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_bytes() != 37261:
@@ -1000,6 +1022,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_from_bytes() != 58221:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_generate() != 49846:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new() != 41810:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions() != 929:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_from_base58() != 41234:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1204,6 +1230,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64() != 8029:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes() != 37499:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 14186:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new() != 32812:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1512,6 +1540,32 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_cancelledtransaction.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_cancelledtransaction.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_cancelledtransaction.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_cancelledtransaction.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_cancelledtransaction_new.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_cancelledtransaction_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_digest.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_version_assignments.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_version_assignments.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_changeepoch.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -1776,6 +1830,61 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_consensuscommitprologuev1.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_consensuscommitprologuev1.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev1_new.argtypes = (
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    ctypes.c_uint64,
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev1_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_commit_timestamp_ms.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_commit_timestamp_ms.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_consensus_commit_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_consensus_commit_digest.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_consensus_determined_version_assignments.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_consensus_determined_version_assignments.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_epoch.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_epoch.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_round.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_round.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_sub_dag_index.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_sub_dag_index.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_consensusdeterminedversionassignments.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_consensusdeterminedversionassignments.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_consensusdeterminedversionassignments.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_consensusdeterminedversionassignments.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensusdeterminedversionassignments_new_cancelled_transactions.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensusdeterminedversionassignments_new_cancelled_transactions.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_digest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3832,6 +3941,32 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_versionassignment.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_versionassignment.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_versionassignment.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_versionassignment.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_version.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4249,6 +4384,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest.restype = ctypes.c_uint16
@@ -4282,6 +4423,24 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitdigest_to_base58.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitdigest_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitdigest_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_commit_timestamp_ms.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_commit_timestamp_ms.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_commit_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_commit_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_determined_version_assignments.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_determined_version_assignments.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_epoch.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_epoch.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58.restype = ctypes.c_uint16
@@ -4897,6 +5056,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_to_base64.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs.restype = ctypes.c_uint16
@@ -4981,6 +5146,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58.restype = ctypes.c_uint16
@@ -5038,6 +5206,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_from_b
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_generate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_digest_from_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_digest_from_base58.restype = ctypes.c_uint16
@@ -5344,6 +5518,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new.restype = ctypes.c_uint16
@@ -5516,6 +5693,12 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
     def write(value, buf):
         buf.write_i32(len(value))
         buf.write(value)
+
+
+
+
+
+
 
 
 
@@ -14916,6 +15099,31 @@ class _UniffiConverterSequenceTypeArgument(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeCancelledTransaction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeCancelledTransaction.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeCancelledTransaction.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeCancelledTransaction.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeCheckpointCommitment(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -15287,6 +15495,31 @@ class _UniffiConverterSequenceTypeUserSignature(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeUserSignature.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeVersionAssignment(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeVersionAssignment.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeVersionAssignment.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeVersionAssignment.read(buf) for i in range(count)
         ]
 
 
@@ -16987,6 +17220,112 @@ class _UniffiConverterTypeBn254FieldElement:
     @classmethod
     def write(cls, value: Bn254FieldElementProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class CancelledTransactionProtocol(typing.Protocol):
+    """
+    A transaction that was cancelled
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    cancelled-transaction = digest (vector version-assignment)
+    ```
+    """
+
+    def digest(self, ):
+        raise NotImplementedError
+    def version_assignments(self, ):
+        raise NotImplementedError
+# CancelledTransaction is a Rust-only trait - it's a wrapper around a Rust implementation.
+class CancelledTransaction():
+    """
+    A transaction that was cancelled
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    cancelled-transaction = digest (vector version-assignment)
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, digest: "TransactionDigest",version_assignments: "typing.List[VersionAssignment]"):
+        _UniffiConverterTypeTransactionDigest.check_lower(digest)
+        
+        _UniffiConverterSequenceTypeVersionAssignment.check_lower(version_assignments)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_cancelledtransaction_new,
+        _UniffiConverterTypeTransactionDigest.lower(digest),
+        _UniffiConverterSequenceTypeVersionAssignment.lower(version_assignments))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_cancelledtransaction, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_cancelledtransaction, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def digest(self, ) -> "TransactionDigest":
+        return _UniffiConverterTypeTransactionDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def version_assignments(self, ) -> "typing.List[VersionAssignment]":
+        return _UniffiConverterSequenceTypeVersionAssignment.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_version_assignments,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeCancelledTransaction:
+
+    @staticmethod
+    def lift(value: int):
+        return CancelledTransaction._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: CancelledTransaction):
+        if not isinstance(value, CancelledTransaction):
+            raise TypeError("Expected CancelledTransaction instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: CancelledTransactionProtocol):
+        if not isinstance(value, CancelledTransaction):
+            raise TypeError("Expected CancelledTransaction instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: CancelledTransactionProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class ChangeEpochProtocol(typing.Protocol):
     pass
 # ChangeEpoch is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -17984,13 +18323,92 @@ class _UniffiConverterTypeConsensusCommitDigest:
     def write(cls, value: ConsensusCommitDigestProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ConsensusCommitPrologueV1Protocol(typing.Protocol):
-    pass
+    """
+    V1 of the consensus commit prologue system transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    consensus-commit-prologue-v1 = u64 u64 (option u64) u64 digest
+    consensus-determined-version-assignments
+    ```
+    """
+
+    def commit_timestamp_ms(self, ):
+        """
+        Unix timestamp from consensus
+        """
+
+        raise NotImplementedError
+    def consensus_commit_digest(self, ):
+        """
+        Digest of consensus output
+        """
+
+        raise NotImplementedError
+    def consensus_determined_version_assignments(self, ):
+        """
+        Stores consensus handler determined shared object version assignments.
+        """
+
+        raise NotImplementedError
+    def epoch(self, ):
+        """
+        Epoch of the commit prologue transaction
+        """
+
+        raise NotImplementedError
+    def round(self, ):
+        """
+        Consensus round of the commit
+        """
+
+        raise NotImplementedError
+    def sub_dag_index(self, ):
+        """
+        The sub DAG index of the consensus commit. This field will be populated
+        if there are multiple consensus commits per round.
+        """
+
+        raise NotImplementedError
 # ConsensusCommitPrologueV1 is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ConsensusCommitPrologueV1():
+    """
+    V1 of the consensus commit prologue system transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    consensus-commit-prologue-v1 = u64 u64 (option u64) u64 digest
+    consensus-determined-version-assignments
+    ```
+    """
+
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, epoch: "int",round: "int",sub_dag_index: "typing.Optional[int]",commit_timestamp_ms: "int",consensus_commit_digest: "ConsensusCommitDigest",consensus_determined_version_assignments: "ConsensusDeterminedVersionAssignments"):
+        _UniffiConverterUInt64.check_lower(epoch)
+        
+        _UniffiConverterUInt64.check_lower(round)
+        
+        _UniffiConverterOptionalUInt64.check_lower(sub_dag_index)
+        
+        _UniffiConverterUInt64.check_lower(commit_timestamp_ms)
+        
+        _UniffiConverterTypeConsensusCommitDigest.check_lower(consensus_commit_digest)
+        
+        _UniffiConverterTypeConsensusDeterminedVersionAssignments.check_lower(consensus_determined_version_assignments)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev1_new,
+        _UniffiConverterUInt64.lower(epoch),
+        _UniffiConverterUInt64.lower(round),
+        _UniffiConverterOptionalUInt64.lower(sub_dag_index),
+        _UniffiConverterUInt64.lower(commit_timestamp_ms),
+        _UniffiConverterTypeConsensusCommitDigest.lower(consensus_commit_digest),
+        _UniffiConverterTypeConsensusDeterminedVersionAssignments.lower(consensus_determined_version_assignments))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -18009,6 +18427,85 @@ class ConsensusCommitPrologueV1():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def commit_timestamp_ms(self, ) -> "int":
+        """
+        Unix timestamp from consensus
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_commit_timestamp_ms,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def consensus_commit_digest(self, ) -> "ConsensusCommitDigest":
+        """
+        Digest of consensus output
+        """
+
+        return _UniffiConverterTypeConsensusCommitDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_consensus_commit_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def consensus_determined_version_assignments(self, ) -> "ConsensusDeterminedVersionAssignments":
+        """
+        Stores consensus handler determined shared object version assignments.
+        """
+
+        return _UniffiConverterTypeConsensusDeterminedVersionAssignments.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_consensus_determined_version_assignments,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def epoch(self, ) -> "int":
+        """
+        Epoch of the commit prologue transaction
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_epoch,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def round(self, ) -> "int":
+        """
+        Consensus round of the commit
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_round,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def sub_dag_index(self, ) -> "typing.Optional[int]":
+        """
+        The sub DAG index of the consensus commit. This field will be populated
+        if there are multiple consensus commits per round.
+        """
+
+        return _UniffiConverterOptionalUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_sub_dag_index,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -18038,6 +18535,71 @@ class _UniffiConverterTypeConsensusCommitPrologueV1:
 
     @classmethod
     def write(cls, value: ConsensusCommitPrologueV1Protocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class ConsensusDeterminedVersionAssignmentsProtocol(typing.Protocol):
+    pass
+# ConsensusDeterminedVersionAssignments is a Rust-only trait - it's a wrapper around a Rust implementation.
+class ConsensusDeterminedVersionAssignments():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_consensusdeterminedversionassignments, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_consensusdeterminedversionassignments, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def new_cancelled_transactions(cls, cancelled_transactions: "typing.List[CancelledTransaction]"):
+        _UniffiConverterSequenceTypeCancelledTransaction.check_lower(cancelled_transactions)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensusdeterminedversionassignments_new_cancelled_transactions,
+        _UniffiConverterSequenceTypeCancelledTransaction.lower(cancelled_transactions))
+        return cls._make_instance_(pointer)
+
+
+
+
+class _UniffiConverterTypeConsensusDeterminedVersionAssignments:
+
+    @staticmethod
+    def lift(value: int):
+        return ConsensusDeterminedVersionAssignments._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: ConsensusDeterminedVersionAssignments):
+        if not isinstance(value, ConsensusDeterminedVersionAssignments):
+            raise TypeError("Expected ConsensusDeterminedVersionAssignments instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: ConsensusDeterminedVersionAssignmentsProtocol):
+        if not isinstance(value, ConsensusDeterminedVersionAssignments):
+            raise TypeError("Expected ConsensusDeterminedVersionAssignments instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: ConsensusDeterminedVersionAssignmentsProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class DigestProtocol(typing.Protocol):
     """
@@ -26794,6 +27356,112 @@ class _UniffiConverterTypeUserSignature:
     @classmethod
     def write(cls, value: UserSignatureProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class VersionAssignmentProtocol(typing.Protocol):
+    """
+    Object version assignment from consensus
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    version-assignment = object-id u64
+    ```
+    """
+
+    def object_id(self, ):
+        raise NotImplementedError
+    def version(self, ):
+        raise NotImplementedError
+# VersionAssignment is a Rust-only trait - it's a wrapper around a Rust implementation.
+class VersionAssignment():
+    """
+    Object version assignment from consensus
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    version-assignment = object-id u64
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, object_id: "ObjectId",version: "int"):
+        _UniffiConverterTypeObjectId.check_lower(object_id)
+        
+        _UniffiConverterUInt64.check_lower(version)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new,
+        _UniffiConverterTypeObjectId.lower(object_id),
+        _UniffiConverterUInt64.lower(version))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_versionassignment, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_versionassignment, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def object_id(self, ) -> "ObjectId":
+        return _UniffiConverterTypeObjectId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def version(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_version,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeVersionAssignment:
+
+    @staticmethod
+    def lift(value: int):
+        return VersionAssignment._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: VersionAssignment):
+        if not isinstance(value, VersionAssignment):
+            raise TypeError("Expected VersionAssignment instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: VersionAssignmentProtocol):
+        if not isinstance(value, VersionAssignment):
+            raise TypeError("Expected VersionAssignment instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: VersionAssignmentProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class ZkLoginAuthenticatorProtocol(typing.Protocol):
     """
     A zklogin authenticator
@@ -27548,6 +28216,7 @@ __all__ = [
     "Bls12381PublicKey",
     "Bls12381Signature",
     "Bn254FieldElement",
+    "CancelledTransaction",
     "ChangeEpoch",
     "ChangeEpochV2",
     "CheckpointCommitment",
@@ -27559,6 +28228,7 @@ __all__ = [
     "Command",
     "ConsensusCommitDigest",
     "ConsensusCommitPrologueV1",
+    "ConsensusDeterminedVersionAssignments",
     "Digest",
     "Ed25519PublicKey",
     "Ed25519Signature",
@@ -27608,6 +28278,7 @@ __all__ = [
     "TypeTag",
     "Upgrade",
     "UserSignature",
+    "VersionAssignment",
     "ZkLoginAuthenticator",
     "ZkLoginInputs",
     "ZkLoginProof",
