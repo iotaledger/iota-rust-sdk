@@ -88,9 +88,9 @@ pub struct Epoch {
     pub system_state_version: Option<u64>,
     /// The total number of checkpoints in this epoch.
     pub total_checkpoints: Option<u64>,
-    /// The total amount of gas fees (in MIST) that were paid in this epoch.
+    /// The total amount of gas fees (in IOTA) that were paid in this epoch.
     pub total_gas_fees: Option<BigInt>,
-    /// The total MIST rewarded as stake.
+    /// The total IOTA rewarded as stake.
     pub total_stake_rewards: Option<BigInt>,
     /// The total number of transaction in this epoch.
     pub total_transactions: Option<u64>,
