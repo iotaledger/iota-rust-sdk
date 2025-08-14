@@ -593,6 +593,33 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions()
+	})
+	if checksum != 59888 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt()
+	})
+	if checksum != 33554 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions()
+	})
+	if checksum != 10241 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58()
 	})
 	if checksum != 54638 {
@@ -6406,6 +6433,9 @@ func (_ FfiDestroyerConsensusCommitPrologueV1) Destroy(value *ConsensusCommitPro
 
 
 type ConsensusDeterminedVersionAssignmentsInterface interface {
+	AsCancelledTransactions() []*CancelledTransaction
+	AsCancelledTransactionsOpt() *[]*CancelledTransaction
+	IsCancelledTransactions() bool
 }
 type ConsensusDeterminedVersionAssignments struct {
 	ffiObject FfiObject
@@ -6419,6 +6449,37 @@ func ConsensusDeterminedVersionAssignmentsNewCancelledTransactions(cancelledTran
 }
 
 
+
+func (_self *ConsensusDeterminedVersionAssignments) AsCancelledTransactions() []*CancelledTransaction {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusDeterminedVersionAssignments")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceCancelledTransactionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *ConsensusDeterminedVersionAssignments) AsCancelledTransactionsOpt() *[]*CancelledTransaction {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusDeterminedVersionAssignments")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalSequenceCancelledTransactionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *ConsensusDeterminedVersionAssignments) IsCancelledTransactions() bool {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusDeterminedVersionAssignments")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_is_cancelled_transactions(
+		_pointer,_uniffiStatus)
+	}))
+}
 func (object *ConsensusDeterminedVersionAssignments) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -22806,6 +22867,43 @@ type FfiDestroyerOptionalSequenceString struct {}
 func (_ FfiDestroyerOptionalSequenceString) Destroy(value *[]string) {
 	if value != nil {
 		FfiDestroyerSequenceString{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSequenceCancelledTransaction struct{}
+
+var FfiConverterOptionalSequenceCancelledTransactionINSTANCE = FfiConverterOptionalSequenceCancelledTransaction{}
+
+func (c FfiConverterOptionalSequenceCancelledTransaction) Lift(rb RustBufferI) *[]*CancelledTransaction {
+	return LiftFromRustBuffer[*[]*CancelledTransaction](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceCancelledTransaction) Read(reader io.Reader) *[]*CancelledTransaction {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceCancelledTransactionINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceCancelledTransaction) Lower(value *[]*CancelledTransaction) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]*CancelledTransaction](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceCancelledTransaction) Write(writer io.Writer, value *[]*CancelledTransaction) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceCancelledTransactionINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceCancelledTransaction struct {}
+
+func (_ FfiDestroyerOptionalSequenceCancelledTransaction) Destroy(value *[]*CancelledTransaction) {
+	if value != nil {
+		FfiDestroyerSequenceCancelledTransaction{}.Destroy(*value)
 	}
 }
 

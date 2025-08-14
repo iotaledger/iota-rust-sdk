@@ -513,6 +513,12 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index() != 56426:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions() != 59888:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt() != 33554:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes() != 14244:
@@ -1885,6 +1891,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensusdeterminedversionassignme
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensusdeterminedversionassignments_new_cancelled_transactions.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_is_cancelled_transactions.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_is_cancelled_transactions.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_digest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4441,6 +4462,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58.restype = ctypes.c_uint16
@@ -14727,6 +14757,33 @@ class _UniffiConverterOptionalSequenceString(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalSequenceTypeCancelledTransaction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeCancelledTransaction.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeCancelledTransaction.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeCancelledTransaction.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalSequenceTypeObjectId(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -18537,7 +18594,12 @@ class _UniffiConverterTypeConsensusCommitPrologueV1:
     def write(cls, value: ConsensusCommitPrologueV1Protocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ConsensusDeterminedVersionAssignmentsProtocol(typing.Protocol):
-    pass
+    def as_cancelled_transactions(self, ):
+        raise NotImplementedError
+    def as_cancelled_transactions_opt(self, ):
+        raise NotImplementedError
+    def is_cancelled_transactions(self, ):
+        raise NotImplementedError
 # ConsensusDeterminedVersionAssignments is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ConsensusDeterminedVersionAssignments():
     _pointer: ctypes.c_void_p
@@ -18570,6 +18632,33 @@ class ConsensusDeterminedVersionAssignments():
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensusdeterminedversionassignments_new_cancelled_transactions,
         _UniffiConverterSequenceTypeCancelledTransaction.lower(cancelled_transactions))
         return cls._make_instance_(pointer)
+
+
+
+    def as_cancelled_transactions(self, ) -> "typing.List[CancelledTransaction]":
+        return _UniffiConverterSequenceTypeCancelledTransaction.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_cancelled_transactions_opt(self, ) -> "typing.Optional[typing.List[CancelledTransaction]]":
+        return _UniffiConverterOptionalSequenceTypeCancelledTransaction.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_cancelled_transactions(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_is_cancelled_transactions,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 

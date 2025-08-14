@@ -703,6 +703,33 @@ impl ConsensusDeterminedVersionAssignments {
             },
         )
     }
+
+    pub fn is_cancelled_transactions(&self) -> bool {
+        matches!(
+            self.0,
+            iota_types::ConsensusDeterminedVersionAssignments::CancelledTransactions { .. }
+        )
+    }
+
+    pub fn as_cancelled_transactions_opt(&self) -> Option<Vec<Arc<CancelledTransaction>>> {
+        let iota_types::ConsensusDeterminedVersionAssignments::CancelledTransactions {
+            cancelled_transactions,
+        } = &self.0;
+
+        Some(
+            cancelled_transactions
+                .iter()
+                .cloned()
+                .map(Into::into)
+                .map(Arc::new)
+                .collect(),
+        )
+    }
+
+    pub fn as_cancelled_transactions(&self) -> Vec<Arc<CancelledTransaction>> {
+        self.as_cancelled_transactions_opt()
+            .expect("not a CancelledTransactions")
+    }
 }
 
 /// A transaction that was cancelled

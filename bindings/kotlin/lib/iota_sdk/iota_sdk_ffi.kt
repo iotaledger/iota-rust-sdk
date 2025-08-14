@@ -1649,6 +1649,12 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -1715,6 +1721,12 @@ fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_epoch(
 fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_digest_to_base58(
 ): Short
@@ -2705,6 +2717,12 @@ fun uniffi_iota_sdk_ffi_fn_free_consensusdeterminedversionassignments(`ptr`: Poi
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_consensusdeterminedversionassignments_new_cancelled_transactions(`cancelledTransactions`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_is_cancelled_transactions(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3775,6 +3793,15 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index() != 56426.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions() != 59888.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt() != 33554.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638.toShort()) {
@@ -11066,6 +11093,12 @@ public object FfiConverterTypeConsensusCommitPrologueV1: FfiConverter<ConsensusC
 
 public interface ConsensusDeterminedVersionAssignmentsInterface {
     
+    fun `asCancelledTransactions`(): List<CancelledTransaction>
+    
+    fun `asCancelledTransactionsOpt`(): List<CancelledTransaction>?
+    
+    fun `isCancelledTransactions`(): kotlin.Boolean
+    
     companion object
 }
 
@@ -11150,6 +11183,42 @@ open class ConsensusDeterminedVersionAssignments: Disposable, AutoCloseable, Con
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_consensusdeterminedversionassignments(pointer!!, status)
         }
     }
+
+    override fun `asCancelledTransactions`(): List<CancelledTransaction> {
+            return FfiConverterSequenceTypeCancelledTransaction.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asCancelledTransactionsOpt`(): List<CancelledTransaction>? {
+            return FfiConverterOptionalSequenceTypeCancelledTransaction.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isCancelledTransactions`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_is_cancelled_transactions(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     
 
@@ -37897,6 +37966,38 @@ public object FfiConverterOptionalSequenceString: FfiConverterRustBuffer<List<ko
         } else {
             buf.put(1)
             FfiConverterSequenceString.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalSequenceTypeCancelledTransaction: FfiConverterRustBuffer<List<CancelledTransaction>?> {
+    override fun read(buf: ByteBuffer): List<CancelledTransaction>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeCancelledTransaction.read(buf)
+    }
+
+    override fun allocationSize(value: List<CancelledTransaction>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeCancelledTransaction.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<CancelledTransaction>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeCancelledTransaction.write(value, buf)
         }
     }
 }
