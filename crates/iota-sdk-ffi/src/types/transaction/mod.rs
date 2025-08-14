@@ -639,7 +639,7 @@ impl ConsensusCommitPrologueV1 {
             round,
             sub_dag_index,
             commit_timestamp_ms,
-            consensus_commit_digest: consensus_commit_digest.0.clone(),
+            consensus_commit_digest: consensus_commit_digest.0,
             consensus_determined_version_assignments: consensus_determined_version_assignments
                 .0
                 .clone(),
@@ -664,7 +664,7 @@ impl ConsensusCommitPrologueV1 {
 
     /// Unix timestamp from consensus
     pub fn commit_timestamp_ms(&self) -> CheckpointTimestamp {
-        self.0.commit_timestamp_ms.into()
+        self.0.commit_timestamp_ms
     }
 
     /// Digest of consensus output
@@ -775,7 +775,7 @@ impl VersionAssignment {
     }
 
     pub fn version(&self) -> Version {
-        self.0.version.into()
+        self.0.version
     }
 }
 
