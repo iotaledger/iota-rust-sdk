@@ -1211,10 +1211,12 @@ impl ActiveJwk {
     pub fn jwk_id(&self) -> JwkId {
         self.0.jwk_id.clone().into()
     }
+
     /// The Jwk
     pub fn jwk(&self) -> Jwk {
         self.0.jwk.clone().into()
     }
+
     /// Most recent epoch in which the jwk was validated
     pub fn epoch(&self) -> u64 {
         self.0.epoch
