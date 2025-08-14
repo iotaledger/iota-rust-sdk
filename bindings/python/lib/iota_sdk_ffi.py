@@ -537,6 +537,20 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 42353:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_data() != 26598:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_id() != 9601:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_type() != 32731:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner() != 50201:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 36305:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events() != 64664:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_objects() != 14715:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators() != 26965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_balance() != 9953:
@@ -1072,6 +1086,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 13557:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_testnet() != 16109:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_genesisobject_new() != 35390:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_genesistransaction_new() != 47990:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new() != 32097:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2133,6 +2151,47 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_faucetreceipt.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_faucetreceipt.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_genesisobject.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_genesisobject.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_genesisobject.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_genesisobject.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_genesisobject_new.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_genesisobject_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_data.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_data.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_object_id.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_object_id.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_object_type.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_object_type.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_owner.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_owner.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_version.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_genesistransaction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2143,6 +2202,22 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_genesistransaction.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_genesistransaction.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_genesistransaction_new.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_genesistransaction_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_events.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_events.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_objects.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_objects.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_graphqlclient.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4498,6 +4573,27 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_data.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_data.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_id.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_id.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_type.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_type.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_objects.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_objects.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators.restype = ctypes.c_uint16
@@ -5302,6 +5398,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_testnet.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_testnet.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_genesisobject_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_genesisobject_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_genesistransaction_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_genesistransaction_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new.restype = ctypes.c_uint16
@@ -5723,6 +5825,8 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
     def write(value, buf):
         buf.write_i32(len(value))
         buf.write(value)
+
+
 
 
 
@@ -15306,6 +15410,31 @@ class _UniffiConverterSequenceTypeEpoch(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeGenesisObject(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeGenesisObject.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeGenesisObject.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeGenesisObject.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeInput(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -19677,14 +19806,191 @@ class _UniffiConverterTypeFaucetReceipt:
     @classmethod
     def write(cls, value: FaucetReceiptProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class GenesisObjectProtocol(typing.Protocol):
+    """
+    An object part of the initial chain state
+
+    `GenesisObject`'s are included as a part of genesis, the initial
+    checkpoint/transaction, that initializes the state of the blockchain.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    genesis-object = object-data owner
+    ```
+    """
+
+    def data(self, ):
+        raise NotImplementedError
+    def object_id(self, ):
+        raise NotImplementedError
+    def object_type(self, ):
+        raise NotImplementedError
+    def owner(self, ):
+        raise NotImplementedError
+    def version(self, ):
+        raise NotImplementedError
+# GenesisObject is a Rust-only trait - it's a wrapper around a Rust implementation.
+class GenesisObject():
+    """
+    An object part of the initial chain state
+
+    `GenesisObject`'s are included as a part of genesis, the initial
+    checkpoint/transaction, that initializes the state of the blockchain.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    genesis-object = object-data owner
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, data: "ObjectData",owner: "Owner"):
+        _UniffiConverterTypeObjectData.check_lower(data)
+        
+        _UniffiConverterTypeOwner.check_lower(owner)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_genesisobject_new,
+        _UniffiConverterTypeObjectData.lower(data),
+        _UniffiConverterTypeOwner.lower(owner))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_genesisobject, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_genesisobject, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def data(self, ) -> "ObjectData":
+        return _UniffiConverterTypeObjectData.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_data,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def object_id(self, ) -> "ObjectId":
+        return _UniffiConverterTypeObjectId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_object_id,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def object_type(self, ) -> "ObjectType":
+        return _UniffiConverterTypeObjectType.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_object_type,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def owner(self, ) -> "Owner":
+        return _UniffiConverterTypeOwner.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_owner,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def version(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_version,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeGenesisObject:
+
+    @staticmethod
+    def lift(value: int):
+        return GenesisObject._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: GenesisObject):
+        if not isinstance(value, GenesisObject):
+            raise TypeError("Expected GenesisObject instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: GenesisObjectProtocol):
+        if not isinstance(value, GenesisObject):
+            raise TypeError("Expected GenesisObject instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: GenesisObjectProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class GenesisTransactionProtocol(typing.Protocol):
-    pass
+    """
+    The genesis transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    genesis-transaction = (vector genesis-object)
+    ```
+    """
+
+    def events(self, ):
+        raise NotImplementedError
+    def objects(self, ):
+        raise NotImplementedError
 # GenesisTransaction is a Rust-only trait - it's a wrapper around a Rust implementation.
 class GenesisTransaction():
+    """
+    The genesis transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    genesis-transaction = (vector genesis-object)
+    ```
+    """
+
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, objects: "typing.List[GenesisObject]",events: "typing.List[Event]"):
+        _UniffiConverterSequenceTypeGenesisObject.check_lower(objects)
+        
+        _UniffiConverterSequenceTypeEvent.check_lower(events)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_genesistransaction_new,
+        _UniffiConverterSequenceTypeGenesisObject.lower(objects),
+        _UniffiConverterSequenceTypeEvent.lower(events))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -19703,6 +20009,24 @@ class GenesisTransaction():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def events(self, ) -> "typing.List[Event]":
+        return _UniffiConverterSequenceTypeEvent.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_events,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def objects(self, ) -> "typing.List[GenesisObject]":
+        return _UniffiConverterSequenceTypeGenesisObject.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_objects,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -28327,6 +28651,7 @@ __all__ = [
     "ExecutionTimeObservations",
     "FaucetClient",
     "FaucetReceipt",
+    "GenesisObject",
     "GenesisTransaction",
     "GraphQlClient",
     "Identifier",

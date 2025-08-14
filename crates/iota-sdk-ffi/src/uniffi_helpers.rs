@@ -7,7 +7,8 @@ use serde_json::Value;
 use crate::types::{
     checkpoint::CheckpointSummary,
     coin::Coin,
-    graphql::{DynamicFieldOutput, Epoch, Event, TransactionDataEffects, Validator},
+    events::Event,
+    graphql::{DynamicFieldOutput, Epoch, TransactionDataEffects, Validator},
     object::{MovePackage, Object},
     transaction::{SignedTransaction, TransactionEffects},
 };

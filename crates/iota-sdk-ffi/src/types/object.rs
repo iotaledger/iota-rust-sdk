@@ -473,3 +473,46 @@ impl ObjectType {
             .map(Arc::new)
     }
 }
+
+/// An object part of the initial chain state
+///
+/// `GenesisObject`'s are included as a part of genesis, the initial
+/// checkpoint/transaction, that initializes the state of the blockchain.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// genesis-object = object-data owner
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+pub struct GenesisObject(pub iota_types::GenesisObject);
+
+#[uniffi::export]
+impl GenesisObject {
+    #[uniffi::constructor]
+    pub fn new(data: &ObjectData, owner: &Owner) -> Self {
+        Self(iota_types::GenesisObject::new(data.0.clone(), owner.0))
+    }
+
+    pub fn object_id(&self) -> ObjectId {
+        self.0.object_id().into()
+    }
+
+    pub fn version(&self) -> Version {
+        self.0.version()
+    }
+
+    pub fn object_type(&self) -> ObjectType {
+        self.0.object_type().into()
+    }
+
+    pub fn owner(&self) -> Owner {
+        (*self.0.owner()).into()
+    }
+
+    pub fn data(&self) -> ObjectData {
+        self.0.data().clone().into()
+    }
+}

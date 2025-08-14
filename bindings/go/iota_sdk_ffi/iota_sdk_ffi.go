@@ -701,6 +701,69 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_genesisobject_data()
+	})
+	if checksum != 26598 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_genesisobject_data: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_id()
+	})
+	if checksum != 9601 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_type()
+	})
+	if checksum != 32731 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_genesisobject_object_type: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner()
+	})
+	if checksum != 50201 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version()
+	})
+	if checksum != 36305 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_genesisobject_version: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events()
+	})
+	if checksum != 64664 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_objects()
+	})
+	if checksum != 14715 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_genesistransaction_objects: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators()
 	})
 	if checksum != 26965 {
@@ -3109,6 +3172,24 @@ func uniffiCheckChecksums() {
 	if checksum != 16109 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_testnet: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_genesisobject_new()
+	})
+	if checksum != 35390 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_genesisobject_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_genesistransaction_new()
+	})
+	if checksum != 47990 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_genesistransaction_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7557,14 +7638,200 @@ func (_ FfiDestroyerFaucetReceipt) Destroy(value *FaucetReceipt) {
 
 
 
-type GenesisTransactionInterface interface {
+// An object part of the initial chain state
+//
+// `GenesisObject`'s are included as a part of genesis, the initial
+// checkpoint/transaction, that initializes the state of the blockchain.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// genesis-object = object-data owner
+// ```
+type GenesisObjectInterface interface {
+	Data() *ObjectData
+	ObjectId() *ObjectId
+	ObjectType() *ObjectType
+	Owner() *Owner
+	Version() uint64
 }
+// An object part of the initial chain state
+//
+// `GenesisObject`'s are included as a part of genesis, the initial
+// checkpoint/transaction, that initializes the state of the blockchain.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// genesis-object = object-data owner
+// ```
+type GenesisObject struct {
+	ffiObject FfiObject
+}
+func NewGenesisObject(data *ObjectData, owner *Owner) *GenesisObject {
+	return FfiConverterGenesisObjectINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_genesisobject_new(FfiConverterObjectDataINSTANCE.Lower(data), FfiConverterOwnerINSTANCE.Lower(owner),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *GenesisObject) Data() *ObjectData {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisObject")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectDataINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_genesisobject_data(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *GenesisObject) ObjectId() *ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisObject")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_genesisobject_object_id(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *GenesisObject) ObjectType() *ObjectType {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisObject")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectTypeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_genesisobject_object_type(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *GenesisObject) Owner() *Owner {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisObject")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOwnerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_genesisobject_owner(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *GenesisObject) Version() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisObject")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_genesisobject_version(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *GenesisObject) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterGenesisObject struct {}
+
+var FfiConverterGenesisObjectINSTANCE = FfiConverterGenesisObject{}
+
+
+func (c FfiConverterGenesisObject) Lift(pointer unsafe.Pointer) *GenesisObject {
+	result := &GenesisObject {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_genesisobject(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_genesisobject(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*GenesisObject).Destroy)
+	return result
+}
+
+func (c FfiConverterGenesisObject) Read(reader io.Reader) *GenesisObject {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterGenesisObject) Lower(value *GenesisObject) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*GenesisObject")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterGenesisObject) Write(writer io.Writer, value *GenesisObject) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerGenesisObject struct {}
+
+func (_ FfiDestroyerGenesisObject) Destroy(value *GenesisObject) {
+		value.Destroy()
+}
+
+
+
+// The genesis transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// genesis-transaction = (vector genesis-object)
+// ```
+type GenesisTransactionInterface interface {
+	Events() []Event
+	Objects() []*GenesisObject
+}
+// The genesis transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// genesis-transaction = (vector genesis-object)
+// ```
 type GenesisTransaction struct {
 	ffiObject FfiObject
 }
+func NewGenesisTransaction(objects []*GenesisObject, events []Event) *GenesisTransaction {
+	return FfiConverterGenesisTransactionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_genesistransaction_new(FfiConverterSequenceGenesisObjectINSTANCE.Lower(objects), FfiConverterSequenceEventINSTANCE.Lower(events),_uniffiStatus)
+	}))
+}
 
 
 
+
+func (_self *GenesisTransaction) Events() []Event {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceEventINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_genesistransaction_events(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *GenesisTransaction) Objects() []*GenesisObject {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceGenesisObjectINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_genesistransaction_objects(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 func (object *GenesisTransaction) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -23698,6 +23965,49 @@ type FfiDestroyerSequenceEpoch struct {}
 func (FfiDestroyerSequenceEpoch) Destroy(sequence []*Epoch) {
 	for _, value := range sequence {
 		FfiDestroyerEpoch{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceGenesisObject struct{}
+
+var FfiConverterSequenceGenesisObjectINSTANCE = FfiConverterSequenceGenesisObject{}
+
+func (c FfiConverterSequenceGenesisObject) Lift(rb RustBufferI) []*GenesisObject {
+	return LiftFromRustBuffer[[]*GenesisObject](c, rb)
+}
+
+func (c FfiConverterSequenceGenesisObject) Read(reader io.Reader) []*GenesisObject {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*GenesisObject, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterGenesisObjectINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceGenesisObject) Lower(value []*GenesisObject) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*GenesisObject](c, value)
+}
+
+func (c FfiConverterSequenceGenesisObject) Write(writer io.Writer, value []*GenesisObject) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*GenesisObject is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterGenesisObjectINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceGenesisObject struct {}
+
+func (FfiDestroyerSequenceGenesisObject) Destroy(sequence []*GenesisObject) {
+	for _, value := range sequence {
+		FfiDestroyerGenesisObject{}.Destroy(value)
 	}
 }
 
