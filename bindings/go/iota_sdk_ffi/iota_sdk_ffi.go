@@ -440,6 +440,159 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepoch_computation_charge()
+	})
+	if checksum != 25355 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepoch_computation_charge: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch()
+	})
+	if checksum != 49990 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch_start_timestamp_ms()
+	})
+	if checksum != 57669 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch_start_timestamp_ms: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee()
+	})
+	if checksum != 28070 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepoch_protocol_version()
+	})
+	if checksum != 40406 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepoch_protocol_version: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_charge()
+	})
+	if checksum != 35870 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_charge: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_rebate()
+	})
+	if checksum != 21786 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_rebate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepoch_system_packages()
+	})
+	if checksum != 55002 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepoch_system_packages: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge()
+	})
+	if checksum != 4379 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned()
+	})
+	if checksum != 17712 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch()
+	})
+	if checksum != 52992 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms()
+	})
+	if checksum != 35398 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee()
+	})
+	if checksum != 38234 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_protocol_version()
+	})
+	if checksum != 16414 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv2_protocol_version: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_charge()
+	})
+	if checksum != 4751 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_charge: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate()
+	})
+	if checksum != 52102 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages()
+	})
+	if checksum != 48705 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest()
 	})
 	if checksum != 41616 {
@@ -2096,6 +2249,33 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies()
+	})
+	if checksum != 25411 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules()
+	})
+	if checksum != 23597 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_systempackage_modules: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_systempackage_version()
+	})
+	if checksum != 39738 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_systempackage_version: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration()
 	})
 	if checksum != 47752 {
@@ -2803,6 +2983,24 @@ func uniffiCheckChecksums() {
 	if checksum != 21959 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new()
+	})
+	if checksum != 48694 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new()
+	})
+	if checksum != 52433 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3640,6 +3838,15 @@ func uniffiCheckChecksums() {
 	if checksum != 30839 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new()
+	})
+	if checksum != 25070 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5364,14 +5571,151 @@ func (_ FfiDestroyerCancelledTransaction) Destroy(value *CancelledTransaction) {
 
 
 
+// System transaction used to change the epoch
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// change-epoch = u64  ; next epoch
+// u64  ; protocol version
+// u64  ; storage charge
+// u64  ; computation charge
+// u64  ; storage rebate
+// u64  ; non-refundable storage fee
+// u64  ; epoch start timestamp
+// (vector system-package)
+// ```
 type ChangeEpochInterface interface {
+	// The total amount of gas charged for computation during the epoch.
+	ComputationCharge() uint64
+	// The next (to become) epoch ID.
+	Epoch() uint64
+	// Unix timestamp when epoch started
+	EpochStartTimestampMs() uint64
+	// The non-refundable storage fee.
+	NonRefundableStorageFee() uint64
+	// The protocol version in effect in the new epoch.
+	ProtocolVersion() uint64
+	// The total amount of gas charged for storage during the epoch.
+	StorageCharge() uint64
+	// The amount of storage rebate refunded to the txn senders.
+	StorageRebate() uint64
+	// System packages (specifically framework and move stdlib) that are
+	// written before the new epoch starts.
+	SystemPackages() []*SystemPackage
 }
+// System transaction used to change the epoch
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// change-epoch = u64  ; next epoch
+// u64  ; protocol version
+// u64  ; storage charge
+// u64  ; computation charge
+// u64  ; storage rebate
+// u64  ; non-refundable storage fee
+// u64  ; epoch start timestamp
+// (vector system-package)
+// ```
 type ChangeEpoch struct {
 	ffiObject FfiObject
 }
+func NewChangeEpoch(epoch uint64, protocolVersion uint64, storageCharge uint64, computationCharge uint64, storageRebate uint64, nonRefundableStorageFee uint64, epochStartTimestampMs uint64, systemPackages []*SystemPackage) *ChangeEpoch {
+	return FfiConverterChangeEpochINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_changeepoch_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterUint64INSTANCE.Lower(protocolVersion), FfiConverterUint64INSTANCE.Lower(storageCharge), FfiConverterUint64INSTANCE.Lower(computationCharge), FfiConverterUint64INSTANCE.Lower(storageRebate), FfiConverterUint64INSTANCE.Lower(nonRefundableStorageFee), FfiConverterUint64INSTANCE.Lower(epochStartTimestampMs), FfiConverterSequenceSystemPackageINSTANCE.Lower(systemPackages),_uniffiStatus)
+	}))
+}
 
 
 
+
+// The total amount of gas charged for computation during the epoch.
+func (_self *ChangeEpoch) ComputationCharge() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepoch_computation_charge(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The next (to become) epoch ID.
+func (_self *ChangeEpoch) Epoch() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Unix timestamp when epoch started
+func (_self *ChangeEpoch) EpochStartTimestampMs() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch_start_timestamp_ms(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The non-refundable storage fee.
+func (_self *ChangeEpoch) NonRefundableStorageFee() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepoch_non_refundable_storage_fee(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The protocol version in effect in the new epoch.
+func (_self *ChangeEpoch) ProtocolVersion() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepoch_protocol_version(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The total amount of gas charged for storage during the epoch.
+func (_self *ChangeEpoch) StorageCharge() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_charge(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The amount of storage rebate refunded to the txn senders.
+func (_self *ChangeEpoch) StorageRebate() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_rebate(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// System packages (specifically framework and move stdlib) that are
+// written before the new epoch starts.
+func (_self *ChangeEpoch) SystemPackages() []*SystemPackage {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceSystemPackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_changeepoch_system_packages(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 func (object *ChangeEpoch) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -5424,14 +5768,165 @@ func (_ FfiDestroyerChangeEpoch) Destroy(value *ChangeEpoch) {
 
 
 
+// System transaction used to change the epoch
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// change-epoch = u64  ; next epoch
+// u64  ; protocol version
+// u64  ; storage charge
+// u64  ; computation charge
+// u64  ; computation charge burned
+// u64  ; storage rebate
+// u64  ; non-refundable storage fee
+// u64  ; epoch start timestamp
+// (vector system-package)
+// ```
 type ChangeEpochV2Interface interface {
+	// The total amount of gas charged for computation during the epoch.
+	ComputationCharge() uint64
+	// The total amount of gas burned for computation during the epoch.
+	ComputationChargeBurned() uint64
+	// The next (to become) epoch ID.
+	Epoch() uint64
+	// Unix timestamp when epoch started
+	EpochStartTimestampMs() uint64
+	// The non-refundable storage fee.
+	NonRefundableStorageFee() uint64
+	// The protocol version in effect in the new epoch.
+	ProtocolVersion() uint64
+	// The total amount of gas charged for storage during the epoch.
+	StorageCharge() uint64
+	// The amount of storage rebate refunded to the txn senders.
+	StorageRebate() uint64
+	// System packages (specifically framework and move stdlib) that are
+	// written before the new epoch starts.
+	SystemPackages() []*SystemPackage
 }
+// System transaction used to change the epoch
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// change-epoch = u64  ; next epoch
+// u64  ; protocol version
+// u64  ; storage charge
+// u64  ; computation charge
+// u64  ; computation charge burned
+// u64  ; storage rebate
+// u64  ; non-refundable storage fee
+// u64  ; epoch start timestamp
+// (vector system-package)
+// ```
 type ChangeEpochV2 struct {
 	ffiObject FfiObject
 }
+func NewChangeEpochV2(epoch uint64, protocolVersion uint64, storageCharge uint64, computationCharge uint64, computationChargeBurned uint64, storageRebate uint64, nonRefundableStorageFee uint64, epochStartTimestampMs uint64, systemPackages []*SystemPackage) *ChangeEpochV2 {
+	return FfiConverterChangeEpochV2INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_changeepochv2_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterUint64INSTANCE.Lower(protocolVersion), FfiConverterUint64INSTANCE.Lower(storageCharge), FfiConverterUint64INSTANCE.Lower(computationCharge), FfiConverterUint64INSTANCE.Lower(computationChargeBurned), FfiConverterUint64INSTANCE.Lower(storageRebate), FfiConverterUint64INSTANCE.Lower(nonRefundableStorageFee), FfiConverterUint64INSTANCE.Lower(epochStartTimestampMs), FfiConverterSequenceSystemPackageINSTANCE.Lower(systemPackages),_uniffiStatus)
+	}))
+}
 
 
 
+
+// The total amount of gas charged for computation during the epoch.
+func (_self *ChangeEpochV2) ComputationCharge() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The total amount of gas burned for computation during the epoch.
+func (_self *ChangeEpochV2) ComputationChargeBurned() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge_burned(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The next (to become) epoch ID.
+func (_self *ChangeEpochV2) Epoch() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Unix timestamp when epoch started
+func (_self *ChangeEpochV2) EpochStartTimestampMs() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch_start_timestamp_ms(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The non-refundable storage fee.
+func (_self *ChangeEpochV2) NonRefundableStorageFee() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_non_refundable_storage_fee(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The protocol version in effect in the new epoch.
+func (_self *ChangeEpochV2) ProtocolVersion() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_protocol_version(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The total amount of gas charged for storage during the epoch.
+func (_self *ChangeEpochV2) StorageCharge() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_charge(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The amount of storage rebate refunded to the txn senders.
+func (_self *ChangeEpochV2) StorageRebate() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_rebate(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// System packages (specifically framework and move stdlib) that are
+// written before the new epoch starts.
+func (_self *ChangeEpochV2) SystemPackages() []*SystemPackage {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceSystemPackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_system_packages(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 func (object *ChangeEpochV2) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -13651,6 +14146,127 @@ func (c FfiConverterStructTag) Write(writer io.Writer, value *StructTag) {
 type FfiDestroyerStructTag struct {}
 
 func (_ FfiDestroyerStructTag) Destroy(value *StructTag) {
+		value.Destroy()
+}
+
+
+
+// System package
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// system-package = u64                ; version
+// (vector bytes)     ; modules
+// (vector object-id) ; dependencies
+// ```
+type SystemPackageInterface interface {
+	Dependencies() []*ObjectId
+	Modules() [][]byte
+	Version() uint64
+}
+// System package
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// system-package = u64                ; version
+// (vector bytes)     ; modules
+// (vector object-id) ; dependencies
+// ```
+type SystemPackage struct {
+	ffiObject FfiObject
+}
+func NewSystemPackage(version uint64, modules [][]byte, dependencies []*ObjectId) *SystemPackage {
+	return FfiConverterSystemPackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(FfiConverterUint64INSTANCE.Lower(version), FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *SystemPackage) Dependencies() []*ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*SystemPackage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *SystemPackage) Modules() [][]byte {
+	_pointer := _self.ffiObject.incrementPointer("*SystemPackage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_systempackage_modules(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *SystemPackage) Version() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*SystemPackage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_systempackage_version(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *SystemPackage) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterSystemPackage struct {}
+
+var FfiConverterSystemPackageINSTANCE = FfiConverterSystemPackage{}
+
+
+func (c FfiConverterSystemPackage) Lift(pointer unsafe.Pointer) *SystemPackage {
+	result := &SystemPackage {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_systempackage(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_systempackage(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*SystemPackage).Destroy)
+	return result
+}
+
+func (c FfiConverterSystemPackage) Read(reader io.Reader) *SystemPackage {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterSystemPackage) Lower(value *SystemPackage) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*SystemPackage")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterSystemPackage) Write(writer io.Writer, value *SystemPackage) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerSystemPackage struct {}
+
+func (_ FfiDestroyerSystemPackage) Destroy(value *SystemPackage) {
 		value.Destroy()
 }
 
@@ -24266,6 +24882,49 @@ type FfiDestroyerSequenceObjectId struct {}
 func (FfiDestroyerSequenceObjectId) Destroy(sequence []*ObjectId) {
 	for _, value := range sequence {
 		FfiDestroyerObjectId{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceSystemPackage struct{}
+
+var FfiConverterSequenceSystemPackageINSTANCE = FfiConverterSequenceSystemPackage{}
+
+func (c FfiConverterSequenceSystemPackage) Lift(rb RustBufferI) []*SystemPackage {
+	return LiftFromRustBuffer[[]*SystemPackage](c, rb)
+}
+
+func (c FfiConverterSequenceSystemPackage) Read(reader io.Reader) []*SystemPackage {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*SystemPackage, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterSystemPackageINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceSystemPackage) Lower(value []*SystemPackage) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*SystemPackage](c, value)
+}
+
+func (c FfiConverterSequenceSystemPackage) Write(writer io.Writer, value []*SystemPackage) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*SystemPackage is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterSystemPackageINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceSystemPackage struct {}
+
+func (FfiDestroyerSequenceSystemPackage) Destroy(sequence []*SystemPackage) {
+	for _, value := range sequence {
+		FfiDestroyerSystemPackage{}.Destroy(value)
 	}
 }
 
