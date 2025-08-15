@@ -479,6 +479,40 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments() != 52539:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_computation_charge() != 25355:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch() != 49990:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch_start_timestamp_ms() != 57669:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee() != 28070:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_protocol_version() != 40406:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_charge() != 35870:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_rebate() != 21786:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_system_packages() != 55002:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge() != 4379:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned() != 17712:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch() != 52992:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms() != 35398:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee() != 38234:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_protocol_version() != 16414:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_charge() != 4751:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate() != 52102:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages() != 48705:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest() != 41616:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set() != 22589:
@@ -847,6 +881,12 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies() != 25411:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules() != 23597:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration() != 47752:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_gas_payment() != 5316:
@@ -1004,6 +1044,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10() != 17556:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new() != 21959:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new() != 48694:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new() != 52433:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58() != 33027:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1190,6 +1234,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() != 20682:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota() != 30839:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 25070:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new() != 4081:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1600,6 +1646,58 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_changeepoch.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_changeepoch.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_changeepoch_new.argtypes = (
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_changeepoch_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_computation_charge.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_computation_charge.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch_start_timestamp_ms.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch_start_timestamp_ms.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_non_refundable_storage_fee.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_non_refundable_storage_fee.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_protocol_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_protocol_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_charge.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_charge.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_rebate.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_rebate.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_system_packages.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_system_packages.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_changeepochv2.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -1610,6 +1708,64 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_changeepochv2.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_changeepochv2.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_changeepochv2_new.argtypes = (
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_changeepochv2_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge_burned.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge_burned.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch_start_timestamp_ms.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch_start_timestamp_ms.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_non_refundable_storage_fee.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_non_refundable_storage_fee.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_protocol_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_protocol_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_charge.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_charge.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_rebate.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_rebate.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_system_packages.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_system_packages.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointcommitment.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3542,6 +3698,38 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_systempackage.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_systempackage.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_systempackage.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_systempackage.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new.argtypes = (
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_modules.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_modules.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transaction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4486,6 +4674,57 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest.resty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_computation_charge.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_computation_charge.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch_start_timestamp_ms.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch_start_timestamp_ms.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_protocol_version.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_protocol_version.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_charge.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_charge.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_rebate.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_rebate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_system_packages.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_system_packages.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_protocol_version.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_protocol_version.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_charge.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_charge.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest.restype = ctypes.c_uint16
@@ -5038,6 +5277,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type.restype = cty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration.restype = ctypes.c_uint16
@@ -5275,6 +5523,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58.restype = ctypes.c_uint16
@@ -5554,6 +5808,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new.restype = ctyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new.restype = ctypes.c_uint16
@@ -5825,6 +6082,8 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
     def write(value, buf):
         buf.write_i32(len(value))
         buf.write(value)
+
+
 
 
 
@@ -15585,6 +15844,31 @@ class _UniffiConverterSequenceTypeObjectId(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeSystemPackage(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeSystemPackage.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeSystemPackage.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeSystemPackage.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeTransactionDigest(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -17513,13 +17797,122 @@ class _UniffiConverterTypeCancelledTransaction:
     def write(cls, value: CancelledTransactionProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ChangeEpochProtocol(typing.Protocol):
-    pass
+    """
+    System transaction used to change the epoch
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    change-epoch = u64  ; next epoch
+    u64  ; protocol version
+    u64  ; storage charge
+    u64  ; computation charge
+    u64  ; storage rebate
+    u64  ; non-refundable storage fee
+    u64  ; epoch start timestamp
+    (vector system-package)
+    ```
+    """
+
+    def computation_charge(self, ):
+        """
+        The total amount of gas charged for computation during the epoch.
+        """
+
+        raise NotImplementedError
+    def epoch(self, ):
+        """
+        The next (to become) epoch ID.
+        """
+
+        raise NotImplementedError
+    def epoch_start_timestamp_ms(self, ):
+        """
+        Unix timestamp when epoch started
+        """
+
+        raise NotImplementedError
+    def non_refundable_storage_fee(self, ):
+        """
+        The non-refundable storage fee.
+        """
+
+        raise NotImplementedError
+    def protocol_version(self, ):
+        """
+        The protocol version in effect in the new epoch.
+        """
+
+        raise NotImplementedError
+    def storage_charge(self, ):
+        """
+        The total amount of gas charged for storage during the epoch.
+        """
+
+        raise NotImplementedError
+    def storage_rebate(self, ):
+        """
+        The amount of storage rebate refunded to the txn senders.
+        """
+
+        raise NotImplementedError
+    def system_packages(self, ):
+        """
+        System packages (specifically framework and move stdlib) that are
+        written before the new epoch starts.
+        """
+
+        raise NotImplementedError
 # ChangeEpoch is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ChangeEpoch():
+    """
+    System transaction used to change the epoch
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    change-epoch = u64  ; next epoch
+    u64  ; protocol version
+    u64  ; storage charge
+    u64  ; computation charge
+    u64  ; storage rebate
+    u64  ; non-refundable storage fee
+    u64  ; epoch start timestamp
+    (vector system-package)
+    ```
+    """
+
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, epoch: "int",protocol_version: "int",storage_charge: "int",computation_charge: "int",storage_rebate: "int",non_refundable_storage_fee: "int",epoch_start_timestamp_ms: "int",system_packages: "typing.List[SystemPackage]"):
+        _UniffiConverterUInt64.check_lower(epoch)
+        
+        _UniffiConverterUInt64.check_lower(protocol_version)
+        
+        _UniffiConverterUInt64.check_lower(storage_charge)
+        
+        _UniffiConverterUInt64.check_lower(computation_charge)
+        
+        _UniffiConverterUInt64.check_lower(storage_rebate)
+        
+        _UniffiConverterUInt64.check_lower(non_refundable_storage_fee)
+        
+        _UniffiConverterUInt64.check_lower(epoch_start_timestamp_ms)
+        
+        _UniffiConverterSequenceTypeSystemPackage.check_lower(system_packages)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_changeepoch_new,
+        _UniffiConverterUInt64.lower(epoch),
+        _UniffiConverterUInt64.lower(protocol_version),
+        _UniffiConverterUInt64.lower(storage_charge),
+        _UniffiConverterUInt64.lower(computation_charge),
+        _UniffiConverterUInt64.lower(storage_rebate),
+        _UniffiConverterUInt64.lower(non_refundable_storage_fee),
+        _UniffiConverterUInt64.lower(epoch_start_timestamp_ms),
+        _UniffiConverterSequenceTypeSystemPackage.lower(system_packages))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -17538,6 +17931,111 @@ class ChangeEpoch():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def computation_charge(self, ) -> "int":
+        """
+        The total amount of gas charged for computation during the epoch.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_computation_charge,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def epoch(self, ) -> "int":
+        """
+        The next (to become) epoch ID.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def epoch_start_timestamp_ms(self, ) -> "int":
+        """
+        Unix timestamp when epoch started
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch_start_timestamp_ms,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def non_refundable_storage_fee(self, ) -> "int":
+        """
+        The non-refundable storage fee.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_non_refundable_storage_fee,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def protocol_version(self, ) -> "int":
+        """
+        The protocol version in effect in the new epoch.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_protocol_version,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def storage_charge(self, ) -> "int":
+        """
+        The total amount of gas charged for storage during the epoch.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_charge,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def storage_rebate(self, ) -> "int":
+        """
+        The amount of storage rebate refunded to the txn senders.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_rebate,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def system_packages(self, ) -> "typing.List[SystemPackage]":
+        """
+        System packages (specifically framework and move stdlib) that are
+        written before the new epoch starts.
+        """
+
+        return _UniffiConverterSequenceTypeSystemPackage.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_system_packages,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -17569,13 +18067,133 @@ class _UniffiConverterTypeChangeEpoch:
     def write(cls, value: ChangeEpochProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ChangeEpochV2Protocol(typing.Protocol):
-    pass
+    """
+    System transaction used to change the epoch
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    change-epoch = u64  ; next epoch
+    u64  ; protocol version
+    u64  ; storage charge
+    u64  ; computation charge
+    u64  ; computation charge burned
+    u64  ; storage rebate
+    u64  ; non-refundable storage fee
+    u64  ; epoch start timestamp
+    (vector system-package)
+    ```
+    """
+
+    def computation_charge(self, ):
+        """
+        The total amount of gas charged for computation during the epoch.
+        """
+
+        raise NotImplementedError
+    def computation_charge_burned(self, ):
+        """
+        The total amount of gas burned for computation during the epoch.
+        """
+
+        raise NotImplementedError
+    def epoch(self, ):
+        """
+        The next (to become) epoch ID.
+        """
+
+        raise NotImplementedError
+    def epoch_start_timestamp_ms(self, ):
+        """
+        Unix timestamp when epoch started
+        """
+
+        raise NotImplementedError
+    def non_refundable_storage_fee(self, ):
+        """
+        The non-refundable storage fee.
+        """
+
+        raise NotImplementedError
+    def protocol_version(self, ):
+        """
+        The protocol version in effect in the new epoch.
+        """
+
+        raise NotImplementedError
+    def storage_charge(self, ):
+        """
+        The total amount of gas charged for storage during the epoch.
+        """
+
+        raise NotImplementedError
+    def storage_rebate(self, ):
+        """
+        The amount of storage rebate refunded to the txn senders.
+        """
+
+        raise NotImplementedError
+    def system_packages(self, ):
+        """
+        System packages (specifically framework and move stdlib) that are
+        written before the new epoch starts.
+        """
+
+        raise NotImplementedError
 # ChangeEpochV2 is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ChangeEpochV2():
+    """
+    System transaction used to change the epoch
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    change-epoch = u64  ; next epoch
+    u64  ; protocol version
+    u64  ; storage charge
+    u64  ; computation charge
+    u64  ; computation charge burned
+    u64  ; storage rebate
+    u64  ; non-refundable storage fee
+    u64  ; epoch start timestamp
+    (vector system-package)
+    ```
+    """
+
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, epoch: "int",protocol_version: "int",storage_charge: "int",computation_charge: "int",computation_charge_burned: "int",storage_rebate: "int",non_refundable_storage_fee: "int",epoch_start_timestamp_ms: "int",system_packages: "typing.List[SystemPackage]"):
+        _UniffiConverterUInt64.check_lower(epoch)
+        
+        _UniffiConverterUInt64.check_lower(protocol_version)
+        
+        _UniffiConverterUInt64.check_lower(storage_charge)
+        
+        _UniffiConverterUInt64.check_lower(computation_charge)
+        
+        _UniffiConverterUInt64.check_lower(computation_charge_burned)
+        
+        _UniffiConverterUInt64.check_lower(storage_rebate)
+        
+        _UniffiConverterUInt64.check_lower(non_refundable_storage_fee)
+        
+        _UniffiConverterUInt64.check_lower(epoch_start_timestamp_ms)
+        
+        _UniffiConverterSequenceTypeSystemPackage.check_lower(system_packages)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_changeepochv2_new,
+        _UniffiConverterUInt64.lower(epoch),
+        _UniffiConverterUInt64.lower(protocol_version),
+        _UniffiConverterUInt64.lower(storage_charge),
+        _UniffiConverterUInt64.lower(computation_charge),
+        _UniffiConverterUInt64.lower(computation_charge_burned),
+        _UniffiConverterUInt64.lower(storage_rebate),
+        _UniffiConverterUInt64.lower(non_refundable_storage_fee),
+        _UniffiConverterUInt64.lower(epoch_start_timestamp_ms),
+        _UniffiConverterSequenceTypeSystemPackage.lower(system_packages))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -17594,6 +18212,124 @@ class ChangeEpochV2():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def computation_charge(self, ) -> "int":
+        """
+        The total amount of gas charged for computation during the epoch.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def computation_charge_burned(self, ) -> "int":
+        """
+        The total amount of gas burned for computation during the epoch.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge_burned,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def epoch(self, ) -> "int":
+        """
+        The next (to become) epoch ID.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def epoch_start_timestamp_ms(self, ) -> "int":
+        """
+        Unix timestamp when epoch started
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch_start_timestamp_ms,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def non_refundable_storage_fee(self, ) -> "int":
+        """
+        The non-refundable storage fee.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_non_refundable_storage_fee,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def protocol_version(self, ) -> "int":
+        """
+        The protocol version in effect in the new epoch.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_protocol_version,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def storage_charge(self, ) -> "int":
+        """
+        The total amount of gas charged for storage during the epoch.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_charge,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def storage_rebate(self, ) -> "int":
+        """
+        The amount of storage rebate refunded to the txn senders.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_rebate,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def system_packages(self, ) -> "typing.List[SystemPackage]":
+        """
+        System packages (specifically framework and move stdlib) that are
+        written before the new epoch starts.
+        """
+
+        return _UniffiConverterSequenceTypeSystemPackage.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_system_packages,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -26148,6 +26884,130 @@ class _UniffiConverterTypeStructTag:
     @classmethod
     def write(cls, value: StructTagProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class SystemPackageProtocol(typing.Protocol):
+    """
+    System package
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    system-package = u64                ; version
+    (vector bytes)     ; modules
+    (vector object-id) ; dependencies
+    ```
+    """
+
+    def dependencies(self, ):
+        raise NotImplementedError
+    def modules(self, ):
+        raise NotImplementedError
+    def version(self, ):
+        raise NotImplementedError
+# SystemPackage is a Rust-only trait - it's a wrapper around a Rust implementation.
+class SystemPackage():
+    """
+    System package
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    system-package = u64                ; version
+    (vector bytes)     ; modules
+    (vector object-id) ; dependencies
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, version: "int",modules: "typing.List[bytes]",dependencies: "typing.List[ObjectId]"):
+        _UniffiConverterUInt64.check_lower(version)
+        
+        _UniffiConverterSequenceBytes.check_lower(modules)
+        
+        _UniffiConverterSequenceTypeObjectId.check_lower(dependencies)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new,
+        _UniffiConverterUInt64.lower(version),
+        _UniffiConverterSequenceBytes.lower(modules),
+        _UniffiConverterSequenceTypeObjectId.lower(dependencies))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_systempackage, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_systempackage, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def dependencies(self, ) -> "typing.List[ObjectId]":
+        return _UniffiConverterSequenceTypeObjectId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def modules(self, ) -> "typing.List[bytes]":
+        return _UniffiConverterSequenceBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_modules,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def version(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeSystemPackage:
+
+    @staticmethod
+    def lift(value: int):
+        return SystemPackage._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: SystemPackage):
+        if not isinstance(value, SystemPackage):
+            raise TypeError("Expected SystemPackage instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: SystemPackageProtocol):
+        if not isinstance(value, SystemPackage):
+            raise TypeError("Expected SystemPackage instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: SystemPackageProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class TransactionProtocol(typing.Protocol):
     """
     A transaction
@@ -28682,6 +29542,7 @@ __all__ = [
     "SimpleSignature",
     "SplitCoins",
     "StructTag",
+    "SystemPackage",
     "Transaction",
     "TransactionDigest",
     "TransactionEffects",

@@ -640,16 +640,22 @@ pub struct ChangeEpoch {
     pub system_packages: Vec<SystemPackage>,
 }
 
-/// System package
+/// System transaction used to change the epoch
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// system-package = u64                ; version
-///                  (vector bytes)     ; modules
-///                  (vector object-id) ; dependencies
+/// change-epoch = u64  ; next epoch
+///                u64  ; protocol version
+///                u64  ; storage charge
+///                u64  ; computation charge
+///                u64  ; computation charge burned
+///                u64  ; storage rebate
+///                u64  ; non-refundable storage fee
+///                u64  ; epoch start timestamp
+///                (vector system-package)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(

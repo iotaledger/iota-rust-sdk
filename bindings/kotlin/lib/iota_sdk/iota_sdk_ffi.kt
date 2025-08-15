@@ -1675,6 +1675,54 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -1707,6 +1755,40 @@ fun uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded(
 fun uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepoch_computation_charge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch_start_timestamp_ms(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepoch_protocol_version(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_charge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_rebate(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepoch_system_packages(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_protocol_version(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_charge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest(
 ): Short
@@ -2076,6 +2158,12 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_systempackage_modules(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_systempackage_version(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_expiration(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_gas_payment(
@@ -2233,6 +2321,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str(
 fun uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58(
 ): Short
@@ -2419,6 +2511,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin(
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_new(
 ): Short
@@ -2635,10 +2729,48 @@ fun uniffi_iota_sdk_ffi_fn_clone_changeepoch(`ptr`: Pointer,uniffi_out_err: Unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_changeepoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_changeepoch_new(`epoch`: Long,`protocolVersion`: Long,`storageCharge`: Long,`computationCharge`: Long,`storageRebate`: Long,`nonRefundableStorageFee`: Long,`epochStartTimestampMs`: Long,`systemPackages`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_computation_charge(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch_start_timestamp_ms(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_non_refundable_storage_fee(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_protocol_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_charge(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_rebate(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_system_packages(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_changeepochv2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_changeepochv2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_changeepochv2_new(`epoch`: Long,`protocolVersion`: Long,`storageCharge`: Long,`computationCharge`: Long,`computationChargeBurned`: Long,`storageRebate`: Long,`nonRefundableStorageFee`: Long,`epochStartTimestampMs`: Long,`systemPackages`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge_burned(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch_start_timestamp_ms(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_non_refundable_storage_fee(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_protocol_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_charge(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_rebate(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_system_packages(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_checkpointcommitment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_checkpointcommitment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3393,6 +3525,18 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(`ptr`: Pointer,uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_clone_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(`version`: Long,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_systempackage_modules(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_systempackage_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3802,6 +3946,57 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_version_assignments() != 52539.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_computation_charge() != 25355.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch() != 49990.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_epoch_start_timestamp_ms() != 57669.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_non_refundable_storage_fee() != 28070.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_protocol_version() != 40406.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_charge() != 35870.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_storage_rebate() != 21786.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepoch_system_packages() != 55002.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge() != 4379.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_computation_charge_burned() != 17712.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch() != 52992.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_epoch_start_timestamp_ms() != 35398.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_non_refundable_storage_fee() != 38234.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_protocol_version() != 16414.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_charge() != 4751.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate() != 52102.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages() != 48705.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest() != 41616.toShort()) {
@@ -4356,6 +4551,15 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies() != 25411.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules() != 23597.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration() != 47752.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -4591,6 +4795,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new() != 21959.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new() != 48694.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new() != 52433.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58() != 33027.toShort()) {
@@ -4870,6 +5080,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota() != 30839.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 25070.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new() != 4081.toShort()) {
@@ -8095,11 +8308,88 @@ public object FfiConverterTypeCancelledTransaction: FfiConverter<CancelledTransa
 //
 
 
+/**
+ * System transaction used to change the epoch
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * change-epoch = u64  ; next epoch
+ * u64  ; protocol version
+ * u64  ; storage charge
+ * u64  ; computation charge
+ * u64  ; storage rebate
+ * u64  ; non-refundable storage fee
+ * u64  ; epoch start timestamp
+ * (vector system-package)
+ * ```
+ */
 public interface ChangeEpochInterface {
+    
+    /**
+     * The total amount of gas charged for computation during the epoch.
+     */
+    fun `computationCharge`(): kotlin.ULong
+    
+    /**
+     * The next (to become) epoch ID.
+     */
+    fun `epoch`(): kotlin.ULong
+    
+    /**
+     * Unix timestamp when epoch started
+     */
+    fun `epochStartTimestampMs`(): kotlin.ULong
+    
+    /**
+     * The non-refundable storage fee.
+     */
+    fun `nonRefundableStorageFee`(): kotlin.ULong
+    
+    /**
+     * The protocol version in effect in the new epoch.
+     */
+    fun `protocolVersion`(): kotlin.ULong
+    
+    /**
+     * The total amount of gas charged for storage during the epoch.
+     */
+    fun `storageCharge`(): kotlin.ULong
+    
+    /**
+     * The amount of storage rebate refunded to the txn senders.
+     */
+    fun `storageRebate`(): kotlin.ULong
+    
+    /**
+     * System packages (specifically framework and move stdlib) that are
+     * written before the new epoch starts.
+     */
+    fun `systemPackages`(): List<SystemPackage>
     
     companion object
 }
 
+/**
+ * System transaction used to change the epoch
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * change-epoch = u64  ; next epoch
+ * u64  ; protocol version
+ * u64  ; storage charge
+ * u64  ; computation charge
+ * u64  ; storage rebate
+ * u64  ; non-refundable storage fee
+ * u64  ; epoch start timestamp
+ * (vector system-package)
+ * ```
+ */
 open class ChangeEpoch: Disposable, AutoCloseable, ChangeEpochInterface
 {
 
@@ -8118,6 +8408,13 @@ open class ChangeEpoch: Disposable, AutoCloseable, ChangeEpochInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
+    constructor(`epoch`: kotlin.ULong, `protocolVersion`: kotlin.ULong, `storageCharge`: kotlin.ULong, `computationCharge`: kotlin.ULong, `storageRebate`: kotlin.ULong, `nonRefundableStorageFee`: kotlin.ULong, `epochStartTimestampMs`: kotlin.ULong, `systemPackages`: List<SystemPackage>) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_changeepoch_new(
+        FfiConverterULong.lower(`epoch`),FfiConverterULong.lower(`protocolVersion`),FfiConverterULong.lower(`storageCharge`),FfiConverterULong.lower(`computationCharge`),FfiConverterULong.lower(`storageRebate`),FfiConverterULong.lower(`nonRefundableStorageFee`),FfiConverterULong.lower(`epochStartTimestampMs`),FfiConverterSequenceTypeSystemPackage.lower(`systemPackages`),_status)
+}
+    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -8181,6 +8478,127 @@ open class ChangeEpoch: Disposable, AutoCloseable, ChangeEpochInterface
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_changeepoch(pointer!!, status)
         }
     }
+
+    
+    /**
+     * The total amount of gas charged for computation during the epoch.
+     */override fun `computationCharge`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepoch_computation_charge(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The next (to become) epoch ID.
+     */override fun `epoch`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Unix timestamp when epoch started
+     */override fun `epochStartTimestampMs`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepoch_epoch_start_timestamp_ms(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The non-refundable storage fee.
+     */override fun `nonRefundableStorageFee`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepoch_non_refundable_storage_fee(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The protocol version in effect in the new epoch.
+     */override fun `protocolVersion`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepoch_protocol_version(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The total amount of gas charged for storage during the epoch.
+     */override fun `storageCharge`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_charge(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The amount of storage rebate refunded to the txn senders.
+     */override fun `storageRebate`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_rebate(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * System packages (specifically framework and move stdlib) that are
+     * written before the new epoch starts.
+     */override fun `systemPackages`(): List<SystemPackage> {
+            return FfiConverterSequenceTypeSystemPackage.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepoch_system_packages(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     
 
@@ -8317,11 +8735,95 @@ public object FfiConverterTypeChangeEpoch: FfiConverter<ChangeEpoch, Pointer> {
 //
 
 
+/**
+ * System transaction used to change the epoch
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * change-epoch = u64  ; next epoch
+ * u64  ; protocol version
+ * u64  ; storage charge
+ * u64  ; computation charge
+ * u64  ; computation charge burned
+ * u64  ; storage rebate
+ * u64  ; non-refundable storage fee
+ * u64  ; epoch start timestamp
+ * (vector system-package)
+ * ```
+ */
 public interface ChangeEpochV2Interface {
+    
+    /**
+     * The total amount of gas charged for computation during the epoch.
+     */
+    fun `computationCharge`(): kotlin.ULong
+    
+    /**
+     * The total amount of gas burned for computation during the epoch.
+     */
+    fun `computationChargeBurned`(): kotlin.ULong
+    
+    /**
+     * The next (to become) epoch ID.
+     */
+    fun `epoch`(): kotlin.ULong
+    
+    /**
+     * Unix timestamp when epoch started
+     */
+    fun `epochStartTimestampMs`(): kotlin.ULong
+    
+    /**
+     * The non-refundable storage fee.
+     */
+    fun `nonRefundableStorageFee`(): kotlin.ULong
+    
+    /**
+     * The protocol version in effect in the new epoch.
+     */
+    fun `protocolVersion`(): kotlin.ULong
+    
+    /**
+     * The total amount of gas charged for storage during the epoch.
+     */
+    fun `storageCharge`(): kotlin.ULong
+    
+    /**
+     * The amount of storage rebate refunded to the txn senders.
+     */
+    fun `storageRebate`(): kotlin.ULong
+    
+    /**
+     * System packages (specifically framework and move stdlib) that are
+     * written before the new epoch starts.
+     */
+    fun `systemPackages`(): List<SystemPackage>
     
     companion object
 }
 
+/**
+ * System transaction used to change the epoch
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * change-epoch = u64  ; next epoch
+ * u64  ; protocol version
+ * u64  ; storage charge
+ * u64  ; computation charge
+ * u64  ; computation charge burned
+ * u64  ; storage rebate
+ * u64  ; non-refundable storage fee
+ * u64  ; epoch start timestamp
+ * (vector system-package)
+ * ```
+ */
 open class ChangeEpochV2: Disposable, AutoCloseable, ChangeEpochV2Interface
 {
 
@@ -8340,6 +8842,13 @@ open class ChangeEpochV2: Disposable, AutoCloseable, ChangeEpochV2Interface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
+    constructor(`epoch`: kotlin.ULong, `protocolVersion`: kotlin.ULong, `storageCharge`: kotlin.ULong, `computationCharge`: kotlin.ULong, `computationChargeBurned`: kotlin.ULong, `storageRebate`: kotlin.ULong, `nonRefundableStorageFee`: kotlin.ULong, `epochStartTimestampMs`: kotlin.ULong, `systemPackages`: List<SystemPackage>) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_changeepochv2_new(
+        FfiConverterULong.lower(`epoch`),FfiConverterULong.lower(`protocolVersion`),FfiConverterULong.lower(`storageCharge`),FfiConverterULong.lower(`computationCharge`),FfiConverterULong.lower(`computationChargeBurned`),FfiConverterULong.lower(`storageRebate`),FfiConverterULong.lower(`nonRefundableStorageFee`),FfiConverterULong.lower(`epochStartTimestampMs`),FfiConverterSequenceTypeSystemPackage.lower(`systemPackages`),_status)
+}
+    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -8403,6 +8912,142 @@ open class ChangeEpochV2: Disposable, AutoCloseable, ChangeEpochV2Interface
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_changeepochv2(pointer!!, status)
         }
     }
+
+    
+    /**
+     * The total amount of gas charged for computation during the epoch.
+     */override fun `computationCharge`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The total amount of gas burned for computation during the epoch.
+     */override fun `computationChargeBurned`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv2_computation_charge_burned(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The next (to become) epoch ID.
+     */override fun `epoch`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Unix timestamp when epoch started
+     */override fun `epochStartTimestampMs`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv2_epoch_start_timestamp_ms(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The non-refundable storage fee.
+     */override fun `nonRefundableStorageFee`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv2_non_refundable_storage_fee(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The protocol version in effect in the new epoch.
+     */override fun `protocolVersion`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv2_protocol_version(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The total amount of gas charged for storage during the epoch.
+     */override fun `storageCharge`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_charge(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The amount of storage rebate refunded to the txn senders.
+     */override fun `storageRebate`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_rebate(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * System packages (specifically framework and move stdlib) that are
+     * written before the new epoch starts.
+     */override fun `systemPackages`(): List<SystemPackage> {
+            return FfiConverterSequenceTypeSystemPackage.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv2_system_packages(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     
 
@@ -25567,6 +26212,303 @@ public object FfiConverterTypeStructTag: FfiConverter<StructTag, Pointer> {
 
 
 /**
+ * System package
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * system-package = u64                ; version
+ * (vector bytes)     ; modules
+ * (vector object-id) ; dependencies
+ * ```
+ */
+public interface SystemPackageInterface {
+    
+    fun `dependencies`(): List<ObjectId>
+    
+    fun `modules`(): List<kotlin.ByteArray>
+    
+    fun `version`(): kotlin.ULong
+    
+    companion object
+}
+
+/**
+ * System package
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * system-package = u64                ; version
+ * (vector bytes)     ; modules
+ * (vector object-id) ; dependencies
+ * ```
+ */
+open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`version`: kotlin.ULong, `modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(
+        FfiConverterULong.lower(`version`),FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_systempackage(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_systempackage(pointer!!, status)
+        }
+    }
+
+    override fun `dependencies`(): List<ObjectId> {
+            return FfiConverterSequenceTypeObjectId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `modules`(): List<kotlin.ByteArray> {
+            return FfiConverterSequenceByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_modules(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `version`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_version(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSystemPackage: FfiConverter<SystemPackage, Pointer> {
+
+    override fun lower(value: SystemPackage): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): SystemPackage {
+        return SystemPackage(value)
+    }
+
+    override fun read(buf: ByteBuffer): SystemPackage {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: SystemPackage) = 8UL
+
+    override fun write(value: SystemPackage, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
  * A transaction
  *
  * # BCS
@@ -39269,6 +40211,34 @@ public object FfiConverterSequenceTypeObjectId: FfiConverterRustBuffer<List<Obje
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeObjectId.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeSystemPackage: FfiConverterRustBuffer<List<SystemPackage>> {
+    override fun read(buf: ByteBuffer): List<SystemPackage> {
+        val len = buf.getInt()
+        return List<SystemPackage>(len) {
+            FfiConverterTypeSystemPackage.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<SystemPackage>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeSystemPackage.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<SystemPackage>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeSystemPackage.write(it, buf)
         }
     }
 }
