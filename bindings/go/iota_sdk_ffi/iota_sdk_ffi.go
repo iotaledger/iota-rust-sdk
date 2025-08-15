@@ -4115,7 +4115,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_randomness_state_update()
 	})
-	if checksum != 45772 {
+	if checksum != 16439 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_randomness_state_update: UniFFI API checksum mismatch")
 	}
@@ -13371,66 +13371,6 @@ func (_ FfiDestroyerPublish) Destroy(value *Publish) {
 
 
 
-type RandomnessStateUpdateInterface interface {
-}
-type RandomnessStateUpdate struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *RandomnessStateUpdate) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterRandomnessStateUpdate struct {}
-
-var FfiConverterRandomnessStateUpdateINSTANCE = FfiConverterRandomnessStateUpdate{}
-
-
-func (c FfiConverterRandomnessStateUpdate) Lift(pointer unsafe.Pointer) *RandomnessStateUpdate {
-	result := &RandomnessStateUpdate {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_randomnessstateupdate(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_randomnessstateupdate(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*RandomnessStateUpdate).Destroy)
-	return result
-}
-
-func (c FfiConverterRandomnessStateUpdate) Read(reader io.Reader) *RandomnessStateUpdate {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterRandomnessStateUpdate) Lower(value *RandomnessStateUpdate) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*RandomnessStateUpdate")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterRandomnessStateUpdate) Write(writer io.Writer, value *RandomnessStateUpdate) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerRandomnessStateUpdate struct {}
-
-func (_ FfiDestroyerRandomnessStateUpdate) Destroy(value *RandomnessStateUpdate) {
-		value.Destroy()
-}
-
-
-
 // A secp256k1 signature.
 //
 // # BCS
@@ -15206,7 +15146,7 @@ func TransactionKindProgrammableTransaction(tx *ProgrammableTransaction) *Transa
 	}))
 }
 
-func TransactionKindRandomnessStateUpdate(tx *RandomnessStateUpdate) *TransactionKind {
+func TransactionKindRandomnessStateUpdate(tx RandomnessStateUpdate) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_randomness_state_update(FfiConverterRandomnessStateUpdateINSTANCE.Lower(tx),_uniffiStatus)
 	}))
@@ -18016,8 +17956,14 @@ func (_ FfiDestroyerGasCostSummary) Destroy(value GasCostSummary) {
 // ```
 type GasPayment struct {
 	Objects []ObjectReference
+	// Owner of the gas objects, either the transaction sender or a sponsor
 	Owner *Address
+	// Gas unit price to use when charging for computation
+	//
+	// Must be greater-than-or-equal-to the network's current RGP (reference
+	// gas price)
 	Price uint64
+	// Total budget willing to spend for the execution of a transaction
 	Budget uint64
 }
 
@@ -19427,6 +19373,66 @@ func (c FfiConverterProtocolConfigs) Write(writer io.Writer, value ProtocolConfi
 type FfiDestroyerProtocolConfigs struct {}
 
 func (_ FfiDestroyerProtocolConfigs) Destroy(value ProtocolConfigs) {
+	value.Destroy()
+}
+// Randomness update
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// randomness-state-update = u64 u64 bytes u64
+// ```
+type RandomnessStateUpdate struct {
+	// Epoch of the randomness state update transaction
+	Epoch uint64
+	// Randomness round of the update
+	RandomnessRound uint64
+	// Updated random bytes
+	RandomBytes []byte
+	// The initial version of the randomness object that it was shared at
+	RandomnessObjInitialSharedVersion uint64
+}
+
+func (r *RandomnessStateUpdate) Destroy() {
+		FfiDestroyerUint64{}.Destroy(r.Epoch);
+		FfiDestroyerUint64{}.Destroy(r.RandomnessRound);
+		FfiDestroyerBytes{}.Destroy(r.RandomBytes);
+		FfiDestroyerUint64{}.Destroy(r.RandomnessObjInitialSharedVersion);
+}
+
+type FfiConverterRandomnessStateUpdate struct {}
+
+var FfiConverterRandomnessStateUpdateINSTANCE = FfiConverterRandomnessStateUpdate{}
+
+func (c FfiConverterRandomnessStateUpdate) Lift(rb RustBufferI) RandomnessStateUpdate {
+	return LiftFromRustBuffer[RandomnessStateUpdate](c, rb)
+}
+
+func (c FfiConverterRandomnessStateUpdate) Read(reader io.Reader) RandomnessStateUpdate {
+	return RandomnessStateUpdate {
+			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterBytesINSTANCE.Read(reader),
+			FfiConverterUint64INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterRandomnessStateUpdate) Lower(value RandomnessStateUpdate) C.RustBuffer {
+	return LowerIntoRustBuffer[RandomnessStateUpdate](c, value)
+}
+
+func (c FfiConverterRandomnessStateUpdate) Write(writer io.Writer, value RandomnessStateUpdate) {
+		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
+		FfiConverterUint64INSTANCE.Write(writer, value.RandomnessRound);
+		FfiConverterBytesINSTANCE.Write(writer, value.RandomBytes);
+		FfiConverterUint64INSTANCE.Write(writer, value.RandomnessObjInitialSharedVersion);
+}
+
+type FfiDestroyerRandomnessStateUpdate struct {}
+
+func (_ FfiDestroyerRandomnessStateUpdate) Destroy(value RandomnessStateUpdate) {
 	value.Destroy()
 }
 type ServiceConfig struct {
@@ -22180,14 +22186,27 @@ func (_ FfiDestroyerTransactionBlockKindInput) Destroy(value TransactionBlockKin
 }
 
 
+// A TTL for a transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// transaction-expiration =  %x00      ; none
+// =/ %x01 u64  ; epoch
+// ```
 type TransactionExpiration interface {
 	Destroy()
 }
+// The transaction has no expiration
 type TransactionExpirationNone struct {
 }
 
 func (e TransactionExpirationNone) Destroy() {
 }
+// Validators wont sign a transaction unless the expiration Epoch
+// is greater than or equal to the current epoch
 type TransactionExpirationEpoch struct {
 	Field0 uint64
 }
