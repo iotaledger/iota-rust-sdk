@@ -3,7 +3,10 @@
 
 use std::sync::Arc;
 
-use iota_types::{GasCostSummary, TransactionExpiration};
+use iota_types::{
+    ActiveJwk, AuthenticatorStateExpire, AuthenticatorStateUpdateV1, GasCostSummary, Jwk, JwkId,
+    TransactionExpiration,
+};
 
 use crate::types::{
     address::Address,
@@ -141,7 +144,7 @@ impl TransactionKind {
     #[uniffi::constructor]
     pub fn authenticator_state_update_v1(tx: &AuthenticatorStateUpdateV1) -> Self {
         Self(iota_types::TransactionKind::AuthenticatorStateUpdateV1(
-            tx.0.clone(),
+            tx.clone(),
         ))
     }
 
@@ -1088,11 +1091,64 @@ impl ChangeEpochV2 {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct AuthenticatorStateExpire(pub iota_types::AuthenticatorStateExpire);
+/// Expire old JWKs
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// authenticator-state-expire = u64 u64
+/// ```
+#[uniffi::remote(Record)]
+pub struct AuthenticatorStateExpire {
+    /// Expire JWKs that have a lower epoch than this
+    pub min_epoch: u64,
+    /// The initial version of the authenticator object that it was shared at.
+    pub authenticator_obj_initial_shared_version: u64,
+}
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct AuthenticatorStateUpdateV1(pub iota_types::AuthenticatorStateUpdateV1);
+/// Update the set of valid JWKs
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// authenticator-state-update = u64 ; epoch
+///                              u64 ; round
+///                              (vector active-jwk)
+///                              u64 ; initial version of the authenticator object
+/// ```
+#[uniffi::remote(Record)]
+pub struct AuthenticatorStateUpdateV1 {
+    /// Epoch of the authenticator state update transaction
+    pub epoch: u64,
+    /// Consensus round of the authenticator state update
+    pub round: u64,
+    /// newly active jwks
+    pub new_active_jwks: Vec<ActiveJwk>,
+    pub authenticator_obj_initial_shared_version: u64,
+}
+
+/// A new Jwk
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// active-jwk = jwk-id jwk u64
+/// ```
+#[uniffi::remote(Record)]
+pub struct ActiveJwk {
+    /// Identifier used to uniquely identify a Jwk
+    pub jwk_id: JwkId,
+    /// The Jwk
+    pub jwk: Jwk,
+    /// Most recent epoch in which the jwk was validated
+    pub epoch: u64,
+}
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ExecutionTimeObservations(pub iota_types::ExecutionTimeObservations);
@@ -1151,7 +1207,7 @@ impl EndOfEpochTransactionKind {
 
     #[uniffi::constructor]
     pub fn authenticator_state_expire(tx: &AuthenticatorStateExpire) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.0.clone()))
+        Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.clone()))
     }
 }
 

@@ -1117,7 +1117,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_authenticator_state_create() != 18946:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_authenticator_state_expire() != 49861:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_authenticator_state_expire() != 31328:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_change_epoch() != 16640:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1259,7 +1259,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneventsdigest_generate() != 18224:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1() != 37860:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1() != 14756:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_consensus_commit_prologue_v1() != 50635:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1487,26 +1487,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_nested.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_nested.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateexpire.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateexpire.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_authenticatorstateexpire.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_authenticatorstateexpire.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateupdatev1.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateupdatev1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_authenticatorstateupdatev1.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_authenticatorstateupdatev1.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_batchsendstatus.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2221,7 +2201,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_authenti
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_authenticator_state_create.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_authenticator_state_expire.argtypes = (
-    ctypes.c_void_p,
+    _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_authenticator_state_expire.restype = ctypes.c_void_p
@@ -3906,7 +3886,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionkind.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionkind.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_authenticator_state_update_v1.argtypes = (
-    ctypes.c_void_p,
+    _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_authenticator_state_update_v1.restype = ctypes.c_void_p
@@ -6234,8 +6214,204 @@ class _UniffiConverterBytes(_UniffiConverterRustBuffer):
 
 
 
+class ActiveJwk:
+    """
+    A new Jwk
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    active-jwk = jwk-id jwk u64
+    ```
+    """
+
+    jwk_id: "JwkId"
+    """
+    Identifier used to uniquely identify a Jwk
+    """
+
+    jwk: "Jwk"
+    """
+    The Jwk
+    """
+
+    epoch: "int"
+    """
+    Most recent epoch in which the jwk was validated
+    """
+
+    def __init__(self, *, jwk_id: "JwkId", jwk: "Jwk", epoch: "int"):
+        self.jwk_id = jwk_id
+        self.jwk = jwk
+        self.epoch = epoch
+
+    def __str__(self):
+        return "ActiveJwk(jwk_id={}, jwk={}, epoch={})".format(self.jwk_id, self.jwk, self.epoch)
+
+    def __eq__(self, other):
+        if self.jwk_id != other.jwk_id:
+            return False
+        if self.jwk != other.jwk:
+            return False
+        if self.epoch != other.epoch:
+            return False
+        return True
+
+class _UniffiConverterTypeActiveJwk(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ActiveJwk(
+            jwk_id=_UniffiConverterTypeJwkId.read(buf),
+            jwk=_UniffiConverterTypeJwk.read(buf),
+            epoch=_UniffiConverterUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeJwkId.check_lower(value.jwk_id)
+        _UniffiConverterTypeJwk.check_lower(value.jwk)
+        _UniffiConverterUInt64.check_lower(value.epoch)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeJwkId.write(value.jwk_id, buf)
+        _UniffiConverterTypeJwk.write(value.jwk, buf)
+        _UniffiConverterUInt64.write(value.epoch, buf)
 
 
+class AuthenticatorStateExpire:
+    """
+    Expire old JWKs
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    authenticator-state-expire = u64 u64
+    ```
+    """
+
+    min_epoch: "int"
+    """
+    Expire JWKs that have a lower epoch than this
+    """
+
+    authenticator_obj_initial_shared_version: "int"
+    """
+    The initial version of the authenticator object that it was shared at.
+    """
+
+    def __init__(self, *, min_epoch: "int", authenticator_obj_initial_shared_version: "int"):
+        self.min_epoch = min_epoch
+        self.authenticator_obj_initial_shared_version = authenticator_obj_initial_shared_version
+
+    def __str__(self):
+        return "AuthenticatorStateExpire(min_epoch={}, authenticator_obj_initial_shared_version={})".format(self.min_epoch, self.authenticator_obj_initial_shared_version)
+
+    def __eq__(self, other):
+        if self.min_epoch != other.min_epoch:
+            return False
+        if self.authenticator_obj_initial_shared_version != other.authenticator_obj_initial_shared_version:
+            return False
+        return True
+
+class _UniffiConverterTypeAuthenticatorStateExpire(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return AuthenticatorStateExpire(
+            min_epoch=_UniffiConverterUInt64.read(buf),
+            authenticator_obj_initial_shared_version=_UniffiConverterUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterUInt64.check_lower(value.min_epoch)
+        _UniffiConverterUInt64.check_lower(value.authenticator_obj_initial_shared_version)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterUInt64.write(value.min_epoch, buf)
+        _UniffiConverterUInt64.write(value.authenticator_obj_initial_shared_version, buf)
+
+
+class AuthenticatorStateUpdateV1:
+    """
+    Update the set of valid JWKs
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    authenticator-state-update = u64 ; epoch
+    u64 ; round
+    (vector active-jwk)
+    u64 ; initial version of the authenticator object
+    ```
+    """
+
+    epoch: "int"
+    """
+    Epoch of the authenticator state update transaction
+    """
+
+    round: "int"
+    """
+    Consensus round of the authenticator state update
+    """
+
+    new_active_jwks: "typing.List[ActiveJwk]"
+    """
+    newly active jwks
+    """
+
+    authenticator_obj_initial_shared_version: "int"
+    def __init__(self, *, epoch: "int", round: "int", new_active_jwks: "typing.List[ActiveJwk]", authenticator_obj_initial_shared_version: "int"):
+        self.epoch = epoch
+        self.round = round
+        self.new_active_jwks = new_active_jwks
+        self.authenticator_obj_initial_shared_version = authenticator_obj_initial_shared_version
+
+    def __str__(self):
+        return "AuthenticatorStateUpdateV1(epoch={}, round={}, new_active_jwks={}, authenticator_obj_initial_shared_version={})".format(self.epoch, self.round, self.new_active_jwks, self.authenticator_obj_initial_shared_version)
+
+    def __eq__(self, other):
+        if self.epoch != other.epoch:
+            return False
+        if self.round != other.round:
+            return False
+        if self.new_active_jwks != other.new_active_jwks:
+            return False
+        if self.authenticator_obj_initial_shared_version != other.authenticator_obj_initial_shared_version:
+            return False
+        return True
+
+class _UniffiConverterTypeAuthenticatorStateUpdateV1(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return AuthenticatorStateUpdateV1(
+            epoch=_UniffiConverterUInt64.read(buf),
+            round=_UniffiConverterUInt64.read(buf),
+            new_active_jwks=_UniffiConverterSequenceTypeActiveJwk.read(buf),
+            authenticator_obj_initial_shared_version=_UniffiConverterUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterUInt64.check_lower(value.epoch)
+        _UniffiConverterUInt64.check_lower(value.round)
+        _UniffiConverterSequenceTypeActiveJwk.check_lower(value.new_active_jwks)
+        _UniffiConverterUInt64.check_lower(value.authenticator_obj_initial_shared_version)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterUInt64.write(value.epoch, buf)
+        _UniffiConverterUInt64.write(value.round, buf)
+        _UniffiConverterSequenceTypeActiveJwk.write(value.new_active_jwks, buf)
+        _UniffiConverterUInt64.write(value.authenticator_obj_initial_shared_version, buf)
 
 
 class ChangedObject:
@@ -7423,6 +7599,144 @@ class _UniffiConverterTypeGqlAddress(_UniffiConverterRustBuffer):
     @staticmethod
     def write(value, buf):
         _UniffiConverterTypeAddress.write(value.address, buf)
+
+
+class Jwk:
+    """
+    A JSON Web Key
+
+    Struct that contains info for a JWK. A list of them for different kids can
+    be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
+    The JWK is used to verify the JWT token.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    jwk = string string string string
+    ```
+    """
+
+    kty: "str"
+    """
+    Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
+    """
+
+    e: "str"
+    """
+    RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+    """
+
+    n: "str"
+    """
+    RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+    """
+
+    alg: "str"
+    """
+    Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
+    """
+
+    def __init__(self, *, kty: "str", e: "str", n: "str", alg: "str"):
+        self.kty = kty
+        self.e = e
+        self.n = n
+        self.alg = alg
+
+    def __str__(self):
+        return "Jwk(kty={}, e={}, n={}, alg={})".format(self.kty, self.e, self.n, self.alg)
+
+    def __eq__(self, other):
+        if self.kty != other.kty:
+            return False
+        if self.e != other.e:
+            return False
+        if self.n != other.n:
+            return False
+        if self.alg != other.alg:
+            return False
+        return True
+
+class _UniffiConverterTypeJwk(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return Jwk(
+            kty=_UniffiConverterString.read(buf),
+            e=_UniffiConverterString.read(buf),
+            n=_UniffiConverterString.read(buf),
+            alg=_UniffiConverterString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.kty)
+        _UniffiConverterString.check_lower(value.e)
+        _UniffiConverterString.check_lower(value.n)
+        _UniffiConverterString.check_lower(value.alg)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.kty, buf)
+        _UniffiConverterString.write(value.e, buf)
+        _UniffiConverterString.write(value.n, buf)
+        _UniffiConverterString.write(value.alg, buf)
+
+
+class JwkId:
+    """
+    Key to uniquely identify a JWK
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    jwk-id = string string
+    ```
+    """
+
+    iss: "str"
+    """
+    The issuer or identity of the OIDC provider.
+    """
+
+    kid: "str"
+    """
+    A key id use to uniquely identify a key from an OIDC provider.
+    """
+
+    def __init__(self, *, iss: "str", kid: "str"):
+        self.iss = iss
+        self.kid = kid
+
+    def __str__(self):
+        return "JwkId(iss={}, kid={})".format(self.iss, self.kid)
+
+    def __eq__(self, other):
+        if self.iss != other.iss:
+            return False
+        if self.kid != other.kid:
+            return False
+        return True
+
+class _UniffiConverterTypeJwkId(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return JwkId(
+            iss=_UniffiConverterString.read(buf),
+            kid=_UniffiConverterString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.iss)
+        _UniffiConverterString.check_lower(value.kid)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.iss, buf)
+        _UniffiConverterString.write(value.kid, buf)
 
 
 class MoveEnum:
@@ -15994,6 +16308,31 @@ class _UniffiConverterSequenceTypeVersionAssignment(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeActiveJwk(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeActiveJwk.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeActiveJwk.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeActiveJwk.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeChangedObject(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -17137,118 +17476,6 @@ class _UniffiConverterTypeArgument:
 
     @classmethod
     def write(cls, value: ArgumentProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class AuthenticatorStateExpireProtocol(typing.Protocol):
-    pass
-# AuthenticatorStateExpire is a Rust-only trait - it's a wrapper around a Rust implementation.
-class AuthenticatorStateExpire():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_authenticatorstateexpire, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateexpire, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeAuthenticatorStateExpire:
-
-    @staticmethod
-    def lift(value: int):
-        return AuthenticatorStateExpire._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: AuthenticatorStateExpire):
-        if not isinstance(value, AuthenticatorStateExpire):
-            raise TypeError("Expected AuthenticatorStateExpire instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: AuthenticatorStateExpireProtocol):
-        if not isinstance(value, AuthenticatorStateExpire):
-            raise TypeError("Expected AuthenticatorStateExpire instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: AuthenticatorStateExpireProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class AuthenticatorStateUpdateV1Protocol(typing.Protocol):
-    pass
-# AuthenticatorStateUpdateV1 is a Rust-only trait - it's a wrapper around a Rust implementation.
-class AuthenticatorStateUpdateV1():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_authenticatorstateupdatev1, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateupdatev1, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeAuthenticatorStateUpdateV1:
-
-    @staticmethod
-    def lift(value: int):
-        return AuthenticatorStateUpdateV1._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: AuthenticatorStateUpdateV1):
-        if not isinstance(value, AuthenticatorStateUpdateV1):
-            raise TypeError("Expected AuthenticatorStateUpdateV1 instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: AuthenticatorStateUpdateV1Protocol):
-        if not isinstance(value, AuthenticatorStateUpdateV1):
-            raise TypeError("Expected AuthenticatorStateUpdateV1 instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: AuthenticatorStateUpdateV1Protocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class BatchSendStatusProtocol(typing.Protocol):
     pass
@@ -29416,6 +29643,9 @@ __all__ = [
     "TransactionExpiration",
     "TypeArgumentError",
     "UnchangedSharedKind",
+    "ActiveJwk",
+    "AuthenticatorStateExpire",
+    "AuthenticatorStateUpdateV1",
     "ChangedObject",
     "CheckpointSummary",
     "CheckpointSummaryPage",
@@ -29434,6 +29664,8 @@ __all__ = [
     "GasCostSummary",
     "GasPayment",
     "GqlAddress",
+    "Jwk",
+    "JwkId",
     "MoveEnum",
     "MoveEnumConnection",
     "MoveEnumVariant",
@@ -29483,8 +29715,6 @@ __all__ = [
     "ZkLoginClaim",
     "Address",
     "Argument",
-    "AuthenticatorStateExpire",
-    "AuthenticatorStateUpdateV1",
     "BatchSendStatus",
     "Bls12381PublicKey",
     "Bls12381Signature",

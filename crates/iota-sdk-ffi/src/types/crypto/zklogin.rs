@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_types::ZkLoginClaim;
+use iota_types::{Jwk, JwkId, ZkLoginClaim};
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -330,4 +330,46 @@ impl Bn254FieldElement {
     pub fn padded(&self) -> Vec<u8> {
         self.0.padded().to_vec()
     }
+}
+
+/// Key to uniquely identify a JWK
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// jwk-id = string string
+/// ```
+#[uniffi::remote(Record)]
+pub struct JwkId {
+    /// The issuer or identity of the OIDC provider.
+    pub iss: String,
+    /// A key id use to uniquely identify a key from an OIDC provider.
+    pub kid: String,
+}
+
+/// A JSON Web Key
+///
+/// Struct that contains info for a JWK. A list of them for different kids can
+/// be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
+/// The JWK is used to verify the JWT token.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// jwk = string string string string
+/// ```
+#[uniffi::remote(Record)]
+pub struct Jwk {
+    /// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
+    pub kty: String,
+    /// RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+    pub e: String,
+    /// RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+    pub n: String,
+    /// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
+    pub alg: String,
 }
