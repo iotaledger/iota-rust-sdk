@@ -63,12 +63,14 @@ bindings: ## Build all bindings
 	$(MAKE) go
 	$(MAKE) kotlin
 	$(MAKE) python
+	$(MAKE) swift
 
 .PHONY: test-bindings
 test-bindings: ## Test all bindings
 	$(MAKE) test-go
 	$(MAKE) test-kotlin
 	$(MAKE) test-python
+	$(MAKE) test-swift
 
 # Build ffi crate and detect platform
 define build_binding
@@ -97,6 +99,12 @@ python: ## Build Python bindings
 	$(build_binding) \
 	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
+
+.PHONY: swift
+swift: ## Build Swift bindings
+	$(build_binding) \
+	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language swift --out-dir bindings/swift/lib --no-format; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/swift/lib/
 
 .PHONY: test-go
 test-go: ## Test Go bindings
