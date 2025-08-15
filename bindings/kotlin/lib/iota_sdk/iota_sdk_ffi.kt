@@ -1719,6 +1719,40 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -1837,6 +1871,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes(
 fun uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_base58(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_faucetclient_request(
 ): Short
@@ -2256,6 +2294,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_usersignature_to_base64(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_versionassignment_version(
@@ -2395,6 +2437,24 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_authentic
 fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_change_epoch(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_change_epoch_v2(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_devnet(
 ): Short
@@ -2573,6 +2633,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new(
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new(
 ): Short
@@ -2949,10 +3011,40 @@ fun uniffi_iota_sdk_ffi_fn_clone_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRust
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_executiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new(`key`: Pointer,`observations`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point(`package`: Pointer,`module`: RustBuffer.ByValue,`function`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_executiontimeobservations(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1(`executionTimeObservations`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_faucetclient(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_faucetclient(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3725,6 +3817,16 @@ fun uniffi_iota_sdk_ffi_fn_method_usersignature_to_base64(`ptr`: Pointer,uniffi_
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(`validator`: Pointer,`duration`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_versionassignment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_versionassignment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4063,6 +4165,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_bytes() != 12259.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key() != 10295.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations() != 58594.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() != 13326.toShort()) {
@@ -4692,6 +4800,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes() != 58893.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration() != 59803.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator() != 10003.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id() != 50440.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -4900,6 +5014,33 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_change_epoch_v2() != 17262.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new() != 22119.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec() != 1498.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins() != 40848.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point() != 6711.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish() != 6398.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins() != 28564.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects() != 29560.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade() != 26115.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() != 19098.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_devnet() != 37366.toShort()) {
@@ -5167,6 +5308,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes() != 37499.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new() != 47546.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 14186.toShort()) {
@@ -5601,6 +5745,47 @@ public object FfiConverterByteArray: FfiConverterRustBuffer<ByteArray> {
     override fun write(value: ByteArray, buf: ByteBuffer) {
         buf.putInt(value.size)
         buf.put(value)
+    }
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterDuration: FfiConverterRustBuffer<java.time.Duration> {
+    override fun read(buf: ByteBuffer): java.time.Duration {
+        // Type mismatch (should be u64) but we check for overflow/underflow below
+        val seconds = buf.getLong()
+        // Type mismatch (should be u32) but we check for overflow/underflow below
+        val nanoseconds = buf.getInt().toLong()
+        if (seconds < 0) {
+            throw java.time.DateTimeException("Duration exceeds minimum or maximum value supported by uniffi")
+        }
+        if (nanoseconds < 0) {
+            throw java.time.DateTimeException("Duration nanoseconds exceed minimum or maximum supported by uniffi")
+        }
+        return java.time.Duration.ofSeconds(seconds, nanoseconds)
+    }
+
+    // 8 bytes for seconds, 4 bytes for nanoseconds
+    override fun allocationSize(value: java.time.Duration) = 12UL
+
+    override fun write(value: java.time.Duration, buf: ByteBuffer) {
+        if (value.seconds < 0) {
+            // Rust does not support negative Durations
+            throw IllegalArgumentException("Invalid duration, must be non-negative")
+        }
+
+        if (value.nano < 0) {
+            // Java docs provide guarantee that nano will always be positive, so this should be impossible
+            // See: https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html
+            throw IllegalArgumentException("Invalid duration, nano value must be non-negative")
+        }
+
+        // Type mismatch (should be u64) but since Rust doesn't support negative durations we should be OK
+        buf.putLong(value.seconds)
+        // Type mismatch (should be u32) but since values will always be between 0 and 999,999,999 it should be OK
+        buf.putInt(value.nano)
     }
 }
 
@@ -13361,11 +13546,631 @@ public object FfiConverterTypeEpoch: FfiConverter<Epoch, Pointer> {
 //
 
 
+public interface ExecutionTimeObservationInterface {
+    
+    fun `key`(): ExecutionTimeObservationKey
+    
+    fun `observations`(): List<ValidatorExecutionTimeObservation>
+    
+    companion object
+}
+
+open class ExecutionTimeObservation: Disposable, AutoCloseable, ExecutionTimeObservationInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`key`: ExecutionTimeObservationKey, `observations`: List<ValidatorExecutionTimeObservation>) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new(
+        FfiConverterTypeExecutionTimeObservationKey.lower(`key`),FfiConverterSequenceTypeValidatorExecutionTimeObservation.lower(`observations`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation(pointer!!, status)
+        }
+    }
+
+    override fun `key`(): ExecutionTimeObservationKey {
+            return FfiConverterTypeExecutionTimeObservationKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `observations`(): List<ValidatorExecutionTimeObservation> {
+            return FfiConverterSequenceTypeValidatorExecutionTimeObservation.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeExecutionTimeObservation: FfiConverter<ExecutionTimeObservation, Pointer> {
+
+    override fun lower(value: ExecutionTimeObservation): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): ExecutionTimeObservation {
+        return ExecutionTimeObservation(value)
+    }
+
+    override fun read(buf: ByteBuffer): ExecutionTimeObservation {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: ExecutionTimeObservation) = 8UL
+
+    override fun write(value: ExecutionTimeObservation, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * Key for an execution time observation
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * execution-time-observation-key  =  %x00 move-entry-point
+ * =/ %x01 ; transfer-objects
+ * =/ %x02 ; split-coins
+ * =/ %x03 ; merge-coins
+ * =/ %x04 ; publish
+ * =/ %x05 ; make-move-vec
+ * =/ %x06 ; upgrade
+ *
+ * move-entry-point = object-id string string (vec type-tag)
+ * ```
+ */
+public interface ExecutionTimeObservationKeyInterface {
+    
+    companion object
+}
+
+/**
+ * Key for an execution time observation
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * execution-time-observation-key  =  %x00 move-entry-point
+ * =/ %x01 ; transfer-objects
+ * =/ %x02 ; split-coins
+ * =/ %x03 ; merge-coins
+ * =/ %x04 ; publish
+ * =/ %x05 ; make-move-vec
+ * =/ %x06 ; upgrade
+ *
+ * move-entry-point = object-id string string (vec type-tag)
+ * ```
+ */
+open class ExecutionTimeObservationKey: Disposable, AutoCloseable, ExecutionTimeObservationKeyInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey(pointer!!, status)
+        }
+    }
+
+    
+
+    
+    companion object {
+         fun `newMakeMoveVec`(): ExecutionTimeObservationKey {
+            return FfiConverterTypeExecutionTimeObservationKey.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newMergeCoins`(): ExecutionTimeObservationKey {
+            return FfiConverterTypeExecutionTimeObservationKey.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newMoveEntryPoint`(`package`: ObjectId, `module`: kotlin.String, `function`: kotlin.String, `typeArguments`: List<TypeTag>): ExecutionTimeObservationKey {
+            return FfiConverterTypeExecutionTimeObservationKey.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point(
+        FfiConverterTypeObjectId.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterSequenceTypeTypeTag.lower(`typeArguments`),_status)
+}
+    )
+    }
+    
+
+         fun `newPublish`(): ExecutionTimeObservationKey {
+            return FfiConverterTypeExecutionTimeObservationKey.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newSplitCoins`(): ExecutionTimeObservationKey {
+            return FfiConverterTypeExecutionTimeObservationKey.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newTransferObjects`(): ExecutionTimeObservationKey {
+            return FfiConverterTypeExecutionTimeObservationKey.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newUpgrade`(): ExecutionTimeObservationKey {
+            return FfiConverterTypeExecutionTimeObservationKey.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade(
+        _status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeExecutionTimeObservationKey: FfiConverter<ExecutionTimeObservationKey, Pointer> {
+
+    override fun lower(value: ExecutionTimeObservationKey): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): ExecutionTimeObservationKey {
+        return ExecutionTimeObservationKey(value)
+    }
+
+    override fun read(buf: ByteBuffer): ExecutionTimeObservationKey {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: ExecutionTimeObservationKey) = 8UL
+
+    override fun write(value: ExecutionTimeObservationKey, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * Set of Execution Time Observations from the committee.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
+ *
+ * v1-stored-execution-time-observations = (vec
+ * execution-time-observation-key
+ * (vec execution-time-observation)
+ * )
+ * ```
+ */
 public interface ExecutionTimeObservationsInterface {
     
     companion object
 }
 
+/**
+ * Set of Execution Time Observations from the committee.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
+ *
+ * v1-stored-execution-time-observations = (vec
+ * execution-time-observation-key
+ * (vec execution-time-observation)
+ * )
+ * ```
+ */
 open class ExecutionTimeObservations: Disposable, AutoCloseable, ExecutionTimeObservationsInterface
 {
 
@@ -13451,8 +14256,19 @@ open class ExecutionTimeObservations: Disposable, AutoCloseable, ExecutionTimeOb
     
 
     
+    companion object {
+         fun `newV1`(`executionTimeObservations`: List<ExecutionTimeObservation>): ExecutionTimeObservations {
+            return FfiConverterTypeExecutionTimeObservations.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1(
+        FfiConverterSequenceTypeExecutionTimeObservation.lower(`executionTimeObservations`),_status)
+}
+    )
+    }
     
-    companion object
+
+        
+    }
     
 }
 
@@ -29535,6 +30351,289 @@ public object FfiConverterTypeUserSignature: FfiConverter<UserSignature, Pointer
 
 
 /**
+ * An execution time observation from a particular validator
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * execution-time-observation = bls-public-key duration
+ * duration =  u64 ; seconds
+ * u32 ; subsecond nanoseconds
+ * ```
+ */
+public interface ValidatorExecutionTimeObservationInterface {
+    
+    fun `duration`(): java.time.Duration
+    
+    fun `validator`(): Bls12381PublicKey
+    
+    companion object
+}
+
+/**
+ * An execution time observation from a particular validator
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * execution-time-observation = bls-public-key duration
+ * duration =  u64 ; seconds
+ * u32 ; subsecond nanoseconds
+ * ```
+ */
+open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, ValidatorExecutionTimeObservationInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`validator`: Bls12381PublicKey, `duration`: java.time.Duration) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(
+        FfiConverterTypeBls12381PublicKey.lower(`validator`),FfiConverterDuration.lower(`duration`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer!!, status)
+        }
+    }
+
+    override fun `duration`(): java.time.Duration {
+            return FfiConverterDuration.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `validator`(): Bls12381PublicKey {
+            return FfiConverterTypeBls12381PublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeValidatorExecutionTimeObservation: FfiConverter<ValidatorExecutionTimeObservation, Pointer> {
+
+    override fun lower(value: ValidatorExecutionTimeObservation): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): ValidatorExecutionTimeObservation {
+        return ValidatorExecutionTimeObservation(value)
+    }
+
+    override fun read(buf: ByteBuffer): ValidatorExecutionTimeObservation {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: ValidatorExecutionTimeObservation) = 8UL
+
+    override fun write(value: ValidatorExecutionTimeObservation, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
  * Object version assignment from consensus
  *
  * # BCS
@@ -39853,6 +40952,34 @@ public object FfiConverterSequenceTypeEpoch: FfiConverterRustBuffer<List<Epoch>>
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypeExecutionTimeObservation: FfiConverterRustBuffer<List<ExecutionTimeObservation>> {
+    override fun read(buf: ByteBuffer): List<ExecutionTimeObservation> {
+        val len = buf.getInt()
+        return List<ExecutionTimeObservation>(len) {
+            FfiConverterTypeExecutionTimeObservation.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<ExecutionTimeObservation>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeExecutionTimeObservation.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<ExecutionTimeObservation>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeExecutionTimeObservation.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceTypeGenesisObject: FfiConverterRustBuffer<List<GenesisObject>> {
     override fun read(buf: ByteBuffer): List<GenesisObject> {
         val len = buf.getInt()
@@ -40179,6 +41306,34 @@ public object FfiConverterSequenceTypeUserSignature: FfiConverterRustBuffer<List
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeUserSignature.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeValidatorExecutionTimeObservation: FfiConverterRustBuffer<List<ValidatorExecutionTimeObservation>> {
+    override fun read(buf: ByteBuffer): List<ValidatorExecutionTimeObservation> {
+        val len = buf.getInt()
+        return List<ValidatorExecutionTimeObservation>(len) {
+            FfiConverterTypeValidatorExecutionTimeObservation.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<ValidatorExecutionTimeObservation>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeValidatorExecutionTimeObservation.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<ValidatorExecutionTimeObservation>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeValidatorExecutionTimeObservation.write(it, buf)
         }
     }
 }

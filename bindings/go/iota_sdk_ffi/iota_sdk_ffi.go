@@ -14,6 +14,7 @@ import (
 	"math"
 	"runtime"
 	"sync/atomic"
+	"time"
 )
 
 
@@ -823,6 +824,24 @@ func uniffiCheckChecksums() {
 	if checksum != 12259 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key()
+	})
+	if checksum != 10295 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations()
+	})
+	if checksum != 58594 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2708,6 +2727,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration()
+	})
+	if checksum != 59803 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator()
+	})
+	if checksum != 10003 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id()
 	})
 	if checksum != 50440 {
@@ -3334,6 +3371,87 @@ func uniffiCheckChecksums() {
 	if checksum != 17262 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_change_epoch_v2: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new()
+	})
+	if checksum != 22119 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec()
+	})
+	if checksum != 1498 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_make_move_vec: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins()
+	})
+	if checksum != 40848 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_merge_coins: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point()
+	})
+	if checksum != 6711 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_move_entry_point: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish()
+	})
+	if checksum != 6398 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_publish: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins()
+	})
+	if checksum != 28564 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_split_coins: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects()
+	})
+	if checksum != 29560 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_transfer_objects: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade()
+	})
+	if checksum != 26115 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservationkey_new_upgrade: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1()
+	})
+	if checksum != 19098 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4139,6 +4257,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new()
+	})
+	if checksum != 47546 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new()
 	})
 	if checksum != 14186 {
@@ -4455,6 +4582,44 @@ type FfiDestroyerBytes struct {}
 
 func (FfiDestroyerBytes) Destroy(_ []byte) {}
 
+
+// FfiConverterDuration converts between uniffi duration and Go duration.
+type FfiConverterDuration struct{}
+
+var FfiConverterDurationINSTANCE = FfiConverterDuration{}
+
+func (c FfiConverterDuration) Lift(rb RustBufferI) time.Duration {
+	return LiftFromRustBuffer[time.Duration](c, rb)
+}
+
+func (c FfiConverterDuration) Read(reader io.Reader) time.Duration {
+	sec := readUint64(reader)
+	nsec := readUint32(reader)
+	return time.Duration(sec*1_000_000_000 + uint64(nsec))
+}
+
+func (c FfiConverterDuration) Lower(value time.Duration) C.RustBuffer {
+	return LowerIntoRustBuffer[time.Duration](c, value)
+}
+
+func (c FfiConverterDuration) Write(writer io.Writer, value time.Duration) {
+	if value.Nanoseconds() < 0 {
+		// Rust does not support negative durations:
+		// https://www.reddit.com/r/rust/comments/ljl55u/why_rusts_duration_not_supporting_negative_values/
+		// This panic is very bad, because it depends on user input, and in Go user input related
+		// error are supposed to be returned as errors, and not cause panics. However, with the
+		// current architecture, its not possible to return an error from here, so panic is used as
+		// the only other option to signal an error.
+		panic("negative duration is not allowed")
+	}
+
+	writeUint64(writer, uint64(value) / 1_000_000_000)
+	writeUint32(writer, uint32(uint64(value) % 1_000_000_000))
+}
+
+type FfiDestroyerDuration struct {}
+
+func (FfiDestroyerDuration) Destroy(_ time.Duration) {}
 
 // Below is an implementation of synchronization requirements outlined in the link.
 // https://github.com/mozilla/uniffi-rs/blob/0dc031132d9493ca812c3af6e7dd60ad2ea95bf0/uniffi_bindgen/src/bindings/kotlin/templates/ObjectRuntime.kt#L31
@@ -7678,12 +7843,269 @@ func (_ FfiDestroyerEpoch) Destroy(value *Epoch) {
 
 
 
+type ExecutionTimeObservationInterface interface {
+	Key() *ExecutionTimeObservationKey
+	Observations() []*ValidatorExecutionTimeObservation
+}
+type ExecutionTimeObservation struct {
+	ffiObject FfiObject
+}
+func NewExecutionTimeObservation(key *ExecutionTimeObservationKey, observations []*ValidatorExecutionTimeObservation) *ExecutionTimeObservation {
+	return FfiConverterExecutionTimeObservationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservation_new(FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(key), FfiConverterSequenceValidatorExecutionTimeObservationINSTANCE.Lower(observations),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *ExecutionTimeObservation) Key() *ExecutionTimeObservationKey {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *ExecutionTimeObservation) Observations() []*ValidatorExecutionTimeObservation {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceValidatorExecutionTimeObservationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *ExecutionTimeObservation) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterExecutionTimeObservation struct {}
+
+var FfiConverterExecutionTimeObservationINSTANCE = FfiConverterExecutionTimeObservation{}
+
+
+func (c FfiConverterExecutionTimeObservation) Lift(pointer unsafe.Pointer) *ExecutionTimeObservation {
+	result := &ExecutionTimeObservation {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_executiontimeobservation(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ExecutionTimeObservation).Destroy)
+	return result
+}
+
+func (c FfiConverterExecutionTimeObservation) Read(reader io.Reader) *ExecutionTimeObservation {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterExecutionTimeObservation) Lower(value *ExecutionTimeObservation) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservation")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterExecutionTimeObservation) Write(writer io.Writer, value *ExecutionTimeObservation) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerExecutionTimeObservation struct {}
+
+func (_ FfiDestroyerExecutionTimeObservation) Destroy(value *ExecutionTimeObservation) {
+		value.Destroy()
+}
+
+
+
+// Key for an execution time observation
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// execution-time-observation-key  =  %x00 move-entry-point
+// =/ %x01 ; transfer-objects
+// =/ %x02 ; split-coins
+// =/ %x03 ; merge-coins
+// =/ %x04 ; publish
+// =/ %x05 ; make-move-vec
+// =/ %x06 ; upgrade
+//
+// move-entry-point = object-id string string (vec type-tag)
+// ```
+type ExecutionTimeObservationKeyInterface interface {
+}
+// Key for an execution time observation
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// execution-time-observation-key  =  %x00 move-entry-point
+// =/ %x01 ; transfer-objects
+// =/ %x02 ; split-coins
+// =/ %x03 ; merge-coins
+// =/ %x04 ; publish
+// =/ %x05 ; make-move-vec
+// =/ %x06 ; upgrade
+//
+// move-entry-point = object-id string string (vec type-tag)
+// ```
+type ExecutionTimeObservationKey struct {
+	ffiObject FfiObject
+}
+
+
+func ExecutionTimeObservationKeyNewMakeMoveVec() *ExecutionTimeObservationKey {
+	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_make_move_vec(_uniffiStatus)
+	}))
+}
+
+func ExecutionTimeObservationKeyNewMergeCoins() *ExecutionTimeObservationKey {
+	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_merge_coins(_uniffiStatus)
+	}))
+}
+
+func ExecutionTimeObservationKeyNewMoveEntryPoint(varPackage *ObjectId, module string, function string, typeArguments []*TypeTag) *ExecutionTimeObservationKey {
+	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_move_entry_point(FfiConverterObjectIdINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterStringINSTANCE.Lower(function), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArguments),_uniffiStatus)
+	}))
+}
+
+func ExecutionTimeObservationKeyNewPublish() *ExecutionTimeObservationKey {
+	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_publish(_uniffiStatus)
+	}))
+}
+
+func ExecutionTimeObservationKeyNewSplitCoins() *ExecutionTimeObservationKey {
+	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_split_coins(_uniffiStatus)
+	}))
+}
+
+func ExecutionTimeObservationKeyNewTransferObjects() *ExecutionTimeObservationKey {
+	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_objects(_uniffiStatus)
+	}))
+}
+
+func ExecutionTimeObservationKeyNewUpgrade() *ExecutionTimeObservationKey {
+	return FfiConverterExecutionTimeObservationKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade(_uniffiStatus)
+	}))
+}
+
+
+func (object *ExecutionTimeObservationKey) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterExecutionTimeObservationKey struct {}
+
+var FfiConverterExecutionTimeObservationKeyINSTANCE = FfiConverterExecutionTimeObservationKey{}
+
+
+func (c FfiConverterExecutionTimeObservationKey) Lift(pointer unsafe.Pointer) *ExecutionTimeObservationKey {
+	result := &ExecutionTimeObservationKey {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ExecutionTimeObservationKey).Destroy)
+	return result
+}
+
+func (c FfiConverterExecutionTimeObservationKey) Read(reader io.Reader) *ExecutionTimeObservationKey {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterExecutionTimeObservationKey) Lower(value *ExecutionTimeObservationKey) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterExecutionTimeObservationKey) Write(writer io.Writer, value *ExecutionTimeObservationKey) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerExecutionTimeObservationKey struct {}
+
+func (_ FfiDestroyerExecutionTimeObservationKey) Destroy(value *ExecutionTimeObservationKey) {
+		value.Destroy()
+}
+
+
+
+// Set of Execution Time Observations from the committee.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
+//
+// v1-stored-execution-time-observations = (vec
+// execution-time-observation-key
+// (vec execution-time-observation)
+// )
+// ```
 type ExecutionTimeObservationsInterface interface {
 }
+// Set of Execution Time Observations from the committee.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
+//
+// v1-stored-execution-time-observations = (vec
+// execution-time-observation-key
+// (vec execution-time-observation)
+// )
+// ```
 type ExecutionTimeObservations struct {
 	ffiObject FfiObject
 }
 
+
+func ExecutionTimeObservationsNewV1(executionTimeObservations []*ExecutionTimeObservation) *ExecutionTimeObservations {
+	return FfiConverterExecutionTimeObservationsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1(FfiConverterSequenceExecutionTimeObservationINSTANCE.Lower(executionTimeObservations),_uniffiStatus)
+	}))
+}
 
 
 func (object *ExecutionTimeObservations) Destroy() {
@@ -15718,6 +16140,115 @@ func (c FfiConverterUserSignature) Write(writer io.Writer, value *UserSignature)
 type FfiDestroyerUserSignature struct {}
 
 func (_ FfiDestroyerUserSignature) Destroy(value *UserSignature) {
+		value.Destroy()
+}
+
+
+
+// An execution time observation from a particular validator
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// execution-time-observation = bls-public-key duration
+// duration =  u64 ; seconds
+// u32 ; subsecond nanoseconds
+// ```
+type ValidatorExecutionTimeObservationInterface interface {
+	Duration() time.Duration
+	Validator() *Bls12381PublicKey
+}
+// An execution time observation from a particular validator
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// execution-time-observation = bls-public-key duration
+// duration =  u64 ; seconds
+// u32 ; subsecond nanoseconds
+// ```
+type ValidatorExecutionTimeObservation struct {
+	ffiObject FfiObject
+}
+func NewValidatorExecutionTimeObservation(validator *Bls12381PublicKey, duration time.Duration) *ValidatorExecutionTimeObservation {
+	return FfiConverterValidatorExecutionTimeObservationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(FfiConverterBls12381PublicKeyINSTANCE.Lower(validator), FfiConverterDurationINSTANCE.Lower(duration),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *ValidatorExecutionTimeObservation) Duration() time.Duration {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDurationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *ValidatorExecutionTimeObservation) Validator() *Bls12381PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBls12381PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *ValidatorExecutionTimeObservation) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterValidatorExecutionTimeObservation struct {}
+
+var FfiConverterValidatorExecutionTimeObservationINSTANCE = FfiConverterValidatorExecutionTimeObservation{}
+
+
+func (c FfiConverterValidatorExecutionTimeObservation) Lift(pointer unsafe.Pointer) *ValidatorExecutionTimeObservation {
+	result := &ValidatorExecutionTimeObservation {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ValidatorExecutionTimeObservation).Destroy)
+	return result
+}
+
+func (c FfiConverterValidatorExecutionTimeObservation) Read(reader io.Reader) *ValidatorExecutionTimeObservation {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterValidatorExecutionTimeObservation) Lower(value *ValidatorExecutionTimeObservation) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterValidatorExecutionTimeObservation) Write(writer io.Writer, value *ValidatorExecutionTimeObservation) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerValidatorExecutionTimeObservation struct {}
+
+func (_ FfiDestroyerValidatorExecutionTimeObservation) Destroy(value *ValidatorExecutionTimeObservation) {
 		value.Destroy()
 }
 
@@ -24745,6 +25276,49 @@ func (FfiDestroyerSequenceEpoch) Destroy(sequence []*Epoch) {
 	}
 }
 
+type FfiConverterSequenceExecutionTimeObservation struct{}
+
+var FfiConverterSequenceExecutionTimeObservationINSTANCE = FfiConverterSequenceExecutionTimeObservation{}
+
+func (c FfiConverterSequenceExecutionTimeObservation) Lift(rb RustBufferI) []*ExecutionTimeObservation {
+	return LiftFromRustBuffer[[]*ExecutionTimeObservation](c, rb)
+}
+
+func (c FfiConverterSequenceExecutionTimeObservation) Read(reader io.Reader) []*ExecutionTimeObservation {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*ExecutionTimeObservation, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterExecutionTimeObservationINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceExecutionTimeObservation) Lower(value []*ExecutionTimeObservation) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*ExecutionTimeObservation](c, value)
+}
+
+func (c FfiConverterSequenceExecutionTimeObservation) Write(writer io.Writer, value []*ExecutionTimeObservation) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*ExecutionTimeObservation is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterExecutionTimeObservationINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceExecutionTimeObservation struct {}
+
+func (FfiDestroyerSequenceExecutionTimeObservation) Destroy(sequence []*ExecutionTimeObservation) {
+	for _, value := range sequence {
+		FfiDestroyerExecutionTimeObservation{}.Destroy(value)
+	}
+}
+
 type FfiConverterSequenceGenesisObject struct{}
 
 var FfiConverterSequenceGenesisObjectINSTANCE = FfiConverterSequenceGenesisObject{}
@@ -25258,6 +25832,49 @@ type FfiDestroyerSequenceUserSignature struct {}
 func (FfiDestroyerSequenceUserSignature) Destroy(sequence []*UserSignature) {
 	for _, value := range sequence {
 		FfiDestroyerUserSignature{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceValidatorExecutionTimeObservation struct{}
+
+var FfiConverterSequenceValidatorExecutionTimeObservationINSTANCE = FfiConverterSequenceValidatorExecutionTimeObservation{}
+
+func (c FfiConverterSequenceValidatorExecutionTimeObservation) Lift(rb RustBufferI) []*ValidatorExecutionTimeObservation {
+	return LiftFromRustBuffer[[]*ValidatorExecutionTimeObservation](c, rb)
+}
+
+func (c FfiConverterSequenceValidatorExecutionTimeObservation) Read(reader io.Reader) []*ValidatorExecutionTimeObservation {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*ValidatorExecutionTimeObservation, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterValidatorExecutionTimeObservationINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceValidatorExecutionTimeObservation) Lower(value []*ValidatorExecutionTimeObservation) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*ValidatorExecutionTimeObservation](c, value)
+}
+
+func (c FfiConverterSequenceValidatorExecutionTimeObservation) Write(writer io.Writer, value []*ValidatorExecutionTimeObservation) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*ValidatorExecutionTimeObservation is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterValidatorExecutionTimeObservationINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceValidatorExecutionTimeObservation struct {}
+
+func (FfiDestroyerSequenceValidatorExecutionTimeObservation) Destroy(sequence []*ValidatorExecutionTimeObservation) {
+	for _, value := range sequence {
+		FfiDestroyerValidatorExecutionTimeObservation{}.Destroy(value)
 	}
 }
 
