@@ -1295,7 +1295,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_programmable_transaction() != 51205:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_randomness_state_update() != 45772:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_randomness_state_update() != 16439:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new() != 22470:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3486,16 +3486,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_modules.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_modules.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_randomnessstateupdate.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_randomnessstateupdate.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_randomnessstateupdate.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_randomnessstateupdate.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256k1publickey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4012,7 +4002,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_programmable_trans
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_programmable_transaction.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_randomness_state_update.argtypes = (
-    ctypes.c_void_p,
+    _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_randomness_state_update.restype = ctypes.c_void_p
@@ -6413,8 +6403,6 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
 
 
 
-
-
 class ActiveJwk:
     """
     A new Jwk
@@ -7726,8 +7714,23 @@ class GasPayment:
 
     objects: "typing.List[ObjectReference]"
     owner: "Address"
+    """
+    Owner of the gas objects, either the transaction sender or a sponsor
+    """
+
     price: "int"
+    """
+    Gas unit price to use when charging for computation
+
+    Must be greater-than-or-equal-to the network's current RGP (reference
+    gas price)
+    """
+
     budget: "int"
+    """
+    Total budget willing to spend for the execution of a transaction
+    """
+
     def __init__(self, *, objects: "typing.List[ObjectReference]", owner: "Address", price: "int", budget: "int"):
         self.objects = objects
         self.owner = owner
@@ -9309,6 +9312,84 @@ class _UniffiConverterTypeProtocolConfigs(_UniffiConverterRustBuffer):
         _UniffiConverterUInt64.write(value.protocol_version, buf)
         _UniffiConverterSequenceTypeProtocolConfigFeatureFlag.write(value.feature_flags, buf)
         _UniffiConverterSequenceTypeProtocolConfigAttr.write(value.configs, buf)
+
+
+class RandomnessStateUpdate:
+    """
+    Randomness update
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    randomness-state-update = u64 u64 bytes u64
+    ```
+    """
+
+    epoch: "int"
+    """
+    Epoch of the randomness state update transaction
+    """
+
+    randomness_round: "int"
+    """
+    Randomness round of the update
+    """
+
+    random_bytes: "bytes"
+    """
+    Updated random bytes
+    """
+
+    randomness_obj_initial_shared_version: "int"
+    """
+    The initial version of the randomness object that it was shared at
+    """
+
+    def __init__(self, *, epoch: "int", randomness_round: "int", random_bytes: "bytes", randomness_obj_initial_shared_version: "int"):
+        self.epoch = epoch
+        self.randomness_round = randomness_round
+        self.random_bytes = random_bytes
+        self.randomness_obj_initial_shared_version = randomness_obj_initial_shared_version
+
+    def __str__(self):
+        return "RandomnessStateUpdate(epoch={}, randomness_round={}, random_bytes={}, randomness_obj_initial_shared_version={})".format(self.epoch, self.randomness_round, self.random_bytes, self.randomness_obj_initial_shared_version)
+
+    def __eq__(self, other):
+        if self.epoch != other.epoch:
+            return False
+        if self.randomness_round != other.randomness_round:
+            return False
+        if self.random_bytes != other.random_bytes:
+            return False
+        if self.randomness_obj_initial_shared_version != other.randomness_obj_initial_shared_version:
+            return False
+        return True
+
+class _UniffiConverterTypeRandomnessStateUpdate(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return RandomnessStateUpdate(
+            epoch=_UniffiConverterUInt64.read(buf),
+            randomness_round=_UniffiConverterUInt64.read(buf),
+            random_bytes=_UniffiConverterBytes.read(buf),
+            randomness_obj_initial_shared_version=_UniffiConverterUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterUInt64.check_lower(value.epoch)
+        _UniffiConverterUInt64.check_lower(value.randomness_round)
+        _UniffiConverterBytes.check_lower(value.random_bytes)
+        _UniffiConverterUInt64.check_lower(value.randomness_obj_initial_shared_version)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterUInt64.write(value.epoch, buf)
+        _UniffiConverterUInt64.write(value.randomness_round, buf)
+        _UniffiConverterBytes.write(value.random_bytes, buf)
+        _UniffiConverterUInt64.write(value.randomness_obj_initial_shared_version, buf)
 
 
 class ServiceConfig:
@@ -13783,11 +13864,28 @@ class _UniffiConverterTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
 
 
 class TransactionExpiration:
+    """
+    A TTL for a transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    transaction-expiration =  %x00      ; none
+    =/ %x01 u64  ; epoch
+    ```
+    """
+
     def __init__(self):
         raise RuntimeError("TransactionExpiration cannot be instantiated directly")
 
     # Each enum variant is a nested class of the enum itself.
     class NONE:
+        """
+        The transaction has no expiration
+        """
+
 
         def __init__(self,):
             pass
@@ -13801,6 +13899,11 @@ class TransactionExpiration:
             return True
     
     class EPOCH:
+        """
+        Validators wont sign a transaction unless the expiration Epoch
+        is greater than or equal to the current epoch
+        """
+
         def __init__(self, *values):
             if len(values) != 1:
                 raise TypeError(f"Expected 1 arguments, found {len(values)}")
@@ -26545,62 +26648,6 @@ class _UniffiConverterTypePublish:
     @classmethod
     def write(cls, value: PublishProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
-class RandomnessStateUpdateProtocol(typing.Protocol):
-    pass
-# RandomnessStateUpdate is a Rust-only trait - it's a wrapper around a Rust implementation.
-class RandomnessStateUpdate():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_randomnessstateupdate, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_randomnessstateupdate, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeRandomnessStateUpdate:
-
-    @staticmethod
-    def lift(value: int):
-        return RandomnessStateUpdate._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: RandomnessStateUpdate):
-        if not isinstance(value, RandomnessStateUpdate):
-            raise TypeError("Expected RandomnessStateUpdate instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: RandomnessStateUpdateProtocol):
-        if not isinstance(value, RandomnessStateUpdate):
-            raise TypeError("Expected RandomnessStateUpdate instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: RandomnessStateUpdateProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
 class Secp256k1PublicKeyProtocol(typing.Protocol):
     """
     A secp256k1 signature.
@@ -30330,6 +30377,7 @@ __all__ = [
     "ProtocolConfigAttr",
     "ProtocolConfigFeatureFlag",
     "ProtocolConfigs",
+    "RandomnessStateUpdate",
     "ServiceConfig",
     "SignedTransaction",
     "SignedTransactionPage",
@@ -30402,7 +30450,6 @@ __all__ = [
     "PasskeyAuthenticator",
     "ProgrammableTransaction",
     "Publish",
-    "RandomnessStateUpdate",
     "Secp256k1PublicKey",
     "Secp256k1Signature",
     "Secp256r1PublicKey",

@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use iota_types::{
     ActiveJwk, AuthenticatorStateExpire, AuthenticatorStateUpdateV1, GasCostSummary, Jwk, JwkId,
-    TransactionExpiration,
+    RandomnessStateUpdate, TransactionExpiration,
 };
 
 use crate::types::{
@@ -159,7 +159,7 @@ impl TransactionKind {
     #[uniffi::constructor]
     pub fn randomness_state_update(tx: &RandomnessStateUpdate) -> Self {
         Self(iota_types::TransactionKind::RandomnessStateUpdate(
-            tx.0.clone(),
+            tx.clone(),
         ))
     }
 }
@@ -1316,8 +1316,26 @@ impl ExecutionTimeObservationKey {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct RandomnessStateUpdate(pub iota_types::RandomnessStateUpdate);
+/// Randomness update
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// randomness-state-update = u64 u64 bytes u64
+/// ```
+#[uniffi::remote(Record)]
+pub struct RandomnessStateUpdate {
+    /// Epoch of the randomness state update transaction
+    pub epoch: u64,
+    /// Randomness round of the update
+    pub randomness_round: u64,
+    /// Updated random bytes
+    pub random_bytes: Vec<u8>,
+    /// The initial version of the randomness object that it was shared at
+    pub randomness_obj_initial_shared_version: u64,
+}
 
 /// Operation run at the end of an epoch
 ///
@@ -1389,8 +1407,14 @@ impl EndOfEpochTransactionKind {
 #[derive(Clone, Debug, uniffi::Record)]
 pub struct GasPayment {
     pub objects: Vec<ObjectReference>,
+    /// Owner of the gas objects, either the transaction sender or a sponsor
     pub owner: Arc<Address>,
+    /// Gas unit price to use when charging for computation
+    ///
+    /// Must be greater-than-or-equal-to the network's current RGP (reference
+    /// gas price)
     pub price: u64,
+    /// Total budget willing to spend for the execution of a transaction
     pub budget: u64,
 }
 
@@ -1436,9 +1460,22 @@ impl TransactionEffects {
     }
 }
 
+/// A TTL for a transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction-expiration =  %x00      ; none
+///                        =/ %x01 u64  ; epoch
+/// ```
 #[uniffi::remote(Enum)]
 pub enum TransactionExpiration {
+    /// The transaction has no expiration
     None,
+    /// Validators wont sign a transaction unless the expiration Epoch
+    /// is greater than or equal to the current epoch
     Epoch(u64),
 }
 

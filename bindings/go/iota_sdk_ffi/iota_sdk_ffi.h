@@ -2386,16 +2386,6 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_publish_dependencies(void* ptr, RustCal
 RustBuffer uniffi_iota_sdk_ffi_fn_method_publish_modules(void* ptr, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_RANDOMNESSSTATEUPDATE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_RANDOMNESSSTATEUPDATE
-void* uniffi_iota_sdk_ffi_fn_clone_randomnessstateupdate(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_RANDOMNESSSTATEUPDATE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_RANDOMNESSSTATEUPDATE
-void uniffi_iota_sdk_ffi_fn_free_randomnessstateupdate(void* ptr, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SECP256K1PUBLICKEY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SECP256K1PUBLICKEY
 void* uniffi_iota_sdk_ffi_fn_clone_secp256k1publickey(void* ptr, RustCallStatus *out_status
@@ -2922,7 +2912,7 @@ void* uniffi_iota_sdk_ffi_fn_constructor_transactionkind_programmable_transactio
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONKIND_RANDOMNESS_STATE_UPDATE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONKIND_RANDOMNESS_STATE_UPDATE
-void* uniffi_iota_sdk_ffi_fn_constructor_transactionkind_randomness_state_update(void* tx, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_constructor_transactionkind_randomness_state_update(RustBuffer tx, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSFEROBJECTS
