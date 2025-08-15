@@ -359,33 +359,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_activejwk_epoch()
-	})
-	if checksum != 7817 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_activejwk_epoch: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk()
-	})
-	if checksum != 50919 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk_id()
-	})
-	if checksum != 12234 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk_id: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes()
 	})
 	if checksum != 57710 {
@@ -409,60 +382,6 @@ func uniffiCheckChecksums() {
 	if checksum != 44576 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_argument_nested: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_authenticator_obj_initial_shared_version()
-	})
-	if checksum != 52191 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_authenticator_obj_initial_shared_version: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_min_epoch()
-	})
-	if checksum != 51226 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_min_epoch: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version()
-	})
-	if checksum != 48312 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_epoch()
-	})
-	if checksum != 24448 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_epoch: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_new_active_jwks()
-	})
-	if checksum != 64383 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_new_active_jwks: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_round()
-	})
-	if checksum != 9474 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_round: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -1399,60 +1318,6 @@ func uniffiCheckChecksums() {
 	if checksum != 63815 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_identifier_as_str: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_jwk_alg()
-	})
-	if checksum != 6678 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_jwk_alg: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_jwk_e()
-	})
-	if checksum != 12949 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_jwk_e: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_jwk_kty()
-	})
-	if checksum != 36134 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_jwk_kty: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_jwk_n()
-	})
-	if checksum != 36069 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_jwk_n: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_jwkid_iss()
-	})
-	if checksum != 38189 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_jwkid_iss: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_jwkid_kid()
-	})
-	if checksum != 8708 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_jwkid_kid: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2969,15 +2834,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_activejwk_new()
-	})
-	if checksum != 58763 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_activejwk_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes()
 	})
 	if checksum != 58901 {
@@ -3037,24 +2893,6 @@ func uniffiCheckChecksums() {
 	if checksum != 44025 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateexpire_new()
-	})
-	if checksum != 20741 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateexpire_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateupdatev1_new()
-	})
-	if checksum != 23114 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateupdatev1_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3475,7 +3313,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_authenticator_state_expire()
 	})
-	if checksum != 49861 {
+	if checksum != 31328 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_authenticator_state_expire: UniFFI API checksum mismatch")
 	}
@@ -3640,24 +3478,6 @@ func uniffiCheckChecksums() {
 	if checksum != 61970 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_jwk_new()
-	})
-	if checksum != 2136 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_jwk_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_jwkid_new()
-	})
-	if checksum != 5425 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_jwkid_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4132,7 +3952,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1()
 	})
-	if checksum != 37860 {
+	if checksum != 14756 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1: UniFFI API checksum mismatch")
 	}
@@ -4698,125 +4518,6 @@ func (ffiObject *FfiObject)freeRustArcPtr() {
 		return 0
 	})
 }
-// A new Jwk
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// active-jwk = jwk-id jwk u64
-// ```
-type ActiveJwkInterface interface {
-	// Most recent epoch in which the jwk was validated
-	Epoch() uint64
-	// The Jwk
-	Jwk() *Jwk
-	// Identifier used to uniquely identify a Jwk
-	JwkId() *JwkId
-}
-// A new Jwk
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// active-jwk = jwk-id jwk u64
-// ```
-type ActiveJwk struct {
-	ffiObject FfiObject
-}
-func NewActiveJwk(jwkId *JwkId, jwk *Jwk, epoch uint64) *ActiveJwk {
-	return FfiConverterActiveJwkINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_activejwk_new(FfiConverterJwkIdINSTANCE.Lower(jwkId), FfiConverterJwkINSTANCE.Lower(jwk), FfiConverterUint64INSTANCE.Lower(epoch),_uniffiStatus)
-	}))
-}
-
-
-
-
-// Most recent epoch in which the jwk was validated
-func (_self *ActiveJwk) Epoch() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*ActiveJwk")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_activejwk_epoch(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-// The Jwk
-func (_self *ActiveJwk) Jwk() *Jwk {
-	_pointer := _self.ffiObject.incrementPointer("*ActiveJwk")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterJwkINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_activejwk_jwk(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-// Identifier used to uniquely identify a Jwk
-func (_self *ActiveJwk) JwkId() *JwkId {
-	_pointer := _self.ffiObject.incrementPointer("*ActiveJwk")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterJwkIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_activejwk_jwk_id(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *ActiveJwk) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterActiveJwk struct {}
-
-var FfiConverterActiveJwkINSTANCE = FfiConverterActiveJwk{}
-
-
-func (c FfiConverterActiveJwk) Lift(pointer unsafe.Pointer) *ActiveJwk {
-	result := &ActiveJwk {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_activejwk(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_activejwk(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ActiveJwk).Destroy)
-	return result
-}
-
-func (c FfiConverterActiveJwk) Read(reader io.Reader) *ActiveJwk {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterActiveJwk) Lower(value *ActiveJwk) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ActiveJwk")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterActiveJwk) Write(writer io.Writer, value *ActiveJwk) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerActiveJwk struct {}
-
-func (_ FfiDestroyerActiveJwk) Destroy(value *ActiveJwk) {
-		value.Destroy()
-}
-
-
-
 // Unique identifier for an Account on the IOTA blockchain.
 //
 // An `Address` is a 32-byte pseudonymous identifier used to uniquely identify
@@ -5174,252 +4875,6 @@ func (c FfiConverterArgument) Write(writer io.Writer, value *Argument) {
 type FfiDestroyerArgument struct {}
 
 func (_ FfiDestroyerArgument) Destroy(value *Argument) {
-		value.Destroy()
-}
-
-
-
-// Expire old JWKs
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// authenticator-state-expire = u64 u64
-// ```
-type AuthenticatorStateExpireInterface interface {
-	// The initial version of the authenticator object that it was shared at.
-	AuthenticatorObjInitialSharedVersion() uint64
-	// Expire JWKs that have a lower epoch than this
-	MinEpoch() uint64
-}
-// Expire old JWKs
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// authenticator-state-expire = u64 u64
-// ```
-type AuthenticatorStateExpire struct {
-	ffiObject FfiObject
-}
-func NewAuthenticatorStateExpire(minEpoch uint64, authenticatorObjInitialSharedVersion uint64) *AuthenticatorStateExpire {
-	return FfiConverterAuthenticatorStateExpireINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateexpire_new(FfiConverterUint64INSTANCE.Lower(minEpoch), FfiConverterUint64INSTANCE.Lower(authenticatorObjInitialSharedVersion),_uniffiStatus)
-	}))
-}
-
-
-
-
-// The initial version of the authenticator object that it was shared at.
-func (_self *AuthenticatorStateExpire) AuthenticatorObjInitialSharedVersion() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*AuthenticatorStateExpire")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_authenticator_obj_initial_shared_version(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-// Expire JWKs that have a lower epoch than this
-func (_self *AuthenticatorStateExpire) MinEpoch() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*AuthenticatorStateExpire")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_min_epoch(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *AuthenticatorStateExpire) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterAuthenticatorStateExpire struct {}
-
-var FfiConverterAuthenticatorStateExpireINSTANCE = FfiConverterAuthenticatorStateExpire{}
-
-
-func (c FfiConverterAuthenticatorStateExpire) Lift(pointer unsafe.Pointer) *AuthenticatorStateExpire {
-	result := &AuthenticatorStateExpire {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateexpire(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_authenticatorstateexpire(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*AuthenticatorStateExpire).Destroy)
-	return result
-}
-
-func (c FfiConverterAuthenticatorStateExpire) Read(reader io.Reader) *AuthenticatorStateExpire {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterAuthenticatorStateExpire) Lower(value *AuthenticatorStateExpire) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*AuthenticatorStateExpire")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterAuthenticatorStateExpire) Write(writer io.Writer, value *AuthenticatorStateExpire) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerAuthenticatorStateExpire struct {}
-
-func (_ FfiDestroyerAuthenticatorStateExpire) Destroy(value *AuthenticatorStateExpire) {
-		value.Destroy()
-}
-
-
-
-// Update the set of valid JWKs
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// authenticator-state-update = u64 ; epoch
-// u64 ; round
-// (vector active-jwk)
-// u64 ; initial version of the authenticator object
-// ```
-type AuthenticatorStateUpdateV1Interface interface {
-	// The initial version of the authenticator object that it was shared at.
-	AuthenticatorObjInitialSharedVersion() uint64
-	// Epoch of the authenticator state update transaction
-	Epoch() uint64
-	// newly active jwks
-	NewActiveJwks() []*ActiveJwk
-	// Consensus round of the authenticator state update
-	Round() uint64
-}
-// Update the set of valid JWKs
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// authenticator-state-update = u64 ; epoch
-// u64 ; round
-// (vector active-jwk)
-// u64 ; initial version of the authenticator object
-// ```
-type AuthenticatorStateUpdateV1 struct {
-	ffiObject FfiObject
-}
-func NewAuthenticatorStateUpdateV1(epoch uint64, round uint64, newActiveJwks []*ActiveJwk, authenticatorObjInitialSharedVersion uint64) *AuthenticatorStateUpdateV1 {
-	return FfiConverterAuthenticatorStateUpdateV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateupdatev1_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterUint64INSTANCE.Lower(round), FfiConverterSequenceActiveJwkINSTANCE.Lower(newActiveJwks), FfiConverterUint64INSTANCE.Lower(authenticatorObjInitialSharedVersion),_uniffiStatus)
-	}))
-}
-
-
-
-
-// The initial version of the authenticator object that it was shared at.
-func (_self *AuthenticatorStateUpdateV1) AuthenticatorObjInitialSharedVersion() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*AuthenticatorStateUpdateV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-// Epoch of the authenticator state update transaction
-func (_self *AuthenticatorStateUpdateV1) Epoch() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*AuthenticatorStateUpdateV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_epoch(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-// newly active jwks
-func (_self *AuthenticatorStateUpdateV1) NewActiveJwks() []*ActiveJwk {
-	_pointer := _self.ffiObject.incrementPointer("*AuthenticatorStateUpdateV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceActiveJwkINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_new_active_jwks(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-// Consensus round of the authenticator state update
-func (_self *AuthenticatorStateUpdateV1) Round() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*AuthenticatorStateUpdateV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_round(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *AuthenticatorStateUpdateV1) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterAuthenticatorStateUpdateV1 struct {}
-
-var FfiConverterAuthenticatorStateUpdateV1INSTANCE = FfiConverterAuthenticatorStateUpdateV1{}
-
-
-func (c FfiConverterAuthenticatorStateUpdateV1) Lift(pointer unsafe.Pointer) *AuthenticatorStateUpdateV1 {
-	result := &AuthenticatorStateUpdateV1 {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_authenticatorstateupdatev1(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_authenticatorstateupdatev1(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*AuthenticatorStateUpdateV1).Destroy)
-	return result
-}
-
-func (c FfiConverterAuthenticatorStateUpdateV1) Read(reader io.Reader) *AuthenticatorStateUpdateV1 {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterAuthenticatorStateUpdateV1) Lower(value *AuthenticatorStateUpdateV1) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*AuthenticatorStateUpdateV1")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterAuthenticatorStateUpdateV1) Write(writer io.Writer, value *AuthenticatorStateUpdateV1) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerAuthenticatorStateUpdateV1 struct {}
-
-func (_ FfiDestroyerAuthenticatorStateUpdateV1) Destroy(value *AuthenticatorStateUpdateV1) {
 		value.Destroy()
 }
 
@@ -8092,7 +7547,7 @@ func EndOfEpochTransactionKindAuthenticatorStateCreate() *EndOfEpochTransactionK
 	}))
 }
 
-func EndOfEpochTransactionKindAuthenticatorStateExpire(tx *AuthenticatorStateExpire) *EndOfEpochTransactionKind {
+func EndOfEpochTransactionKindAuthenticatorStateExpire(tx AuthenticatorStateExpire) *EndOfEpochTransactionKind {
 	return FfiConverterEndOfEpochTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_authenticator_state_expire(FfiConverterAuthenticatorStateExpireINSTANCE.Lower(tx),_uniffiStatus)
 	}))
@@ -10856,264 +10311,6 @@ func (c FfiConverterInput) Write(writer io.Writer, value *Input) {
 type FfiDestroyerInput struct {}
 
 func (_ FfiDestroyerInput) Destroy(value *Input) {
-		value.Destroy()
-}
-
-
-
-// A JSON Web Key
-//
-// Struct that contains info for a JWK. A list of them for different kids can
-// be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
-// The JWK is used to verify the JWT token.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// jwk = string string string string
-// ```
-type JwkInterface interface {
-	// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
-	Alg() string
-	// RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-	E() string
-	// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
-	Kty() string
-	// RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-	N() string
-}
-// A JSON Web Key
-//
-// Struct that contains info for a JWK. A list of them for different kids can
-// be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
-// The JWK is used to verify the JWT token.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// jwk = string string string string
-// ```
-type Jwk struct {
-	ffiObject FfiObject
-}
-func NewJwk(kty string, e string, n string, alg string) *Jwk {
-	return FfiConverterJwkINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_jwk_new(FfiConverterStringINSTANCE.Lower(kty), FfiConverterStringINSTANCE.Lower(e), FfiConverterStringINSTANCE.Lower(n), FfiConverterStringINSTANCE.Lower(alg),_uniffiStatus)
-	}))
-}
-
-
-
-
-// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
-func (_self *Jwk) Alg() string {
-	_pointer := _self.ffiObject.incrementPointer("*Jwk")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_jwk_alg(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-// RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-func (_self *Jwk) E() string {
-	_pointer := _self.ffiObject.incrementPointer("*Jwk")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_jwk_e(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
-func (_self *Jwk) Kty() string {
-	_pointer := _self.ffiObject.incrementPointer("*Jwk")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_jwk_kty(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-// RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-func (_self *Jwk) N() string {
-	_pointer := _self.ffiObject.incrementPointer("*Jwk")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_jwk_n(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *Jwk) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterJwk struct {}
-
-var FfiConverterJwkINSTANCE = FfiConverterJwk{}
-
-
-func (c FfiConverterJwk) Lift(pointer unsafe.Pointer) *Jwk {
-	result := &Jwk {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_jwk(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_jwk(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*Jwk).Destroy)
-	return result
-}
-
-func (c FfiConverterJwk) Read(reader io.Reader) *Jwk {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterJwk) Lower(value *Jwk) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*Jwk")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterJwk) Write(writer io.Writer, value *Jwk) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerJwk struct {}
-
-func (_ FfiDestroyerJwk) Destroy(value *Jwk) {
-		value.Destroy()
-}
-
-
-
-// Key to uniquely identify a JWK
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// jwk-id = string string
-// ```
-type JwkIdInterface interface {
-	// The issuer or identity of the OIDC provider.
-	Iss() string
-	// A key id use to uniquely identify a key from an OIDC provider.
-	Kid() string
-}
-// Key to uniquely identify a JWK
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// jwk-id = string string
-// ```
-type JwkId struct {
-	ffiObject FfiObject
-}
-func NewJwkId(iss string, kid string) *JwkId {
-	return FfiConverterJwkIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_jwkid_new(FfiConverterStringINSTANCE.Lower(iss), FfiConverterStringINSTANCE.Lower(kid),_uniffiStatus)
-	}))
-}
-
-
-
-
-// The issuer or identity of the OIDC provider.
-func (_self *JwkId) Iss() string {
-	_pointer := _self.ffiObject.incrementPointer("*JwkId")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_jwkid_iss(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-// A key id use to uniquely identify a key from an OIDC provider.
-func (_self *JwkId) Kid() string {
-	_pointer := _self.ffiObject.incrementPointer("*JwkId")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_jwkid_kid(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *JwkId) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterJwkId struct {}
-
-var FfiConverterJwkIdINSTANCE = FfiConverterJwkId{}
-
-
-func (c FfiConverterJwkId) Lift(pointer unsafe.Pointer) *JwkId {
-	result := &JwkId {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_jwkid(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_jwkid(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*JwkId).Destroy)
-	return result
-}
-
-func (c FfiConverterJwkId) Read(reader io.Reader) *JwkId {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterJwkId) Lower(value *JwkId) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*JwkId")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterJwkId) Write(writer io.Writer, value *JwkId) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerJwkId struct {}
-
-func (_ FfiDestroyerJwkId) Destroy(value *JwkId) {
 		value.Destroy()
 }
 
@@ -15557,7 +14754,7 @@ type TransactionKind struct {
 }
 
 
-func TransactionKindAuthenticatorStateUpdateV1(tx *AuthenticatorStateUpdateV1) *TransactionKind {
+func TransactionKindAuthenticatorStateUpdateV1(tx AuthenticatorStateUpdateV1) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_authenticator_state_update_v1(FfiConverterAuthenticatorStateUpdateV1INSTANCE.Lower(tx),_uniffiStatus)
 	}))
@@ -17207,6 +16404,173 @@ func (_ FfiDestroyerZkLoginPublicIdentifier) Destroy(value *ZkLoginPublicIdentif
 
 
 
+// A new Jwk
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// active-jwk = jwk-id jwk u64
+// ```
+type ActiveJwk struct {
+	// Identifier used to uniquely identify a Jwk
+	JwkId JwkId
+	// The Jwk
+	Jwk Jwk
+	// Most recent epoch in which the jwk was validated
+	Epoch uint64
+}
+
+func (r *ActiveJwk) Destroy() {
+		FfiDestroyerJwkId{}.Destroy(r.JwkId);
+		FfiDestroyerJwk{}.Destroy(r.Jwk);
+		FfiDestroyerUint64{}.Destroy(r.Epoch);
+}
+
+type FfiConverterActiveJwk struct {}
+
+var FfiConverterActiveJwkINSTANCE = FfiConverterActiveJwk{}
+
+func (c FfiConverterActiveJwk) Lift(rb RustBufferI) ActiveJwk {
+	return LiftFromRustBuffer[ActiveJwk](c, rb)
+}
+
+func (c FfiConverterActiveJwk) Read(reader io.Reader) ActiveJwk {
+	return ActiveJwk {
+			FfiConverterJwkIdINSTANCE.Read(reader),
+			FfiConverterJwkINSTANCE.Read(reader),
+			FfiConverterUint64INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterActiveJwk) Lower(value ActiveJwk) C.RustBuffer {
+	return LowerIntoRustBuffer[ActiveJwk](c, value)
+}
+
+func (c FfiConverterActiveJwk) Write(writer io.Writer, value ActiveJwk) {
+		FfiConverterJwkIdINSTANCE.Write(writer, value.JwkId);
+		FfiConverterJwkINSTANCE.Write(writer, value.Jwk);
+		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
+}
+
+type FfiDestroyerActiveJwk struct {}
+
+func (_ FfiDestroyerActiveJwk) Destroy(value ActiveJwk) {
+	value.Destroy()
+}
+// Expire old JWKs
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// authenticator-state-expire = u64 u64
+// ```
+type AuthenticatorStateExpire struct {
+	// Expire JWKs that have a lower epoch than this
+	MinEpoch uint64
+	// The initial version of the authenticator object that it was shared at.
+	AuthenticatorObjInitialSharedVersion uint64
+}
+
+func (r *AuthenticatorStateExpire) Destroy() {
+		FfiDestroyerUint64{}.Destroy(r.MinEpoch);
+		FfiDestroyerUint64{}.Destroy(r.AuthenticatorObjInitialSharedVersion);
+}
+
+type FfiConverterAuthenticatorStateExpire struct {}
+
+var FfiConverterAuthenticatorStateExpireINSTANCE = FfiConverterAuthenticatorStateExpire{}
+
+func (c FfiConverterAuthenticatorStateExpire) Lift(rb RustBufferI) AuthenticatorStateExpire {
+	return LiftFromRustBuffer[AuthenticatorStateExpire](c, rb)
+}
+
+func (c FfiConverterAuthenticatorStateExpire) Read(reader io.Reader) AuthenticatorStateExpire {
+	return AuthenticatorStateExpire {
+			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterUint64INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterAuthenticatorStateExpire) Lower(value AuthenticatorStateExpire) C.RustBuffer {
+	return LowerIntoRustBuffer[AuthenticatorStateExpire](c, value)
+}
+
+func (c FfiConverterAuthenticatorStateExpire) Write(writer io.Writer, value AuthenticatorStateExpire) {
+		FfiConverterUint64INSTANCE.Write(writer, value.MinEpoch);
+		FfiConverterUint64INSTANCE.Write(writer, value.AuthenticatorObjInitialSharedVersion);
+}
+
+type FfiDestroyerAuthenticatorStateExpire struct {}
+
+func (_ FfiDestroyerAuthenticatorStateExpire) Destroy(value AuthenticatorStateExpire) {
+	value.Destroy()
+}
+// Update the set of valid JWKs
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// authenticator-state-update = u64 ; epoch
+// u64 ; round
+// (vector active-jwk)
+// u64 ; initial version of the authenticator object
+// ```
+type AuthenticatorStateUpdateV1 struct {
+	// Epoch of the authenticator state update transaction
+	Epoch uint64
+	// Consensus round of the authenticator state update
+	Round uint64
+	// newly active jwks
+	NewActiveJwks []ActiveJwk
+	AuthenticatorObjInitialSharedVersion uint64
+}
+
+func (r *AuthenticatorStateUpdateV1) Destroy() {
+		FfiDestroyerUint64{}.Destroy(r.Epoch);
+		FfiDestroyerUint64{}.Destroy(r.Round);
+		FfiDestroyerSequenceActiveJwk{}.Destroy(r.NewActiveJwks);
+		FfiDestroyerUint64{}.Destroy(r.AuthenticatorObjInitialSharedVersion);
+}
+
+type FfiConverterAuthenticatorStateUpdateV1 struct {}
+
+var FfiConverterAuthenticatorStateUpdateV1INSTANCE = FfiConverterAuthenticatorStateUpdateV1{}
+
+func (c FfiConverterAuthenticatorStateUpdateV1) Lift(rb RustBufferI) AuthenticatorStateUpdateV1 {
+	return LiftFromRustBuffer[AuthenticatorStateUpdateV1](c, rb)
+}
+
+func (c FfiConverterAuthenticatorStateUpdateV1) Read(reader io.Reader) AuthenticatorStateUpdateV1 {
+	return AuthenticatorStateUpdateV1 {
+			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterSequenceActiveJwkINSTANCE.Read(reader),
+			FfiConverterUint64INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterAuthenticatorStateUpdateV1) Lower(value AuthenticatorStateUpdateV1) C.RustBuffer {
+	return LowerIntoRustBuffer[AuthenticatorStateUpdateV1](c, value)
+}
+
+func (c FfiConverterAuthenticatorStateUpdateV1) Write(writer io.Writer, value AuthenticatorStateUpdateV1) {
+		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
+		FfiConverterUint64INSTANCE.Write(writer, value.Round);
+		FfiConverterSequenceActiveJwkINSTANCE.Write(writer, value.NewActiveJwks);
+		FfiConverterUint64INSTANCE.Write(writer, value.AuthenticatorObjInitialSharedVersion);
+}
+
+type FfiDestroyerAuthenticatorStateUpdateV1 struct {}
+
+func (_ FfiDestroyerAuthenticatorStateUpdateV1) Destroy(value AuthenticatorStateUpdateV1) {
+	value.Destroy()
+}
 // Input/output state of an object that was changed during execution
 //
 // # BCS
@@ -18164,6 +17528,120 @@ func (c FfiConverterGasPayment) Write(writer io.Writer, value GasPayment) {
 type FfiDestroyerGasPayment struct {}
 
 func (_ FfiDestroyerGasPayment) Destroy(value GasPayment) {
+	value.Destroy()
+}
+// A JSON Web Key
+//
+// Struct that contains info for a JWK. A list of them for different kids can
+// be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
+// The JWK is used to verify the JWT token.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// jwk = string string string string
+// ```
+type Jwk struct {
+	// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
+	Kty string
+	// RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+	E string
+	// RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
+	N string
+	// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
+	Alg string
+}
+
+func (r *Jwk) Destroy() {
+		FfiDestroyerString{}.Destroy(r.Kty);
+		FfiDestroyerString{}.Destroy(r.E);
+		FfiDestroyerString{}.Destroy(r.N);
+		FfiDestroyerString{}.Destroy(r.Alg);
+}
+
+type FfiConverterJwk struct {}
+
+var FfiConverterJwkINSTANCE = FfiConverterJwk{}
+
+func (c FfiConverterJwk) Lift(rb RustBufferI) Jwk {
+	return LiftFromRustBuffer[Jwk](c, rb)
+}
+
+func (c FfiConverterJwk) Read(reader io.Reader) Jwk {
+	return Jwk {
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterJwk) Lower(value Jwk) C.RustBuffer {
+	return LowerIntoRustBuffer[Jwk](c, value)
+}
+
+func (c FfiConverterJwk) Write(writer io.Writer, value Jwk) {
+		FfiConverterStringINSTANCE.Write(writer, value.Kty);
+		FfiConverterStringINSTANCE.Write(writer, value.E);
+		FfiConverterStringINSTANCE.Write(writer, value.N);
+		FfiConverterStringINSTANCE.Write(writer, value.Alg);
+}
+
+type FfiDestroyerJwk struct {}
+
+func (_ FfiDestroyerJwk) Destroy(value Jwk) {
+	value.Destroy()
+}
+// Key to uniquely identify a JWK
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// jwk-id = string string
+// ```
+type JwkId struct {
+	// The issuer or identity of the OIDC provider.
+	Iss string
+	// A key id use to uniquely identify a key from an OIDC provider.
+	Kid string
+}
+
+func (r *JwkId) Destroy() {
+		FfiDestroyerString{}.Destroy(r.Iss);
+		FfiDestroyerString{}.Destroy(r.Kid);
+}
+
+type FfiConverterJwkId struct {}
+
+var FfiConverterJwkIdINSTANCE = FfiConverterJwkId{}
+
+func (c FfiConverterJwkId) Lift(rb RustBufferI) JwkId {
+	return LiftFromRustBuffer[JwkId](c, rb)
+}
+
+func (c FfiConverterJwkId) Read(reader io.Reader) JwkId {
+	return JwkId {
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterJwkId) Lower(value JwkId) C.RustBuffer {
+	return LowerIntoRustBuffer[JwkId](c, value)
+}
+
+func (c FfiConverterJwkId) Write(writer io.Writer, value JwkId) {
+		FfiConverterStringINSTANCE.Write(writer, value.Iss);
+		FfiConverterStringINSTANCE.Write(writer, value.Kid);
+}
+
+type FfiDestroyerJwkId struct {}
+
+func (_ FfiDestroyerJwkId) Destroy(value JwkId) {
 	value.Destroy()
 }
 type MoveEnum struct {
@@ -24966,49 +24444,6 @@ func (FfiDestroyerSequenceBytes) Destroy(sequence [][]byte) {
 	}
 }
 
-type FfiConverterSequenceActiveJwk struct{}
-
-var FfiConverterSequenceActiveJwkINSTANCE = FfiConverterSequenceActiveJwk{}
-
-func (c FfiConverterSequenceActiveJwk) Lift(rb RustBufferI) []*ActiveJwk {
-	return LiftFromRustBuffer[[]*ActiveJwk](c, rb)
-}
-
-func (c FfiConverterSequenceActiveJwk) Read(reader io.Reader) []*ActiveJwk {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]*ActiveJwk, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterActiveJwkINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceActiveJwk) Lower(value []*ActiveJwk) C.RustBuffer {
-	return LowerIntoRustBuffer[[]*ActiveJwk](c, value)
-}
-
-func (c FfiConverterSequenceActiveJwk) Write(writer io.Writer, value []*ActiveJwk) {
-	if len(value) > math.MaxInt32 {
-		panic("[]*ActiveJwk is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterActiveJwkINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceActiveJwk struct {}
-
-func (FfiDestroyerSequenceActiveJwk) Destroy(sequence []*ActiveJwk) {
-	for _, value := range sequence {
-		FfiDestroyerActiveJwk{}.Destroy(value)
-	}
-}
-
 type FfiConverterSequenceArgument struct{}
 
 var FfiConverterSequenceArgumentINSTANCE = FfiConverterSequenceArgument{}
@@ -25866,6 +25301,49 @@ type FfiDestroyerSequenceVersionAssignment struct {}
 func (FfiDestroyerSequenceVersionAssignment) Destroy(sequence []*VersionAssignment) {
 	for _, value := range sequence {
 		FfiDestroyerVersionAssignment{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceActiveJwk struct{}
+
+var FfiConverterSequenceActiveJwkINSTANCE = FfiConverterSequenceActiveJwk{}
+
+func (c FfiConverterSequenceActiveJwk) Lift(rb RustBufferI) []ActiveJwk {
+	return LiftFromRustBuffer[[]ActiveJwk](c, rb)
+}
+
+func (c FfiConverterSequenceActiveJwk) Read(reader io.Reader) []ActiveJwk {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]ActiveJwk, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterActiveJwkINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceActiveJwk) Lower(value []ActiveJwk) C.RustBuffer {
+	return LowerIntoRustBuffer[[]ActiveJwk](c, value)
+}
+
+func (c FfiConverterSequenceActiveJwk) Write(writer io.Writer, value []ActiveJwk) {
+	if len(value) > math.MaxInt32 {
+		panic("[]ActiveJwk is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterActiveJwkINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceActiveJwk struct {}
+
+func (FfiDestroyerSequenceActiveJwk) Destroy(sequence []ActiveJwk) {
+	for _, value := range sequence {
+		FfiDestroyerActiveJwk{}.Destroy(value)
 	}
 }
 

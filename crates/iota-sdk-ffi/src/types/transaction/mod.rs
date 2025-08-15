@@ -3,12 +3,14 @@
 
 use std::sync::Arc;
 
-use iota_types::{GasCostSummary, TransactionExpiration};
+use iota_types::{
+    ActiveJwk, AuthenticatorStateExpire, AuthenticatorStateUpdateV1, GasCostSummary, Jwk, JwkId,
+    TransactionExpiration,
+};
 
 use crate::types::{
     address::Address,
     checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
-    crypto::zklogin::{Jwk, JwkId},
     digest::{CheckpointDigest, ConsensusCommitDigest, TransactionDigest, TransactionEventsDigest},
     events::Event,
     execution_status::ExecutionStatus,
@@ -142,7 +144,7 @@ impl TransactionKind {
     #[uniffi::constructor]
     pub fn authenticator_state_update_v1(tx: &AuthenticatorStateUpdateV1) -> Self {
         Self(iota_types::TransactionKind::AuthenticatorStateUpdateV1(
-            tx.0.clone(),
+            tx.clone(),
         ))
     }
 
@@ -1098,28 +1100,12 @@ impl ChangeEpochV2 {
 /// ```text
 /// authenticator-state-expire = u64 u64
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct AuthenticatorStateExpire(pub iota_types::AuthenticatorStateExpire);
-
-#[uniffi::export]
-impl AuthenticatorStateExpire {
-    #[uniffi::constructor]
-    pub fn new(min_epoch: u64, authenticator_obj_initial_shared_version: u64) -> Self {
-        Self(iota_types::AuthenticatorStateExpire {
-            min_epoch,
-            authenticator_obj_initial_shared_version,
-        })
-    }
-
+#[uniffi::remote(Record)]
+pub struct AuthenticatorStateExpire {
     /// Expire JWKs that have a lower epoch than this
-    pub fn min_epoch(&self) -> u64 {
-        self.0.min_epoch
-    }
-
+    pub min_epoch: u64,
     /// The initial version of the authenticator object that it was shared at.
-    pub fn authenticator_obj_initial_shared_version(&self) -> u64 {
-        self.0.authenticator_obj_initial_shared_version
-    }
+    pub authenticator_obj_initial_shared_version: u64,
 }
 
 /// Update the set of valid JWKs
@@ -1134,54 +1120,15 @@ impl AuthenticatorStateExpire {
 ///                              (vector active-jwk)
 ///                              u64 ; initial version of the authenticator object
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
-pub struct AuthenticatorStateUpdateV1(pub iota_types::AuthenticatorStateUpdateV1);
-
-#[uniffi::export]
-impl AuthenticatorStateUpdateV1 {
-    #[uniffi::constructor]
-    pub fn new(
-        epoch: u64,
-        round: u64,
-        new_active_jwks: Vec<Arc<ActiveJwk>>,
-        authenticator_obj_initial_shared_version: u64,
-    ) -> Self {
-        Self(iota_types::AuthenticatorStateUpdateV1 {
-            epoch,
-            round,
-            new_active_jwks: new_active_jwks
-                .into_iter()
-                .map(|jwk| jwk.0.clone())
-                .collect(),
-            authenticator_obj_initial_shared_version,
-        })
-    }
-
+#[uniffi::remote(Record)]
+pub struct AuthenticatorStateUpdateV1 {
     /// Epoch of the authenticator state update transaction
-    pub fn epoch(&self) -> u64 {
-        self.0.epoch
-    }
-
+    pub epoch: u64,
     /// Consensus round of the authenticator state update
-    pub fn round(&self) -> u64 {
-        self.0.round
-    }
-
+    pub round: u64,
     /// newly active jwks
-    pub fn new_active_jwks(&self) -> Vec<Arc<ActiveJwk>> {
-        self.0
-            .new_active_jwks
-            .iter()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-            .collect()
-    }
-
-    /// The initial version of the authenticator object that it was shared at.
-    pub fn authenticator_obj_initial_shared_version(&self) -> u64 {
-        self.0.authenticator_obj_initial_shared_version
-    }
+    pub new_active_jwks: Vec<ActiveJwk>,
+    pub authenticator_obj_initial_shared_version: u64,
 }
 
 /// A new Jwk
@@ -1193,34 +1140,14 @@ impl AuthenticatorStateUpdateV1 {
 /// ```text
 /// active-jwk = jwk-id jwk u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
-pub struct ActiveJwk(pub iota_types::ActiveJwk);
-
-#[uniffi::export]
-impl ActiveJwk {
-    #[uniffi::constructor]
-    pub fn new(jwk_id: &JwkId, jwk: &Jwk, epoch: u64) -> Self {
-        Self(iota_types::ActiveJwk {
-            jwk_id: jwk_id.0.clone(),
-            jwk: jwk.0.clone(),
-            epoch,
-        })
-    }
-
+#[uniffi::remote(Record)]
+pub struct ActiveJwk {
     /// Identifier used to uniquely identify a Jwk
-    pub fn jwk_id(&self) -> JwkId {
-        self.0.jwk_id.clone().into()
-    }
-
+    pub jwk_id: JwkId,
     /// The Jwk
-    pub fn jwk(&self) -> Jwk {
-        self.0.jwk.clone().into()
-    }
-
+    pub jwk: Jwk,
     /// Most recent epoch in which the jwk was validated
-    pub fn epoch(&self) -> u64 {
-        self.0.epoch
-    }
+    pub epoch: u64,
 }
 
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
@@ -1280,7 +1207,7 @@ impl EndOfEpochTransactionKind {
 
     #[uniffi::constructor]
     pub fn authenticator_state_expire(tx: &AuthenticatorStateExpire) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.0.clone()))
+        Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.clone()))
     }
 }
 

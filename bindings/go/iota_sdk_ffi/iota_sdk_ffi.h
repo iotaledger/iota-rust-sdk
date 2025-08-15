@@ -378,36 +378,6 @@ static void call_UniffiForeignFutureCompleteVoid(
 
 
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ACTIVEJWK
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ACTIVEJWK
-void* uniffi_iota_sdk_ffi_fn_clone_activejwk(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_ACTIVEJWK
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_ACTIVEJWK
-void uniffi_iota_sdk_ffi_fn_free_activejwk(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ACTIVEJWK_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ACTIVEJWK_NEW
-void* uniffi_iota_sdk_ffi_fn_constructor_activejwk_new(void* jwk_id, void* jwk, uint64_t epoch, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ACTIVEJWK_EPOCH
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ACTIVEJWK_EPOCH
-uint64_t uniffi_iota_sdk_ffi_fn_method_activejwk_epoch(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ACTIVEJWK_JWK
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ACTIVEJWK_JWK
-void* uniffi_iota_sdk_ffi_fn_method_activejwk_jwk(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ACTIVEJWK_JWK_ID
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ACTIVEJWK_JWK_ID
-void* uniffi_iota_sdk_ffi_fn_method_activejwk_jwk_id(void* ptr, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ADDRESS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ADDRESS
 void* uniffi_iota_sdk_ffi_fn_clone_address(void* ptr, RustCallStatus *out_status
@@ -478,66 +448,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_argument_new_result(uint16_t result, Ru
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ARGUMENT_NESTED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ARGUMENT_NESTED
 RustBuffer uniffi_iota_sdk_ffi_fn_method_argument_nested(void* ptr, uint16_t ix, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_AUTHENTICATORSTATEEXPIRE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_AUTHENTICATORSTATEEXPIRE
-void* uniffi_iota_sdk_ffi_fn_clone_authenticatorstateexpire(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_AUTHENTICATORSTATEEXPIRE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_AUTHENTICATORSTATEEXPIRE
-void uniffi_iota_sdk_ffi_fn_free_authenticatorstateexpire(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_AUTHENTICATORSTATEEXPIRE_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_AUTHENTICATORSTATEEXPIRE_NEW
-void* uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateexpire_new(uint64_t min_epoch, uint64_t authenticator_obj_initial_shared_version, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEEXPIRE_AUTHENTICATOR_OBJ_INITIAL_SHARED_VERSION
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEEXPIRE_AUTHENTICATOR_OBJ_INITIAL_SHARED_VERSION
-uint64_t uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_authenticator_obj_initial_shared_version(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEEXPIRE_MIN_EPOCH
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEEXPIRE_MIN_EPOCH
-uint64_t uniffi_iota_sdk_ffi_fn_method_authenticatorstateexpire_min_epoch(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_AUTHENTICATORSTATEUPDATEV1
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_AUTHENTICATORSTATEUPDATEV1
-void* uniffi_iota_sdk_ffi_fn_clone_authenticatorstateupdatev1(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_AUTHENTICATORSTATEUPDATEV1
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_AUTHENTICATORSTATEUPDATEV1
-void uniffi_iota_sdk_ffi_fn_free_authenticatorstateupdatev1(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_AUTHENTICATORSTATEUPDATEV1_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_AUTHENTICATORSTATEUPDATEV1_NEW
-void* uniffi_iota_sdk_ffi_fn_constructor_authenticatorstateupdatev1_new(uint64_t epoch, uint64_t round, RustBuffer new_active_jwks, uint64_t authenticator_obj_initial_shared_version, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEUPDATEV1_AUTHENTICATOR_OBJ_INITIAL_SHARED_VERSION
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEUPDATEV1_AUTHENTICATOR_OBJ_INITIAL_SHARED_VERSION
-uint64_t uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEUPDATEV1_EPOCH
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEUPDATEV1_EPOCH
-uint64_t uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_epoch(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEUPDATEV1_NEW_ACTIVE_JWKS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEUPDATEV1_NEW_ACTIVE_JWKS
-RustBuffer uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_new_active_jwks(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEUPDATEV1_ROUND
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_AUTHENTICATORSTATEUPDATEV1_ROUND
-uint64_t uniffi_iota_sdk_ffi_fn_method_authenticatorstateupdatev1_round(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_BATCHSENDSTATUS
@@ -1247,7 +1157,7 @@ void* uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_authenticator
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ENDOFEPOCHTRANSACTIONKIND_AUTHENTICATOR_STATE_EXPIRE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ENDOFEPOCHTRANSACTIONKIND_AUTHENTICATOR_STATE_EXPIRE
-void* uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_authenticator_state_expire(void* tx, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_authenticator_state_expire(RustBuffer tx, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ENDOFEPOCHTRANSACTIONKIND_CHANGE_EPOCH
@@ -1710,66 +1620,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_input_new_receiving(RustBuffer object_r
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INPUT_NEW_SHARED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INPUT_NEW_SHARED
 void* uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(void* object_id, uint64_t initial_shared_version, int8_t mutable, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_JWK
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_JWK
-void* uniffi_iota_sdk_ffi_fn_clone_jwk(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_JWK
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_JWK
-void uniffi_iota_sdk_ffi_fn_free_jwk(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_JWK_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_JWK_NEW
-void* uniffi_iota_sdk_ffi_fn_constructor_jwk_new(RustBuffer kty, RustBuffer e, RustBuffer n, RustBuffer alg, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWK_ALG
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWK_ALG
-RustBuffer uniffi_iota_sdk_ffi_fn_method_jwk_alg(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWK_E
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWK_E
-RustBuffer uniffi_iota_sdk_ffi_fn_method_jwk_e(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWK_KTY
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWK_KTY
-RustBuffer uniffi_iota_sdk_ffi_fn_method_jwk_kty(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWK_N
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWK_N
-RustBuffer uniffi_iota_sdk_ffi_fn_method_jwk_n(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_JWKID
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_JWKID
-void* uniffi_iota_sdk_ffi_fn_clone_jwkid(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_JWKID
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_JWKID
-void uniffi_iota_sdk_ffi_fn_free_jwkid(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_JWKID_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_JWKID_NEW
-void* uniffi_iota_sdk_ffi_fn_constructor_jwkid_new(RustBuffer iss, RustBuffer kid, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWKID_ISS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWKID_ISS
-RustBuffer uniffi_iota_sdk_ffi_fn_method_jwkid_iss(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWKID_KID
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_JWKID_KID
-RustBuffer uniffi_iota_sdk_ffi_fn_method_jwkid_kid(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MAKEMOVEVECTOR
@@ -2966,7 +2816,7 @@ void uniffi_iota_sdk_ffi_fn_free_transactionkind(void* ptr, RustCallStatus *out_
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONKIND_AUTHENTICATOR_STATE_UPDATE_V1
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONKIND_AUTHENTICATOR_STATE_UPDATE_V1
-void* uniffi_iota_sdk_ffi_fn_constructor_transactionkind_authenticator_state_update_v1(void* tx, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_constructor_transactionkind_authenticator_state_update_v1(RustBuffer tx, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONKIND_CONSENSUS_COMMIT_PROLOGUE_V1
@@ -3723,24 +3573,6 @@ void ffi_iota_sdk_ffi_rust_future_free_void(uint64_t handle
 void ffi_iota_sdk_ffi_rust_future_complete_void(uint64_t handle, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ACTIVEJWK_EPOCH
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ACTIVEJWK_EPOCH
-uint16_t uniffi_iota_sdk_ffi_checksum_method_activejwk_epoch(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ACTIVEJWK_JWK
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ACTIVEJWK_JWK
-uint16_t uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ACTIVEJWK_JWK_ID
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ACTIVEJWK_JWK_ID
-uint16_t uniffi_iota_sdk_ffi_checksum_method_activejwk_jwk_id(void
-    
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_BYTES
 uint16_t uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(void
@@ -3756,42 +3588,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_address_to_hex(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ARGUMENT_NESTED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ARGUMENT_NESTED
 uint16_t uniffi_iota_sdk_ffi_checksum_method_argument_nested(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEEXPIRE_AUTHENTICATOR_OBJ_INITIAL_SHARED_VERSION
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEEXPIRE_AUTHENTICATOR_OBJ_INITIAL_SHARED_VERSION
-uint16_t uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_authenticator_obj_initial_shared_version(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEEXPIRE_MIN_EPOCH
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEEXPIRE_MIN_EPOCH
-uint16_t uniffi_iota_sdk_ffi_checksum_method_authenticatorstateexpire_min_epoch(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEUPDATEV1_AUTHENTICATOR_OBJ_INITIAL_SHARED_VERSION
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEUPDATEV1_AUTHENTICATOR_OBJ_INITIAL_SHARED_VERSION
-uint16_t uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_authenticator_obj_initial_shared_version(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEUPDATEV1_EPOCH
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEUPDATEV1_EPOCH
-uint16_t uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_epoch(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEUPDATEV1_NEW_ACTIVE_JWKS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEUPDATEV1_NEW_ACTIVE_JWKS
-uint16_t uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_new_active_jwks(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEUPDATEV1_ROUND
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_AUTHENTICATORSTATEUPDATEV1_ROUND
-uint16_t uniffi_iota_sdk_ffi_checksum_method_authenticatorstateupdatev1_round(void
     
 );
 #endif
@@ -4416,42 +4212,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects(
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_IDENTIFIER_AS_STR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_IDENTIFIER_AS_STR
 uint16_t uniffi_iota_sdk_ffi_checksum_method_identifier_as_str(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWK_ALG
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWK_ALG
-uint16_t uniffi_iota_sdk_ffi_checksum_method_jwk_alg(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWK_E
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWK_E
-uint16_t uniffi_iota_sdk_ffi_checksum_method_jwk_e(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWK_KTY
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWK_KTY
-uint16_t uniffi_iota_sdk_ffi_checksum_method_jwk_kty(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWK_N
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWK_N
-uint16_t uniffi_iota_sdk_ffi_checksum_method_jwk_n(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWKID_ISS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWKID_ISS
-uint16_t uniffi_iota_sdk_ffi_checksum_method_jwkid_iss(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWKID_KID
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_JWKID_KID
-uint16_t uniffi_iota_sdk_ffi_checksum_method_jwkid_kid(void
     
 );
 #endif
@@ -5463,12 +5223,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ACTIVEJWK_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ACTIVEJWK_NEW
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_activejwk_new(void
-    
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_FROM_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_FROM_BYTES
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(void
@@ -5508,18 +5262,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_argument_new_nested_result(voi
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ARGUMENT_NEW_RESULT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ARGUMENT_NEW_RESULT
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_AUTHENTICATORSTATEEXPIRE_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_AUTHENTICATORSTATEEXPIRE_NEW
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateexpire_new(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_AUTHENTICATORSTATEUPDATEV1_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_AUTHENTICATORSTATEUPDATEV1_NEW
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_authenticatorstateupdatev1_new(void
     
 );
 #endif
@@ -5910,18 +5652,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_SHARED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_SHARED
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_JWK_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_JWK_NEW
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_jwk_new(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_JWKID_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_JWKID_NEW
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_jwkid_new(void
     
 );
 #endif

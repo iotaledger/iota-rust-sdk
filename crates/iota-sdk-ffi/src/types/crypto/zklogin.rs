@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_types::ZkLoginClaim;
+use iota_types::{Jwk, JwkId, ZkLoginClaim};
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -341,25 +341,12 @@ impl Bn254FieldElement {
 /// ```text
 /// jwk-id = string string
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-pub struct JwkId(pub iota_types::JwkId);
-
-#[uniffi::export]
-impl JwkId {
-    #[uniffi::constructor]
-    pub fn new(iss: String, kid: String) -> Self {
-        Self(iota_types::JwkId { iss, kid })
-    }
-
+#[uniffi::remote(Record)]
+pub struct JwkId {
     /// The issuer or identity of the OIDC provider.
-    pub fn iss(&self) -> String {
-        self.0.iss.clone()
-    }
-
+    pub iss: String,
     /// A key id use to uniquely identify a key from an OIDC provider.
-    pub fn kid(&self) -> String {
-        self.0.kid.clone()
-    }
+    pub kid: String,
 }
 
 /// A JSON Web Key
@@ -375,33 +362,14 @@ impl JwkId {
 /// ```text
 /// jwk = string string string string
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-pub struct Jwk(pub iota_types::Jwk);
-
-#[uniffi::export]
-impl Jwk {
-    #[uniffi::constructor]
-    pub fn new(kty: String, e: String, n: String, alg: String) -> Self {
-        Self(iota_types::Jwk { kty, e, n, alg })
-    }
-
+#[uniffi::remote(Record)]
+pub struct Jwk {
     /// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
-    pub fn kty(&self) -> String {
-        self.0.kty.clone()
-    }
-
+    pub kty: String,
     /// RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-    pub fn e(&self) -> String {
-        self.0.e.clone()
-    }
-
+    pub e: String,
     /// RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
-    pub fn n(&self) -> String {
-        self.0.n.clone()
-    }
-
+    pub n: String,
     /// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
-    pub fn alg(&self) -> String {
-        self.0.alg.clone()
-    }
+    pub alg: String,
 }
