@@ -39,7 +39,7 @@ use query_types::{
     Validator,
 };
 use reqwest::Url;
-use serde::{Serialize, de::DeserializeOwned};
+use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use streams::stream_paginated_query;
 
 use crate::{
@@ -63,13 +63,13 @@ static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_V
 
 /// The result of a dry run, which includes the effects of the transaction and
 /// any errors that may have occurred.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct DryRunResult {
     pub effects: Option<TransactionEffects>,
     pub error: Option<String>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct TransactionDataEffects {
     pub tx: SignedTransaction,
     pub effects: TransactionEffects,
@@ -77,7 +77,7 @@ pub struct TransactionDataEffects {
 
 /// The name part of a dynamic field, including its type, bcs, and json
 /// representation.
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct DynamicFieldName {
     /// The type name of this dynamic field name
     pub type_: TypeTag,
@@ -88,7 +88,7 @@ pub struct DynamicFieldName {
 }
 
 /// The value part of a dynamic field.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct DynamicFieldValue {
     pub type_: TypeTag,
     pub bcs: Vec<u8>,
@@ -96,7 +96,7 @@ pub struct DynamicFieldValue {
 
 /// The output of a dynamic field query, that includes the name, value, and
 /// value's json representation.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct DynamicFieldOutput {
     /// The name of the dynamic field
     pub name: DynamicFieldName,
