@@ -55,3 +55,14 @@ jobs:
         run: git diff --exit-code
       - name: Run the example
         run: make test-python
+  swift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build the bindings
+        run: make swift
+      - name: Checks for uncommitted changes
+        run: git diff --exit-code
+      - name: Run the example
+        run: make test-swift
