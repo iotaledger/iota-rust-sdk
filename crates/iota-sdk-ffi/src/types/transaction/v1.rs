@@ -289,10 +289,9 @@ impl From<UnchangedSharedKind> for iota_types::UnchangedSharedKind {
 /// ```
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum ObjectIn {
-    NotExist,
-
+    Missing,
     /// The old version, digest and owner.
-    Exist {
+    Data {
         version: u64,
         digest: Arc<ObjectDigest>,
         owner: Arc<Owner>,
@@ -302,12 +301,12 @@ pub enum ObjectIn {
 impl From<iota_types::ObjectIn> for ObjectIn {
     fn from(value: iota_types::ObjectIn) -> Self {
         match value {
-            iota_types::ObjectIn::NotExist => Self::NotExist,
-            iota_types::ObjectIn::Exist {
+            iota_types::ObjectIn::Missing => Self::Missing,
+            iota_types::ObjectIn::Data {
                 version,
                 digest,
                 owner,
-            } => Self::Exist {
+            } => Self::Data {
                 version,
                 digest: Arc::new(digest.into()),
                 owner: Arc::new(owner.into()),
@@ -319,12 +318,12 @@ impl From<iota_types::ObjectIn> for ObjectIn {
 impl From<ObjectIn> for iota_types::ObjectIn {
     fn from(value: ObjectIn) -> Self {
         match value {
-            ObjectIn::NotExist => Self::NotExist,
-            ObjectIn::Exist {
+            ObjectIn::Missing => Self::Missing,
+            ObjectIn::Data {
                 version,
                 digest,
                 owner,
-            } => Self::Exist {
+            } => Self::Data {
                 version,
                 digest: **digest,
                 owner: **owner,
@@ -352,14 +351,12 @@ impl From<ObjectIn> for iota_types::ObjectIn {
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
-    NotExist,
-
+    Missing,
     /// Any written object, including all of mutated, created, unwrapped today.
     ObjectWrite {
         digest: Arc<ObjectDigest>,
         owner: Arc<Owner>,
     },
-
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
     PackageWrite {
@@ -371,7 +368,7 @@ pub enum ObjectOut {
 impl From<iota_types::ObjectOut> for ObjectOut {
     fn from(value: iota_types::ObjectOut) -> Self {
         match value {
-            iota_types::ObjectOut::NotExist => Self::NotExist,
+            iota_types::ObjectOut::Missing => Self::Missing,
             iota_types::ObjectOut::ObjectWrite { digest, owner } => Self::ObjectWrite {
                 digest: Arc::new(digest.into()),
                 owner: Arc::new(owner.into()),
@@ -387,7 +384,7 @@ impl From<iota_types::ObjectOut> for ObjectOut {
 impl From<ObjectOut> for iota_types::ObjectOut {
     fn from(value: ObjectOut) -> Self {
         match value {
-            ObjectOut::NotExist => Self::NotExist,
+            ObjectOut::Missing => Self::Missing,
             ObjectOut::ObjectWrite { digest, owner } => Self::ObjectWrite {
                 digest: **digest,
                 owner: **owner,

@@ -53,6 +53,42 @@ pub enum MultisigMemberPublicKey {
     ZkLogin(ZkLoginPublicIdentifier),
 }
 
+impl MultisigMemberPublicKey {
+    crate::def_is_as_into_opt!(
+        Ed25519 => Ed25519PublicKey,
+        Secp256k1 => Secp256k1PublicKey,
+        Secp256r1 => Secp256r1PublicKey,
+    );
+
+    pub fn is_zklogin(&self) -> bool {
+        matches!(self, Self::ZkLogin(_))
+    }
+
+    pub fn as_zklogin_opt(&self) -> Option<&ZkLoginPublicIdentifier> {
+        if let Self::ZkLogin(id) = self {
+            Some(id)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_zklogin(&self) -> &ZkLoginPublicIdentifier {
+        self.as_zklogin_opt().expect("not a ZkLogin key")
+    }
+
+    pub fn into_zklogin_opt(self) -> Option<ZkLoginPublicIdentifier> {
+        if let Self::ZkLogin(id) = self {
+            Some(id)
+        } else {
+            None
+        }
+    }
+
+    pub fn into_zklogin(self) -> ZkLoginPublicIdentifier {
+        self.into_zklogin_opt().expect("not a ZkLogin key")
+    }
+}
+
 /// A member in a multisig committee
 ///
 /// # BCS
@@ -306,6 +342,43 @@ pub enum MultisigMemberSignature {
     Secp256k1(Secp256k1Signature),
     Secp256r1(Secp256r1Signature),
     ZkLogin(Box<ZkLoginAuthenticator>),
+}
+
+impl MultisigMemberSignature {
+    crate::def_is_as_into_opt!(
+        Ed25519 => Ed25519Signature,
+        Secp256k1 => Secp256k1Signature,
+        Secp256r1 => Secp256r1Signature,
+    );
+
+    pub fn is_zklogin(&self) -> bool {
+        matches!(self, Self::ZkLogin(_))
+    }
+
+    pub fn as_zklogin_opt(&self) -> Option<&ZkLoginAuthenticator> {
+        if let Self::ZkLogin(auth) = self {
+            Some(&*auth)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_zklogin(&self) -> &ZkLoginAuthenticator {
+        self.as_zklogin_opt().expect("not a ZkLogin authenticator")
+    }
+
+    pub fn into_zklogin_opt(self) -> Option<ZkLoginAuthenticator> {
+        if let Self::ZkLogin(auth) = self {
+            Some(*auth)
+        } else {
+            None
+        }
+    }
+
+    pub fn into_zklogin(self) -> ZkLoginAuthenticator {
+        self.into_zklogin_opt()
+            .expect("not a ZkLogin authenticator")
+    }
 }
 
 #[cfg(feature = "serde")]

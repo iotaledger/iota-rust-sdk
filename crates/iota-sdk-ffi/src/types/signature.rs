@@ -73,67 +73,67 @@ impl UserSignature {
     }
 
     pub fn is_simple(&self) -> bool {
-        matches!(self.0, iota_types::UserSignature::Simple(_))
+        self.0.is_simple()
     }
 
     pub fn as_simple_opt(&self) -> Option<Arc<SimpleSignature>> {
-        if let iota_types::UserSignature::Simple(sig) = self.0.clone() {
-            Some(Arc::new(SimpleSignature(sig)))
-        } else {
-            None
-        }
+        self.0
+            .as_simple_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_simple(&self) -> Arc<SimpleSignature> {
-        self.as_simple_opt().expect("not a simple signature")
+        Arc::new(self.0.as_simple().clone().into())
     }
 
     pub fn is_multisig(&self) -> bool {
-        matches!(self.0, iota_types::UserSignature::Multisig(_))
+        self.0.is_multisig()
     }
 
     pub fn as_multisig_opt(&self) -> Option<Arc<MultisigAggregatedSignature>> {
-        if let iota_types::UserSignature::Multisig(sig) = self.0.clone() {
-            Some(Arc::new(MultisigAggregatedSignature(sig)))
-        } else {
-            None
-        }
+        self.0
+            .as_multisig_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_multisig(&self) -> Arc<MultisigAggregatedSignature> {
-        self.as_multisig_opt().expect("not a multi-signature")
+        Arc::new(self.0.as_multisig().clone().into())
     }
 
     pub fn is_zklogin(&self) -> bool {
-        matches!(self.0, iota_types::UserSignature::ZkLogin(_))
+        self.0.is_zklogin()
     }
 
     pub fn as_zklogin_opt(&self) -> Option<Arc<ZkLoginAuthenticator>> {
-        if let iota_types::UserSignature::ZkLogin(sig) = self.0.clone() {
-            Some(Arc::new(ZkLoginAuthenticator(*sig)))
-        } else {
-            None
-        }
+        self.0
+            .as_zklogin_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_zklogin(&self) -> Arc<ZkLoginAuthenticator> {
-        self.as_zklogin_opt().expect("not a zklogin authenticator")
+        Arc::new(self.0.as_zklogin().clone().into())
     }
 
     pub fn is_passkey(&self) -> bool {
-        matches!(self.0, iota_types::UserSignature::Passkey(_))
+        self.0.is_passkey()
     }
 
     pub fn as_passkey_opt(&self) -> Option<Arc<PasskeyAuthenticator>> {
-        if let iota_types::UserSignature::Passkey(sig) = self.0.clone() {
-            Some(Arc::new(sig.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_passkey_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_passkey(&self) -> Arc<PasskeyAuthenticator> {
-        self.as_passkey_opt().expect("not a passkey signature")
+        Arc::new(self.0.as_passkey().clone().into())
     }
 }
 
@@ -173,91 +173,86 @@ impl SimpleSignature {
     }
 
     pub fn is_ed25519(&self) -> bool {
-        matches!(self.0, iota_types::SimpleSignature::Ed25519 { .. })
+        self.0.is_ed25519()
     }
 
     pub fn ed25519_sig_opt(&self) -> Option<Arc<Ed25519Signature>> {
-        if let iota_types::SimpleSignature::Ed25519 { signature, .. } = self.0.clone() {
-            Some(Arc::new(signature.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_ed25519_sig_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn ed25519_sig(&self) -> Arc<Ed25519Signature> {
-        self.ed25519_sig_opt().expect("not an ed25519 signature")
+        Arc::new(self.0.as_ed25519_sig().clone().into())
     }
 
     pub fn ed25519_pub_key_opt(&self) -> Option<Arc<Ed25519PublicKey>> {
-        if let iota_types::SimpleSignature::Ed25519 { public_key, .. } = self.0.clone() {
-            Some(Arc::new(public_key.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_ed25519_pub_key_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn ed25519_pub_key(&self) -> Arc<Ed25519PublicKey> {
-        self.ed25519_pub_key_opt()
-            .expect("not an ed25519 public key")
+        Arc::new(self.0.as_ed25519_pub_key().clone().into())
     }
 
     pub fn is_secp256k1(&self) -> bool {
-        matches!(self.0, iota_types::SimpleSignature::Secp256k1 { .. })
+        self.0.is_secp256k1()
     }
 
     pub fn secp256k1_sig_opt(&self) -> Option<Arc<Secp256k1Signature>> {
-        if let iota_types::SimpleSignature::Secp256k1 { signature, .. } = self.0.clone() {
-            Some(Arc::new(signature.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_secp256k1_sig_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn secp256k1_sig(&self) -> Arc<Secp256k1Signature> {
-        self.secp256k1_sig_opt()
-            .expect("not an secp256k1 signature")
+        Arc::new(self.0.as_secp256k1_sig().clone().into())
     }
 
     pub fn secp256k1_pub_key_opt(&self) -> Option<Arc<Secp256k1PublicKey>> {
-        if let iota_types::SimpleSignature::Secp256k1 { public_key, .. } = self.0.clone() {
-            Some(Arc::new(public_key.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_secp256k1_pub_key_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn secp256k1_pub_key(&self) -> Arc<Secp256k1PublicKey> {
-        self.secp256k1_pub_key_opt()
-            .expect("not an secp256k1 public key")
+        Arc::new(self.0.as_secp256k1_pub_key().clone().into())
     }
 
     pub fn is_secp256r1(&self) -> bool {
-        matches!(self.0, iota_types::SimpleSignature::Secp256r1 { .. })
+        self.0.is_secp256r1()
     }
 
     pub fn secp256r1_sig_opt(&self) -> Option<Arc<Secp256r1Signature>> {
-        if let iota_types::SimpleSignature::Secp256r1 { signature, .. } = self.0.clone() {
-            Some(Arc::new(signature.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_secp256r1_sig_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn secp256r1_sig(&self) -> Arc<Secp256r1Signature> {
-        self.secp256r1_sig_opt()
-            .expect("not an secp256r1 signature")
+        Arc::new(self.0.as_secp256r1_sig().clone().into())
     }
 
     pub fn secp256r1_pub_key_opt(&self) -> Option<Arc<Secp256r1PublicKey>> {
-        if let iota_types::SimpleSignature::Secp256r1 { public_key, .. } = self.0.clone() {
-            Some(Arc::new(public_key.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_secp256r1_pub_key_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn secp256r1_pub_key(&self) -> Arc<Secp256r1PublicKey> {
-        self.secp256r1_pub_key_opt()
-            .expect("not an secp256r1 public key")
+        Arc::new(self.0.as_secp256r1_pub_key().clone().into())
     }
 }

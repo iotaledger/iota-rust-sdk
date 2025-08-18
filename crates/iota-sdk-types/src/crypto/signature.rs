@@ -53,6 +53,138 @@ pub enum SimpleSignature {
 }
 
 impl SimpleSignature {
+    crate::def_is!(Ed25519, Secp256k1, Secp256r1);
+
+    pub fn as_ed25519_sig_opt(&self) -> Option<&Ed25519Signature> {
+        if let Self::Ed25519 { signature, .. } = self {
+            Some(signature)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_ed25519_sig(&self) -> &Ed25519Signature {
+        self.as_ed25519_sig_opt().expect("not an ed25519 signature")
+    }
+
+    pub fn as_ed25519_pub_key_opt(&self) -> Option<&Ed25519PublicKey> {
+        if let Self::Ed25519 { public_key, .. } = self {
+            Some(public_key)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_ed25519_pub_key(&self) -> &Ed25519PublicKey {
+        self.as_ed25519_pub_key_opt()
+            .expect("not an ed25519 public key")
+    }
+
+    pub fn into_ed25519_opt(self) -> Option<(Ed25519Signature, Ed25519PublicKey)> {
+        if let Self::Ed25519 {
+            signature,
+            public_key,
+            ..
+        } = self
+        {
+            Some((signature, public_key))
+        } else {
+            None
+        }
+    }
+
+    pub fn into_ed25519(self) -> (Ed25519Signature, Ed25519PublicKey) {
+        self.into_ed25519_opt().expect("not an ed25519 signature")
+    }
+
+    pub fn as_secp256k1_sig_opt(&self) -> Option<&Secp256k1Signature> {
+        if let Self::Secp256k1 { signature, .. } = self {
+            Some(signature)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_secp256k1_sig(&self) -> &Secp256k1Signature {
+        self.as_secp256k1_sig_opt()
+            .expect("not an secp256k1 signature")
+    }
+
+    pub fn as_secp256k1_pub_key_opt(&self) -> Option<&Secp256k1PublicKey> {
+        if let Self::Secp256k1 { public_key, .. } = self {
+            Some(public_key)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_secp256k1_pub_key(&self) -> &Secp256k1PublicKey {
+        self.as_secp256k1_pub_key_opt()
+            .expect("not an secp256k1 public key")
+    }
+
+    pub fn into_secp256k1_opt(self) -> Option<(Secp256k1Signature, Secp256k1PublicKey)> {
+        if let Self::Secp256k1 {
+            signature,
+            public_key,
+            ..
+        } = self
+        {
+            Some((signature, public_key))
+        } else {
+            None
+        }
+    }
+
+    pub fn into_secp256k1(self) -> (Secp256k1Signature, Secp256k1PublicKey) {
+        self.into_secp256k1_opt()
+            .expect("not an secp256k1 signature")
+    }
+
+    pub fn as_secp256r1_sig_opt(&self) -> Option<&Secp256r1Signature> {
+        if let Self::Secp256r1 { signature, .. } = self {
+            Some(signature)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_secp256r1_sig(&self) -> &Secp256r1Signature {
+        self.as_secp256r1_sig_opt()
+            .expect("not an secp256r1 signature")
+    }
+
+    pub fn as_secp256r1_pub_key_opt(&self) -> Option<&Secp256r1PublicKey> {
+        if let Self::Secp256r1 { public_key, .. } = self {
+            Some(public_key)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_secp256r1_pub_key(&self) -> &Secp256r1PublicKey {
+        self.as_secp256r1_pub_key_opt()
+            .expect("not an secp256r1 public key")
+    }
+
+    pub fn into_secp256r1_opt(self) -> Option<(Secp256r1Signature, Secp256r1PublicKey)> {
+        if let Self::Secp256r1 {
+            signature,
+            public_key,
+            ..
+        } = self
+        {
+            Some((signature, public_key))
+        } else {
+            None
+        }
+    }
+
+    pub fn into_secp256r1(self) -> (Secp256r1Signature, Secp256r1PublicKey) {
+        self.into_secp256r1_opt()
+            .expect("not an secp256r1 signature")
+    }
+
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
         match self {
@@ -94,6 +226,10 @@ pub enum SignatureScheme {
 }
 
 impl SignatureScheme {
+    crate::def_is!(
+        Ed25519, Secp256k1, Secp256r1, Multisig, Bls12381, ZkLogin, Passkey,
+    );
+
     /// Return the name of this signature scheme
     pub fn name(self) -> &'static str {
         match self {
@@ -200,6 +336,41 @@ pub enum UserSignature {
 }
 
 impl UserSignature {
+    crate::def_is_as_into_opt!(
+        Simple => SimpleSignature,
+        Multisig => MultisigAggregatedSignature,
+        Passkey => PasskeyAuthenticator
+    );
+
+    pub fn is_zklogin(&self) -> bool {
+        matches!(self, Self::ZkLogin(_))
+    }
+
+    pub fn as_zklogin_opt(&self) -> Option<&ZkLoginAuthenticator> {
+        if let Self::ZkLogin(auth) = self {
+            Some(&*auth)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_zklogin(&self) -> &ZkLoginAuthenticator {
+        self.as_zklogin_opt().expect("not a ZkLogin authenticator")
+    }
+
+    pub fn into_zklogin_opt(self) -> Option<ZkLoginAuthenticator> {
+        if let Self::ZkLogin(auth) = self {
+            Some(*auth)
+        } else {
+            None
+        }
+    }
+
+    pub fn into_zklogin(self) -> ZkLoginAuthenticator {
+        self.into_zklogin_opt()
+            .expect("not a ZkLogin authenticator")
+    }
+
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
         match self {

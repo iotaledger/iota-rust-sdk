@@ -710,30 +710,17 @@ impl ConsensusDeterminedVersionAssignments {
     }
 
     pub fn is_cancelled_transactions(&self) -> bool {
-        matches!(
-            self.0,
-            iota_types::ConsensusDeterminedVersionAssignments::CancelledTransactions { .. }
-        )
-    }
-
-    pub fn as_cancelled_transactions_opt(&self) -> Option<Vec<Arc<CancelledTransaction>>> {
-        let iota_types::ConsensusDeterminedVersionAssignments::CancelledTransactions {
-            cancelled_transactions,
-        } = &self.0;
-
-        Some(
-            cancelled_transactions
-                .iter()
-                .cloned()
-                .map(Into::into)
-                .map(Arc::new)
-                .collect(),
-        )
+        self.0.is_cancelled_transactions()
     }
 
     pub fn as_cancelled_transactions(&self) -> Vec<Arc<CancelledTransaction>> {
-        self.as_cancelled_transactions_opt()
-            .expect("not a CancelledTransactions")
+        self.0
+            .as_cancelled_transactions()
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
     }
 }
 
@@ -1451,12 +1438,11 @@ impl TransactionEffects {
     }
 
     pub fn is_v1(&self) -> bool {
-        matches!(self.0, iota_types::TransactionEffects::V1(_))
+        self.0.is_v1()
     }
 
     pub fn as_v1(&self) -> TransactionEffectsV1 {
-        let iota_types::TransactionEffects::V1(inner) = self.0.clone();
-        (*inner).into()
+        self.0.as_v1().clone().into()
     }
 }
 
@@ -1531,12 +1517,6 @@ impl Argument {
             command_index,
             subresult_index,
         ))
-    }
-
-    /// Turn a Result into a NestedResult. If the argument is not a Result,
-    /// returns None.
-    pub fn nested(&self, ix: u16) -> Option<Arc<Argument>> {
-        self.0.nested(ix).map(Self).map(Arc::new)
     }
 }
 

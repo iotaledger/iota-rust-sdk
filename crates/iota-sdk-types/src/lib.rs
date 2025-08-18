@@ -189,7 +189,7 @@ macro_rules! def_is {
         paste::paste! {$(
         #[inline]
         pub fn [< is_ $variant:snake >](&self) -> bool {
-            matches!(self, Self::$variant)
+            matches!(self, Self::$variant { .. })
         }
         )*}
     };
@@ -211,6 +211,7 @@ macro_rules! def_is_as_into_opt {
 
         #[inline]
         pub fn [< as_ $variant:snake _opt >](&self) -> Option<&$inner> {
+            #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
             } else {
@@ -220,6 +221,7 @@ macro_rules! def_is_as_into_opt {
 
         #[inline]
         pub fn [< into_ $variant:snake _opt >](self) -> Option<$inner> {
+            #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
             } else {

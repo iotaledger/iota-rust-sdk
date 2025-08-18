@@ -34,67 +34,67 @@ pub struct MultisigMemberSignature(pub iota_types::MultisigMemberSignature);
 #[uniffi::export]
 impl MultisigMemberSignature {
     pub fn is_ed25519(&self) -> bool {
-        matches!(self.0, iota_types::MultisigMemberSignature::Ed25519(_))
+        self.0.is_ed25519()
     }
 
     pub fn as_ed25519_opt(&self) -> Option<Arc<Ed25519Signature>> {
-        if let iota_types::MultisigMemberSignature::Ed25519(sig) = self.0.clone() {
-            Some(Arc::new(sig.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_ed25519_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_ed25519(&self) -> Arc<Ed25519Signature> {
-        self.as_ed25519_opt().expect("not a ed25519 signature")
+        Arc::new(self.0.as_ed25519().clone().into())
     }
 
     pub fn is_secp256k1(&self) -> bool {
-        matches!(self.0, iota_types::MultisigMemberSignature::Secp256k1(_))
+        self.0.is_secp256k1()
     }
 
     pub fn as_secp256k1_opt(&self) -> Option<Arc<Secp256k1Signature>> {
-        if let iota_types::MultisigMemberSignature::Secp256k1(sig) = self.0.clone() {
-            Some(Arc::new(sig.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_secp256k1_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_secp256k1(&self) -> Arc<Secp256k1Signature> {
-        self.as_secp256k1_opt().expect("not a secp256k1 signature")
+        Arc::new(self.0.as_secp256k1().clone().into())
     }
 
     pub fn is_secp256r1(&self) -> bool {
-        matches!(self.0, iota_types::MultisigMemberSignature::Secp256r1(_))
+        self.0.is_secp256r1()
     }
 
     pub fn as_secp256r1_opt(&self) -> Option<Arc<Secp256r1Signature>> {
-        if let iota_types::MultisigMemberSignature::Secp256r1(sig) = self.0.clone() {
-            Some(Arc::new(sig.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_secp256r1_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_secp256r1(&self) -> Arc<Secp256r1Signature> {
-        self.as_secp256r1_opt().expect("not a secp256r1 signature")
+        Arc::new(self.0.as_secp256r1().clone().into())
     }
 
     pub fn is_zklogin(&self) -> bool {
-        matches!(self.0, iota_types::MultisigMemberSignature::ZkLogin(_))
+        self.0.is_zklogin()
     }
 
     pub fn as_zklogin_opt(&self) -> Option<Arc<ZkLoginAuthenticator>> {
-        if let iota_types::MultisigMemberSignature::ZkLogin(sig) = self.0.clone() {
-            Some(Arc::new((*sig).into()))
-        } else {
-            None
-        }
+        self.0
+            .as_zklogin_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_zklogin(&self) -> Arc<ZkLoginAuthenticator> {
-        self.as_zklogin_opt().expect("not a zklogin authenticator")
+        Arc::new(self.0.as_zklogin().clone().into())
     }
 }
 
@@ -104,67 +104,67 @@ pub struct MultisigMemberPublicKey(pub iota_types::MultisigMemberPublicKey);
 #[uniffi::export]
 impl MultisigMemberPublicKey {
     pub fn is_ed25519(&self) -> bool {
-        matches!(self.0, iota_types::MultisigMemberPublicKey::Ed25519(_))
+        self.0.is_ed25519()
     }
 
     pub fn as_ed25519_opt(&self) -> Option<Arc<Ed25519PublicKey>> {
-        if let iota_types::MultisigMemberPublicKey::Ed25519(key) = self.0.clone() {
-            Some(Arc::new(key.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_ed25519_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_ed25519(&self) -> Arc<Ed25519PublicKey> {
-        self.as_ed25519_opt().expect("not a ed25519 public key")
+        Arc::new(self.0.as_ed25519().clone().into())
     }
 
     pub fn is_secp256k1(&self) -> bool {
-        matches!(self.0, iota_types::MultisigMemberPublicKey::Secp256k1(_))
+        self.0.is_secp256k1()
     }
 
     pub fn as_secp256k1_opt(&self) -> Option<Arc<Secp256k1PublicKey>> {
-        if let iota_types::MultisigMemberPublicKey::Secp256k1(key) = self.0.clone() {
-            Some(Arc::new(key.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_secp256k1_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_secp256k1(&self) -> Arc<Secp256k1PublicKey> {
-        self.as_secp256k1_opt().expect("not a secp256k1 public key")
+        Arc::new(self.0.as_secp256k1().clone().into())
     }
 
     pub fn is_secp256r1(&self) -> bool {
-        matches!(self.0, iota_types::MultisigMemberPublicKey::Secp256r1(_))
+        self.0.is_secp256r1()
     }
 
     pub fn as_secp256r1_opt(&self) -> Option<Arc<Secp256r1PublicKey>> {
-        if let iota_types::MultisigMemberPublicKey::Secp256r1(key) = self.0.clone() {
-            Some(Arc::new(key.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_secp256r1_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_secp256r1(&self) -> Arc<Secp256r1PublicKey> {
-        self.as_secp256r1_opt().expect("not a secp256r1 public key")
+        Arc::new(self.0.as_secp256r1().clone().into())
     }
 
     pub fn is_zklogin(&self) -> bool {
-        matches!(self.0, iota_types::MultisigMemberPublicKey::ZkLogin(_))
+        self.0.is_zklogin()
     }
 
     pub fn as_zklogin_opt(&self) -> Option<Arc<ZkLoginPublicIdentifier>> {
-        if let iota_types::MultisigMemberPublicKey::ZkLogin(key) = self.0.clone() {
-            Some(Arc::new(key.into()))
-        } else {
-            None
-        }
+        self.0
+            .as_zklogin_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
     pub fn as_zklogin(&self) -> Arc<ZkLoginPublicIdentifier> {
-        self.as_zklogin_opt().expect("not a zklogin authenticator")
+        Arc::new(self.0.as_zklogin().clone().into())
     }
 }
 

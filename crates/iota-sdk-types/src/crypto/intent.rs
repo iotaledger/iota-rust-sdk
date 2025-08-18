@@ -79,6 +79,20 @@ pub enum IntentScope {
     ConsensusBlock = 8,    // Used for consensus authority signature on block's digest
 }
 
+impl IntentScope {
+    crate::def_is!(
+        TransactionData,
+        TransactionEffects,
+        CheckpointSummary,
+        PersonalMessage,
+        SenderSignedTransaction,
+        ProofOfPossession,
+        HeaderDigest,
+        BridgeEventUnused,
+        ConsensusBlock,
+    );
+}
+
 /// Byte signifying the version of an [`Intent`]
 ///
 /// # BCS
@@ -93,6 +107,10 @@ pub enum IntentScope {
 #[non_exhaustive]
 pub enum IntentVersion {
     V0 = 0,
+}
+
+impl IntentVersion {
+    crate::def_is!(V0);
 }
 
 /// Byte signifying the application id of an [`Intent`]
@@ -111,4 +129,8 @@ pub enum IntentAppId {
     Iota = 0,
     Narwhal = 1,
     Consensus = 2,
+}
+
+impl IntentAppId {
+    crate::def_is!(Iota, Narwhal, Consensus);
 }

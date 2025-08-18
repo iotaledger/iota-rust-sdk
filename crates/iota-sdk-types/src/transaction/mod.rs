@@ -78,6 +78,12 @@ pub enum TransactionExpiration {
     Epoch(EpochId),
 }
 
+impl TransactionExpiration {
+    crate::def_is!(None);
+
+    crate::def_is_as_into_opt!(Epoch => EpochId);
+}
+
 /// Payment information for executing a transaction
 ///
 /// # BCS
@@ -180,23 +186,18 @@ pub struct RandomnessStateUpdate {
 pub enum TransactionKind {
     /// A user transaction comprised of a list of native commands and move calls
     ProgrammableTransaction(ProgrammableTransaction),
-
     /// Transaction used to initialize the chain state.
     ///
     /// Only valid if in the genesis checkpoint (0) and if this is the very
     /// first transaction ever executed on the chain.
     Genesis(GenesisTransaction),
-
     /// V1 consensus commit update
     ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-
     /// Update set of valid JWKs used for zklogin
     AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
-
     /// Set of operations to run at the end of the epoch to close out the
     /// current epoch and start the next one.
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
-
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
 }
@@ -250,15 +251,18 @@ impl TransactionKind {
 pub enum EndOfEpochTransactionKind {
     /// End the epoch and start the next one
     ChangeEpoch(ChangeEpoch),
-
     /// End the epoch and start the next one
     ChangeEpochV2(ChangeEpochV2),
-
     /// Create and initialize the authenticator object used for zklogin
     AuthenticatorStateCreate,
-
     /// Expire JWKs used for zklogin
     AuthenticatorStateExpire(AuthenticatorStateExpire),
+}
+
+impl EndOfEpochTransactionKind {
+    crate::def_is!(AuthenticatorStateCreate);
+
+    crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, AuthenticatorStateExpire);
 }
 
 /// Set of Execution Time Observations from the committee.
@@ -284,6 +288,10 @@ pub enum EndOfEpochTransactionKind {
 )]
 pub enum ExecutionTimeObservations {
     V1(Vec<ExecutionTimeObservation>),
+}
+
+impl ExecutionTimeObservations {
+    crate::def_is_as_into_opt!(V1 => Vec<ExecutionTimeObservation>);
 }
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
@@ -364,6 +372,18 @@ pub enum ExecutionTimeObservationKey {
     Publish, // special case: should not be used; we only use hard-coded estimate for this
     MakeMoveVec,
     Upgrade,
+}
+
+impl ExecutionTimeObservationKey {
+    crate::def_is!(
+        MoveEntryPoint,
+        TransferObjects,
+        SplitCoins,
+        MergeCoins,
+        Publish,
+        MakeMoveVec,
+        Upgrade,
+    );
 }
 
 /// Expire old JWKs
@@ -475,6 +495,17 @@ pub enum ConsensusDeterminedVersionAssignments {
         #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
         cancelled_transactions: Vec<CancelledTransaction>,
     },
+}
+
+impl ConsensusDeterminedVersionAssignments {
+    crate::def_is!(CancelledTransactions);
+
+    pub fn as_cancelled_transactions(&self) -> &[CancelledTransaction] {
+        let Self::CancelledTransactions {
+            cancelled_transactions,
+        } = self;
+        cancelled_transactions
+    }
 }
 
 /// A transaction that was cancelled
@@ -813,24 +844,26 @@ pub enum Input {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
         value: Vec<u8>,
     },
-
     /// A move object that is either immutable or address owned
     ImmutableOrOwned(ObjectReference),
-
     /// A move object whose owner is "Shared"
     Shared {
         object_id: ObjectId,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         initial_shared_version: u64,
-
         /// Controls whether the caller asks for a mutable reference to the
         /// shared object.
         mutable: bool,
     },
-
     /// A move object that is attempted to be received in this transaction.
     // TODO add discussion around what receiving is
     Receiving(ObjectReference),
+}
+
+impl Input {
+    crate::def_is!(Pure, Shared);
+
+    crate::def_is_as_into_opt!(ImmutableOrOwned => ObjectReference, Receiving => ObjectReference);
 }
 
 /// A single command in a programmable transaction.
@@ -866,30 +899,24 @@ pub enum Input {
 pub enum Command {
     /// A call to either an entry or a public Move function
     MoveCall(MoveCall),
-
     /// `(Vec<forall T:key+store. T>, address)`
     /// It sends n-objects to the specified address. These objects must have
     /// store (public transfer) and either the previous owner must be an
     /// address or the object must be newly created.
     TransferObjects(TransferObjects),
-
     /// `(&mut Coin<T>, Vec<u64>)` -> `Vec<Coin<T>>`
     /// It splits off some amounts into a new coins with those amounts
     SplitCoins(SplitCoins),
-
     /// `(&mut Coin<T>, Vec<Coin<T>>)`
     /// It merges n-coins into the first coin
     MergeCoins(MergeCoins),
-
     /// Publishes a Move package. It takes the package bytes and a list of the
     /// package's transitive dependencies to link against on-chain.
     Publish(Publish),
-
     /// `forall T: Vec<T> -> vector<T>`
     /// Given n-values of the same type, it constructs a vector. For non objects
     /// or an empty vector, the type tag must be specified.
     MakeMoveVector(MakeMoveVector),
-
     /// Upgrades a Move package
     /// Takes (in order):
     /// 1. A vector of serialized modules for the package.
@@ -899,6 +926,18 @@ pub enum Command {
     /// 4. An argument holding the `UpgradeTicket` that must have been produced
     ///    from an earlier command in the same programmable transaction.
     Upgrade(Upgrade),
+}
+
+impl Command {
+    crate::def_is_as_into_opt!(
+        MoveCall,
+        TransferObjects,
+        SplitCoins,
+        MergeCoins,
+        Publish,
+        MakeMoveVector,
+        Upgrade,
+    );
 }
 
 /// Command to transfer ownership of a set of objects to an address
@@ -1102,14 +1141,11 @@ pub enum Argument {
     /// The gas coin. The gas coin can only be used by-ref, except for with
     /// `TransferObjects`, which can use it by-value.
     Gas,
-
     /// One of the input objects or primitive values (from
     /// `ProgrammableTransaction` inputs)
     Input(u16),
-
     /// The result of another command (from `ProgrammableTransaction` commands)
     Result(u16),
-
     /// Like a `Result` but it accesses a nested result. Currently, the only
     /// usage of this is to access a value from a Move call with multiple
     /// return values.
@@ -1118,13 +1154,42 @@ pub enum Argument {
 }
 
 impl Argument {
-    /// Turn a Result into a NestedResult. If the argument is not a Result,
-    /// returns None.
-    pub fn nested(&self, ix: u16) -> Option<Argument> {
-        match self {
-            Argument::Result(i) => Some(Argument::NestedResult(*i, ix)),
-            _ => None,
+    crate::def_is!(Gas, Input, Result, NestedResult);
+
+    pub fn as_input_opt(&self) -> Option<u16> {
+        if let Self::Input(idx) = self {
+            Some(*idx)
+        } else {
+            None
         }
+    }
+
+    pub fn as_input(&self) -> u16 {
+        self.as_input_opt().expect("not an input")
+    }
+
+    pub fn as_result_opt(&self) -> Option<u16> {
+        if let Self::Result(idx) = self {
+            Some(*idx)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_result(&self) -> u16 {
+        self.as_result_opt().expect("not a result")
+    }
+
+    pub fn as_nested_result_opt(&self) -> Option<(u16, u16)> {
+        if let Self::NestedResult(idx0, idx1) = self {
+            Some((*idx0, *idx1))
+        } else {
+            None
+        }
+    }
+
+    pub fn as_nested_result(&self) -> (u16, u16) {
+        self.as_nested_result_opt().expect("not a nested result")
     }
 }
 
