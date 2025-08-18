@@ -348,7 +348,7 @@ impl UserSignature {
 
     pub fn as_zklogin_opt(&self) -> Option<&ZkLoginAuthenticator> {
         if let Self::ZkLogin(auth) = self {
-            Some(&*auth)
+            Some(auth)
         } else {
             None
         }

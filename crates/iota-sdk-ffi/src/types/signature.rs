@@ -185,7 +185,7 @@ impl SimpleSignature {
     }
 
     pub fn ed25519_sig(&self) -> Arc<Ed25519Signature> {
-        Arc::new(self.0.as_ed25519_sig().clone().into())
+        Arc::new((*self.0.as_ed25519_sig()).into())
     }
 
     pub fn ed25519_pub_key_opt(&self) -> Option<Arc<Ed25519PublicKey>> {
@@ -197,7 +197,7 @@ impl SimpleSignature {
     }
 
     pub fn ed25519_pub_key(&self) -> Arc<Ed25519PublicKey> {
-        Arc::new(self.0.as_ed25519_pub_key().clone().into())
+        Arc::new((*self.0.as_ed25519_pub_key()).into())
     }
 
     pub fn is_secp256k1(&self) -> bool {
@@ -213,7 +213,7 @@ impl SimpleSignature {
     }
 
     pub fn secp256k1_sig(&self) -> Arc<Secp256k1Signature> {
-        Arc::new(self.0.as_secp256k1_sig().clone().into())
+        Arc::new((*self.0.as_secp256k1_sig()).into())
     }
 
     pub fn secp256k1_pub_key_opt(&self) -> Option<Arc<Secp256k1PublicKey>> {
@@ -225,7 +225,7 @@ impl SimpleSignature {
     }
 
     pub fn secp256k1_pub_key(&self) -> Arc<Secp256k1PublicKey> {
-        Arc::new(self.0.as_secp256k1_pub_key().clone().into())
+        Arc::new((*self.0.as_secp256k1_pub_key()).into())
     }
 
     pub fn is_secp256r1(&self) -> bool {
@@ -241,7 +241,7 @@ impl SimpleSignature {
     }
 
     pub fn secp256r1_sig(&self) -> Arc<Secp256r1Signature> {
-        Arc::new(self.0.as_secp256r1_sig().clone().into())
+        Arc::new((*self.0.as_secp256r1_sig()).into())
     }
 
     pub fn secp256r1_pub_key_opt(&self) -> Option<Arc<Secp256r1PublicKey>> {
@@ -253,6 +253,6 @@ impl SimpleSignature {
     }
 
     pub fn secp256r1_pub_key(&self) -> Arc<Secp256r1PublicKey> {
-        Arc::new(self.0.as_secp256r1_pub_key().clone().into())
+        Arc::new((*self.0.as_secp256r1_pub_key()).into())
     }
 }

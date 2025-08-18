@@ -46,7 +46,7 @@ impl MultisigMemberSignature {
     }
 
     pub fn as_ed25519(&self) -> Arc<Ed25519Signature> {
-        Arc::new(self.0.as_ed25519().clone().into())
+        Arc::new((*self.0.as_ed25519()).into())
     }
 
     pub fn is_secp256k1(&self) -> bool {
@@ -62,7 +62,7 @@ impl MultisigMemberSignature {
     }
 
     pub fn as_secp256k1(&self) -> Arc<Secp256k1Signature> {
-        Arc::new(self.0.as_secp256k1().clone().into())
+        Arc::new((*self.0.as_secp256k1()).into())
     }
 
     pub fn is_secp256r1(&self) -> bool {
@@ -78,7 +78,7 @@ impl MultisigMemberSignature {
     }
 
     pub fn as_secp256r1(&self) -> Arc<Secp256r1Signature> {
-        Arc::new(self.0.as_secp256r1().clone().into())
+        Arc::new((*self.0.as_secp256r1()).into())
     }
 
     pub fn is_zklogin(&self) -> bool {
@@ -116,7 +116,7 @@ impl MultisigMemberPublicKey {
     }
 
     pub fn as_ed25519(&self) -> Arc<Ed25519PublicKey> {
-        Arc::new(self.0.as_ed25519().clone().into())
+        Arc::new((*self.0.as_ed25519()).into())
     }
 
     pub fn is_secp256k1(&self) -> bool {
@@ -132,7 +132,7 @@ impl MultisigMemberPublicKey {
     }
 
     pub fn as_secp256k1(&self) -> Arc<Secp256k1PublicKey> {
-        Arc::new(self.0.as_secp256k1().clone().into())
+        Arc::new((*self.0.as_secp256k1()).into())
     }
 
     pub fn is_secp256r1(&self) -> bool {
@@ -148,7 +148,7 @@ impl MultisigMemberPublicKey {
     }
 
     pub fn as_secp256r1(&self) -> Arc<Secp256r1PublicKey> {
-        Arc::new(self.0.as_secp256r1().clone().into())
+        Arc::new((*self.0.as_secp256r1()).into())
     }
 
     pub fn is_zklogin(&self) -> bool {
