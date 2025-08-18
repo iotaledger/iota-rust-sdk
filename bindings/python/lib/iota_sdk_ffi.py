@@ -7640,11 +7640,73 @@ class _UniffiConverterTypeEventPage(_UniffiConverterRustBuffer):
 
 
 class GasCostSummary:
+    """
+    Summary of gas charges.
+
+    Storage is charged independently of computation.
+    There are 3 parts to the storage charges:
+    `storage_cost`: it is the charge of storage at the time the transaction is
+    executed.                 The cost of storage is the number of bytes of the
+    objects being mutated                 multiplied by a variable storage cost
+    per byte `storage_rebate`: this is the amount a user gets back when
+    manipulating an object.                   The `storage_rebate` is the
+    `storage_cost` for an object minus fees. `non_refundable_storage_fee`: not
+    all the value of the object storage cost is
+    given back to user and there is a small fraction that
+    is kept by the system. This value tracks that charge.
+
+    When looking at a gas cost summary the amount charged to the user is
+    `computation_cost + storage_cost - storage_rebate`
+    and that is the amount that is deducted from the gas coins.
+    `non_refundable_storage_fee` is collected from the objects being
+    mutated/deleted and it is tracked by the system in storage funds.
+
+    Objects deleted, including the older versions of objects mutated, have the
+    storage field on the objects added up to a pool of "potential rebate". This
+    rebate then is reduced by the "nonrefundable rate" such that:
+    `potential_rebate(storage cost of deleted/mutated objects) =
+    storage_rebate + non_refundable_storage_fee`
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    gas-cost-summary = u64 ; computation-cost
+    u64 ; storage-cost
+    u64 ; storage-rebate
+    u64 ; non-refundable-storage-fee
+    ```
+    """
+
     computation_cost: "int"
+    """
+    Cost of computation/execution
+    """
+
     computation_cost_burned: "int"
+    """
+    The burned component of the computation/execution costs
+    """
+
     storage_cost: "int"
+    """
+    Storage cost, it's the sum of all storage cost for all objects created
+    or mutated.
+    """
+
     storage_rebate: "int"
+    """
+    The amount of storage cost refunded to the user for all objects deleted
+    or mutated in the transaction.
+    """
+
     non_refundable_storage_fee: "int"
+    """
+    The fee for the rebate. The portion of the storage rebate kept by the
+    system.
+    """
+
     def __init__(self, *, computation_cost: "int", computation_cost_burned: "int", storage_cost: "int", storage_rebate: "int", non_refundable_storage_fee: "int"):
         self.computation_cost = computation_cost
         self.computation_cost_burned = computation_cost_burned
@@ -10720,6 +10782,10 @@ class _UniffiConverterTypeValidatorConnection(_UniffiConverterRustBuffer):
 
 
 class ValidatorCredentials:
+    """
+    The credentials related fields associated with a validator.
+    """
+
     authority_pub_key: "typing.Optional[Base64]"
     network_pub_key: "typing.Optional[Base64]"
     protocol_pub_key: "typing.Optional[Base64]"
@@ -10869,6 +10935,18 @@ class _UniffiConverterTypeValidatorSet(_UniffiConverterRustBuffer):
 
 
 class ZkLoginClaim:
+    """
+    A claim of the iss in a zklogin proof
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    zklogin-claim = string u8
+    ```
+    """
+
     value: "str"
     index_mod_4: "int"
     def __init__(self, *, value: "str", index_mod_4: "int"):
@@ -10908,11 +10986,51 @@ class _UniffiConverterTypeZkLoginClaim(_UniffiConverterRustBuffer):
 
 
 class CommandArgumentError:
+    """
+    An error with an argument to a command
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    command-argument-error =  type-mismatch
+    =/ invalid-bcs-bytes
+    =/ invalid-usage-of-pure-argument
+    =/ invalid-argument-to-private-entry-function
+    =/ index-out-of-bounds
+    =/ secondary-index-out-of-bound
+    =/ invalid-result-arity
+    =/ invalid-gas-coin-usage
+    =/ invalid-value-usage
+    =/ invalid-object-by-value
+    =/ invalid-object-by-mut-ref
+    =/ shared-object-operation-not-allowed
+
+    type-mismatch                               = %x00
+    invalid-bcs-bytes                           = %x01
+    invalid-usage-of-pure-argument              = %x02
+    invalid-argument-to-private-entry-function  = %x03
+    index-out-of-bounds                         = %x04 u16
+    secondary-index-out-of-bound                = %x05 u16 u16
+    invalid-result-arity                        = %x06 u16
+    invalid-gas-coin-usage                      = %x07
+    invalid-value-usage                         = %x08
+    invalid-object-by-value                     = %x09
+    invalid-object-by-mut-ref                   = %x0a
+    shared-object-operation-not-allowed         = %x0b
+    ```
+    """
+
     def __init__(self):
         raise RuntimeError("CommandArgumentError cannot be instantiated directly")
 
     # Each enum variant is a nested class of the enum itself.
     class TYPE_MISMATCH:
+        """
+        The type of the value does not match the expected type
+        """
+
 
         def __init__(self,):
             pass
@@ -10926,6 +11044,10 @@ class CommandArgumentError:
             return True
     
     class INVALID_BCS_BYTES:
+        """
+        The argument cannot be deserialized into a value of the specified type
+        """
+
 
         def __init__(self,):
             pass
@@ -10939,6 +11061,10 @@ class CommandArgumentError:
             return True
     
     class INVALID_USAGE_OF_PURE_ARGUMENT:
+        """
+        The argument cannot be instantiated from raw bytes
+        """
+
 
         def __init__(self,):
             pass
@@ -10952,6 +11078,11 @@ class CommandArgumentError:
             return True
     
     class INVALID_ARGUMENT_TO_PRIVATE_ENTRY_FUNCTION:
+        """
+        Invalid argument to private entry function.
+        Private entry functions cannot take arguments from other Move functions.
+        """
+
 
         def __init__(self,):
             pass
@@ -10965,6 +11096,10 @@ class CommandArgumentError:
             return True
     
     class INDEX_OUT_OF_BOUNDS:
+        """
+        Out of bounds access to input or results
+        """
+
         index: "int"
 
         def __init__(self,index: "int"):
@@ -10981,6 +11116,10 @@ class CommandArgumentError:
             return True
     
     class SECONDARY_INDEX_OUT_OF_BOUNDS:
+        """
+        Out of bounds access to subresult
+        """
+
         result: "int"
         subresult: "int"
 
@@ -11001,6 +11140,11 @@ class CommandArgumentError:
             return True
     
     class INVALID_RESULT_ARITY:
+        """
+        Invalid usage of result.
+        Expected a single result but found either no return value or multiple.
+        """
+
         result: "int"
 
         def __init__(self,result: "int"):
@@ -11017,6 +11161,11 @@ class CommandArgumentError:
             return True
     
     class INVALID_GAS_COIN_USAGE:
+        """
+        Invalid usage of Gas coin.
+        The Gas coin can only be used by-value with a TransferObjects command.
+        """
+
 
         def __init__(self,):
             pass
@@ -11030,6 +11179,10 @@ class CommandArgumentError:
             return True
     
     class INVALID_VALUE_USAGE:
+        """
+        Invalid usage of move value.
+        """
+
 
         def __init__(self,):
             pass
@@ -11043,6 +11196,10 @@ class CommandArgumentError:
             return True
     
     class INVALID_OBJECT_BY_VALUE:
+        """
+        Immutable objects cannot be passed by-value.
+        """
+
 
         def __init__(self,):
             pass
@@ -11056,6 +11213,10 @@ class CommandArgumentError:
             return True
     
     class INVALID_OBJECT_BY_MUT_REF:
+        """
+        Immutable objects cannot be passed by mutable reference, &mut.
+        """
+
 
         def __init__(self,):
             pass
@@ -11069,6 +11230,11 @@ class CommandArgumentError:
             return True
     
     class SHARED_OBJECT_OPERATION_NOT_ALLOWED:
+        """
+        Shared object operations such a wrapping, freezing, or converting to
+        owned are not allowed.
+        """
+
 
         def __init__(self,):
             pass
@@ -12947,6 +13113,24 @@ class _UniffiConverterTypeFeature(_UniffiConverterRustBuffer):
 
 
 class IdOperation(enum.Enum):
+    """
+    Defines what happened to an ObjectId during execution
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    id-operation =  id-operation-none
+    =/ id-operation-created
+    =/ id-operation-deleted
+
+    id-operation-none       = %x00
+    id-operation-created    = %x01
+    id-operation-deleted    = %x02
+    ```
+    """
+
     NONE = 0
     
     CREATED = 1
@@ -13708,6 +13892,26 @@ class _UniffiConverterTypeSdkFfiError(_UniffiConverterRustBuffer):
 
 
 class SignatureScheme(enum.Enum):
+    """
+    Flag use to disambiguate the signature schemes supported by IOTA.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
+    multisig-flag / bls-flag / zklogin-flag / passkey-flag
+    ed25519-flag     = %x00
+    secp256k1-flag   = %x01
+    secp256r1-flag   = %x02
+    multisig-flag    = %x03
+    bls-flag         = %x04
+    zklogin-flag     = %x05
+    passkey-flag     = %x06
+    ```
+    """
+
     ED25519 = 0
     
     SECP256K1 = 1
@@ -13979,9 +14183,31 @@ class _UniffiConverterTypeTransactionExpiration(_UniffiConverterRustBuffer):
 
 
 class TypeArgumentError(enum.Enum):
+    """
+    An error with a type argument
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    type-argument-error = type-not-found / constraint-not-satisfied
+    type-not-found = %x00
+    constraint-not-satisfied = %x01
+    ```
+    """
+
     TYPE_NOT_FOUND = 0
+    """
+    A type was not found in the module specified
+    """
+
     
     CONSTRAINT_NOT_SATISFIED = 1
+    """
+    A type provided did not match the specified constraint
+    """
+
     
 
 

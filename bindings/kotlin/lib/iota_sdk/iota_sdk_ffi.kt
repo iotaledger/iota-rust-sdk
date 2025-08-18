@@ -33041,11 +33041,67 @@ public object FfiConverterTypeGQLAddress: FfiConverterRustBuffer<GqlAddress> {
 
 
 
+/**
+ * Summary of gas charges.
+ *
+ * Storage is charged independently of computation.
+ * There are 3 parts to the storage charges:
+ * `storage_cost`: it is the charge of storage at the time the transaction is
+ * executed.                 The cost of storage is the number of bytes of the
+ * objects being mutated                 multiplied by a variable storage cost
+ * per byte `storage_rebate`: this is the amount a user gets back when
+ * manipulating an object.                   The `storage_rebate` is the
+ * `storage_cost` for an object minus fees. `non_refundable_storage_fee`: not
+ * all the value of the object storage cost is
+ * given back to user and there is a small fraction that
+ * is kept by the system. This value tracks that charge.
+ *
+ * When looking at a gas cost summary the amount charged to the user is
+ * `computation_cost + storage_cost - storage_rebate`
+ * and that is the amount that is deducted from the gas coins.
+ * `non_refundable_storage_fee` is collected from the objects being
+ * mutated/deleted and it is tracked by the system in storage funds.
+ *
+ * Objects deleted, including the older versions of objects mutated, have the
+ * storage field on the objects added up to a pool of "potential rebate". This
+ * rebate then is reduced by the "nonrefundable rate" such that:
+ * `potential_rebate(storage cost of deleted/mutated objects) =
+ * storage_rebate + non_refundable_storage_fee`
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * gas-cost-summary = u64 ; computation-cost
+ * u64 ; storage-cost
+ * u64 ; storage-rebate
+ * u64 ; non-refundable-storage-fee
+ * ```
+ */
 data class GasCostSummary (
+    /**
+     * Cost of computation/execution
+     */
     var `computationCost`: kotlin.ULong, 
+    /**
+     * The burned component of the computation/execution costs
+     */
     var `computationCostBurned`: kotlin.ULong, 
+    /**
+     * Storage cost, it's the sum of all storage cost for all objects created
+     * or mutated.
+     */
     var `storageCost`: kotlin.ULong, 
+    /**
+     * The amount of storage cost refunded to the user for all objects deleted
+     * or mutated in the transaction.
+     */
     var `storageRebate`: kotlin.ULong, 
+    /**
+     * The fee for the rebate. The portion of the storage rebate kept by the
+     * system.
+     */
     var `nonRefundableStorageFee`: kotlin.ULong
 ) {
     
@@ -35731,6 +35787,9 @@ public object FfiConverterTypeValidatorConnection: FfiConverterRustBuffer<Valida
 
 
 
+/**
+ * The credentials related fields associated with a validator.
+ */
 data class ValidatorCredentials (
     var `authorityPubKey`: Base64?, 
     var `networkPubKey`: Base64?, 
@@ -35870,6 +35929,17 @@ public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet>
 
 
 
+/**
+ * A claim of the iss in a zklogin proof
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * zklogin-claim = string u8
+ * ```
+ */
 data class ZkLoginClaim (
     var `value`: kotlin.String, 
     var `indexMod4`: kotlin.UByte
@@ -35902,48 +35972,123 @@ public object FfiConverterTypeZkLoginClaim: FfiConverterRustBuffer<ZkLoginClaim>
 
 
 
+/**
+ * An error with an argument to a command
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * command-argument-error =  type-mismatch
+ * =/ invalid-bcs-bytes
+ * =/ invalid-usage-of-pure-argument
+ * =/ invalid-argument-to-private-entry-function
+ * =/ index-out-of-bounds
+ * =/ secondary-index-out-of-bound
+ * =/ invalid-result-arity
+ * =/ invalid-gas-coin-usage
+ * =/ invalid-value-usage
+ * =/ invalid-object-by-value
+ * =/ invalid-object-by-mut-ref
+ * =/ shared-object-operation-not-allowed
+ *
+ * type-mismatch                               = %x00
+ * invalid-bcs-bytes                           = %x01
+ * invalid-usage-of-pure-argument              = %x02
+ * invalid-argument-to-private-entry-function  = %x03
+ * index-out-of-bounds                         = %x04 u16
+ * secondary-index-out-of-bound                = %x05 u16 u16
+ * invalid-result-arity                        = %x06 u16
+ * invalid-gas-coin-usage                      = %x07
+ * invalid-value-usage                         = %x08
+ * invalid-object-by-value                     = %x09
+ * invalid-object-by-mut-ref                   = %x0a
+ * shared-object-operation-not-allowed         = %x0b
+ * ```
+ */
 sealed class CommandArgumentError {
     
+    /**
+     * The type of the value does not match the expected type
+     */
     object TypeMismatch : CommandArgumentError()
     
     
+    /**
+     * The argument cannot be deserialized into a value of the specified type
+     */
     object InvalidBcsBytes : CommandArgumentError()
     
     
+    /**
+     * The argument cannot be instantiated from raw bytes
+     */
     object InvalidUsageOfPureArgument : CommandArgumentError()
     
     
+    /**
+     * Invalid argument to private entry function.
+     * Private entry functions cannot take arguments from other Move functions.
+     */
     object InvalidArgumentToPrivateEntryFunction : CommandArgumentError()
     
     
+    /**
+     * Out of bounds access to input or results
+     */
     data class IndexOutOfBounds(
         val `index`: kotlin.UShort) : CommandArgumentError() {
         companion object
     }
     
+    /**
+     * Out of bounds access to subresult
+     */
     data class SecondaryIndexOutOfBounds(
         val `result`: kotlin.UShort, 
         val `subresult`: kotlin.UShort) : CommandArgumentError() {
         companion object
     }
     
+    /**
+     * Invalid usage of result.
+     * Expected a single result but found either no return value or multiple.
+     */
     data class InvalidResultArity(
         val `result`: kotlin.UShort) : CommandArgumentError() {
         companion object
     }
     
+    /**
+     * Invalid usage of Gas coin.
+     * The Gas coin can only be used by-value with a TransferObjects command.
+     */
     object InvalidGasCoinUsage : CommandArgumentError()
     
     
+    /**
+     * Invalid usage of move value.
+     */
     object InvalidValueUsage : CommandArgumentError()
     
     
+    /**
+     * Immutable objects cannot be passed by-value.
+     */
     object InvalidObjectByValue : CommandArgumentError()
     
     
+    /**
+     * Immutable objects cannot be passed by mutable reference, &mut.
+     */
     object InvalidObjectByMutRef : CommandArgumentError()
     
     
+    /**
+     * Shared object operations such a wrapping, freezing, or converting to
+     * owned are not allowed.
+     */
     object SharedObjectOperationNotAllowed : CommandArgumentError()
     
     
@@ -37407,6 +37552,23 @@ public object FfiConverterTypeFeature: FfiConverterRustBuffer<Feature> {
 
 
 
+/**
+ * Defines what happened to an ObjectId during execution
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * id-operation =  id-operation-none
+ * =/ id-operation-created
+ * =/ id-operation-deleted
+ *
+ * id-operation-none       = %x00
+ * id-operation-created    = %x01
+ * id-operation-deleted    = %x02
+ * ```
+ */
 
 enum class IdOperation {
     
@@ -38030,6 +38192,25 @@ public object FfiConverterTypeSdkFfiError : FfiConverterRustBuffer<SdkFfiExcepti
 
 
 
+/**
+ * Flag use to disambiguate the signature schemes supported by IOTA.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
+ * multisig-flag / bls-flag / zklogin-flag / passkey-flag
+ * ed25519-flag     = %x00
+ * secp256k1-flag   = %x01
+ * secp256r1-flag   = %x02
+ * multisig-flag    = %x03
+ * bls-flag         = %x04
+ * zklogin-flag     = %x05
+ * passkey-flag     = %x06
+ * ```
+ */
 
 enum class SignatureScheme {
     
@@ -38183,10 +38364,29 @@ public object FfiConverterTypeTransactionExpiration : FfiConverterRustBuffer<Tra
 
 
 
+/**
+ * An error with a type argument
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * type-argument-error = type-not-found / constraint-not-satisfied
+ * type-not-found = %x00
+ * constraint-not-satisfied = %x01
+ * ```
+ */
 
 enum class TypeArgumentError {
     
+    /**
+     * A type was not found in the module specified
+     */
     TYPE_NOT_FOUND,
+    /**
+     * A type provided did not match the specified constraint
+     */
     CONSTRAINT_NOT_SATISFIED;
     companion object
 }
