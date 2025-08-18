@@ -10570,6 +10570,17 @@ func (_self *Identifier) AsStr() string {
 	}
 	}))
 }
+
+func (_self *Identifier) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Identifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Identifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -12637,6 +12648,17 @@ func (_self *ObjectId) ToHex() string {
 	}
 	}))
 }
+
+func (_self *ObjectId) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *ObjectId) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()

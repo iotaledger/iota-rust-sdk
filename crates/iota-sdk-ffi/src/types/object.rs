@@ -39,6 +39,7 @@ use crate::{
 #[derive(
     Clone, Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Deref, uniffi::Object,
 )]
+#[uniffi::export(Hash)]
 pub struct ObjectId(pub iota_types::ObjectId);
 
 #[uniffi::export]

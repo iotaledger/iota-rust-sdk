@@ -22,6 +22,7 @@ use crate::{
 /// UNDERSCORE = %x95
 /// ```
 #[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash, derive_more::From, uniffi::Object)]
+#[uniffi::export(Hash)]
 pub struct Identifier(pub iota_types::Identifier);
 
 #[uniffi::export]
