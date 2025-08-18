@@ -465,8 +465,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_argument_nested() != 44576:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() != 9890:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes() != 56969:
@@ -548,8 +546,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index() != 56426:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions() != 59888:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt() != 33554:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1509,12 +1505,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_argument_new_result.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_argument_new_result.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_nested.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_uint16,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_nested.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_batchsendstatus.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2078,11 +2068,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_a
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_is_cancelled_transactions.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4750,9 +4735,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.restype = ctypes
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_nested.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_nested.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes.restype = ctypes.c_uint16
@@ -4876,9 +4858,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions.restype = ctypes.c_uint16
@@ -13116,20 +13095,20 @@ class ObjectIn:
         raise RuntimeError("ObjectIn cannot be instantiated directly")
 
     # Each enum variant is a nested class of the enum itself.
-    class NOT_EXIST:
+    class MISSING:
 
         def __init__(self,):
             pass
 
         def __str__(self):
-            return "ObjectIn.NOT_EXIST()".format()
+            return "ObjectIn.MISSING()".format()
 
         def __eq__(self, other):
-            if not other.is_NOT_EXIST():
+            if not other.is_MISSING():
                 return False
             return True
     
-    class EXIST:
+    class DATA:
         """
         The old version, digest and owner.
         """
@@ -13144,10 +13123,10 @@ class ObjectIn:
             self.owner = owner
 
         def __str__(self):
-            return "ObjectIn.EXIST(version={}, digest={}, owner={})".format(self.version, self.digest, self.owner)
+            return "ObjectIn.DATA(version={}, digest={}, owner={})".format(self.version, self.digest, self.owner)
 
         def __eq__(self, other):
-            if not other.is_EXIST():
+            if not other.is_DATA():
                 return False
             if self.version != other.version:
                 return False
@@ -13161,21 +13140,21 @@ class ObjectIn:
 
     # For each variant, we have `is_NAME` and `is_name` methods for easily checking
     # whether an instance is that variant.
-    def is_NOT_EXIST(self) -> bool:
-        return isinstance(self, ObjectIn.NOT_EXIST)
-    def is_not_exist(self) -> bool:
-        return isinstance(self, ObjectIn.NOT_EXIST)
-    def is_EXIST(self) -> bool:
-        return isinstance(self, ObjectIn.EXIST)
-    def is_exist(self) -> bool:
-        return isinstance(self, ObjectIn.EXIST)
+    def is_MISSING(self) -> bool:
+        return isinstance(self, ObjectIn.MISSING)
+    def is_missing(self) -> bool:
+        return isinstance(self, ObjectIn.MISSING)
+    def is_DATA(self) -> bool:
+        return isinstance(self, ObjectIn.DATA)
+    def is_data(self) -> bool:
+        return isinstance(self, ObjectIn.DATA)
     
 
 # Now, a little trick - we make each nested variant class be a subclass of the main
 # enum class, so that method calls and instance checks etc will work intuitively.
 # We might be able to do this a little more neatly with a metaclass, but this'll do.
-ObjectIn.NOT_EXIST = type("ObjectIn.NOT_EXIST", (ObjectIn.NOT_EXIST, ObjectIn,), {})  # type: ignore
-ObjectIn.EXIST = type("ObjectIn.EXIST", (ObjectIn.EXIST, ObjectIn,), {})  # type: ignore
+ObjectIn.MISSING = type("ObjectIn.MISSING", (ObjectIn.MISSING, ObjectIn,), {})  # type: ignore
+ObjectIn.DATA = type("ObjectIn.DATA", (ObjectIn.DATA, ObjectIn,), {})  # type: ignore
 
 
 
@@ -13185,10 +13164,10 @@ class _UniffiConverterTypeObjectIn(_UniffiConverterRustBuffer):
     def read(buf):
         variant = buf.read_i32()
         if variant == 1:
-            return ObjectIn.NOT_EXIST(
+            return ObjectIn.MISSING(
             )
         if variant == 2:
-            return ObjectIn.EXIST(
+            return ObjectIn.DATA(
                 _UniffiConverterUInt64.read(buf),
                 _UniffiConverterTypeObjectDigest.read(buf),
                 _UniffiConverterTypeOwner.read(buf),
@@ -13197,9 +13176,9 @@ class _UniffiConverterTypeObjectIn(_UniffiConverterRustBuffer):
 
     @staticmethod
     def check_lower(value):
-        if value.is_NOT_EXIST():
+        if value.is_MISSING():
             return
-        if value.is_EXIST():
+        if value.is_DATA():
             _UniffiConverterUInt64.check_lower(value.version)
             _UniffiConverterTypeObjectDigest.check_lower(value.digest)
             _UniffiConverterTypeOwner.check_lower(value.owner)
@@ -13208,9 +13187,9 @@ class _UniffiConverterTypeObjectIn(_UniffiConverterRustBuffer):
 
     @staticmethod
     def write(value, buf):
-        if value.is_NOT_EXIST():
+        if value.is_MISSING():
             buf.write_i32(1)
-        if value.is_EXIST():
+        if value.is_DATA():
             buf.write_i32(2)
             _UniffiConverterUInt64.write(value.version, buf)
             _UniffiConverterTypeObjectDigest.write(value.digest, buf)
@@ -13246,7 +13225,7 @@ class ObjectOut:
         raise RuntimeError("ObjectOut cannot be instantiated directly")
 
     # Each enum variant is a nested class of the enum itself.
-    class NOT_EXIST:
+    class MISSING:
         """
         Same definition as in ObjectIn.
         """
@@ -13256,10 +13235,10 @@ class ObjectOut:
             pass
 
         def __str__(self):
-            return "ObjectOut.NOT_EXIST()".format()
+            return "ObjectOut.MISSING()".format()
 
         def __eq__(self, other):
-            if not other.is_NOT_EXIST():
+            if not other.is_MISSING():
                 return False
             return True
     
@@ -13316,10 +13295,10 @@ class ObjectOut:
 
     # For each variant, we have `is_NAME` and `is_name` methods for easily checking
     # whether an instance is that variant.
-    def is_NOT_EXIST(self) -> bool:
-        return isinstance(self, ObjectOut.NOT_EXIST)
-    def is_not_exist(self) -> bool:
-        return isinstance(self, ObjectOut.NOT_EXIST)
+    def is_MISSING(self) -> bool:
+        return isinstance(self, ObjectOut.MISSING)
+    def is_missing(self) -> bool:
+        return isinstance(self, ObjectOut.MISSING)
     def is_OBJECT_WRITE(self) -> bool:
         return isinstance(self, ObjectOut.OBJECT_WRITE)
     def is_object_write(self) -> bool:
@@ -13333,7 +13312,7 @@ class ObjectOut:
 # Now, a little trick - we make each nested variant class be a subclass of the main
 # enum class, so that method calls and instance checks etc will work intuitively.
 # We might be able to do this a little more neatly with a metaclass, but this'll do.
-ObjectOut.NOT_EXIST = type("ObjectOut.NOT_EXIST", (ObjectOut.NOT_EXIST, ObjectOut,), {})  # type: ignore
+ObjectOut.MISSING = type("ObjectOut.MISSING", (ObjectOut.MISSING, ObjectOut,), {})  # type: ignore
 ObjectOut.OBJECT_WRITE = type("ObjectOut.OBJECT_WRITE", (ObjectOut.OBJECT_WRITE, ObjectOut,), {})  # type: ignore
 ObjectOut.PACKAGE_WRITE = type("ObjectOut.PACKAGE_WRITE", (ObjectOut.PACKAGE_WRITE, ObjectOut,), {})  # type: ignore
 
@@ -13345,7 +13324,7 @@ class _UniffiConverterTypeObjectOut(_UniffiConverterRustBuffer):
     def read(buf):
         variant = buf.read_i32()
         if variant == 1:
-            return ObjectOut.NOT_EXIST(
+            return ObjectOut.MISSING(
             )
         if variant == 2:
             return ObjectOut.OBJECT_WRITE(
@@ -13361,7 +13340,7 @@ class _UniffiConverterTypeObjectOut(_UniffiConverterRustBuffer):
 
     @staticmethod
     def check_lower(value):
-        if value.is_NOT_EXIST():
+        if value.is_MISSING():
             return
         if value.is_OBJECT_WRITE():
             _UniffiConverterTypeObjectDigest.check_lower(value.digest)
@@ -13375,7 +13354,7 @@ class _UniffiConverterTypeObjectOut(_UniffiConverterRustBuffer):
 
     @staticmethod
     def write(value, buf):
-        if value.is_NOT_EXIST():
+        if value.is_MISSING():
             buf.write_i32(1)
         if value.is_OBJECT_WRITE():
             buf.write_i32(2)
@@ -14437,33 +14416,6 @@ class _UniffiConverterOptionalTypeAddress(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeAddress.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
-class _UniffiConverterOptionalTypeArgument(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeArgument.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeArgument.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeArgument.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -15733,33 +15685,6 @@ class _UniffiConverterOptionalSequenceString(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterSequenceString.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
-class _UniffiConverterOptionalSequenceTypeCancelledTransaction(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterSequenceTypeCancelledTransaction.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterSequenceTypeCancelledTransaction.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterSequenceTypeCancelledTransaction.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -17677,13 +17602,7 @@ class ArgumentProtocol(typing.Protocol):
     ```
     """
 
-    def nested(self, ix: "int"):
-        """
-        Turn a Result into a NestedResult. If the argument is not a Result,
-        returns None.
-        """
-
-        raise NotImplementedError
+    pass
 # Argument is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Argument():
     """
@@ -17783,23 +17702,6 @@ class Argument():
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_argument_new_result,
         _UniffiConverterUInt16.lower(result))
         return cls._make_instance_(pointer)
-
-
-
-    def nested(self, ix: "int") -> "typing.Optional[Argument]":
-        """
-        Turn a Result into a NestedResult. If the argument is not a Result,
-        returns None.
-        """
-
-        _UniffiConverterUInt16.check_lower(ix)
-        
-        return _UniffiConverterOptionalTypeArgument.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_nested,self._uniffi_clone_pointer(),
-        _UniffiConverterUInt16.lower(ix))
-        )
-
-
 
 
 
@@ -20042,8 +19944,6 @@ class _UniffiConverterTypeConsensusCommitPrologueV1:
 class ConsensusDeterminedVersionAssignmentsProtocol(typing.Protocol):
     def as_cancelled_transactions(self, ):
         raise NotImplementedError
-    def as_cancelled_transactions_opt(self, ):
-        raise NotImplementedError
     def is_cancelled_transactions(self, ):
         raise NotImplementedError
 # ConsensusDeterminedVersionAssignments is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -20084,15 +19984,6 @@ class ConsensusDeterminedVersionAssignments():
     def as_cancelled_transactions(self, ) -> "typing.List[CancelledTransaction]":
         return _UniffiConverterSequenceTypeCancelledTransaction.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def as_cancelled_transactions_opt(self, ) -> "typing.Optional[typing.List[CancelledTransaction]]":
-        return _UniffiConverterOptionalSequenceTypeCancelledTransaction.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt,self._uniffi_clone_pointer(),)
         )
 
 

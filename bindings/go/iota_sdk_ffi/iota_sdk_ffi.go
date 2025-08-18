@@ -378,15 +378,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_argument_nested()
-	})
-	if checksum != 44576 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_argument_nested: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes()
 	})
 	if checksum != 9890 {
@@ -752,15 +743,6 @@ func uniffiCheckChecksums() {
 	if checksum != 59888 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt()
-	})
-	if checksum != 33554 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4921,9 +4903,6 @@ func (_ FfiDestroyerAddress) Destroy(value *Address) {
 // argument-nested-result  = %x03 u16 u16
 // ```
 type ArgumentInterface interface {
-	// Turn a Result into a NestedResult. If the argument is not a Result,
-	// returns None.
-	Nested(ix uint16) **Argument
 }
 // An argument to a programmable transaction command
 //
@@ -4980,19 +4959,6 @@ func ArgumentNewResult(result uint16) *Argument {
 }
 
 
-
-// Turn a Result into a NestedResult. If the argument is not a Result,
-// returns None.
-func (_self *Argument) Nested(ix uint16) **Argument {
-	_pointer := _self.ffiObject.incrementPointer("*Argument")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_argument_nested(
-		_pointer,FfiConverterUint16INSTANCE.Lower(ix),_uniffiStatus),
-	}
-	}))
-}
 func (object *Argument) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -7055,7 +7021,6 @@ func (_ FfiDestroyerConsensusCommitPrologueV1) Destroy(value *ConsensusCommitPro
 
 type ConsensusDeterminedVersionAssignmentsInterface interface {
 	AsCancelledTransactions() []*CancelledTransaction
-	AsCancelledTransactionsOpt() *[]*CancelledTransaction
 	IsCancelledTransactions() bool
 }
 type ConsensusDeterminedVersionAssignments struct {
@@ -7077,17 +7042,6 @@ func (_self *ConsensusDeterminedVersionAssignments) AsCancelledTransactions() []
 	return FfiConverterSequenceCancelledTransactionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ConsensusDeterminedVersionAssignments) AsCancelledTransactionsOpt() *[]*CancelledTransaction {
-	_pointer := _self.ffiObject.incrementPointer("*ConsensusDeterminedVersionAssignments")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalSequenceCancelledTransactionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -21695,19 +21649,19 @@ func (_ FfiDestroyerMoveVisibility) Destroy(value MoveVisibility) {
 type ObjectIn interface {
 	Destroy()
 }
-type ObjectInNotExist struct {
+type ObjectInMissing struct {
 }
 
-func (e ObjectInNotExist) Destroy() {
+func (e ObjectInMissing) Destroy() {
 }
 // The old version, digest and owner.
-type ObjectInExist struct {
+type ObjectInData struct {
 	Version uint64
 	Digest *ObjectDigest
 	Owner *Owner
 }
 
-func (e ObjectInExist) Destroy() {
+func (e ObjectInData) Destroy() {
 		FfiDestroyerUint64{}.Destroy(e.Version);
 		FfiDestroyerObjectDigest{}.Destroy(e.Digest);
 		FfiDestroyerOwner{}.Destroy(e.Owner);
@@ -21728,10 +21682,10 @@ func (FfiConverterObjectIn) Read(reader io.Reader) ObjectIn {
 	id := readInt32(reader)
 	switch (id) {
 		case 1:
-			return ObjectInNotExist{
+			return ObjectInMissing{
 			};
 		case 2:
-			return ObjectInExist{
+			return ObjectInData{
 				FfiConverterUint64INSTANCE.Read(reader),
 				FfiConverterObjectDigestINSTANCE.Read(reader),
 				FfiConverterOwnerINSTANCE.Read(reader),
@@ -21743,9 +21697,9 @@ func (FfiConverterObjectIn) Read(reader io.Reader) ObjectIn {
 
 func (FfiConverterObjectIn) Write(writer io.Writer, value ObjectIn) {
 	switch variant_value := value.(type) {
-		case ObjectInNotExist:
+		case ObjectInMissing:
 			writeInt32(writer, 1)
-		case ObjectInExist:
+		case ObjectInData:
 			writeInt32(writer, 2)
 			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
 			FfiConverterObjectDigestINSTANCE.Write(writer, variant_value.Digest)
@@ -21783,10 +21737,10 @@ type ObjectOut interface {
 	Destroy()
 }
 // Same definition as in ObjectIn.
-type ObjectOutNotExist struct {
+type ObjectOutMissing struct {
 }
 
-func (e ObjectOutNotExist) Destroy() {
+func (e ObjectOutMissing) Destroy() {
 }
 // Any written object, including all of mutated, created, unwrapped today.
 type ObjectOutObjectWrite struct {
@@ -21825,7 +21779,7 @@ func (FfiConverterObjectOut) Read(reader io.Reader) ObjectOut {
 	id := readInt32(reader)
 	switch (id) {
 		case 1:
-			return ObjectOutNotExist{
+			return ObjectOutMissing{
 			};
 		case 2:
 			return ObjectOutObjectWrite{
@@ -21844,7 +21798,7 @@ func (FfiConverterObjectOut) Read(reader io.Reader) ObjectOut {
 
 func (FfiConverterObjectOut) Write(writer io.Writer, value ObjectOut) {
 	switch variant_value := value.(type) {
-		case ObjectOutNotExist:
+		case ObjectOutMissing:
 			writeInt32(writer, 1)
 		case ObjectOutObjectWrite:
 			writeInt32(writer, 2)
@@ -22685,43 +22639,6 @@ type FfiDestroyerOptionalAddress struct {}
 func (_ FfiDestroyerOptionalAddress) Destroy(value **Address) {
 	if value != nil {
 		FfiDestroyerAddress{}.Destroy(*value)
-	}
-}
-
-type FfiConverterOptionalArgument struct{}
-
-var FfiConverterOptionalArgumentINSTANCE = FfiConverterOptionalArgument{}
-
-func (c FfiConverterOptionalArgument) Lift(rb RustBufferI) **Argument {
-	return LiftFromRustBuffer[**Argument](c, rb)
-}
-
-func (_ FfiConverterOptionalArgument) Read(reader io.Reader) **Argument {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterArgumentINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalArgument) Lower(value **Argument) C.RustBuffer {
-	return LowerIntoRustBuffer[**Argument](c, value)
-}
-
-func (_ FfiConverterOptionalArgument) Write(writer io.Writer, value **Argument) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterArgumentINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalArgument struct {}
-
-func (_ FfiDestroyerOptionalArgument) Destroy(value **Argument) {
-	if value != nil {
-		FfiDestroyerArgument{}.Destroy(*value)
 	}
 }
 
@@ -24461,43 +24378,6 @@ type FfiDestroyerOptionalSequenceString struct {}
 func (_ FfiDestroyerOptionalSequenceString) Destroy(value *[]string) {
 	if value != nil {
 		FfiDestroyerSequenceString{}.Destroy(*value)
-	}
-}
-
-type FfiConverterOptionalSequenceCancelledTransaction struct{}
-
-var FfiConverterOptionalSequenceCancelledTransactionINSTANCE = FfiConverterOptionalSequenceCancelledTransaction{}
-
-func (c FfiConverterOptionalSequenceCancelledTransaction) Lift(rb RustBufferI) *[]*CancelledTransaction {
-	return LiftFromRustBuffer[*[]*CancelledTransaction](c, rb)
-}
-
-func (_ FfiConverterOptionalSequenceCancelledTransaction) Read(reader io.Reader) *[]*CancelledTransaction {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterSequenceCancelledTransactionINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalSequenceCancelledTransaction) Lower(value *[]*CancelledTransaction) C.RustBuffer {
-	return LowerIntoRustBuffer[*[]*CancelledTransaction](c, value)
-}
-
-func (_ FfiConverterOptionalSequenceCancelledTransaction) Write(writer io.Writer, value *[]*CancelledTransaction) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterSequenceCancelledTransactionINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalSequenceCancelledTransaction struct {}
-
-func (_ FfiDestroyerOptionalSequenceCancelledTransaction) Destroy(value *[]*CancelledTransaction) {
-	if value != nil {
-		FfiDestroyerSequenceCancelledTransaction{}.Destroy(*value)
 	}
 }
 
