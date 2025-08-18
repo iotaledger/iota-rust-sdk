@@ -125,57 +125,57 @@ impl TypeTag {
     }
 
     #[uniffi::constructor]
-    pub fn u8() -> Self {
+    pub fn new_u8() -> Self {
         Self(iota_types::TypeTag::U8)
     }
 
     #[uniffi::constructor]
-    pub fn u16() -> Self {
+    pub fn new_u16() -> Self {
         Self(iota_types::TypeTag::U16)
     }
 
     #[uniffi::constructor]
-    pub fn u32() -> Self {
+    pub fn new_u32() -> Self {
         Self(iota_types::TypeTag::U32)
     }
 
     #[uniffi::constructor]
-    pub fn u64() -> Self {
+    pub fn new_u64() -> Self {
         Self(iota_types::TypeTag::U64)
     }
 
     #[uniffi::constructor]
-    pub fn u128() -> Self {
+    pub fn new_u128() -> Self {
         Self(iota_types::TypeTag::U128)
     }
 
     #[uniffi::constructor]
-    pub fn u256() -> Self {
+    pub fn new_u256() -> Self {
         Self(iota_types::TypeTag::U256)
     }
 
     #[uniffi::constructor]
-    pub fn bool() -> Self {
+    pub fn new_bool() -> Self {
         Self(iota_types::TypeTag::Bool)
     }
 
     #[uniffi::constructor]
-    pub fn address() -> Self {
+    pub fn new_address() -> Self {
         Self(iota_types::TypeTag::Address)
     }
 
     #[uniffi::constructor]
-    pub fn signer() -> Self {
+    pub fn new_signer() -> Self {
         Self(iota_types::TypeTag::Signer)
     }
 
     #[uniffi::constructor]
-    pub fn vector(type_tag: &TypeTag) -> Self {
+    pub fn new_vector(type_tag: &TypeTag) -> Self {
         Self(iota_types::TypeTag::Vector(Box::new(type_tag.0.clone())))
     }
 
     #[uniffi::constructor]
-    pub fn struct_tag(struct_tag: &StructTag) -> Self {
+    pub fn new_struct(struct_tag: &StructTag) -> Self {
         Self(iota_types::TypeTag::Struct(Box::new(struct_tag.0.clone())))
     }
 }
