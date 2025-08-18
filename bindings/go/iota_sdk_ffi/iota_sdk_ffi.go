@@ -3339,38 +3339,38 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_authenticator_state_create()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create()
 	})
-	if checksum != 18946 {
+	if checksum != 42248 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_authenticator_state_create: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_authenticator_state_expire()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire()
 	})
-	if checksum != 31328 {
+	if checksum != 58811 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_authenticator_state_expire: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_change_epoch()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch()
 	})
-	if checksum != 16640 {
+	if checksum != 56235 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_change_epoch: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_change_epoch_v2()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v2()
 	})
-	if checksum != 17262 {
+	if checksum != 13653 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_change_epoch_v2: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v2: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3456,24 +3456,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_devnet()
-	})
-	if checksum != 37366 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_devnet: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_local()
-	})
-	if checksum != 55393 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_local: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new()
 	})
 	if checksum != 13557 {
@@ -3483,11 +3465,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_testnet()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet()
 	})
-	if checksum != 16109 {
+	if checksum != 60053 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_testnet: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local()
+	})
+	if checksum != 12434 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet()
+	})
+	if checksum != 14673 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3924,24 +3924,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_coin()
-	})
-	if checksum != 13756 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_coin: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin()
-	})
-	if checksum != 37848 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new()
 	})
 	if checksum != 20682 {
@@ -3951,11 +3933,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin()
 	})
-	if checksum != 30839 {
+	if checksum != 38232 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin()
+	})
+	if checksum != 5754 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota()
+	})
+	if checksum != 60970 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4068,56 +4068,56 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1()
 	})
-	if checksum != 14756 {
+	if checksum != 29264 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_authenticator_state_update_v1: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_consensus_commit_prologue_v1()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1()
 	})
-	if checksum != 50635 {
+	if checksum != 27756 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_consensus_commit_prologue_v1: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_end_of_epoch()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch()
 	})
-	if checksum != 65525 {
+	if checksum != 44556 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_end_of_epoch: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_genesis()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis()
 	})
-	if checksum != 65272 {
+	if checksum != 45541 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_genesis: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_programmable_transaction()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction()
 	})
-	if checksum != 51205 {
+	if checksum != 9153 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_programmable_transaction: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_randomness_state_update()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update()
 	})
-	if checksum != 16439 {
+	if checksum != 37051 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_randomness_state_update: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4131,101 +4131,101 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_address()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_address()
 	})
-	if checksum != 44901 {
+	if checksum != 65087 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_address: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_address: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_bool()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_bool()
 	})
-	if checksum != 19366 {
+	if checksum != 404 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_bool: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_bool: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_signer()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_signer()
 	})
-	if checksum != 12676 {
+	if checksum != 49791 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_signer: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_signer: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_struct_tag()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_struct()
 	})
-	if checksum != 53303 {
+	if checksum != 40686 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_struct_tag: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_struct: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u128()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u128()
 	})
-	if checksum != 41280 {
+	if checksum != 24239 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_u128: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u128: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u16()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u16()
 	})
-	if checksum != 13801 {
+	if checksum != 14922 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_u16: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u16: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u256()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u256()
 	})
-	if checksum != 13310 {
+	if checksum != 41658 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_u256: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u256: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u32()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u32()
 	})
-	if checksum != 9870 {
+	if checksum != 59185 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_u32: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u32: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u64()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u64()
 	})
-	if checksum != 59470 {
+	if checksum != 29045 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_u64: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u64: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_u8()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u8()
 	})
-	if checksum != 9403 {
+	if checksum != 55184 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_u8: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u8: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_vector()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_vector()
 	})
-	if checksum != 46548 {
+	if checksum != 2453 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_vector: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_vector: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7706,27 +7706,27 @@ type EndOfEpochTransactionKind struct {
 }
 
 
-func EndOfEpochTransactionKindAuthenticatorStateCreate() *EndOfEpochTransactionKind {
+func EndOfEpochTransactionKindNewAuthenticatorStateCreate() *EndOfEpochTransactionKind {
 	return FfiConverterEndOfEpochTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_authenticator_state_create(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_create(_uniffiStatus)
 	}))
 }
 
-func EndOfEpochTransactionKindAuthenticatorStateExpire(tx AuthenticatorStateExpire) *EndOfEpochTransactionKind {
+func EndOfEpochTransactionKindNewAuthenticatorStateExpire(tx AuthenticatorStateExpire) *EndOfEpochTransactionKind {
 	return FfiConverterEndOfEpochTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_authenticator_state_expire(FfiConverterAuthenticatorStateExpireINSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticator_state_expire(FfiConverterAuthenticatorStateExpireINSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
-func EndOfEpochTransactionKindChangeEpoch(tx *ChangeEpoch) *EndOfEpochTransactionKind {
+func EndOfEpochTransactionKindNewChangeEpoch(tx *ChangeEpoch) *EndOfEpochTransactionKind {
 	return FfiConverterEndOfEpochTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_change_epoch(FfiConverterChangeEpochINSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch(FfiConverterChangeEpochINSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
-func EndOfEpochTransactionKindChangeEpochV2(tx *ChangeEpochV2) *EndOfEpochTransactionKind {
+func EndOfEpochTransactionKindNewChangeEpochV2(tx *ChangeEpochV2) *EndOfEpochTransactionKind {
 	return FfiConverterEndOfEpochTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_change_epoch_v2(FfiConverterChangeEpochV2INSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v2(FfiConverterChangeEpochV2INSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
@@ -8196,23 +8196,23 @@ func NewFaucetClient(faucetUrl string) *FaucetClient {
 
 
 // Set to devnet faucet.
-func FaucetClientDevnet() *FaucetClient {
+func FaucetClientNewDevnet() *FaucetClient {
 	return FfiConverterFaucetClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_devnet(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet(_uniffiStatus)
 	}))
 }
 
 // Set to local faucet.
-func FaucetClientLocal() *FaucetClient {
+func FaucetClientNewLocal() *FaucetClient {
 	return FfiConverterFaucetClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_local(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local(_uniffiStatus)
 	}))
 }
 
 // Set to testnet faucet.
-func FaucetClientTestnet() *FaucetClient {
+func FaucetClientNewTestnet() *FaucetClient {
 	return FfiConverterFaucetClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_testnet(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_testnet(_uniffiStatus)
 	}))
 }
 
@@ -14291,21 +14291,21 @@ func NewStructTag(address *Address, module *Identifier, name *Identifier, typePa
 }
 
 
-func StructTagCoin(typeTag *TypeTag) *StructTag {
+func StructTagNewCoin(typeTag *TypeTag) *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_coin(FfiConverterTypeTagINSTANCE.Lower(typeTag),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin(FfiConverterTypeTagINSTANCE.Lower(typeTag),_uniffiStatus)
 	}))
 }
 
-func StructTagGasCoin() *StructTag {
+func StructTagNewGasCoin() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_gas_coin(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(_uniffiStatus)
 	}))
 }
 
-func StructTagStakedIota() *StructTag {
+func StructTagNewStakedIota() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_staked_iota(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(_uniffiStatus)
 	}))
 }
 
@@ -15116,39 +15116,39 @@ type TransactionKind struct {
 }
 
 
-func TransactionKindAuthenticatorStateUpdateV1(tx AuthenticatorStateUpdateV1) *TransactionKind {
+func TransactionKindNewAuthenticatorStateUpdateV1(tx AuthenticatorStateUpdateV1) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_authenticator_state_update_v1(FfiConverterAuthenticatorStateUpdateV1INSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(FfiConverterAuthenticatorStateUpdateV1INSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
-func TransactionKindConsensusCommitPrologueV1(tx *ConsensusCommitPrologueV1) *TransactionKind {
+func TransactionKindNewConsensusCommitPrologueV1(tx *ConsensusCommitPrologueV1) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_consensus_commit_prologue_v1(FfiConverterConsensusCommitPrologueV1INSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(FfiConverterConsensusCommitPrologueV1INSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
-func TransactionKindEndOfEpoch(tx []*EndOfEpochTransactionKind) *TransactionKind {
+func TransactionKindNewEndOfEpoch(tx []*EndOfEpochTransactionKind) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_end_of_epoch(FfiConverterSequenceEndOfEpochTransactionKindINSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(FfiConverterSequenceEndOfEpochTransactionKindINSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
-func TransactionKindGenesis(tx *GenesisTransaction) *TransactionKind {
+func TransactionKindNewGenesis(tx *GenesisTransaction) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_genesis(FfiConverterGenesisTransactionINSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(FfiConverterGenesisTransactionINSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
-func TransactionKindProgrammableTransaction(tx *ProgrammableTransaction) *TransactionKind {
+func TransactionKindNewProgrammableTransaction(tx *ProgrammableTransaction) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_programmable_transaction(FfiConverterProgrammableTransactionINSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(FfiConverterProgrammableTransactionINSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
-func TransactionKindRandomnessStateUpdate(tx RandomnessStateUpdate) *TransactionKind {
+func TransactionKindNewRandomnessStateUpdate(tx RandomnessStateUpdate) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_randomness_state_update(FfiConverterRandomnessStateUpdateINSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(FfiConverterRandomnessStateUpdateINSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
@@ -15398,69 +15398,69 @@ type TypeTag struct {
 }
 
 
-func TypeTagAddress() *TypeTag {
+func TypeTagNewAddress() *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_address(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(_uniffiStatus)
 	}))
 }
 
-func TypeTagBool() *TypeTag {
+func TypeTagNewBool() *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_bool(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(_uniffiStatus)
 	}))
 }
 
-func TypeTagSigner() *TypeTag {
+func TypeTagNewSigner() *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_signer(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(_uniffiStatus)
 	}))
 }
 
-func TypeTagStructTag(structTag *StructTag) *TypeTag {
+func TypeTagNewStruct(structTag *StructTag) *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_struct_tag(FfiConverterStructTagINSTANCE.Lower(structTag),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_struct(FfiConverterStructTagINSTANCE.Lower(structTag),_uniffiStatus)
 	}))
 }
 
-func TypeTagU128() *TypeTag {
+func TypeTagNewU128() *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_u128(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(_uniffiStatus)
 	}))
 }
 
-func TypeTagU16() *TypeTag {
+func TypeTagNewU16() *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_u16(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(_uniffiStatus)
 	}))
 }
 
-func TypeTagU256() *TypeTag {
+func TypeTagNewU256() *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_u256(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(_uniffiStatus)
 	}))
 }
 
-func TypeTagU32() *TypeTag {
+func TypeTagNewU32() *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_u32(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(_uniffiStatus)
 	}))
 }
 
-func TypeTagU64() *TypeTag {
+func TypeTagNewU64() *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_u64(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(_uniffiStatus)
 	}))
 }
 
-func TypeTagU8() *TypeTag {
+func TypeTagNewU8() *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_u8(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(_uniffiStatus)
 	}))
 }
 
-func TypeTagVector(typeTag *TypeTag) *TypeTag {
+func TypeTagNewVector(typeTag *TypeTag) *TypeTag {
 	return FfiConverterTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_vector(FfiConverterTypeTagINSTANCE.Lower(typeTag),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_vector(FfiConverterTypeTagINSTANCE.Lower(typeTag),_uniffiStatus)
 	}))
 }
 
