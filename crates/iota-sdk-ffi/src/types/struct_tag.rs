@@ -72,7 +72,7 @@ impl StructTag {
     }
 
     #[uniffi::constructor]
-    pub fn new_coin(type_tag: &TypeTag) -> Self {
+    pub fn coin(type_tag: &TypeTag) -> Self {
         Self(iota_types::StructTag::coin(type_tag.0.clone()))
     }
 
@@ -91,12 +91,12 @@ impl StructTag {
     }
 
     #[uniffi::constructor]
-    pub fn new_gas_coin() -> Self {
+    pub fn gas_coin() -> Self {
         Self(iota_types::StructTag::gas_coin())
     }
 
     #[uniffi::constructor]
-    pub fn new_staked_iota() -> Self {
+    pub fn staked_iota() -> Self {
         Self(iota_types::StructTag::staked_iota())
     }
 
