@@ -215,6 +215,15 @@ impl ZkLoginProof {
     }
 }
 
+/// A claim of the iss in a zklogin proof
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// zklogin-claim = string u8
+/// ```
 #[uniffi::remote(Record)]
 pub struct ZkLoginClaim {
     pub value: String,

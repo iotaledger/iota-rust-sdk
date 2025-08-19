@@ -133,6 +133,17 @@ impl From<CheckpointSummary> for iota_types::CheckpointSummary {
     }
 }
 
+/// A commitment made by a checkpoint.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// ; CheckpointCommitment is an enum and each variant is prefixed with its index
+/// checkpoint-commitment = ecmh-live-object-set
+/// ecmh-live-object-set = %x00 digest
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct CheckpointCommitment(pub iota_types::CheckpointCommitment);
 
