@@ -378,6 +378,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested()
+	})
+	if checksum != 12136 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_argument_get_nested: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes()
 	})
 	if checksum != 9890 {
@@ -4903,6 +4912,9 @@ func (_ FfiDestroyerAddress) Destroy(value *Address) {
 // argument-nested-result  = %x03 u16 u16
 // ```
 type ArgumentInterface interface {
+	// Get the nested result for this result at the given index. Returns None
+	// if this is not a Result.
+	GetNested(ix uint16) **Argument
 }
 // An argument to a programmable transaction command
 //
@@ -4959,6 +4971,19 @@ func ArgumentNewResult(result uint16) *Argument {
 }
 
 
+
+// Get the nested result for this result at the given index. Returns None
+// if this is not a Result.
+func (_self *Argument) GetNested(ix uint16) **Argument {
+	_pointer := _self.ffiObject.incrementPointer("*Argument")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_argument_get_nested(
+		_pointer,FfiConverterUint16INSTANCE.Lower(ix),_uniffiStatus),
+	}
+	}))
+}
 func (object *Argument) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -21633,18 +21658,18 @@ func (_ FfiDestroyerMoveVisibility) Destroy(value MoveVisibility) {
 // State of an object prior to execution
 //
 // If an object exists (at root-level) in the store prior to this transaction,
-// it should be Exist, otherwise it's NonExist, e.g. wrapped objects should be
-// NonExist.
+// it should be Data, otherwise it's Missing, e.g. wrapped objects should be
+// Missing.
 //
 // # BCS
 //
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// object-in = object-in-not-exist / object-in-exist
+// object-in = object-in-missing / object-in-data
 //
-// object-in-not-exist = %x00
-// object-in-exist     = %x01 u64 digest owner
+// object-in-missing = %x00
+// object-in-data    = %x01 u64 digest owner
 // ```
 type ObjectIn interface {
 	Destroy()
@@ -21724,14 +21749,14 @@ func (_ FfiDestroyerObjectIn) Destroy(value ObjectIn) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// object-out  =  object-out-not-exist
+// object-out  =  object-out-missing
 // =/ object-out-object-write
 // =/ object-out-package-write
 //
 //
-// object-out-not-exist        = %x00
-// object-out-object-write     = %x01 digest owner
-// object-out-package-write    = %x02 version digest
+// object-out-missing        = %x00
+// object-out-object-write   = %x01 digest owner
+// object-out-package-write  = %x02 version digest
 // ```
 type ObjectOut interface {
 	Destroy()
@@ -22639,6 +22664,43 @@ type FfiDestroyerOptionalAddress struct {}
 func (_ FfiDestroyerOptionalAddress) Destroy(value **Address) {
 	if value != nil {
 		FfiDestroyerAddress{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalArgument struct{}
+
+var FfiConverterOptionalArgumentINSTANCE = FfiConverterOptionalArgument{}
+
+func (c FfiConverterOptionalArgument) Lift(rb RustBufferI) **Argument {
+	return LiftFromRustBuffer[**Argument](c, rb)
+}
+
+func (_ FfiConverterOptionalArgument) Read(reader io.Reader) **Argument {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterArgumentINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalArgument) Lower(value **Argument) C.RustBuffer {
+	return LowerIntoRustBuffer[**Argument](c, value)
+}
+
+func (_ FfiConverterOptionalArgument) Write(writer io.Writer, value **Argument) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterArgumentINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalArgument struct {}
+
+func (_ FfiDestroyerOptionalArgument) Destroy(value **Argument) {
+	if value != nil {
+		FfiDestroyerArgument{}.Destroy(*value)
 	}
 }
 

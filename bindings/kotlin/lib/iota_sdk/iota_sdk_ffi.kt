@@ -1747,6 +1747,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -1765,6 +1767,8 @@ internal interface IntegrityCheckingUniffiLib : Library {
     fun uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_argument_get_nested(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes(
 ): Short
@@ -2711,6 +2715,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_argument_new_nested_result(`commandIndex`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_argument_new_result(`result`: Short,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_argument_get_nested(`ptr`: Pointer,`ix`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_batchsendstatus(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_batchsendstatus(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3997,6 +4003,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested() != 12136.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() != 9890.toShort()) {
@@ -6278,6 +6287,12 @@ public object FfiConverterTypeAddress: FfiConverter<Address, Pointer> {
  */
 public interface ArgumentInterface {
     
+    /**
+     * Get the nested result for this result at the given index. Returns None
+     * if this is not a Result.
+     */
+    fun `getNested`(`ix`: kotlin.UShort): Argument?
+    
     companion object
 }
 
@@ -6381,6 +6396,22 @@ open class Argument: Disposable, AutoCloseable, ArgumentInterface
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_argument(pointer!!, status)
         }
     }
+
+    
+    /**
+     * Get the nested result for this result at the given index. Returns None
+     * if this is not a Result.
+     */override fun `getNested`(`ix`: kotlin.UShort): Argument? {
+            return FfiConverterOptionalTypeArgument.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_argument_get_nested(
+        it, FfiConverterUShort.lower(`ix`),_status)
+}
+    }
+    )
+    }
+    
 
     
 
@@ -37451,18 +37482,18 @@ public object FfiConverterTypeMoveVisibility: FfiConverterRustBuffer<MoveVisibil
  * State of an object prior to execution
  *
  * If an object exists (at root-level) in the store prior to this transaction,
- * it should be Exist, otherwise it's NonExist, e.g. wrapped objects should be
- * NonExist.
+ * it should be Data, otherwise it's Missing, e.g. wrapped objects should be
+ * Missing.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-in = object-in-not-exist / object-in-exist
+ * object-in = object-in-missing / object-in-data
  *
- * object-in-not-exist = %x00
- * object-in-exist     = %x01 u64 digest owner
+ * object-in-missing = %x00
+ * object-in-data    = %x01 u64 digest owner
  * ```
  */
 sealed class ObjectIn: Disposable  {
@@ -37565,14 +37596,14 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-out  =  object-out-not-exist
+ * object-out  =  object-out-missing
  * =/ object-out-object-write
  * =/ object-out-package-write
  *
  *
- * object-out-not-exist        = %x00
- * object-out-object-write     = %x01 digest owner
- * object-out-package-write    = %x02 version digest
+ * object-out-missing        = %x00
+ * object-out-object-write   = %x01 digest owner
+ * object-out-package-write  = %x02 version digest
  * ```
  */
 sealed class ObjectOut: Disposable  {
@@ -38582,6 +38613,38 @@ public object FfiConverterOptionalTypeAddress: FfiConverterRustBuffer<Address?> 
         } else {
             buf.put(1)
             FfiConverterTypeAddress.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeArgument: FfiConverterRustBuffer<Argument?> {
+    override fun read(buf: ByteBuffer): Argument? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeArgument.read(buf)
+    }
+
+    override fun allocationSize(value: Argument?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeArgument.allocationSize(value)
+        }
+    }
+
+    override fun write(value: Argument?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeArgument.write(value, buf)
         }
     }
 }

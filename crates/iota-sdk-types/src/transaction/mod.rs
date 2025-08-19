@@ -1194,6 +1194,15 @@ impl Argument {
     pub fn as_nested_result(&self) -> (u16, u16) {
         self.as_nested_result_opt().expect("not a nested result")
     }
+
+    /// Get the nested result for this result at the given index. Returns None
+    /// if this is not a Result.
+    pub fn get_nested(&self, ix: u16) -> Option<Argument> {
+        match self {
+            Argument::Result(i) => Some(Argument::NestedResult(*i, ix)),
+            _ => None,
+        }
+    }
 }
 
 /// Command to call a move function

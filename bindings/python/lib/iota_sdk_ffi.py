@@ -465,6 +465,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested() != 12136:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() != 9890:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes() != 56969:
@@ -1505,6 +1507,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_argument_new_result.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_argument_new_result.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_uint16,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_batchsendstatus.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4735,6 +4743,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.restype = ctypes
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes.restype = ctypes.c_uint16
@@ -13076,18 +13087,18 @@ class ObjectIn:
     State of an object prior to execution
 
     If an object exists (at root-level) in the store prior to this transaction,
-    it should be Exist, otherwise it's NonExist, e.g. wrapped objects should be
-    NonExist.
+    it should be Data, otherwise it's Missing, e.g. wrapped objects should be
+    Missing.
 
     # BCS
 
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    object-in = object-in-not-exist / object-in-exist
+    object-in = object-in-missing / object-in-data
 
-    object-in-not-exist = %x00
-    object-in-exist     = %x01 u64 digest owner
+    object-in-missing = %x00
+    object-in-data    = %x01 u64 digest owner
     ```
     """
 
@@ -13210,14 +13221,14 @@ class ObjectOut:
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    object-out  =  object-out-not-exist
+    object-out  =  object-out-missing
     =/ object-out-object-write
     =/ object-out-package-write
 
 
-    object-out-not-exist        = %x00
-    object-out-object-write     = %x01 digest owner
-    object-out-package-write    = %x02 version digest
+    object-out-missing        = %x00
+    object-out-object-write   = %x01 digest owner
+    object-out-package-write  = %x02 version digest
     ```
     """
 
@@ -14416,6 +14427,33 @@ class _UniffiConverterOptionalTypeAddress(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeAddress.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeArgument(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeArgument.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeArgument.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeArgument.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -17602,7 +17640,13 @@ class ArgumentProtocol(typing.Protocol):
     ```
     """
 
-    pass
+    def get_nested(self, ix: "int"):
+        """
+        Get the nested result for this result at the given index. Returns None
+        if this is not a Result.
+        """
+
+        raise NotImplementedError
 # Argument is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Argument():
     """
@@ -17702,6 +17746,23 @@ class Argument():
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_argument_new_result,
         _UniffiConverterUInt16.lower(result))
         return cls._make_instance_(pointer)
+
+
+
+    def get_nested(self, ix: "int") -> "typing.Optional[Argument]":
+        """
+        Get the nested result for this result at the given index. Returns None
+        if this is not a Result.
+        """
+
+        _UniffiConverterUInt16.check_lower(ix)
+        
+        return _UniffiConverterOptionalTypeArgument.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested,self._uniffi_clone_pointer(),
+        _UniffiConverterUInt16.lower(ix))
+        )
+
+
 
 
 
