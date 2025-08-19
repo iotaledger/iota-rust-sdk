@@ -1673,6 +1673,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_identifier_new(RustBuffer identifier, R
 RustBuffer uniffi_iota_sdk_ffi_fn_method_identifier_as_str(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_IDENTIFIER_UNIFFI_TRAIT_HASH
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_IDENTIFIER_UNIFFI_TRAIT_HASH
+uint64_t uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_hash(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_INPUT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_INPUT
 void* uniffi_iota_sdk_ffi_fn_clone_input(void* ptr, RustCallStatus *out_status
@@ -2202,6 +2207,11 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes(void* ptr, RustCallSt
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_HEX
 RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_UNIFFI_TRAIT_HASH
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_UNIFFI_TRAIT_HASH
+uint64_t uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_hash(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OBJECTTYPE
