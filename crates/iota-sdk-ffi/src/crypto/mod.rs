@@ -2,4 +2,5 @@
 // SPDX-License-Identifier: Apache-2.0
 
 pub mod passkey;
+pub mod secp256r1;
 pub mod simple;
