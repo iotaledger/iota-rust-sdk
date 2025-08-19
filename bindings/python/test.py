@@ -68,7 +68,7 @@ async def main():
     )
 
     move_struct = MoveStruct(
-        struct_type=StructTag.coin(TypeTag.vector(TypeTag.u8())),
+        struct_type=StructTag.coin(TypeTag.new_vector(TypeTag.new_u8())),
         version=1,
         contents=bytes(),
     )
