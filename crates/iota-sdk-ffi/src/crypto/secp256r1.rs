@@ -63,7 +63,7 @@ impl Secp256r1PrivateKey {
     }
 
     pub fn verifying_key(&self) -> Secp256r1VerifyingKey {
-        Secp256r1VerifyingKey(self.0.verifying_key())
+        self.0.verifying_key().into()
     }
 
     /// Generate a new random Secp256r1PrivateKey
