@@ -3,7 +3,6 @@
 
 pub mod multisig;
 pub mod passkey;
-pub mod simple;
 pub mod validator;
 pub mod zklogin;
 
