@@ -1998,6 +1998,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify()
+	})
+	if checksum != 19101 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands()
 	})
 	if checksum != 49868 {
@@ -3785,6 +3794,15 @@ func uniffiCheckChecksums() {
 	if checksum != 36753 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new()
+	})
+	if checksum != 23457 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -13134,6 +13152,83 @@ func (c FfiConverterPasskeyAuthenticator) Write(writer io.Writer, value *Passkey
 type FfiDestroyerPasskeyAuthenticator struct {}
 
 func (_ FfiDestroyerPasskeyAuthenticator) Destroy(value *PasskeyAuthenticator) {
+		value.Destroy()
+}
+
+
+
+type PasskeyVerifierInterface interface {
+	Verify(message []byte, authenticator *PasskeyAuthenticator) error
+}
+type PasskeyVerifier struct {
+	ffiObject FfiObject
+}
+func NewPasskeyVerifier() *PasskeyVerifier {
+	return FfiConverterPasskeyVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_passkeyverifier_new(_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *PasskeyVerifier) Verify(message []byte, authenticator *PasskeyAuthenticator) error {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyVerifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterPasskeyAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+func (object *PasskeyVerifier) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterPasskeyVerifier struct {}
+
+var FfiConverterPasskeyVerifierINSTANCE = FfiConverterPasskeyVerifier{}
+
+
+func (c FfiConverterPasskeyVerifier) Lift(pointer unsafe.Pointer) *PasskeyVerifier {
+	result := &PasskeyVerifier {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_passkeyverifier(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*PasskeyVerifier).Destroy)
+	return result
+}
+
+func (c FfiConverterPasskeyVerifier) Read(reader io.Reader) *PasskeyVerifier {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterPasskeyVerifier) Lower(value *PasskeyVerifier) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*PasskeyVerifier")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterPasskeyVerifier) Write(writer io.Writer, value *PasskeyVerifier) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerPasskeyVerifier struct {}
+
+func (_ FfiDestroyerPasskeyVerifier) Destroy(value *PasskeyVerifier) {
 		value.Destroy()
 }
 

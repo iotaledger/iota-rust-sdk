@@ -2336,6 +2336,27 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json(v
 void* uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_PASSKEYVERIFIER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_PASSKEYVERIFIER
+void* uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_PASSKEYVERIFIER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_PASSKEYVERIFIER
+void uniffi_iota_sdk_ffi_fn_free_passkeyverifier(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PASSKEYVERIFIER_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PASSKEYVERIFIER_NEW
+void* uniffi_iota_sdk_ffi_fn_constructor_passkeyverifier_new(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PASSKEYVERIFIER_VERIFY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PASSKEYVERIFIER_VERIFY
+void uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify(void* ptr, RustBuffer message, void* authenticator, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_PROGRAMMABLETRANSACTION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_PROGRAMMABLETRANSACTION
 void* uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(void* ptr, RustCallStatus *out_status
@@ -4761,6 +4782,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_PASSKEYVERIFIER_VERIFY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_PASSKEYVERIFIER_VERIFY
+uint16_t uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_PROGRAMMABLETRANSACTION_COMMANDS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_PROGRAMMABLETRANSACTION_COMMANDS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands(void
@@ -5952,6 +5979,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_SHARED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_SHARED
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PASSKEYVERIFIER_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PASSKEYVERIFIER_NEW
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new(void
     
 );
 #endif
