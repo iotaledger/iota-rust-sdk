@@ -27,19 +27,19 @@ impl FaucetClient {
 
     /// Set to local faucet.
     #[uniffi::constructor]
-    pub fn local() -> Self {
+    pub fn new_local() -> Self {
         Self(iota_graphql_client::faucet::FaucetClient::local())
     }
 
     /// Set to devnet faucet.
     #[uniffi::constructor]
-    pub fn devnet() -> Self {
+    pub fn new_devnet() -> Self {
         Self(iota_graphql_client::faucet::FaucetClient::devnet())
     }
 
     /// Set to testnet faucet.
     #[uniffi::constructor]
-    pub fn testnet() -> Self {
+    pub fn new_testnet() -> Self {
         Self(iota_graphql_client::faucet::FaucetClient::testnet())
     }
 
