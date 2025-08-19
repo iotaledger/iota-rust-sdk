@@ -4,7 +4,7 @@
 use crate::{
     error::{Result, SdkFfiError},
     types::{
-        crypto::Secp256k1Signature,
+        crypto::{Secp256k1PublicKey, Secp256k1Signature},
         signature::{SimpleSignature, UserSignature},
     },
 };
@@ -116,59 +116,42 @@ pub struct Secp256k1VerifyingKey(iota_crypto::secp256k1::Secp256k1VerifyingKey);
 
 #[uniffi::export]
 impl Secp256k1VerifyingKey {
-    //     pub fn new(public_key: &Secp256k1PublicKey) -> Result<Self,
-    // SignatureError> {         VerifyingKey::try_from(public_key.inner().
-    // as_ref()).map(Self)     }
+    #[uniffi::constructor]
+    pub fn new(public_key: &Secp256k1PublicKey) -> Result<Self> {
+        iota_crypto::secp256k1::Secp256k1VerifyingKey::new(&public_key.0)
+            .map(Self)
+            .map_err(SdkFfiError::custom)
+    }
 
-    //     pub fn public_key(&self) -> Secp256k1PublicKey {
-    //         Secp256k1PublicKey::new(self.0.as_ref().to_bytes().into())
-    //     }
+    pub fn public_key(&self) -> Secp256k1PublicKey {
+        self.0.public_key().into()
+    }
 
-    //     #[cfg(feature = "pem")]
-    //     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-    //     /// Deserialize public key from ASN.1 DER-encoded data (binary format).
-    //     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
-    //         k256::pkcs8::DecodePublicKey::from_public_key_der(bytes)
-    //             .map(Self)
-    //             .map_err(SignatureError::from_source)
-    //     }
+    /// Deserialize public key from ASN.1 DER-encoded data (binary format).
+    #[uniffi::constructor]
+    pub fn from_der(bytes: &[u8]) -> Result<Self> {
+        iota_crypto::secp256k1::Secp256k1VerifyingKey::from_der(bytes)
+            .map(Self)
+            .map_err(SdkFfiError::custom)
+    }
 
-    //     #[cfg(feature = "pem")]
-    //     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-    //     /// Serialize this public key as DER-encoded data
-    //     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
-    //         use pkcs8::EncodePublicKey;
+    /// Serialize this public key as DER-encoded data
+    pub fn to_der(&self) -> Result<Vec<u8>> {
+        self.0.to_der().map_err(SdkFfiError::custom)
+    }
 
-    //         self.0
-    //             .to_public_key_der()
-    //             .map_err(SignatureError::from_source)
-    //             .map(|der| der.into_vec())
-    //     }
+    /// Deserialize public key from PEM.
+    #[uniffi::constructor]
+    pub fn from_pem(s: &str) -> Result<Self> {
+        iota_crypto::secp256k1::Secp256k1VerifyingKey::from_pem(s)
+            .map(Self)
+            .map_err(SdkFfiError::custom)
+    }
 
-    //     #[cfg(feature = "pem")]
-    //     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-    //     /// Deserialize public key from PEM.
-    //     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
-    //         k256::pkcs8::DecodePublicKey::from_public_key_pem(s)
-    //             .map(Self)
-    //             .map_err(SignatureError::from_source)
-    //     }
-
-    //     #[cfg(feature = "pem")]
-    //     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-    //     /// Serialize this public key into PEM
-    //     pub fn to_pem(&self) -> Result<String, SignatureError> {
-    //         use pkcs8::EncodePublicKey;
-
-    //         self.0
-    //             .to_public_key_pem(pkcs8::LineEnding::default())
-    //             .map_err(SignatureError::from_source)
-    //     }
-
-    //     #[cfg(feature = "pem")]
-    //     pub(crate) fn from_k256(verifying_key: VerifyingKey) -> Self {
-    //         Self(verifying_key)
-    //     }
+    /// Serialize this public key into PEM
+    pub fn to_pem(&self) -> Result<String> {
+        self.0.to_pem().map_err(SdkFfiError::custom)
+    }
 
     pub fn verify(&self, message: &[u8], signature: &Secp256k1Signature) -> Result<()> {
         <iota_crypto::secp256k1::Secp256k1VerifyingKey as iota_crypto::Verifier<
