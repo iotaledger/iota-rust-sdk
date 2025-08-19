@@ -21876,6 +21876,10 @@ class _UniffiConverterTypeGenesisTransaction:
     def write(cls, value: GenesisTransactionProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class GraphQlClientProtocol(typing.Protocol):
+    """
+    The GraphQL client for interacting with the IOTA blockchain.
+    """
+
     def active_validators(self, pagination_filter: "PaginationFilter",epoch: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
         """
         Get the list of active validators for the provided epoch, including
@@ -22261,6 +22265,10 @@ class GraphQlClientProtocol(typing.Protocol):
         raise NotImplementedError
 # GraphQlClient is a Rust-only trait - it's a wrapper around a Rust implementation.
 class GraphQlClient():
+    """
+    The GraphQL client for interacting with the IOTA blockchain.
+    """
+
     _pointer: ctypes.c_void_p
     def __init__(self, server: "str"):
         """

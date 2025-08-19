@@ -15606,6 +15606,9 @@ public object FfiConverterTypeGenesisTransaction: FfiConverter<GenesisTransactio
 //
 
 
+/**
+ * The GraphQL client for interacting with the IOTA blockchain.
+ */
 public interface GraphQlClientInterface {
     
     /**
@@ -15950,6 +15953,9 @@ public interface GraphQlClientInterface {
     companion object
 }
 
+/**
+ * The GraphQL client for interacting with the IOTA blockchain.
+ */
 open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 {
 

@@ -8681,6 +8681,7 @@ func (_ FfiDestroyerGenesisTransaction) Destroy(value *GenesisTransaction) {
 
 
 
+// The GraphQL client for interacting with the IOTA blockchain.
 type GraphQlClientInterface interface {
 	// Get the list of active validators for the provided epoch, including
 	// related metadata. If no epoch is provided, it will return the active
@@ -8890,6 +8891,7 @@ type GraphQlClientInterface interface {
 	// Get a page of transactions' effects based on the provided filters.
 	TransactionsEffects(paginationFilter PaginationFilter, filter *TransactionsFilter) (TransactionEffectsPage, error)
 }
+// The GraphQL client for interacting with the IOTA blockchain.
 type GraphQlClient struct {
 	ffiObject FfiObject
 }
