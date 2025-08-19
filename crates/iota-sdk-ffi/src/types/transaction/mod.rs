@@ -1440,6 +1440,16 @@ impl From<GasPayment> for iota_types::GasPayment {
     }
 }
 
+/// The output or effects of executing a transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction-effects =  %x00 effects-v1
+///                     =/ %x01 effects-v2
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct TransactionEffects(pub iota_types::TransactionEffects);
 

@@ -98,6 +98,34 @@ impl MultisigMemberSignature {
     }
 }
 
+/// Enum of valid public keys for multisig committee members
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// multisig-member-public-key = ed25519-multisig-member-public-key /
+///                              secp256k1-multisig-member-public-key /
+///                              secp256r1-multisig-member-public-key /
+///                              zklogin-multisig-member-public-key
+///
+/// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
+/// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+/// zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+/// ```
+///
+/// There is also a legacy encoding for this type defined as:
+///
+/// ```text
+/// legacy-multisig-member-public-key = string ; which is valid base64 encoded
+///                                            ; and the decoded bytes are defined
+///                                            ; by legacy-public-key
+/// legacy-public-key = (ed25519-flag ed25519-public-key) /
+///                     (secp256k1-flag secp256k1-public-key) /
+///                     (secp256r1-flag secp256r1-public-key)
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct MultisigMemberPublicKey(pub iota_types::MultisigMemberPublicKey);
 
