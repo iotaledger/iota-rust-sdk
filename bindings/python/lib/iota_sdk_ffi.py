@@ -19168,12 +19168,40 @@ class _UniffiConverterTypeChangeEpochV2:
     def write(cls, value: ChangeEpochV2Protocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class CheckpointCommitmentProtocol(typing.Protocol):
+    """
+    A commitment made by a checkpoint.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    ; CheckpointCommitment is an enum and each variant is prefixed with its index
+    checkpoint-commitment = ecmh-live-object-set
+    ecmh-live-object-set = %x00 digest
+    ```
+    """
+
     def as_ecmh_live_object_set_digest(self, ):
         raise NotImplementedError
     def is_ecmh_live_object_set(self, ):
         raise NotImplementedError
 # CheckpointCommitment is a Rust-only trait - it's a wrapper around a Rust implementation.
 class CheckpointCommitment():
+    """
+    A commitment made by a checkpoint.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    ; CheckpointCommitment is an enum and each variant is prefixed with its index
+    checkpoint-commitment = ecmh-live-object-set
+    ecmh-live-object-set = %x00 digest
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     
     def __init__(self, *args, **kwargs):
@@ -25084,6 +25112,37 @@ class _UniffiConverterTypeMultisigMember:
     def write(cls, value: MultisigMemberProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class MultisigMemberPublicKeyProtocol(typing.Protocol):
+    """
+    Enum of valid public keys for multisig committee members
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    multisig-member-public-key = ed25519-multisig-member-public-key /
+    secp256k1-multisig-member-public-key /
+    secp256r1-multisig-member-public-key /
+    zklogin-multisig-member-public-key
+
+    ed25519-multisig-member-public-key   = %x00 ed25519-public-key
+    secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
+    secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+    zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+    ```
+
+    There is also a legacy encoding for this type defined as:
+
+    ```text
+    legacy-multisig-member-public-key = string ; which is valid base64 encoded
+    ; and the decoded bytes are defined
+    ; by legacy-public-key
+    legacy-public-key = (ed25519-flag ed25519-public-key) /
+    (secp256k1-flag secp256k1-public-key) /
+    (secp256r1-flag secp256r1-public-key)
+    ```
+    """
+
     def as_ed25519(self, ):
         raise NotImplementedError
     def as_ed25519_opt(self, ):
@@ -25110,6 +25169,37 @@ class MultisigMemberPublicKeyProtocol(typing.Protocol):
         raise NotImplementedError
 # MultisigMemberPublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
 class MultisigMemberPublicKey():
+    """
+    Enum of valid public keys for multisig committee members
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    multisig-member-public-key = ed25519-multisig-member-public-key /
+    secp256k1-multisig-member-public-key /
+    secp256r1-multisig-member-public-key /
+    zklogin-multisig-member-public-key
+
+    ed25519-multisig-member-public-key   = %x00 ed25519-public-key
+    secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
+    secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+    zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+    ```
+
+    There is also a legacy encoding for this type defined as:
+
+    ```text
+    legacy-multisig-member-public-key = string ; which is valid base64 encoded
+    ; and the decoded bytes are defined
+    ; by legacy-public-key
+    legacy-public-key = (ed25519-flag ed25519-public-key) /
+    (secp256k1-flag secp256k1-public-key) /
+    (secp256r1-flag secp256r1-public-key)
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     
     def __init__(self, *args, **kwargs):
@@ -25746,6 +25836,21 @@ class _UniffiConverterTypeObject:
     def write(cls, value: ObjectProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ObjectDataProtocol(typing.Protocol):
+    """
+    Object data, either a package or struct
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    object-data = object-data-struct / object-data-package
+
+    object-data-struct  = %x00 object-move-struct
+    object-data-package = %x01 object-move-package
+    ```
+    """
+
     def as_package_opt(self, ):
         """
         Try to interpret this object as a `MovePackage`
@@ -25772,6 +25877,21 @@ class ObjectDataProtocol(typing.Protocol):
         raise NotImplementedError
 # ObjectData is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ObjectData():
+    """
+    Object data, either a package or struct
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    object-data = object-data-struct / object-data-package
+
+    object-data-struct  = %x00 object-move-struct
+    object-data-package = %x01 object-move-package
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     
     def __init__(self, *args, **kwargs):
@@ -26152,6 +26272,10 @@ class _UniffiConverterTypeObjectId:
     def write(cls, value: ObjectIdProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ObjectTypeProtocol(typing.Protocol):
+    """
+    Type of an IOTA object
+    """
+
     def as_struct_opt(self, ):
         raise NotImplementedError
     def is_package(self, ):
@@ -26160,6 +26284,10 @@ class ObjectTypeProtocol(typing.Protocol):
         raise NotImplementedError
 # ObjectType is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ObjectType():
+    """
+    Type of an IOTA object
+    """
+
     _pointer: ctypes.c_void_p
     
     def __init__(self, *args, **kwargs):
@@ -26255,6 +26383,23 @@ class _UniffiConverterTypeObjectType:
     def write(cls, value: ObjectTypeProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class OwnerProtocol(typing.Protocol):
+    """
+    Enum of different types of ownership for an object.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    owner = owner-address / owner-object / owner-shared / owner-immutable
+
+    owner-address   = %x00 address
+    owner-object    = %x01 object-id
+    owner-shared    = %x02 u64
+    owner-immutable = %x03
+    ```
+    """
+
     def as_address_opt(self, ):
         raise NotImplementedError
     def as_object_opt(self, ):
@@ -26271,6 +26416,23 @@ class OwnerProtocol(typing.Protocol):
         raise NotImplementedError
 # Owner is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Owner():
+    """
+    Enum of different types of ownership for an object.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    owner = owner-address / owner-object / owner-shared / owner-immutable
+
+    owner-address   = %x00 address
+    owner-object    = %x01 object-id
+    owner-shared    = %x02 u64
+    owner-immutable = %x03
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     
     def __init__(self, *args, **kwargs):
@@ -28282,12 +28444,38 @@ class _UniffiConverterTypeTransactionDigest:
     def write(cls, value: TransactionDigestProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class TransactionEffectsProtocol(typing.Protocol):
+    """
+    The output or effects of executing a transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    transaction-effects =  %x00 effects-v1
+    =/ %x01 effects-v2
+    ```
+    """
+
     def as_v1(self, ):
         raise NotImplementedError
     def is_v1(self, ):
         raise NotImplementedError
 # TransactionEffects is a Rust-only trait - it's a wrapper around a Rust implementation.
 class TransactionEffects():
+    """
+    The output or effects of executing a transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    transaction-effects =  %x00 effects-v1
+    =/ %x01 effects-v2
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     
     def __init__(self, *args, **kwargs):

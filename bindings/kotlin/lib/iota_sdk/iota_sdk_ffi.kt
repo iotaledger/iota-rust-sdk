@@ -8907,6 +8907,19 @@ public object FfiConverterTypeChangeEpochV2: FfiConverter<ChangeEpochV2, Pointer
 //
 
 
+/**
+ * A commitment made by a checkpoint.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * ; CheckpointCommitment is an enum and each variant is prefixed with its index
+ * checkpoint-commitment = ecmh-live-object-set
+ * ecmh-live-object-set = %x00 digest
+ * ```
+ */
 public interface CheckpointCommitmentInterface {
     
     fun `asEcmhLiveObjectSetDigest`(): Digest
@@ -8916,6 +8929,19 @@ public interface CheckpointCommitmentInterface {
     companion object
 }
 
+/**
+ * A commitment made by a checkpoint.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * ; CheckpointCommitment is an enum and each variant is prefixed with its index
+ * checkpoint-commitment = ecmh-live-object-set
+ * ecmh-live-object-set = %x00 digest
+ * ```
+ */
 open class CheckpointCommitment: Disposable, AutoCloseable, CheckpointCommitmentInterface
 {
 
@@ -20254,6 +20280,36 @@ public object FfiConverterTypeMultisigMember: FfiConverter<MultisigMember, Point
 //
 
 
+/**
+ * Enum of valid public keys for multisig committee members
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * multisig-member-public-key = ed25519-multisig-member-public-key /
+ * secp256k1-multisig-member-public-key /
+ * secp256r1-multisig-member-public-key /
+ * zklogin-multisig-member-public-key
+ *
+ * ed25519-multisig-member-public-key   = %x00 ed25519-public-key
+ * secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+ * zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+ * ```
+ *
+ * There is also a legacy encoding for this type defined as:
+ *
+ * ```text
+ * legacy-multisig-member-public-key = string ; which is valid base64 encoded
+ * ; and the decoded bytes are defined
+ * ; by legacy-public-key
+ * legacy-public-key = (ed25519-flag ed25519-public-key) /
+ * (secp256k1-flag secp256k1-public-key) /
+ * (secp256r1-flag secp256r1-public-key)
+ * ```
+ */
 public interface MultisigMemberPublicKeyInterface {
     
     fun `asEd25519`(): Ed25519PublicKey
@@ -20283,6 +20339,36 @@ public interface MultisigMemberPublicKeyInterface {
     companion object
 }
 
+/**
+ * Enum of valid public keys for multisig committee members
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * multisig-member-public-key = ed25519-multisig-member-public-key /
+ * secp256k1-multisig-member-public-key /
+ * secp256r1-multisig-member-public-key /
+ * zklogin-multisig-member-public-key
+ *
+ * ed25519-multisig-member-public-key   = %x00 ed25519-public-key
+ * secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
+ * secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+ * zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+ * ```
+ *
+ * There is also a legacy encoding for this type defined as:
+ *
+ * ```text
+ * legacy-multisig-member-public-key = string ; which is valid base64 encoded
+ * ; and the decoded bytes are defined
+ * ; by legacy-public-key
+ * legacy-public-key = (ed25519-flag ed25519-public-key) /
+ * (secp256k1-flag secp256k1-public-key) /
+ * (secp256r1-flag secp256r1-public-key)
+ * ```
+ */
 open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPublicKeyInterface
 {
 
@@ -21489,6 +21575,20 @@ public object FfiConverterTypeObject: FfiConverter<Object, Pointer> {
 //
 
 
+/**
+ * Object data, either a package or struct
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * object-data = object-data-struct / object-data-package
+ *
+ * object-data-struct  = %x00 object-move-struct
+ * object-data-package = %x01 object-move-package
+ * ```
+ */
 public interface ObjectDataInterface {
     
     /**
@@ -21514,6 +21614,20 @@ public interface ObjectDataInterface {
     companion object
 }
 
+/**
+ * Object data, either a package or struct
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * object-data = object-data-struct / object-data-package
+ *
+ * object-data-struct  = %x00 object-move-struct
+ * object-data-package = %x01 object-move-package
+ * ```
+ */
 open class ObjectData: Disposable, AutoCloseable, ObjectDataInterface
 {
 
@@ -22428,6 +22542,9 @@ public object FfiConverterTypeObjectId: FfiConverter<ObjectId, Pointer> {
 //
 
 
+/**
+ * Type of an IOTA object
+ */
 public interface ObjectTypeInterface {
     
     fun `asStructOpt`(): StructTag?
@@ -22439,6 +22556,9 @@ public interface ObjectTypeInterface {
     companion object
 }
 
+/**
+ * Type of an IOTA object
+ */
 open class ObjectType: Disposable, AutoCloseable, ObjectTypeInterface
 {
 
@@ -22713,6 +22833,22 @@ public object FfiConverterTypeObjectType: FfiConverter<ObjectType, Pointer> {
 //
 
 
+/**
+ * Enum of different types of ownership for an object.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * owner = owner-address / owner-object / owner-shared / owner-immutable
+ *
+ * owner-address   = %x00 address
+ * owner-object    = %x01 object-id
+ * owner-shared    = %x02 u64
+ * owner-immutable = %x03
+ * ```
+ */
 public interface OwnerInterface {
     
     fun `asAddressOpt`(): Address?
@@ -22732,6 +22868,22 @@ public interface OwnerInterface {
     companion object
 }
 
+/**
+ * Enum of different types of ownership for an object.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * owner = owner-address / owner-object / owner-shared / owner-immutable
+ *
+ * owner-address   = %x00 address
+ * owner-object    = %x01 object-id
+ * owner-shared    = %x02 u64
+ * owner-immutable = %x03
+ * ```
+ */
 open class Owner: Disposable, AutoCloseable, OwnerInterface
 {
 
@@ -27240,6 +27392,18 @@ public object FfiConverterTypeTransactionDigest: FfiConverter<TransactionDigest,
 //
 
 
+/**
+ * The output or effects of executing a transaction
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * transaction-effects =  %x00 effects-v1
+ * =/ %x01 effects-v2
+ * ```
+ */
 public interface TransactionEffectsInterface {
     
     fun `asV1`(): TransactionEffectsV1
@@ -27249,6 +27413,18 @@ public interface TransactionEffectsInterface {
     companion object
 }
 
+/**
+ * The output or effects of executing a transaction
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * transaction-effects =  %x00 effects-v1
+ * =/ %x01 effects-v2
+ * ```
+ */
 open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInterface
 {
 

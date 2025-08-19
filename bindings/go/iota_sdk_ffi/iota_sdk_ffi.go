@@ -6024,10 +6024,32 @@ func (_ FfiDestroyerChangeEpochV2) Destroy(value *ChangeEpochV2) {
 
 
 
+// A commitment made by a checkpoint.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// ; CheckpointCommitment is an enum and each variant is prefixed with its index
+// checkpoint-commitment = ecmh-live-object-set
+// ecmh-live-object-set = %x00 digest
+// ```
 type CheckpointCommitmentInterface interface {
 	AsEcmhLiveObjectSetDigest() *Digest
 	IsEcmhLiveObjectSet() bool
 }
+// A commitment made by a checkpoint.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// ; CheckpointCommitment is an enum and each variant is prefixed with its index
+// checkpoint-commitment = ecmh-live-object-set
+// ecmh-live-object-set = %x00 digest
+// ```
 type CheckpointCommitment struct {
 	ffiObject FfiObject
 }
@@ -11700,6 +11722,34 @@ func (_ FfiDestroyerMultisigMember) Destroy(value *MultisigMember) {
 
 
 
+// Enum of valid public keys for multisig committee members
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// multisig-member-public-key = ed25519-multisig-member-public-key /
+// secp256k1-multisig-member-public-key /
+// secp256r1-multisig-member-public-key /
+// zklogin-multisig-member-public-key
+//
+// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
+// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
+// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+// zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+// ```
+//
+// There is also a legacy encoding for this type defined as:
+//
+// ```text
+// legacy-multisig-member-public-key = string ; which is valid base64 encoded
+// ; and the decoded bytes are defined
+// ; by legacy-public-key
+// legacy-public-key = (ed25519-flag ed25519-public-key) /
+// (secp256k1-flag secp256k1-public-key) /
+// (secp256r1-flag secp256r1-public-key)
+// ```
 type MultisigMemberPublicKeyInterface interface {
 	AsEd25519() *Ed25519PublicKey
 	AsEd25519Opt() **Ed25519PublicKey
@@ -11714,6 +11764,34 @@ type MultisigMemberPublicKeyInterface interface {
 	IsSecp256r1() bool
 	IsZklogin() bool
 }
+// Enum of valid public keys for multisig committee members
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// multisig-member-public-key = ed25519-multisig-member-public-key /
+// secp256k1-multisig-member-public-key /
+// secp256r1-multisig-member-public-key /
+// zklogin-multisig-member-public-key
+//
+// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
+// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
+// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
+// zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+// ```
+//
+// There is also a legacy encoding for this type defined as:
+//
+// ```text
+// legacy-multisig-member-public-key = string ; which is valid base64 encoded
+// ; and the decoded bytes are defined
+// ; by legacy-public-key
+// legacy-public-key = (ed25519-flag ed25519-public-key) /
+// (secp256k1-flag secp256k1-public-key) /
+// (secp256r1-flag secp256r1-public-key)
+// ```
 type MultisigMemberPublicKey struct {
 	ffiObject FfiObject
 }
@@ -12297,6 +12375,18 @@ func (_ FfiDestroyerObject) Destroy(value *Object) {
 
 
 
+// Object data, either a package or struct
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// object-data = object-data-struct / object-data-package
+//
+// object-data-struct  = %x00 object-move-struct
+// object-data-package = %x01 object-move-package
+// ```
 type ObjectDataInterface interface {
 	// Try to interpret this object as a `MovePackage`
 	AsPackageOpt() **MovePackage
@@ -12307,6 +12397,18 @@ type ObjectDataInterface interface {
 	// Return whether this object is a `MoveStruct`
 	IsStruct() bool
 }
+// Object data, either a package or struct
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// object-data = object-data-struct / object-data-package
+//
+// object-data-struct  = %x00 object-move-struct
+// object-data-package = %x01 object-move-package
+// ```
 type ObjectData struct {
 	ffiObject FfiObject
 }
@@ -12691,11 +12793,13 @@ func (_ FfiDestroyerObjectId) Destroy(value *ObjectId) {
 
 
 
+// Type of an IOTA object
 type ObjectTypeInterface interface {
 	AsStructOpt() **StructTag
 	IsPackage() bool
 	IsStruct() bool
 }
+// Type of an IOTA object
 type ObjectType struct {
 	ffiObject FfiObject
 }
@@ -12795,6 +12899,20 @@ func (_ FfiDestroyerObjectType) Destroy(value *ObjectType) {
 
 
 
+// Enum of different types of ownership for an object.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// owner = owner-address / owner-object / owner-shared / owner-immutable
+//
+// owner-address   = %x00 address
+// owner-object    = %x01 object-id
+// owner-shared    = %x02 u64
+// owner-immutable = %x03
+// ```
 type OwnerInterface interface {
 	AsAddressOpt() **Address
 	AsObjectOpt() **ObjectId
@@ -12804,6 +12922,20 @@ type OwnerInterface interface {
 	IsObject() bool
 	IsShared() bool
 }
+// Enum of different types of ownership for an object.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// owner = owner-address / owner-object / owner-shared / owner-immutable
+//
+// owner-address   = %x00 address
+// owner-object    = %x01 object-id
+// owner-shared    = %x02 u64
+// owner-immutable = %x03
+// ```
 type Owner struct {
 	ffiObject FfiObject
 }
@@ -14761,10 +14893,30 @@ func (_ FfiDestroyerTransactionDigest) Destroy(value *TransactionDigest) {
 
 
 
+// The output or effects of executing a transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// transaction-effects =  %x00 effects-v1
+// =/ %x01 effects-v2
+// ```
 type TransactionEffectsInterface interface {
 	AsV1() TransactionEffectsV1
 	IsV1() bool
 }
+// The output or effects of executing a transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// transaction-effects =  %x00 effects-v1
+// =/ %x01 effects-v2
+// ```
 type TransactionEffects struct {
 	ffiObject FfiObject
 }
