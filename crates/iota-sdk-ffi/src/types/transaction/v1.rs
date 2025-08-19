@@ -274,18 +274,18 @@ impl From<UnchangedSharedKind> for iota_types::UnchangedSharedKind {
 /// State of an object prior to execution
 ///
 /// If an object exists (at root-level) in the store prior to this transaction,
-/// it should be Exist, otherwise it's NonExist, e.g. wrapped objects should be
-/// NonExist.
+/// it should be Data, otherwise it's Missing, e.g. wrapped objects should be
+/// Missing.
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-in = object-in-not-exist / object-in-exist
+/// object-in = object-in-missing / object-in-data
 ///
-/// object-in-not-exist = %x00
-/// object-in-exist     = %x01 u64 digest owner
+/// object-in-missing = %x00
+/// object-in-data    = %x01 u64 digest owner
 /// ```
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum ObjectIn {
@@ -339,14 +339,14 @@ impl From<ObjectIn> for iota_types::ObjectIn {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-out  =  object-out-not-exist
+/// object-out  =  object-out-missing
 ///             =/ object-out-object-write
 ///             =/ object-out-package-write
 ///
 ///
-/// object-out-not-exist        = %x00
-/// object-out-object-write     = %x01 digest owner
-/// object-out-package-write    = %x02 version digest
+/// object-out-missing        = %x00
+/// object-out-object-write   = %x01 digest owner
+/// object-out-package-write  = %x02 version digest
 /// ```
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum ObjectOut {

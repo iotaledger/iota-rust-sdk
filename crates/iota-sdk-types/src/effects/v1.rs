@@ -218,8 +218,8 @@ impl UnchangedSharedKind {
 /// State of an object prior to execution
 ///
 /// If an object exists (at root-level) in the store prior to this transaction,
-/// it should be Exist, otherwise it's NonExist, e.g. wrapped objects should be
-/// NonExist.
+/// it should be Data, otherwise it's Missing, e.g. wrapped objects should be
+/// Missing.
 ///
 /// # BCS
 ///
@@ -731,8 +731,8 @@ mod serialization {
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
     enum ReadableObjectIn {
-        NotExist,
-        Exist {
+        Missing,
+        Data {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             version: Version,
             digest: ObjectDigest,
@@ -742,8 +742,8 @@ mod serialization {
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     enum BinaryObjectIn {
-        NotExist,
-        Exist {
+        Missing,
+        Data {
             version: Version,
             digest: ObjectDigest,
             owner: Owner,
@@ -757,12 +757,12 @@ mod serialization {
         {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
-                    ObjectIn::Missing => ReadableObjectIn::NotExist,
+                    ObjectIn::Missing => ReadableObjectIn::Missing,
                     ObjectIn::Data {
                         version,
                         digest,
                         owner,
-                    } => ReadableObjectIn::Exist {
+                    } => ReadableObjectIn::Data {
                         version,
                         digest,
                         owner,
@@ -771,12 +771,12 @@ mod serialization {
                 readable.serialize(serializer)
             } else {
                 let binary = match self.clone() {
-                    ObjectIn::Missing => BinaryObjectIn::NotExist,
+                    ObjectIn::Missing => BinaryObjectIn::Missing,
                     ObjectIn::Data {
                         version,
                         digest,
                         owner,
-                    } => BinaryObjectIn::Exist {
+                    } => BinaryObjectIn::Data {
                         version,
                         digest,
                         owner,
@@ -794,8 +794,8 @@ mod serialization {
         {
             if deserializer.is_human_readable() {
                 ReadableObjectIn::deserialize(deserializer).map(|readable| match readable {
-                    ReadableObjectIn::NotExist => Self::Missing,
-                    ReadableObjectIn::Exist {
+                    ReadableObjectIn::Missing => Self::Missing,
+                    ReadableObjectIn::Data {
                         version,
                         digest,
                         owner,
@@ -807,8 +807,8 @@ mod serialization {
                 })
             } else {
                 BinaryObjectIn::deserialize(deserializer).map(|binary| match binary {
-                    BinaryObjectIn::NotExist => Self::Missing,
-                    BinaryObjectIn::Exist {
+                    BinaryObjectIn::Missing => Self::Missing,
+                    BinaryObjectIn::Data {
                         version,
                         digest,
                         owner,
@@ -825,7 +825,7 @@ mod serialization {
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
     enum ReadableObjectOut {
-        NotExist,
+        Missing,
         ObjectWrite {
             digest: ObjectDigest,
             owner: Owner,
@@ -839,7 +839,7 @@ mod serialization {
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     enum BinaryObjectOut {
-        NotExist,
+        Missing,
         ObjectWrite {
             digest: ObjectDigest,
             owner: Owner,
@@ -858,7 +858,7 @@ mod serialization {
         {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
-                    ObjectOut::Missing => ReadableObjectOut::NotExist,
+                    ObjectOut::Missing => ReadableObjectOut::Missing,
                     ObjectOut::ObjectWrite { digest, owner } => {
                         ReadableObjectOut::ObjectWrite { digest, owner }
                     }
@@ -869,7 +869,7 @@ mod serialization {
                 readable.serialize(serializer)
             } else {
                 let binary = match self.clone() {
-                    ObjectOut::Missing => BinaryObjectOut::NotExist,
+                    ObjectOut::Missing => BinaryObjectOut::Missing,
                     ObjectOut::ObjectWrite { digest, owner } => {
                         BinaryObjectOut::ObjectWrite { digest, owner }
                     }
@@ -889,7 +889,7 @@ mod serialization {
         {
             if deserializer.is_human_readable() {
                 ReadableObjectOut::deserialize(deserializer).map(|readable| match readable {
-                    ReadableObjectOut::NotExist => Self::Missing,
+                    ReadableObjectOut::Missing => Self::Missing,
                     ReadableObjectOut::ObjectWrite { digest, owner } => {
                         Self::ObjectWrite { digest, owner }
                     }
@@ -899,7 +899,7 @@ mod serialization {
                 })
             } else {
                 BinaryObjectOut::deserialize(deserializer).map(|binary| match binary {
-                    BinaryObjectOut::NotExist => Self::Missing,
+                    BinaryObjectOut::Missing => Self::Missing,
                     BinaryObjectOut::ObjectWrite { digest, owner } => {
                         Self::ObjectWrite { digest, owner }
                     }
