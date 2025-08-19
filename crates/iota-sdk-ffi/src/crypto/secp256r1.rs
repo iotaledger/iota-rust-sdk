@@ -72,6 +72,33 @@ impl Secp256r1PrivateKey {
         use rand::rngs::OsRng;
         Self(iota_crypto::secp256r1::Secp256r1PrivateKey::generate(OsRng))
     }
+
+    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
+    /// format).
+    #[uniffi::constructor]
+    pub fn from_der(bytes: Vec<u8>) -> Result<Self, SdkFfiError> {
+        iota_crypto::secp256r1::Secp256r1PrivateKey::from_der(&bytes)
+            .map(Self)
+            .map_err(SdkFfiError::custom)
+    }
+
+    /// Serialize this private key as DER-encoded PKCS#8
+    pub fn to_der(&self) -> Result<Vec<u8>, SdkFfiError> {
+        self.0.to_der().map_err(SdkFfiError::custom)
+    }
+
+    /// Deserialize PKCS#8-encoded private key from PEM.
+    #[uniffi::constructor]
+    pub fn from_pem(s: &str) -> Result<Self, SdkFfiError> {
+        iota_crypto::secp256r1::Secp256r1PrivateKey::from_pem(s)
+            .map(Self)
+            .map_err(SdkFfiError::custom)
+    }
+
+    /// Serialize this private key as PEM-encoded PKCS#8
+    pub fn to_pem(&self) -> Result<String, SdkFfiError> {
+        self.0.to_pem().map_err(SdkFfiError::custom)
+    }
 }
 
 #[derive(derive_more::From, uniffi::Object)]
@@ -131,16 +158,17 @@ impl Secp256r1Verifier {
         Self(iota_crypto::secp256r1::Secp256r1Verifier::new())
     }
 
-    pub fn verify(
-        &self,
-        message: Vec<u8>,
-        signature: &Secp256r1Signature,
-        public_key: &Secp256r1PublicKey,
-    ) -> bool {
-        let verifying_key = iota_crypto::secp256r1::Secp256r1VerifyingKey::new(public_key);
-        match verifying_key {
-            Ok(key) => key.verify(&message, &signature.0).is_ok(),
-            Err(_) => false,
-        }
+    pub fn verify_simple(&self, message: Vec<u8>, signature: &SimpleSignature) -> bool {
+        <iota_crypto::secp256r1::Secp256r1Verifier as iota_crypto::Verifier<
+            iota_types::SimpleSignature,
+        >>::verify(&self.0, &message, &signature.0)
+        .is_ok()
+    }
+
+    pub fn verify_user(&self, message: Vec<u8>, signature: &UserSignature) -> bool {
+        <iota_crypto::secp256r1::Secp256r1Verifier as iota_crypto::Verifier<
+            iota_types::UserSignature,
+        >>::verify(&self.0, &message, &signature.0)
+        .is_ok()
     }
 }

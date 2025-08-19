@@ -843,6 +843,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme() != 20973:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der() != 48507:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem() != 34634:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign() != 1959:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple() != 14060:
@@ -855,7 +859,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() != 64948:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify() != 39213:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple() != 39226:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user() != 47300:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key() != 35474:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1288,6 +1294,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_from_str() != 16397:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_generate() != 63087:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der() != 63595:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem() != 28166:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate() != 47736:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3657,6 +3667,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -3676,6 +3696,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
@@ -3771,14 +3801,20 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
     ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5660,6 +5696,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign.restype = ctypes.c_uint16
@@ -5678,9 +5720,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.resty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key.restype = ctypes.c_uint16
@@ -6329,6 +6374,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_from_str.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_generate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate.restype = ctypes.c_uint16
@@ -27834,6 +27885,18 @@ class Secp256r1PrivateKeyProtocol(typing.Protocol):
         raise NotImplementedError
     def scheme(self, ):
         raise NotImplementedError
+    def to_der(self, ):
+        """
+        Serialize this private key as DER-encoded PKCS#8
+        """
+
+        raise NotImplementedError
+    def to_pem(self, ):
+        """
+        Serialize this private key as PEM-encoded PKCS#8
+        """
+
+        raise NotImplementedError
     def try_sign(self, message: "bytes"):
         """
         Sign a message and return a Secp256r1Signature.
@@ -27881,6 +27944,33 @@ class Secp256r1PrivateKey():
         inst._pointer = pointer
         return inst
     @classmethod
+    def from_der(cls, bytes: "bytes"):
+        """
+        Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
+        format).
+        """
+
+        _UniffiConverterBytes.check_lower(bytes)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der,
+        _UniffiConverterBytes.lower(bytes))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_pem(cls, s: "str"):
+        """
+        Deserialize PKCS#8-encoded private key from PEM.
+        """
+
+        _UniffiConverterString.check_lower(s)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem,
+        _UniffiConverterString.lower(s))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def generate(cls, ):
         """
         Generate a new random Secp256r1PrivateKey
@@ -27908,6 +27998,32 @@ class Secp256r1PrivateKey():
     def scheme(self, ) -> "SignatureScheme":
         return _UniffiConverterTypeSignatureScheme.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_der(self, ) -> "bytes":
+        """
+        Serialize this private key as DER-encoded PKCS#8
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_pem(self, ) -> "str":
+        """
+        Serialize this private key as PEM-encoded PKCS#8
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem,self._uniffi_clone_pointer(),)
         )
 
 
@@ -28228,7 +28344,9 @@ class _UniffiConverterTypeSecp256r1Signature:
     def write(cls, value: Secp256r1SignatureProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class Secp256r1VerifierProtocol(typing.Protocol):
-    def verify(self, message: "bytes",signature: "Secp256r1Signature",public_key: "Secp256r1PublicKey"):
+    def verify_simple(self, message: "bytes",signature: "SimpleSignature"):
+        raise NotImplementedError
+    def verify_user(self, message: "bytes",signature: "UserSignature"):
         raise NotImplementedError
 # Secp256r1Verifier is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Secp256r1Verifier():
@@ -28255,18 +28373,30 @@ class Secp256r1Verifier():
         return inst
 
 
-    def verify(self, message: "bytes",signature: "Secp256r1Signature",public_key: "Secp256r1PublicKey") -> "bool":
+    def verify_simple(self, message: "bytes",signature: "SimpleSignature") -> "bool":
         _UniffiConverterBytes.check_lower(message)
         
-        _UniffiConverterTypeSecp256r1Signature.check_lower(signature)
-        
-        _UniffiConverterTypeSecp256r1PublicKey.check_lower(public_key)
+        _UniffiConverterTypeSimpleSignature.check_lower(signature)
         
         return _UniffiConverterBool.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify,self._uniffi_clone_pointer(),
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple,self._uniffi_clone_pointer(),
         _UniffiConverterBytes.lower(message),
-        _UniffiConverterTypeSecp256r1Signature.lower(signature),
-        _UniffiConverterTypeSecp256r1PublicKey.lower(public_key))
+        _UniffiConverterTypeSimpleSignature.lower(signature))
+        )
+
+
+
+
+
+    def verify_user(self, message: "bytes",signature: "UserSignature") -> "bool":
+        _UniffiConverterBytes.check_lower(message)
+        
+        _UniffiConverterTypeUserSignature.check_lower(signature)
+        
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user,self._uniffi_clone_pointer(),
+        _UniffiConverterBytes.lower(message),
+        _UniffiConverterTypeUserSignature.lower(signature))
         )
 
 
