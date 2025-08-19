@@ -119,7 +119,7 @@ pub enum Owner {
 impl Owner {
     crate::def_is!(Immutable);
 
-    crate::def_is_as_into_opt!(Address => Address, Object => ObjectId, Shared => Version);
+    crate::def_is_as_into_opt!(Address, Object[ObjectId], Shared[Version]);
 }
 
 /// Object data, either a package or struct
@@ -151,7 +151,7 @@ pub enum ObjectData {
 }
 
 impl ObjectData {
-    crate::def_is_as_into_opt!(Struct => MoveStruct, Package => MovePackage);
+    crate::def_is_as_into_opt!(Struct[MoveStruct], Package[MovePackage]);
 }
 
 /// A move package
@@ -324,7 +324,7 @@ pub enum ObjectType {
 impl ObjectType {
     crate::def_is!(Package);
 
-    crate::def_is_as_into_opt!(Struct => StructTag);
+    crate::def_is_as_into_opt!(Struct[StructTag]);
 }
 
 /// An object on the IOTA blockchain

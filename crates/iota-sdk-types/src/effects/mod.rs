@@ -41,6 +41,11 @@ impl TransactionEffects {
         effects
     }
 
+    pub fn into_v1(self) -> TransactionEffectsV1 {
+        let Self::V1(effects) = self;
+        *effects
+    }
+
     /// Return the status of the transaction.
     pub fn status(&self) -> &ExecutionStatus {
         match self {

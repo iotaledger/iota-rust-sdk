@@ -197,20 +197,56 @@ macro_rules! def_is {
 
 #[macro_export]
 macro_rules! def_is_as_into_opt {
-    ($($variant:ident => $inner:ty),* $(,)?) => {
-        paste::paste! {$(
+    (@into $variant:ident ($rename:ident) [Box<$inner:ty>]) => {
+        paste::paste! {
         #[inline]
-        pub fn [< is_ $variant:snake >](&self) -> bool {
+        pub fn [< into_ $rename _opt >](self) -> Option<$inner> {
+            #[allow(irrefutable_let_patterns)]
+            if let Self::$variant(inner) = self {
+                Some(*inner)
+            } else {
+                None
+            }
+        }
+
+        #[inline]
+        pub fn [< into_ $rename >](self) -> $inner {
+            self.[< into_ $rename _opt >]().expect(&format!("not a {}", stringify!($rename)))
+        }
+        }
+    };
+    (@into $variant:ident ($rename:ident) [$inner:ty]) => {
+        paste::paste! {
+        #[inline]
+        pub fn [< into_ $rename _opt >](self) -> Option<$inner> {
+            #[allow(irrefutable_let_patterns)]
+            if let Self::$variant(inner) = self {
+                Some(inner)
+            } else {
+                None
+            }
+        }
+
+        #[inline]
+        pub fn [< into_ $rename >](self) -> $inner {
+            self.[< into_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
+        }
+        }
+    };
+    (@impl $variant:ident ($rename:ident) [Box<$inner:ty>]) => {
+        paste::paste! {
+        #[inline]
+        pub fn [< is_ $rename >](&self) -> bool {
             matches!(self, Self::$variant(_))
         }
 
         #[inline]
-        pub fn [< as_ $variant:snake >](&self) -> &$inner {
-            self.[< as_ $variant:snake _opt >]().expect(&format!("not a {}", stringify!($variant)))
+        pub fn [< as_ $rename >](&self) -> &$inner {
+            self.[< as_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
         #[inline]
-        pub fn [< as_ $variant:snake _opt >](&self) -> Option<&$inner> {
+        pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
@@ -218,25 +254,51 @@ macro_rules! def_is_as_into_opt {
                 None
             }
         }
-
-        #[inline]
-        pub fn [< into_ $variant:snake _opt >](self) -> Option<$inner> {
-            #[allow(irrefutable_let_patterns)]
-            if let Self::$variant(inner) = self {
-                Some(inner)
-            } else {
-                None
-            }
         }
 
-        #[inline]
-        pub fn [< into_ $variant:snake >](self) -> $inner {
-            self.[< into_ $variant:snake _opt >]().expect(&format!("not a {}", stringify!($variant)))
-        }
-        )*}
+        $crate::def_is_as_into_opt!{@into $variant($rename) [Box<$inner>]}
     };
-    ($($variant:ident),* $(,)?) => {
-        $crate::def_is_as_into_opt!{$($variant => $variant,)*}
+    (@impl $variant:ident ($rename:ident) [$inner:ty]) => {
+        paste::paste! {
+        #[inline]
+        pub fn [< is_ $rename >](&self) -> bool {
+            matches!(self, Self::$variant(_))
+        }
+
+        #[inline]
+        pub fn [< as_ $rename >](&self) -> &$inner {
+            self.[< as_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
+        }
+
+        #[inline]
+        pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
+            #[allow(irrefutable_let_patterns)]
+            if let Self::$variant(inner) = self {
+                Some(inner)
+            } else {
+                None
+            }
+        }
+        }
+
+        $crate::def_is_as_into_opt!{@into $variant($rename) [$inner]}
+    };
+    (@parse $variant:ident ($rename:ident) [$($inner:tt)*]) => {
+        $crate::def_is_as_into_opt!{@impl $variant($rename) [$($inner)*]}
+    };
+    (@parse $variant:ident ($rename:ident)) => {
+        $crate::def_is_as_into_opt!{@impl $variant($rename) [$variant]}
+    };
+    (@parse $variant:ident [$($inner:tt)*]) => {
+        paste::paste! { $crate::def_is_as_into_opt!{@impl $variant ([< $variant:snake >]) [$($inner)*]} }
+    };
+    (@parse $variant:ident) => {
+        paste::paste! { $crate::def_is_as_into_opt!{@impl $variant ([< $variant:snake >]) [$variant]} }
+    };
+    ($($variant:ident $(($rename:ident))? $([$($inner:tt)*])?),* $(,)?) => {
+        $(
+        crate::def_is_as_into_opt!{@parse $variant $(($rename))? $([$($inner)*])?}
+        )*
     };
 }
 

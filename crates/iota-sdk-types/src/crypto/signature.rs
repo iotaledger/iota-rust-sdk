@@ -337,9 +337,9 @@ pub enum UserSignature {
 
 impl UserSignature {
     crate::def_is_as_into_opt!(
-        Simple => SimpleSignature,
-        Multisig => MultisigAggregatedSignature,
-        Passkey => PasskeyAuthenticator
+        Simple[SimpleSignature],
+        Multisig[MultisigAggregatedSignature],
+        Passkey[PasskeyAuthenticator]
     );
 
     pub fn is_zklogin(&self) -> bool {
