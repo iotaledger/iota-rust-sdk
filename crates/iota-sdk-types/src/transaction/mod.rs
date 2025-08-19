@@ -81,7 +81,7 @@ pub enum TransactionExpiration {
 impl TransactionExpiration {
     crate::def_is!(None);
 
-    crate::def_is_as_into_opt!(Epoch[EpochId]);
+    crate::def_is_as_into_opt!(Epoch(EpochId));
 }
 
 /// Payment information for executing a transaction
@@ -211,8 +211,8 @@ impl TransactionKind {
     }
 
     crate::def_is_as_into_opt! {
-        Genesis [GenesisTransaction],
-        EndOfEpoch [Vec<EndOfEpochTransactionKind>],
+        Genesis(GenesisTransaction),
+        EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     }
 }
 
@@ -291,7 +291,7 @@ pub enum ExecutionTimeObservations {
 }
 
 impl ExecutionTimeObservations {
-    crate::def_is_as_into_opt!(V1 [Vec<ExecutionTimeObservation>]);
+    crate::def_is_as_into_opt!(V1(Vec<ExecutionTimeObservation>));
 }
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
@@ -864,8 +864,8 @@ impl Input {
     crate::def_is!(Pure, Shared);
 
     crate::def_is_as_into_opt!(
-        ImmutableOrOwned[ObjectReference],
-        Receiving[ObjectReference]
+        ImmutableOrOwned(ObjectReference),
+        Receiving(ObjectReference)
     );
 }
 

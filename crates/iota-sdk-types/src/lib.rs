@@ -295,7 +295,7 @@ macro_rules! def_is_as_into_opt {
     (@parse $variant:ident) => {
         paste::paste! { $crate::def_is_as_into_opt!{@impl $variant ([< $variant:snake >]) [$variant]} }
     };
-    ($($variant:ident $(($rename:ident))? $([$($inner:tt)*])?),* $(,)?) => {
+    ($($variant:ident $( as $rename:ident)? $(($($inner:tt)*))?),* $(,)?) => {
         $(
         crate::def_is_as_into_opt!{@parse $variant $(($rename))? $([$($inner)*])?}
         )*

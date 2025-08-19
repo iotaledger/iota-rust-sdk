@@ -55,10 +55,10 @@ pub enum MultisigMemberPublicKey {
 
 impl MultisigMemberPublicKey {
     crate::def_is_as_into_opt!(
-        Ed25519[Ed25519PublicKey],
-        Secp256k1[Secp256k1PublicKey],
-        Secp256r1[Secp256r1PublicKey],
-        ZkLogin(zklogin)[ZkLoginPublicIdentifier],
+        Ed25519(Ed25519PublicKey),
+        Secp256k1(Secp256k1PublicKey),
+        Secp256r1(Secp256r1PublicKey),
+        ZkLogin as zklogin(ZkLoginPublicIdentifier),
     );
 }
 
@@ -319,10 +319,10 @@ pub enum MultisigMemberSignature {
 
 impl MultisigMemberSignature {
     crate::def_is_as_into_opt!(
-        Ed25519 [Ed25519Signature],
-        Secp256k1 [Secp256k1Signature],
-        Secp256r1 [Secp256r1Signature],
-        ZkLogin(zklogin) [Box<ZkLoginAuthenticator>]
+        Ed25519(Ed25519Signature),
+        Secp256k1(Secp256k1Signature),
+        Secp256r1(Secp256r1Signature),
+        ZkLogin as zklogin(Box<ZkLoginAuthenticator>)
     );
 }
 
