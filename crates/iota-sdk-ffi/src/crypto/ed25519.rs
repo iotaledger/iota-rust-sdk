@@ -51,7 +51,7 @@ impl Ed25519PrivateKey {
     }
 
     /// Serialize this private key as DER-encoded PKCS#8
-    pub fn to_der(&self) -> Result<Vec<u8>, SdkFfiError> {
+    pub fn to_der(&self) -> Result<Vec<u8>> {
         self.0.to_der().map_err(SdkFfiError::custom)
     }
 
@@ -64,11 +64,11 @@ impl Ed25519PrivateKey {
     }
 
     /// Serialize this private key as PEM-encoded PKCS#8
-    pub fn to_pem(&self) -> Result<String, SdkFfiError> {
+    pub fn to_pem(&self) -> Result<String> {
         self.0.to_pem().map_err(SdkFfiError::custom)
     }
 
-    pub fn try_sign(&self, msg: &[u8]) -> Result<Ed25519Signature, SdkFfiError> {
+    pub fn try_sign(&self, msg: &[u8]) -> Result<Ed25519Signature> {
         <iota_crypto::ed25519::Ed25519PrivateKey as iota_crypto::Signer<
             iota_types::Ed25519Signature,
         >>::try_sign(&self.0, msg)
@@ -76,7 +76,7 @@ impl Ed25519PrivateKey {
         .map(Into::into)
     }
 
-    pub fn try_sign_simple(&self, msg: &[u8]) -> Result<SimpleSignature, SdkFfiError> {
+    pub fn try_sign_simple(&self, msg: &[u8]) -> Result<SimpleSignature> {
         <iota_crypto::ed25519::Ed25519PrivateKey as iota_crypto::Signer<
             iota_types::SimpleSignature,
         >>::try_sign(&self.0, msg)
@@ -84,7 +84,7 @@ impl Ed25519PrivateKey {
         .map(Into::into)
     }
 
-    pub fn try_sign_user(&self, msg: &[u8]) -> Result<UserSignature, SdkFfiError> {
+    pub fn try_sign_user(&self, msg: &[u8]) -> Result<UserSignature> {
         <iota_crypto::ed25519::Ed25519PrivateKey as iota_crypto::Signer<
             iota_types::UserSignature,
         >>::try_sign(&self.0, msg)
@@ -118,7 +118,7 @@ impl Ed25519VerifyingKey {
     }
 
     /// Serialize this public key as DER-encoded data
-    pub fn to_der(&self) -> Result<Vec<u8>, SdkFfiError> {
+    pub fn to_der(&self) -> Result<Vec<u8>> {
         self.0.to_der().map_err(SdkFfiError::custom)
     }
 
@@ -131,33 +131,25 @@ impl Ed25519VerifyingKey {
     }
 
     /// Serialize this public key into PEM format
-    pub fn to_pem(&self) -> Result<String, SdkFfiError> {
+    pub fn to_pem(&self) -> Result<String> {
         self.0.to_pem().map_err(SdkFfiError::custom)
     }
 
-    pub fn verify(&self, message: &[u8], signature: &Ed25519Signature) -> Result<(), SdkFfiError> {
+    pub fn verify(&self, message: &[u8], signature: &Ed25519Signature) -> Result<()> {
         <iota_crypto::ed25519::Ed25519VerifyingKey as iota_crypto::Verifier<
             iota_types::Ed25519Signature,
         >>::verify(&self.0, message, &signature.0)
         .map_err(SdkFfiError::custom)
     }
 
-    pub fn verify_simple(
-        &self,
-        message: &[u8],
-        signature: &SimpleSignature,
-    ) -> Result<(), SdkFfiError> {
+    pub fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
         <iota_crypto::ed25519::Ed25519VerifyingKey as iota_crypto::Verifier<
             iota_types::SimpleSignature,
         >>::verify(&self.0, message, &signature.0)
         .map_err(SdkFfiError::custom)
     }
 
-    pub fn verify_user(
-        &self,
-        message: &[u8],
-        signature: &UserSignature,
-    ) -> Result<(), SdkFfiError> {
+    pub fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
         <iota_crypto::ed25519::Ed25519VerifyingKey as iota_crypto::Verifier<
             iota_types::UserSignature,
         >>::verify(&self.0, message, &signature.0)
@@ -174,18 +166,14 @@ impl Ed25519Verifier {
         Self(iota_crypto::ed25519::Ed25519Verifier::new())
     }
 
-    fn verify_simple(
-        &self,
-        message: &[u8],
-        signature: &SimpleSignature,
-    ) -> Result<(), SdkFfiError> {
+    fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
         <iota_crypto::ed25519::Ed25519Verifier as iota_crypto::Verifier<
             iota_types::SimpleSignature,
         >>::verify(&self.0, message, &signature.0)
         .map_err(SdkFfiError::custom)
     }
 
-    fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<(), SdkFfiError> {
+    fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
         <iota_crypto::ed25519::Ed25519Verifier as iota_crypto::Verifier<
             iota_types::UserSignature,
         >>::verify(&self.0, message, &signature.0)
