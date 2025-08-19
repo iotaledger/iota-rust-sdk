@@ -121,7 +121,7 @@ impl Secp256r1VerifyingKey {
     }
 }
 
-#[derive(Clone, Debug, Default, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct Secp256r1Verifier(pub iota_crypto::secp256r1::Secp256r1Verifier);
 
 #[uniffi::export]
