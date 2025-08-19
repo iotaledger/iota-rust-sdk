@@ -397,6 +397,21 @@ impl From<ObjectOut> for iota_types::ObjectOut {
     }
 }
 
+/// Defines what happened to an ObjectId during execution
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// id-operation =  id-operation-none
+///              =/ id-operation-created
+///              =/ id-operation-deleted
+///
+/// id-operation-none       = %x00
+/// id-operation-created    = %x01
+/// id-operation-deleted    = %x02
+/// ```
 #[uniffi::remote(Enum)]
 pub enum IdOperation {
     None,

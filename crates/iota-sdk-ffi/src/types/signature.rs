@@ -14,6 +14,23 @@ use crate::{
     },
 };
 
+/// Flag use to disambiguate the signature schemes supported by IOTA.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
+///                    multisig-flag / bls-flag / zklogin-flag / passkey-flag
+/// ed25519-flag     = %x00
+/// secp256k1-flag   = %x01
+/// secp256r1-flag   = %x02
+/// multisig-flag    = %x03
+/// bls-flag         = %x04
+/// zklogin-flag     = %x05
+/// passkey-flag     = %x06
+/// ```
 #[uniffi::remote(Enum)]
 pub enum SignatureScheme {
     Ed25519 = 0x00,

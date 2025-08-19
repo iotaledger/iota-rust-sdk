@@ -106,6 +106,7 @@
 #![expect(unused)]
 #![allow(clippy::wrong_self_convention)]
 
+mod crypto;
 mod error;
 mod faucet;
 mod graphql;

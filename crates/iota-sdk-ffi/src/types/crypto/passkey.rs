@@ -1,7 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::types::signature::SimpleSignature;
+use iota_crypto::Verifier;
+
+use crate::{error::Result, types::signature::SimpleSignature};
 
 /// A passkey authenticator.
 ///

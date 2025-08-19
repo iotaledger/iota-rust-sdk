@@ -573,19 +573,71 @@ impl From<MoveLocation> for iota_types::MoveLocation {
     }
 }
 
+/// An error with an argument to a command
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// command-argument-error =  type-mismatch
+///                        =/ invalid-bcs-bytes
+///                        =/ invalid-usage-of-pure-argument
+///                        =/ invalid-argument-to-private-entry-function
+///                        =/ index-out-of-bounds
+///                        =/ secondary-index-out-of-bound
+///                        =/ invalid-result-arity
+///                        =/ invalid-gas-coin-usage
+///                        =/ invalid-value-usage
+///                        =/ invalid-object-by-value
+///                        =/ invalid-object-by-mut-ref
+///                        =/ shared-object-operation-not-allowed
+///
+/// type-mismatch                               = %x00
+/// invalid-bcs-bytes                           = %x01
+/// invalid-usage-of-pure-argument              = %x02
+/// invalid-argument-to-private-entry-function  = %x03
+/// index-out-of-bounds                         = %x04 u16
+/// secondary-index-out-of-bound                = %x05 u16 u16
+/// invalid-result-arity                        = %x06 u16
+/// invalid-gas-coin-usage                      = %x07
+/// invalid-value-usage                         = %x08
+/// invalid-object-by-value                     = %x09
+/// invalid-object-by-mut-ref                   = %x0a
+/// shared-object-operation-not-allowed         = %x0b
+/// ```
 #[uniffi::remote(Enum)]
 pub enum CommandArgumentError {
+    /// The type of the value does not match the expected type
     TypeMismatch,
+    /// The argument cannot be deserialized into a value of the specified type
     InvalidBcsBytes,
+    /// The argument cannot be instantiated from raw bytes
     InvalidUsageOfPureArgument,
+    /// Invalid argument to private entry function.
+    /// Private entry functions cannot take arguments from other Move functions.
     InvalidArgumentToPrivateEntryFunction,
+    /// Out of bounds access to input or results
     IndexOutOfBounds { index: u16 },
+    /// Out of bounds access to subresult
     SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
+    /// Invalid usage of result.
+    /// Expected a single result but found either no return value or multiple.
     InvalidResultArity { result: u16 },
+    /// Invalid usage of Gas coin.
+    /// The Gas coin can only be used by-value with a TransferObjects command.
     InvalidGasCoinUsage,
+    /// Invalid usage of move value.
+    //     Mutably borrowed values require unique usage.
+    //     Immutably borrowed values cannot be taken or borrowed mutably.
+    //     Taken values cannot be used again.
     InvalidValueUsage,
+    /// Immutable objects cannot be passed by-value.
     InvalidObjectByValue,
+    /// Immutable objects cannot be passed by mutable reference, &mut.
     InvalidObjectByMutRef,
+    /// Shared object operations such a wrapping, freezing, or converting to
+    /// owned are not allowed.
     SharedObjectOperationNotAllowed,
 }
 
@@ -689,8 +741,21 @@ impl From<PackageUpgradeError> for iota_types::PackageUpgradeError {
     }
 }
 
+/// An error with a type argument
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// type-argument-error = type-not-found / constraint-not-satisfied
+/// type-not-found = %x00
+/// constraint-not-satisfied = %x01
+/// ```
 #[uniffi::remote(Enum)]
 pub enum TypeArgumentError {
+    /// A type was not found in the module specified
     TypeNotFound,
+    /// A type provided did not match the specified constraint
     ConstraintNotSatisfied,
 }
