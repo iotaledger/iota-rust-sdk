@@ -127,10 +127,9 @@ impl IntentVersion {
 #[non_exhaustive]
 pub enum IntentAppId {
     Iota = 0,
-    Narwhal = 1,
-    Consensus = 2,
+    Consensus = 1,
 }
 
 impl IntentAppId {
-    crate::def_is!(Iota, Narwhal, Consensus);
+    crate::def_is!(Iota, Consensus);
 }
