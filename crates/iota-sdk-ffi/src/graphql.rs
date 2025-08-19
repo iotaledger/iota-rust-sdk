@@ -32,6 +32,7 @@ use crate::{
     },
 };
 
+/// The GraphQL client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
 pub struct GraphQLClient(RwLock<iota_graphql_client::Client>);
 
