@@ -176,6 +176,18 @@ impl Object {
     }
 }
 
+/// Object data, either a package or struct
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-data = object-data-struct / object-data-package
+///
+/// object-data-struct  = %x00 object-move-struct
+/// object-data-package = %x01 object-move-package
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectData(pub iota_types::ObjectData);
 
@@ -381,6 +393,20 @@ impl From<MoveStruct> for iota_types::MoveStruct {
     }
 }
 
+/// Enum of different types of ownership for an object.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// owner = owner-address / owner-object / owner-shared / owner-immutable
+///
+/// owner-address   = %x00 address
+/// owner-object    = %x01 object-id
+/// owner-shared    = %x02 u64
+/// owner-immutable = %x03
+/// ```
 #[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Owner(pub iota_types::Owner);
 
@@ -443,6 +469,7 @@ impl Owner {
     }
 }
 
+/// Type of an IOTA object
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct ObjectType(pub iota_types::ObjectType);
 

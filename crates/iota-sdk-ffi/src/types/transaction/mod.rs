@@ -124,40 +124,40 @@ pub struct TransactionKind(pub iota_types::TransactionKind);
 #[uniffi::export]
 impl TransactionKind {
     #[uniffi::constructor]
-    pub fn programmable_transaction(tx: &ProgrammableTransaction) -> Self {
+    pub fn new_programmable_transaction(tx: &ProgrammableTransaction) -> Self {
         Self(iota_types::TransactionKind::ProgrammableTransaction(
             tx.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn genesis(tx: &GenesisTransaction) -> Self {
+    pub fn new_genesis(tx: &GenesisTransaction) -> Self {
         Self(iota_types::TransactionKind::Genesis(tx.0.clone()))
     }
 
     #[uniffi::constructor]
-    pub fn consensus_commit_prologue_v1(tx: &ConsensusCommitPrologueV1) -> Self {
+    pub fn new_consensus_commit_prologue_v1(tx: &ConsensusCommitPrologueV1) -> Self {
         Self(iota_types::TransactionKind::ConsensusCommitPrologueV1(
             tx.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn authenticator_state_update_v1(tx: &AuthenticatorStateUpdateV1) -> Self {
+    pub fn new_authenticator_state_update_v1(tx: &AuthenticatorStateUpdateV1) -> Self {
         Self(iota_types::TransactionKind::AuthenticatorStateUpdateV1(
             tx.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn end_of_epoch(tx: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
+    pub fn new_end_of_epoch(tx: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
         Self(iota_types::TransactionKind::EndOfEpoch(
             tx.into_iter().map(|tx| tx.0.clone()).collect(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn randomness_state_update(tx: &RandomnessStateUpdate) -> Self {
+    pub fn new_randomness_state_update(tx: &RandomnessStateUpdate) -> Self {
         Self(iota_types::TransactionKind::RandomnessStateUpdate(
             tx.clone(),
         ))
@@ -1368,26 +1368,26 @@ pub struct EndOfEpochTransactionKind(pub iota_types::EndOfEpochTransactionKind);
 #[uniffi::export]
 impl EndOfEpochTransactionKind {
     #[uniffi::constructor]
-    pub fn change_epoch(tx: &ChangeEpoch) -> Self {
+    pub fn new_change_epoch(tx: &ChangeEpoch) -> Self {
         Self(iota_types::EndOfEpochTransactionKind::ChangeEpoch(
             tx.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn change_epoch_v2(tx: &ChangeEpochV2) -> Self {
+    pub fn new_change_epoch_v2(tx: &ChangeEpochV2) -> Self {
         Self(iota_types::EndOfEpochTransactionKind::ChangeEpochV2(
             tx.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn authenticator_state_create() -> Self {
+    pub fn new_authenticator_state_create() -> Self {
         Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateCreate)
     }
 
     #[uniffi::constructor]
-    pub fn authenticator_state_expire(tx: &AuthenticatorStateExpire) -> Self {
+    pub fn new_authenticator_state_expire(tx: &AuthenticatorStateExpire) -> Self {
         Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.clone()))
     }
 }
@@ -1440,6 +1440,16 @@ impl From<GasPayment> for iota_types::GasPayment {
     }
 }
 
+/// The output or effects of executing a transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction-effects =  %x00 effects-v1
+///                     =/ %x01 effects-v2
+/// ```
 #[derive(Clone, Debug, derive_more::From, uniffi::Object)]
 pub struct TransactionEffects(pub iota_types::TransactionEffects);
 

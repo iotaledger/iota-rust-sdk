@@ -507,6 +507,7 @@ impl From<Validator> for iota_graphql_client::query_types::Validator {
     }
 }
 
+/// The credentials related fields associated with a validator.
 #[uniffi::remote(Record)]
 pub struct ValidatorCredentials {
     pub authority_pub_key: Option<Base64>,
