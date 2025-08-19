@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_types::SignatureScheme;
+
 use crate::{
     error::{Result, SdkFfiError},
     types::{
@@ -14,77 +16,58 @@ pub struct Secp256k1PrivateKey(iota_crypto::secp256k1::Secp256k1PrivateKey);
 
 #[uniffi::export]
 impl Secp256k1PrivateKey {
-    //     pub fn new(bytes: [u8; Self::LENGTH]) -> Result<Self, SignatureError> {
-    //         SigningKey::from_bytes(&bytes.into()).map(Self)
-    //     }
+    #[uniffi::constructor]
+    pub fn new(bytes: Vec<u8>) -> Result<Self> {
+        Ok(Self(
+            iota_crypto::secp256k1::Secp256k1PrivateKey::new(bytes.try_into().unwrap())
+                .map_err(SdkFfiError::custom)?,
+        ))
+    }
 
-    //     pub fn scheme(&self) -> SignatureScheme {
-    //         SignatureScheme::Secp256k1
-    //     }
+    pub fn scheme(&self) -> SignatureScheme {
+        self.0.scheme()
+    }
 
-    //     pub fn verifying_key(&self) -> Secp256k1VerifyingKey {
-    //         let verifying_key = self.0.verifying_key();
-    //         Secp256k1VerifyingKey(*verifying_key)
-    //     }
+    pub fn verifying_key(&self) -> Secp256k1VerifyingKey {
+        self.0.verifying_key().into()
+    }
 
-    //     pub fn public_key(&self) -> Secp256k1PublicKey {
-    //         Secp256k1PublicKey::new(self.0.verifying_key().as_ref().to_bytes().
-    // into())     }
+    pub fn public_key(&self) -> Secp256k1PublicKey {
+        self.0.public_key().into()
+    }
 
-    //     pub fn generate<R>(mut rng: R) -> Self
-    //     where
-    //         R: rand_core::RngCore + rand_core::CryptoRng,
-    //     {
-    //         Self(SigningKey::random(&mut rng))
-    //     }
+    #[uniffi::constructor]
+    pub fn generate() -> Self {
+        use rand::rngs::OsRng;
+        Self(iota_crypto::secp256k1::Secp256k1PrivateKey::generate(OsRng))
+    }
 
-    //     #[cfg(feature = "pem")]
-    //     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-    //     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-    //     /// format).
-    //     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
-    //         k256::pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
-    //             .map(Self)
-    //             .map_err(SignatureError::from_source)
-    //     }
+    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
+    /// format).
+    #[uniffi::constructor]
+    pub fn from_der(bytes: &[u8]) -> Result<Self> {
+        iota_crypto::secp256k1::Secp256k1PrivateKey::from_der(bytes)
+            .map(Self)
+            .map_err(SdkFfiError::custom)
+    }
 
-    //     #[cfg(feature = "pem")]
-    //     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-    //     /// Serialize this private key as DER-encoded PKCS#8
-    //     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
-    //         use k256::pkcs8::EncodePrivateKey;
+    /// Serialize this private key as DER-encoded PKCS#8
+    pub fn to_der(&self) -> Result<Vec<u8>> {
+        self.0.to_der().map_err(SdkFfiError::custom)
+    }
 
-    //         self.0
-    //             .to_pkcs8_der()
-    //             .map_err(SignatureError::from_source)
-    //             .map(|der| der.as_bytes().to_owned())
-    //     }
+    /// Deserialize PKCS#8-encoded private key from PEM.
+    #[uniffi::constructor]
+    pub fn from_pem(s: &str) -> Result<Self> {
+        iota_crypto::secp256k1::Secp256k1PrivateKey::from_pem(s)
+            .map(Self)
+            .map_err(SdkFfiError::custom)
+    }
 
-    //     #[cfg(feature = "pem")]
-    //     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-    //     /// Deserialize PKCS#8-encoded private key from PEM.
-    //     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
-    //         k256::pkcs8::DecodePrivateKey::from_pkcs8_pem(s)
-    //             .map(Self)
-    //             .map_err(SignatureError::from_source)
-    //     }
-
-    //     #[cfg(feature = "pem")]
-    //     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-    //     /// Serialize this private key as PEM-encoded PKCS#8
-    //     pub fn to_pem(&self) -> Result<String, SignatureError> {
-    //         use pkcs8::EncodePrivateKey;
-
-    //         self.0
-    //             .to_pkcs8_pem(pkcs8::LineEnding::default())
-    //             .map_err(SignatureError::from_source)
-    //             .map(|pem| (*pem).to_owned())
-    //     }
-
-    //     #[cfg(feature = "pem")]
-    //     pub(crate) fn from_k256(private_key: SigningKey) -> Self {
-    //         Self(private_key)
-    //     }
+    /// Serialize this private key as PEM-encoded PKCS#8
+    pub fn to_pem(&self) -> Result<String> {
+        self.0.to_pem().map_err(SdkFfiError::custom)
+    }
 
     pub fn try_sign(&self, msg: &[u8]) -> Result<Secp256k1Signature> {
         <iota_crypto::secp256k1::Secp256k1PrivateKey as iota_crypto::Signer<
