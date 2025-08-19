@@ -77,7 +77,7 @@ impl PasskeyVerifier {
         Self(iota_crypto::passkey::PasskeyVerifier::new())
     }
 
-    pub fn verify(&self, message: Vec<u8>, authenticator: &PasskeyAuthenticator) -> Result<()> {
-        Ok(self.0.verify(&message, &authenticator.0)?)
+    pub fn verify(&self, message: &[u8], authenticator: &PasskeyAuthenticator) -> Result<()> {
+        Ok(self.0.verify(message, &authenticator.0)?)
     }
 }
