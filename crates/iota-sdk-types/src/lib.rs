@@ -297,7 +297,7 @@ macro_rules! def_is_as_into_opt {
     };
     ($($variant:ident $( as $rename:ident)? $(($($inner:tt)*))?),* $(,)?) => {
         $(
-        crate::def_is_as_into_opt!{@parse $variant $(($rename))? $([$($inner)*])?}
+        $crate::def_is_as_into_opt!{@parse $variant $(($rename))? $([$($inner)*])?}
         )*
     };
 }
