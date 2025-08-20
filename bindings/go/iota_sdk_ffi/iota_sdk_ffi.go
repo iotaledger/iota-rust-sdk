@@ -2081,7 +2081,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign()
 	})
-	if checksum != 61557 {
+	if checksum != 5798 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign: UniFFI API checksum mismatch")
 	}
@@ -2090,7 +2090,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple()
 	})
-	if checksum != 41193 {
+	if checksum != 11597 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple: UniFFI API checksum mismatch")
 	}
@@ -2099,7 +2099,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user()
 	})
-	if checksum != 11351 {
+	if checksum != 20597 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user: UniFFI API checksum mismatch")
 	}
@@ -13998,9 +13998,9 @@ type Secp256k1PrivateKeyInterface interface {
 	ToDer() ([]byte, error)
 	// Serialize this private key as PEM-encoded PKCS#8
 	ToPem() (string, error)
-	TrySign(msg []byte) (*Secp256k1Signature, error)
-	TrySignSimple(msg []byte) (*SimpleSignature, error)
-	TrySignUser(msg []byte) (*UserSignature, error)
+	TrySign(message []byte) (*Secp256k1Signature, error)
+	TrySignSimple(message []byte) (*SimpleSignature, error)
+	TrySignUser(message []byte) (*UserSignature, error)
 	VerifyingKey() *Secp256k1VerifyingKey
 }
 type Secp256k1PrivateKey struct {
@@ -14110,12 +14110,12 @@ func (_self *Secp256k1PrivateKey) ToPem() (string, error) {
 		}
 }
 
-func (_self *Secp256k1PrivateKey) TrySign(msg []byte) (*Secp256k1Signature, error) {
+func (_self *Secp256k1PrivateKey) TrySign(message []byte) (*Secp256k1Signature, error) {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
 	defer _self.ffiObject.decrementPointer()
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign(
-		_pointer,FfiConverterBytesINSTANCE.Lower(msg),_uniffiStatus)
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Secp256k1Signature
@@ -14125,12 +14125,12 @@ func (_self *Secp256k1PrivateKey) TrySign(msg []byte) (*Secp256k1Signature, erro
 		}
 }
 
-func (_self *Secp256k1PrivateKey) TrySignSimple(msg []byte) (*SimpleSignature, error) {
+func (_self *Secp256k1PrivateKey) TrySignSimple(message []byte) (*SimpleSignature, error) {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
 	defer _self.ffiObject.decrementPointer()
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_simple(
-		_pointer,FfiConverterBytesINSTANCE.Lower(msg),_uniffiStatus)
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *SimpleSignature
@@ -14140,12 +14140,12 @@ func (_self *Secp256k1PrivateKey) TrySignSimple(msg []byte) (*SimpleSignature, e
 		}
 }
 
-func (_self *Secp256k1PrivateKey) TrySignUser(msg []byte) (*UserSignature, error) {
+func (_self *Secp256k1PrivateKey) TrySignUser(message []byte) (*UserSignature, error) {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
 	defer _self.ffiObject.decrementPointer()
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_user(
-		_pointer,FfiConverterBytesINSTANCE.Lower(msg),_uniffiStatus)
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *UserSignature

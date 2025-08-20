@@ -843,11 +843,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_pem() != 12369:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign() != 61557:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign() != 5798:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple() != 41193:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple() != 11597:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user() != 11351:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user() != 20597:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key() != 51137:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -27689,11 +27689,11 @@ class Secp256k1PrivateKeyProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def try_sign(self, msg: "bytes"):
+    def try_sign(self, message: "bytes"):
         raise NotImplementedError
-    def try_sign_simple(self, msg: "bytes"):
+    def try_sign_simple(self, message: "bytes"):
         raise NotImplementedError
-    def try_sign_user(self, msg: "bytes"):
+    def try_sign_user(self, message: "bytes"):
         raise NotImplementedError
     def verifying_key(self, ):
         raise NotImplementedError
@@ -27802,36 +27802,36 @@ class Secp256k1PrivateKey():
 
 
 
-    def try_sign(self, msg: "bytes") -> "Secp256k1Signature":
-        _UniffiConverterBytes.check_lower(msg)
+    def try_sign(self, message: "bytes") -> "Secp256k1Signature":
+        _UniffiConverterBytes.check_lower(message)
         
         return _UniffiConverterTypeSecp256k1Signature.lift(
             _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign,self._uniffi_clone_pointer(),
-        _UniffiConverterBytes.lower(msg))
+        _UniffiConverterBytes.lower(message))
         )
 
 
 
 
 
-    def try_sign_simple(self, msg: "bytes") -> "SimpleSignature":
-        _UniffiConverterBytes.check_lower(msg)
+    def try_sign_simple(self, message: "bytes") -> "SimpleSignature":
+        _UniffiConverterBytes.check_lower(message)
         
         return _UniffiConverterTypeSimpleSignature.lift(
             _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_simple,self._uniffi_clone_pointer(),
-        _UniffiConverterBytes.lower(msg))
+        _UniffiConverterBytes.lower(message))
         )
 
 
 
 
 
-    def try_sign_user(self, msg: "bytes") -> "UserSignature":
-        _UniffiConverterBytes.check_lower(msg)
+    def try_sign_user(self, message: "bytes") -> "UserSignature":
+        _UniffiConverterBytes.check_lower(message)
         
         return _UniffiConverterTypeUserSignature.lift(
             _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_user,self._uniffi_clone_pointer(),
-        _UniffiConverterBytes.lower(msg))
+        _UniffiConverterBytes.lower(message))
         )
 
 
