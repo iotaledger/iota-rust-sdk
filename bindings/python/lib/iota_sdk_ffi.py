@@ -847,11 +847,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem() != 34634:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign() != 1959:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign() != 39126:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple() != 14060:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple() != 57038:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user() != 44755:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user() != 36924:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key() != 55895:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -28038,7 +28038,7 @@ class Secp256r1PrivateKey():
         _UniffiConverterBytes.check_lower(message)
         
         return _UniffiConverterTypeSecp256r1Signature.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign,self._uniffi_clone_pointer(),
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign,self._uniffi_clone_pointer(),
         _UniffiConverterBytes.lower(message))
         )
 
@@ -28054,7 +28054,7 @@ class Secp256r1PrivateKey():
         _UniffiConverterBytes.check_lower(message)
         
         return _UniffiConverterTypeSimpleSignature.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple,self._uniffi_clone_pointer(),
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple,self._uniffi_clone_pointer(),
         _UniffiConverterBytes.lower(message))
         )
 
@@ -28070,7 +28070,7 @@ class Secp256r1PrivateKey():
         _UniffiConverterBytes.check_lower(message)
         
         return _UniffiConverterTypeUserSignature.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user,self._uniffi_clone_pointer(),
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user,self._uniffi_clone_pointer(),
         _UniffiConverterBytes.lower(message))
         )
 

@@ -4878,13 +4878,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem() != 34634.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign() != 1959.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign() != 39126.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple() != 14060.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple() != 57038.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user() != 44755.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user() != 36924.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key() != 55895.toShort()) {
@@ -25648,10 +25648,11 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     
     /**
      * Sign a message and return a Secp256r1Signature.
-     */override fun `trySign`(`message`: kotlin.ByteArray): Secp256r1Signature {
+     */
+    @Throws(SdkFfiException::class)override fun `trySign`(`message`: kotlin.ByteArray): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     callWithPointer {
-    uniffiRustCall() { _status ->
+    uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
@@ -25663,10 +25664,11 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     
     /**
      * Sign a message and return a SimpleSignature.
-     */override fun `trySignSimple`(`message`: kotlin.ByteArray): SimpleSignature {
+     */
+    @Throws(SdkFfiException::class)override fun `trySignSimple`(`message`: kotlin.ByteArray): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
-    uniffiRustCall() { _status ->
+    uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
@@ -25678,10 +25680,11 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     
     /**
      * Sign a message and return a UserSignature.
-     */override fun `trySignUser`(`message`: kotlin.ByteArray): UserSignature {
+     */
+    @Throws(SdkFfiException::class)override fun `trySignUser`(`message`: kotlin.ByteArray): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
-    uniffiRustCall() { _status ->
+    uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
         it, FfiConverterByteArray.lower(`message`),_status)
 }

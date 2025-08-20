@@ -36,30 +36,30 @@ impl Secp256r1PrivateKey {
     }
 
     /// Sign a message and return a Secp256r1Signature.
-    pub fn try_sign(&self, message: Vec<u8>) -> Secp256r1Signature {
+    pub fn try_sign(&self, message: &[u8]) -> Result<Secp256r1Signature, SdkFfiError> {
         <iota_crypto::secp256r1::Secp256r1PrivateKey as iota_crypto::Signer<
             iota_types::Secp256r1Signature,
-        >>::try_sign(&self.0, &message)
-        .unwrap()
-        .into()
+        >>::try_sign(&self.0, message)
+        .map(Into::into)
+        .map_err(SdkFfiError::custom)
     }
 
     /// Sign a message and return a SimpleSignature.
-    pub fn try_sign_simple(&self, message: Vec<u8>) -> SimpleSignature {
+    pub fn try_sign_simple(&self, message: &[u8]) -> Result<SimpleSignature, SdkFfiError> {
         <iota_crypto::secp256r1::Secp256r1PrivateKey as iota_crypto::Signer<
             iota_types::SimpleSignature,
-        >>::try_sign(&self.0, &message)
-        .unwrap()
-        .into()
+        >>::try_sign(&self.0, message)
+        .map(Into::into)
+        .map_err(SdkFfiError::custom)
     }
 
     /// Sign a message and return a UserSignature.
-    pub fn try_sign_user(&self, message: Vec<u8>) -> UserSignature {
+    pub fn try_sign_user(&self, message: &[u8]) -> Result<UserSignature, SdkFfiError> {
         <iota_crypto::secp256r1::Secp256r1PrivateKey as iota_crypto::Signer<
             iota_types::UserSignature,
-        >>::try_sign(&self.0, &message)
-        .unwrap()
-        .into()
+        >>::try_sign(&self.0, message)
+        .map(Into::into)
+        .map_err(SdkFfiError::custom)
     }
 
     pub fn verifying_key(&self) -> Secp256r1VerifyingKey {

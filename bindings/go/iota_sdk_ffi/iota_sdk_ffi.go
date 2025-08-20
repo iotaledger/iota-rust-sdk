@@ -2099,7 +2099,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign()
 	})
-	if checksum != 1959 {
+	if checksum != 39126 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign: UniFFI API checksum mismatch")
 	}
@@ -2108,7 +2108,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple()
 	})
-	if checksum != 14060 {
+	if checksum != 57038 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple: UniFFI API checksum mismatch")
 	}
@@ -2117,7 +2117,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user()
 	})
-	if checksum != 44755 {
+	if checksum != 36924 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user: UniFFI API checksum mismatch")
 	}
@@ -14222,11 +14222,11 @@ type Secp256r1PrivateKeyInterface interface {
 	// Serialize this private key as PEM-encoded PKCS#8
 	ToPem() (string, error)
 	// Sign a message and return a Secp256r1Signature.
-	TrySign(message []byte) *Secp256r1Signature
+	TrySign(message []byte) (*Secp256r1Signature, error)
 	// Sign a message and return a SimpleSignature.
-	TrySignSimple(message []byte) *SimpleSignature
+	TrySignSimple(message []byte) (*SimpleSignature, error)
 	// Sign a message and return a UserSignature.
-	TrySignUser(message []byte) *UserSignature
+	TrySignUser(message []byte) (*UserSignature, error)
 	VerifyingKey() *Secp256r1VerifyingKey
 }
 type Secp256r1PrivateKey struct {
@@ -14333,33 +14333,51 @@ func (_self *Secp256r1PrivateKey) ToPem() (string, error) {
 }
 
 // Sign a message and return a Secp256r1Signature.
-func (_self *Secp256r1PrivateKey) TrySign(message []byte) *Secp256r1Signature {
+func (_self *Secp256r1PrivateKey) TrySign(message []byte) (*Secp256r1Signature, error) {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSecp256r1SignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
 		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
-	}))
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1Signature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1SignatureINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 // Sign a message and return a SimpleSignature.
-func (_self *Secp256r1PrivateKey) TrySignSimple(message []byte) *SimpleSignature {
+func (_self *Secp256r1PrivateKey) TrySignSimple(message []byte) (*SimpleSignature, error) {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSimpleSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
 		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
-	}))
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *SimpleSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSimpleSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 // Sign a message and return a UserSignature.
-func (_self *Secp256r1PrivateKey) TrySignUser(message []byte) *UserSignature {
+func (_self *Secp256r1PrivateKey) TrySignUser(message []byte) (*UserSignature, error) {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
 		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
-	}))
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 func (_self *Secp256r1PrivateKey) VerifyingKey() *Secp256r1VerifyingKey {
