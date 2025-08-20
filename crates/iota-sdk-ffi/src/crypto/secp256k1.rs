@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_types::SignatureScheme;
+use rand::rngs::OsRng;
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -39,7 +40,6 @@ impl Secp256k1PrivateKey {
 
     #[uniffi::constructor]
     pub fn generate() -> Self {
-        use rand::rngs::OsRng;
         Self(iota_crypto::secp256k1::Secp256k1PrivateKey::generate(OsRng))
     }
 
