@@ -87,7 +87,7 @@ impl Secp256r1PrivateKey {
 
     /// Serialize this private key as DER-encoded PKCS#8
     pub fn to_der(&self) -> Result<Vec<u8>> {
-        self.0.to_der().map_err(SdkFfiError::custom)
+        Ok(self.0.to_der()?)
     }
 
     /// Deserialize PKCS#8-encoded private key from PEM.
