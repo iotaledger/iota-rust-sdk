@@ -160,17 +160,25 @@ impl Secp256r1Verifier {
         Self(iota_crypto::secp256r1::Secp256r1Verifier::new())
     }
 
-    pub fn verify_simple(&self, message: Vec<u8>, signature: &SimpleSignature) -> bool {
+    pub fn verify_simple(
+        &self,
+        message: Vec<u8>,
+        signature: &SimpleSignature,
+    ) -> Result<(), SdkFfiError> {
         <iota_crypto::secp256r1::Secp256r1Verifier as iota_crypto::Verifier<
             iota_types::SimpleSignature,
         >>::verify(&self.0, &message, &signature.0)
-        .is_ok()
+        .map_err(SdkFfiError::custom)
     }
 
-    pub fn verify_user(&self, message: Vec<u8>, signature: &UserSignature) -> bool {
+    pub fn verify_user(
+        &self,
+        message: Vec<u8>,
+        signature: &UserSignature,
+    ) -> Result<(), SdkFfiError> {
         <iota_crypto::secp256r1::Secp256r1Verifier as iota_crypto::Verifier<
             iota_types::UserSignature,
         >>::verify(&self.0, &message, &signature.0)
-        .is_ok()
+        .map_err(SdkFfiError::custom)
     }
 }

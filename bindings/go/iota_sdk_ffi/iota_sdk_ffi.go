@@ -2153,7 +2153,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple()
 	})
-	if checksum != 39226 {
+	if checksum != 18491 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple: UniFFI API checksum mismatch")
 	}
@@ -2162,7 +2162,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user()
 	})
-	if checksum != 47300 {
+	if checksum != 19940 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user: UniFFI API checksum mismatch")
 	}
@@ -14687,8 +14687,8 @@ func (_ FfiDestroyerSecp256r1Signature) Destroy(value *Secp256r1Signature) {
 
 
 type Secp256r1VerifierInterface interface {
-	VerifySimple(message []byte, signature *SimpleSignature) bool
-	VerifyUser(message []byte, signature *UserSignature) bool
+	VerifySimple(message []byte, signature *SimpleSignature) error
+	VerifyUser(message []byte, signature *UserSignature) error
 }
 type Secp256r1Verifier struct {
 	ffiObject FfiObject
@@ -14702,22 +14702,26 @@ func NewSecp256r1Verifier() *Secp256r1Verifier {
 
 
 
-func (_self *Secp256r1Verifier) VerifySimple(message []byte, signature *SimpleSignature) bool {
+func (_self *Secp256r1Verifier) VerifySimple(message []byte, signature *SimpleSignature) error {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256r1Verifier")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
 		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterSimpleSignatureINSTANCE.Lower(signature),_uniffiStatus)
-	}))
+		return false
+	})
+		return _uniffiErr.AsError()
 }
 
-func (_self *Secp256r1Verifier) VerifyUser(message []byte, signature *UserSignature) bool {
+func (_self *Secp256r1Verifier) VerifyUser(message []byte, signature *UserSignature) error {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256r1Verifier")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
 		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterUserSignatureINSTANCE.Lower(signature),_uniffiStatus)
-	}))
+		return false
+	})
+		return _uniffiErr.AsError()
 }
 func (object *Secp256r1Verifier) Destroy() {
 	runtime.SetFinalizer(object, nil)

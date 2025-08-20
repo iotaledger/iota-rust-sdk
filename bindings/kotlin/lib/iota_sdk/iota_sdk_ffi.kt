@@ -3760,9 +3760,9 @@ fun uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(`ptr`: Pointer,uniffi_out_err:
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
+): Unit
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
+): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4896,10 +4896,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() != 64948.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple() != 39226.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple() != 18491.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user() != 47300.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user() != 19940.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key() != 35474.toShort()) {
@@ -26467,9 +26467,9 @@ public object FfiConverterTypeSecp256r1Signature: FfiConverter<Secp256r1Signatur
 
 public interface Secp256r1VerifierInterface {
     
-    fun `verifySimple`(`message`: kotlin.ByteArray, `signature`: SimpleSignature): kotlin.Boolean
+    fun `verifySimple`(`message`: kotlin.ByteArray, `signature`: SimpleSignature)
     
-    fun `verifyUser`(`message`: kotlin.ByteArray, `signature`: UserSignature): kotlin.Boolean
+    fun `verifyUser`(`message`: kotlin.ByteArray, `signature`: UserSignature)
     
     companion object
 }
@@ -26563,28 +26563,28 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
         }
     }
 
-    override fun `verifySimple`(`message`: kotlin.ByteArray, `signature`: SimpleSignature): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
+    
+    @Throws(SdkFfiException::class)override fun `verifySimple`(`message`: kotlin.ByteArray, `signature`: SimpleSignature)
+        = 
     callWithPointer {
-    uniffiRustCall() { _status ->
+    uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
-    )
-    }
+    
     
 
-    override fun `verifyUser`(`message`: kotlin.ByteArray, `signature`: UserSignature): kotlin.Boolean {
-            return FfiConverterBoolean.lift(
+    
+    @Throws(SdkFfiException::class)override fun `verifyUser`(`message`: kotlin.ByteArray, `signature`: UserSignature)
+        = 
     callWithPointer {
-    uniffiRustCall() { _status ->
+    uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
 }
     }
-    )
-    }
+    
     
 
     

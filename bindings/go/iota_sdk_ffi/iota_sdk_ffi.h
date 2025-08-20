@@ -2630,12 +2630,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(RustCallStatus *o
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1VERIFIER_VERIFY_SIMPLE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1VERIFIER_VERIFY_SIMPLE
-int8_t uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
+void uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1VERIFIER_VERIFY_USER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1VERIFIER_VERIFY_USER
-int8_t uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
+void uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SECP256R1VERIFYINGKEY

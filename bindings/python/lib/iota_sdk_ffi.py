@@ -859,9 +859,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() != 64948:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple() != 39226:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple() != 18491:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user() != 47300:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user() != 19940:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key() != 35474:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3807,14 +3807,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple.argtype
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -28373,31 +28373,29 @@ class Secp256r1Verifier():
         return inst
 
 
-    def verify_simple(self, message: "bytes",signature: "SimpleSignature") -> "bool":
+    def verify_simple(self, message: "bytes",signature: "SimpleSignature") -> None:
         _UniffiConverterBytes.check_lower(message)
         
         _UniffiConverterTypeSimpleSignature.check_lower(signature)
         
-        return _UniffiConverterBool.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple,self._uniffi_clone_pointer(),
+        _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple,self._uniffi_clone_pointer(),
         _UniffiConverterBytes.lower(message),
         _UniffiConverterTypeSimpleSignature.lower(signature))
-        )
 
 
 
 
 
-    def verify_user(self, message: "bytes",signature: "UserSignature") -> "bool":
+
+    def verify_user(self, message: "bytes",signature: "UserSignature") -> None:
         _UniffiConverterBytes.check_lower(message)
         
         _UniffiConverterTypeUserSignature.check_lower(signature)
         
-        return _UniffiConverterBool.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user,self._uniffi_clone_pointer(),
+        _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user,self._uniffi_clone_pointer(),
         _UniffiConverterBytes.lower(message),
         _UniffiConverterTypeUserSignature.lower(signature))
-        )
+
 
 
 
