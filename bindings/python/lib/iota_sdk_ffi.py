@@ -1165,7 +1165,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate() != 53932:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new() != 39271:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new() != 12862:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes() != 60403:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -21063,7 +21063,7 @@ class Ed25519PrivateKey():
     def __init__(self, bytes: "bytes"):
         _UniffiConverterBytes.check_lower(bytes)
         
-        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new,
+        self._pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new,
         _UniffiConverterBytes.lower(bytes))
 
     def __del__(self):

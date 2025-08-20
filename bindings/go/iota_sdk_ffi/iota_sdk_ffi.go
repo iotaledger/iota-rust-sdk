@@ -3530,7 +3530,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new()
 	})
-	if checksum != 39271 {
+	if checksum != 12862 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new: UniFFI API checksum mismatch")
 	}
@@ -7692,10 +7692,16 @@ type Ed25519PrivateKeyInterface interface {
 type Ed25519PrivateKey struct {
 	ffiObject FfiObject
 }
-func NewEd25519PrivateKey(bytes []byte) *Ed25519PrivateKey {
-	return FfiConverterEd25519PrivateKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+func NewEd25519PrivateKey(bytes []byte) (*Ed25519PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	}))
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 
