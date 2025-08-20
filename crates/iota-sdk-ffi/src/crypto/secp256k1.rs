@@ -18,10 +18,11 @@ pub struct Secp256k1PrivateKey(iota_crypto::secp256k1::Secp256k1PrivateKey);
 impl Secp256k1PrivateKey {
     #[uniffi::constructor]
     pub fn new(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(
-            iota_crypto::secp256k1::Secp256k1PrivateKey::new(bytes.try_into().unwrap())
-                .map_err(SdkFfiError::custom)?,
-        ))
+        Ok(Self(iota_crypto::secp256k1::Secp256k1PrivateKey::new(
+            bytes.try_into().map_err(|v: Vec<u8>| {
+                SdkFfiError::custom(format!("expected bytes of length 32, found {}", v.len()))
+            })?,
+        )?))
     }
 
     pub fn scheme(&self) -> SignatureScheme {
