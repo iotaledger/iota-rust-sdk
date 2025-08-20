@@ -17,10 +17,12 @@ pub struct Ed25519PrivateKey(iota_crypto::ed25519::Ed25519PrivateKey);
 #[uniffi::export]
 impl Ed25519PrivateKey {
     #[uniffi::constructor]
-    pub fn new(bytes: Vec<u8>) -> Self {
-        Self(iota_crypto::ed25519::Ed25519PrivateKey::new(
-            bytes.try_into().unwrap(),
-        ))
+    pub fn new(bytes: Vec<u8>) -> Result<Self> {
+        Ok(Self(iota_crypto::ed25519::Ed25519PrivateKey::new(
+            bytes.try_into().map_err(|v: Vec<u8>| {
+                SdkFfiError::custom(format!("expected bytes of length 32, found {}", v.len()))
+            })?,
+        )))
     }
 
     pub fn scheme(&self) -> SignatureScheme {
