@@ -52,7 +52,7 @@ impl Secp256k1PrivateKey {
 
     /// Serialize this private key as DER-encoded PKCS#8
     pub fn to_der(&self) -> Result<Vec<u8>> {
-        self.0.to_der().map_err(SdkFfiError::custom)
+        Ok(self.0.to_der()?)
     }
 
     /// Deserialize PKCS#8-encoded private key from PEM.
@@ -63,7 +63,7 @@ impl Secp256k1PrivateKey {
 
     /// Serialize this private key as PEM-encoded PKCS#8
     pub fn to_pem(&self) -> Result<String> {
-        self.0.to_pem().map_err(SdkFfiError::custom)
+        Ok(self.0.to_pem()?)
     }
 
     pub fn try_sign(&self, message: &[u8]) -> Result<Secp256k1Signature> {
@@ -89,9 +89,7 @@ pub struct Secp256k1VerifyingKey(iota_crypto::secp256k1::Secp256k1VerifyingKey);
 impl Secp256k1VerifyingKey {
     #[uniffi::constructor]
     pub fn new(public_key: &Secp256k1PublicKey) -> Result<Self> {
-        iota_crypto::secp256k1::Secp256k1VerifyingKey::new(&public_key.0)
-            .map(Self)
-            .map_err(SdkFfiError::custom)
+        Ok(iota_crypto::secp256k1::Secp256k1VerifyingKey::new(&public_key.0).map(Self)?)
     }
 
     pub fn public_key(&self) -> Secp256k1PublicKey {
@@ -106,7 +104,7 @@ impl Secp256k1VerifyingKey {
 
     /// Serialize this public key as DER-encoded data
     pub fn to_der(&self) -> Result<Vec<u8>> {
-        self.0.to_der().map_err(SdkFfiError::custom)
+        Ok(self.0.to_der()?)
     }
 
     /// Deserialize public key from PEM.
@@ -117,26 +115,35 @@ impl Secp256k1VerifyingKey {
 
     /// Serialize this public key into PEM
     pub fn to_pem(&self) -> Result<String> {
-        self.0.to_pem().map_err(SdkFfiError::custom)
+        Ok(self.0.to_pem()?)
     }
 
     pub fn verify(&self, message: &[u8], signature: &Secp256k1Signature) -> Result<()> {
-        iota_crypto::Verifier::<iota_types::Secp256k1Signature>::verify(
-            &self.0,
-            message,
-            &signature.0,
+        Ok(
+            iota_crypto::Verifier::<iota_types::Secp256k1Signature>::verify(
+                &self.0,
+                message,
+                &signature.0,
+            )?,
         )
-        .map_err(SdkFfiError::custom)
     }
 
     pub fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
-        iota_crypto::Verifier::<iota_types::SimpleSignature>::verify(&self.0, message, &signature.0)
-            .map_err(SdkFfiError::custom)
+        Ok(
+            iota_crypto::Verifier::<iota_types::SimpleSignature>::verify(
+                &self.0,
+                message,
+                &signature.0,
+            )?,
+        )
     }
 
     pub fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
-        iota_crypto::Verifier::<iota_types::UserSignature>::verify(&self.0, message, &signature.0)
-            .map_err(SdkFfiError::custom)
+        Ok(iota_crypto::Verifier::<iota_types::UserSignature>::verify(
+            &self.0,
+            message,
+            &signature.0,
+        )?)
     }
 }
 
@@ -151,12 +158,20 @@ impl Secp256k1Verifier {
     }
 
     fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
-        iota_crypto::Verifier::<iota_types::SimpleSignature>::verify(&self.0, message, &signature.0)
-            .map_err(SdkFfiError::custom)
+        Ok(
+            iota_crypto::Verifier::<iota_types::SimpleSignature>::verify(
+                &self.0,
+                message,
+                &signature.0,
+            )?,
+        )
     }
 
     fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
-        iota_crypto::Verifier::<iota_types::UserSignature>::verify(&self.0, message, &signature.0)
-            .map_err(SdkFfiError::custom)
+        Ok(iota_crypto::Verifier::<iota_types::UserSignature>::verify(
+            &self.0,
+            message,
+            &signature.0,
+        )?)
     }
 }
