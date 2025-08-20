@@ -4142,7 +4142,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new()
 	})
-	if checksum != 37856 {
+	if checksum != 32825 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new: UniFFI API checksum mismatch")
 	}
@@ -14232,10 +14232,16 @@ type Secp256r1PrivateKeyInterface interface {
 type Secp256r1PrivateKey struct {
 	ffiObject FfiObject
 }
-func NewSecp256r1PrivateKey(bytes []byte) *Secp256r1PrivateKey {
-	return FfiConverterSecp256r1PrivateKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+func NewSecp256r1PrivateKey(bytes []byte) (*Secp256r1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	}))
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 

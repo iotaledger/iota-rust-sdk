@@ -5559,7 +5559,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate() != 47736.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new() != 37856.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new() != 32825.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes() != 60002.toShort()) {
@@ -25517,7 +25517,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     }
     constructor(`bytes`: kotlin.ByteArray) :
         this(
-    uniffiRustCall() { _status ->
+    uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
         FfiConverterByteArray.lower(`bytes`),_status)
 }

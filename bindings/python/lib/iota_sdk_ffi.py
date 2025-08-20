@@ -1301,7 +1301,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate() != 47736:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new() != 37856:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new() != 32825:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes() != 60002:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -27923,7 +27923,7 @@ class Secp256r1PrivateKey():
     def __init__(self, bytes: "bytes"):
         _UniffiConverterBytes.check_lower(bytes)
         
-        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new,
+        self._pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new,
         _UniffiConverterBytes.lower(bytes))
 
     def __del__(self):

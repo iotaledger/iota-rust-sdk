@@ -20,10 +20,12 @@ pub struct Secp256r1PrivateKey(pub iota_crypto::secp256r1::Secp256r1PrivateKey);
 #[uniffi::export]
 impl Secp256r1PrivateKey {
     #[uniffi::constructor]
-    pub fn new(bytes: Vec<u8>) -> Self {
-        Self(iota_crypto::secp256r1::Secp256r1PrivateKey::new(
-            bytes.try_into().unwrap(),
-        ))
+    pub fn new(bytes: Vec<u8>) -> Result<Self, SdkFfiError> {
+        Ok(Self(iota_crypto::secp256r1::Secp256r1PrivateKey::new(
+            bytes.try_into().map_err(|v: Vec<u8>| {
+                SdkFfiError::custom(format!("expected bytes of length 32, found {}", v.len()))
+            })?,
+        )))
     }
 
     pub fn scheme(&self) -> SignatureScheme {
