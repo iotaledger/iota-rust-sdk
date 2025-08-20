@@ -79,9 +79,7 @@ impl Secp256r1PrivateKey {
     /// format).
     #[uniffi::constructor]
     pub fn from_der(bytes: Vec<u8>) -> Result<Self> {
-        iota_crypto::secp256r1::Secp256r1PrivateKey::from_der(&bytes)
-            .map(Self)
-            .map_err(SdkFfiError::custom)
+        Ok(iota_crypto::secp256r1::Secp256r1PrivateKey::from_der(&bytes)?.into())
     }
 
     /// Serialize this private key as DER-encoded PKCS#8
