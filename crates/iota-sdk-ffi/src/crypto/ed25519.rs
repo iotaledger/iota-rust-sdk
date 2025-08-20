@@ -45,9 +45,7 @@ impl Ed25519PrivateKey {
     /// format).
     #[uniffi::constructor]
     pub fn from_der(bytes: &[u8]) -> Result<Self> {
-        iota_crypto::ed25519::Ed25519PrivateKey::from_der(bytes)
-            .map(Self)
-            .map_err(SdkFfiError::custom)
+        Ok(iota_crypto::ed25519::Ed25519PrivateKey::from_der(bytes)?.into())
     }
 
     /// Serialize this private key as DER-encoded PKCS#8
@@ -58,9 +56,7 @@ impl Ed25519PrivateKey {
     /// Deserialize PKCS#8-encoded private key from PEM.
     #[uniffi::constructor]
     pub fn from_pem(s: &str) -> Result<Self> {
-        iota_crypto::ed25519::Ed25519PrivateKey::from_pem(s)
-            .map(Self)
-            .map_err(SdkFfiError::custom)
+        Ok(iota_crypto::ed25519::Ed25519PrivateKey::from_pem(s)?.into())
     }
 
     /// Serialize this private key as PEM-encoded PKCS#8
@@ -112,9 +108,7 @@ impl Ed25519VerifyingKey {
     /// Deserialize public key from ASN.1 DER-encoded data (binary format).
     #[uniffi::constructor]
     pub fn from_der(bytes: &[u8]) -> Result<Self> {
-        iota_crypto::ed25519::Ed25519VerifyingKey::from_der(bytes)
-            .map(Self)
-            .map_err(SdkFfiError::custom)
+        Ok(iota_crypto::ed25519::Ed25519VerifyingKey::from_der(bytes)?.into())
     }
 
     /// Serialize this public key as DER-encoded data
@@ -125,9 +119,7 @@ impl Ed25519VerifyingKey {
     /// Deserialize public key from PEM.
     #[uniffi::constructor]
     pub fn from_pem(s: &str) -> Result<Self> {
-        iota_crypto::ed25519::Ed25519VerifyingKey::from_pem(s)
-            .map(Self)
-            .map_err(SdkFfiError::custom)
+        Ok(iota_crypto::ed25519::Ed25519VerifyingKey::from_pem(s)?.into())
     }
 
     /// Serialize this public key into PEM format
