@@ -98,7 +98,7 @@ impl Secp256r1PrivateKey {
 
     /// Serialize this private key as PEM-encoded PKCS#8
     pub fn to_pem(&self) -> Result<String> {
-        Ok(self.0.to_pem()?.into())
+        Ok(self.0.to_pem()?)
     }
 }
 
@@ -128,7 +128,7 @@ impl Secp256r1VerifyingKey {
 
     /// Serialize this public key as DER-encoded data.
     pub fn to_der(&self) -> Result<Vec<u8>> {
-        Ok(self.0.to_der()?.into())
+        Ok(self.0.to_der()?)
     }
 
     /// Deserialize public key from PEM.
@@ -139,7 +139,7 @@ impl Secp256r1VerifyingKey {
 
     /// Serialize this public key into PEM.
     pub fn to_pem(&self) -> Result<String> {
-        Ok(self.0.to_pem()?.into())
+        Ok(self.0.to_pem()?)
     }
 }
 
@@ -157,8 +157,7 @@ impl Secp256r1Verifier {
         Ok(
             <iota_crypto::secp256r1::Secp256r1Verifier as iota_crypto::Verifier<
                 iota_types::SimpleSignature,
-            >>::verify(&self.0, &message, &signature.0)?
-            .into(),
+            >>::verify(&self.0, &message, &signature.0)?,
         )
     }
 
@@ -166,8 +165,7 @@ impl Secp256r1Verifier {
         Ok(
             <iota_crypto::secp256r1::Secp256r1Verifier as iota_crypto::Verifier<
                 iota_types::UserSignature,
-            >>::verify(&self.0, &message, &signature.0)?
-            .into(),
+            >>::verify(&self.0, &message, &signature.0)?,
         )
     }
 }
