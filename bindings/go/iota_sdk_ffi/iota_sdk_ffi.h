@@ -1094,17 +1094,17 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_pem(void* ptr, Rus
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PRIVATEKEY_TRY_SIGN
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PRIVATEKEY_TRY_SIGN
-void* uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(void* ptr, RustBuffer msg, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(void* ptr, RustBuffer message, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PRIVATEKEY_TRY_SIGN_SIMPLE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PRIVATEKEY_TRY_SIGN_SIMPLE
-void* uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(void* ptr, RustBuffer msg, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(void* ptr, RustBuffer message, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PRIVATEKEY_TRY_SIGN_USER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PRIVATEKEY_TRY_SIGN_USER
-void* uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(void* ptr, RustBuffer msg, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(void* ptr, RustBuffer message, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PRIVATEKEY_VERIFYING_KEY

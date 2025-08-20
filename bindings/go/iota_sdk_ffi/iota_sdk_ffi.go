@@ -830,7 +830,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign()
 	})
-	if checksum != 30814 {
+	if checksum != 39795 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign: UniFFI API checksum mismatch")
 	}
@@ -839,7 +839,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple()
 	})
-	if checksum != 30540 {
+	if checksum != 56024 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple: UniFFI API checksum mismatch")
 	}
@@ -848,7 +848,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user()
 	})
-	if checksum != 22313 {
+	if checksum != 42020 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user: UniFFI API checksum mismatch")
 	}
@@ -7684,9 +7684,9 @@ type Ed25519PrivateKeyInterface interface {
 	ToDer() ([]byte, error)
 	// Serialize this private key as PEM-encoded PKCS#8
 	ToPem() (string, error)
-	TrySign(msg []byte) (*Ed25519Signature, error)
-	TrySignSimple(msg []byte) (*SimpleSignature, error)
-	TrySignUser(msg []byte) (*UserSignature, error)
+	TrySign(message []byte) (*Ed25519Signature, error)
+	TrySignSimple(message []byte) (*SimpleSignature, error)
+	TrySignUser(message []byte) (*UserSignature, error)
 	VerifyingKey() *Ed25519VerifyingKey
 }
 type Ed25519PrivateKey struct {
@@ -7796,12 +7796,12 @@ func (_self *Ed25519PrivateKey) ToPem() (string, error) {
 		}
 }
 
-func (_self *Ed25519PrivateKey) TrySign(msg []byte) (*Ed25519Signature, error) {
+func (_self *Ed25519PrivateKey) TrySign(message []byte) (*Ed25519Signature, error) {
 	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
 	defer _self.ffiObject.decrementPointer()
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(
-		_pointer,FfiConverterBytesINSTANCE.Lower(msg),_uniffiStatus)
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Ed25519Signature
@@ -7811,12 +7811,12 @@ func (_self *Ed25519PrivateKey) TrySign(msg []byte) (*Ed25519Signature, error) {
 		}
 }
 
-func (_self *Ed25519PrivateKey) TrySignSimple(msg []byte) (*SimpleSignature, error) {
+func (_self *Ed25519PrivateKey) TrySignSimple(message []byte) (*SimpleSignature, error) {
 	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
 	defer _self.ffiObject.decrementPointer()
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(
-		_pointer,FfiConverterBytesINSTANCE.Lower(msg),_uniffiStatus)
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *SimpleSignature
@@ -7826,12 +7826,12 @@ func (_self *Ed25519PrivateKey) TrySignSimple(msg []byte) (*SimpleSignature, err
 		}
 }
 
-func (_self *Ed25519PrivateKey) TrySignUser(msg []byte) (*UserSignature, error) {
+func (_self *Ed25519PrivateKey) TrySignUser(message []byte) (*UserSignature, error) {
 	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
 	defer _self.ffiObject.decrementPointer()
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(
-		_pointer,FfiConverterBytesINSTANCE.Lower(msg),_uniffiStatus)
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *UserSignature

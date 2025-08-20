@@ -3151,11 +3151,11 @@ fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_der(`ptr`: Pointer,uniffi
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_pem(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(`ptr`: Pointer,`msg`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(`ptr`: Pointer,`message`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(`ptr`: Pointer,`msg`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(`ptr`: Pointer,`message`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(`ptr`: Pointer,`msg`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -4449,13 +4449,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem() != 34166.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign() != 30814.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign() != 39795.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple() != 30540.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple() != 56024.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user() != 22313.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user() != 42020.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key() != 59162.toShort()) {
@@ -12586,11 +12586,11 @@ public interface Ed25519PrivateKeyInterface {
      */
     fun `toPem`(): kotlin.String
     
-    fun `trySign`(`msg`: kotlin.ByteArray): Ed25519Signature
+    fun `trySign`(`message`: kotlin.ByteArray): Ed25519Signature
     
-    fun `trySignSimple`(`msg`: kotlin.ByteArray): SimpleSignature
+    fun `trySignSimple`(`message`: kotlin.ByteArray): SimpleSignature
     
-    fun `trySignUser`(`msg`: kotlin.ByteArray): UserSignature
+    fun `trySignUser`(`message`: kotlin.ByteArray): UserSignature
     
     fun `verifyingKey`(): Ed25519VerifyingKey
     
@@ -12743,12 +12743,12 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
     
 
     
-    @Throws(SdkFfiException::class)override fun `trySign`(`msg`: kotlin.ByteArray): Ed25519Signature {
+    @Throws(SdkFfiException::class)override fun `trySign`(`message`: kotlin.ByteArray): Ed25519Signature {
             return FfiConverterTypeEd25519Signature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(
-        it, FfiConverterByteArray.lower(`msg`),_status)
+        it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
     )
@@ -12756,12 +12756,12 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
     
 
     
-    @Throws(SdkFfiException::class)override fun `trySignSimple`(`msg`: kotlin.ByteArray): SimpleSignature {
+    @Throws(SdkFfiException::class)override fun `trySignSimple`(`message`: kotlin.ByteArray): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(
-        it, FfiConverterByteArray.lower(`msg`),_status)
+        it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
     )
@@ -12769,12 +12769,12 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
     
 
     
-    @Throws(SdkFfiException::class)override fun `trySignUser`(`msg`: kotlin.ByteArray): UserSignature {
+    @Throws(SdkFfiException::class)override fun `trySignUser`(`message`: kotlin.ByteArray): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(
-        it, FfiConverterByteArray.lower(`msg`),_status)
+        it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
     )
