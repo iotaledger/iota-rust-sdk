@@ -132,7 +132,7 @@ impl TransactionBuilder {
     ///
     /// The return value is a result argument that can be used in subsequent
     /// commands. If the move call returns multiple results, you can access
-    /// them using the [`Argument::nested`] method.
+    /// them using the [`Argument::get_nested_result`] method.
     pub fn move_call(&mut self, function: Function, arguments: Vec<Argument>) -> Argument {
         let cmd = Command::MoveCall(MoveCall {
             package: function.package.into(),
@@ -154,7 +154,8 @@ impl TransactionBuilder {
 
     /// Split a coin by the provided amounts, returning multiple results (as
     /// many as there are amounts). To access the results, use the
-    /// [`Argument::nested`] method to access the desired coin by its index.
+    /// [`Argument::get_nested_result`] method to access the desired coin by its
+    /// index.
     pub fn split_coins(&mut self, coin: Argument, amounts: Vec<Argument>) -> Argument {
         let cmd = Command::SplitCoins(SplitCoins { coin, amounts });
         self.commands.push(cmd);

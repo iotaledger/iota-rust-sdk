@@ -22,7 +22,6 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
     Success,
-
     /// The Transaction didn't execute successfully.
     ///
     /// Failed transactions are still committed to the blockchain but any
@@ -667,19 +666,14 @@ pub enum CommandArgumentError {
 pub enum PackageUpgradeError {
     /// Unable to fetch package
     UnableToFetchPackage { package_id: Arc<ObjectId> },
-
     /// Object is not a package
     NotAPackage { object_id: Arc<ObjectId> },
-
     /// Package upgrade is incompatible with previous version
     IncompatibleUpgrade,
-
     /// Digest in upgrade ticket and computed digest differ
     DigestDoesNotMatch { digest: Arc<Digest> },
-
     /// Upgrade policy is not valid
     UnknownUpgradePolicy { policy: u8 },
-
     /// PackageId does not matach PackageId in upgrade ticket
     PackageIdDoesNotMatch {
         package_id: Arc<ObjectId>,
