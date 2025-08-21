@@ -48,19 +48,6 @@ struct RawBytes(Vec<u8>);
 /// A transaction input that will be serialized from BCS.
 pub struct Serialized<'a, T: Serialize>(pub &'a T);
 
-/// A separate type to support denoting a function by a more structured
-/// representation.
-pub struct Function {
-    /// The package that contains the module with the function.
-    package: Address,
-    /// The module that contains the function.
-    module: Identifier,
-    /// The function name.
-    function: Identifier,
-    /// The type arguments for the function.
-    type_args: Vec<TypeTag>,
-}
-
 /// A transaction builder to build transactions.
 impl TransactionBuilder {
     /// Create a new transaction builder and initialize its elements to default.
@@ -331,6 +318,19 @@ impl TransactionBuilder {
             expiration: self.expiration,
         })
     }
+}
+
+/// A separate type to support denoting a function by a more structured
+/// representation.
+pub struct Function {
+    /// The package that contains the module with the function.
+    pub package: Address,
+    /// The module that contains the function.
+    pub module: Identifier,
+    /// The function name.
+    pub function: Identifier,
+    /// The type arguments for the function.
+    pub type_args: Vec<TypeTag>,
 }
 
 impl Function {

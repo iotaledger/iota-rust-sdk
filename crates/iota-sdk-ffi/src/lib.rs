@@ -110,6 +110,7 @@ mod crypto;
 mod error;
 mod faucet;
 mod graphql;
+mod transaction_builder;
 mod types;
 mod uniffi_helpers;
 

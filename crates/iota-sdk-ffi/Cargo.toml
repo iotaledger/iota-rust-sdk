@@ -21,4 +21,5 @@ uniffi = { version = "0.29", features = ["cli", "tokio"] }
 
 iota-crypto = { version = "0.0.1", path = "../iota-crypto", features = ["ed25519", "secp256r1", "passkey", "secp256k1", "zklogin", "pem"] }
 iota-graphql-client = { version = "0.0.1", path = "../iota-graphql-client" }
+iota-transaction-builder = { version = "0.0.1", path = "../iota-transaction-builder" }
 iota-types = { package = "iota-sdk-types", version = "0.0.1", path = "../iota-sdk-types", features = ["hash", "rand"] }

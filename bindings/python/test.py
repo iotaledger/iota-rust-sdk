@@ -17,7 +17,7 @@ async def main():
         PaginationFilter(direction=Direction.FORWARD, cursor=None, limit=None),
     )
     for coin in coins.data:
-        print(f"ID = 0x{coin.id().to_hex()} Balance = {coin.balance()}")
+        print(f"ID = {coin.id().to_hex()} Balance = {coin.balance()}")
 
     balance = await client.balance(my_address)
 
@@ -89,6 +89,44 @@ async def main():
         type_origin_table=[type_origin],
         linkage_table={id: upgrade_info},
     )
+
+    builder = TransactionBuilder()
+    framework_addr = Address.from_hex(
+        "0x0000000000000000000000000000000000000000000000000000000000000002"
+    )
+    builder.move_call(
+        Function(
+            package=framework_addr,
+            module=Identifier("coin"),
+            function=Identifier("value"),
+            type_args=[
+                TypeTag.new_struct(
+                    StructTag(
+                        framework_addr, Identifier("iota"), Identifier("IOTA"), []
+                    )
+                )
+            ],
+        ),
+        [Argument.new_input(0)],
+    )
+    builder.set_sender(my_address)
+    builder.set_gas_budget(50000000)
+    builder.set_gas_price(await client.reference_gas_price() or 100)
+    coin_0 = await client.object(coins.data[0].id())
+    if coin_0 is None:
+        raise InternalError
+    coin_1 = await client.object(coins.data[1].id())
+    if coin_1 is None:
+        raise InternalError
+    builder.input(UnresolvedInput.from_object(coin_0).with_owned_kind())
+    builder.add_gas_objects([UnresolvedInput.from_object(coin_1).with_owned_kind()])
+    txn = builder.finish()
+
+    res = await client.dry_run_tx(txn)
+    if res.error is not None:
+        print(res.error)
+    elif res.effects is not None:
+        print(res.effects.as_v1())
 
 
 if __name__ == "__main__":
