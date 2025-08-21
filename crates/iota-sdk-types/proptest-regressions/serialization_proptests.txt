@@ -1,7 +1,0 @@
-# Seeds for failure cases proptest has generated in the past. It is
-# automatically read and these particular cases re-run before any
-# novel cases are generated.
-#
-# It is recommended to check this file in to source control so that
-# everyone who runs the test benefits from these saved cases.
-cc 8a6723e6813cd5d9b2dc0ad6c3405635c53c7b7eb4cb91c9da2ba179d3f9e1e3 # shrinks to input = _TestValidJsonSchemaChangedObjectArgs { instance: ChangedObject { object_id: ObjectId(Address("0x0000000000000000000000000000000000000000000000000000000000000000")), input_state: Data { version: 0, digest: ObjectDigest("11111111111111111111111111111111"), owner: Address(Address("0x000000000000000000000000000000000000000000000000000000000000000f")) }, output_state: PackageWrite { version: 3031647525582358184, digest: ObjectDigest("CRGoN1jmAKYSirRGuhqJzKVrFcMVfShEJE4Vzxq5Hcm6") }, id_operation: None } }
