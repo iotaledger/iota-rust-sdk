@@ -36,6 +36,28 @@ pub enum ExecutionStatus {
     },
 }
 
+impl ExecutionStatus {
+    crate::def_is!(Success, Failure);
+
+    /// The error encountered during execution.
+    pub fn error(&self) -> Option<&ExecutionError> {
+        if let Self::Failure { error, .. } = self {
+            Some(error)
+        } else {
+            None
+        }
+    }
+
+    /// The command, if any, during which the error occurred.
+    pub fn error_command(&self) -> Option<u64> {
+        if let Self::Failure { command, .. } = self {
+            *command
+        } else {
+            None
+        }
+    }
+}
+
 /// An error that can occur during the execution of a transaction
 ///
 /// # BCS
@@ -128,7 +150,6 @@ pub enum ExecutionStatus {
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum ExecutionError {
-    // General transaction errors
     /// Insufficient Gas
     InsufficientGas,
     /// Invalid Gas Object.
@@ -153,22 +174,15 @@ pub enum ExecutionError {
     },
     /// Circular Object Ownership
     CircularObjectOwnership { object: ObjectId },
-
-    // Coin errors
     /// Insufficient coin balance for requested operation
     InsufficientCoinBalance,
     /// Coin balance overflowed an u64
     CoinBalanceOverflow,
-
-    // Publish/Upgrade errors
     /// Publish Error, Non-zero Address.
     /// The modules in the package must have their self-addresses set to zero.
     PublishErrorNonZeroAddress,
-
     /// IOTA Move Bytecode Verification Error.
     IotaMoveVerificationError,
-
-    // MoveVm Errors
     /// Error from a non-abort instruction.
     /// Possible causes:
     ///     Arithmetic error, stack overflow, max value depth, etc."
@@ -183,8 +197,6 @@ pub enum ExecutionError {
     VmVerificationOrDeserializationError,
     /// MoveVm invariant violation
     VmInvariantViolation,
-
-    // Programmable Transaction Errors
     /// Function not found
     FunctionNotFound,
     /// Arity mismatch for Move function.
@@ -213,8 +225,6 @@ pub enum ExecutionError {
     InvalidPublicFunctionReturnType { index: u16 },
     /// Invalid Transfer Object, object does not have public transfer.
     InvalidTransferObject,
-
-    // Post-execution errors
     /// Effects from the transaction are too large
     EffectsTooLarge {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -222,21 +232,17 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         max_size: u64,
     },
-
     /// Publish or Upgrade is missing dependency
     PublishUpgradeMissingDependency,
-
     /// Publish or Upgrade dependency downgrade.
     ///
     /// Indirect (transitive) dependency of published or upgraded package has
     /// been assigned an on-chain version that is less than the version
     /// required by one of the package's transitive dependencies.
     PublishUpgradeDependencyDowngrade,
-
     /// Invalid package upgrade
     #[cfg_attr(feature = "schemars", schemars(title = "PackageUpgradeError"))]
     PackageUpgradeError { kind: PackageUpgradeError },
-
     /// Indicates the transaction tried to write objects too large to storage
     WrittenObjectsTooLarge {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -244,42 +250,76 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         max_object_size: u64,
     },
-
     /// Certificate is on the deny list
     CertificateDenied,
-
     /// IOTA Move Bytecode verification timed out.
     IotaMoveVerificationTimeout,
-
     /// The requested shared object operation is not allowed
     SharedObjectOperationNotAllowed,
-
     /// Requested shared object has been deleted
     InputObjectDeleted,
-
     /// Certificate is cancelled due to congestion on shared objects
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
-
     /// Certificate is cancelled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
     ExecutionCancelledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<ObjectId>,
         suggested_gas_price: u64,
     },
-
     /// Address is denied for this coin type
     AddressDeniedForCoin { address: Address, coin_type: String },
-
     /// Coin type is globally paused for use
     CoinTypeGlobalPause { coin_type: String },
-
     /// Certificate is cancelled because randomness could not be generated this
     /// epoch
     ExecutionCancelledDueToRandomnessUnavailable,
-
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
     InvalidLinkage,
+}
+
+impl ExecutionError {
+    crate::def_is!(
+        InsufficientGas,
+        InvalidGasObject,
+        InvariantViolation,
+        FeatureNotYetSupported,
+        ObjectTooBig,
+        PackageTooBig,
+        CircularObjectOwnership,
+        InsufficientCoinBalance,
+        CoinBalanceOverflow,
+        PublishErrorNonZeroAddress,
+        IotaMoveVerificationError,
+        MovePrimitiveRuntimeError,
+        MoveAbort,
+        VmVerificationOrDeserializationError,
+        VmInvariantViolation,
+        FunctionNotFound,
+        ArityMismatch,
+        TypeArityMismatch,
+        NonEntryFunctionInvoked,
+        CommandArgumentError,
+        TypeArgumentError,
+        UnusedValueWithoutDrop,
+        InvalidPublicFunctionReturnType,
+        InvalidTransferObject,
+        EffectsTooLarge,
+        PublishUpgradeMissingDependency,
+        PublishUpgradeDependencyDowngrade,
+        PackageUpgradeError,
+        WrittenObjectsTooLarge,
+        CertificateDenied,
+        IotaMoveVerificationTimeout,
+        SharedObjectOperationNotAllowed,
+        InputObjectDeleted,
+        ExecutionCancelledDueToSharedObjectCongestion,
+        ExecutionCancelledDueToSharedObjectCongestionV2,
+        AddressDeniedForCoin,
+        CoinTypeGlobalPause,
+        ExecutionCancelledDueToRandomnessUnavailable,
+        InvalidLinkage,
+    );
 }
 
 /// Location in move bytecode where an error occurred
@@ -359,46 +399,52 @@ pub struct MoveLocation {
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
     TypeMismatch,
-
     /// The argument cannot be deserialized into a value of the specified type
     InvalidBcsBytes,
-
     /// The argument cannot be instantiated from raw bytes
     InvalidUsageOfPureArgument,
-
     /// Invalid argument to private entry function.
     /// Private entry functions cannot take arguments from other Move functions.
     InvalidArgumentToPrivateEntryFunction,
-
     /// Out of bounds access to input or results
     IndexOutOfBounds { index: u16 },
-
     /// Out of bounds access to subresult
     SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
-
     /// Invalid usage of result.
     /// Expected a single result but found either no return value or multiple.
     InvalidResultArity { result: u16 },
-
     /// Invalid usage of Gas coin.
     /// The Gas coin can only be used by-value with a TransferObjects command.
     InvalidGasCoinUsage,
-
     /// Invalid usage of move value.
     //     Mutably borrowed values require unique usage.
     //     Immutably borrowed values cannot be taken or borrowed mutably.
     //     Taken values cannot be used again.
     InvalidValueUsage,
-
     /// Immutable objects cannot be passed by-value.
     InvalidObjectByValue,
-
     /// Immutable objects cannot be passed by mutable reference, &mut.
     InvalidObjectByMutRef,
-
     /// Shared object operations such a wrapping, freezing, or converting to
     /// owned are not allowed.
     SharedObjectOperationNotAllowed,
+}
+
+impl CommandArgumentError {
+    crate::def_is!(
+        TypeMismatch,
+        InvalidBcsBytes,
+        InvalidUsageOfPureArgument,
+        InvalidArgumentToPrivateEntryFunction,
+        IndexOutOfBounds,
+        SecondaryIndexOutOfBounds,
+        InvalidResultArity,
+        InvalidGasCoinUsage,
+        InvalidValueUsage,
+        InvalidObjectByValue,
+        InvalidObjectByMutRef,
+        SharedObjectOperationNotAllowed,
+    );
 }
 
 /// An error with a upgrading a package
@@ -432,24 +478,30 @@ pub enum CommandArgumentError {
 pub enum PackageUpgradeError {
     /// Unable to fetch package
     UnableToFetchPackage { package_id: ObjectId },
-
     /// Object is not a package
     NotAPackage { object_id: ObjectId },
-
     /// Package upgrade is incompatible with previous version
     IncompatibleUpgrade,
-
     /// Digest in upgrade ticket and computed digest differ
     DigestDoesNotMatch { digest: Digest },
-
     /// Upgrade policy is not valid
     UnknownUpgradePolicy { policy: u8 },
-
     /// PackageId does not matach PackageId in upgrade ticket
     PackageIdDoesNotMatch {
         package_id: ObjectId,
         ticket_id: ObjectId,
     },
+}
+
+impl PackageUpgradeError {
+    crate::def_is!(
+        UnableToFetchPackage,
+        NotAPackage,
+        IncompatibleUpgrade,
+        DigestDoesNotMatch,
+        UnknownUpgradePolicy,
+        PackageIdDoesNotMatch,
+    );
 }
 
 /// An error with a type argument
@@ -478,9 +530,12 @@ pub enum PackageUpgradeError {
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
     TypeNotFound,
-
     /// A type provided did not match the specified constraint
     ConstraintNotSatisfied,
+}
+
+impl TypeArgumentError {
+    crate::def_is!(TypeNotFound, ConstraintNotSatisfied);
 }
 
 #[cfg(feature = "serde")]

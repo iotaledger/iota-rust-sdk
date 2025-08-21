@@ -150,15 +150,11 @@ pub struct CheckpointCommitment(pub iota_types::CheckpointCommitment);
 #[uniffi::export]
 impl CheckpointCommitment {
     pub fn is_ecmh_live_object_set(&self) -> bool {
-        matches!(
-            self.0,
-            iota_types::CheckpointCommitment::EcmhLiveObjectSet { .. }
-        )
+        self.0.is_ecmh_live_object_set()
     }
 
     pub fn as_ecmh_live_object_set_digest(&self) -> Digest {
-        let iota_types::CheckpointCommitment::EcmhLiveObjectSet { digest } = self.0.clone();
-        digest.into()
+        self.0.as_ecmh_live_object_set_digest().into()
     }
 }
 
