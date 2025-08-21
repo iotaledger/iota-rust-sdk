@@ -41,31 +41,19 @@ impl Secp256r1PrivateKey {
     /// Sign a message and return a Secp256r1Signature.
     pub fn try_sign(&self, message: &[u8]) -> Result<Secp256r1Signature> {
         Ok(
-            <iota_crypto::secp256r1::Secp256r1PrivateKey as iota_crypto::Signer<
-                iota_types::Secp256r1Signature,
-            >>::try_sign(&self.0, message)?
-            .into(),
+            iota_crypto::Signer::<iota_types::Secp256r1Signature>::try_sign(&self.0, message)?
+                .into(),
         )
     }
 
     /// Sign a message and return a SimpleSignature.
     pub fn try_sign_simple(&self, message: &[u8]) -> Result<SimpleSignature> {
-        Ok(
-            <iota_crypto::secp256r1::Secp256r1PrivateKey as iota_crypto::Signer<
-                iota_types::SimpleSignature,
-            >>::try_sign(&self.0, message)?
-            .into(),
-        )
+        Ok(iota_crypto::Signer::<iota_types::SimpleSignature>::try_sign(&self.0, message)?.into())
     }
 
     /// Sign a message and return a UserSignature.
     pub fn try_sign_user(&self, message: &[u8]) -> Result<UserSignature> {
-        Ok(
-            <iota_crypto::secp256r1::Secp256r1PrivateKey as iota_crypto::Signer<
-                iota_types::UserSignature,
-            >>::try_sign(&self.0, message)?
-            .into(),
-        )
+        Ok(iota_crypto::Signer::<iota_types::UserSignature>::try_sign(&self.0, message)?.into())
     }
 
     pub fn verifying_key(&self) -> Secp256r1VerifyingKey {
@@ -155,17 +143,19 @@ impl Secp256r1Verifier {
 
     pub fn verify_simple(&self, message: Vec<u8>, signature: &SimpleSignature) -> Result<()> {
         Ok(
-            <iota_crypto::secp256r1::Secp256r1Verifier as iota_crypto::Verifier<
-                iota_types::SimpleSignature,
-            >>::verify(&self.0, &message, &signature.0)?,
+            iota_crypto::Verifier::<iota_types::SimpleSignature>::verify(
+                &self.0,
+                &message,
+                &signature.0,
+            )?,
         )
     }
 
     pub fn verify_user(&self, message: Vec<u8>, signature: &UserSignature) -> Result<()> {
-        Ok(
-            <iota_crypto::secp256r1::Secp256r1Verifier as iota_crypto::Verifier<
-                iota_types::UserSignature,
-            >>::verify(&self.0, &message, &signature.0)?,
-        )
+        Ok(iota_crypto::Verifier::<iota_types::UserSignature>::verify(
+            &self.0,
+            &message,
+            &signature.0,
+        )?)
     }
 }
