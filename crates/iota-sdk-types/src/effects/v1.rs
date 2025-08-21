@@ -79,6 +79,23 @@ pub struct TransactionEffectsV1 {
     pub auxiliary_data_digest: Option<EffectsAuxiliaryDataDigest>,
 }
 
+impl TransactionEffectsV1 {
+    /// The status of the execution
+    pub fn status(&self) -> &ExecutionStatus {
+        &self.status
+    }
+
+    /// The epoch when this transaction was executed.
+    pub fn epoch(&self) -> EpochId {
+        self.epoch
+    }
+
+    /// The gas used in this transaction.
+    pub fn gas_summary(&self) -> &GasCostSummary {
+        &self.gas_used
+    }
+}
+
 /// Input/output state of an object that was changed during execution
 ///
 /// # BCS
@@ -167,7 +184,6 @@ pub enum UnchangedSharedKind {
         version: Version,
         digest: ObjectDigest,
     },
-
     /// Deleted shared objects that appear mutably/owned in the input.
     MutateDeleted {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -189,21 +205,31 @@ pub enum UnchangedSharedKind {
     PerEpochConfig,
 }
 
+impl UnchangedSharedKind {
+    crate::def_is!(
+        ReadOnlyRoot,
+        MutateDeleted,
+        ReadDeleted,
+        Cancelled,
+        PerEpochConfig
+    );
+}
+
 /// State of an object prior to execution
 ///
 /// If an object exists (at root-level) in the store prior to this transaction,
-/// it should be Exist, otherwise it's NonExist, e.g. wrapped objects should be
-/// NonExist.
+/// it should be Data, otherwise it's Missing, e.g. wrapped objects should be
+/// Missing.
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-in = object-in-not-exist / object-in-exist
+/// object-in = object-in-missing / object-in-data
 ///
-/// object-in-not-exist = %x00
-/// object-in-exist     = %x01 u64 digest owner
+/// object-in-missing = %x00
+/// object-in-data    = %x01 u64 digest owner
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -213,15 +239,54 @@ pub enum UnchangedSharedKind {
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum ObjectIn {
-    NotExist,
-
+    Missing,
     /// The old version, digest and owner.
-    Exist {
+    Data {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         digest: ObjectDigest,
         owner: Owner,
     },
+}
+
+impl ObjectIn {
+    crate::def_is!(Missing, Data);
+
+    pub fn version_opt(&self) -> Option<Version> {
+        if let Self::Data { version, .. } = self {
+            Some(*version)
+        } else {
+            None
+        }
+    }
+
+    pub fn version(&self) -> Version {
+        self.version_opt().expect("object does not exist")
+    }
+
+    pub fn digest_opt(&self) -> Option<ObjectDigest> {
+        if let Self::Data { digest, .. } = self {
+            Some(*digest)
+        } else {
+            None
+        }
+    }
+
+    pub fn digest(&self) -> ObjectDigest {
+        self.digest_opt().expect("object does not exist")
+    }
+
+    pub fn owner_opt(&self) -> Option<Owner> {
+        if let Self::Data { owner, .. } = self {
+            Some(*owner)
+        } else {
+            None
+        }
+    }
+
+    pub fn owner(&self) -> Owner {
+        self.owner_opt().expect("object does not exist")
+    }
 }
 
 /// State of an object after execution
@@ -231,14 +296,14 @@ pub enum ObjectIn {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-out  =  object-out-not-exist
+/// object-out  =  object-out-missing
 ///             =/ object-out-object-write
 ///             =/ object-out-package-write
 ///
 ///
-/// object-out-not-exist        = %x00
-/// object-out-object-write     = %x01 digest owner
-/// object-out-package-write    = %x02 version digest
+/// object-out-missing        = %x00
+/// object-out-object-write   = %x01 digest owner
+/// object-out-package-write  = %x02 version digest
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -249,11 +314,9 @@ pub enum ObjectIn {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
-    NotExist,
-
+    Missing,
     /// Any written object, including all of mutated, created, unwrapped today.
     ObjectWrite { digest: ObjectDigest, owner: Owner },
-
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
     PackageWrite {
@@ -261,6 +324,58 @@ pub enum ObjectOut {
         version: Version,
         digest: ObjectDigest,
     },
+}
+
+impl ObjectOut {
+    crate::def_is!(Missing, ObjectWrite, PackageWrite);
+
+    pub fn object_digest_opt(&self) -> Option<ObjectDigest> {
+        if let Self::ObjectWrite { digest, .. } = self {
+            Some(*digest)
+        } else {
+            None
+        }
+    }
+
+    pub fn object_digest(&self) -> ObjectDigest {
+        self.object_digest_opt().expect("object does not exist")
+    }
+
+    pub fn object_owner_opt(&self) -> Option<Owner> {
+        if let Self::ObjectWrite { owner, .. } = self {
+            Some(*owner)
+        } else {
+            None
+        }
+    }
+
+    pub fn object_owner(&self) -> Owner {
+        self.object_owner_opt().expect("object does not exist")
+    }
+
+    pub fn package_version_opt(&self) -> Option<Version> {
+        if let Self::PackageWrite { version, .. } = self {
+            Some(*version)
+        } else {
+            None
+        }
+    }
+
+    pub fn package_version(&self) -> Version {
+        self.package_version_opt().expect("object does not exist")
+    }
+
+    pub fn package_digest_opt(&self) -> Option<ObjectDigest> {
+        if let Self::PackageWrite { digest, .. } = self {
+            Some(*digest)
+        } else {
+            None
+        }
+    }
+
+    pub fn package_digest(&self) -> ObjectDigest {
+        self.package_digest_opt().expect("package does not exist")
+    }
 }
 
 /// Defines what happened to an ObjectId during execution
@@ -292,21 +407,8 @@ pub enum IdOperation {
     Deleted,
 }
 
-impl TransactionEffectsV1 {
-    /// The status of the execution
-    pub fn status(&self) -> &ExecutionStatus {
-        &self.status
-    }
-
-    /// The epoch when this transaction was executed.
-    pub fn epoch(&self) -> EpochId {
-        self.epoch
-    }
-
-    /// The gas used in this transaction.
-    pub fn gas_summary(&self) -> &GasCostSummary {
-        &self.gas_used
-    }
+impl IdOperation {
+    crate::def_is!(None, Created, Deleted);
 }
 
 #[cfg(feature = "serde")]
@@ -629,8 +731,8 @@ mod serialization {
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
     enum ReadableObjectIn {
-        NotExist,
-        Exist {
+        Missing,
+        Data {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             version: Version,
             digest: ObjectDigest,
@@ -640,8 +742,8 @@ mod serialization {
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     enum BinaryObjectIn {
-        NotExist,
-        Exist {
+        Missing,
+        Data {
             version: Version,
             digest: ObjectDigest,
             owner: Owner,
@@ -655,12 +757,12 @@ mod serialization {
         {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
-                    ObjectIn::NotExist => ReadableObjectIn::NotExist,
-                    ObjectIn::Exist {
+                    ObjectIn::Missing => ReadableObjectIn::Missing,
+                    ObjectIn::Data {
                         version,
                         digest,
                         owner,
-                    } => ReadableObjectIn::Exist {
+                    } => ReadableObjectIn::Data {
                         version,
                         digest,
                         owner,
@@ -669,12 +771,12 @@ mod serialization {
                 readable.serialize(serializer)
             } else {
                 let binary = match self.clone() {
-                    ObjectIn::NotExist => BinaryObjectIn::NotExist,
-                    ObjectIn::Exist {
+                    ObjectIn::Missing => BinaryObjectIn::Missing,
+                    ObjectIn::Data {
                         version,
                         digest,
                         owner,
-                    } => BinaryObjectIn::Exist {
+                    } => BinaryObjectIn::Data {
                         version,
                         digest,
                         owner,
@@ -692,12 +794,12 @@ mod serialization {
         {
             if deserializer.is_human_readable() {
                 ReadableObjectIn::deserialize(deserializer).map(|readable| match readable {
-                    ReadableObjectIn::NotExist => Self::NotExist,
-                    ReadableObjectIn::Exist {
+                    ReadableObjectIn::Missing => Self::Missing,
+                    ReadableObjectIn::Data {
                         version,
                         digest,
                         owner,
-                    } => Self::Exist {
+                    } => Self::Data {
                         version,
                         digest,
                         owner,
@@ -705,12 +807,12 @@ mod serialization {
                 })
             } else {
                 BinaryObjectIn::deserialize(deserializer).map(|binary| match binary {
-                    BinaryObjectIn::NotExist => Self::NotExist,
-                    BinaryObjectIn::Exist {
+                    BinaryObjectIn::Missing => Self::Missing,
+                    BinaryObjectIn::Data {
                         version,
                         digest,
                         owner,
-                    } => Self::Exist {
+                    } => Self::Data {
                         version,
                         digest,
                         owner,
@@ -723,7 +825,7 @@ mod serialization {
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
     enum ReadableObjectOut {
-        NotExist,
+        Missing,
         ObjectWrite {
             digest: ObjectDigest,
             owner: Owner,
@@ -737,7 +839,7 @@ mod serialization {
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     enum BinaryObjectOut {
-        NotExist,
+        Missing,
         ObjectWrite {
             digest: ObjectDigest,
             owner: Owner,
@@ -756,7 +858,7 @@ mod serialization {
         {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
-                    ObjectOut::NotExist => ReadableObjectOut::NotExist,
+                    ObjectOut::Missing => ReadableObjectOut::Missing,
                     ObjectOut::ObjectWrite { digest, owner } => {
                         ReadableObjectOut::ObjectWrite { digest, owner }
                     }
@@ -767,7 +869,7 @@ mod serialization {
                 readable.serialize(serializer)
             } else {
                 let binary = match self.clone() {
-                    ObjectOut::NotExist => BinaryObjectOut::NotExist,
+                    ObjectOut::Missing => BinaryObjectOut::Missing,
                     ObjectOut::ObjectWrite { digest, owner } => {
                         BinaryObjectOut::ObjectWrite { digest, owner }
                     }
@@ -787,7 +889,7 @@ mod serialization {
         {
             if deserializer.is_human_readable() {
                 ReadableObjectOut::deserialize(deserializer).map(|readable| match readable {
-                    ReadableObjectOut::NotExist => Self::NotExist,
+                    ReadableObjectOut::Missing => Self::Missing,
                     ReadableObjectOut::ObjectWrite { digest, owner } => {
                         Self::ObjectWrite { digest, owner }
                     }
@@ -797,7 +899,7 @@ mod serialization {
                 })
             } else {
                 BinaryObjectOut::deserialize(deserializer).map(|binary| match binary {
-                    BinaryObjectOut::NotExist => Self::NotExist,
+                    BinaryObjectOut::Missing => Self::Missing,
                     BinaryObjectOut::ObjectWrite { digest, owner } => {
                         Self::ObjectWrite { digest, owner }
                     }
