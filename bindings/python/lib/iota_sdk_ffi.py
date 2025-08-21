@@ -555,9 +555,37 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes() != 14244:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key() != 55389:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme() != 8128:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der() != 61433:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem() != 34166:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign() != 39795:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple() != 56024:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user() != 42020:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key() != 59162:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes() != 16656:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() != 31911:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key() != 55026:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_der() != 56779:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_pem() != 56327:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify() != 24673:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple() != 29563:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user() != 43622:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_base58() != 56652:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1129,6 +1157,14 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() != 8094:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der() != 42838:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem() != 53776:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate() != 53932:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new() != 12862:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes() != 60403:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_str() != 38751:
@@ -1140,6 +1176,12 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_str() != 39607:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate() != 41607:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der() != 1677:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem() != 37214:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new() != 23280:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_effectsauxiliarydatadigest_from_base58() != 31144:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2153,6 +2195,78 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ed25519privatekey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ed25519privatekey.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_der.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_der.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_pem.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_pem.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519publickey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2211,6 +2325,77 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519verifier.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519verifier.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ed25519verifier.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ed25519verifier.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ed25519verifyingkey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ed25519verifyingkey.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_der.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_der.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_pem.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_pem.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_new.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_public_key.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_public_key.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_der.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_der.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_pem.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_pem.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_simple.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_simple.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_effectsauxiliarydatadigest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5066,12 +5251,54 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58.restype = ctypes
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_der.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_der.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_pem.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_pem.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_base58.restype = ctypes.c_uint16
@@ -5927,6 +6154,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes.restype = 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_digest_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_digest_generate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes.restype = ctypes.c_uint16
@@ -5945,6 +6184,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_str.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_effectsauxiliarydatadigest_from_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_effectsauxiliarydatadigest_from_base58.restype = ctypes.c_uint16
@@ -6482,6 +6730,12 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
+
+
+
+
 
 
 
@@ -20730,6 +20984,209 @@ class _UniffiConverterTypeDigest:
     @classmethod
     def write(cls, value: DigestProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class Ed25519PrivateKeyProtocol(typing.Protocol):
+    def public_key(self, ):
+        raise NotImplementedError
+    def scheme(self, ):
+        raise NotImplementedError
+    def to_der(self, ):
+        """
+        Serialize this private key as DER-encoded PKCS#8
+        """
+
+        raise NotImplementedError
+    def to_pem(self, ):
+        """
+        Serialize this private key as PEM-encoded PKCS#8
+        """
+
+        raise NotImplementedError
+    def try_sign(self, message: "bytes"):
+        raise NotImplementedError
+    def try_sign_simple(self, message: "bytes"):
+        raise NotImplementedError
+    def try_sign_user(self, message: "bytes"):
+        raise NotImplementedError
+    def verifying_key(self, ):
+        raise NotImplementedError
+# Ed25519PrivateKey is a Rust-only trait - it's a wrapper around a Rust implementation.
+class Ed25519PrivateKey():
+    _pointer: ctypes.c_void_p
+    def __init__(self, bytes: "bytes"):
+        _UniffiConverterBytes.check_lower(bytes)
+        
+        self._pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new,
+        _UniffiConverterBytes.lower(bytes))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ed25519privatekey, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def from_der(cls, bytes: "bytes"):
+        """
+        Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
+        format).
+        """
+
+        _UniffiConverterBytes.check_lower(bytes)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der,
+        _UniffiConverterBytes.lower(bytes))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_pem(cls, s: "str"):
+        """
+        Deserialize PKCS#8-encoded private key from PEM.
+        """
+
+        _UniffiConverterString.check_lower(s)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem,
+        _UniffiConverterString.lower(s))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def generate(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate,)
+        return cls._make_instance_(pointer)
+
+
+
+    def public_key(self, ) -> "Ed25519PublicKey":
+        return _UniffiConverterTypeEd25519PublicKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def scheme(self, ) -> "SignatureScheme":
+        return _UniffiConverterTypeSignatureScheme.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_der(self, ) -> "bytes":
+        """
+        Serialize this private key as DER-encoded PKCS#8
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_der,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_pem(self, ) -> "str":
+        """
+        Serialize this private key as PEM-encoded PKCS#8
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_pem,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def try_sign(self, message: "bytes") -> "Ed25519Signature":
+        _UniffiConverterBytes.check_lower(message)
+        
+        return _UniffiConverterTypeEd25519Signature.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign,self._uniffi_clone_pointer(),
+        _UniffiConverterBytes.lower(message))
+        )
+
+
+
+
+
+    def try_sign_simple(self, message: "bytes") -> "SimpleSignature":
+        _UniffiConverterBytes.check_lower(message)
+        
+        return _UniffiConverterTypeSimpleSignature.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple,self._uniffi_clone_pointer(),
+        _UniffiConverterBytes.lower(message))
+        )
+
+
+
+
+
+    def try_sign_user(self, message: "bytes") -> "UserSignature":
+        _UniffiConverterBytes.check_lower(message)
+        
+        return _UniffiConverterTypeUserSignature.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user,self._uniffi_clone_pointer(),
+        _UniffiConverterBytes.lower(message))
+        )
+
+
+
+
+
+    def verifying_key(self, ) -> "Ed25519VerifyingKey":
+        return _UniffiConverterTypeEd25519VerifyingKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeEd25519PrivateKey:
+
+    @staticmethod
+    def lift(value: int):
+        return Ed25519PrivateKey._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: Ed25519PrivateKey):
+        if not isinstance(value, Ed25519PrivateKey):
+            raise TypeError("Expected Ed25519PrivateKey instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: Ed25519PrivateKeyProtocol):
+        if not isinstance(value, Ed25519PrivateKey):
+            raise TypeError("Expected Ed25519PrivateKey instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: Ed25519PrivateKeyProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class Ed25519PublicKeyProtocol(typing.Protocol):
     """
     An ed25519 public key.
@@ -20957,6 +21414,242 @@ class _UniffiConverterTypeEd25519Signature:
 
     @classmethod
     def write(cls, value: Ed25519SignatureProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class Ed25519VerifierProtocol(typing.Protocol):
+    pass
+# Ed25519Verifier is a Rust-only trait - it's a wrapper around a Rust implementation.
+class Ed25519Verifier():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ed25519verifier, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519verifier, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+
+class _UniffiConverterTypeEd25519Verifier:
+
+    @staticmethod
+    def lift(value: int):
+        return Ed25519Verifier._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: Ed25519Verifier):
+        if not isinstance(value, Ed25519Verifier):
+            raise TypeError("Expected Ed25519Verifier instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: Ed25519VerifierProtocol):
+        if not isinstance(value, Ed25519Verifier):
+            raise TypeError("Expected Ed25519Verifier instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: Ed25519VerifierProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class Ed25519VerifyingKeyProtocol(typing.Protocol):
+    def public_key(self, ):
+        raise NotImplementedError
+    def to_der(self, ):
+        """
+        Serialize this public key as DER-encoded data
+        """
+
+        raise NotImplementedError
+    def to_pem(self, ):
+        """
+        Serialize this public key into PEM format
+        """
+
+        raise NotImplementedError
+    def verify(self, message: "bytes",signature: "Ed25519Signature"):
+        raise NotImplementedError
+    def verify_simple(self, message: "bytes",signature: "SimpleSignature"):
+        raise NotImplementedError
+    def verify_user(self, message: "bytes",signature: "UserSignature"):
+        raise NotImplementedError
+# Ed25519VerifyingKey is a Rust-only trait - it's a wrapper around a Rust implementation.
+class Ed25519VerifyingKey():
+    _pointer: ctypes.c_void_p
+    def __init__(self, public_key: "Ed25519PublicKey"):
+        _UniffiConverterTypeEd25519PublicKey.check_lower(public_key)
+        
+        self._pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_new,
+        _UniffiConverterTypeEd25519PublicKey.lower(public_key))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ed25519verifyingkey, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def from_der(cls, bytes: "bytes"):
+        """
+        Deserialize public key from ASN.1 DER-encoded data (binary format).
+        """
+
+        _UniffiConverterBytes.check_lower(bytes)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_der,
+        _UniffiConverterBytes.lower(bytes))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_pem(cls, s: "str"):
+        """
+        Deserialize public key from PEM.
+        """
+
+        _UniffiConverterString.check_lower(s)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_pem,
+        _UniffiConverterString.lower(s))
+        return cls._make_instance_(pointer)
+
+
+
+    def public_key(self, ) -> "Ed25519PublicKey":
+        return _UniffiConverterTypeEd25519PublicKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_public_key,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_der(self, ) -> "bytes":
+        """
+        Serialize this public key as DER-encoded data
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_der,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_pem(self, ) -> "str":
+        """
+        Serialize this public key into PEM format
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_pem,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def verify(self, message: "bytes",signature: "Ed25519Signature") -> None:
+        _UniffiConverterBytes.check_lower(message)
+        
+        _UniffiConverterTypeEd25519Signature.check_lower(signature)
+        
+        _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify,self._uniffi_clone_pointer(),
+        _UniffiConverterBytes.lower(message),
+        _UniffiConverterTypeEd25519Signature.lower(signature))
+
+
+
+
+
+
+    def verify_simple(self, message: "bytes",signature: "SimpleSignature") -> None:
+        _UniffiConverterBytes.check_lower(message)
+        
+        _UniffiConverterTypeSimpleSignature.check_lower(signature)
+        
+        _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_simple,self._uniffi_clone_pointer(),
+        _UniffiConverterBytes.lower(message),
+        _UniffiConverterTypeSimpleSignature.lower(signature))
+
+
+
+
+
+
+    def verify_user(self, message: "bytes",signature: "UserSignature") -> None:
+        _UniffiConverterBytes.check_lower(message)
+        
+        _UniffiConverterTypeUserSignature.check_lower(signature)
+        
+        _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user,self._uniffi_clone_pointer(),
+        _UniffiConverterBytes.lower(message),
+        _UniffiConverterTypeUserSignature.lower(signature))
+
+
+
+
+
+
+
+class _UniffiConverterTypeEd25519VerifyingKey:
+
+    @staticmethod
+    def lift(value: int):
+        return Ed25519VerifyingKey._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: Ed25519VerifyingKey):
+        if not isinstance(value, Ed25519VerifyingKey):
+            raise TypeError("Expected Ed25519VerifyingKey instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: Ed25519VerifyingKeyProtocol):
+        if not isinstance(value, Ed25519VerifyingKey):
+            raise TypeError("Expected Ed25519VerifyingKey instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: Ed25519VerifyingKeyProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class EffectsAuxiliaryDataDigestProtocol(typing.Protocol):
     def to_base58(self, ):
@@ -31527,8 +32220,11 @@ __all__ = [
     "ConsensusCommitPrologueV1",
     "ConsensusDeterminedVersionAssignments",
     "Digest",
+    "Ed25519PrivateKey",
     "Ed25519PublicKey",
     "Ed25519Signature",
+    "Ed25519Verifier",
+    "Ed25519VerifyingKey",
     "EffectsAuxiliaryDataDigest",
     "EndOfEpochTransactionKind",
     "Epoch",
