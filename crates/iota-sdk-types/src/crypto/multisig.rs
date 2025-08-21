@@ -53,6 +53,15 @@ pub enum MultisigMemberPublicKey {
     ZkLogin(ZkLoginPublicIdentifier),
 }
 
+impl MultisigMemberPublicKey {
+    crate::def_is_as_into_opt!(
+        Ed25519(Ed25519PublicKey),
+        Secp256k1(Secp256k1PublicKey),
+        Secp256r1(Secp256r1PublicKey),
+        ZkLogin as zklogin(ZkLoginPublicIdentifier),
+    );
+}
+
 /// A member in a multisig committee
 ///
 /// # BCS
@@ -306,6 +315,15 @@ pub enum MultisigMemberSignature {
     Secp256k1(Secp256k1Signature),
     Secp256r1(Secp256r1Signature),
     ZkLogin(Box<ZkLoginAuthenticator>),
+}
+
+impl MultisigMemberSignature {
+    crate::def_is_as_into_opt!(
+        Ed25519(Ed25519Signature),
+        Secp256k1(Secp256k1Signature),
+        Secp256r1(Secp256r1Signature),
+        ZkLogin as zklogin(Box<ZkLoginAuthenticator>)
+    );
 }
 
 #[cfg(feature = "serde")]

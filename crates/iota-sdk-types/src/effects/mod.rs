@@ -34,6 +34,18 @@ pub enum TransactionEffects {
 }
 
 impl TransactionEffects {
+    crate::def_is!(V1);
+
+    pub fn as_v1(&self) -> &TransactionEffectsV1 {
+        let Self::V1(effects) = self;
+        effects
+    }
+
+    pub fn into_v1(self) -> TransactionEffectsV1 {
+        let Self::V1(effects) = self;
+        *effects
+    }
+
     /// Return the status of the transaction.
     pub fn status(&self) -> &ExecutionStatus {
         match self {

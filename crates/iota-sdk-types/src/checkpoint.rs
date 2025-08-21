@@ -34,9 +34,18 @@ pub type ProtocolVersion = u64;
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum CheckpointCommitment {
     /// An Elliptic Curve Multiset Hash attesting to the set of Objects that
-    /// comprise the live state of the IOTA blockchain.
+    /// compose the live state of the IOTA blockchain.
     EcmhLiveObjectSet { digest: Digest },
     // Other commitment types (e.g. merkle roots) go here.
+}
+
+impl CheckpointCommitment {
+    crate::def_is!(EcmhLiveObjectSet);
+
+    pub fn as_ecmh_live_object_set_digest(&self) -> Digest {
+        let Self::EcmhLiveObjectSet { digest } = self;
+        *digest
+    }
 }
 
 /// Data, which when included in a [`CheckpointSummary`], signals the end of an
