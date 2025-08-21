@@ -132,7 +132,7 @@ impl TransactionBuilder {
     ///
     /// The return value is a result argument that can be used in subsequent
     /// commands. If the move call returns multiple results, you can access
-    /// them using the [`Argument::get_nested`] method.
+    /// them using the [`Argument::get_nested_result`] method.
     pub fn move_call(&mut self, function: Function, arguments: Vec<Argument>) -> Argument {
         let cmd = Command::MoveCall(MoveCall {
             package: function.package.into(),
