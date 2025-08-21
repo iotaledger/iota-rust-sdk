@@ -1531,8 +1531,8 @@ impl Argument {
 
     /// Get the nested result for this result at the given index. Returns None
     /// if this is not a Result.
-    pub fn get_nested(&self, ix: u16) -> Option<Arc<Argument>> {
-        self.0.get_nested(ix).map(Self).map(Arc::new)
+    pub fn get_nested_result(&self, ix: u16) -> Option<Arc<Argument>> {
+        self.0.get_nested_result(ix).map(Self).map(Arc::new)
     }
 }
 

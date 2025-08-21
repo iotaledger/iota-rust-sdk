@@ -465,7 +465,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested() != 12136:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() != 9890:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1545,12 +1545,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_argument_new_result.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_argument_new_result.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint16,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_batchsendstatus.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4931,9 +4931,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.restype = ctypes
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes.restype = ctypes.c_uint16
@@ -18119,7 +18119,7 @@ class ArgumentProtocol(typing.Protocol):
     ```
     """
 
-    def get_nested(self, ix: "int"):
+    def get_nested_result(self, ix: "int"):
         """
         Get the nested result for this result at the given index. Returns None
         if this is not a Result.
@@ -18228,7 +18228,7 @@ class Argument():
 
 
 
-    def get_nested(self, ix: "int") -> "typing.Optional[Argument]":
+    def get_nested_result(self, ix: "int") -> "typing.Optional[Argument]":
         """
         Get the nested result for this result at the given index. Returns None
         if this is not a Result.
@@ -18237,7 +18237,7 @@ class Argument():
         _UniffiConverterUInt16.check_lower(ix)
         
         return _UniffiConverterOptionalTypeArgument.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested,self._uniffi_clone_pointer(),
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result,self._uniffi_clone_pointer(),
         _UniffiConverterUInt16.lower(ix))
         )
 

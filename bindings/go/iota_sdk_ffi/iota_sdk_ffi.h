@@ -445,9 +445,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_argument_new_nested_result(uint16_t com
 void* uniffi_iota_sdk_ffi_fn_constructor_argument_new_result(uint16_t result, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ARGUMENT_GET_NESTED
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ARGUMENT_GET_NESTED
-RustBuffer uniffi_iota_sdk_ffi_fn_method_argument_get_nested(void* ptr, uint16_t ix, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ARGUMENT_GET_NESTED_RESULT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ARGUMENT_GET_NESTED_RESULT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result(void* ptr, uint16_t ix, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_BATCHSENDSTATUS
@@ -3823,9 +3823,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_address_to_hex(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ARGUMENT_GET_NESTED
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ARGUMENT_GET_NESTED
-uint16_t uniffi_iota_sdk_ffi_checksum_method_argument_get_nested(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ARGUMENT_GET_NESTED_RESULT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ARGUMENT_GET_NESTED_RESULT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result(void
     
 );
 #endif

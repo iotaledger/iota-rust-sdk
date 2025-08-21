@@ -378,11 +378,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested()
+		return C.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result()
 	})
-	if checksum != 12136 {
+	if checksum != 53358 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_argument_get_nested: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5085,7 +5085,7 @@ func (_ FfiDestroyerAddress) Destroy(value *Address) {
 type ArgumentInterface interface {
 	// Get the nested result for this result at the given index. Returns None
 	// if this is not a Result.
-	GetNested(ix uint16) **Argument
+	GetNestedResult(ix uint16) **Argument
 }
 // An argument to a programmable transaction command
 //
@@ -5145,12 +5145,12 @@ func ArgumentNewResult(result uint16) *Argument {
 
 // Get the nested result for this result at the given index. Returns None
 // if this is not a Result.
-func (_self *Argument) GetNested(ix uint16) **Argument {
+func (_self *Argument) GetNestedResult(ix uint16) **Argument {
 	_pointer := _self.ffiObject.incrementPointer("*Argument")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_argument_get_nested(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result(
 		_pointer,FfiConverterUint16INSTANCE.Lower(ix),_uniffiStatus),
 	}
 	}))

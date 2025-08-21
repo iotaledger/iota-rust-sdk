@@ -1816,7 +1816,7 @@ internal interface IntegrityCheckingUniffiLib : Library {
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_argument_get_nested(
+fun uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes(
 ): Short
@@ -2801,7 +2801,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_argument_new_nested_result(`commandIndex`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_argument_new_result(`result`: Short,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_argument_get_nested(`ptr`: Pointer,`ix`: Short,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result(`ptr`: Pointer,`ix`: Short,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_batchsendstatus(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -4149,7 +4149,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested() != 12136.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() != 9890.toShort()) {
@@ -6492,7 +6492,7 @@ public interface ArgumentInterface {
      * Get the nested result for this result at the given index. Returns None
      * if this is not a Result.
      */
-    fun `getNested`(`ix`: kotlin.UShort): Argument?
+    fun `getNestedResult`(`ix`: kotlin.UShort): Argument?
     
     companion object
 }
@@ -6602,11 +6602,11 @@ open class Argument: Disposable, AutoCloseable, ArgumentInterface
     /**
      * Get the nested result for this result at the given index. Returns None
      * if this is not a Result.
-     */override fun `getNested`(`ix`: kotlin.UShort): Argument? {
+     */override fun `getNestedResult`(`ix`: kotlin.UShort): Argument? {
             return FfiConverterOptionalTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_argument_get_nested(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result(
         it, FfiConverterUShort.lower(`ix`),_status)
 }
     }
