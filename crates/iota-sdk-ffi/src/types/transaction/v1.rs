@@ -274,25 +274,24 @@ impl From<UnchangedSharedKind> for iota_types::UnchangedSharedKind {
 /// State of an object prior to execution
 ///
 /// If an object exists (at root-level) in the store prior to this transaction,
-/// it should be Exist, otherwise it's NonExist, e.g. wrapped objects should be
-/// NonExist.
+/// it should be Data, otherwise it's Missing, e.g. wrapped objects should be
+/// Missing.
 ///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-in = object-in-not-exist / object-in-exist
+/// object-in = object-in-missing / object-in-data
 ///
-/// object-in-not-exist = %x00
-/// object-in-exist     = %x01 u64 digest owner
+/// object-in-missing = %x00
+/// object-in-data    = %x01 u64 digest owner
 /// ```
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum ObjectIn {
-    NotExist,
-
+    Missing,
     /// The old version, digest and owner.
-    Exist {
+    Data {
         version: u64,
         digest: Arc<ObjectDigest>,
         owner: Arc<Owner>,
@@ -302,12 +301,12 @@ pub enum ObjectIn {
 impl From<iota_types::ObjectIn> for ObjectIn {
     fn from(value: iota_types::ObjectIn) -> Self {
         match value {
-            iota_types::ObjectIn::NotExist => Self::NotExist,
-            iota_types::ObjectIn::Exist {
+            iota_types::ObjectIn::Missing => Self::Missing,
+            iota_types::ObjectIn::Data {
                 version,
                 digest,
                 owner,
-            } => Self::Exist {
+            } => Self::Data {
                 version,
                 digest: Arc::new(digest.into()),
                 owner: Arc::new(owner.into()),
@@ -319,12 +318,12 @@ impl From<iota_types::ObjectIn> for ObjectIn {
 impl From<ObjectIn> for iota_types::ObjectIn {
     fn from(value: ObjectIn) -> Self {
         match value {
-            ObjectIn::NotExist => Self::NotExist,
-            ObjectIn::Exist {
+            ObjectIn::Missing => Self::Missing,
+            ObjectIn::Data {
                 version,
                 digest,
                 owner,
-            } => Self::Exist {
+            } => Self::Data {
                 version,
                 digest: **digest,
                 owner: **owner,
@@ -340,26 +339,24 @@ impl From<ObjectIn> for iota_types::ObjectIn {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-out  =  object-out-not-exist
+/// object-out  =  object-out-missing
 ///             =/ object-out-object-write
 ///             =/ object-out-package-write
 ///
 ///
-/// object-out-not-exist        = %x00
-/// object-out-object-write     = %x01 digest owner
-/// object-out-package-write    = %x02 version digest
+/// object-out-missing        = %x00
+/// object-out-object-write   = %x01 digest owner
+/// object-out-package-write  = %x02 version digest
 /// ```
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
-    NotExist,
-
+    Missing,
     /// Any written object, including all of mutated, created, unwrapped today.
     ObjectWrite {
         digest: Arc<ObjectDigest>,
         owner: Arc<Owner>,
     },
-
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
     PackageWrite {
@@ -371,7 +368,7 @@ pub enum ObjectOut {
 impl From<iota_types::ObjectOut> for ObjectOut {
     fn from(value: iota_types::ObjectOut) -> Self {
         match value {
-            iota_types::ObjectOut::NotExist => Self::NotExist,
+            iota_types::ObjectOut::Missing => Self::Missing,
             iota_types::ObjectOut::ObjectWrite { digest, owner } => Self::ObjectWrite {
                 digest: Arc::new(digest.into()),
                 owner: Arc::new(owner.into()),
@@ -387,7 +384,7 @@ impl From<iota_types::ObjectOut> for ObjectOut {
 impl From<ObjectOut> for iota_types::ObjectOut {
     fn from(value: ObjectOut) -> Self {
         match value {
-            ObjectOut::NotExist => Self::NotExist,
+            ObjectOut::Missing => Self::Missing,
             ObjectOut::ObjectWrite { digest, owner } => Self::ObjectWrite {
                 digest: **digest,
                 owner: **owner,

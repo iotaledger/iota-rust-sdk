@@ -1869,8 +1869,6 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -1890,7 +1888,7 @@ internal interface IntegrityCheckingUniffiLib : Library {
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_argument_nested(
+fun uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes(
 ): Short
@@ -1973,8 +1971,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round(
 fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions(
 ): Short
@@ -2945,7 +2941,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_argument_new_nested_result(`commandIndex`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_argument_new_result(`result`: Short,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_argument_nested(`ptr`: Pointer,`ix`: Short,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result(`ptr`: Pointer,`ix`: Short,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_batchsendstatus(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -3162,8 +3158,6 @@ fun uniffi_iota_sdk_ffi_fn_free_consensusdeterminedversionassignments(`ptr`: Poi
 fun uniffi_iota_sdk_ffi_fn_constructor_consensusdeterminedversionassignments_new_cancelled_transactions(`cancelledTransactions`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_is_cancelled_transactions(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
@@ -4371,7 +4365,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_argument_nested() != 44576.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() != 9890.toShort()) {
@@ -4495,9 +4489,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions() != 59888.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt() != 33554.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241.toShort()) {
@@ -6816,10 +6807,10 @@ public object FfiConverterTypeAddress: FfiConverter<Address, Pointer> {
 public interface ArgumentInterface {
     
     /**
-     * Turn a Result into a NestedResult. If the argument is not a Result,
-     * returns None.
+     * Get the nested result for this result at the given index. Returns None
+     * if this is not a Result.
      */
-    fun `nested`(`ix`: kotlin.UShort): Argument?
+    fun `getNestedResult`(`ix`: kotlin.UShort): Argument?
     
     companion object
 }
@@ -6927,13 +6918,13 @@ open class Argument: Disposable, AutoCloseable, ArgumentInterface
 
     
     /**
-     * Turn a Result into a NestedResult. If the argument is not a Result,
-     * returns None.
-     */override fun `nested`(`ix`: kotlin.UShort): Argument? {
+     * Get the nested result for this result at the given index. Returns None
+     * if this is not a Result.
+     */override fun `getNestedResult`(`ix`: kotlin.UShort): Argument? {
             return FfiConverterOptionalTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_argument_nested(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result(
         it, FfiConverterUShort.lower(`ix`),_status)
 }
     }
@@ -12095,8 +12086,6 @@ public interface ConsensusDeterminedVersionAssignmentsInterface {
     
     fun `asCancelledTransactions`(): List<CancelledTransaction>
     
-    fun `asCancelledTransactionsOpt`(): List<CancelledTransaction>?
-    
     fun `isCancelledTransactions`(): kotlin.Boolean
     
     companion object
@@ -12189,18 +12178,6 @@ open class ConsensusDeterminedVersionAssignments: Disposable, AutoCloseable, Con
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `asCancelledTransactionsOpt`(): List<CancelledTransaction>? {
-            return FfiConverterOptionalSequenceTypeCancelledTransaction.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions_opt(
         it, _status)
 }
     }
@@ -40942,29 +40919,29 @@ public object FfiConverterTypeMoveVisibility: FfiConverterRustBuffer<MoveVisibil
  * State of an object prior to execution
  *
  * If an object exists (at root-level) in the store prior to this transaction,
- * it should be Exist, otherwise it's NonExist, e.g. wrapped objects should be
- * NonExist.
+ * it should be Data, otherwise it's Missing, e.g. wrapped objects should be
+ * Missing.
  *
  * # BCS
  *
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-in = object-in-not-exist / object-in-exist
+ * object-in = object-in-missing / object-in-data
  *
- * object-in-not-exist = %x00
- * object-in-exist     = %x01 u64 digest owner
+ * object-in-missing = %x00
+ * object-in-data    = %x01 u64 digest owner
  * ```
  */
 sealed class ObjectIn: Disposable  {
     
-    object NotExist : ObjectIn()
+    object Missing : ObjectIn()
     
     
     /**
      * The old version, digest and owner.
      */
-    data class Exist(
+    data class Data(
         val `version`: kotlin.ULong, 
         val `digest`: ObjectDigest, 
         val `owner`: Owner) : ObjectIn() {
@@ -40976,9 +40953,9 @@ sealed class ObjectIn: Disposable  {
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
     override fun destroy() {
         when(this) {
-            is ObjectIn.NotExist -> {// Nothing to destroy
+            is ObjectIn.Missing -> {// Nothing to destroy
             }
-            is ObjectIn.Exist -> {
+            is ObjectIn.Data -> {
                 
     Disposable.destroy(
         this.`version`,
@@ -40999,8 +40976,8 @@ sealed class ObjectIn: Disposable  {
 public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
     override fun read(buf: ByteBuffer): ObjectIn {
         return when(buf.getInt()) {
-            1 -> ObjectIn.NotExist
-            2 -> ObjectIn.Exist(
+            1 -> ObjectIn.Missing
+            2 -> ObjectIn.Data(
                 FfiConverterULong.read(buf),
                 FfiConverterTypeObjectDigest.read(buf),
                 FfiConverterTypeOwner.read(buf),
@@ -41010,13 +40987,13 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
     }
 
     override fun allocationSize(value: ObjectIn) = when(value) {
-        is ObjectIn.NotExist -> {
+        is ObjectIn.Missing -> {
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
             )
         }
-        is ObjectIn.Exist -> {
+        is ObjectIn.Data -> {
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
@@ -41029,11 +41006,11 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
 
     override fun write(value: ObjectIn, buf: ByteBuffer) {
         when(value) {
-            is ObjectIn.NotExist -> {
+            is ObjectIn.Missing -> {
                 buf.putInt(1)
                 Unit
             }
-            is ObjectIn.Exist -> {
+            is ObjectIn.Data -> {
                 buf.putInt(2)
                 FfiConverterULong.write(value.`version`, buf)
                 FfiConverterTypeObjectDigest.write(value.`digest`, buf)
@@ -41056,14 +41033,14 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * object-out  =  object-out-not-exist
+ * object-out  =  object-out-missing
  * =/ object-out-object-write
  * =/ object-out-package-write
  *
  *
- * object-out-not-exist        = %x00
- * object-out-object-write     = %x01 digest owner
- * object-out-package-write    = %x02 version digest
+ * object-out-missing        = %x00
+ * object-out-object-write   = %x01 digest owner
+ * object-out-package-write  = %x02 version digest
  * ```
  */
 sealed class ObjectOut: Disposable  {
@@ -41071,7 +41048,7 @@ sealed class ObjectOut: Disposable  {
     /**
      * Same definition as in ObjectIn.
      */
-    object NotExist : ObjectOut()
+    object Missing : ObjectOut()
     
     
     /**
@@ -41098,7 +41075,7 @@ sealed class ObjectOut: Disposable  {
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
     override fun destroy() {
         when(this) {
-            is ObjectOut.NotExist -> {// Nothing to destroy
+            is ObjectOut.Missing -> {// Nothing to destroy
             }
             is ObjectOut.ObjectWrite -> {
                 
@@ -41128,7 +41105,7 @@ sealed class ObjectOut: Disposable  {
 public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
     override fun read(buf: ByteBuffer): ObjectOut {
         return when(buf.getInt()) {
-            1 -> ObjectOut.NotExist
+            1 -> ObjectOut.Missing
             2 -> ObjectOut.ObjectWrite(
                 FfiConverterTypeObjectDigest.read(buf),
                 FfiConverterTypeOwner.read(buf),
@@ -41142,7 +41119,7 @@ public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
     }
 
     override fun allocationSize(value: ObjectOut) = when(value) {
-        is ObjectOut.NotExist -> {
+        is ObjectOut.Missing -> {
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
@@ -41168,7 +41145,7 @@ public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
 
     override fun write(value: ObjectOut, buf: ByteBuffer) {
         when(value) {
-            is ObjectOut.NotExist -> {
+            is ObjectOut.Missing -> {
                 buf.putInt(1)
                 Unit
             }
@@ -43647,38 +43624,6 @@ public object FfiConverterOptionalSequenceString: FfiConverterRustBuffer<List<ko
         } else {
             buf.put(1)
             FfiConverterSequenceString.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalSequenceTypeCancelledTransaction: FfiConverterRustBuffer<List<CancelledTransaction>?> {
-    override fun read(buf: ByteBuffer): List<CancelledTransaction>? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterSequenceTypeCancelledTransaction.read(buf)
-    }
-
-    override fun allocationSize(value: List<CancelledTransaction>?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterSequenceTypeCancelledTransaction.allocationSize(value)
-        }
-    }
-
-    override fun write(value: List<CancelledTransaction>?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterSequenceTypeCancelledTransaction.write(value, buf)
         }
     }
 }

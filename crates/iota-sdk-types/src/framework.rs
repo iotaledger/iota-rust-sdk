@@ -60,6 +60,10 @@ pub enum CoinFromObjectError {
     InvalidContentLength,
 }
 
+impl CoinFromObjectError {
+    crate::def_is!(NotACoin, InvalidContentLength);
+}
+
 impl std::fmt::Display for CoinFromObjectError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
