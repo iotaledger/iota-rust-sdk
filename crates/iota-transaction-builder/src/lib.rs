@@ -154,7 +154,8 @@ impl TransactionBuilder {
 
     /// Split a coin by the provided amounts, returning multiple results (as
     /// many as there are amounts). To access the results, use the
-    /// [`Argument::get_nested`] method to access the desired coin by its index.
+    /// [`Argument::get_nested_result`] method to access the desired coin by its
+    /// index.
     pub fn split_coins(&mut self, coin: Argument, amounts: Vec<Argument>) -> Argument {
         let cmd = Command::SplitCoins(SplitCoins { coin, amounts });
         self.commands.push(cmd);
