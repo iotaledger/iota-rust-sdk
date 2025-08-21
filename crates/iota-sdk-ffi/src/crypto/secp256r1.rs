@@ -104,10 +104,6 @@ impl Secp256r1VerifyingKey {
         self.0.public_key().into()
     }
 
-    pub fn verify(&self, message: Vec<u8>, signature: &Secp256r1Signature) -> bool {
-        self.0.verify(&message, &signature.0).is_ok()
-    }
-
     /// Deserialize public key from ASN.1 DER-encoded data (binary format).
     #[uniffi::constructor]
     pub fn from_der(bytes: Vec<u8>) -> Result<Self> {
@@ -128,6 +124,28 @@ impl Secp256r1VerifyingKey {
     /// Serialize this public key into PEM.
     pub fn to_pem(&self) -> Result<String> {
         Ok(self.0.to_pem()?)
+    }
+
+    pub fn verify(&self, message: Vec<u8>, signature: &Secp256r1Signature) -> Result<()> {
+        Ok(self.0.verify(&message, &signature.0)?)
+    }
+
+    pub fn verify_simple(&self, message: Vec<u8>, signature: &SimpleSignature) -> Result<()> {
+        Ok(
+            iota_crypto::Verifier::<iota_types::SimpleSignature>::verify(
+                &self.0,
+                &message,
+                &signature.0,
+            )?,
+        )
+    }
+
+    pub fn verify_user(&self, message: Vec<u8>, signature: &UserSignature) -> Result<()> {
+        Ok(iota_crypto::Verifier::<iota_types::UserSignature>::verify(
+            &self.0,
+            &message,
+            &signature.0,
+        )?)
     }
 }
 

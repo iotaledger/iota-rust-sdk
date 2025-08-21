@@ -2680,7 +2680,17 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_pem(void* ptr,
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1VERIFYINGKEY_VERIFY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1VERIFYINGKEY_VERIFY
-int8_t uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
+void uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1VERIFYINGKEY_VERIFY_SIMPLE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1VERIFYINGKEY_VERIFY_SIMPLE
+void uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1VERIFYINGKEY_VERIFY_USER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1VERIFYINGKEY_VERIFY_USER
+void uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SIMPLEKEYPAIR
@@ -5185,6 +5195,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1VERIFYINGKEY_VERIFY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1VERIFYINGKEY_VERIFY
 uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1VERIFYINGKEY_VERIFY_SIMPLE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1VERIFYINGKEY_VERIFY_SIMPLE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1VERIFYINGKEY_VERIFY_USER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1VERIFYINGKEY_VERIFY_USER
+uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user(void
     
 );
 #endif

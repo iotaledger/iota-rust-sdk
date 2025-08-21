@@ -2198,9 +2198,27 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify()
 	})
-	if checksum != 21367 {
+	if checksum != 32594 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple()
+	})
+	if checksum != 35191 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user()
+	})
+	if checksum != 46052 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -14781,7 +14799,9 @@ type Secp256r1VerifyingKeyInterface interface {
 	ToDer() ([]byte, error)
 	// Serialize this public key into PEM.
 	ToPem() (string, error)
-	Verify(message []byte, signature *Secp256r1Signature) bool
+	Verify(message []byte, signature *Secp256r1Signature) error
+	VerifySimple(message []byte, signature *SimpleSignature) error
+	VerifyUser(message []byte, signature *UserSignature) error
 }
 type Secp256r1VerifyingKey struct {
 	ffiObject FfiObject
@@ -14872,13 +14892,37 @@ func (_self *Secp256r1VerifyingKey) ToPem() (string, error) {
 		}
 }
 
-func (_self *Secp256r1VerifyingKey) Verify(message []byte, signature *Secp256r1Signature) bool {
+func (_self *Secp256r1VerifyingKey) Verify(message []byte, signature *Secp256r1Signature) error {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(
 		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterSecp256r1SignatureINSTANCE.Lower(signature),_uniffiStatus)
-	}))
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *Secp256r1VerifyingKey) VerifySimple(message []byte, signature *SimpleSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterSimpleSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *Secp256r1VerifyingKey) VerifyUser(message []byte, signature *UserSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterUserSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
 }
 func (object *Secp256r1VerifyingKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
