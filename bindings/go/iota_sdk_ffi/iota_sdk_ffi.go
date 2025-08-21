@@ -783,6 +783,78 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key()
+	})
+	if checksum != 55389 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme()
+	})
+	if checksum != 8128 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der()
+	})
+	if checksum != 61433 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem()
+	})
+	if checksum != 34166 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign()
+	})
+	if checksum != 39795 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple()
+	})
+	if checksum != 56024 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user()
+	})
+	if checksum != 42020 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key()
+	})
+	if checksum != 59162 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes()
 	})
 	if checksum != 16656 {
@@ -797,6 +869,60 @@ func uniffiCheckChecksums() {
 	if checksum != 31911 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key()
+	})
+	if checksum != 55026 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_der()
+	})
+	if checksum != 56779 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_der: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_pem()
+	})
+	if checksum != 56327 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_pem: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify()
+	})
+	if checksum != 24673 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple()
+	})
+	if checksum != 29563 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user()
+	})
+	if checksum != 43622 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2196,6 +2322,78 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key()
+	})
+	if checksum != 58075 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme()
+	})
+	if checksum != 20973 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der()
+	})
+	if checksum != 48507 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem()
+	})
+	if checksum != 34634 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign()
+	})
+	if checksum != 39126 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple()
+	})
+	if checksum != 57038 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user()
+	})
+	if checksum != 36924 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key()
+	})
+	if checksum != 55895 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes()
 	})
 	if checksum != 21066 {
@@ -2210,6 +2408,78 @@ func uniffiCheckChecksums() {
 	if checksum != 64948 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple()
+	})
+	if checksum != 18491 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user()
+	})
+	if checksum != 19940 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key()
+	})
+	if checksum != 35474 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_der()
+	})
+	if checksum != 49763 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_der: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem()
+	})
+	if checksum != 51401 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify()
+	})
+	if checksum != 32594 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple()
+	})
+	if checksum != 35191 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user()
+	})
+	if checksum != 46052 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3510,6 +3780,42 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der()
+	})
+	if checksum != 42838 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem()
+	})
+	if checksum != 53776 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate()
+	})
+	if checksum != 53932 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new()
+	})
+	if checksum != 12862 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes()
 	})
 	if checksum != 60403 {
@@ -3560,6 +3866,33 @@ func uniffiCheckChecksums() {
 	if checksum != 41607 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der()
+	})
+	if checksum != 1677 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem()
+	})
+	if checksum != 37214 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new()
+	})
+	if checksum != 23280 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4194,6 +4527,42 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der()
+	})
+	if checksum != 63595 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem()
+	})
+	if checksum != 28166 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate()
+	})
+	if checksum != 47736 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new()
+	})
+	if checksum != 32825 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes()
 	})
 	if checksum != 60002 {
@@ -4244,6 +4613,42 @@ func uniffiCheckChecksums() {
 	if checksum != 40260 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_generate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifier_new()
+	})
+	if checksum != 59881 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifier_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der()
+	})
+	if checksum != 6292 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem()
+	})
+	if checksum != 20421 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new()
+	})
+	if checksum != 57317 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7683,6 +8088,230 @@ func (_ FfiDestroyerDigest) Destroy(value *Digest) {
 
 
 
+type Ed25519PrivateKeyInterface interface {
+	PublicKey() *Ed25519PublicKey
+	Scheme() SignatureScheme
+	// Serialize this private key as DER-encoded PKCS#8
+	ToDer() ([]byte, error)
+	// Serialize this private key as PEM-encoded PKCS#8
+	ToPem() (string, error)
+	TrySign(message []byte) (*Ed25519Signature, error)
+	TrySignSimple(message []byte) (*SimpleSignature, error)
+	TrySignUser(message []byte) (*UserSignature, error)
+	VerifyingKey() *Ed25519VerifyingKey
+}
+type Ed25519PrivateKey struct {
+	ffiObject FfiObject
+}
+func NewEd25519PrivateKey(bytes []byte) (*Ed25519PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
+// format).
+func Ed25519PrivateKeyFromDer(bytes []byte) (*Ed25519PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Deserialize PKCS#8-encoded private key from PEM.
+func Ed25519PrivateKeyFromPem(s string) (*Ed25519PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem(FfiConverterStringINSTANCE.Lower(s),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func Ed25519PrivateKeyGenerate() *Ed25519PrivateKey {
+	return FfiConverterEd25519PrivateKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate(_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Ed25519PrivateKey) PublicKey() *Ed25519PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterEd25519PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *Ed25519PrivateKey) Scheme() SignatureScheme {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Serialize this private key as DER-encoded PKCS#8
+func (_self *Ed25519PrivateKey) ToDer() ([]byte, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_der(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize this private key as PEM-encoded PKCS#8
+func (_self *Ed25519PrivateKey) ToPem() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_pem(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *Ed25519PrivateKey) TrySign(message []byte) (*Ed25519Signature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519Signature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519SignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *Ed25519PrivateKey) TrySignSimple(message []byte) (*SimpleSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *SimpleSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSimpleSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *Ed25519PrivateKey) TrySignUser(message []byte) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *Ed25519PrivateKey) VerifyingKey() *Ed25519VerifyingKey {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterEd25519VerifyingKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *Ed25519PrivateKey) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterEd25519PrivateKey struct {}
+
+var FfiConverterEd25519PrivateKeyINSTANCE = FfiConverterEd25519PrivateKey{}
+
+
+func (c FfiConverterEd25519PrivateKey) Lift(pointer unsafe.Pointer) *Ed25519PrivateKey {
+	result := &Ed25519PrivateKey {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_ed25519privatekey(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Ed25519PrivateKey).Destroy)
+	return result
+}
+
+func (c FfiConverterEd25519PrivateKey) Read(reader io.Reader) *Ed25519PrivateKey {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterEd25519PrivateKey) Lower(value *Ed25519PrivateKey) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterEd25519PrivateKey) Write(writer io.Writer, value *Ed25519PrivateKey) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerEd25519PrivateKey struct {}
+
+func (_ FfiDestroyerEd25519PrivateKey) Destroy(value *Ed25519PrivateKey) {
+		value.Destroy()
+}
+
+
+
 // An ed25519 public key.
 //
 // # BCS
@@ -7918,6 +8547,249 @@ func (c FfiConverterEd25519Signature) Write(writer io.Writer, value *Ed25519Sign
 type FfiDestroyerEd25519Signature struct {}
 
 func (_ FfiDestroyerEd25519Signature) Destroy(value *Ed25519Signature) {
+		value.Destroy()
+}
+
+
+
+type Ed25519VerifierInterface interface {
+}
+type Ed25519Verifier struct {
+	ffiObject FfiObject
+}
+
+
+
+func (object *Ed25519Verifier) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterEd25519Verifier struct {}
+
+var FfiConverterEd25519VerifierINSTANCE = FfiConverterEd25519Verifier{}
+
+
+func (c FfiConverterEd25519Verifier) Lift(pointer unsafe.Pointer) *Ed25519Verifier {
+	result := &Ed25519Verifier {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_ed25519verifier(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Ed25519Verifier).Destroy)
+	return result
+}
+
+func (c FfiConverterEd25519Verifier) Read(reader io.Reader) *Ed25519Verifier {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterEd25519Verifier) Lower(value *Ed25519Verifier) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Ed25519Verifier")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterEd25519Verifier) Write(writer io.Writer, value *Ed25519Verifier) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerEd25519Verifier struct {}
+
+func (_ FfiDestroyerEd25519Verifier) Destroy(value *Ed25519Verifier) {
+		value.Destroy()
+}
+
+
+
+type Ed25519VerifyingKeyInterface interface {
+	PublicKey() *Ed25519PublicKey
+	// Serialize this public key as DER-encoded data
+	ToDer() ([]byte, error)
+	// Serialize this public key into PEM format
+	ToPem() (string, error)
+	Verify(message []byte, signature *Ed25519Signature) error
+	VerifySimple(message []byte, signature *SimpleSignature) error
+	VerifyUser(message []byte, signature *UserSignature) error
+}
+type Ed25519VerifyingKey struct {
+	ffiObject FfiObject
+}
+func NewEd25519VerifyingKey(publicKey *Ed25519PublicKey) (*Ed25519VerifyingKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_new(FfiConverterEd25519PublicKeyINSTANCE.Lower(publicKey),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519VerifyingKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519VerifyingKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+// Deserialize public key from ASN.1 DER-encoded data (binary format).
+func Ed25519VerifyingKeyFromDer(bytes []byte) (*Ed25519VerifyingKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_der(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519VerifyingKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519VerifyingKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Deserialize public key from PEM.
+func Ed25519VerifyingKeyFromPem(s string) (*Ed25519VerifyingKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_pem(FfiConverterStringINSTANCE.Lower(s),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519VerifyingKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519VerifyingKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+
+func (_self *Ed25519VerifyingKey) PublicKey() *Ed25519PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterEd25519PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_public_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Serialize this public key as DER-encoded data
+func (_self *Ed25519VerifyingKey) ToDer() ([]byte, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_der(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize this public key into PEM format
+func (_self *Ed25519VerifyingKey) ToPem() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_pem(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *Ed25519VerifyingKey) Verify(message []byte, signature *Ed25519Signature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterEd25519SignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *Ed25519VerifyingKey) VerifySimple(message []byte, signature *SimpleSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_simple(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterSimpleSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *Ed25519VerifyingKey) VerifyUser(message []byte, signature *UserSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterUserSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+func (object *Ed25519VerifyingKey) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterEd25519VerifyingKey struct {}
+
+var FfiConverterEd25519VerifyingKeyINSTANCE = FfiConverterEd25519VerifyingKey{}
+
+
+func (c FfiConverterEd25519VerifyingKey) Lift(pointer unsafe.Pointer) *Ed25519VerifyingKey {
+	result := &Ed25519VerifyingKey {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_ed25519verifyingkey(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Ed25519VerifyingKey).Destroy)
+	return result
+}
+
+func (c FfiConverterEd25519VerifyingKey) Read(reader io.Reader) *Ed25519VerifyingKey {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterEd25519VerifyingKey) Lower(value *Ed25519VerifyingKey) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Ed25519VerifyingKey")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterEd25519VerifyingKey) Write(writer io.Writer, value *Ed25519VerifyingKey) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerEd25519VerifyingKey struct {}
+
+func (_ FfiDestroyerEd25519VerifyingKey) Destroy(value *Ed25519VerifyingKey) {
 		value.Destroy()
 }
 
@@ -14706,6 +15578,239 @@ func (_ FfiDestroyerSecp256k1VerifyingKey) Destroy(value *Secp256k1VerifyingKey)
 
 
 
+type Secp256r1PrivateKeyInterface interface {
+	// Get the public key corresponding to this private key.
+	PublicKey() *Secp256r1PublicKey
+	Scheme() SignatureScheme
+	// Serialize this private key as DER-encoded PKCS#8
+	ToDer() ([]byte, error)
+	// Serialize this private key as PEM-encoded PKCS#8
+	ToPem() (string, error)
+	// Sign a message and return a Secp256r1Signature.
+	TrySign(message []byte) (*Secp256r1Signature, error)
+	// Sign a message and return a SimpleSignature.
+	TrySignSimple(message []byte) (*SimpleSignature, error)
+	// Sign a message and return a UserSignature.
+	TrySignUser(message []byte) (*UserSignature, error)
+	VerifyingKey() *Secp256r1VerifyingKey
+}
+type Secp256r1PrivateKey struct {
+	ffiObject FfiObject
+}
+func NewSecp256r1PrivateKey(bytes []byte) (*Secp256r1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
+// format).
+func Secp256r1PrivateKeyFromDer(bytes []byte) (*Secp256r1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Deserialize PKCS#8-encoded private key from PEM.
+func Secp256r1PrivateKeyFromPem(s string) (*Secp256r1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(FfiConverterStringINSTANCE.Lower(s),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Generate a new random Secp256r1PrivateKey
+func Secp256r1PrivateKeyGenerate() *Secp256r1PrivateKey {
+	return FfiConverterSecp256r1PrivateKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(_uniffiStatus)
+	}))
+}
+
+
+
+// Get the public key corresponding to this private key.
+func (_self *Secp256r1PrivateKey) PublicKey() *Secp256r1PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSecp256r1PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *Secp256r1PrivateKey) Scheme() SignatureScheme {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Serialize this private key as DER-encoded PKCS#8
+func (_self *Secp256r1PrivateKey) ToDer() ([]byte, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize this private key as PEM-encoded PKCS#8
+func (_self *Secp256r1PrivateKey) ToPem() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Sign a message and return a Secp256r1Signature.
+func (_self *Secp256r1PrivateKey) TrySign(message []byte) (*Secp256r1Signature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1Signature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1SignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Sign a message and return a SimpleSignature.
+func (_self *Secp256r1PrivateKey) TrySignSimple(message []byte) (*SimpleSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *SimpleSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSimpleSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Sign a message and return a UserSignature.
+func (_self *Secp256r1PrivateKey) TrySignUser(message []byte) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *Secp256r1PrivateKey) VerifyingKey() *Secp256r1VerifyingKey {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSecp256r1VerifyingKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *Secp256r1PrivateKey) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterSecp256r1PrivateKey struct {}
+
+var FfiConverterSecp256r1PrivateKeyINSTANCE = FfiConverterSecp256r1PrivateKey{}
+
+
+func (c FfiConverterSecp256r1PrivateKey) Lift(pointer unsafe.Pointer) *Secp256r1PrivateKey {
+	result := &Secp256r1PrivateKey {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Secp256r1PrivateKey).Destroy)
+	return result
+}
+
+func (c FfiConverterSecp256r1PrivateKey) Read(reader io.Reader) *Secp256r1PrivateKey {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterSecp256r1PrivateKey) Lower(value *Secp256r1PrivateKey) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterSecp256r1PrivateKey) Write(writer io.Writer, value *Secp256r1PrivateKey) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerSecp256r1PrivateKey struct {}
+
+func (_ FfiDestroyerSecp256r1PrivateKey) Destroy(value *Secp256r1PrivateKey) {
+		value.Destroy()
+}
+
+
+
 // A secp256r1 signature.
 //
 // # BCS
@@ -14941,6 +16046,278 @@ func (c FfiConverterSecp256r1Signature) Write(writer io.Writer, value *Secp256r1
 type FfiDestroyerSecp256r1Signature struct {}
 
 func (_ FfiDestroyerSecp256r1Signature) Destroy(value *Secp256r1Signature) {
+		value.Destroy()
+}
+
+
+
+type Secp256r1VerifierInterface interface {
+	VerifySimple(message []byte, signature *SimpleSignature) error
+	VerifyUser(message []byte, signature *UserSignature) error
+}
+type Secp256r1Verifier struct {
+	ffiObject FfiObject
+}
+func NewSecp256r1Verifier() *Secp256r1Verifier {
+	return FfiConverterSecp256r1VerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *Secp256r1Verifier) VerifySimple(message []byte, signature *SimpleSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1Verifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterSimpleSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *Secp256r1Verifier) VerifyUser(message []byte, signature *UserSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1Verifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterUserSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+func (object *Secp256r1Verifier) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterSecp256r1Verifier struct {}
+
+var FfiConverterSecp256r1VerifierINSTANCE = FfiConverterSecp256r1Verifier{}
+
+
+func (c FfiConverterSecp256r1Verifier) Lift(pointer unsafe.Pointer) *Secp256r1Verifier {
+	result := &Secp256r1Verifier {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Secp256r1Verifier).Destroy)
+	return result
+}
+
+func (c FfiConverterSecp256r1Verifier) Read(reader io.Reader) *Secp256r1Verifier {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterSecp256r1Verifier) Lower(value *Secp256r1Verifier) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Secp256r1Verifier")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterSecp256r1Verifier) Write(writer io.Writer, value *Secp256r1Verifier) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerSecp256r1Verifier struct {}
+
+func (_ FfiDestroyerSecp256r1Verifier) Destroy(value *Secp256r1Verifier) {
+		value.Destroy()
+}
+
+
+
+type Secp256r1VerifyingKeyInterface interface {
+	PublicKey() *Secp256r1PublicKey
+	// Serialize this public key as DER-encoded data.
+	ToDer() ([]byte, error)
+	// Serialize this public key into PEM.
+	ToPem() (string, error)
+	Verify(message []byte, signature *Secp256r1Signature) error
+	VerifySimple(message []byte, signature *SimpleSignature) error
+	VerifyUser(message []byte, signature *UserSignature) error
+}
+type Secp256r1VerifyingKey struct {
+	ffiObject FfiObject
+}
+func NewSecp256r1VerifyingKey(publicKey *Secp256r1PublicKey) (*Secp256r1VerifyingKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_new(FfiConverterSecp256r1PublicKeyINSTANCE.Lower(publicKey),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1VerifyingKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1VerifyingKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+// Deserialize public key from ASN.1 DER-encoded data (binary format).
+func Secp256r1VerifyingKeyFromDer(bytes []byte) (*Secp256r1VerifyingKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_der(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1VerifyingKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1VerifyingKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Deserialize public key from PEM.
+func Secp256r1VerifyingKeyFromPem(s string) (*Secp256r1VerifyingKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_pem(FfiConverterStringINSTANCE.Lower(s),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1VerifyingKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1VerifyingKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+
+func (_self *Secp256r1VerifyingKey) PublicKey() *Secp256r1PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSecp256r1PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_public_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Serialize this public key as DER-encoded data.
+func (_self *Secp256r1VerifyingKey) ToDer() ([]byte, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_der(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize this public key into PEM.
+func (_self *Secp256r1VerifyingKey) ToPem() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_pem(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *Secp256r1VerifyingKey) Verify(message []byte, signature *Secp256r1Signature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterSecp256r1SignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *Secp256r1VerifyingKey) VerifySimple(message []byte, signature *SimpleSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterSimpleSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *Secp256r1VerifyingKey) VerifyUser(message []byte, signature *UserSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterUserSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+func (object *Secp256r1VerifyingKey) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterSecp256r1VerifyingKey struct {}
+
+var FfiConverterSecp256r1VerifyingKeyINSTANCE = FfiConverterSecp256r1VerifyingKey{}
+
+
+func (c FfiConverterSecp256r1VerifyingKey) Lift(pointer unsafe.Pointer) *Secp256r1VerifyingKey {
+	result := &Secp256r1VerifyingKey {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Secp256r1VerifyingKey).Destroy)
+	return result
+}
+
+func (c FfiConverterSecp256r1VerifyingKey) Read(reader io.Reader) *Secp256r1VerifyingKey {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterSecp256r1VerifyingKey) Lower(value *Secp256r1VerifyingKey) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterSecp256r1VerifyingKey) Write(writer io.Writer, value *Secp256r1VerifyingKey) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerSecp256r1VerifyingKey struct {}
+
+func (_ FfiDestroyerSecp256r1VerifyingKey) Destroy(value *Secp256r1VerifyingKey) {
 		value.Destroy()
 }
 
