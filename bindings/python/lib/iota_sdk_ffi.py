@@ -7746,11 +7746,14 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
 
 
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> sdk-bindings
+
+
+
+
+
+
 class ActiveJwk:
     """
     A new Jwk
