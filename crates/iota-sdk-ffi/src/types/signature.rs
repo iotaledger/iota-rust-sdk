@@ -181,6 +181,30 @@ pub struct SimpleSignature(pub iota_types::SimpleSignature);
 
 #[uniffi::export]
 impl SimpleSignature {
+    #[uniffi::constructor]
+    pub fn new_ed25519(signature: &Ed25519Signature, public_key: &Ed25519PublicKey) -> Self {
+        Self(iota_types::SimpleSignature::Ed25519 {
+            signature: **signature,
+            public_key: **public_key,
+        })
+    }
+
+    #[uniffi::constructor]
+    pub fn new_secp256k1(signature: &Secp256k1Signature, public_key: &Secp256k1PublicKey) -> Self {
+        Self(iota_types::SimpleSignature::Secp256k1 {
+            signature: **signature,
+            public_key: **public_key,
+        })
+    }
+
+    #[uniffi::constructor]
+    pub fn new_secp256r1(signature: &Secp256r1Signature, public_key: &Secp256r1PublicKey) -> Self {
+        Self(iota_types::SimpleSignature::Secp256r1 {
+            signature: **signature,
+            public_key: **public_key,
+        })
+    }
+
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
     }

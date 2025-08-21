@@ -152,7 +152,7 @@ fn mainnet_verifying_key() -> VerifyingKey {
 
 /// Load a fixed verifying key from zkLogin.vkey output. This is based on a
 /// local setup and should not use in production.
-fn dev_verifying_key() -> VerifyingKey {
+fn devnet_verifying_key() -> VerifyingKey {
     const CIRCOM_ALPHA_G1: CircomG1 = build_circom_g1([
         "20491192805390485299153009773594534940189261866228447918068658471970481763042",
         "9383485363053290200918347156157836566562967994039712273449902621266178545958",
@@ -232,8 +232,8 @@ impl VerifyingKey {
         mainnet_verifying_key()
     }
 
-    pub fn new_dev() -> Self {
-        dev_verifying_key()
+    pub fn new_devnet() -> Self {
+        devnet_verifying_key()
     }
 
     pub fn verify_zklogin(

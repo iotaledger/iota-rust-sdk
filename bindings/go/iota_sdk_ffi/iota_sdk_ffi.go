@@ -1566,6 +1566,42 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_finish()
+	})
+	if checksum != 31014 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_finish: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_verifier()
+	})
+	if checksum != 36902 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_verifier: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature()
+	})
+	if checksum != 48209 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier()
+	})
+	if checksum != 10820 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid()
 	})
 	if checksum != 45468 {
@@ -1832,6 +1868,33 @@ func uniffiCheckChecksums() {
 	if checksum != 65193 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify()
+	})
+	if checksum != 49901 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier()
+	})
+	if checksum != 20062 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier()
+	})
+	if checksum != 5971 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3105,6 +3168,33 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify()
+	})
+	if checksum != 47797 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier()
+	})
+	if checksum != 44658 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier()
+	})
+	if checksum != 9821 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration()
 	})
 	if checksum != 59803 {
@@ -3245,6 +3335,33 @@ func uniffiCheckChecksums() {
 	if checksum != 58864 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks()
+	})
+	if checksum != 62366 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify()
+	})
+	if checksum != 29967 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks()
+	})
+	if checksum != 49665 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4086,6 +4203,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message()
+	})
+	if checksum != 41388 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction()
+	})
+	if checksum != 27644 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new()
 	})
 	if checksum != 40069 {
@@ -4100,6 +4235,15 @@ func uniffiCheckChecksums() {
 	if checksum != 63622 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_multisigverifier_new()
+	})
+	if checksum != 53197 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_multisigverifier_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4451,6 +4595,33 @@ func uniffiCheckChecksums() {
 	if checksum != 2041 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519()
+	})
+	if checksum != 65185 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256k1()
+	})
+	if checksum != 56524 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256k1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256r1()
+	})
+	if checksum != 19953 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256r1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4824,6 +4995,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new()
+	})
+	if checksum != 32322 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new()
 	})
 	if checksum != 47546 {
@@ -4874,6 +5054,24 @@ func uniffiCheckChecksums() {
 	if checksum != 53294 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_devnet()
+	})
+	if checksum != 3274 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_devnet: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet()
+	})
+	if checksum != 12123 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet: UniFFI API checksum mismatch")
 	}
 	}
 }
@@ -12445,6 +12643,130 @@ func (_ FfiDestroyerMultisigAggregatedSignature) Destroy(value *MultisigAggregat
 
 
 
+type MultisigAggregatorInterface interface {
+	Finish() (*MultisigAggregatedSignature, error)
+	Verifier() *MultisigVerifier
+	WithSignature(signature *UserSignature) (*MultisigAggregator, error)
+	WithVerifier(verifier *MultisigVerifier) *MultisigAggregator
+}
+type MultisigAggregator struct {
+	ffiObject FfiObject
+}
+
+
+func MultisigAggregatorNewWithMessage(committee *MultisigCommittee, message []byte) *MultisigAggregator {
+	return FfiConverterMultisigAggregatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_message(FfiConverterMultisigCommitteeINSTANCE.Lower(committee), FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
+	}))
+}
+
+func MultisigAggregatorNewWithTransaction(committee *MultisigCommittee, transaction *Transaction) *MultisigAggregator {
+	return FfiConverterMultisigAggregatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction(FfiConverterMultisigCommitteeINSTANCE.Lower(committee), FfiConverterTransactionINSTANCE.Lower(transaction),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *MultisigAggregator) Finish() (*MultisigAggregatedSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigAggregator")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_finish(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *MultisigAggregatedSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterMultisigAggregatedSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *MultisigAggregator) Verifier() *MultisigVerifier {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigAggregator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterMultisigVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_verifier(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigAggregator) WithSignature(signature *UserSignature) (*MultisigAggregator, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigAggregator")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_signature(
+		_pointer,FfiConverterUserSignatureINSTANCE.Lower(signature),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *MultisigAggregator
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterMultisigAggregatorINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *MultisigAggregator) WithVerifier(verifier *MultisigVerifier) *MultisigAggregator {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigAggregator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterMultisigAggregatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_verifier(
+		_pointer,FfiConverterMultisigVerifierINSTANCE.Lower(verifier),_uniffiStatus)
+	}))
+}
+func (object *MultisigAggregator) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMultisigAggregator struct {}
+
+var FfiConverterMultisigAggregatorINSTANCE = FfiConverterMultisigAggregator{}
+
+
+func (c FfiConverterMultisigAggregator) Lift(pointer unsafe.Pointer) *MultisigAggregator {
+	result := &MultisigAggregator {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_multisigaggregator(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_multisigaggregator(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MultisigAggregator).Destroy)
+	return result
+}
+
+func (c FfiConverterMultisigAggregator) Read(reader io.Reader) *MultisigAggregator {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterMultisigAggregator) Lower(value *MultisigAggregator) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*MultisigAggregator")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterMultisigAggregator) Write(writer io.Writer, value *MultisigAggregator) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerMultisigAggregator struct {}
+
+func (_ FfiDestroyerMultisigAggregator) Destroy(value *MultisigAggregator) {
+		value.Destroy()
+}
+
+
+
 // A multisig committee
 //
 // A `MultisigCommittee` is a set of members who collectively control a single
@@ -13216,6 +13538,105 @@ func (c FfiConverterMultisigMemberSignature) Write(writer io.Writer, value *Mult
 type FfiDestroyerMultisigMemberSignature struct {}
 
 func (_ FfiDestroyerMultisigMemberSignature) Destroy(value *MultisigMemberSignature) {
+		value.Destroy()
+}
+
+
+
+type MultisigVerifierInterface interface {
+	Verify(message []byte, signature *MultisigAggregatedSignature) error
+	WithZkloginVerifier(zkloginVerifier *ZkloginVerifier) *MultisigVerifier
+	ZkloginVerifier() **ZkloginVerifier
+}
+type MultisigVerifier struct {
+	ffiObject FfiObject
+}
+func NewMultisigVerifier() *MultisigVerifier {
+	return FfiConverterMultisigVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_multisigverifier_new(_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *MultisigVerifier) Verify(message []byte, signature *MultisigAggregatedSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigVerifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_multisigverifier_verify(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterMultisigAggregatedSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *MultisigVerifier) WithZkloginVerifier(zkloginVerifier *ZkloginVerifier) *MultisigVerifier {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterMultisigVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(
+		_pointer,FfiConverterZkloginVerifierINSTANCE.Lower(zkloginVerifier),_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigVerifier) ZkloginVerifier() **ZkloginVerifier {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *MultisigVerifier) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMultisigVerifier struct {}
+
+var FfiConverterMultisigVerifierINSTANCE = FfiConverterMultisigVerifier{}
+
+
+func (c FfiConverterMultisigVerifier) Lift(pointer unsafe.Pointer) *MultisigVerifier {
+	result := &MultisigVerifier {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_multisigverifier(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_multisigverifier(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MultisigVerifier).Destroy)
+	return result
+}
+
+func (c FfiConverterMultisigVerifier) Read(reader io.Reader) *MultisigVerifier {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterMultisigVerifier) Lower(value *MultisigVerifier) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*MultisigVerifier")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterMultisigVerifier) Write(writer io.Writer, value *MultisigVerifier) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerMultisigVerifier struct {}
+
+func (_ FfiDestroyerMultisigVerifier) Destroy(value *MultisigVerifier) {
 		value.Destroy()
 }
 
@@ -15854,6 +16275,24 @@ type SimpleSignature struct {
 }
 
 
+func SimpleSignatureNewEd25519(signature *Ed25519Signature, publicKey *Ed25519PublicKey) *SimpleSignature {
+	return FfiConverterSimpleSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_ed25519(FfiConverterEd25519SignatureINSTANCE.Lower(signature), FfiConverterEd25519PublicKeyINSTANCE.Lower(publicKey),_uniffiStatus)
+	}))
+}
+
+func SimpleSignatureNewSecp256k1(signature *Secp256k1Signature, publicKey *Secp256k1PublicKey) *SimpleSignature {
+	return FfiConverterSimpleSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_secp256k1(FfiConverterSecp256k1SignatureINSTANCE.Lower(signature), FfiConverterSecp256k1PublicKeyINSTANCE.Lower(publicKey),_uniffiStatus)
+	}))
+}
+
+func SimpleSignatureNewSecp256r1(signature *Secp256r1Signature, publicKey *Secp256r1PublicKey) *SimpleSignature {
+	return FfiConverterSimpleSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_secp256r1(FfiConverterSecp256r1SignatureINSTANCE.Lower(signature), FfiConverterSecp256r1PublicKeyINSTANCE.Lower(publicKey),_uniffiStatus)
+	}))
+}
+
 
 
 func (_self *SimpleSignature) Ed25519PubKey() *Ed25519PublicKey {
@@ -18278,6 +18717,107 @@ func (_ FfiDestroyerUserSignature) Destroy(value *UserSignature) {
 
 
 
+// Verifier that will verify all UserSignature variants
+type UserSignatureVerifierInterface interface {
+	Verify(message []byte, signature *UserSignature) error
+	WithZkloginVerifier(zkloginVerifier *ZkloginVerifier) *UserSignatureVerifier
+	ZkloginVerifier() **ZkloginVerifier
+}
+// Verifier that will verify all UserSignature variants
+type UserSignatureVerifier struct {
+	ffiObject FfiObject
+}
+func NewUserSignatureVerifier() *UserSignatureVerifier {
+	return FfiConverterUserSignatureVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *UserSignatureVerifier) Verify(message []byte, signature *UserSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignatureVerifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterUserSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *UserSignatureVerifier) WithZkloginVerifier(zkloginVerifier *ZkloginVerifier) *UserSignatureVerifier {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignatureVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUserSignatureVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
+		_pointer,FfiConverterZkloginVerifierINSTANCE.Lower(zkloginVerifier),_uniffiStatus)
+	}))
+}
+
+func (_self *UserSignatureVerifier) ZkloginVerifier() **ZkloginVerifier {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignatureVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *UserSignatureVerifier) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterUserSignatureVerifier struct {}
+
+var FfiConverterUserSignatureVerifierINSTANCE = FfiConverterUserSignatureVerifier{}
+
+
+func (c FfiConverterUserSignatureVerifier) Lift(pointer unsafe.Pointer) *UserSignatureVerifier {
+	result := &UserSignatureVerifier {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*UserSignatureVerifier).Destroy)
+	return result
+}
+
+func (c FfiConverterUserSignatureVerifier) Read(reader io.Reader) *UserSignatureVerifier {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterUserSignatureVerifier) Lower(value *UserSignatureVerifier) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*UserSignatureVerifier")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterUserSignatureVerifier) Write(writer io.Writer, value *UserSignatureVerifier) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerUserSignatureVerifier struct {}
+
+func (_ FfiDestroyerUserSignatureVerifier) Destroy(value *UserSignatureVerifier) {
+		value.Destroy()
+}
+
+
+
 // An execution time observation from a particular validator
 //
 // # BCS
@@ -19063,6 +19603,112 @@ func (c FfiConverterZkLoginPublicIdentifier) Write(writer io.Writer, value *ZkLo
 type FfiDestroyerZkLoginPublicIdentifier struct {}
 
 func (_ FfiDestroyerZkLoginPublicIdentifier) Destroy(value *ZkLoginPublicIdentifier) {
+		value.Destroy()
+}
+
+
+
+type ZkloginVerifierInterface interface {
+	Jwks() map[JwkId]Jwk
+	Verify(message []byte, authenticator *ZkLoginAuthenticator) error
+	WithJwks(jwks map[JwkId]Jwk) *ZkloginVerifier
+}
+type ZkloginVerifier struct {
+	ffiObject FfiObject
+}
+
+
+func ZkloginVerifierNewDevnet() *ZkloginVerifier {
+	return FfiConverterZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_devnet(_uniffiStatus)
+	}))
+}
+
+func ZkloginVerifierNewMainnet() *ZkloginVerifier {
+	return FfiConverterZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *ZkloginVerifier) Jwks() map[JwkId]Jwk {
+	_pointer := _self.ffiObject.incrementPointer("*ZkloginVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterMapJwkIdJwkINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *ZkloginVerifier) Verify(message []byte, authenticator *ZkLoginAuthenticator) error {
+	_pointer := _self.ffiObject.incrementPointer("*ZkloginVerifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterZkLoginAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *ZkloginVerifier) WithJwks(jwks map[JwkId]Jwk) *ZkloginVerifier {
+	_pointer := _self.ffiObject.incrementPointer("*ZkloginVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(
+		_pointer,FfiConverterMapJwkIdJwkINSTANCE.Lower(jwks),_uniffiStatus)
+	}))
+}
+func (object *ZkloginVerifier) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterZkloginVerifier struct {}
+
+var FfiConverterZkloginVerifierINSTANCE = FfiConverterZkloginVerifier{}
+
+
+func (c FfiConverterZkloginVerifier) Lift(pointer unsafe.Pointer) *ZkloginVerifier {
+	result := &ZkloginVerifier {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ZkloginVerifier).Destroy)
+	return result
+}
+
+func (c FfiConverterZkloginVerifier) Read(reader io.Reader) *ZkloginVerifier {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterZkloginVerifier) Lower(value *ZkloginVerifier) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ZkloginVerifier")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterZkloginVerifier) Write(writer io.Writer, value *ZkloginVerifier) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerZkloginVerifier struct {}
+
+func (_ FfiDestroyerZkloginVerifier) Destroy(value *ZkloginVerifier) {
 		value.Destroy()
 }
 
@@ -25954,6 +26600,43 @@ func (_ FfiDestroyerOptionalZkLoginPublicIdentifier) Destroy(value **ZkLoginPubl
 	}
 }
 
+type FfiConverterOptionalZkloginVerifier struct{}
+
+var FfiConverterOptionalZkloginVerifierINSTANCE = FfiConverterOptionalZkloginVerifier{}
+
+func (c FfiConverterOptionalZkloginVerifier) Lift(rb RustBufferI) **ZkloginVerifier {
+	return LiftFromRustBuffer[**ZkloginVerifier](c, rb)
+}
+
+func (_ FfiConverterOptionalZkloginVerifier) Read(reader io.Reader) **ZkloginVerifier {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterZkloginVerifierINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalZkloginVerifier) Lower(value **ZkloginVerifier) C.RustBuffer {
+	return LowerIntoRustBuffer[**ZkloginVerifier](c, value)
+}
+
+func (_ FfiConverterOptionalZkloginVerifier) Write(writer io.Writer, value **ZkloginVerifier) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterZkloginVerifierINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalZkloginVerifier struct {}
+
+func (_ FfiDestroyerOptionalZkloginVerifier) Destroy(value **ZkloginVerifier) {
+	if value != nil {
+		FfiDestroyerZkloginVerifier{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalCheckpointSummary struct{}
 
 var FfiConverterOptionalCheckpointSummaryINSTANCE = FfiConverterOptionalCheckpointSummary{}
@@ -29447,6 +30130,50 @@ func (_ FfiDestroyerMapObjectIdUpgradeInfo) Destroy(mapValue map[*ObjectId]Upgra
 	for key, value := range mapValue {
 		FfiDestroyerObjectId{}.Destroy(key)
 		FfiDestroyerUpgradeInfo{}.Destroy(value)
+	}
+}
+
+type FfiConverterMapJwkIdJwk struct {}
+
+var FfiConverterMapJwkIdJwkINSTANCE = FfiConverterMapJwkIdJwk{}
+
+func (c FfiConverterMapJwkIdJwk) Lift(rb RustBufferI) map[JwkId]Jwk {
+	return LiftFromRustBuffer[map[JwkId]Jwk](c, rb)
+}
+
+func (_ FfiConverterMapJwkIdJwk) Read(reader io.Reader) map[JwkId]Jwk {
+	result := make(map[JwkId]Jwk)
+	length := readInt32(reader)
+	for i := int32(0); i < length; i++ {
+		key := FfiConverterJwkIdINSTANCE.Read(reader)
+		value := FfiConverterJwkINSTANCE.Read(reader)
+		result[key] = value
+	}
+	return result
+}
+
+func (c FfiConverterMapJwkIdJwk) Lower(value map[JwkId]Jwk) C.RustBuffer {
+	return LowerIntoRustBuffer[map[JwkId]Jwk](c, value)
+}
+
+func (_ FfiConverterMapJwkIdJwk) Write(writer io.Writer, mapValue map[JwkId]Jwk) {
+	if len(mapValue) > math.MaxInt32 {
+		panic("map[JwkId]Jwk is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(mapValue)))
+	for key, value := range mapValue {
+		FfiConverterJwkIdINSTANCE.Write(writer, key)
+		FfiConverterJwkINSTANCE.Write(writer, value)
+	}
+}
+
+type FfiDestroyerMapJwkIdJwk struct {}
+
+func (_ FfiDestroyerMapJwkIdJwk) Destroy(mapValue map[JwkId]Jwk) {
+	for key, value := range mapValue {
+		FfiDestroyerJwkId{}.Destroy(key)
+		FfiDestroyerJwk{}.Destroy(value)
 	}
 }
 /**

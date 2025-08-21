@@ -18,6 +18,7 @@ mod verify;
 #[cfg(test)]
 mod tests;
 
+#[derive(Clone)]
 pub struct ZkloginVerifier {
     proof_verifying_key: verify::VerifyingKey,
     jwks: HashMap<JwkId, Jwk>,
@@ -35,8 +36,8 @@ impl ZkloginVerifier {
         Self::new(verify::VerifyingKey::new_mainnet())
     }
 
-    pub fn new_dev() -> Self {
-        Self::new(verify::VerifyingKey::new_dev())
+    pub fn new_devnet() -> Self {
+        Self::new(verify::VerifyingKey::new_devnet())
     }
 
     pub fn jwks(&self) -> &HashMap<JwkId, Jwk> {

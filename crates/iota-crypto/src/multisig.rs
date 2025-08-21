@@ -9,7 +9,7 @@ use iota_sdk_types::{
 
 use crate::{SignatureError, Verifier};
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct MultisigVerifier {
     #[cfg(feature = "zklogin")]
     zklogin_verifier: Option<crate::zklogin::ZkloginVerifier>,
@@ -200,7 +200,7 @@ impl Iterator for BitmapIndices {
 }
 
 /// Verifier that will verify all UserSignature variants
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct UserSignatureVerifier {
     inner: MultisigVerifier,
 }
@@ -259,6 +259,7 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
     }
 }
 
+#[derive(Clone)]
 pub struct MultisigAggregator {
     committee: MultisigCommittee,
     signatures: std::collections::BTreeMap<usize, MultisigMemberSignature>,
