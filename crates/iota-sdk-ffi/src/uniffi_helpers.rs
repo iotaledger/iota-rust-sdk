@@ -14,7 +14,7 @@ use crate::types::{
 };
 
 macro_rules! define_paged_record {
-    ($id:ident, $typ:ty) => {
+    ($id:ident, $type_:ty) => {
         /// A page of items returned by the GraphQL server.
         #[derive(Debug, Clone, uniffi::Record)]
         pub struct $id {
@@ -22,11 +22,11 @@ macro_rules! define_paged_record {
             /// more pages.
             pub page_info: PageInfo,
             /// The data returned by the server.
-            pub data: Vec<$typ>,
+            pub data: Vec<$type_>,
         }
 
-        impl From<iota_graphql_client::pagination::Page<$typ>> for $id {
-            fn from(value: iota_graphql_client::pagination::Page<$typ>) -> Self {
+        impl From<iota_graphql_client::pagination::Page<$type_>> for $id {
+            fn from(value: iota_graphql_client::pagination::Page<$type_>) -> Self {
                 Self {
                     page_info: value.page_info.into(),
                     data: value.data,
@@ -44,7 +44,7 @@ define_paged_record!(EventPage, Event);
 define_paged_record!(ValidatorPage, Validator);
 
 macro_rules! define_paged_object {
-    ($id:ident, $typ:ty) => {
+    ($id:ident, $type_:ty) => {
         /// A page of items returned by the GraphQL server.
         #[derive(Debug, Clone, uniffi::Record)]
         pub struct $id {
@@ -52,11 +52,11 @@ macro_rules! define_paged_object {
             /// more pages.
             pub page_info: PageInfo,
             /// The data returned by the server.
-            pub data: Vec<std::sync::Arc<$typ>>,
+            pub data: Vec<std::sync::Arc<$type_>>,
         }
 
-        impl From<iota_graphql_client::pagination::Page<$typ>> for $id {
-            fn from(value: iota_graphql_client::pagination::Page<$typ>) -> Self {
+        impl From<iota_graphql_client::pagination::Page<$type_>> for $id {
+            fn from(value: iota_graphql_client::pagination::Page<$type_>) -> Self {
                 Self {
                     page_info: value.page_info.into(),
                     data: value

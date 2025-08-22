@@ -1,0 +1,31 @@
+[default]
+extend-ignore-identifiers-re = [
+  # Short git hashes
+  "^[a-f0-9]{7}$",
+  "^[a-f0-9]{12}$",
+  # Base64
+  "^[a-zA-Z0-9_]{43}$",
+  "^[a-zA-Z0-9_]{44}$",
+  "^[a-zA-Z0-9_]{47}$",
+  "^[a-zA-Z0-9_]{49}$",
+  "^[a-zA-Z0-9_]{56,}$",
+]
+
+extend-ignore-re = [
+  # Truncated hex IDs (ex. "0x9...a9b")
+  "0x[a-f0-9]\\.{3}[a-f0-9]{3}",
+  # Documentation pattern
+  "\\d*OCTECT",
+]
+
+[default.extend-words]
+# random identifiers, variables, functions, ...
+groth = "groth"
+
+[files]
+extend-exclude = [
+  "bindings/go/iota_sdk_ffi/iota_sdk_ffi.go",
+  "bindings/go/iota_sdk_ffi/iota_sdk_ffi.h",
+  "bindings/kotlin/lib/iota_sdk/iota_sdk_ffi.kt",
+  "bindings/python/lib/iota_sdk_ffi.py",
+]

@@ -59,7 +59,7 @@ impl std::error::Error for SignatureFromBytesError {}
 /// Utility for calculating base64 encoding lengths.
 ///
 /// In the Base64 encoding each character is used to represent 6 bits (log2(64)
-/// = 6). This means that 4 characters are used to represnet 4*6 = 24 bits = 3
+/// = 6). This means that 4 characters are used to represent 4*6 = 24 bits = 3
 /// bytes. So you need 4*(`n`/3) characters in order to represent `n` bytes, and
 /// this needs to be rounded up to a multiple of 4. The number of unused padding
 /// characters resulting from the rounding will be 0, 1, 2, or 3.

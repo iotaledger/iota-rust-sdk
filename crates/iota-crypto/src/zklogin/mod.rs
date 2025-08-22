@@ -54,11 +54,11 @@ impl Verifier<ZkLoginAuthenticator> for ZkloginVerifier {
         message: &[u8],
         signature: &ZkLoginAuthenticator,
     ) -> Result<(), SignatureError> {
-        // 1. check that we have a valid corrisponding Jwk
+        // 1. check that we have a valid corresponding Jwk
         let jwt_details = JwtDetails::from_zklogin_inputs(&signature.inputs)?;
         let jwk = self.jwks.get(&jwt_details.id).ok_or_else(|| {
             SignatureError::from_source(format!(
-                "unable to find corrisponding jwk with id '{:?}' for provided authenticator",
+                "unable to find corresponding jwk with id '{:?}' for provided authenticator",
                 jwt_details.id
             ))
         })?;
@@ -86,7 +86,7 @@ impl Verifier<UserSignature> for ZkloginVerifier {
     }
 }
 
-/// A structed of parsed JWT details, consists of kid, header, iss.
+/// A struct of parsed JWT details, consists of kid, header, iss.
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct JwtDetails {
     header: JwtHeader,
@@ -112,7 +112,7 @@ impl JwtDetails {
 struct JwtHeader {
     alg: String,
     kid: String,
-    typ: Option<String>,
+    type_: Option<String>,
 }
 
 impl JwtHeader {
@@ -124,17 +124,17 @@ impl JwtHeader {
             alg: String,
             kid: String,
             #[serde(skip_serializing_if = "Option::is_none")]
-            typ: Option<String>,
+            type_: Option<String>,
         }
 
         let header_bytes = Base64UrlUnpadded::decode_vec(s)
             .map_err(|e| SignatureError::from_source(e.to_string()))?;
-        let Header { alg, kid, typ } =
+        let Header { alg, kid, type_ } =
             serde_json::from_slice(&header_bytes).map_err(SignatureError::from_source)?;
         if alg != "RS256" {
             return Err(SignatureError::from_source("jwt alg must be RS256"));
         }
-        Ok(Self { alg, kid, typ })
+        Ok(Self { alg, kid, type_ })
     }
 }
 
