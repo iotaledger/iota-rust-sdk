@@ -6441,7 +6441,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new() != 53294.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() != 37528.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() != 44446.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet() != 12123.toShort()) {
@@ -38534,7 +38534,11 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
 
     
     companion object {
-         fun `newDev`(): ZkloginVerifier {
+        
+    /**
+     * Load a fixed verifying key from zkLogin.vkey output. This is based on a
+     * local setup and should not be used in production.
+     */ fun `newDev`(): ZkloginVerifier {
             return FfiConverterTypeZkloginVerifier.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(

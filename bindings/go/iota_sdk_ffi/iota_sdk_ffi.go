@@ -5312,7 +5312,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev()
 	})
-	if checksum != 37528 {
+	if checksum != 44446 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev: UniFFI API checksum mismatch")
 	}
@@ -20390,6 +20390,8 @@ type ZkloginVerifier struct {
 }
 
 
+// Load a fixed verifying key from zkLogin.vkey output. This is based on a
+// local setup and should not be used in production.
 func ZkloginVerifierNewDev() *ZkloginVerifier {
 	return FfiConverterZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(_uniffiStatus)

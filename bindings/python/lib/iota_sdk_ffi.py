@@ -1561,7 +1561,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new() != 53294:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() != 37528:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() != 44446:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet() != 12123:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -34402,6 +34402,11 @@ class ZkloginVerifier():
         return inst
     @classmethod
     def new_dev(cls, ):
+        """
+        Load a fixed verifying key from zkLogin.vkey output. This is based on a
+        local setup and should not be used in production.
+        """
+
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev,)
         return cls._make_instance_(pointer)
