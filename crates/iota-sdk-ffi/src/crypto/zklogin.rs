@@ -18,6 +18,8 @@ impl ZkloginVerifier {
         Self(iota_crypto::zklogin::ZkloginVerifier::new_mainnet())
     }
 
+    /// Load a fixed verifying key from zkLogin.vkey output. This is based on a
+    /// local setup and should not be used in production.
     #[uniffi::constructor]
     pub fn new_dev() -> Self {
         Self(iota_crypto::zklogin::ZkloginVerifier::new_dev())
