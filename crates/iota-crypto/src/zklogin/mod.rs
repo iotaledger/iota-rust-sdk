@@ -54,11 +54,11 @@ impl Verifier<ZkLoginAuthenticator> for ZkloginVerifier {
         message: &[u8],
         signature: &ZkLoginAuthenticator,
     ) -> Result<(), SignatureError> {
-        // 1. check that we have a valid corrisponding Jwk
+        // 1. check that we have a valid corresponding Jwk
         let jwt_details = JwtDetails::from_zklogin_inputs(&signature.inputs)?;
         let jwk = self.jwks.get(&jwt_details.id).ok_or_else(|| {
             SignatureError::from_source(format!(
-                "unable to find corrisponding jwk with id '{:?}' for provided authenticator",
+                "unable to find corresponding jwk with id '{:?}' for provided authenticator",
                 jwt_details.id
             ))
         })?;
@@ -86,7 +86,7 @@ impl Verifier<UserSignature> for ZkloginVerifier {
     }
 }
 
-/// A structed of parsed JWT details, consists of kid, header, iss.
+/// A struct of parsed JWT details, consists of kid, header, iss.
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct JwtDetails {
     header: JwtHeader,

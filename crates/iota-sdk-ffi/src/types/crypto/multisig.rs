@@ -271,7 +271,7 @@ impl MultisigAggregatedSignature {
 /// A multisig committee
 ///
 /// A `MultisigCommittee` is a set of members who collectively control a single
-/// `Address` on the IOTA blockchain. The number of required signautres to
+/// `Address` on the IOTA blockchain. The number of required signatures to
 /// authorize the execution of a transaction is determined by
 /// `(signature_0_weight + signature_1_weight ..) >= threshold`.
 ///

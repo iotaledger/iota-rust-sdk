@@ -285,7 +285,7 @@ fn zklogin_proof_to_arkworks(
     })
 }
 
-/// Given a SimpleSignature convert the corrisponding public key, prefixed with
+/// Given a SimpleSignature convert the corresponding public key, prefixed with
 /// the signature scheme flag, to two Bn254Frs
 pub fn public_key_to_frs(signature: &SimpleSignature) -> (Fr, Fr) {
     // buf length of the longest public key secp256r1/secp256k1 of 33 bytes plus 1

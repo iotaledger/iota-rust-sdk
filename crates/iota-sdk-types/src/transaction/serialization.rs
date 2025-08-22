@@ -1116,7 +1116,7 @@ mod transaction_expiration {
                     // `deny_unknown_fields`. If additional properties were allowed
                     // one could easily construct an object that validated against
                     // multiple variants since here it's the properties rather than
-                    // the values of a property that distingish between variants.
+                    // the values of a property that distinguish between variants.
                     additional_properties: Some(Box::new(false.into())),
                     ..Default::default()
                 })),

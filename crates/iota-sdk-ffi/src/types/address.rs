@@ -28,7 +28,7 @@ use crate::error::Result;
 ///
 /// Deriving an address consists of the Blake2b256 hash of the sequence of bytes
 /// of its corresponding authenticator, prefixed with a domain-separator (except
-/// ed25519, for compatability reasons). For each other authenticator, this
+/// ed25519, for compatibility reasons). For each other authenticator, this
 /// domain-separator is the single byte-value of its
 /// [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
 /// schema flag || authenticator bytes)`.

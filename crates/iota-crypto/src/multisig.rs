@@ -402,7 +402,7 @@ fn multisig_pubkey_and_signature_from_user_signature(
         }
 
         UserSignature::Multisig(_) | UserSignature::Passkey(_) => {
-            Err(SignatureError::from_source("invalid siganture scheme"))
+            Err(SignatureError::from_source("invalid signature scheme"))
         }
     }
 }
