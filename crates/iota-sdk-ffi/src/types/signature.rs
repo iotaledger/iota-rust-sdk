@@ -66,6 +66,28 @@ pub struct UserSignature(pub iota_types::UserSignature);
 
 #[uniffi::export]
 impl UserSignature {
+    #[uniffi::constructor]
+    pub fn new_simple(signature: &SimpleSignature) -> Self {
+        Self(iota_types::UserSignature::Simple(signature.0.clone()))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_multisig(signature: &MultisigAggregatedSignature) -> Self {
+        Self(iota_types::UserSignature::Multisig(signature.0.clone()))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_zklogin(authenticator: &ZkLoginAuthenticator) -> Self {
+        Self(iota_types::UserSignature::ZkLogin(Box::new(
+            authenticator.0.clone(),
+        )))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_passkey(authenticator: &PasskeyAuthenticator) -> Self {
+        Self(iota_types::UserSignature::Passkey(authenticator.0.clone()))
+    }
+
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
@@ -181,6 +203,30 @@ pub struct SimpleSignature(pub iota_types::SimpleSignature);
 
 #[uniffi::export]
 impl SimpleSignature {
+    #[uniffi::constructor]
+    pub fn new_ed25519(signature: &Ed25519Signature, public_key: &Ed25519PublicKey) -> Self {
+        Self(iota_types::SimpleSignature::Ed25519 {
+            signature: **signature,
+            public_key: **public_key,
+        })
+    }
+
+    #[uniffi::constructor]
+    pub fn new_secp256k1(signature: &Secp256k1Signature, public_key: &Secp256k1PublicKey) -> Self {
+        Self(iota_types::SimpleSignature::Secp256k1 {
+            signature: **signature,
+            public_key: **public_key,
+        })
+    }
+
+    #[uniffi::constructor]
+    pub fn new_secp256r1(signature: &Secp256r1Signature, public_key: &Secp256r1PublicKey) -> Self {
+        Self(iota_types::SimpleSignature::Secp256r1 {
+            signature: **signature,
+            public_key: **public_key,
+        })
+    }
+
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
     }
