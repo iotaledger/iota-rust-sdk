@@ -18740,7 +18740,7 @@ class AddressProtocol(typing.Protocol):
 
     Deriving an address consists of the Blake2b256 hash of the sequence of bytes
     of its corresponding authenticator, prefixed with a domain-separator (except
-    ed25519, for compatability reasons). For each other authenticator, this
+    ed25519, for compatibility reasons). For each other authenticator, this
     domain-separator is the single byte-value of its
     [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
     schema flag || authenticator bytes)`.
@@ -18802,7 +18802,7 @@ class Address():
 
     Deriving an address consists of the Blake2b256 hash of the sequence of bytes
     of its corresponding authenticator, prefixed with a domain-separator (except
-    ed25519, for compatability reasons). For each other authenticator, this
+    ed25519, for compatibility reasons). For each other authenticator, this
     domain-separator is the single byte-value of its
     [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
     schema flag || authenticator bytes)`.
@@ -26241,7 +26241,7 @@ class MultisigCommitteeProtocol(typing.Protocol):
     A multisig committee
 
     A `MultisigCommittee` is a set of members who collectively control a single
-    `Address` on the IOTA blockchain. The number of required signautres to
+    `Address` on the IOTA blockchain. The number of required signatures to
     authorize the execution of a transaction is determined by
     `(signature_0_weight + signature_1_weight ..) >= threshold`.
 
@@ -26302,7 +26302,7 @@ class MultisigCommittee():
     A multisig committee
 
     A `MultisigCommittee` is a set of members who collectively control a single
-    `Address` on the IOTA blockchain. The number of required signautres to
+    `Address` on the IOTA blockchain. The number of required signatures to
     authorize the execution of a transaction is determined by
     `(signature_0_weight + signature_1_weight ..) >= threshold`.
 

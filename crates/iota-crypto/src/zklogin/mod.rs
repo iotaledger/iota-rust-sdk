@@ -112,7 +112,7 @@ impl JwtDetails {
 struct JwtHeader {
     alg: String,
     kid: String,
-    typ: Option<String>,
+    type_: Option<String>,
 }
 
 impl JwtHeader {
@@ -124,17 +124,17 @@ impl JwtHeader {
             alg: String,
             kid: String,
             #[serde(skip_serializing_if = "Option::is_none")]
-            typ: Option<String>,
+            type_: Option<String>,
         }
 
         let header_bytes = Base64UrlUnpadded::decode_vec(s)
             .map_err(|e| SignatureError::from_source(e.to_string()))?;
-        let Header { alg, kid, typ } =
+        let Header { alg, kid, type_ } =
             serde_json::from_slice(&header_bytes).map_err(SignatureError::from_source)?;
         if alg != "RS256" {
             return Err(SignatureError::from_source("jwt alg must be RS256"));
         }
-        Ok(Self { alg, kid, typ })
+        Ok(Self { alg, kid, type_ })
     }
 }
 
