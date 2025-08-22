@@ -68,7 +68,7 @@ pub struct PaginationFilter {
     pub direction: Direction,
     /// An opaque cursor used for pagination.
     pub cursor: Option<String>,
-    /// The maximum number of items to return. If this is ommitted, it will
+    /// The maximum number of items to return. If this is omitted, it will
     /// lazily query the service configuration for the max page size.
     pub limit: Option<i32>,
 }

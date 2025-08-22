@@ -128,7 +128,7 @@ impl FaucetClient {
                     error!("Faucet request was unsuccessful: {err}");
                     bail!("Faucet request was unsuccessful: {err}")
                 } else {
-                    info!("Request succesful: {:?}", faucet_resp.task);
+                    info!("Request successful: {:?}", faucet_resp.task);
                     Ok(faucet_resp.task)
                 }
             }
