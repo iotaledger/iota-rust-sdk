@@ -10,36 +10,17 @@ extend-ignore-identifiers-re = [
   "^[a-zA-Z0-9_]{49}$",
   "^[a-zA-Z0-9_]{56,}$",
 ]
-# Truncated hex IDs (ex. "0x9...a9b")
-extend-ignore-re = ["0x[a-f0-9]\\.{3}[a-f0-9]{3}"]
 
-# [type.hex-move]
-# extend-glob = ["hex.move"]
-# extend-words = { ba = "ba" }
-
-# [type.css]
-# extend-glob = ["*.css"]
-# extend-words = { wdth = "wdth" }
+extend-ignore-re = [
+  # Truncated hex IDs (ex. "0x9...a9b")
+  "0x[a-f0-9]\\.{3}[a-f0-9]{3}",
+  # Documentation pattern
+  "\\d*OCTECT",
+]
 
 [default.extend-words]
-# # ordinal numbers (2nd, ...)
-# nd = "nd"
-# # random identifiers, variables, functions, ...
-# tto = "tto"
-# ser = "ser"
+# random identifiers, variables, functions, ...
 groth = "groth"
-# # Identity
-# AAS = "AAS"
-# # actual typos purposely used in tests
-# assing = "assing"
-# tring = "tring"
-# # better suggestions for typos
-# transferer = "transferrer"
-# # not in the correction dictionary
-# checkpoitn = "checkpoint"
-
-# [default.extend-identifiers]
-# numer = "numer"
 
 [files]
 extend-exclude = [
