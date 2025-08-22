@@ -18,6 +18,7 @@ mod verify;
 #[cfg(test)]
 mod tests;
 
+#[derive(Clone)]
 pub struct ZkloginVerifier {
     proof_verifying_key: verify::VerifyingKey,
     jwks: HashMap<JwkId, Jwk>,
@@ -35,6 +36,8 @@ impl ZkloginVerifier {
         Self::new(verify::VerifyingKey::new_mainnet())
     }
 
+    /// Load a fixed verifying key from zkLogin.vkey output. This is based on a
+    /// local setup and should not be used in production.
     pub fn new_dev() -> Self {
         Self::new(verify::VerifyingKey::new_dev())
     }
