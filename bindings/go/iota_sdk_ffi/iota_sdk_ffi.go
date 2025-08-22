@@ -5211,6 +5211,42 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig()
+	})
+	if checksum != 39922 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey()
+	})
+	if checksum != 25378 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple()
+	})
+	if checksum != 31310 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin()
+	})
+	if checksum != 43856 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new()
 	})
 	if checksum != 32322 {
@@ -5274,11 +5310,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_devnet()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev()
 	})
-	if checksum != 3274 {
+	if checksum != 37528 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_devnet: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -19226,6 +19262,30 @@ func UserSignatureFromBytes(bytes []byte) (*UserSignature, error) {
 		}
 }
 
+func UserSignatureNewMultisig(signature *MultisigAggregatedSignature) *UserSignature {
+	return FfiConverterUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(FfiConverterMultisigAggregatedSignatureINSTANCE.Lower(signature),_uniffiStatus)
+	}))
+}
+
+func UserSignatureNewPasskey(authenticator *PasskeyAuthenticator) *UserSignature {
+	return FfiConverterUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey(FfiConverterPasskeyAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
+	}))
+}
+
+func UserSignatureNewSimple(signature *SimpleSignature) *UserSignature {
+	return FfiConverterUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(FfiConverterSimpleSignatureINSTANCE.Lower(signature),_uniffiStatus)
+	}))
+}
+
+func UserSignatureNewZklogin(authenticator *ZkLoginAuthenticator) *UserSignature {
+	return FfiConverterUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin(FfiConverterZkLoginAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
+	}))
+}
+
 
 
 func (_self *UserSignature) AsMultisig() *MultisigAggregatedSignature {
@@ -20330,9 +20390,9 @@ type ZkloginVerifier struct {
 }
 
 
-func ZkloginVerifierNewDevnet() *ZkloginVerifier {
+func ZkloginVerifierNewDev() *ZkloginVerifier {
 	return FfiConverterZkloginVerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_devnet(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(_uniffiStatus)
 	}))
 }
 

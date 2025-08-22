@@ -2005,6 +2005,14 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3098,6 +3106,14 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new(
@@ -3112,7 +3128,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_devnet(
+fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet(
 ): Short
@@ -4517,6 +4533,14 @@ fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(`base64`: RustB
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4631,7 +4655,7 @@ fun uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(`ptr`: Pointer,uniffi_out_err: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_zkloginverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_devnet(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6384,6 +6408,18 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes() != 37499.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig() != 39922.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey() != 25378.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple() != 31310.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin() != 43856.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() != 32322.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6405,7 +6441,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new() != 53294.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_devnet() != 3274.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() != 37528.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet() != 12123.toShort()) {
@@ -36068,6 +36104,46 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
+         fun `newMultisig`(`signature`: MultisigAggregatedSignature): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(
+        FfiConverterTypeMultisigAggregatedSignature.lower(`signature`),_status)
+}
+    )
+    }
+    
+
+         fun `newPasskey`(`authenticator`: PasskeyAuthenticator): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey(
+        FfiConverterTypePasskeyAuthenticator.lower(`authenticator`),_status)
+}
+    )
+    }
+    
+
+         fun `newSimple`(`signature`: SimpleSignature): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(
+        FfiConverterTypeSimpleSignature.lower(`signature`),_status)
+}
+    )
+    }
+    
+
+         fun `newZklogin`(`authenticator`: ZkLoginAuthenticator): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin(
+        FfiConverterTypeZkLoginAuthenticator.lower(`authenticator`),_status)
+}
+    )
+    }
+    
+
         
     }
     
@@ -38458,10 +38534,10 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
 
     
     companion object {
-         fun `newDevnet`(): ZkloginVerifier {
+         fun `newDev`(): ZkloginVerifier {
             return FfiConverterTypeZkloginVerifier.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_devnet(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
         _status)
 }
     )

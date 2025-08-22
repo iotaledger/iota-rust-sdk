@@ -69,7 +69,7 @@ fn zklogin_sign_personal_message() {
         max_epoch,
         signature,
     };
-    let mut verifier = ZkloginVerifier::new_devnet();
+    let mut verifier = ZkloginVerifier::new_dev();
     verifier.jwks_mut().insert(jwk_id, jwk);
 
     verifier

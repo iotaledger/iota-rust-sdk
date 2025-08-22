@@ -66,6 +66,28 @@ pub struct UserSignature(pub iota_types::UserSignature);
 
 #[uniffi::export]
 impl UserSignature {
+    #[uniffi::constructor]
+    pub fn new_simple(signature: &SimpleSignature) -> Self {
+        Self(iota_types::UserSignature::Simple(signature.0.clone()))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_multisig(signature: &MultisigAggregatedSignature) -> Self {
+        Self(iota_types::UserSignature::Multisig(signature.0.clone()))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_zklogin(authenticator: &ZkLoginAuthenticator) -> Self {
+        Self(iota_types::UserSignature::ZkLogin(Box::new(
+            authenticator.0.clone(),
+        )))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_passkey(authenticator: &PasskeyAuthenticator) -> Self {
+        Self(iota_types::UserSignature::Passkey(authenticator.0.clone()))
+    }
+
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()

@@ -19,8 +19,8 @@ impl ZkloginVerifier {
     }
 
     #[uniffi::constructor]
-    pub fn new_devnet() -> Self {
-        Self(iota_crypto::zklogin::ZkloginVerifier::new_devnet())
+    pub fn new_dev() -> Self {
+        Self(iota_crypto::zklogin::ZkloginVerifier::new_dev())
     }
 
     pub fn jwks(&self) -> HashMap<JwkId, Jwk> {

@@ -36,8 +36,8 @@ impl ZkloginVerifier {
         Self::new(verify::VerifyingKey::new_mainnet())
     }
 
-    pub fn new_devnet() -> Self {
-        Self::new(verify::VerifyingKey::new_devnet())
+    pub fn new_dev() -> Self {
+        Self::new(verify::VerifyingKey::new_dev())
     }
 
     pub fn jwks(&self) -> &HashMap<JwkId, Jwk> {
