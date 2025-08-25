@@ -54,7 +54,7 @@ pem = [
 ]
 
 [dependencies]
-iota-sdk-types = { version = "0.0.1", path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
+iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
 signature = "2.2"
 
 # RNG support

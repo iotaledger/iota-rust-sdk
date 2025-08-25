@@ -1492,7 +1492,9 @@ pub enum TransactionExpiration {
 /// argument-result         = %x02 u16
 /// argument-nested-result  = %x03 u16 u16
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(
+    Copy, Clone, Debug, PartialEq, Eq, derive_more::Deref, derive_more::From, uniffi::Object,
+)]
 pub struct Argument(iota_types::Argument);
 
 #[uniffi::export]

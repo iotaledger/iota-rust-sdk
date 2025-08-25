@@ -2916,6 +2916,150 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_add_gas_objects()
+	})
+	if checksum != 33983 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_add_gas_objects: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish()
+	})
+	if checksum != 1260 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas()
+	})
+	if checksum != 30573 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_input()
+	})
+	if checksum != 38700 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_input: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec()
+	})
+	if checksum != 18259 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins()
+	})
+	if checksum != 13343 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call()
+	})
+	if checksum != 319 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish()
+	})
+	if checksum != 33084 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_expiration()
+	})
+	if checksum != 48982 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_expiration: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_gas_budget()
+	})
+	if checksum != 32690 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_gas_budget: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_gas_price()
+	})
+	if checksum != 43939 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_gas_price: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender()
+	})
+	if checksum != 18611 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sponsor()
+	})
+	if checksum != 36483 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sponsor: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins()
+	})
+	if checksum != 12632 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects()
+	})
+	if checksum != 58966 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade()
+	})
+	if checksum != 981 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondigest_to_base58()
 	})
 	if checksum != 22119 {
@@ -3137,6 +3281,96 @@ func uniffiCheckChecksums() {
 	if checksum != 49992 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_mut()
+	})
+	if checksum != 46185 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_mut: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_ref()
+	})
+	if checksum != 34531 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_ref: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_val()
+	})
+	if checksum != 56747 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_val: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_digest()
+	})
+	if checksum != 30477 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_immutable_kind()
+	})
+	if checksum != 63275 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_immutable_kind: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_initial_shared_version()
+	})
+	if checksum != 46827 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_initial_shared_version: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_owned_kind()
+	})
+	if checksum != 26094 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_owned_kind: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_receiving_kind()
+	})
+	if checksum != 34579 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_receiving_kind: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_shared_kind()
+	})
+	if checksum != 4261 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_shared_kind: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_version()
+	})
+	if checksum != 27702 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_version: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4932,6 +5166,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new()
+	})
+	if checksum != 55528 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_from_base58()
 	})
 	if checksum != 15069 {
@@ -5180,6 +5423,69 @@ func uniffiCheckChecksums() {
 	if checksum != 2453 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_vector: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_by_id()
+	})
+	if checksum != 61291 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_by_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object()
+	})
+	if checksum != 12551 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object_id()
+	})
+	if checksum != 24424 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable()
+	})
+	if checksum != 37965 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned()
+	})
+	if checksum != 12810 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving()
+	})
+	if checksum != 10063 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared()
+	})
+	if checksum != 41623 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -18005,6 +18311,474 @@ func (_ FfiDestroyerTransaction) Destroy(value *Transaction) {
 
 
 
+// A builder for creating transactions. Use [`finish`](Self::finish) to
+// finalize the transaction data.
+type TransactionBuilderInterface interface {
+	// Add one or more gas objects to use to pay for the transaction.
+	//
+	// Most commonly the gas can be passed as a reference to an owned/immutable
+	// [`Object`](iota_types::Object), or can created using one of the of
+	// the constructors of the [`unresolved::Input`] enum, e.g.,
+	// [`unresolved::Input::owned`].
+	AddGasObjects(gas []*UnresolvedInput) 
+	// Assuming everything is resolved, convert this transaction into the
+	// resolved form. Returns a [`Transaction`] if successful, or an `Error` if
+	// not.
+	Finish() (*Transaction, error)
+	// Return the argument to be the gas object.
+	Gas() *Argument
+	// Make a value available to the transaction as an input.
+	Input(i *UnresolvedInput) *Argument
+	// Make a move vector from a list of elements. If the elements are not
+	// objects, or the vector is empty, a type must be supplied.
+	// It returns the Move vector as an argument, that can be used in
+	// subsequent commands.
+	MakeMoveVec(typeTag **TypeTag, elements []*Argument) *Argument
+	// Merge a list of coins into a single coin, without producing any result.
+	MergeCoins(coin *Argument, coinsToMerge []*Argument) 
+	// Call a Move function with the given arguments.
+	//
+	// - `function` is a structured representation of a
+	// package::module::function argument, optionally with type arguments.
+	//
+	// The return value is a result argument that can be used in subsequent
+	// commands. If the move call returns multiple results, you can access
+	// them using the [`Argument::nested`] method.
+	MoveCall(function Function, arguments []*Argument) *Argument
+	// Publish a list of modules with the given dependencies. The result is the
+	// `0x2::package::UpgradeCap` Move type. Note that the upgrade capability
+	// needs to be handled after this call:
+	// - transfer it to the transaction sender or another address
+	// - burn it
+	// - wrap it for access control
+	// - discard the it to make a package immutable
+	//
+	// The arguments required for this command are:
+	// - `modules`: is the modules' bytecode to be published
+	// - `dependencies`: is the list of IDs of the transitive dependencies of
+	// the package
+	Publish(modules [][]byte, dependencies []*ObjectId) *Argument
+	// Set the expiration of the transaction to be a specific epoch.
+	SetExpiration(epoch uint64) 
+	// Set the gas budget for the transaction.
+	SetGasBudget(budget uint64) 
+	// Set the gas price for the transaction.
+	SetGasPrice(price uint64) 
+	// Set the sender of the transaction.
+	SetSender(sender *Address) 
+	// Set the sponsor of the transaction.
+	SetSponsor(sponsor *Address) 
+	// Split a coin by the provided amounts, returning multiple results (as
+	// many as there are amounts). To access the results, use the
+	// [`Argument::nested`] method to access the desired coin by its index.
+	SplitCoins(coin *Argument, amounts []*Argument) *Argument
+	// Transfer a list of objects to the given address, without producing any
+	// result.
+	TransferObjects(objects []*Argument, address *Argument) 
+	// Upgrade a Move package.
+	//
+	// - `modules`: is the modules' bytecode for the modules to be published
+	// - `dependencies`: is the list of IDs of the transitive dependencies of
+	// the package to be upgraded
+	// - `package`: is the ID of the current package being upgraded
+	// - `ticket`: is the upgrade ticket
+	//
+	// To get the ticket, you have to call the
+	// `0x2::package::authorize_upgrade` function,  and pass the package
+	// ID, the upgrade policy, and package digest.
+	//
+	// Examples:
+	// ### Upgrade a package with some pre-known data.
+	//
+	// ```rust,ignore
+	// use iota_graphql_client::Client;
+	// use iota_sdk_types::unresolved;
+	// use iota_transaction_builder::TransactionBuilder;
+	// use iota_transaction_builder::Function;
+	//
+	// let mut tx = TransactionBuilder::new();
+	// let package_id = "0x...".parse().unwrap();
+	// let upgrade_cap =
+	// tx.input(unresolved::Input::by_id("0x...".parse().unwrap()));
+	// let upgrade_policy = tx.input(Serialized(&0u8));
+	// // the digest of the new package that was compiled
+	// let package_digest: &[u8] = &[
+	// 68, 89, 156, 51, 190, 35, 155, 216, 248, 49, 135, 170, 106, 42,
+	// 190, 4, 208, 59, 155, 89, 74, 63, 70, 95, 207, 78, 227, 22,
+	// 136, 146, 57, 79
+	// ];
+	// let digest_arg = tx.input(Serialized(&package_digest));
+	//
+	// // we need this ticket to authorize the upgrade
+	// let upgrade_ticket = tx.move_call(
+	// Function::new(
+	// "0x2".parse().unwrap(),
+	// "package".parse().unwrap(),
+	// "authorize_upgrade".parse().unwrap(),
+	// vec![],
+	// ),
+	// vec![upgrade_cap, upgrade_policy, digest_arg],
+	// );
+	// // now we can upgrade the package
+	// let upgrade_receipt = tx.upgrade(
+	// updated_modules,
+	// deps,
+	// package_id,
+	// upgrade_ticket,
+	// );
+	//
+	// // commit the upgrade
+	// tx.move_call(
+	// Function::new(
+	// "0x2".parse().unwrap(),
+	// "package".parse().unwrap(),
+	// "commit_upgrade".parse().unwrap(),
+	// vec![],
+	// ),
+	// vec![upgrade_cap, upgrade_receipt],
+	// );
+	//
+	// let client = Client::new_mainnet();
+	// let tx = tx.resolve(&client)?;
+	// ```
+	Upgrade(modules [][]byte, dependencies []*ObjectId, varPackage *ObjectId, ticket *Argument) *Argument
+}
+// A builder for creating transactions. Use [`finish`](Self::finish) to
+// finalize the transaction data.
+type TransactionBuilder struct {
+	ffiObject FfiObject
+}
+// Create a new transaction builder and initialize its elements to default.
+func NewTransactionBuilder() *TransactionBuilder {
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(_uniffiStatus)
+	}))
+}
+
+
+
+
+// Add one or more gas objects to use to pay for the transaction.
+//
+// Most commonly the gas can be passed as a reference to an owned/immutable
+// [`Object`](iota_types::Object), or can created using one of the of
+// the constructors of the [`unresolved::Input`] enum, e.g.,
+// [`unresolved::Input::owned`].
+func (_self *TransactionBuilder) AddGasObjects(gas []*UnresolvedInput)  {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_add_gas_objects(
+		_pointer,FfiConverterSequenceUnresolvedInputINSTANCE.Lower(gas),_uniffiStatus)
+		return false
+	})
+}
+
+// Assuming everything is resolved, convert this transaction into the
+// resolved form. Returns a [`Transaction`] if successful, or an `Error` if
+// not.
+func (_self *TransactionBuilder) Finish() (*Transaction, error) {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Transaction
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterTransactionINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Return the argument to be the gas object.
+func (_self *TransactionBuilder) Gas() *Argument {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Make a value available to the transaction as an input.
+func (_self *TransactionBuilder) Input(i *UnresolvedInput) *Argument {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_input(
+		_pointer,FfiConverterUnresolvedInputINSTANCE.Lower(i),_uniffiStatus)
+	}))
+}
+
+// Make a move vector from a list of elements. If the elements are not
+// objects, or the vector is empty, a type must be supplied.
+// It returns the Move vector as an argument, that can be used in
+// subsequent commands.
+func (_self *TransactionBuilder) MakeMoveVec(typeTag **TypeTag, elements []*Argument) *Argument {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(
+		_pointer,FfiConverterOptionalTypeTagINSTANCE.Lower(typeTag), FfiConverterSequenceArgumentINSTANCE.Lower(elements),_uniffiStatus)
+	}))
+}
+
+// Merge a list of coins into a single coin, without producing any result.
+func (_self *TransactionBuilder) MergeCoins(coin *Argument, coinsToMerge []*Argument)  {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
+		_pointer,FfiConverterArgumentINSTANCE.Lower(coin), FfiConverterSequenceArgumentINSTANCE.Lower(coinsToMerge),_uniffiStatus)
+		return false
+	})
+}
+
+// Call a Move function with the given arguments.
+//
+// - `function` is a structured representation of a
+// package::module::function argument, optionally with type arguments.
+//
+// The return value is a result argument that can be used in subsequent
+// commands. If the move call returns multiple results, you can access
+// them using the [`Argument::nested`] method.
+func (_self *TransactionBuilder) MoveCall(function Function, arguments []*Argument) *Argument {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(
+		_pointer,FfiConverterFunctionINSTANCE.Lower(function), FfiConverterSequenceArgumentINSTANCE.Lower(arguments),_uniffiStatus)
+	}))
+}
+
+// Publish a list of modules with the given dependencies. The result is the
+// `0x2::package::UpgradeCap` Move type. Note that the upgrade capability
+// needs to be handled after this call:
+// - transfer it to the transaction sender or another address
+// - burn it
+// - wrap it for access control
+// - discard the it to make a package immutable
+//
+// The arguments required for this command are:
+// - `modules`: is the modules' bytecode to be published
+// - `dependencies`: is the list of IDs of the transitive dependencies of
+// the package
+func (_self *TransactionBuilder) Publish(modules [][]byte, dependencies []*ObjectId) *Argument {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(
+		_pointer,FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies),_uniffiStatus)
+	}))
+}
+
+// Set the expiration of the transaction to be a specific epoch.
+func (_self *TransactionBuilder) SetExpiration(epoch uint64)  {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_expiration(
+		_pointer,FfiConverterUint64INSTANCE.Lower(epoch),_uniffiStatus)
+		return false
+	})
+}
+
+// Set the gas budget for the transaction.
+func (_self *TransactionBuilder) SetGasBudget(budget uint64)  {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_gas_budget(
+		_pointer,FfiConverterUint64INSTANCE.Lower(budget),_uniffiStatus)
+		return false
+	})
+}
+
+// Set the gas price for the transaction.
+func (_self *TransactionBuilder) SetGasPrice(price uint64)  {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_gas_price(
+		_pointer,FfiConverterUint64INSTANCE.Lower(price),_uniffiStatus)
+		return false
+	})
+}
+
+// Set the sender of the transaction.
+func (_self *TransactionBuilder) SetSender(sender *Address)  {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(
+		_pointer,FfiConverterAddressINSTANCE.Lower(sender),_uniffiStatus)
+		return false
+	})
+}
+
+// Set the sponsor of the transaction.
+func (_self *TransactionBuilder) SetSponsor(sponsor *Address)  {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sponsor(
+		_pointer,FfiConverterAddressINSTANCE.Lower(sponsor),_uniffiStatus)
+		return false
+	})
+}
+
+// Split a coin by the provided amounts, returning multiple results (as
+// many as there are amounts). To access the results, use the
+// [`Argument::nested`] method to access the desired coin by its index.
+func (_self *TransactionBuilder) SplitCoins(coin *Argument, amounts []*Argument) *Argument {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
+		_pointer,FfiConverterArgumentINSTANCE.Lower(coin), FfiConverterSequenceArgumentINSTANCE.Lower(amounts),_uniffiStatus)
+	}))
+}
+
+// Transfer a list of objects to the given address, without producing any
+// result.
+func (_self *TransactionBuilder) TransferObjects(objects []*Argument, address *Argument)  {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
+		_pointer,FfiConverterSequenceArgumentINSTANCE.Lower(objects), FfiConverterArgumentINSTANCE.Lower(address),_uniffiStatus)
+		return false
+	})
+}
+
+// Upgrade a Move package.
+//
+// - `modules`: is the modules' bytecode for the modules to be published
+// - `dependencies`: is the list of IDs of the transitive dependencies of
+// the package to be upgraded
+// - `package`: is the ID of the current package being upgraded
+// - `ticket`: is the upgrade ticket
+//
+// To get the ticket, you have to call the
+// `0x2::package::authorize_upgrade` function,  and pass the package
+// ID, the upgrade policy, and package digest.
+//
+// Examples:
+// ### Upgrade a package with some pre-known data.
+//
+// ```rust,ignore
+// use iota_graphql_client::Client;
+// use iota_sdk_types::unresolved;
+// use iota_transaction_builder::TransactionBuilder;
+// use iota_transaction_builder::Function;
+//
+// let mut tx = TransactionBuilder::new();
+// let package_id = "0x...".parse().unwrap();
+// let upgrade_cap =
+// tx.input(unresolved::Input::by_id("0x...".parse().unwrap()));
+// let upgrade_policy = tx.input(Serialized(&0u8));
+// // the digest of the new package that was compiled
+// let package_digest: &[u8] = &[
+// 68, 89, 156, 51, 190, 35, 155, 216, 248, 49, 135, 170, 106, 42,
+// 190, 4, 208, 59, 155, 89, 74, 63, 70, 95, 207, 78, 227, 22,
+// 136, 146, 57, 79
+// ];
+// let digest_arg = tx.input(Serialized(&package_digest));
+//
+// // we need this ticket to authorize the upgrade
+// let upgrade_ticket = tx.move_call(
+// Function::new(
+// "0x2".parse().unwrap(),
+// "package".parse().unwrap(),
+// "authorize_upgrade".parse().unwrap(),
+// vec![],
+// ),
+// vec![upgrade_cap, upgrade_policy, digest_arg],
+// );
+// // now we can upgrade the package
+// let upgrade_receipt = tx.upgrade(
+// updated_modules,
+// deps,
+// package_id,
+// upgrade_ticket,
+// );
+//
+// // commit the upgrade
+// tx.move_call(
+// Function::new(
+// "0x2".parse().unwrap(),
+// "package".parse().unwrap(),
+// "commit_upgrade".parse().unwrap(),
+// vec![],
+// ),
+// vec![upgrade_cap, upgrade_receipt],
+// );
+//
+// let client = Client::new_mainnet();
+// let tx = tx.resolve(&client)?;
+// ```
+func (_self *TransactionBuilder) Upgrade(modules [][]byte, dependencies []*ObjectId, varPackage *ObjectId, ticket *Argument) *Argument {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
+		_pointer,FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies), FfiConverterObjectIdINSTANCE.Lower(varPackage), FfiConverterArgumentINSTANCE.Lower(ticket),_uniffiStatus)
+	}))
+}
+func (object *TransactionBuilder) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterTransactionBuilder struct {}
+
+var FfiConverterTransactionBuilderINSTANCE = FfiConverterTransactionBuilder{}
+
+
+func (c FfiConverterTransactionBuilder) Lift(pointer unsafe.Pointer) *TransactionBuilder {
+	result := &TransactionBuilder {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_transactionbuilder(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*TransactionBuilder).Destroy)
+	return result
+}
+
+func (c FfiConverterTransactionBuilder) Read(reader io.Reader) *TransactionBuilder {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterTransactionBuilder) Lower(value *TransactionBuilder) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*TransactionBuilder")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterTransactionBuilder) Write(writer io.Writer, value *TransactionBuilder) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerTransactionBuilder struct {}
+
+func (_ FfiDestroyerTransactionBuilder) Destroy(value *TransactionBuilder) {
+		value.Destroy()
+}
+
+
+
 type TransactionDigestInterface interface {
 	ToBase58() string
 	ToBytes() []byte
@@ -19031,6 +19805,257 @@ func (c FfiConverterTypeTag) Write(writer io.Writer, value *TypeTag) {
 type FfiDestroyerTypeTag struct {}
 
 func (_ FfiDestroyerTypeTag) Destroy(value *TypeTag) {
+		value.Destroy()
+}
+
+
+
+// A potentially unresolved transaction input. Note that one can construct a
+// fully resolved input using the provided constructors, but this struct is
+// also useful when the input data is not complete.
+//
+// If used in the context of transaction builder, make sure to call
+// `tx.resolve` function on the transaction builder to resolve all unresolved
+// inputs.
+type UnresolvedInputInterface interface {
+	// Make the object shared and set `mutable` to true when the input is used
+	// by mutable reference.
+	ByMut() *UnresolvedInput
+	// Make the object shared and set `mutable` to false when the input is used
+	// by reference.
+	ByRef() *UnresolvedInput
+	// Make the object shared and set `mutable` to true when the input is used
+	// by value.
+	ByVal() *UnresolvedInput
+	// Set the specified digest.
+	WithDigest(digest *ObjectDigest) *UnresolvedInput
+	// Set the object kind to immutable.
+	WithImmutableKind() *UnresolvedInput
+	// Set the initial shared version.
+	WithInitialSharedVersion(initialVersion uint64) *UnresolvedInput
+	// Set the object kind to owned.
+	WithOwnedKind() *UnresolvedInput
+	// Set the object kind to receiving.
+	WithReceivingKind() *UnresolvedInput
+	// Set the object kind to shared.
+	WithSharedKind() *UnresolvedInput
+	// Set the specified version.
+	WithVersion(version uint64) *UnresolvedInput
+}
+// A potentially unresolved transaction input. Note that one can construct a
+// fully resolved input using the provided constructors, but this struct is
+// also useful when the input data is not complete.
+//
+// If used in the context of transaction builder, make sure to call
+// `tx.resolve` function on the transaction builder to resolve all unresolved
+// inputs.
+type UnresolvedInput struct {
+	ffiObject FfiObject
+}
+
+
+// Return an object with only its unique identifier.
+func UnresolvedInputById(objectId *ObjectId) *UnresolvedInput {
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_by_id(FfiConverterObjectIdINSTANCE.Lower(objectId),_uniffiStatus)
+	}))
+}
+
+func UnresolvedInputFromObject(object *Object) *UnresolvedInput {
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object(FfiConverterObjectINSTANCE.Lower(object),_uniffiStatus)
+	}))
+}
+
+func UnresolvedInputFromObjectId(objectId *ObjectId) *UnresolvedInput {
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object_id(FfiConverterObjectIdINSTANCE.Lower(objectId),_uniffiStatus)
+	}))
+}
+
+// Return an immutable kind of object with all required fields.
+func UnresolvedInputNewImmutable(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+	}))
+}
+
+// Return an owned kind of object with all required fields.
+func UnresolvedInputNewOwned(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+	}))
+}
+
+// Return a receiving kind of object with all required fields.
+func UnresolvedInputNewReceiving(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+	}))
+}
+
+// Return a shared object.
+// - `mutable` controls whether a command can accept the object by value or
+// mutable reference.
+// - `initial_shared_version` is the first version the object was shared
+// at.
+func UnresolvedInputNewShared(objectId *ObjectId, initialSharedVersion uint64, mutable bool) *UnresolvedInput {
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_shared(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(initialSharedVersion), FfiConverterBoolINSTANCE.Lower(mutable),_uniffiStatus)
+	}))
+}
+
+
+
+// Make the object shared and set `mutable` to true when the input is used
+// by mutable reference.
+func (_self *UnresolvedInput) ByMut() *UnresolvedInput {
+	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_mut(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Make the object shared and set `mutable` to false when the input is used
+// by reference.
+func (_self *UnresolvedInput) ByRef() *UnresolvedInput {
+	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_ref(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Make the object shared and set `mutable` to true when the input is used
+// by value.
+func (_self *UnresolvedInput) ByVal() *UnresolvedInput {
+	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_val(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Set the specified digest.
+func (_self *UnresolvedInput) WithDigest(digest *ObjectDigest) *UnresolvedInput {
+	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_digest(
+		_pointer,FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+	}))
+}
+
+// Set the object kind to immutable.
+func (_self *UnresolvedInput) WithImmutableKind() *UnresolvedInput {
+	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_immutable_kind(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Set the initial shared version.
+func (_self *UnresolvedInput) WithInitialSharedVersion(initialVersion uint64) *UnresolvedInput {
+	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_initial_shared_version(
+		_pointer,FfiConverterUint64INSTANCE.Lower(initialVersion),_uniffiStatus)
+	}))
+}
+
+// Set the object kind to owned.
+func (_self *UnresolvedInput) WithOwnedKind() *UnresolvedInput {
+	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_owned_kind(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Set the object kind to receiving.
+func (_self *UnresolvedInput) WithReceivingKind() *UnresolvedInput {
+	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_receiving_kind(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Set the object kind to shared.
+func (_self *UnresolvedInput) WithSharedKind() *UnresolvedInput {
+	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_shared_kind(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Set the specified version.
+func (_self *UnresolvedInput) WithVersion(version uint64) *UnresolvedInput {
+	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_version(
+		_pointer,FfiConverterUint64INSTANCE.Lower(version),_uniffiStatus)
+	}))
+}
+func (object *UnresolvedInput) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterUnresolvedInput struct {}
+
+var FfiConverterUnresolvedInputINSTANCE = FfiConverterUnresolvedInput{}
+
+
+func (c FfiConverterUnresolvedInput) Lift(pointer unsafe.Pointer) *UnresolvedInput {
+	result := &UnresolvedInput {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_unresolvedinput(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_unresolvedinput(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*UnresolvedInput).Destroy)
+	return result
+}
+
+func (c FfiConverterUnresolvedInput) Read(reader io.Reader) *UnresolvedInput {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterUnresolvedInput) Lower(value *UnresolvedInput) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*UnresolvedInput")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterUnresolvedInput) Write(writer io.Writer, value *UnresolvedInput) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerUnresolvedInput struct {}
+
+func (_ FfiDestroyerUnresolvedInput) Destroy(value *UnresolvedInput) {
 		value.Destroy()
 }
 
@@ -21467,6 +22492,59 @@ func (c FfiConverterEventPage) Write(writer io.Writer, value EventPage) {
 type FfiDestroyerEventPage struct {}
 
 func (_ FfiDestroyerEventPage) Destroy(value EventPage) {
+	value.Destroy()
+}
+// A separate type to support denoting a function by a more structured
+// representation.
+type Function struct {
+	// The package that contains the module with the function.
+	Package *Address
+	// The module that contains the function.
+	Module *Identifier
+	// The function name.
+	Function *Identifier
+	// The type arguments for the function.
+	TypeArgs []*TypeTag
+}
+
+func (r *Function) Destroy() {
+		FfiDestroyerAddress{}.Destroy(r.Package);
+		FfiDestroyerIdentifier{}.Destroy(r.Module);
+		FfiDestroyerIdentifier{}.Destroy(r.Function);
+		FfiDestroyerSequenceTypeTag{}.Destroy(r.TypeArgs);
+}
+
+type FfiConverterFunction struct {}
+
+var FfiConverterFunctionINSTANCE = FfiConverterFunction{}
+
+func (c FfiConverterFunction) Lift(rb RustBufferI) Function {
+	return LiftFromRustBuffer[Function](c, rb)
+}
+
+func (c FfiConverterFunction) Read(reader io.Reader) Function {
+	return Function {
+			FfiConverterAddressINSTANCE.Read(reader),
+			FfiConverterIdentifierINSTANCE.Read(reader),
+			FfiConverterIdentifierINSTANCE.Read(reader),
+			FfiConverterSequenceTypeTagINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterFunction) Lower(value Function) C.RustBuffer {
+	return LowerIntoRustBuffer[Function](c, value)
+}
+
+func (c FfiConverterFunction) Write(writer io.Writer, value Function) {
+		FfiConverterAddressINSTANCE.Write(writer, value.Package);
+		FfiConverterIdentifierINSTANCE.Write(writer, value.Module);
+		FfiConverterIdentifierINSTANCE.Write(writer, value.Function);
+		FfiConverterSequenceTypeTagINSTANCE.Write(writer, value.TypeArgs);
+}
+
+type FfiDestroyerFunction struct {}
+
+func (_ FfiDestroyerFunction) Destroy(value Function) {
 	value.Destroy()
 }
 type GqlAddress struct {
@@ -29569,6 +30647,49 @@ type FfiDestroyerSequenceTypeTag struct {}
 func (FfiDestroyerSequenceTypeTag) Destroy(sequence []*TypeTag) {
 	for _, value := range sequence {
 		FfiDestroyerTypeTag{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceUnresolvedInput struct{}
+
+var FfiConverterSequenceUnresolvedInputINSTANCE = FfiConverterSequenceUnresolvedInput{}
+
+func (c FfiConverterSequenceUnresolvedInput) Lift(rb RustBufferI) []*UnresolvedInput {
+	return LiftFromRustBuffer[[]*UnresolvedInput](c, rb)
+}
+
+func (c FfiConverterSequenceUnresolvedInput) Read(reader io.Reader) []*UnresolvedInput {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*UnresolvedInput, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterUnresolvedInputINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceUnresolvedInput) Lower(value []*UnresolvedInput) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*UnresolvedInput](c, value)
+}
+
+func (c FfiConverterSequenceUnresolvedInput) Write(writer io.Writer, value []*UnresolvedInput) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*UnresolvedInput is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterUnresolvedInputINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceUnresolvedInput struct {}
+
+func (FfiDestroyerSequenceUnresolvedInput) Destroy(sequence []*UnresolvedInput) {
+	for _, value := range sequence {
+		FfiDestroyerUnresolvedInput{}.Destroy(value)
 	}
 }
 
