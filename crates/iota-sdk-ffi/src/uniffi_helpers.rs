@@ -16,7 +16,7 @@ use crate::types::{
 macro_rules! define_paged_record {
     ($id:ident, $type_:ty) => {
         /// A page of items returned by the GraphQL server.
-        #[derive(Debug, Clone, uniffi::Record)]
+        #[derive(uniffi::Record)]
         pub struct $id {
             /// Information about the page, such as the cursor and whether there are
             /// more pages.
@@ -46,7 +46,7 @@ define_paged_record!(ValidatorPage, Validator);
 macro_rules! define_paged_object {
     ($id:ident, $type_:ty) => {
         /// A page of items returned by the GraphQL server.
-        #[derive(Debug, Clone, uniffi::Record)]
+        #[derive(uniffi::Record)]
         pub struct $id {
             /// Information about the page, such as the cursor and whether there are
             /// more pages.

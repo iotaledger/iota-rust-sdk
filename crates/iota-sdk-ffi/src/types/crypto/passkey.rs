@@ -32,7 +32,7 @@ use crate::{error::Result, types::signature::SimpleSignature};
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct PasskeyAuthenticator(pub iota_types::PasskeyAuthenticator);
 
 #[uniffi::export]

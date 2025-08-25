@@ -16,7 +16,7 @@ use crate::types::{address::Address, object::ObjectId};
 /// ```text
 /// event = object-id identifier address struct-tag bytes
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct Event {
     /// Package id of the top-level function invoked by a MoveCall command which
     /// triggered this event to be emitted.

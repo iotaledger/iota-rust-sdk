@@ -55,7 +55,7 @@ pub type ProtocolVersion = u64;
 ///                      (option end-of-epoch-data)     ; end_of_epoch_data
 ///                      bytes                          ; version_specific_data
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct CheckpointSummary {
     /// Epoch that this checkpoint belongs to.
     pub epoch: u64,
@@ -144,7 +144,7 @@ impl From<CheckpointSummary> for iota_types::CheckpointSummary {
 /// checkpoint-commitment = ecmh-live-object-set
 /// ecmh-live-object-set = %x00 digest
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointCommitment(pub iota_types::CheckpointCommitment);
 
 #[uniffi::export]
@@ -158,7 +158,7 @@ impl CheckpointCommitment {
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct EndOfEpochData {
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
     pub next_epoch_protocol_version: u64,

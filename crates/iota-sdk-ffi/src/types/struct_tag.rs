@@ -21,7 +21,7 @@ use crate::{
 ///
 /// UNDERSCORE = %x95
 /// ```
-#[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash, derive_more::From, uniffi::Object)]
+#[derive(PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
 #[uniffi::export(Hash)]
 pub struct Identifier(pub iota_types::Identifier);
 
@@ -49,7 +49,7 @@ impl Identifier {
 ///              identifier         ; name of the type
 ///              (vector type-tag)  ; type parameters
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct StructTag(pub iota_types::StructTag);
 
 #[uniffi::export]
