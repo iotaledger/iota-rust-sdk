@@ -65,6 +65,7 @@ pub struct CheckpointSummary(pub iota_types::CheckpointSummary);
 #[uniffi::export]
 impl CheckpointSummary {
     #[uniffi::constructor]
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         epoch: EpochId,
         sequence_number: CheckpointSequenceNumber,

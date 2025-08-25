@@ -89,7 +89,7 @@ pub struct PasskeyPublicKey(iota_types::PasskeyPublicKey);
 #[uniffi::export]
 impl PasskeyPublicKey {
     pub fn inner(&self) -> Secp256r1PublicKey {
-        self.0.inner().clone().into()
+        (*self.0.inner()).into()
     }
 
     /// Derive an `Address` from this Passkey Public Key
