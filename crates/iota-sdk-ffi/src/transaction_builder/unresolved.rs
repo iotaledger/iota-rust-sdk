@@ -6,15 +6,6 @@ use crate::types::{
     object::{Object, ObjectId},
 };
 
-#[derive(uniffi::Enum)]
-pub enum InputKind {
-    Pure,
-    Shared,
-    Receiving,
-    ImmutableOrOwned,
-    Literal,
-}
-
 /// A potentially unresolved transaction input. Note that one can construct a
 /// fully resolved input using the provided constructors, but this struct is
 /// also useful when the input data is not complete.
@@ -41,7 +32,7 @@ impl UnresolvedInput {
 
     /// Return an owned kind of object with all required fields.
     #[uniffi::constructor]
-    pub fn owned(object_id: &ObjectId, version: u64, digest: &ObjectDigest) -> Self {
+    pub fn new_owned(object_id: &ObjectId, version: u64, digest: &ObjectDigest) -> Self {
         Self(iota_transaction_builder::unresolved::Input::owned(
             **object_id,
             version,
@@ -51,7 +42,7 @@ impl UnresolvedInput {
 
     /// Return an immutable kind of object with all required fields.
     #[uniffi::constructor]
-    pub fn immutable(object_id: &ObjectId, version: u64, digest: &ObjectDigest) -> Self {
+    pub fn new_immutable(object_id: &ObjectId, version: u64, digest: &ObjectDigest) -> Self {
         Self(iota_transaction_builder::unresolved::Input::immutable(
             **object_id,
             version,
@@ -61,7 +52,7 @@ impl UnresolvedInput {
 
     /// Return a receiving kind of object with all required fields.
     #[uniffi::constructor]
-    pub fn receiving(object_id: &ObjectId, version: u64, digest: &ObjectDigest) -> Self {
+    pub fn new_receiving(object_id: &ObjectId, version: u64, digest: &ObjectDigest) -> Self {
         Self(iota_transaction_builder::unresolved::Input::receiving(
             **object_id,
             version,
@@ -75,7 +66,7 @@ impl UnresolvedInput {
     /// - `initial_shared_version` is the first version the object was shared
     ///   at.
     #[uniffi::constructor]
-    pub fn shared(object_id: &ObjectId, initial_shared_version: u64, mutable: bool) -> Self {
+    pub fn new_shared(object_id: &ObjectId, initial_shared_version: u64, mutable: bool) -> Self {
         Self(iota_transaction_builder::unresolved::Input::shared(
             **object_id,
             initial_shared_version,
