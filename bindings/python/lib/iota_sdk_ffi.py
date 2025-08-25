@@ -517,6 +517,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set() != 22589:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_digest() != 24603:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_transaction_info() != 56465:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcontentsdigest_to_base58() != 60951:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcontentsdigest_to_bytes() != 51343:
@@ -524,6 +528,34 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointdigest_to_base58() != 40700:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointdigest_to_bytes() != 48082:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_checkpoint_commitments() != 61600:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_content_digest() != 14508:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_digest() != 30742:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_end_of_epoch_data() != 49930:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch() != 35840:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch_rolling_gas_cost_summary() != 10205:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_network_total_transactions() != 50558:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest() != 44819:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number() != 33896:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms() != 62474:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data() != 43828:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects() != 36757:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_signatures() != 36925:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction() != 45492:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_coin_balance() != 29928:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -621,7 +653,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_chain_id() != 45619:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint() != 33658:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint() != 26413:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 8422:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -737,6 +769,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier() != 10820:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 12725:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid() != 45468:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_members() != 62870:
@@ -807,6 +841,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_data() != 4330:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_object_digest() != 5209:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_object_id() != 6575:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_object_type() != 1843:
@@ -830,6 +866,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58() != 2414:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_bytes() != 31732:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id() != 47819:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address() != 21880:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -865,7 +903,15 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature() != 5489:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_derive_address() != 61803:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_inner() != 65008:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify() != 19101:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() != 347:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() != 39344:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands() != 49868:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1021,6 +1067,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest() != 19400:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration() != 47752:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_gas_payment() != 5316:
@@ -1028,6 +1076,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_kind() != 49492:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender() != 38190:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest() != 36608:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_add_gas_objects() != 33983:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1067,11 +1117,17 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_digest() != 38142:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1() != 39808:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffectsdigest_to_base58() != 38601:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffectsdigest_to_bytes() != 43744:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest() != 26621:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events() != 36651:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneventsdigest_to_base58() != 54162:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1205,6 +1261,12 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed() != 3936:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address() != 14353:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded() != 45141:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded() != 51424:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss() != 58864:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks() != 62366:
@@ -1251,6 +1313,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new() != 52433:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontents_new() != 27130:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58() != 33027:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_bytes() != 37261:
@@ -1262,6 +1326,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_from_bytes() != 24226:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_generate() != 13389:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new() != 15638:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new() != 55728:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new() != 39786:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1421,6 +1489,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_generate() != 61181:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id() != 32351:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954:
@@ -1438,6 +1508,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new() != 23457:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new() != 3617:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_programmabletransaction_new() != 38638:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1544,6 +1616,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_from_bytes() != 51937:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_generate() != 11715:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneventsdigest_from_base58() != 56954:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2088,6 +2162,31 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointcommitment_is_ecmh_live_objec
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointcommitment_is_ecmh_live_object_set.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointcontents.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointcontents.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_checkpointcontents.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_checkpointcontents.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_checkpointcontents_new.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_checkpointcontents_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointcontents_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointcontents_digest.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointcontents_transaction_info.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointcontents_transaction_info.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointcontentsdigest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2156,6 +2255,117 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointdigest_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointdigest_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointsummary.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointsummary.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_checkpointsummary.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_checkpointsummary.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_checkpointsummary_new.argtypes = (
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_checkpointsummary_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_checkpoint_commitments.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_checkpoint_commitments.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_content_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_content_digest.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_digest.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_end_of_epoch_data.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_end_of_epoch_data.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_epoch.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_epoch.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_epoch_rolling_gas_cost_summary.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_epoch_rolling_gas_cost_summary.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_network_total_transactions.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_network_total_transactions.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_previous_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_previous_digest.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_sequence_number.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_sequence_number.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_timestamp_ms.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_timestamp_ms.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_version_specific_data.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_version_specific_data.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointtransactioninfo.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointtransactioninfo.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_checkpointtransactioninfo.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_checkpointtransactioninfo.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_checkpointtransactioninfo_new.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_checkpointtransactioninfo_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_effects.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_effects.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_signatures.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_signatures.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_transaction.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_transaction.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_circomg1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3434,6 +3644,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_multisigcommittee_new.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_multisigcommittee_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_derive_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_derive_address.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_is_valid.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3680,6 +3895,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_data.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_data.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_digest.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_object_id.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3794,6 +4014,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_objectid.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_objectid.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3804,6 +4030,13 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_address.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3952,6 +4185,26 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_passkeypublickey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_passkeypublickey.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_passkeypublickey.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_passkeypublickey.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_derive_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_derive_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_inner.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_inner.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_passkeyverifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3973,6 +4226,31 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_personalmessage.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_personalmessage.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_personalmessage.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_personalmessage.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_personalmessage_new.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_personalmessage_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_message_bytes.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_message_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_programmabletransaction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4817,6 +5095,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_digest.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_expiration.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4837,6 +5120,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_sender.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_sender.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionbuilder.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5008,6 +5296,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_digest.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5047,6 +5340,31 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffectsdigest_to_bytes.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffectsdigest_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionevents.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionevents.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionevents.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionevents.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionevents_events.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionevents_events.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactioneventsdigest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5744,6 +6062,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed.ar
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6137,6 +6470,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_transaction_info.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_transaction_info.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcontentsdigest_to_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointcontentsdigest_to_base58.restype = ctypes.c_uint16
@@ -6149,6 +6488,48 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointdigest_to_base58.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointdigest_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointdigest_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_checkpoint_commitments.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_checkpoint_commitments.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_content_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_content_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_end_of_epoch_data.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_end_of_epoch_data.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch_rolling_gas_cost_summary.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch_rolling_gas_cost_summary.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_network_total_transactions.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_network_total_transactions.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_signatures.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_signatures.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_coin_balance.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_coin_balance.restype = ctypes.c_uint16
@@ -6467,6 +6848,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid.restype = ctypes.c_uint16
@@ -6572,6 +6956,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct.restype = ctypes
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_data.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_data.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_digest.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_object_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_object_id.restype = ctypes.c_uint16
@@ -6608,6 +6995,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58.restype = 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address.restype = ctypes.c_uint16
@@ -6659,9 +7049,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_derive_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_derive_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_inner.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_inner.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands.restype = ctypes.c_uint16
@@ -6893,6 +7295,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration.restype = ctypes.c_uint16
@@ -6905,6 +7310,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_kind.restype = ctypes
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_add_gas_objects.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_add_gas_objects.restype = ctypes.c_uint16
@@ -6962,6 +7370,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondigest_to_bytes.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_digest.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1.restype = ctypes.c_uint16
@@ -6971,6 +7382,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffectsdigest_to_base5
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffectsdigest_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffectsdigest_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneventsdigest_to_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneventsdigest_to_base58.restype = ctypes.c_uint16
@@ -7169,6 +7586,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_c.restype = ctypes.c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_address_seed.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss.restype = ctypes.c_uint16
@@ -7238,6 +7664,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new.restype = ct
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontents_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontents_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58.restype = ctypes.c_uint16
@@ -7256,6 +7685,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_from_bytes.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_generate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new.restype = ctypes.c_uint16
@@ -7493,6 +7928,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_bytes.rest
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_generate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes.restype = ctypes.c_uint16
@@ -7520,6 +7958,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_programmabletransaction_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_programmabletransaction_new.restype = ctypes.c_uint16
@@ -7679,6 +8120,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_fro
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_generate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneventsdigest_from_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneventsdigest_from_base58.restype = ctypes.c_uint16
@@ -8191,6 +8635,18 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 class ActiveJwk:
     """
     A new Jwk
@@ -8469,191 +8925,6 @@ class _UniffiConverterTypeChangedObject(_UniffiConverterRustBuffer):
         _UniffiConverterTypeObjectIn.write(value.input_state, buf)
         _UniffiConverterTypeObjectOut.write(value.output_state, buf)
         _UniffiConverterTypeIdOperation.write(value.id_operation, buf)
-
-
-class CheckpointSummary:
-    """
-    A header for a Checkpoint on the IOTA blockchain.
-
-    On the IOTA network, checkpoints define the history of the blockchain. They
-    are quite similar to the concept of blocks used by other blockchains like
-    Bitcoin or Ethereum. The IOTA blockchain, however, forms checkpoints after
-    transaction execution has already happened to provide a certified history of
-    the chain, instead of being formed before execution.
-
-    Checkpoints commit to a variety of state including but not limited to:
-    - The hash of the previous checkpoint.
-    - The set of transaction digests, their corresponding effects digests, as
-    well as the set of user signatures which authorized its execution.
-    - The object's produced by a transaction.
-    - The set of live objects that make up the current state of the chain.
-    - On epoch transitions, the next validator committee.
-
-    `CheckpointSummary`s themselves don't directly include all of the above
-    information but they are the top-level type by which all the above are
-    committed to transitively via cryptographic hashes included in the summary.
-    `CheckpointSummary`s are signed and certified by a quorum of the validator
-    committee in a given epoch in order to allow verification of the chain's
-    state.
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    checkpoint-summary = u64                            ; epoch
-    u64                            ; sequence_number
-    u64                            ; network_total_transactions
-    digest                         ; content_digest
-    (option digest)                ; previous_digest
-    gas-cost-summary               ; epoch_rolling_gas_cost_summary
-    u64                            ; timestamp_ms
-    (vector checkpoint-commitment) ; checkpoint_commitments
-    (option end-of-epoch-data)     ; end_of_epoch_data
-    bytes                          ; version_specific_data
-    ```
-    """
-
-    epoch: "int"
-    """
-    Epoch that this checkpoint belongs to.
-    """
-
-    sequence_number: "int"
-    """
-    The height of this checkpoint.
-    """
-
-    network_total_transactions: "int"
-    """
-    Total number of transactions committed since genesis, including those in
-    this checkpoint.
-    """
-
-    content_digest: "CheckpointContentsDigest"
-    """
-    The hash of the `CheckpointContents` for this checkpoint.
-    """
-
-    previous_digest: "typing.Optional[CheckpointDigest]"
-    """
-    The hash of the previous `CheckpointSummary`.
-
-    This will be only be `None` for the first, or genesis checkpoint.
-    """
-
-    epoch_rolling_gas_cost_summary: "GasCostSummary"
-    """
-    The running total gas costs of all transactions included in the current
-    epoch so far until this checkpoint.
-    """
-
-    timestamp_ms: "int"
-    """
-    Timestamp of the checkpoint - number of milliseconds from the Unix epoch
-    Checkpoint timestamps are monotonic, but not strongly monotonic -
-    subsequent checkpoints can have same timestamp if they originate
-    from the same underlining consensus commit
-    """
-
-    checkpoint_commitments: "typing.List[CheckpointCommitment]"
-    """
-    Commitments to checkpoint-specific state.
-    """
-
-    end_of_epoch_data: "typing.Optional[EndOfEpochData]"
-    """
-    Extra data only present in the final checkpoint of an epoch.
-    """
-
-    version_specific_data: "bytes"
-    """
-    CheckpointSummary is not an evolvable structure - it must be readable by
-    any version of the code. Therefore, in order to allow extensions to
-    be added to CheckpointSummary, we allow opaque data to be added to
-    checkpoints which can be deserialized based on the current
-    protocol version.
-    """
-
-    def __init__(self, *, epoch: "int", sequence_number: "int", network_total_transactions: "int", content_digest: "CheckpointContentsDigest", previous_digest: "typing.Optional[CheckpointDigest]", epoch_rolling_gas_cost_summary: "GasCostSummary", timestamp_ms: "int", checkpoint_commitments: "typing.List[CheckpointCommitment]", end_of_epoch_data: "typing.Optional[EndOfEpochData]", version_specific_data: "bytes"):
-        self.epoch = epoch
-        self.sequence_number = sequence_number
-        self.network_total_transactions = network_total_transactions
-        self.content_digest = content_digest
-        self.previous_digest = previous_digest
-        self.epoch_rolling_gas_cost_summary = epoch_rolling_gas_cost_summary
-        self.timestamp_ms = timestamp_ms
-        self.checkpoint_commitments = checkpoint_commitments
-        self.end_of_epoch_data = end_of_epoch_data
-        self.version_specific_data = version_specific_data
-
-    def __str__(self):
-        return "CheckpointSummary(epoch={}, sequence_number={}, network_total_transactions={}, content_digest={}, previous_digest={}, epoch_rolling_gas_cost_summary={}, timestamp_ms={}, checkpoint_commitments={}, end_of_epoch_data={}, version_specific_data={})".format(self.epoch, self.sequence_number, self.network_total_transactions, self.content_digest, self.previous_digest, self.epoch_rolling_gas_cost_summary, self.timestamp_ms, self.checkpoint_commitments, self.end_of_epoch_data, self.version_specific_data)
-
-    def __eq__(self, other):
-        if self.epoch != other.epoch:
-            return False
-        if self.sequence_number != other.sequence_number:
-            return False
-        if self.network_total_transactions != other.network_total_transactions:
-            return False
-        if self.content_digest != other.content_digest:
-            return False
-        if self.previous_digest != other.previous_digest:
-            return False
-        if self.epoch_rolling_gas_cost_summary != other.epoch_rolling_gas_cost_summary:
-            return False
-        if self.timestamp_ms != other.timestamp_ms:
-            return False
-        if self.checkpoint_commitments != other.checkpoint_commitments:
-            return False
-        if self.end_of_epoch_data != other.end_of_epoch_data:
-            return False
-        if self.version_specific_data != other.version_specific_data:
-            return False
-        return True
-
-class _UniffiConverterTypeCheckpointSummary(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return CheckpointSummary(
-            epoch=_UniffiConverterUInt64.read(buf),
-            sequence_number=_UniffiConverterUInt64.read(buf),
-            network_total_transactions=_UniffiConverterUInt64.read(buf),
-            content_digest=_UniffiConverterTypeCheckpointContentsDigest.read(buf),
-            previous_digest=_UniffiConverterOptionalTypeCheckpointDigest.read(buf),
-            epoch_rolling_gas_cost_summary=_UniffiConverterTypeGasCostSummary.read(buf),
-            timestamp_ms=_UniffiConverterUInt64.read(buf),
-            checkpoint_commitments=_UniffiConverterSequenceTypeCheckpointCommitment.read(buf),
-            end_of_epoch_data=_UniffiConverterOptionalTypeEndOfEpochData.read(buf),
-            version_specific_data=_UniffiConverterBytes.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterUInt64.check_lower(value.epoch)
-        _UniffiConverterUInt64.check_lower(value.sequence_number)
-        _UniffiConverterUInt64.check_lower(value.network_total_transactions)
-        _UniffiConverterTypeCheckpointContentsDigest.check_lower(value.content_digest)
-        _UniffiConverterOptionalTypeCheckpointDigest.check_lower(value.previous_digest)
-        _UniffiConverterTypeGasCostSummary.check_lower(value.epoch_rolling_gas_cost_summary)
-        _UniffiConverterUInt64.check_lower(value.timestamp_ms)
-        _UniffiConverterSequenceTypeCheckpointCommitment.check_lower(value.checkpoint_commitments)
-        _UniffiConverterOptionalTypeEndOfEpochData.check_lower(value.end_of_epoch_data)
-        _UniffiConverterBytes.check_lower(value.version_specific_data)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterUInt64.write(value.epoch, buf)
-        _UniffiConverterUInt64.write(value.sequence_number, buf)
-        _UniffiConverterUInt64.write(value.network_total_transactions, buf)
-        _UniffiConverterTypeCheckpointContentsDigest.write(value.content_digest, buf)
-        _UniffiConverterOptionalTypeCheckpointDigest.write(value.previous_digest, buf)
-        _UniffiConverterTypeGasCostSummary.write(value.epoch_rolling_gas_cost_summary, buf)
-        _UniffiConverterUInt64.write(value.timestamp_ms, buf)
-        _UniffiConverterSequenceTypeCheckpointCommitment.write(value.checkpoint_commitments, buf)
-        _UniffiConverterOptionalTypeEndOfEpochData.write(value.end_of_epoch_data, buf)
-        _UniffiConverterBytes.write(value.version_specific_data, buf)
 
 
 class CheckpointSummaryPage:
@@ -16635,6 +16906,33 @@ class _UniffiConverterOptionalTypeCheckpointDigest(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeCheckpointSummary(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeCheckpointSummary.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeCheckpointSummary.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeCheckpointSummary.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeEd25519PublicKey(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -17224,33 +17522,6 @@ class _UniffiConverterOptionalTypeZkloginVerifier(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeZkloginVerifier.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
-class _UniffiConverterOptionalTypeCheckpointSummary(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeCheckpointSummary.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeCheckpointSummary.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeCheckpointSummary.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -18197,6 +18468,31 @@ class _UniffiConverterSequenceBytes(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeAddress(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeAddress.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeAddress.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeAddress.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeArgument(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -18268,6 +18564,56 @@ class _UniffiConverterSequenceTypeCheckpointCommitment(_UniffiConverterRustBuffe
 
         return [
             _UniffiConverterTypeCheckpointCommitment.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeCheckpointSummary(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeCheckpointSummary.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeCheckpointSummary.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeCheckpointSummary.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeCheckpointTransactionInfo(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeCheckpointTransactionInfo.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeCheckpointTransactionInfo.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeCheckpointTransactionInfo.read(buf) for i in range(count)
         ]
 
 
@@ -18818,31 +19164,6 @@ class _UniffiConverterSequenceTypeChangedObject(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeChangedObject.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceTypeCheckpointSummary(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeCheckpointSummary.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeCheckpointSummary.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeCheckpointSummary.read(buf) for i in range(count)
         ]
 
 
@@ -21189,6 +21510,127 @@ class _UniffiConverterTypeCheckpointCommitment:
     @classmethod
     def write(cls, value: CheckpointCommitmentProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class CheckpointContentsProtocol(typing.Protocol):
+    """
+    The committed to contents of a checkpoint.
+
+    `CheckpointContents` contains a list of digests of Transactions, their
+    effects, and the user signatures that authorized their execution included in
+    a checkpoint.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+
+    checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
+    (vector (vector bcs-user-signature)) ; set of user signatures for each
+    ; transaction. MUST be the same
+    ; length as the vector of digests
+    ```
+    """
+
+    def digest(self, ):
+        raise NotImplementedError
+    def transaction_info(self, ):
+        raise NotImplementedError
+# CheckpointContents is a Rust-only trait - it's a wrapper around a Rust implementation.
+class CheckpointContents():
+    """
+    The committed to contents of a checkpoint.
+
+    `CheckpointContents` contains a list of digests of Transactions, their
+    effects, and the user signatures that authorized their execution included in
+    a checkpoint.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+
+    checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
+    (vector (vector bcs-user-signature)) ; set of user signatures for each
+    ; transaction. MUST be the same
+    ; length as the vector of digests
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, transaction_info: "typing.List[CheckpointTransactionInfo]"):
+        _UniffiConverterSequenceTypeCheckpointTransactionInfo.check_lower(transaction_info)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_checkpointcontents_new,
+        _UniffiConverterSequenceTypeCheckpointTransactionInfo.lower(transaction_info))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_checkpointcontents, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointcontents, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def digest(self, ) -> "CheckpointContentsDigest":
+        return _UniffiConverterTypeCheckpointContentsDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointcontents_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def transaction_info(self, ) -> "typing.List[CheckpointTransactionInfo]":
+        return _UniffiConverterSequenceTypeCheckpointTransactionInfo.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointcontents_transaction_info,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeCheckpointContents:
+
+    @staticmethod
+    def lift(value: int):
+        return CheckpointContents._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: CheckpointContents):
+        if not isinstance(value, CheckpointContents):
+            raise TypeError("Expected CheckpointContents instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: CheckpointContentsProtocol):
+        if not isinstance(value, CheckpointContents):
+            raise TypeError("Expected CheckpointContents instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: CheckpointContentsProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class CheckpointContentsDigestProtocol(typing.Protocol):
     def to_base58(self, ):
         raise NotImplementedError
@@ -21390,6 +21832,501 @@ class _UniffiConverterTypeCheckpointDigest:
 
     @classmethod
     def write(cls, value: CheckpointDigestProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class CheckpointSummaryProtocol(typing.Protocol):
+    """
+    A header for a Checkpoint on the IOTA blockchain.
+
+    On the IOTA network, checkpoints define the history of the blockchain. They
+    are quite similar to the concept of blocks used by other blockchains like
+    Bitcoin or Ethereum. The IOTA blockchain, however, forms checkpoints after
+    transaction execution has already happened to provide a certified history of
+    the chain, instead of being formed before execution.
+
+    Checkpoints commit to a variety of state including but not limited to:
+    - The hash of the previous checkpoint.
+    - The set of transaction digests, their corresponding effects digests, as
+    well as the set of user signatures which authorized its execution.
+    - The object's produced by a transaction.
+    - The set of live objects that make up the current state of the chain.
+    - On epoch transitions, the next validator committee.
+
+    `CheckpointSummary`s themselves don't directly include all of the above
+    information but they are the top-level type by which all the above are
+    committed to transitively via cryptographic hashes included in the summary.
+    `CheckpointSummary`s are signed and certified by a quorum of the validator
+    committee in a given epoch in order to allow verification of the chain's
+    state.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    checkpoint-summary = u64                            ; epoch
+    u64                            ; sequence_number
+    u64                            ; network_total_transactions
+    digest                         ; content_digest
+    (option digest)                ; previous_digest
+    gas-cost-summary               ; epoch_rolling_gas_cost_summary
+    u64                            ; timestamp_ms
+    (vector checkpoint-commitment) ; checkpoint_commitments
+    (option end-of-epoch-data)     ; end_of_epoch_data
+    bytes                          ; version_specific_data
+    ```
+    """
+
+    def checkpoint_commitments(self, ):
+        """
+        Commitments to checkpoint-specific state.
+        """
+
+        raise NotImplementedError
+    def content_digest(self, ):
+        """
+        The hash of the `CheckpointContents` for this checkpoint.
+        """
+
+        raise NotImplementedError
+    def digest(self, ):
+        raise NotImplementedError
+    def end_of_epoch_data(self, ):
+        """
+        Extra data only present in the final checkpoint of an epoch.
+        """
+
+        raise NotImplementedError
+    def epoch(self, ):
+        """
+        Epoch that this checkpoint belongs to.
+        """
+
+        raise NotImplementedError
+    def epoch_rolling_gas_cost_summary(self, ):
+        """
+        The running total gas costs of all transactions included in the current
+        epoch so far until this checkpoint.
+        """
+
+        raise NotImplementedError
+    def network_total_transactions(self, ):
+        """
+        Total number of transactions committed since genesis, including those in
+        this checkpoint.
+        """
+
+        raise NotImplementedError
+    def previous_digest(self, ):
+        """
+        The hash of the previous `CheckpointSummary`.
+
+        This will be only be `None` for the first, or genesis checkpoint.
+        """
+
+        raise NotImplementedError
+    def sequence_number(self, ):
+        """
+        The height of this checkpoint.
+        """
+
+        raise NotImplementedError
+    def timestamp_ms(self, ):
+        """
+        Timestamp of the checkpoint - number of milliseconds from the Unix epoch
+        Checkpoint timestamps are monotonic, but not strongly monotonic -
+        subsequent checkpoints can have same timestamp if they originate
+        from the same underlining consensus commit
+        """
+
+        raise NotImplementedError
+    def version_specific_data(self, ):
+        """
+        CheckpointSummary is not an evolvable structure - it must be readable by
+        any version of the code. Therefore, in order to allow extensions to
+        be added to CheckpointSummary, we allow opaque data to be added to
+        checkpoints which can be deserialized based on the current
+        protocol version.
+        """
+
+        raise NotImplementedError
+# CheckpointSummary is a Rust-only trait - it's a wrapper around a Rust implementation.
+class CheckpointSummary():
+    """
+    A header for a Checkpoint on the IOTA blockchain.
+
+    On the IOTA network, checkpoints define the history of the blockchain. They
+    are quite similar to the concept of blocks used by other blockchains like
+    Bitcoin or Ethereum. The IOTA blockchain, however, forms checkpoints after
+    transaction execution has already happened to provide a certified history of
+    the chain, instead of being formed before execution.
+
+    Checkpoints commit to a variety of state including but not limited to:
+    - The hash of the previous checkpoint.
+    - The set of transaction digests, their corresponding effects digests, as
+    well as the set of user signatures which authorized its execution.
+    - The object's produced by a transaction.
+    - The set of live objects that make up the current state of the chain.
+    - On epoch transitions, the next validator committee.
+
+    `CheckpointSummary`s themselves don't directly include all of the above
+    information but they are the top-level type by which all the above are
+    committed to transitively via cryptographic hashes included in the summary.
+    `CheckpointSummary`s are signed and certified by a quorum of the validator
+    committee in a given epoch in order to allow verification of the chain's
+    state.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    checkpoint-summary = u64                            ; epoch
+    u64                            ; sequence_number
+    u64                            ; network_total_transactions
+    digest                         ; content_digest
+    (option digest)                ; previous_digest
+    gas-cost-summary               ; epoch_rolling_gas_cost_summary
+    u64                            ; timestamp_ms
+    (vector checkpoint-commitment) ; checkpoint_commitments
+    (option end-of-epoch-data)     ; end_of_epoch_data
+    bytes                          ; version_specific_data
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, epoch: "int",sequence_number: "int",network_total_transactions: "int",content_digest: "CheckpointContentsDigest",previous_digest: "typing.Optional[CheckpointDigest]",epoch_rolling_gas_cost_summary: "GasCostSummary",timestamp_ms: "int",checkpoint_commitments: "typing.List[CheckpointCommitment]",end_of_epoch_data: "typing.Optional[EndOfEpochData]",version_specific_data: "bytes"):
+        _UniffiConverterUInt64.check_lower(epoch)
+        
+        _UniffiConverterUInt64.check_lower(sequence_number)
+        
+        _UniffiConverterUInt64.check_lower(network_total_transactions)
+        
+        _UniffiConverterTypeCheckpointContentsDigest.check_lower(content_digest)
+        
+        _UniffiConverterOptionalTypeCheckpointDigest.check_lower(previous_digest)
+        
+        _UniffiConverterTypeGasCostSummary.check_lower(epoch_rolling_gas_cost_summary)
+        
+        _UniffiConverterUInt64.check_lower(timestamp_ms)
+        
+        _UniffiConverterSequenceTypeCheckpointCommitment.check_lower(checkpoint_commitments)
+        
+        _UniffiConverterOptionalTypeEndOfEpochData.check_lower(end_of_epoch_data)
+        
+        _UniffiConverterBytes.check_lower(version_specific_data)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_checkpointsummary_new,
+        _UniffiConverterUInt64.lower(epoch),
+        _UniffiConverterUInt64.lower(sequence_number),
+        _UniffiConverterUInt64.lower(network_total_transactions),
+        _UniffiConverterTypeCheckpointContentsDigest.lower(content_digest),
+        _UniffiConverterOptionalTypeCheckpointDigest.lower(previous_digest),
+        _UniffiConverterTypeGasCostSummary.lower(epoch_rolling_gas_cost_summary),
+        _UniffiConverterUInt64.lower(timestamp_ms),
+        _UniffiConverterSequenceTypeCheckpointCommitment.lower(checkpoint_commitments),
+        _UniffiConverterOptionalTypeEndOfEpochData.lower(end_of_epoch_data),
+        _UniffiConverterBytes.lower(version_specific_data))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_checkpointsummary, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointsummary, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def checkpoint_commitments(self, ) -> "typing.List[CheckpointCommitment]":
+        """
+        Commitments to checkpoint-specific state.
+        """
+
+        return _UniffiConverterSequenceTypeCheckpointCommitment.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_checkpoint_commitments,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def content_digest(self, ) -> "CheckpointContentsDigest":
+        """
+        The hash of the `CheckpointContents` for this checkpoint.
+        """
+
+        return _UniffiConverterTypeCheckpointContentsDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_content_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def digest(self, ) -> "CheckpointDigest":
+        return _UniffiConverterTypeCheckpointDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def end_of_epoch_data(self, ) -> "typing.Optional[EndOfEpochData]":
+        """
+        Extra data only present in the final checkpoint of an epoch.
+        """
+
+        return _UniffiConverterOptionalTypeEndOfEpochData.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_end_of_epoch_data,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def epoch(self, ) -> "int":
+        """
+        Epoch that this checkpoint belongs to.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_epoch,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def epoch_rolling_gas_cost_summary(self, ) -> "GasCostSummary":
+        """
+        The running total gas costs of all transactions included in the current
+        epoch so far until this checkpoint.
+        """
+
+        return _UniffiConverterTypeGasCostSummary.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_epoch_rolling_gas_cost_summary,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def network_total_transactions(self, ) -> "int":
+        """
+        Total number of transactions committed since genesis, including those in
+        this checkpoint.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_network_total_transactions,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def previous_digest(self, ) -> "typing.Optional[CheckpointDigest]":
+        """
+        The hash of the previous `CheckpointSummary`.
+
+        This will be only be `None` for the first, or genesis checkpoint.
+        """
+
+        return _UniffiConverterOptionalTypeCheckpointDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_previous_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def sequence_number(self, ) -> "int":
+        """
+        The height of this checkpoint.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_sequence_number,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def timestamp_ms(self, ) -> "int":
+        """
+        Timestamp of the checkpoint - number of milliseconds from the Unix epoch
+        Checkpoint timestamps are monotonic, but not strongly monotonic -
+        subsequent checkpoints can have same timestamp if they originate
+        from the same underlining consensus commit
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_timestamp_ms,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def version_specific_data(self, ) -> "bytes":
+        """
+        CheckpointSummary is not an evolvable structure - it must be readable by
+        any version of the code. Therefore, in order to allow extensions to
+        be added to CheckpointSummary, we allow opaque data to be added to
+        checkpoints which can be deserialized based on the current
+        protocol version.
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_version_specific_data,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeCheckpointSummary:
+
+    @staticmethod
+    def lift(value: int):
+        return CheckpointSummary._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: CheckpointSummary):
+        if not isinstance(value, CheckpointSummary):
+            raise TypeError("Expected CheckpointSummary instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: CheckpointSummaryProtocol):
+        if not isinstance(value, CheckpointSummary):
+            raise TypeError("Expected CheckpointSummary instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: CheckpointSummaryProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class CheckpointTransactionInfoProtocol(typing.Protocol):
+    """
+    Transaction information committed to in a checkpoint
+    """
+
+    def effects(self, ):
+        raise NotImplementedError
+    def signatures(self, ):
+        raise NotImplementedError
+    def transaction(self, ):
+        raise NotImplementedError
+# CheckpointTransactionInfo is a Rust-only trait - it's a wrapper around a Rust implementation.
+class CheckpointTransactionInfo():
+    """
+    Transaction information committed to in a checkpoint
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, transaction: "TransactionDigest",effects: "TransactionEffectsDigest",signatures: "typing.List[UserSignature]"):
+        _UniffiConverterTypeTransactionDigest.check_lower(transaction)
+        
+        _UniffiConverterTypeTransactionEffectsDigest.check_lower(effects)
+        
+        _UniffiConverterSequenceTypeUserSignature.check_lower(signatures)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_checkpointtransactioninfo_new,
+        _UniffiConverterTypeTransactionDigest.lower(transaction),
+        _UniffiConverterTypeTransactionEffectsDigest.lower(effects),
+        _UniffiConverterSequenceTypeUserSignature.lower(signatures))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_checkpointtransactioninfo, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_checkpointtransactioninfo, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def effects(self, ) -> "TransactionEffectsDigest":
+        return _UniffiConverterTypeTransactionEffectsDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_effects,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def signatures(self, ) -> "typing.List[UserSignature]":
+        return _UniffiConverterSequenceTypeUserSignature.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_signatures,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def transaction(self, ) -> "TransactionDigest":
+        return _UniffiConverterTypeTransactionDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_transaction,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeCheckpointTransactionInfo:
+
+    @staticmethod
+    def lift(value: int):
+        return CheckpointTransactionInfo._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: CheckpointTransactionInfo):
+        if not isinstance(value, CheckpointTransactionInfo):
+            raise TypeError("Expected CheckpointTransactionInfo instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: CheckpointTransactionInfoProtocol):
+        if not isinstance(value, CheckpointTransactionInfo):
+            raise TypeError("Expected CheckpointTransactionInfo instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: CheckpointTransactionInfoProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class CircomG1Protocol(typing.Protocol):
     """
@@ -27264,6 +28201,28 @@ class MultisigCommitteeProtocol(typing.Protocol):
     ```
     """
 
+    def derive_address(self, ):
+        """
+        Derive an `Address` from this MultisigCommittee.
+
+        A MultiSig address
+        is defined as the 32-byte Blake2b hash of serializing the
+        `SignatureScheme` flag (0x03), the threshold (in little endian), and
+        the concatenation of all n flag, public keys and its weight.
+
+        `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
+        || ... || flag_n || pk_n || weight_n)`.
+
+        When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+        refers to the same input used when deriving the address using the
+        [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+        full 32-byte `address_seed` value).
+
+        [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
+        [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
+        """
+
+        raise NotImplementedError
     def is_valid(self, ):
         """
         Checks if the Committee is valid.
@@ -27360,6 +28319,35 @@ class MultisigCommittee():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def derive_address(self, ) -> "Address":
+        """
+        Derive an `Address` from this MultisigCommittee.
+
+        A MultiSig address
+        is defined as the 32-byte Blake2b hash of serializing the
+        `SignatureScheme` flag (0x03), the threshold (in little endian), and
+        the concatenation of all n flag, public keys and its weight.
+
+        `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
+        || ... || flag_n || pk_n || weight_n)`.
+
+        When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+        refers to the same input used when deriving the address using the
+        [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+        full 32-byte `address_seed` value).
+
+        [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
+        [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_derive_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
     def is_valid(self, ) -> "bool":
@@ -28190,6 +29178,14 @@ class ObjectProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def digest(self, ):
+        """
+        Calculate the digest of this `Object`
+
+        This is done by hashing the BCS bytes of this `Object` prefixed
+        """
+
+        raise NotImplementedError
     def object_id(self, ):
         """
         Return this object's id
@@ -28298,6 +29294,21 @@ class Object():
 
         return _UniffiConverterTypeObjectData.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_data,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def digest(self, ) -> "ObjectDigest":
+        """
+        Calculate the digest of this `Object`
+
+        This is done by hashing the BCS bytes of this `Object` prefixed
+        """
+
+        return _UniffiConverterTypeObjectDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_digest,self._uniffi_clone_pointer(),)
         )
 
 
@@ -28723,6 +29734,14 @@ class ObjectIdProtocol(typing.Protocol):
     ```
     """
 
+    def derive_dynamic_child_id(self, key_type_tag: "TypeTag",key_bytes: "bytes"):
+        """
+        Derive an ObjectId for a Dynamic Child Object.
+
+        hash(parent || len(key) || key || key_type_tag)
+        """
+
+        raise NotImplementedError
     def to_address(self, ):
         raise NotImplementedError
     def to_bytes(self, ):
@@ -28775,6 +29794,25 @@ class ObjectId():
         inst._pointer = pointer
         return inst
     @classmethod
+    def derive_id(cls, digest: "TransactionDigest",count: "int"):
+        """
+        Create an ObjectId from `TransactionDigest` and `count`.
+
+        `count` is the number of objects that have been created during a
+        transactions.
+        """
+
+        _UniffiConverterTypeTransactionDigest.check_lower(digest)
+        
+        _UniffiConverterUInt64.check_lower(count)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id,
+        _UniffiConverterTypeTransactionDigest.lower(digest),
+        _UniffiConverterUInt64.lower(count))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def from_bytes(cls, bytes: "bytes"):
         _UniffiConverterBytes.check_lower(bytes)
         
@@ -28791,6 +29829,27 @@ class ObjectId():
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex,
         _UniffiConverterString.lower(hex))
         return cls._make_instance_(pointer)
+
+
+
+    def derive_dynamic_child_id(self, key_type_tag: "TypeTag",key_bytes: "bytes") -> "ObjectId":
+        """
+        Derive an ObjectId for a Dynamic Child Object.
+
+        hash(parent || len(key) || key || key_type_tag)
+        """
+
+        _UniffiConverterTypeTypeTag.check_lower(key_type_tag)
+        
+        _UniffiConverterBytes.check_lower(key_bytes)
+        
+        return _UniffiConverterTypeObjectId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTypeTag.lower(key_type_tag),
+        _UniffiConverterBytes.lower(key_bytes))
+        )
+
+
 
 
 
@@ -29377,6 +30436,131 @@ class _UniffiConverterTypePasskeyAuthenticator:
     @classmethod
     def write(cls, value: PasskeyAuthenticatorProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class PasskeyPublicKeyProtocol(typing.Protocol):
+    """
+    Public key of a `PasskeyAuthenticator`.
+
+    This is used to derive the onchain `Address` for a `PasskeyAuthenticator`.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    passkey-public-key = passkey-flag secp256r1-public-key
+    ```
+    """
+
+    def derive_address(self, ):
+        """
+        Derive an `Address` from this Passkey Public Key
+
+        An `Address` can be derived from a `PasskeyPublicKey` by hashing the
+        bytes of the `Secp256r1PublicKey` that corresponds to this passkey
+        prefixed with the Passkey `SignatureScheme` flag (`0x06`).
+
+        `hash( 0x06 || 33-byte secp256r1 public key)`
+        """
+
+        raise NotImplementedError
+    def inner(self, ):
+        raise NotImplementedError
+# PasskeyPublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
+class PasskeyPublicKey():
+    """
+    Public key of a `PasskeyAuthenticator`.
+
+    This is used to derive the onchain `Address` for a `PasskeyAuthenticator`.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    passkey-public-key = passkey-flag secp256r1-public-key
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_passkeypublickey, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_passkeypublickey, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def derive_address(self, ) -> "Address":
+        """
+        Derive an `Address` from this Passkey Public Key
+
+        An `Address` can be derived from a `PasskeyPublicKey` by hashing the
+        bytes of the `Secp256r1PublicKey` that corresponds to this passkey
+        prefixed with the Passkey `SignatureScheme` flag (`0x06`).
+
+        `hash( 0x06 || 33-byte secp256r1 public key)`
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_derive_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def inner(self, ) -> "Secp256r1PublicKey":
+        return _UniffiConverterTypeSecp256r1PublicKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_inner,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypePasskeyPublicKey:
+
+    @staticmethod
+    def lift(value: int):
+        return PasskeyPublicKey._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: PasskeyPublicKey):
+        if not isinstance(value, PasskeyPublicKey):
+            raise TypeError("Expected PasskeyPublicKey instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: PasskeyPublicKeyProtocol):
+        if not isinstance(value, PasskeyPublicKey):
+            raise TypeError("Expected PasskeyPublicKey instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: PasskeyPublicKeyProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class PasskeyVerifierProtocol(typing.Protocol):
     def verify(self, message: "bytes",authenticator: "PasskeyAuthenticator"):
         raise NotImplementedError
@@ -29446,6 +30630,85 @@ class _UniffiConverterTypePasskeyVerifier:
 
     @classmethod
     def write(cls, value: PasskeyVerifierProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class PersonalMessageProtocol(typing.Protocol):
+    def message_bytes(self, ):
+        raise NotImplementedError
+    def signing_digest(self, ):
+        raise NotImplementedError
+# PersonalMessage is a Rust-only trait - it's a wrapper around a Rust implementation.
+class PersonalMessage():
+    _pointer: ctypes.c_void_p
+    def __init__(self, message_bytes: "bytes"):
+        _UniffiConverterBytes.check_lower(message_bytes)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_personalmessage_new,
+        _UniffiConverterBytes.lower(message_bytes))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_personalmessage, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_personalmessage, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def message_bytes(self, ) -> "bytes":
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_message_bytes,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def signing_digest(self, ) -> "bytes":
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypePersonalMessage:
+
+    @staticmethod
+    def lift(value: int):
+        return PersonalMessage._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: PersonalMessage):
+        if not isinstance(value, PersonalMessage):
+            raise TypeError("Expected PersonalMessage instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: PersonalMessageProtocol):
+        if not isinstance(value, PersonalMessage):
+            raise TypeError("Expected PersonalMessage instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: PersonalMessageProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ProgrammableTransactionProtocol(typing.Protocol):
     """
@@ -32281,6 +33544,8 @@ class TransactionProtocol(typing.Protocol):
     ```
     """
 
+    def digest(self, ):
+        raise NotImplementedError
     def expiration(self, ):
         raise NotImplementedError
     def gas_payment(self, ):
@@ -32288,6 +33553,8 @@ class TransactionProtocol(typing.Protocol):
     def kind(self, ):
         raise NotImplementedError
     def sender(self, ):
+        raise NotImplementedError
+    def signing_digest(self, ):
         raise NotImplementedError
 # Transaction is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Transaction():
@@ -32340,6 +33607,15 @@ class Transaction():
         return inst
 
 
+    def digest(self, ) -> "TransactionDigest":
+        return _UniffiConverterTypeTransactionDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def expiration(self, ) -> "TransactionExpiration":
         return _UniffiConverterTypeTransactionExpiration.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_expiration,self._uniffi_clone_pointer(),)
@@ -32370,6 +33646,15 @@ class Transaction():
     def sender(self, ) -> "Address":
         return _UniffiConverterTypeAddress.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_sender,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def signing_digest(self, ) -> "bytes":
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest,self._uniffi_clone_pointer(),)
         )
 
 
@@ -33146,6 +34431,8 @@ class TransactionEffectsProtocol(typing.Protocol):
 
     def as_v1(self, ):
         raise NotImplementedError
+    def digest(self, ):
+        raise NotImplementedError
     def is_v1(self, ):
         raise NotImplementedError
 # TransactionEffects is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -33199,6 +34486,15 @@ class TransactionEffects():
     def as_v1(self, ) -> "TransactionEffectsV1":
         return _UniffiConverterTypeTransactionEffectsV1.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def digest(self, ) -> "TransactionEffectsDigest":
+        return _UniffiConverterTypeTransactionEffectsDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_digest,self._uniffi_clone_pointer(),)
         )
 
 
@@ -33342,6 +34638,109 @@ class _UniffiConverterTypeTransactionEffectsDigest:
 
     @classmethod
     def write(cls, value: TransactionEffectsDigestProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class TransactionEventsProtocol(typing.Protocol):
+    """
+    Events emitted during the successful execution of a transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    transaction-events = vector event
+    ```
+    """
+
+    def digest(self, ):
+        raise NotImplementedError
+    def events(self, ):
+        raise NotImplementedError
+# TransactionEvents is a Rust-only trait - it's a wrapper around a Rust implementation.
+class TransactionEvents():
+    """
+    Events emitted during the successful execution of a transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    transaction-events = vector event
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, events: "typing.List[Event]"):
+        _UniffiConverterSequenceTypeEvent.check_lower(events)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new,
+        _UniffiConverterSequenceTypeEvent.lower(events))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionevents, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionevents, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def digest(self, ) -> "TransactionEventsDigest":
+        return _UniffiConverterTypeTransactionEventsDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def events(self, ) -> "typing.List[Event]":
+        return _UniffiConverterSequenceTypeEvent.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionevents_events,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeTransactionEvents:
+
+    @staticmethod
+    def lift(value: int):
+        return TransactionEvents._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: TransactionEvents):
+        if not isinstance(value, TransactionEvents):
+            raise TypeError("Expected TransactionEvents instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: TransactionEventsProtocol):
+        if not isinstance(value, TransactionEvents):
+            raise TypeError("Expected TransactionEvents instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: TransactionEventsProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class TransactionEventsDigestProtocol(typing.Protocol):
     def to_base58(self, ):
@@ -35744,6 +37143,41 @@ class ZkLoginPublicIdentifierProtocol(typing.Protocol):
 
     def address_seed(self, ):
         raise NotImplementedError
+    def derive_address(self, ):
+        """
+        Provides an iterator over the addresses that correspond to this zklogin
+        authenticator.
+
+        In the majority of instances this will only yield a single address,
+        except for the instances where the `address_seed` value has a
+        leading zero-byte, in such cases the returned iterator will yield
+        two addresses.
+        """
+
+        raise NotImplementedError
+    def derive_address_padded(self, ):
+        """
+        Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
+        byte length of the `iss` followed by the `iss` bytes themselves and
+        the full 32 byte `address_seed` value, all prefixed with the zklogin
+        `SignatureScheme` flag (`0x05`).
+
+        `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
+        """
+
+        raise NotImplementedError
+    def derive_address_unpadded(self, ):
+        """
+        Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
+        byte length of the `iss` followed by the `iss` bytes themselves and
+        the `address_seed` bytes with any leading zero-bytes stripped, all
+        prefixed with the zklogin `SignatureScheme` flag (`0x05`).
+
+        `hash( 0x05 || iss_bytes_len || iss_bytes ||
+        unpadded_32_byte_address_seed )`
+        """
+
+        raise NotImplementedError
     def iss(self, ):
         raise NotImplementedError
 # ZkLoginPublicIdentifier is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -35835,6 +37269,62 @@ class ZkLoginPublicIdentifier():
     def address_seed(self, ) -> "Bn254FieldElement":
         return _UniffiConverterTypeBn254FieldElement.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def derive_address(self, ) -> "typing.List[Address]":
+        """
+        Provides an iterator over the addresses that correspond to this zklogin
+        authenticator.
+
+        In the majority of instances this will only yield a single address,
+        except for the instances where the `address_seed` value has a
+        leading zero-byte, in such cases the returned iterator will yield
+        two addresses.
+        """
+
+        return _UniffiConverterSequenceTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def derive_address_padded(self, ) -> "Address":
+        """
+        Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
+        byte length of the `iss` followed by the `iss` bytes themselves and
+        the full 32 byte `address_seed` value, all prefixed with the zklogin
+        `SignatureScheme` flag (`0x05`).
+
+        `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def derive_address_unpadded(self, ) -> "Address":
+        """
+        Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
+        byte length of the `iss` followed by the `iss` bytes themselves and
+        the `address_seed` bytes with any leading zero-bytes stripped, all
+        prefixed with the zklogin `SignatureScheme` flag (`0x05`).
+
+        `hash( 0x05 || iss_bytes_len || iss_bytes ||
+        unpadded_32_byte_address_seed )`
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded,self._uniffi_clone_pointer(),)
         )
 
 
@@ -36082,7 +37572,6 @@ __all__ = [
     "AuthenticatorStateExpire",
     "AuthenticatorStateUpdateV1",
     "ChangedObject",
-    "CheckpointSummary",
     "CheckpointSummaryPage",
     "CoinMetadata",
     "CoinPage",
@@ -36160,8 +37649,11 @@ __all__ = [
     "ChangeEpoch",
     "ChangeEpochV2",
     "CheckpointCommitment",
+    "CheckpointContents",
     "CheckpointContentsDigest",
     "CheckpointDigest",
+    "CheckpointSummary",
+    "CheckpointTransactionInfo",
     "CircomG1",
     "CircomG2",
     "Coin",
@@ -36206,7 +37698,9 @@ __all__ = [
     "ObjectType",
     "Owner",
     "PasskeyAuthenticator",
+    "PasskeyPublicKey",
     "PasskeyVerifier",
+    "PersonalMessage",
     "ProgrammableTransaction",
     "Publish",
     "Secp256k1PrivateKey",
@@ -36231,6 +37725,7 @@ __all__ = [
     "TransactionDigest",
     "TransactionEffects",
     "TransactionEffectsDigest",
+    "TransactionEvents",
     "TransactionEventsDigest",
     "TransactionKind",
     "TransferObjects",
