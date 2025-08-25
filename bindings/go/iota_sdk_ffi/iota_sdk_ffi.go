@@ -5454,38 +5454,38 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_immutable()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable()
 	})
-	if checksum != 22072 {
+	if checksum != 37965 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_immutable: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_owned()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned()
 	})
-	if checksum != 59980 {
+	if checksum != 12810 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_owned: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_receiving()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving()
 	})
-	if checksum != 19846 {
+	if checksum != 10063 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_receiving: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_shared()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared()
 	})
-	if checksum != 33046 {
+	if checksum != 41623 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_shared: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -19874,23 +19874,23 @@ func UnresolvedInputFromObjectId(objectId *ObjectId) *UnresolvedInput {
 }
 
 // Return an immutable kind of object with all required fields.
-func UnresolvedInputImmutable(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
+func UnresolvedInputNewImmutable(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
 	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_immutable(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
 	}))
 }
 
 // Return an owned kind of object with all required fields.
-func UnresolvedInputOwned(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
+func UnresolvedInputNewOwned(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
 	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_owned(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
 	}))
 }
 
 // Return a receiving kind of object with all required fields.
-func UnresolvedInputReceiving(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
+func UnresolvedInputNewReceiving(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
 	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_receiving(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
 	}))
 }
 
@@ -19899,9 +19899,9 @@ func UnresolvedInputReceiving(objectId *ObjectId, version uint64, digest *Object
 // mutable reference.
 // - `initial_shared_version` is the first version the object was shared
 // at.
-func UnresolvedInputShared(objectId *ObjectId, initialSharedVersion uint64, mutable bool) *UnresolvedInput {
+func UnresolvedInputNewShared(objectId *ObjectId, initialSharedVersion uint64, mutable bool) *UnresolvedInput {
 	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_shared(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(initialSharedVersion), FfiConverterBoolINSTANCE.Lower(mutable),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_shared(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(initialSharedVersion), FfiConverterBoolINSTANCE.Lower(mutable),_uniffiStatus)
 	}))
 }
 
@@ -26413,42 +26413,6 @@ func (FfiConverterIdOperation) Write(writer io.Writer, value IdOperation) {
 type FfiDestroyerIdOperation struct {}
 
 func (_ FfiDestroyerIdOperation) Destroy(value IdOperation) {
-}
-
-
-type InputKind uint
-
-const (
-	InputKindPure InputKind = 1
-	InputKindShared InputKind = 2
-	InputKindReceiving InputKind = 3
-	InputKindImmutableOrOwned InputKind = 4
-	InputKindLiteral InputKind = 5
-)
-
-type FfiConverterInputKind struct {}
-
-var FfiConverterInputKindINSTANCE = FfiConverterInputKind{}
-
-func (c FfiConverterInputKind) Lift(rb RustBufferI) InputKind {
-	return LiftFromRustBuffer[InputKind](c, rb)
-}
-
-func (c FfiConverterInputKind) Lower(value InputKind) C.RustBuffer {
-	return LowerIntoRustBuffer[InputKind](c, value)
-}
-func (FfiConverterInputKind) Read(reader io.Reader) InputKind {
-	id := readInt32(reader)
-	return InputKind(id)
-}
-
-func (FfiConverterInputKind) Write(writer io.Writer, value InputKind) {
-	writeInt32(writer, int32(value))
-}
-
-type FfiDestroyerInputKind struct {}
-
-func (_ FfiDestroyerInputKind) Destroy(value InputKind) {
 }
 
 

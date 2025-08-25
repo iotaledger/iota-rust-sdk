@@ -3232,13 +3232,13 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object_id(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_immutable(
+fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_owned(
+fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_receiving(
+fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_shared(
+fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new(
 ): Short
@@ -4699,13 +4699,13 @@ fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object(`object`: Poi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object_id(`objectId`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_immutable(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_owned(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_receiving(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_shared(`objectId`: Pointer,`initialSharedVersion`: Long,`mutable`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_shared(`objectId`: Pointer,`initialSharedVersion`: Long,`mutable`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_mut(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6705,16 +6705,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object_id() != 24424.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_immutable() != 22072.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable() != 37965.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_owned() != 59980.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned() != 12810.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_receiving() != 19846.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving() != 10063.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_shared() != 33046.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared() != 41623.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new() != 61663.toShort()) {
@@ -36810,10 +36810,10 @@ open class UnresolvedInput: Disposable, AutoCloseable, UnresolvedInputInterface
         
     /**
      * Return an immutable kind of object with all required fields.
-     */ fun `immutable`(`objectId`: ObjectId, `version`: kotlin.ULong, `digest`: ObjectDigest): UnresolvedInput {
+     */ fun `newImmutable`(`objectId`: ObjectId, `version`: kotlin.ULong, `digest`: ObjectDigest): UnresolvedInput {
             return FfiConverterTypeUnresolvedInput.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_immutable(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(
         FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),FfiConverterTypeObjectDigest.lower(`digest`),_status)
 }
     )
@@ -36823,10 +36823,10 @@ open class UnresolvedInput: Disposable, AutoCloseable, UnresolvedInputInterface
         
     /**
      * Return an owned kind of object with all required fields.
-     */ fun `owned`(`objectId`: ObjectId, `version`: kotlin.ULong, `digest`: ObjectDigest): UnresolvedInput {
+     */ fun `newOwned`(`objectId`: ObjectId, `version`: kotlin.ULong, `digest`: ObjectDigest): UnresolvedInput {
             return FfiConverterTypeUnresolvedInput.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_owned(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(
         FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),FfiConverterTypeObjectDigest.lower(`digest`),_status)
 }
     )
@@ -36836,10 +36836,10 @@ open class UnresolvedInput: Disposable, AutoCloseable, UnresolvedInputInterface
         
     /**
      * Return a receiving kind of object with all required fields.
-     */ fun `receiving`(`objectId`: ObjectId, `version`: kotlin.ULong, `digest`: ObjectDigest): UnresolvedInput {
+     */ fun `newReceiving`(`objectId`: ObjectId, `version`: kotlin.ULong, `digest`: ObjectDigest): UnresolvedInput {
             return FfiConverterTypeUnresolvedInput.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_receiving(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving(
         FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),FfiConverterTypeObjectDigest.lower(`digest`),_status)
 }
     )
@@ -36853,10 +36853,10 @@ open class UnresolvedInput: Disposable, AutoCloseable, UnresolvedInputInterface
      * mutable reference.
      * - `initial_shared_version` is the first version the object was shared
      * at.
-     */ fun `shared`(`objectId`: ObjectId, `initialSharedVersion`: kotlin.ULong, `mutable`: kotlin.Boolean): UnresolvedInput {
+     */ fun `newShared`(`objectId`: ObjectId, `initialSharedVersion`: kotlin.ULong, `mutable`: kotlin.Boolean): UnresolvedInput {
             return FfiConverterTypeUnresolvedInput.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_shared(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_shared(
         FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`initialSharedVersion`),FfiConverterBoolean.lower(`mutable`),_status)
 }
     )
@@ -45978,39 +45978,6 @@ public object FfiConverterTypeIdOperation: FfiConverterRustBuffer<IdOperation> {
     override fun allocationSize(value: IdOperation) = 4UL
 
     override fun write(value: IdOperation, buf: ByteBuffer) {
-        buf.putInt(value.ordinal + 1)
-    }
-}
-
-
-
-
-
-
-enum class InputKind {
-    
-    PURE,
-    SHARED,
-    RECEIVING,
-    IMMUTABLE_OR_OWNED,
-    LITERAL;
-    companion object
-}
-
-
-/**
- * @suppress
- */
-public object FfiConverterTypeInputKind: FfiConverterRustBuffer<InputKind> {
-    override fun read(buf: ByteBuffer) = try {
-        InputKind.values()[buf.getInt() - 1]
-    } catch (e: IndexOutOfBoundsException) {
-        throw RuntimeException("invalid enum value, something is very wrong!!", e)
-    }
-
-    override fun allocationSize(value: InputKind) = 4UL
-
-    override fun write(value: InputKind, buf: ByteBuffer) {
         buf.putInt(value.ordinal + 1)
     }
 }

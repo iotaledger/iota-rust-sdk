@@ -1593,13 +1593,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object_id() != 24424:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_immutable() != 22072:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable() != 37965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_owned() != 59980:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned() != 12810:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_receiving() != 19846:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving() != 10063:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_shared() != 33046:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared() != 41623:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new() != 61663:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5303,34 +5303,34 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object_id.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object_id.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_immutable.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint64,
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_immutable.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_owned.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint64,
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_owned.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_receiving.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint64,
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_receiving.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_shared.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_shared.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint64,
     ctypes.c_int8,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_shared.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_shared.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_mut.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7751,18 +7751,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object_id.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_immutable.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_immutable.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_owned.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_owned.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_receiving.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_receiving.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_shared.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new.restype = ctypes.c_uint16
@@ -15028,68 +15028,6 @@ class _UniffiConverterTypeIdOperation(_UniffiConverterRustBuffer):
             buf.write_i32(2)
         if value == IdOperation.DELETED:
             buf.write_i32(3)
-
-
-
-
-
-
-
-class InputKind(enum.Enum):
-    PURE = 0
-    
-    SHARED = 1
-    
-    RECEIVING = 2
-    
-    IMMUTABLE_OR_OWNED = 3
-    
-    LITERAL = 4
-    
-
-
-class _UniffiConverterTypeInputKind(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        variant = buf.read_i32()
-        if variant == 1:
-            return InputKind.PURE
-        if variant == 2:
-            return InputKind.SHARED
-        if variant == 3:
-            return InputKind.RECEIVING
-        if variant == 4:
-            return InputKind.IMMUTABLE_OR_OWNED
-        if variant == 5:
-            return InputKind.LITERAL
-        raise InternalError("Raw enum value doesn't match any cases")
-
-    @staticmethod
-    def check_lower(value):
-        if value == InputKind.PURE:
-            return
-        if value == InputKind.SHARED:
-            return
-        if value == InputKind.RECEIVING:
-            return
-        if value == InputKind.IMMUTABLE_OR_OWNED:
-            return
-        if value == InputKind.LITERAL:
-            return
-        raise ValueError(value)
-
-    @staticmethod
-    def write(value, buf):
-        if value == InputKind.PURE:
-            buf.write_i32(1)
-        if value == InputKind.SHARED:
-            buf.write_i32(2)
-        if value == InputKind.RECEIVING:
-            buf.write_i32(3)
-        if value == InputKind.IMMUTABLE_OR_OWNED:
-            buf.write_i32(4)
-        if value == InputKind.LITERAL:
-            buf.write_i32(5)
 
 
 
@@ -34278,7 +34216,7 @@ class UnresolvedInput():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def immutable(cls, object_id: "ObjectId",version: "int",digest: "ObjectDigest"):
+    def new_immutable(cls, object_id: "ObjectId",version: "int",digest: "ObjectDigest"):
         """
         Return an immutable kind of object with all required fields.
         """
@@ -34290,14 +34228,14 @@ class UnresolvedInput():
         _UniffiConverterTypeObjectDigest.check_lower(digest)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_immutable,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable,
         _UniffiConverterTypeObjectId.lower(object_id),
         _UniffiConverterUInt64.lower(version),
         _UniffiConverterTypeObjectDigest.lower(digest))
         return cls._make_instance_(pointer)
 
     @classmethod
-    def owned(cls, object_id: "ObjectId",version: "int",digest: "ObjectDigest"):
+    def new_owned(cls, object_id: "ObjectId",version: "int",digest: "ObjectDigest"):
         """
         Return an owned kind of object with all required fields.
         """
@@ -34309,14 +34247,14 @@ class UnresolvedInput():
         _UniffiConverterTypeObjectDigest.check_lower(digest)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_owned,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned,
         _UniffiConverterTypeObjectId.lower(object_id),
         _UniffiConverterUInt64.lower(version),
         _UniffiConverterTypeObjectDigest.lower(digest))
         return cls._make_instance_(pointer)
 
     @classmethod
-    def receiving(cls, object_id: "ObjectId",version: "int",digest: "ObjectDigest"):
+    def new_receiving(cls, object_id: "ObjectId",version: "int",digest: "ObjectDigest"):
         """
         Return a receiving kind of object with all required fields.
         """
@@ -34328,14 +34266,14 @@ class UnresolvedInput():
         _UniffiConverterTypeObjectDigest.check_lower(digest)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_receiving,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving,
         _UniffiConverterTypeObjectId.lower(object_id),
         _UniffiConverterUInt64.lower(version),
         _UniffiConverterTypeObjectDigest.lower(digest))
         return cls._make_instance_(pointer)
 
     @classmethod
-    def shared(cls, object_id: "ObjectId",initial_shared_version: "int",mutable: "bool"):
+    def new_shared(cls, object_id: "ObjectId",initial_shared_version: "int",mutable: "bool"):
         """
         Return a shared object.
         - `mutable` controls whether a command can accept the object by value or
@@ -34351,7 +34289,7 @@ class UnresolvedInput():
         _UniffiConverterBool.check_lower(mutable)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_shared,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_shared,
         _UniffiConverterTypeObjectId.lower(object_id),
         _UniffiConverterUInt64.lower(initial_shared_version),
         _UniffiConverterBool.lower(mutable))
@@ -36129,7 +36067,6 @@ __all__ = [
     "ExecutionStatus",
     "Feature",
     "IdOperation",
-    "InputKind",
     "MoveAbility",
     "MoveVisibility",
     "ObjectIn",
