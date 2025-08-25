@@ -36,9 +36,7 @@ use crate::{
 /// ```text
 /// object-id = 32*OCTET
 /// ```
-#[derive(
-    Clone, Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Deref, uniffi::Object,
-)]
+#[derive(PartialEq, Eq, Hash, derive_more::From, derive_more::Deref, uniffi::Object)]
 #[uniffi::export(Hash)]
 pub struct ObjectId(pub iota_types::ObjectId);
 
@@ -80,7 +78,7 @@ impl ObjectId {
 /// ```text
 /// object-ref = object-id u64 digest
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct ObjectReference {
     object_id: Arc<ObjectId>,
     version: u64,
@@ -112,7 +110,7 @@ impl From<ObjectReference> for iota_types::ObjectReference {
 /// ```text
 /// object = object-data owner digest u64
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct Object(pub iota_types::Object);
 
 #[uniffi::export]
@@ -188,7 +186,7 @@ impl Object {
 /// object-data-struct  = %x00 object-move-struct
 /// object-data-package = %x01 object-move-package
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ObjectData(pub iota_types::ObjectData);
 
 #[uniffi::export]
@@ -239,7 +237,7 @@ impl ObjectData {
 /// ```text
 /// type-origin = identifier identifier object-id
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct TypeOrigin {
     pub module_name: Arc<Identifier>,
     pub struct_name: Arc<Identifier>,
@@ -275,7 +273,7 @@ impl From<TypeOrigin> for iota_types::TypeOrigin {
 /// ```text
 /// upgrade-info = object-id u64
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct UpgradeInfo {
     /// Id of the upgraded packages
     pub upgraded_id: Arc<ObjectId>,
@@ -314,7 +312,7 @@ impl From<UpgradeInfo> for iota_types::UpgradeInfo {
 /// type-origin-table = vector type-origin
 /// linkage-table = map (object-id upgrade-info)
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct MovePackage(pub iota_types::MovePackage);
 
 #[uniffi::export]
@@ -361,7 +359,7 @@ impl MovePackage {
 /// ; first 32 bytes of the contents are the object's object-id
 /// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct MoveStruct {
     /// The type of this object
     pub struct_type: Arc<StructTag>,
@@ -407,7 +405,7 @@ impl From<MoveStruct> for iota_types::MoveStruct {
 /// owner-shared    = %x02 u64
 /// owner-immutable = %x03
 /// ```
-#[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Owner(pub iota_types::Owner);
 
 #[uniffi::export]
@@ -470,7 +468,7 @@ impl Owner {
 }
 
 /// Type of an IOTA object
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ObjectType(pub iota_types::ObjectType);
 
 #[uniffi::export]
@@ -514,7 +512,7 @@ impl ObjectType {
 /// ```text
 /// genesis-object = object-data owner
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct GenesisObject(pub iota_types::GenesisObject);
 
 #[uniffi::export]

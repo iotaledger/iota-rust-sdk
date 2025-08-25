@@ -29,7 +29,7 @@ use crate::{
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ZkLoginAuthenticator(pub iota_types::ZkLoginAuthenticator);
 
 #[uniffi::export]
@@ -108,7 +108,7 @@ impl ZkLoginAuthenticator {
 /// ```
 ///
 /// [`Address`]: crate::Address
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ZkLoginPublicIdentifier(pub iota_types::ZkLoginPublicIdentifier);
 
 #[uniffi::export]
@@ -142,7 +142,7 @@ impl ZkLoginPublicIdentifier {
 ///                  string              ; base64url-unpadded encoded JwtHeader
 ///                  bn254-field-element ; address_seed
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ZkLoginInputs(pub iota_types::ZkLoginInputs);
 
 #[uniffi::export]
@@ -188,7 +188,7 @@ impl ZkLoginInputs {
 /// ```text
 /// zklogin-proof = circom-g1 circom-g2 circom-g1
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ZkLoginProof(pub iota_types::ZkLoginProof);
 
 #[uniffi::export]
@@ -242,7 +242,7 @@ pub struct ZkLoginClaim {
 /// ```text
 /// circom-g1 = %x03 3(bn254-field-element)
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct CircomG1(pub iota_types::CircomG1);
 
 #[uniffi::export]
@@ -273,7 +273,7 @@ impl CircomG1 {
 /// ```text
 /// circom-g2 = %x03 3(%x02 2(bn254-field-element))
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct CircomG2(pub iota_types::CircomG2);
 
 #[uniffi::export]
@@ -308,7 +308,7 @@ impl CircomG2 {
 /// ```text
 /// bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct Bn254FieldElement(pub iota_types::Bn254FieldElement);
 
 #[uniffi::export]

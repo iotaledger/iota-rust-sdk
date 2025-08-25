@@ -35,7 +35,7 @@ pub mod v1;
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct Transaction(pub iota_types::Transaction);
 
 #[uniffi::export]
@@ -72,7 +72,7 @@ impl Transaction {
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct SignedTransaction {
     pub transaction: Arc<Transaction>,
     pub signatures: Vec<Arc<UserSignature>>,
@@ -118,7 +118,7 @@ impl From<SignedTransaction> for iota_types::SignedTransaction {
 ///                     =/ %x07 consensus-commit-prologue-v2
 ///                     =/ %x08 consensus-commit-prologue-v3
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct TransactionKind(pub iota_types::TransactionKind);
 
 #[uniffi::export]
@@ -176,7 +176,7 @@ impl TransactionKind {
 /// ```text
 /// ptb = (vector input) (vector command)
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ProgrammableTransaction(pub iota_types::ProgrammableTransaction);
 
 #[uniffi::export]
@@ -235,7 +235,7 @@ impl ProgrammableTransaction {
 /// input-shared                = %x02 object-id u64 bool
 /// input-receiving             = %x04 object-ref
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct Input(pub iota_types::Input);
 
 #[uniffi::export]
@@ -292,7 +292,7 @@ impl Input {
 /// command-make-move-vector    = %x05 make-move-vector
 /// command-upgrade             = %x06 upgrade
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct Command(pub iota_types::Command);
 
 #[uniffi::export]
@@ -364,7 +364,7 @@ impl Command {
 /// ```text
 /// transfer-objects = (vector argument) argument
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct TransferObjects(pub iota_types::TransferObjects);
 
 #[uniffi::export]
@@ -403,7 +403,7 @@ impl TransferObjects {
 /// ```text
 /// split-coins = argument (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct SplitCoins(pub iota_types::SplitCoins);
 
 #[uniffi::export]
@@ -442,7 +442,7 @@ impl SplitCoins {
 /// ```text
 /// merge-coins = argument (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct MergeCoins(pub iota_types::MergeCoins);
 
 #[uniffi::export]
@@ -484,7 +484,7 @@ impl MergeCoins {
 /// publish = (vector bytes)        ; the serialized move modules
 ///           (vector object-id)    ; the set of package dependencies
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct Publish(pub iota_types::Publish);
 
 #[uniffi::export]
@@ -523,7 +523,7 @@ impl Publish {
 /// ```text
 /// make-move-vector = (option type-tag) (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct MakeMoveVector(pub iota_types::MakeMoveVector);
 
 #[uniffi::export]
@@ -568,7 +568,7 @@ impl MakeMoveVector {
 ///           object-id             ; package-id of the package
 ///           argument              ; upgrade ticket
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct Upgrade(pub iota_types::Upgrade);
 
 #[uniffi::export]
@@ -625,7 +625,7 @@ impl Upgrade {
 /// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 digest
 ///                                consensus-determined-version-assignments
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ConsensusCommitPrologueV1(pub iota_types::ConsensusCommitPrologueV1);
 
 #[uniffi::export]
@@ -688,7 +688,7 @@ impl ConsensusCommitPrologueV1 {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ConsensusDeterminedVersionAssignments(
     pub iota_types::ConsensusDeterminedVersionAssignments,
 );
@@ -733,7 +733,7 @@ impl ConsensusDeterminedVersionAssignments {
 /// ```text
 /// cancelled-transaction = digest (vector version-assignment)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct CancelledTransaction(pub iota_types::CancelledTransaction);
 
 #[uniffi::export]
@@ -773,7 +773,7 @@ impl CancelledTransaction {
 /// ```text
 /// version-assignment = object-id u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct VersionAssignment(iota_types::VersionAssignment);
 
 #[uniffi::export]
@@ -804,7 +804,7 @@ impl VersionAssignment {
 /// ```text
 /// genesis-transaction = (vector genesis-object)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct GenesisTransaction(iota_types::GenesisTransaction);
 
 #[uniffi::export]
@@ -813,7 +813,7 @@ impl GenesisTransaction {
     pub fn new(objects: Vec<Arc<GenesisObject>>, events: Vec<Event>) -> Self {
         Self(iota_types::GenesisTransaction {
             objects: objects.iter().map(|object| object.0.clone()).collect(),
-            events: events.iter().cloned().map(Into::into).collect(),
+            events: events.into_iter().map(Into::into).collect(),
         })
     }
 
@@ -848,7 +848,7 @@ impl GenesisTransaction {
 ///                u64  ; epoch start timestamp
 ///                (vector system-package)
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ChangeEpoch(pub iota_types::ChangeEpoch);
 
 #[uniffi::export]
@@ -939,7 +939,7 @@ impl ChangeEpoch {
 ///                  (vector bytes)     ; modules
 ///                  (vector object-id) ; dependencies
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct SystemPackage(pub iota_types::SystemPackage);
 
 #[uniffi::export]
@@ -989,7 +989,7 @@ impl SystemPackage {
 ///                u64  ; epoch start timestamp
 ///                (vector system-package)
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ChangeEpochV2(pub iota_types::ChangeEpochV2);
 
 #[uniffi::export]
@@ -1149,7 +1149,7 @@ pub struct ActiveJwk {
 ///                                          (vec execution-time-observation)
 ///                                         )
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ExecutionTimeObservations(pub iota_types::ExecutionTimeObservations);
 
 #[uniffi::export]
@@ -1165,7 +1165,7 @@ impl ExecutionTimeObservations {
     }
 }
 
-#[derive(Debug, Hash, PartialEq, Eq, Clone, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ExecutionTimeObservation(pub iota_types::ExecutionTimeObservation);
 
 #[uniffi::export]
@@ -1207,7 +1207,7 @@ impl ExecutionTimeObservation {
 /// duration =  u64 ; seconds
 ///             u32 ; subsecond nanoseconds
 /// ```
-#[derive(Debug, Hash, PartialEq, Eq, Clone, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ValidatorExecutionTimeObservation(iota_types::ValidatorExecutionTimeObservation);
 
 #[uniffi::export]
@@ -1246,7 +1246,7 @@ impl ValidatorExecutionTimeObservation {
 ///
 /// move-entry-point = object-id string string (vec type-tag)
 /// ```
-#[derive(Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Clone, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct ExecutionTimeObservationKey(iota_types::ExecutionTimeObservationKey);
 
 #[uniffi::export]
@@ -1346,7 +1346,7 @@ pub struct RandomnessStateUpdate {
 /// eoe-bridge-committee-init       = %x06 u64
 /// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct EndOfEpochTransactionKind(pub iota_types::EndOfEpochTransactionKind);
 
 #[uniffi::export]
@@ -1388,7 +1388,7 @@ impl EndOfEpochTransactionKind {
 ///               u64                 ; price
 ///               u64                 ; budget
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct GasPayment {
     pub objects: Vec<ObjectReference>,
     /// Owner of the gas objects, either the transaction sender or a sponsor
@@ -1434,7 +1434,7 @@ impl From<GasPayment> for iota_types::GasPayment {
 /// transaction-effects =  %x00 effects-v1
 ///                     =/ %x01 effects-v2
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct TransactionEffects(pub iota_types::TransactionEffects);
 
 #[uniffi::export]
@@ -1489,9 +1489,7 @@ pub enum TransactionExpiration {
 /// argument-result         = %x02 u16
 /// argument-nested-result  = %x03 u16 u16
 /// ```
-#[derive(
-    Copy, Clone, Debug, PartialEq, Eq, derive_more::Deref, derive_more::From, uniffi::Object,
-)]
+#[derive(derive_more::Deref, derive_more::From, uniffi::Object)]
 pub struct Argument(iota_types::Argument);
 
 #[uniffi::export]
@@ -1552,7 +1550,7 @@ impl Argument {
 ///             (vector type-tag)   ; type arguments, if any
 ///             (vector argument)   ; input arguments
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct MoveCall(iota_types::MoveCall);
 
 #[uniffi::export]

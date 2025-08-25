@@ -23,7 +23,7 @@ use crate::types::{
     type_tag::TypeTag,
 };
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct TransactionMetadata {
     #[uniffi(default = None)]
     pub gas_budget: Option<u64>,
@@ -65,7 +65,7 @@ impl From<TransactionMetadata> for iota_graphql_client::query_types::Transaction
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct TransactionDataEffects {
     pub tx: SignedTransaction,
     pub effects: Arc<TransactionEffects>,
@@ -89,7 +89,7 @@ impl From<TransactionDataEffects> for iota_graphql_client::TransactionDataEffect
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct TransactionsFilter {
     #[uniffi(default = None)]
     pub function: Option<String>,
@@ -156,7 +156,7 @@ impl From<TransactionsFilter> for iota_graphql_client::query_types::Transactions
 
 /// The result of a dry run, which includes the effects of the transaction and
 /// any errors that may have occurred.
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct DryRunResult {
     pub effects: Option<Arc<TransactionEffects>>,
     pub error: Option<String>,
@@ -180,7 +180,7 @@ impl From<DryRunResult> for iota_graphql_client::DryRunResult {
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct ObjectRef {
     pub address: Arc<ObjectId>,
     pub digest: String,
@@ -207,10 +207,10 @@ impl From<ObjectRef> for iota_graphql_client::query_types::ObjectRef {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct Epoch(pub iota_graphql_client::query_types::Epoch);
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct EventFilter {
     #[uniffi(default = None)]
     pub emitting_module: Option<String>,
@@ -244,7 +244,7 @@ impl From<EventFilter> for iota_graphql_client::query_types::EventFilter {
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct ObjectFilter {
     pub type_tag: Option<String>,
     pub owner: Option<Arc<Address>>,
@@ -277,7 +277,7 @@ impl From<ObjectFilter> for iota_graphql_client::query_types::ObjectFilter {
 
 /// The output of a dynamic field query, that includes the name, value, and
 /// value's json representation.
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct DynamicFieldOutput {
     /// The name of the dynamic field
     pub name: DynamicFieldName,
@@ -309,7 +309,7 @@ impl From<DynamicFieldOutput> for iota_graphql_client::DynamicFieldOutput {
 
 /// The name part of a dynamic field, including its type, bcs, and json
 /// representation.
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct DynamicFieldName {
     /// The type name of this dynamic field name
     pub type_tag: Arc<TypeTag>,
@@ -340,7 +340,7 @@ impl From<DynamicFieldName> for iota_graphql_client::DynamicFieldName {
 }
 
 /// The value part of a dynamic field.
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct DynamicFieldValue {
     pub type_tag: Arc<TypeTag>,
     pub bcs: Vec<u8>,
@@ -365,7 +365,7 @@ impl From<DynamicFieldValue> for iota_graphql_client::DynamicFieldValue {
 }
 
 /// Represents a validator in the system.
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct Validator {
     /// The APY of this validator in basis points.
     /// To get the APY in percentage, divide by 100.
@@ -567,7 +567,7 @@ pub enum Direction {
     Backward,
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct ValidatorSet {
     pub active_validators: ValidatorConnection,
 }
@@ -588,7 +588,7 @@ impl From<ValidatorSet> for iota_graphql_client::query_types::ValidatorSet {
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct ValidatorConnection {
     pub page_info: PageInfo,
     pub nodes: Vec<Validator>,
@@ -612,7 +612,7 @@ impl From<ValidatorConnection> for iota_graphql_client::query_types::ValidatorCo
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct GQLAddress {
     pub address: Arc<Address>,
 }
@@ -773,7 +773,7 @@ pub struct OpenMoveType {
     pub repr: String,
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct MoveModule {
     pub file_format_version: i32,
     #[uniffi(default = None)]
@@ -809,7 +809,7 @@ impl From<MoveModule> for iota_graphql_client::query_types::MoveModule {
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct MoveModuleConnection {
     pub nodes: Vec<MoveModuleQuery>,
     pub page_info: PageInfo,
@@ -833,7 +833,7 @@ impl From<MoveModuleConnection> for iota_graphql_client::query_types::MoveModule
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct MovePackageQuery {
     pub address: Arc<Address>,
     pub bcs: Option<Base64>,
@@ -857,7 +857,7 @@ impl From<MovePackageQuery> for iota_graphql_client::query_types::MovePackageQue
     }
 }
 
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct MoveModuleQuery {
     pub package: MovePackageQuery,
     pub name: String,

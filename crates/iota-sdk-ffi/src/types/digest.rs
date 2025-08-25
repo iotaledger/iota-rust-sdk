@@ -17,20 +17,7 @@ use crate::error::Result;
 /// IOTA's binary representation of a `Digest` is prefixed with its length
 /// meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 /// compact 32 bytes.
-#[derive(
-    Copy,
-    Clone,
-    Debug,
-    Default,
-    Hash,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    derive_more::From,
-    derive_more::Deref,
-    uniffi::Object,
-)]
+#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Digest(pub iota_types::Digest);
 
 #[uniffi::export]

@@ -15,7 +15,7 @@ use crate::types::crypto::Bls12381PublicKey;
 /// validator-committee-member = bls-public-key
 ///                              u64 ; stake
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct ValidatorCommitteeMember {
     pub public_key: Arc<Bls12381PublicKey>,
     pub stake: u64,

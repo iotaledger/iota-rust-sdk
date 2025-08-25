@@ -28,7 +28,7 @@ use crate::types::crypto::{
 /// secp256r1-multisig-member-signature = %x02 secp256r1-signature
 /// zklogin-multisig-member-signature   = %x03 zklogin-authenticator
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct MultisigMemberSignature(pub iota_types::MultisigMemberSignature);
 
 #[uniffi::export]
@@ -126,7 +126,7 @@ impl MultisigMemberSignature {
 ///                     (secp256k1-flag secp256k1-public-key) /
 ///                     (secp256r1-flag secp256r1-public-key)
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct MultisigMemberPublicKey(pub iota_types::MultisigMemberPublicKey);
 
 #[uniffi::export]
@@ -221,7 +221,7 @@ impl MultisigMemberPublicKey {
 ///
 /// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct MultisigAggregatedSignature(pub iota_types::MultisigAggregatedSignature);
 
 #[uniffi::export]
@@ -290,7 +290,7 @@ impl MultisigAggregatedSignature {
 /// legacy-multisig-committee = (vector legacy-multisig-member)
 ///                             u16     ; threshold
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct MultisigCommittee(pub iota_types::MultisigCommittee);
 
 #[uniffi::export]
@@ -362,7 +362,7 @@ impl MultisigCommittee {
 /// legacy-multisig-member = legacy-multisig-member-public-key
 ///                          u8     ; weight
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct MultisigMember(pub iota_types::MultisigMember);
 
 #[uniffi::export]

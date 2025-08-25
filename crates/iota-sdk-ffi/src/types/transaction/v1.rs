@@ -30,7 +30,7 @@ use crate::types::{
 ///              (vector unchanged-shared-object)
 ///              (option digest)                    ; auxiliary data digest
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct TransactionEffectsV1 {
     /// The status of the execution
     pub status: ExecutionStatus,
@@ -124,7 +124,7 @@ impl From<TransactionEffectsV1> for iota_types::TransactionEffectsV1 {
 /// ```text
 /// changed-object = object-id object-in object-out id-operation
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct ChangedObject {
     /// Id of the object
     pub object_id: Arc<ObjectId>,
@@ -169,7 +169,7 @@ impl From<ChangedObject> for iota_types::ChangedObject {
 /// ```text
 /// unchanged-shared-object = object-id unchanged-shared-object-kind
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct UnchangedSharedObject {
     pub object_id: Arc<ObjectId>,
     pub kind: UnchangedSharedKind,
@@ -212,7 +212,7 @@ impl From<UnchangedSharedObject> for iota_types::UnchangedSharedObject {
 /// cancelled           = %x03 u64
 /// per-epoch-config    = %x04
 /// ```
-#[derive(Clone, Debug, uniffi::Enum)]
+#[derive(uniffi::Enum)]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
@@ -282,7 +282,7 @@ impl From<UnchangedSharedKind> for iota_types::UnchangedSharedKind {
 /// object-in-missing = %x00
 /// object-in-data    = %x01 u64 digest owner
 /// ```
-#[derive(Clone, Debug, uniffi::Enum)]
+#[derive(uniffi::Enum)]
 pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
@@ -343,7 +343,7 @@ impl From<ObjectIn> for iota_types::ObjectIn {
 /// object-out-object-write   = %x01 digest owner
 /// object-out-package-write  = %x02 version digest
 /// ```
-#[derive(Clone, Debug, uniffi::Enum)]
+#[derive(uniffi::Enum)]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
     Missing,

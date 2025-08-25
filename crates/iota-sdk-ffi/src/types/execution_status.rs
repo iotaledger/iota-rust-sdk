@@ -18,7 +18,7 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 /// success = %x00
 /// failure = %x01 execution-error (option u64)
 /// ```xx
-#[derive(Debug, Clone, uniffi::Enum)]
+#[derive(uniffi::Enum)]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
     Success,
@@ -144,7 +144,7 @@ impl From<ExecutionStatus> for iota_types::ExecutionStatus {
 /// coin-type-global-pause                              = %x23 string
 /// execution-cancelled-due-to-randomness-unavailable   = %x24
 /// ```
-#[derive(Debug, Clone, uniffi::Enum)]
+#[derive(uniffi::Enum)]
 pub enum ExecutionError {
     // General transaction errors
     /// Insufficient Gas
@@ -530,7 +530,7 @@ impl From<ExecutionError> for iota_types::ExecutionError {
 /// ```text
 /// move-location = object-id identifier u16 u16 (option identifier)
 /// ```
-#[derive(Clone, Debug, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct MoveLocation {
     /// The package id
     pub package: Arc<ObjectId>,
@@ -662,7 +662,7 @@ pub enum CommandArgumentError {
 /// unknown-upgrade-policy      = %x04 u8
 /// package-id-does-not-match   = %x05 object-id object-id
 /// ```
-#[derive(Debug, Clone, uniffi::Enum)]
+#[derive(uniffi::Enum)]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
     UnableToFetchPackage { package_id: Arc<ObjectId> },
