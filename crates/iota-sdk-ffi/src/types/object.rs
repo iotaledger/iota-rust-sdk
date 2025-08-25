@@ -13,7 +13,7 @@ use crate::{
     error::Result,
     types::{
         address::Address,
-        digest::{ObjectDigest, TransactionDigest},
+        digest::Digest,
         struct_tag::{Identifier, StructTag},
     },
 };
@@ -82,7 +82,7 @@ impl ObjectId {
 pub struct ObjectReference {
     object_id: Arc<ObjectId>,
     version: u64,
-    digest: Arc<ObjectDigest>,
+    digest: Arc<Digest>,
 }
 
 impl From<iota_types::ObjectReference> for ObjectReference {
@@ -90,7 +90,7 @@ impl From<iota_types::ObjectReference> for ObjectReference {
         Self {
             object_id: Arc::new((*value.object_id()).into()),
             version: value.version(),
-            digest: Arc::new(value.digest().into()),
+            digest: Arc::new((*value.digest()).into()),
         }
     }
 }
@@ -119,7 +119,7 @@ impl Object {
     pub fn new(
         data: &ObjectData,
         owner: &Owner,
-        previous_transaction: &TransactionDigest,
+        previous_transaction: &Digest,
         storage_rebate: u64,
     ) -> Self {
         Self(iota_types::Object::new(
@@ -161,7 +161,7 @@ impl Object {
     }
 
     /// Return the digest of the transaction that last modified this object
-    pub fn previous_transaction(&self) -> TransactionDigest {
+    pub fn previous_transaction(&self) -> Digest {
         self.0.previous_transaction.into()
     }
 

@@ -4,7 +4,7 @@
 
 use std::collections::BTreeMap;
 
-use super::{Address, Identifier, ObjectDigest, ObjectId, StructTag, TransactionDigest};
+use super::{Address, Digest, Identifier, ObjectId, StructTag};
 
 pub type Version = u64;
 
@@ -34,13 +34,13 @@ pub struct ObjectReference {
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     version: Version,
     /// The digest of this object.
-    digest: ObjectDigest,
+    digest: Digest,
 }
 
 impl ObjectReference {
     /// Creates a new object reference from the object's id, version, and
     /// digest.
-    pub fn new(object_id: ObjectId, version: Version, digest: ObjectDigest) -> Self {
+    pub fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
         Self {
             object_id,
             version,
@@ -62,12 +62,12 @@ impl ObjectReference {
 
     /// Returns the digest of the object that this ObjectReference is referring
     /// to.
-    pub fn digest(&self) -> &ObjectDigest {
+    pub fn digest(&self) -> &Digest {
         &self.digest
     }
 
     /// Returns a 3-tuple containing the object id, version, and digest.
-    pub fn into_parts(self) -> (ObjectId, Version, ObjectDigest) {
+    pub fn into_parts(self) -> (ObjectId, Version, Digest) {
         let Self {
             object_id,
             version,
@@ -344,7 +344,7 @@ pub struct Object {
     /// The owner that unlocks this object
     pub owner: Owner,
     /// The digest of the transaction that created or last mutated this object
-    pub previous_transaction: TransactionDigest,
+    pub previous_transaction: Digest,
     /// The amount of IOTA we would rebate if this object gets deleted.
     /// This number is re-calculated each time the object is mutated based on
     /// the present storage gas price.
@@ -356,7 +356,7 @@ impl Object {
     pub fn new(
         data: ObjectData,
         owner: Owner,
-        previous_transaction: TransactionDigest,
+        previous_transaction: Digest,
         storage_rebate: u64,
     ) -> Self {
         Self {
@@ -410,7 +410,7 @@ impl Object {
     }
 
     /// Return the digest of the transaction that last modified this object
-    pub fn previous_transaction(&self) -> TransactionDigest {
+    pub fn previous_transaction(&self) -> Digest {
         self.previous_transaction
     }
 
@@ -661,7 +661,7 @@ mod serialization {
         #[serde(flatten)]
         data: ReadableObjectData,
 
-        previous_transaction: TransactionDigest,
+        previous_transaction: Digest,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         storage_rebate: u64,
@@ -843,7 +843,7 @@ mod serialization {
     struct BinaryObject {
         data: ObjectData,
         owner: Owner,
-        previous_transaction: TransactionDigest,
+        previous_transaction: Digest,
         storage_rebate: u64,
     }
 
@@ -1006,7 +1006,7 @@ mod serialization {
                 // owner: Owner::Shared {
                 //     initial_shared_version: 14,
                 // },
-                previous_transaction: TransactionDigest::ZERO,
+                previous_transaction: Digest::ZERO,
                 storage_rebate: 100,
             };
 
@@ -1016,7 +1016,7 @@ mod serialization {
                 serde_json::to_string_pretty(&ObjectReference {
                     object_id: ObjectId::ZERO,
                     version: 1,
-                    digest: ObjectDigest::ZERO,
+                    digest: Digest::ZERO,
                 })
                 .unwrap()
             );

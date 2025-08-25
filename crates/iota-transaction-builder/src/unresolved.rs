@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::{Address, Command, ObjectDigest, ObjectId, TransactionExpiration, Version};
+use iota_types::{Address, Command, Digest, ObjectId, TransactionExpiration, Version};
 
 // A potentially unresolved user transaction. Note that one can construct a
 // fully resolved transaction using this type by providing all the required
@@ -64,7 +64,7 @@ pub struct ObjectReference {
     #[cfg_attr(feature = "schemars", schemars(with = "Option<_schemars::U64>"))]
     pub version: Option<Version>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub digest: Option<ObjectDigest>,
+    pub digest: Option<Digest>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -115,7 +115,7 @@ pub struct Input {
     /// The digest of this object. This field is only relevant for
     /// owned/immutable/receiving inputs.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub digest: Option<ObjectDigest>,
+    pub digest: Option<Digest>,
     /// Whether this object is mutable. This field is only relevant for shared
     /// objects.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -137,7 +137,7 @@ pub enum Value {
 
 impl Input {
     /// Return an owned kind of object with all required fields.
-    pub fn owned(object_id: ObjectId, version: u64, digest: ObjectDigest) -> Self {
+    pub fn owned(object_id: ObjectId, version: u64, digest: Digest) -> Self {
         Self {
             kind: Some(InputKind::ImmutableOrOwned),
             object_id: Some(object_id),
@@ -148,7 +148,7 @@ impl Input {
     }
 
     /// Return an immutable kind of object with all required fields.
-    pub fn immutable(object_id: ObjectId, version: u64, digest: ObjectDigest) -> Self {
+    pub fn immutable(object_id: ObjectId, version: u64, digest: Digest) -> Self {
         Self {
             kind: Some(InputKind::ImmutableOrOwned),
             object_id: Some(object_id),
@@ -159,7 +159,7 @@ impl Input {
     }
 
     /// Return a receiving kind of object with all required fields.
-    pub fn receiving(object_id: ObjectId, version: u64, digest: ObjectDigest) -> Self {
+    pub fn receiving(object_id: ObjectId, version: u64, digest: Digest) -> Self {
         Self {
             kind: Some(InputKind::Receiving),
             object_id: Some(object_id),
@@ -233,7 +233,7 @@ impl Input {
     }
 
     /// Set the specified digest.
-    pub fn with_digest(self, digest: ObjectDigest) -> Self {
+    pub fn with_digest(self, digest: Digest) -> Self {
         Self {
             digest: Some(digest),
             ..self

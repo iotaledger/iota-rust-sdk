@@ -5,10 +5,7 @@ use std::sync::Arc;
 
 use iota_types::GasCostSummary;
 
-use crate::types::{
-    crypto::validator::ValidatorCommitteeMember,
-    digest::{CheckpointContentsDigest, CheckpointDigest, Digest},
-};
+use crate::types::{crypto::validator::ValidatorCommitteeMember, digest::Digest};
 
 pub type CheckpointSequenceNumber = u64;
 pub type CheckpointTimestamp = u64;
@@ -65,11 +62,11 @@ pub struct CheckpointSummary {
     /// this checkpoint.
     pub network_total_transactions: u64,
     /// The hash of the `CheckpointContents` for this checkpoint.
-    pub content_digest: Arc<CheckpointContentsDigest>,
+    pub content_digest: Arc<Digest>,
     /// The hash of the previous `CheckpointSummary`.
     ///
     /// This will be only be `None` for the first, or genesis checkpoint.
-    pub previous_digest: Option<Arc<CheckpointDigest>>,
+    pub previous_digest: Option<Arc<Digest>>,
     /// The running total gas costs of all transactions included in the current
     /// epoch so far until this checkpoint.
     pub epoch_rolling_gas_cost_summary: GasCostSummary,

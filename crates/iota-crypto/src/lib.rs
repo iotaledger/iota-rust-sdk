@@ -7,12 +7,13 @@
 use iota_sdk_types::{PersonalMessage, Transaction, UserSignature};
 pub use signature::{Error as SignatureError, Signer, Verifier};
 
+#[cfg(feature = "bls12381")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bls12381")))]
+pub mod bls12381;
+
 #[cfg(feature = "ed25519")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
 pub mod ed25519;
-
-#[allow(unused)]
-mod bls12381;
 
 #[cfg(feature = "secp256k1")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]

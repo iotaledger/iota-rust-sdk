@@ -21,6 +21,7 @@ extend-ignore-re = [
 [default.extend-words]
 # random identifiers, variables, functions, ...
 groth = "groth"
+typ = "typ"
 
 [files]
 extend-exclude = [

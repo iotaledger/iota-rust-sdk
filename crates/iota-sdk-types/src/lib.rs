@@ -133,19 +133,15 @@ pub use checkpoint::{
 };
 pub use crypto::{
     Bls12381PublicKey, Bls12381Signature, Bn254FieldElement, CircomG1, CircomG2, Ed25519PublicKey,
-    Ed25519Signature, Intent, IntentAppId, IntentScope, IntentVersion, InvalidSignatureScheme, Jwk,
-    JwkId, MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
-    MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, Secp256k1PublicKey,
-    Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature, SignatureScheme, SimpleSignature,
-    UserSignature, ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember,
-    ValidatorSignature, ZkLoginAuthenticator, ZkLoginClaim, ZkLoginInputs, ZkLoginProof,
-    ZkLoginPublicIdentifier,
+    Ed25519Signature, Intent, IntentAppId, IntentScope, IntentVersion, InvalidSignatureScheme,
+    InvalidZkLoginAuthenticatorError, Jwk, JwkId, MultisigAggregatedSignature, MultisigCommittee,
+    MultisigMember, MultisigMemberPublicKey, MultisigMemberSignature, PasskeyAuthenticator,
+    PasskeyPublicKey, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
+    Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
+    ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
+    ZkLoginAuthenticator, ZkLoginClaim, ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
 };
-pub use digest::{
-    CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest, DigestParseError,
-    EffectsAuxiliaryDataDigest, ObjectDigest, SigningDigest, TransactionDigest,
-    TransactionEffectsDigest, TransactionEventsDigest,
-};
+pub use digest::{Digest, DigestParseError, SigningDigest};
 pub use effects::{
     ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffects, TransactionEffectsV1,
     UnchangedSharedKind, UnchangedSharedObject,
