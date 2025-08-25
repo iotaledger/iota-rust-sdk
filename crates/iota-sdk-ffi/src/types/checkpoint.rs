@@ -52,7 +52,7 @@ pub type ProtocolVersion = u64;
 ///                      (option end-of-epoch-data)     ; end_of_epoch_data
 ///                      bytes                          ; version_specific_data
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct CheckpointSummary {
     /// Epoch that this checkpoint belongs to.
     pub epoch: u64,
@@ -155,7 +155,7 @@ impl CheckpointCommitment {
     }
 }
 
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct EndOfEpochData {
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
     pub next_epoch_protocol_version: u64,
