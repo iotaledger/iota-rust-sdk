@@ -70,6 +70,11 @@ impl PasskeyAuthenticator {
     pub fn signature(&self) -> SimpleSignature {
         self.0.signature().into()
     }
+
+    /// The passkey public key
+    pub fn public_key(&self) -> PasskeyPublicKey {
+        self.0.public_key().into()
+    }
 }
 
 /// Public key of a `PasskeyAuthenticator`.
@@ -88,6 +93,11 @@ pub struct PasskeyPublicKey(iota_types::PasskeyPublicKey);
 
 #[uniffi::export]
 impl PasskeyPublicKey {
+    #[uniffi::constructor]
+    pub fn new(public_key: &Secp256r1PublicKey) -> Self {
+        Self(iota_types::PasskeyPublicKey::new(**public_key))
+    }
+
     pub fn inner(&self) -> Secp256r1PublicKey {
         (*self.0.inner()).into()
     }

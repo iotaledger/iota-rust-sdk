@@ -2075,6 +2075,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2509,6 +2513,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data(
 fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_challenge(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature(
 ): Short
@@ -3073,6 +3079,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_immutable(
 fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new(
 ): Short
@@ -4147,12 +4155,16 @@ fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_challenge(`ptr`: Pointer,
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_passkeypublickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_passkeypublickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_passkeypublickey_new(`publicKey`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_passkeypublickey_derive_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_passkeypublickey_inner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5607,6 +5619,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() != 20272.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key() != 18555.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature() != 5489.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6451,6 +6466,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new() != 30856.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new() != 23457.toShort()) {
@@ -26060,6 +26078,11 @@ public interface PasskeyAuthenticatorInterface {
     fun `clientDataJson`(): kotlin.String
     
     /**
+     * The passkey public key
+     */
+    fun `publicKey`(): PasskeyPublicKey
+    
+    /**
      * The passkey signature.
      */
     fun `signature`(): SimpleSignature
@@ -26225,6 +26248,21 @@ open class PasskeyAuthenticator: Disposable, AutoCloseable, PasskeyAuthenticator
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The passkey public key
+     */override fun `publicKey`(): PasskeyPublicKey {
+            return FfiConverterTypePasskeyPublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key(
         it, _status)
 }
     }
@@ -26444,6 +26482,13 @@ open class PasskeyPublicKey: Disposable, AutoCloseable, PasskeyPublicKeyInterfac
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
+    constructor(`publicKey`: Secp256r1PublicKey) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_passkeypublickey_new(
+        FfiConverterTypeSecp256r1PublicKey.lower(`publicKey`),_status)
+}
+    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable

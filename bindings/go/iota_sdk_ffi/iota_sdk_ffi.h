@@ -2508,6 +2508,11 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_challenge(void* pt
 RustBuffer uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PASSKEYAUTHENTICATOR_PUBLIC_KEY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PASSKEYAUTHENTICATOR_PUBLIC_KEY
+void* uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PASSKEYAUTHENTICATOR_SIGNATURE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PASSKEYAUTHENTICATOR_SIGNATURE
 void* uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature(void* ptr, RustCallStatus *out_status
@@ -2521,6 +2526,11 @@ void* uniffi_iota_sdk_ffi_fn_clone_passkeypublickey(void* ptr, RustCallStatus *o
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_PASSKEYPUBLICKEY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_PASSKEYPUBLICKEY
 void uniffi_iota_sdk_ffi_fn_free_passkeypublickey(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PASSKEYPUBLICKEY_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PASSKEYPUBLICKEY_NEW
+void* uniffi_iota_sdk_ffi_fn_constructor_passkeypublickey_new(void* public_key, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PASSKEYPUBLICKEY_DERIVE_ADDRESS
@@ -5833,6 +5843,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_js
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_PASSKEYAUTHENTICATOR_PUBLIC_KEY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_PASSKEYAUTHENTICATOR_PUBLIC_KEY
+uint16_t uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_PASSKEYAUTHENTICATOR_SIGNATURE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_PASSKEYAUTHENTICATOR_SIGNATURE
 uint16_t uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature(void
@@ -7522,6 +7538,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_SHARED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OWNER_NEW_SHARED
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PASSKEYPUBLICKEY_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PASSKEYPUBLICKEY_NEW
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new(void
     
 );
 #endif

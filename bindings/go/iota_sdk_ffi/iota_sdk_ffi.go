@@ -2250,6 +2250,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key()
+	})
+	if checksum != 18555 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature()
 	})
 	if checksum != 5489 {
@@ -4784,6 +4793,15 @@ func uniffiCheckChecksums() {
 	if checksum != 36753 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new()
+	})
+	if checksum != 30856 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -15167,6 +15185,8 @@ type PasskeyAuthenticatorInterface interface {
 	// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
 	// for more information on this field.
 	ClientDataJson() string
+	// The passkey public key
+	PublicKey() *PasskeyPublicKey
 	// The passkey signature.
 	Signature() *SimpleSignature
 }
@@ -15246,6 +15266,16 @@ func (_self *PasskeyAuthenticator) ClientDataJson() string {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json(
 		_pointer,_uniffiStatus),
 	}
+	}))
+}
+
+// The passkey public key
+func (_self *PasskeyAuthenticator) PublicKey() *PasskeyPublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterPasskeyPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key(
+		_pointer,_uniffiStatus)
 	}))
 }
 
@@ -15345,6 +15375,11 @@ type PasskeyPublicKeyInterface interface {
 // ```
 type PasskeyPublicKey struct {
 	ffiObject FfiObject
+}
+func NewPasskeyPublicKey(publicKey *Secp256r1PublicKey) *PasskeyPublicKey {
+	return FfiConverterPasskeyPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_passkeypublickey_new(FfiConverterSecp256r1PublicKeyINSTANCE.Lower(publicKey),_uniffiStatus)
+	}))
 }
 
 

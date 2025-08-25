@@ -881,6 +881,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() != 20272:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key() != 18555:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature() != 5489:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_derive_address() != 61803:
@@ -1444,6 +1446,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object() != 381:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new() != 30856:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new() != 23457:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3930,6 +3934,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json.a
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3945,6 +3954,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_passkeypublickey.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_passkeypublickey.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_passkeypublickey_new.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_passkeypublickey_new.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_derive_address.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6664,6 +6678,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_challenge.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature.restype = ctypes.c_uint16
@@ -7510,6 +7527,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new.restype = ctypes.c_uint16
@@ -29220,6 +29240,12 @@ class PasskeyAuthenticatorProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def public_key(self, ):
+        """
+        The passkey public key
+        """
+
+        raise NotImplementedError
     def signature(self, ):
         """
         The passkey signature.
@@ -29330,6 +29356,19 @@ class PasskeyAuthenticator():
 
 
 
+    def public_key(self, ) -> "PasskeyPublicKey":
+        """
+        The passkey public key
+        """
+
+        return _UniffiConverterTypePasskeyPublicKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def signature(self, ) -> "SimpleSignature":
         """
         The passkey signature.
@@ -29417,9 +29456,11 @@ class PasskeyPublicKey():
     """
 
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, public_key: "Secp256r1PublicKey"):
+        _UniffiConverterTypeSecp256r1PublicKey.check_lower(public_key)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_passkeypublickey_new,
+        _UniffiConverterTypeSecp256r1PublicKey.lower(public_key))
 
     def __del__(self):
         # In case of partial initialization of instances.
