@@ -9,7 +9,7 @@ use iota_sdk_types::{
 
 use crate::{SignatureError, Verifier};
 
-#[derive(Clone, Default)]
+#[derive(Default, Debug, Clone, PartialEq)]
 pub struct MultisigVerifier {
     #[cfg(feature = "zklogin")]
     zklogin_verifier: Option<crate::zklogin::ZkloginVerifier>,
@@ -74,11 +74,7 @@ impl MultisigVerifier {
                     .ok_or_else(|| SignatureError::from_source("no zklogin verifier provided"))?;
 
                 // verify that the member identifier and the authenticator match
-                if zklogin_identifier
-                    != &crate::zklogin::zklogin_identifier_from_inputs(
-                        &zklogin_authenticator.inputs,
-                    )?
-                {
+                if zklogin_identifier != zklogin_authenticator.inputs.public_identifier() {
                     return Err(SignatureError::from_source(
                         "member zklogin identifier does not match signature",
                     ));
@@ -200,7 +196,7 @@ impl Iterator for BitmapIndices {
 }
 
 /// Verifier that will verify all UserSignature variants
-#[derive(Clone, Default)]
+#[derive(Default, Debug, Clone, PartialEq)]
 pub struct UserSignatureVerifier {
     inner: MultisigVerifier,
 }
@@ -259,7 +255,7 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
     }
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct MultisigAggregator {
     committee: MultisigCommittee,
     signatures: std::collections::BTreeMap<usize, MultisigMemberSignature>,
@@ -337,7 +333,7 @@ impl MultisigAggregator {
         Ok(())
     }
 
-    pub fn finish(&mut self) -> Result<MultisigAggregatedSignature, SignatureError> {
+    pub fn finish(&self) -> Result<MultisigAggregatedSignature, SignatureError> {
         if self.signed_weight < self.committee.threshold() {
             return Err(SignatureError::from_source(
                 "insufficient signature weight to reach threshold",
@@ -394,8 +390,7 @@ fn multisig_pubkey_and_signature_from_user_signature(
         )),
         #[cfg(feature = "zklogin")]
         UserSignature::ZkLogin(zklogin_authenticator) => {
-            let zklogin_identifier =
-                crate::zklogin::zklogin_identifier_from_inputs(&zklogin_authenticator.inputs)?;
+            let zklogin_identifier = zklogin_authenticator.inputs.public_identifier().to_owned();
             Ok((
                 MultisigMemberPublicKey::ZkLogin(zklogin_identifier),
                 MultisigMemberSignature::ZkLogin(zklogin_authenticator),

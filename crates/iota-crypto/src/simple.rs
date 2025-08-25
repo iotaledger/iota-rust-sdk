@@ -86,10 +86,12 @@ mod keypair {
 
     use crate::SignatureError;
 
+    #[derive(Debug, Clone)]
     pub struct SimpleKeypair {
         inner: InnerKeypair,
     }
 
+    #[derive(Debug, Clone)]
     enum InnerKeypair {
         #[cfg(feature = "ed25519")]
         Ed25519(crate::ed25519::Ed25519PrivateKey),
@@ -274,10 +276,12 @@ mod keypair {
         }
     }
 
+    #[derive(Debug, Clone, Eq, PartialEq)]
     pub struct SimpleVerifyingKey {
         inner: InnerVerifyingKey,
     }
 
+    #[derive(Debug, Clone, Eq, PartialEq)]
     enum InnerVerifyingKey {
         #[cfg(feature = "ed25519")]
         Ed25519(crate::ed25519::Ed25519VerifyingKey),

@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    EpochId, GasCostSummary, ObjectDigest, ObjectId, TransactionDigest, TransactionEventsDigest,
-    digest::EffectsAuxiliaryDataDigest,
+    Digest, EpochId, GasCostSummary, ObjectId,
     execution_status::ExecutionStatus,
     object::{Owner, Version},
 };
@@ -44,7 +43,7 @@ pub struct TransactionEffectsV1 {
     pub gas_used: GasCostSummary,
 
     /// The transaction digest
-    pub transaction_digest: TransactionDigest,
+    pub transaction_digest: Digest,
     /// The updated gas object reference, as an index into the `changed_objects`
     /// vector. Having a dedicated field for convenient access.
     /// System transaction that don't require gas will leave this as None.
@@ -52,11 +51,11 @@ pub struct TransactionEffectsV1 {
 
     /// The digest of the events emitted during execution,
     /// can be None if the transaction does not emit any event.
-    pub events_digest: Option<TransactionEventsDigest>,
+    pub events_digest: Option<Digest>,
 
     /// The set of transaction digests this transaction depends on.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=5).lift()))]
-    pub dependencies: Vec<TransactionDigest>,
+    pub dependencies: Vec<Digest>,
 
     /// The version number of all the written Move objects by this transaction.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -76,7 +75,7 @@ pub struct TransactionEffectsV1 {
     /// effects but are stored separately. Storing it separately allows us
     /// to avoid bloating the effects with data that are not critical.
     /// It also provides more flexibility on the format and type of the data.
-    pub auxiliary_data_digest: Option<EffectsAuxiliaryDataDigest>,
+    pub auxiliary_data_digest: Option<Digest>,
 }
 
 impl TransactionEffectsV1 {
@@ -182,7 +181,7 @@ pub enum UnchangedSharedKind {
     ReadOnlyRoot {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
-        digest: ObjectDigest,
+        digest: Digest,
     },
     /// Deleted shared objects that appear mutably/owned in the input.
     MutateDeleted {
@@ -244,7 +243,7 @@ pub enum ObjectIn {
     Data {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
-        digest: ObjectDigest,
+        digest: Digest,
         owner: Owner,
     },
 }
@@ -264,7 +263,7 @@ impl ObjectIn {
         self.version_opt().expect("object does not exist")
     }
 
-    pub fn digest_opt(&self) -> Option<ObjectDigest> {
+    pub fn digest_opt(&self) -> Option<Digest> {
         if let Self::Data { digest, .. } = self {
             Some(*digest)
         } else {
@@ -272,7 +271,7 @@ impl ObjectIn {
         }
     }
 
-    pub fn digest(&self) -> ObjectDigest {
+    pub fn digest(&self) -> Digest {
         self.digest_opt().expect("object does not exist")
     }
 
@@ -316,20 +315,20 @@ pub enum ObjectOut {
     /// Same definition as in ObjectIn.
     Missing,
     /// Any written object, including all of mutated, created, unwrapped today.
-    ObjectWrite { digest: ObjectDigest, owner: Owner },
+    ObjectWrite { digest: Digest, owner: Owner },
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
     PackageWrite {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
-        digest: ObjectDigest,
+        digest: Digest,
     },
 }
 
 impl ObjectOut {
     crate::def_is!(Missing, ObjectWrite, PackageWrite);
 
-    pub fn object_digest_opt(&self) -> Option<ObjectDigest> {
+    pub fn object_digest_opt(&self) -> Option<Digest> {
         if let Self::ObjectWrite { digest, .. } = self {
             Some(*digest)
         } else {
@@ -337,7 +336,7 @@ impl ObjectOut {
         }
     }
 
-    pub fn object_digest(&self) -> ObjectDigest {
+    pub fn object_digest(&self) -> Digest {
         self.object_digest_opt().expect("object does not exist")
     }
 
@@ -365,7 +364,7 @@ impl ObjectOut {
         self.package_version_opt().expect("object does not exist")
     }
 
-    pub fn package_digest_opt(&self) -> Option<ObjectDigest> {
+    pub fn package_digest_opt(&self) -> Option<Digest> {
         if let Self::PackageWrite { digest, .. } = self {
             Some(*digest)
         } else {
@@ -373,7 +372,7 @@ impl ObjectOut {
         }
     }
 
-    pub fn package_digest(&self) -> ObjectDigest {
+    pub fn package_digest(&self) -> Digest {
         self.package_digest_opt().expect("package does not exist")
     }
 }
@@ -425,15 +424,15 @@ mod serialization {
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: &'a EpochId,
         gas_used: &'a GasCostSummary,
-        transaction_digest: &'a TransactionDigest,
+        transaction_digest: &'a Digest,
         gas_object_index: &'a Option<u32>,
-        events_digest: &'a Option<TransactionEventsDigest>,
-        dependencies: &'a Vec<TransactionDigest>,
+        events_digest: &'a Option<Digest>,
+        dependencies: &'a Vec<Digest>,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         lamport_version: &'a Version,
         changed_objects: &'a Vec<ChangedObject>,
         unchanged_shared_objects: &'a Vec<UnchangedSharedObject>,
-        auxiliary_data_digest: &'a Option<EffectsAuxiliaryDataDigest>,
+        auxiliary_data_digest: &'a Option<Digest>,
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -443,15 +442,15 @@ mod serialization {
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: EpochId,
         gas_used: GasCostSummary,
-        transaction_digest: TransactionDigest,
+        transaction_digest: Digest,
         gas_object_index: Option<u32>,
-        events_digest: Option<TransactionEventsDigest>,
-        dependencies: Vec<TransactionDigest>,
+        events_digest: Option<Digest>,
+        dependencies: Vec<Digest>,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         lamport_version: Version,
         changed_objects: Vec<ChangedObject>,
         unchanged_shared_objects: Vec<UnchangedSharedObject>,
-        auxiliary_data_digest: Option<EffectsAuxiliaryDataDigest>,
+        auxiliary_data_digest: Option<Digest>,
     }
 
     #[derive(serde_derive::Serialize)]
@@ -459,14 +458,14 @@ mod serialization {
         status: &'a ExecutionStatus,
         epoch: &'a EpochId,
         gas_used: &'a GasCostSummary,
-        transaction_digest: &'a TransactionDigest,
+        transaction_digest: &'a Digest,
         gas_object_index: &'a Option<u32>,
-        events_digest: &'a Option<TransactionEventsDigest>,
-        dependencies: &'a Vec<TransactionDigest>,
+        events_digest: &'a Option<Digest>,
+        dependencies: &'a Vec<Digest>,
         lamport_version: &'a Version,
         changed_objects: &'a Vec<ChangedObject>,
         unchanged_shared_objects: &'a Vec<UnchangedSharedObject>,
-        auxiliary_data_digest: &'a Option<EffectsAuxiliaryDataDigest>,
+        auxiliary_data_digest: &'a Option<Digest>,
     }
 
     #[derive(serde_derive::Deserialize)]
@@ -474,14 +473,14 @@ mod serialization {
         status: ExecutionStatus,
         epoch: EpochId,
         gas_used: GasCostSummary,
-        transaction_digest: TransactionDigest,
+        transaction_digest: Digest,
         gas_object_index: Option<u32>,
-        events_digest: Option<TransactionEventsDigest>,
-        dependencies: Vec<TransactionDigest>,
+        events_digest: Option<Digest>,
+        dependencies: Vec<Digest>,
         lamport_version: Version,
         changed_objects: Vec<ChangedObject>,
         unchanged_shared_objects: Vec<UnchangedSharedObject>,
-        auxiliary_data_digest: Option<EffectsAuxiliaryDataDigest>,
+        auxiliary_data_digest: Option<Digest>,
     }
 
     impl Serialize for TransactionEffectsV1 {
@@ -605,7 +604,7 @@ mod serialization {
         ReadOnlyRoot {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             version: Version,
-            digest: ObjectDigest,
+            digest: Digest,
         },
         MutateDeleted {
             #[serde(with = "crate::_serde::ReadableDisplay")]
@@ -624,19 +623,10 @@ mod serialization {
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
     enum BinaryUnchangedSharedKind {
-        ReadOnlyRoot {
-            version: Version,
-            digest: ObjectDigest,
-        },
-        MutateDeleted {
-            version: Version,
-        },
-        ReadDeleted {
-            version: Version,
-        },
-        Cancelled {
-            version: Version,
-        },
+        ReadOnlyRoot { version: Version, digest: Digest },
+        MutateDeleted { version: Version },
+        ReadDeleted { version: Version },
+        Cancelled { version: Version },
         PerEpochConfig,
     }
 
@@ -735,7 +725,7 @@ mod serialization {
         Data {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             version: Version,
-            digest: ObjectDigest,
+            digest: Digest,
             owner: Owner,
         },
     }
@@ -745,7 +735,7 @@ mod serialization {
         Missing,
         Data {
             version: Version,
-            digest: ObjectDigest,
+            digest: Digest,
             owner: Owner,
         },
     }
@@ -827,13 +817,13 @@ mod serialization {
     enum ReadableObjectOut {
         Missing,
         ObjectWrite {
-            digest: ObjectDigest,
+            digest: Digest,
             owner: Owner,
         },
         PackageWrite {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             version: Version,
-            digest: ObjectDigest,
+            digest: Digest,
         },
     }
 
@@ -841,13 +831,13 @@ mod serialization {
     enum BinaryObjectOut {
         Missing,
         ObjectWrite {
-            digest: ObjectDigest,
+            digest: Digest,
             owner: Owner,
         },
         PackageWrite {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             version: Version,
-            digest: ObjectDigest,
+            digest: Digest,
         },
     }
 

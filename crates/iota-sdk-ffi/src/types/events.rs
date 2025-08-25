@@ -5,7 +5,7 @@ use std::{str::FromStr, sync::Arc};
 
 use iota_types::{Identifier, StructTag};
 
-use crate::types::{address::Address, digest::TransactionEventsDigest, object::ObjectId};
+use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
 /// An event
 ///
@@ -82,7 +82,7 @@ impl TransactionEvents {
         self.0.0.iter().cloned().map(Into::into).collect()
     }
 
-    pub fn digest(&self) -> TransactionEventsDigest {
+    pub fn digest(&self) -> Digest {
         self.0.digest().into()
     }
 }

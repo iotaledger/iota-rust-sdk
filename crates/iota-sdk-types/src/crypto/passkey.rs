@@ -88,6 +88,11 @@ impl PasskeyAuthenticator {
             public_key: self.public_key,
         }
     }
+
+    /// The passkey public key
+    pub fn public_key(&self) -> PasskeyPublicKey {
+        PasskeyPublicKey::new(self.public_key)
+    }
 }
 
 /// Public key of a `PasskeyAuthenticator`.
@@ -105,6 +110,10 @@ impl PasskeyAuthenticator {
 pub struct PasskeyPublicKey(Secp256r1PublicKey);
 
 impl PasskeyPublicKey {
+    pub fn new(public_key: Secp256r1PublicKey) -> Self {
+        Self(public_key)
+    }
+
     /// The underlying `Secp256r1PublicKey` for this passkey.
     pub fn inner(&self) -> &Secp256r1PublicKey {
         &self.0

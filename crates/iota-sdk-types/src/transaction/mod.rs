@@ -3,9 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
-    Jwk, JwkId, ObjectId, ObjectReference, ProtocolVersion, TransactionDigest, TypeTag,
-    UserSignature, Version,
+    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
+    ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
 };
 
 #[cfg(feature = "serde")]
@@ -525,7 +524,7 @@ impl ConsensusDeterminedVersionAssignments {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CancelledTransaction {
-    pub digest: TransactionDigest,
+    pub digest: Digest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub version_assignments: Vec<VersionAssignment>,
 }
@@ -596,7 +595,7 @@ pub struct ConsensusCommitPrologueV1 {
     pub commit_timestamp_ms: CheckpointTimestamp,
 
     /// Digest of consensus output
-    pub consensus_commit_digest: ConsensusCommitDigest,
+    pub consensus_commit_digest: Digest,
 
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,

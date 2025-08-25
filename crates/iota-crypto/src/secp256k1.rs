@@ -13,6 +13,7 @@ use signature::{Signer, Verifier};
 
 use crate::SignatureError;
 
+#[derive(Clone)]
 pub struct Secp256k1PrivateKey(SigningKey);
 
 impl std::fmt::Debug for Secp256k1PrivateKey {
@@ -139,7 +140,7 @@ impl Signer<UserSignature> for Secp256k1PrivateKey {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Secp256k1VerifyingKey(VerifyingKey);
 
 impl Secp256k1VerifyingKey {

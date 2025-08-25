@@ -12,10 +12,7 @@ use crate::types::{
     address::Address,
     checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
     crypto::Bls12381PublicKey,
-    digest::{
-        CheckpointDigest, ConsensusCommitDigest, TransactionDigest, TransactionEffectsDigest,
-        TransactionEventsDigest,
-    },
+    digest::Digest,
     events::Event,
     execution_status::ExecutionStatus,
     object::{GenesisObject, ObjectId, ObjectReference, Version},
@@ -74,7 +71,7 @@ impl Transaction {
         self.0.expiration
     }
 
-    pub fn digest(&self) -> TransactionDigest {
+    pub fn digest(&self) -> Digest {
         self.0.digest().into()
     }
 
@@ -647,7 +644,7 @@ impl ConsensusCommitPrologueV1 {
         round: u64,
         sub_dag_index: Option<u64>,
         commit_timestamp_ms: CheckpointTimestamp,
-        consensus_commit_digest: &ConsensusCommitDigest,
+        consensus_commit_digest: &Digest,
         consensus_determined_version_assignments: &ConsensusDeterminedVersionAssignments,
     ) -> Self {
         Self(iota_types::ConsensusCommitPrologueV1 {
@@ -684,7 +681,7 @@ impl ConsensusCommitPrologueV1 {
     }
 
     /// Digest of consensus output
-    pub fn consensus_commit_digest(&self) -> ConsensusCommitDigest {
+    pub fn consensus_commit_digest(&self) -> Digest {
         self.0.consensus_commit_digest.into()
     }
 
@@ -750,10 +747,7 @@ pub struct CancelledTransaction(pub iota_types::CancelledTransaction);
 #[uniffi::export]
 impl CancelledTransaction {
     #[uniffi::constructor]
-    pub fn new(
-        digest: &TransactionDigest,
-        version_assignments: Vec<Arc<VersionAssignment>>,
-    ) -> Self {
+    pub fn new(digest: &Digest, version_assignments: Vec<Arc<VersionAssignment>>) -> Self {
         Self(iota_types::CancelledTransaction {
             digest: digest.0,
             version_assignments: version_assignments
@@ -763,7 +757,7 @@ impl CancelledTransaction {
         })
     }
 
-    pub fn digest(&self) -> TransactionDigest {
+    pub fn digest(&self) -> Digest {
         self.0.digest.into()
     }
 
@@ -1466,7 +1460,7 @@ impl TransactionEffects {
         self.0.as_v1().clone().into()
     }
 
-    pub fn digest(&self) -> TransactionEffectsDigest {
+    pub fn digest(&self) -> Digest {
         self.0.digest().into()
     }
 }

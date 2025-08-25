@@ -8,6 +8,7 @@ use iota_sdk_types::{
 
 use crate::{SignatureError, Signer, Verifier};
 
+#[derive(Clone, Eq, PartialEq)]
 pub struct Ed25519PrivateKey(ed25519_dalek::SigningKey);
 
 impl std::fmt::Debug for Ed25519PrivateKey {
@@ -135,7 +136,7 @@ impl Signer<UserSignature> for Ed25519PrivateKey {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Eq, PartialEq, Default)]
 pub struct Ed25519VerifyingKey(ed25519_dalek::VerifyingKey);
 
 impl Ed25519VerifyingKey {

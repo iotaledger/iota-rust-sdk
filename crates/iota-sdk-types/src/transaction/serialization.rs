@@ -1148,7 +1148,7 @@ mod test {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use crate::{
-        ObjectDigest, ObjectId, ObjectReference,
+        Digest, ObjectId, ObjectReference,
         transaction::{Argument, Input, Transaction},
     };
 
@@ -1187,11 +1187,7 @@ mod test {
                 }),
             ),
             (
-                Input::ImmutableOrOwned(ObjectReference::new(
-                    ObjectId::ZERO,
-                    1,
-                    ObjectDigest::ZERO,
-                )),
+                Input::ImmutableOrOwned(ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO)),
                 serde_json::json!({
                   "type": "immutable_or_owned",
                   "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -1213,7 +1209,7 @@ mod test {
                 }),
             ),
             (
-                Input::Receiving(ObjectReference::new(ObjectId::ZERO, 1, ObjectDigest::ZERO)),
+                Input::Receiving(ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO)),
                 serde_json::json!({
                   "type": "receiving",
                   "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",

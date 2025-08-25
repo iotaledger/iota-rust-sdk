@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use iota_graphql_client::{
     pagination::PaginationFilter,
-    query_types::{CoinMetadata, MoveFunction, ProtocolConfigs, ServiceConfig},
+    query_types::{MoveFunction, ProtocolConfigs, ServiceConfig},
 };
 use iota_types::CheckpointSequenceNumber;
 use tokio::sync::RwLock;
@@ -15,10 +15,10 @@ use crate::{
     types::{
         address::Address,
         checkpoint::CheckpointSummary,
-        digest::{CheckpointContentsDigest, CheckpointDigest, TransactionDigest},
+        digest::Digest,
         graphql::{
-            DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveModule, ObjectFilter,
-            TransactionDataEffects, TransactionMetadata, TransactionsFilter,
+            CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveModule,
+            ObjectFilter, TransactionDataEffects, TransactionMetadata, TransactionsFilter,
         },
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
@@ -129,10 +129,7 @@ impl GraphQLClient {
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint digest.
-    pub async fn total_transaction_blocks_by_digest(
-        &self,
-        digest: &CheckpointContentsDigest,
-    ) -> Result<Option<u64>> {
+    pub async fn total_transaction_blocks_by_digest(&self, digest: &Digest) -> Result<Option<u64>> {
         Ok(self
             .0
             .read()
@@ -186,7 +183,13 @@ impl GraphQLClient {
 
     /// Get the coin metadata for the coin type.
     pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
-        Ok(self.0.read().await.coin_metadata(coin_type).await?)
+        Ok(self
+            .0
+            .read()
+            .await
+            .coin_metadata(coin_type)
+            .await?
+            .map(Into::into))
     }
 
     /// Get total supply for the coin type.
@@ -204,7 +207,7 @@ impl GraphQLClient {
     #[uniffi::method(default(digest = None, seq_num = None))]
     pub async fn checkpoint(
         &self,
-        digest: Option<Arc<CheckpointContentsDigest>>,
+        digest: Option<Arc<Digest>>,
         seq_num: Option<u64>,
     ) -> Result<Option<Arc<CheckpointSummary>>> {
         Ok(self
@@ -483,10 +486,7 @@ impl GraphQLClient {
     // ===========================================================================
 
     /// Get a transaction by its digest.
-    pub async fn transaction(
-        &self,
-        digest: &TransactionDigest,
-    ) -> Result<Option<SignedTransaction>> {
+    pub async fn transaction(&self, digest: &Digest) -> Result<Option<SignedTransaction>> {
         Ok(self
             .0
             .read()
@@ -499,7 +499,7 @@ impl GraphQLClient {
     /// Get a transaction's effects by its digest.
     pub async fn transaction_effects(
         &self,
-        digest: &TransactionDigest,
+        digest: &Digest,
     ) -> Result<Option<Arc<TransactionEffects>>> {
         Ok(self
             .0
@@ -514,7 +514,7 @@ impl GraphQLClient {
     /// Get a transaction's data and effects by its digest.
     pub async fn transaction_data_effects(
         &self,
-        digest: &TransactionDigest,
+        digest: &Digest,
     ) -> Result<Option<TransactionDataEffects>> {
         Ok(self
             .0

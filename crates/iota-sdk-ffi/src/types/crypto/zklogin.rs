@@ -189,29 +189,29 @@ impl ZkLoginInputs {
         iss_base64_details: ZkLoginClaim,
         header_base64: String,
         address_seed: &Bn254FieldElement,
-    ) -> Self {
-        Self(iota_types::ZkLoginInputs {
-            proof_points: proof_points.0.clone(),
+    ) -> Result<Self> {
+        Ok(Self(iota_types::ZkLoginInputs::new(
+            proof_points.0.clone(),
             iss_base64_details,
             header_base64,
-            address_seed: address_seed.0.clone(),
-        })
+            address_seed.0.clone(),
+        )?))
     }
 
     pub fn proof_points(&self) -> ZkLoginProof {
-        self.0.proof_points.clone().into()
+        self.0.proof_points().clone().into()
     }
 
     pub fn iss_base64_details(&self) -> ZkLoginClaim {
-        self.0.iss_base64_details.clone()
+        self.0.iss_base64_details().clone()
     }
 
     pub fn header_base64(&self) -> String {
-        self.0.header_base64.clone()
+        self.0.header_base64().to_owned()
     }
 
     pub fn address_seed(&self) -> Bn254FieldElement {
-        self.0.address_seed.clone().into()
+        self.0.address_seed().clone().into()
     }
 }
 

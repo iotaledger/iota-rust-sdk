@@ -33,7 +33,7 @@ async def main():
     filter = EventFilter(sender=my_address)
 
     txn = await client.transaction(
-        TransactionDigest.from_base58("HT1wvebXV4LUisLa4aJQEyoxt1HEMqznjf5UtStmdxyM")
+        Digest.from_base58("HT1wvebXV4LUisLa4aJQEyoxt1HEMqznjf5UtStmdxyM")
     )
 
     if txn is not None:
@@ -58,6 +58,9 @@ async def main():
     )
 
     coin_metadata = CoinMetadata(
+        address=ObjectId.from_hex(
+            "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"
+        ),
         decimals=2,
         description="test",
         icon_url=None,

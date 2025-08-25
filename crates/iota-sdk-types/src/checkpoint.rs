@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    CheckpointContentsDigest, CheckpointDigest, Digest, GasCostSummary, Object, SignedTransaction,
-    TransactionDigest, TransactionEffects, TransactionEffectsDigest, TransactionEvents,
+    Digest, GasCostSummary, Object, SignedTransaction, TransactionEffects, TransactionEvents,
     UserSignature, ValidatorAggregatedSignature, ValidatorCommitteeMember,
 };
 
@@ -142,12 +141,12 @@ pub struct CheckpointSummary {
     pub network_total_transactions: u64,
 
     /// The hash of the [`CheckpointContents`] for this checkpoint.
-    pub content_digest: CheckpointContentsDigest,
+    pub content_digest: Digest,
 
     /// The hash of the previous `CheckpointSummary`.
     ///
     /// This will be only be `None` for the first, or genesis checkpoint.
-    pub previous_digest: Option<CheckpointDigest>,
+    pub previous_digest: Option<Digest>,
 
     /// The running total gas costs of all transactions included in the current
     /// epoch so far until this checkpoint.
@@ -243,8 +242,8 @@ impl CheckpointContents {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointTransactionInfo {
-    pub transaction: TransactionDigest,
-    pub effects: TransactionEffectsDigest,
+    pub transaction: Digest,
+    pub effects: Digest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub signatures: Vec<UserSignature>,
 }
@@ -306,9 +305,9 @@ mod serialization {
         sequence_number: &'a CheckpointSequenceNumber,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         network_total_transactions: &'a u64,
-        content_digest: &'a CheckpointContentsDigest,
+        content_digest: &'a Digest,
         #[serde(skip_serializing_if = "Option::is_none")]
-        previous_digest: &'a Option<CheckpointDigest>,
+        previous_digest: &'a Option<Digest>,
         epoch_rolling_gas_cost_summary: &'a GasCostSummary,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         timestamp_ms: &'a CheckpointTimestamp,
@@ -329,9 +328,9 @@ mod serialization {
         sequence_number: CheckpointSequenceNumber,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         network_total_transactions: u64,
-        content_digest: CheckpointContentsDigest,
+        content_digest: Digest,
         #[serde(default)]
-        previous_digest: Option<CheckpointDigest>,
+        previous_digest: Option<Digest>,
         epoch_rolling_gas_cost_summary: GasCostSummary,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         timestamp_ms: CheckpointTimestamp,
@@ -349,8 +348,8 @@ mod serialization {
         epoch: &'a EpochId,
         sequence_number: &'a CheckpointSequenceNumber,
         network_total_transactions: &'a u64,
-        content_digest: &'a CheckpointContentsDigest,
-        previous_digest: &'a Option<CheckpointDigest>,
+        content_digest: &'a Digest,
+        previous_digest: &'a Option<Digest>,
         epoch_rolling_gas_cost_summary: &'a GasCostSummary,
         timestamp_ms: &'a CheckpointTimestamp,
         checkpoint_commitments: &'a Vec<CheckpointCommitment>,
@@ -363,8 +362,8 @@ mod serialization {
         epoch: EpochId,
         sequence_number: CheckpointSequenceNumber,
         network_total_transactions: u64,
-        content_digest: CheckpointContentsDigest,
-        previous_digest: Option<CheckpointDigest>,
+        content_digest: Digest,
+        previous_digest: Option<Digest>,
         epoch_rolling_gas_cost_summary: GasCostSummary,
         timestamp_ms: CheckpointTimestamp,
         checkpoint_commitments: Vec<CheckpointCommitment>,
@@ -493,8 +492,8 @@ mod serialization {
             } else {
                 #[derive(serde_derive::Serialize)]
                 struct Digests<'a> {
-                    transaction: &'a TransactionDigest,
-                    effects: &'a TransactionEffectsDigest,
+                    transaction: &'a Digest,
+                    effects: &'a Digest,
                 }
 
                 struct DigestSeq<'a>(&'a CheckpointContents);
@@ -539,8 +538,8 @@ mod serialization {
 
     #[derive(serde_derive::Deserialize)]
     struct ExecutionDigests {
-        transaction: TransactionDigest,
-        effects: TransactionEffectsDigest,
+        transaction: Digest,
+        effects: Digest,
     }
 
     #[derive(serde_derive::Deserialize)]

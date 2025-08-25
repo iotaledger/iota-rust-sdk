@@ -425,7 +425,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest()
 	})
-	if checksum != 3583 {
+	if checksum != 52811 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest: UniFFI API checksum mismatch")
 	}
@@ -614,7 +614,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_digest()
 	})
-	if checksum != 24603 {
+	if checksum != 22345 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_digest: UniFFI API checksum mismatch")
 	}
@@ -630,42 +630,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointcontentsdigest_to_base58()
-	})
-	if checksum != 60951 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointcontentsdigest_to_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointcontentsdigest_to_bytes()
-	})
-	if checksum != 51343 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointcontentsdigest_to_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointdigest_to_base58()
-	})
-	if checksum != 40700 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointdigest_to_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointdigest_to_bytes()
-	})
-	if checksum != 48082 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointdigest_to_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_checkpoint_commitments()
 	})
 	if checksum != 61600 {
@@ -677,7 +641,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_content_digest()
 	})
-	if checksum != 14508 {
+	if checksum != 31627 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_content_digest: UniFFI API checksum mismatch")
 	}
@@ -686,7 +650,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_digest()
 	})
-	if checksum != 30742 {
+	if checksum != 14291 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_digest: UniFFI API checksum mismatch")
 	}
@@ -731,7 +695,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest()
 	})
-	if checksum != 44819 {
+	if checksum != 933 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest: UniFFI API checksum mismatch")
 	}
@@ -767,7 +731,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects()
 	})
-	if checksum != 36757 {
+	if checksum != 54822 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects: UniFFI API checksum mismatch")
 	}
@@ -785,7 +749,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction()
 	})
-	if checksum != 45492 {
+	if checksum != 58570 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction: UniFFI API checksum mismatch")
 	}
@@ -819,24 +783,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitdigest_to_base58()
-	})
-	if checksum != 7053 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensuscommitdigest_to_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitdigest_to_bytes()
-	})
-	if checksum != 5048 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensuscommitdigest_to_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_commit_timestamp_ms()
 	})
 	if checksum != 14198 {
@@ -848,7 +794,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_commit_digest()
 	})
-	if checksum != 44291 {
+	if checksum != 34585 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_consensus_commit_digest: UniFFI API checksum mismatch")
 	}
@@ -1071,24 +1017,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_base58()
-	})
-	if checksum != 56652 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_bytes()
-	})
-	if checksum != 12259 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_effectsauxiliarydatadigest_to_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key()
 	})
 	if checksum != 10295 {
@@ -1226,7 +1154,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint()
 	})
-	if checksum != 26413 {
+	if checksum != 11584 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint: UniFFI API checksum mismatch")
 	}
@@ -1523,7 +1451,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_digest()
 	})
-	if checksum != 64969 {
+	if checksum != 24739 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks_by_digest: UniFFI API checksum mismatch")
 	}
@@ -1541,7 +1469,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction()
 	})
-	if checksum != 35048 {
+	if checksum != 58857 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction: UniFFI API checksum mismatch")
 	}
@@ -1550,7 +1478,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_data_effects()
 	})
-	if checksum != 7442 {
+	if checksum != 53397 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_data_effects: UniFFI API checksum mismatch")
 	}
@@ -1559,7 +1487,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_effects()
 	})
-	if checksum != 56760 {
+	if checksum != 27010 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_effects: UniFFI API checksum mismatch")
 	}
@@ -2072,7 +2000,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_object_digest()
 	})
-	if checksum != 5209 {
+	if checksum != 48655 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_digest: UniFFI API checksum mismatch")
 	}
@@ -2108,7 +2036,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_object_previous_transaction()
 	})
-	if checksum != 455 {
+	if checksum != 4427 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_previous_transaction: UniFFI API checksum mismatch")
 	}
@@ -2165,24 +2093,6 @@ func uniffiCheckChecksums() {
 	if checksum != 58579 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58()
-	})
-	if checksum != 2414 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_bytes()
-	})
-	if checksum != 31732 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdigest_to_bytes: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3089,7 +2999,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_digest()
 	})
-	if checksum != 19400 {
+	if checksum != 52429 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_digest: UniFFI API checksum mismatch")
 	}
@@ -3285,24 +3195,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondigest_to_base58()
-	})
-	if checksum != 22119 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondigest_to_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondigest_to_bytes()
-	})
-	if checksum != 3253 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondigest_to_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1()
 	})
 	if checksum != 48710 {
@@ -3314,7 +3206,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_digest()
 	})
-	if checksum != 38142 {
+	if checksum != 46963 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactioneffects_digest: UniFFI API checksum mismatch")
 	}
@@ -3330,27 +3222,9 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneffectsdigest_to_base58()
-	})
-	if checksum != 38601 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactioneffectsdigest_to_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneffectsdigest_to_bytes()
-	})
-	if checksum != 43744 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactioneffectsdigest_to_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest()
 	})
-	if checksum != 26621 {
+	if checksum != 55750 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest: UniFFI API checksum mismatch")
 	}
@@ -3362,24 +3236,6 @@ func uniffiCheckChecksums() {
 	if checksum != 36651 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionevents_events: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneventsdigest_to_base58()
-	})
-	if checksum != 54162 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactioneventsdigest_to_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneventsdigest_to_bytes()
-	})
-	if checksum != 6773 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactioneventsdigest_to_bytes: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3566,7 +3422,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_digest()
 	})
-	if checksum != 30477 {
+	if checksum != 6876 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_digest: UniFFI API checksum mismatch")
 	}
@@ -4169,7 +4025,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new()
 	})
-	if checksum != 21959 {
+	if checksum != 59199 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_cancelledtransaction_new: UniFFI API checksum mismatch")
 	}
@@ -4203,63 +4059,9 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58()
-	})
-	if checksum != 33027 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_bytes()
-	})
-	if checksum != 37261 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_from_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_generate()
-	})
-	if checksum != 79 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontentsdigest_generate: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_from_base58()
-	})
-	if checksum != 65453 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_from_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_from_bytes()
-	})
-	if checksum != 24226 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_from_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_generate()
-	})
-	if checksum != 13389 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointdigest_generate: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new()
 	})
-	if checksum != 15638 {
+	if checksum != 16062 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new: UniFFI API checksum mismatch")
 	}
@@ -4268,7 +4070,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new()
 	})
-	if checksum != 55728 {
+	if checksum != 65327 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new: UniFFI API checksum mismatch")
 	}
@@ -4365,36 +4167,9 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_from_base58()
-	})
-	if checksum != 17742 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_from_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_from_bytes()
-	})
-	if checksum != 58221 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_from_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_generate()
-	})
-	if checksum != 49846 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitdigest_generate: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new()
 	})
-	if checksum != 41810 {
+	if checksum != 50376 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new: UniFFI API checksum mismatch")
 	}
@@ -4550,33 +4325,6 @@ func uniffiCheckChecksums() {
 	if checksum != 23280 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_effectsauxiliarydatadigest_from_base58()
-	})
-	if checksum != 31144 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_effectsauxiliarydatadigest_from_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_effectsauxiliarydatadigest_from_bytes()
-	})
-	if checksum != 36699 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_effectsauxiliarydatadigest_from_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_effectsauxiliarydatadigest_generate()
-	})
-	if checksum != 28926 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_effectsauxiliarydatadigest_generate: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4934,7 +4682,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_object_new()
 	})
-	if checksum != 56232 {
+	if checksum != 41346 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_object_new: UniFFI API checksum mismatch")
 	}
@@ -4959,36 +4707,9 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58()
-	})
-	if checksum != 57967 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_bytes()
-	})
-	if checksum != 62288 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_from_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_generate()
-	})
-	if checksum != 61181 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectdigest_generate: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id()
 	})
-	if checksum != 32351 {
+	if checksum != 16970 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id: UniFFI API checksum mismatch")
 	}
@@ -5499,33 +5220,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_from_base58()
-	})
-	if checksum != 15069 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_from_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_from_bytes()
-	})
-	if checksum != 43656 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_from_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_generate()
-	})
-	if checksum != 14578 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactiondigest_generate: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1()
 	})
 	if checksum != 63561 {
@@ -5535,65 +5229,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_from_base58()
-	})
-	if checksum != 63406 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_from_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_from_bytes()
-	})
-	if checksum != 51937 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_from_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_generate()
-	})
-	if checksum != 11715 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactioneffectsdigest_generate: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new()
 	})
 	if checksum != 1310 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactioneventsdigest_from_base58()
-	})
-	if checksum != 56954 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactioneventsdigest_from_base58: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactioneventsdigest_from_bytes()
-	})
-	if checksum != 4647 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactioneventsdigest_from_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactioneventsdigest_generate()
-	})
-	if checksum != 18224 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactioneventsdigest_generate: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5789,7 +5429,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable()
 	})
-	if checksum != 37965 {
+	if checksum != 12892 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable: UniFFI API checksum mismatch")
 	}
@@ -5798,7 +5438,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned()
 	})
-	if checksum != 12810 {
+	if checksum != 26285 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned: UniFFI API checksum mismatch")
 	}
@@ -5807,7 +5447,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving()
 	})
-	if checksum != 10063 {
+	if checksum != 50820 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving: UniFFI API checksum mismatch")
 	}
@@ -5924,7 +5564,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new()
 	})
-	if checksum != 54245 {
+	if checksum != 48962 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new: UniFFI API checksum mismatch")
 	}
@@ -7177,7 +6817,7 @@ func (_ FfiDestroyerBn254FieldElement) Destroy(value *Bn254FieldElement) {
 // cancelled-transaction = digest (vector version-assignment)
 // ```
 type CancelledTransactionInterface interface {
-	Digest() *TransactionDigest
+	Digest() *Digest
 	VersionAssignments() []*VersionAssignment
 }
 // A transaction that was cancelled
@@ -7192,19 +6832,19 @@ type CancelledTransactionInterface interface {
 type CancelledTransaction struct {
 	ffiObject FfiObject
 }
-func NewCancelledTransaction(digest *TransactionDigest, versionAssignments []*VersionAssignment) *CancelledTransaction {
+func NewCancelledTransaction(digest *Digest, versionAssignments []*VersionAssignment) *CancelledTransaction {
 	return FfiConverterCancelledTransactionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_cancelledtransaction_new(FfiConverterTransactionDigestINSTANCE.Lower(digest), FfiConverterSequenceVersionAssignmentINSTANCE.Lower(versionAssignments),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_cancelledtransaction_new(FfiConverterDigestINSTANCE.Lower(digest), FfiConverterSequenceVersionAssignmentINSTANCE.Lower(versionAssignments),_uniffiStatus)
 	}))
 }
 
 
 
 
-func (_self *CancelledTransaction) Digest() *TransactionDigest {
+func (_self *CancelledTransaction) Digest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*CancelledTransaction")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_digest(
 		_pointer,_uniffiStatus)
 	}))
@@ -7801,7 +7441,7 @@ func (_ FfiDestroyerCheckpointCommitment) Destroy(value *CheckpointCommitment) {
 // ; length as the vector of digests
 // ```
 type CheckpointContentsInterface interface {
-	Digest() *CheckpointContentsDigest
+	Digest() *Digest
 	TransactionInfo() []*CheckpointTransactionInfo
 }
 // The committed to contents of a checkpoint.
@@ -7834,10 +7474,10 @@ func NewCheckpointContents(transactionInfo []*CheckpointTransactionInfo) *Checkp
 
 
 
-func (_self *CheckpointContents) Digest() *CheckpointContentsDigest {
+func (_self *CheckpointContents) Digest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*CheckpointContents")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterCheckpointContentsDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_checkpointcontents_digest(
 		_pointer,_uniffiStatus)
 	}))
@@ -7905,234 +7545,6 @@ func (_ FfiDestroyerCheckpointContents) Destroy(value *CheckpointContents) {
 
 
 
-type CheckpointContentsDigestInterface interface {
-	ToBase58() string
-	ToBytes() []byte
-}
-type CheckpointContentsDigest struct {
-	ffiObject FfiObject
-}
-
-
-func CheckpointContentsDigestFromBase58(base58 string) (*CheckpointContentsDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointcontentsdigest_from_base58(FfiConverterStringINSTANCE.Lower(base58),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *CheckpointContentsDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterCheckpointContentsDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func CheckpointContentsDigestFromBytes(bytes []byte) (*CheckpointContentsDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointcontentsdigest_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *CheckpointContentsDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterCheckpointContentsDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func CheckpointContentsDigestGenerate() *CheckpointContentsDigest {
-	return FfiConverterCheckpointContentsDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointcontentsdigest_generate(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *CheckpointContentsDigest) ToBase58() string {
-	_pointer := _self.ffiObject.incrementPointer("*CheckpointContentsDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointcontentsdigest_to_base58(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *CheckpointContentsDigest) ToBytes() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*CheckpointContentsDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointcontentsdigest_to_bytes(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *CheckpointContentsDigest) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterCheckpointContentsDigest struct {}
-
-var FfiConverterCheckpointContentsDigestINSTANCE = FfiConverterCheckpointContentsDigest{}
-
-
-func (c FfiConverterCheckpointContentsDigest) Lift(pointer unsafe.Pointer) *CheckpointContentsDigest {
-	result := &CheckpointContentsDigest {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_checkpointcontentsdigest(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_checkpointcontentsdigest(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*CheckpointContentsDigest).Destroy)
-	return result
-}
-
-func (c FfiConverterCheckpointContentsDigest) Read(reader io.Reader) *CheckpointContentsDigest {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterCheckpointContentsDigest) Lower(value *CheckpointContentsDigest) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*CheckpointContentsDigest")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterCheckpointContentsDigest) Write(writer io.Writer, value *CheckpointContentsDigest) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerCheckpointContentsDigest struct {}
-
-func (_ FfiDestroyerCheckpointContentsDigest) Destroy(value *CheckpointContentsDigest) {
-		value.Destroy()
-}
-
-
-
-type CheckpointDigestInterface interface {
-	ToBase58() string
-	ToBytes() []byte
-}
-type CheckpointDigest struct {
-	ffiObject FfiObject
-}
-
-
-func CheckpointDigestFromBase58(base58 string) (*CheckpointDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointdigest_from_base58(FfiConverterStringINSTANCE.Lower(base58),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *CheckpointDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterCheckpointDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func CheckpointDigestFromBytes(bytes []byte) (*CheckpointDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointdigest_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *CheckpointDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterCheckpointDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func CheckpointDigestGenerate() *CheckpointDigest {
-	return FfiConverterCheckpointDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointdigest_generate(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *CheckpointDigest) ToBase58() string {
-	_pointer := _self.ffiObject.incrementPointer("*CheckpointDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointdigest_to_base58(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *CheckpointDigest) ToBytes() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*CheckpointDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointdigest_to_bytes(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *CheckpointDigest) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterCheckpointDigest struct {}
-
-var FfiConverterCheckpointDigestINSTANCE = FfiConverterCheckpointDigest{}
-
-
-func (c FfiConverterCheckpointDigest) Lift(pointer unsafe.Pointer) *CheckpointDigest {
-	result := &CheckpointDigest {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_checkpointdigest(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_checkpointdigest(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*CheckpointDigest).Destroy)
-	return result
-}
-
-func (c FfiConverterCheckpointDigest) Read(reader io.Reader) *CheckpointDigest {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterCheckpointDigest) Lower(value *CheckpointDigest) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*CheckpointDigest")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterCheckpointDigest) Write(writer io.Writer, value *CheckpointDigest) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerCheckpointDigest struct {}
-
-func (_ FfiDestroyerCheckpointDigest) Destroy(value *CheckpointDigest) {
-		value.Destroy()
-}
-
-
-
 // A header for a Checkpoint on the IOTA blockchain.
 //
 // On the IOTA network, checkpoints define the history of the blockchain. They
@@ -8176,8 +7588,8 @@ type CheckpointSummaryInterface interface {
 	// Commitments to checkpoint-specific state.
 	CheckpointCommitments() []*CheckpointCommitment
 	// The hash of the `CheckpointContents` for this checkpoint.
-	ContentDigest() *CheckpointContentsDigest
-	Digest() *CheckpointDigest
+	ContentDigest() *Digest
+	Digest() *Digest
 	// Extra data only present in the final checkpoint of an epoch.
 	EndOfEpochData() *EndOfEpochData
 	// Epoch that this checkpoint belongs to.
@@ -8191,7 +7603,7 @@ type CheckpointSummaryInterface interface {
 	// The hash of the previous `CheckpointSummary`.
 	//
 	// This will be only be `None` for the first, or genesis checkpoint.
-	PreviousDigest() **CheckpointDigest
+	PreviousDigest() **Digest
 	// The height of this checkpoint.
 	SequenceNumber() uint64
 	// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
@@ -8248,9 +7660,9 @@ type CheckpointSummaryInterface interface {
 type CheckpointSummary struct {
 	ffiObject FfiObject
 }
-func NewCheckpointSummary(epoch uint64, sequenceNumber uint64, networkTotalTransactions uint64, contentDigest *CheckpointContentsDigest, previousDigest **CheckpointDigest, epochRollingGasCostSummary GasCostSummary, timestampMs uint64, checkpointCommitments []*CheckpointCommitment, endOfEpochData *EndOfEpochData, versionSpecificData []byte) *CheckpointSummary {
+func NewCheckpointSummary(epoch uint64, sequenceNumber uint64, networkTotalTransactions uint64, contentDigest *Digest, previousDigest **Digest, epochRollingGasCostSummary GasCostSummary, timestampMs uint64, checkpointCommitments []*CheckpointCommitment, endOfEpochData *EndOfEpochData, versionSpecificData []byte) *CheckpointSummary {
 	return FfiConverterCheckpointSummaryINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointsummary_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterUint64INSTANCE.Lower(sequenceNumber), FfiConverterUint64INSTANCE.Lower(networkTotalTransactions), FfiConverterCheckpointContentsDigestINSTANCE.Lower(contentDigest), FfiConverterOptionalCheckpointDigestINSTANCE.Lower(previousDigest), FfiConverterGasCostSummaryINSTANCE.Lower(epochRollingGasCostSummary), FfiConverterUint64INSTANCE.Lower(timestampMs), FfiConverterSequenceCheckpointCommitmentINSTANCE.Lower(checkpointCommitments), FfiConverterOptionalEndOfEpochDataINSTANCE.Lower(endOfEpochData), FfiConverterBytesINSTANCE.Lower(versionSpecificData),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointsummary_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterUint64INSTANCE.Lower(sequenceNumber), FfiConverterUint64INSTANCE.Lower(networkTotalTransactions), FfiConverterDigestINSTANCE.Lower(contentDigest), FfiConverterOptionalDigestINSTANCE.Lower(previousDigest), FfiConverterGasCostSummaryINSTANCE.Lower(epochRollingGasCostSummary), FfiConverterUint64INSTANCE.Lower(timestampMs), FfiConverterSequenceCheckpointCommitmentINSTANCE.Lower(checkpointCommitments), FfiConverterOptionalEndOfEpochDataINSTANCE.Lower(endOfEpochData), FfiConverterBytesINSTANCE.Lower(versionSpecificData),_uniffiStatus)
 	}))
 }
 
@@ -8270,19 +7682,19 @@ func (_self *CheckpointSummary) CheckpointCommitments() []*CheckpointCommitment 
 }
 
 // The hash of the `CheckpointContents` for this checkpoint.
-func (_self *CheckpointSummary) ContentDigest() *CheckpointContentsDigest {
+func (_self *CheckpointSummary) ContentDigest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterCheckpointContentsDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_content_digest(
 		_pointer,_uniffiStatus)
 	}))
 }
 
-func (_self *CheckpointSummary) Digest() *CheckpointDigest {
+func (_self *CheckpointSummary) Digest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterCheckpointDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_digest(
 		_pointer,_uniffiStatus)
 	}))
@@ -8337,10 +7749,10 @@ func (_self *CheckpointSummary) NetworkTotalTransactions() uint64 {
 // The hash of the previous `CheckpointSummary`.
 //
 // This will be only be `None` for the first, or genesis checkpoint.
-func (_self *CheckpointSummary) PreviousDigest() **CheckpointDigest {
+func (_self *CheckpointSummary) PreviousDigest() **Digest {
 	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalCheckpointDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+	return FfiConverterOptionalDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_previous_digest(
 		_pointer,_uniffiStatus),
@@ -8440,27 +7852,27 @@ func (_ FfiDestroyerCheckpointSummary) Destroy(value *CheckpointSummary) {
 
 // Transaction information committed to in a checkpoint
 type CheckpointTransactionInfoInterface interface {
-	Effects() *TransactionEffectsDigest
+	Effects() *Digest
 	Signatures() []*UserSignature
-	Transaction() *TransactionDigest
+	Transaction() *Digest
 }
 // Transaction information committed to in a checkpoint
 type CheckpointTransactionInfo struct {
 	ffiObject FfiObject
 }
-func NewCheckpointTransactionInfo(transaction *TransactionDigest, effects *TransactionEffectsDigest, signatures []*UserSignature) *CheckpointTransactionInfo {
+func NewCheckpointTransactionInfo(transaction *Digest, effects *Digest, signatures []*UserSignature) *CheckpointTransactionInfo {
 	return FfiConverterCheckpointTransactionInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointtransactioninfo_new(FfiConverterTransactionDigestINSTANCE.Lower(transaction), FfiConverterTransactionEffectsDigestINSTANCE.Lower(effects), FfiConverterSequenceUserSignatureINSTANCE.Lower(signatures),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointtransactioninfo_new(FfiConverterDigestINSTANCE.Lower(transaction), FfiConverterDigestINSTANCE.Lower(effects), FfiConverterSequenceUserSignatureINSTANCE.Lower(signatures),_uniffiStatus)
 	}))
 }
 
 
 
 
-func (_self *CheckpointTransactionInfo) Effects() *TransactionEffectsDigest {
+func (_self *CheckpointTransactionInfo) Effects() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*CheckpointTransactionInfo")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionEffectsDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_effects(
 		_pointer,_uniffiStatus)
 	}))
@@ -8477,10 +7889,10 @@ func (_self *CheckpointTransactionInfo) Signatures() []*UserSignature {
 	}))
 }
 
-func (_self *CheckpointTransactionInfo) Transaction() *TransactionDigest {
+func (_self *CheckpointTransactionInfo) Transaction() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*CheckpointTransactionInfo")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_transaction(
 		_pointer,_uniffiStatus)
 	}))
@@ -8983,120 +8395,6 @@ func (_ FfiDestroyerCommand) Destroy(value *Command) {
 
 
 
-type ConsensusCommitDigestInterface interface {
-	ToBase58() string
-	ToBytes() []byte
-}
-type ConsensusCommitDigest struct {
-	ffiObject FfiObject
-}
-
-
-func ConsensusCommitDigestFromBase58(base58 string) (*ConsensusCommitDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitdigest_from_base58(FfiConverterStringINSTANCE.Lower(base58),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ConsensusCommitDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterConsensusCommitDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func ConsensusCommitDigestFromBytes(bytes []byte) (*ConsensusCommitDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitdigest_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ConsensusCommitDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterConsensusCommitDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func ConsensusCommitDigestGenerate() *ConsensusCommitDigest {
-	return FfiConverterConsensusCommitDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitdigest_generate(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ConsensusCommitDigest) ToBase58() string {
-	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_consensuscommitdigest_to_base58(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ConsensusCommitDigest) ToBytes() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_consensuscommitdigest_to_bytes(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *ConsensusCommitDigest) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterConsensusCommitDigest struct {}
-
-var FfiConverterConsensusCommitDigestINSTANCE = FfiConverterConsensusCommitDigest{}
-
-
-func (c FfiConverterConsensusCommitDigest) Lift(pointer unsafe.Pointer) *ConsensusCommitDigest {
-	result := &ConsensusCommitDigest {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_consensuscommitdigest(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_consensuscommitdigest(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ConsensusCommitDigest).Destroy)
-	return result
-}
-
-func (c FfiConverterConsensusCommitDigest) Read(reader io.Reader) *ConsensusCommitDigest {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterConsensusCommitDigest) Lower(value *ConsensusCommitDigest) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ConsensusCommitDigest")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterConsensusCommitDigest) Write(writer io.Writer, value *ConsensusCommitDigest) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerConsensusCommitDigest struct {}
-
-func (_ FfiDestroyerConsensusCommitDigest) Destroy(value *ConsensusCommitDigest) {
-		value.Destroy()
-}
-
-
-
 // V1 of the consensus commit prologue system transaction
 //
 // # BCS
@@ -9111,7 +8409,7 @@ type ConsensusCommitPrologueV1Interface interface {
 	// Unix timestamp from consensus
 	CommitTimestampMs() uint64
 	// Digest of consensus output
-	ConsensusCommitDigest() *ConsensusCommitDigest
+	ConsensusCommitDigest() *Digest
 	// Stores consensus handler determined shared object version assignments.
 	ConsensusDeterminedVersionAssignments() *ConsensusDeterminedVersionAssignments
 	// Epoch of the commit prologue transaction
@@ -9135,9 +8433,9 @@ type ConsensusCommitPrologueV1Interface interface {
 type ConsensusCommitPrologueV1 struct {
 	ffiObject FfiObject
 }
-func NewConsensusCommitPrologueV1(epoch uint64, round uint64, subDagIndex *uint64, commitTimestampMs uint64, consensusCommitDigest *ConsensusCommitDigest, consensusDeterminedVersionAssignments *ConsensusDeterminedVersionAssignments) *ConsensusCommitPrologueV1 {
+func NewConsensusCommitPrologueV1(epoch uint64, round uint64, subDagIndex *uint64, commitTimestampMs uint64, consensusCommitDigest *Digest, consensusDeterminedVersionAssignments *ConsensusDeterminedVersionAssignments) *ConsensusCommitPrologueV1 {
 	return FfiConverterConsensusCommitPrologueV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev1_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterUint64INSTANCE.Lower(round), FfiConverterOptionalUint64INSTANCE.Lower(subDagIndex), FfiConverterUint64INSTANCE.Lower(commitTimestampMs), FfiConverterConsensusCommitDigestINSTANCE.Lower(consensusCommitDigest), FfiConverterConsensusDeterminedVersionAssignmentsINSTANCE.Lower(consensusDeterminedVersionAssignments),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev1_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterUint64INSTANCE.Lower(round), FfiConverterOptionalUint64INSTANCE.Lower(subDagIndex), FfiConverterUint64INSTANCE.Lower(commitTimestampMs), FfiConverterDigestINSTANCE.Lower(consensusCommitDigest), FfiConverterConsensusDeterminedVersionAssignmentsINSTANCE.Lower(consensusDeterminedVersionAssignments),_uniffiStatus)
 	}))
 }
 
@@ -9155,10 +8453,10 @@ func (_self *ConsensusCommitPrologueV1) CommitTimestampMs() uint64 {
 }
 
 // Digest of consensus output
-func (_self *ConsensusCommitPrologueV1) ConsensusCommitDigest() *ConsensusCommitDigest {
+func (_self *ConsensusCommitPrologueV1) ConsensusCommitDigest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV1")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterConsensusCommitDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_consensus_commit_digest(
 		_pointer,_uniffiStatus)
 	}))
@@ -10190,120 +9488,6 @@ func (c FfiConverterEd25519VerifyingKey) Write(writer io.Writer, value *Ed25519V
 type FfiDestroyerEd25519VerifyingKey struct {}
 
 func (_ FfiDestroyerEd25519VerifyingKey) Destroy(value *Ed25519VerifyingKey) {
-		value.Destroy()
-}
-
-
-
-type EffectsAuxiliaryDataDigestInterface interface {
-	ToBase58() string
-	ToBytes() []byte
-}
-type EffectsAuxiliaryDataDigest struct {
-	ffiObject FfiObject
-}
-
-
-func EffectsAuxiliaryDataDigestFromBase58(base58 string) (*EffectsAuxiliaryDataDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_effectsauxiliarydatadigest_from_base58(FfiConverterStringINSTANCE.Lower(base58),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *EffectsAuxiliaryDataDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterEffectsAuxiliaryDataDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func EffectsAuxiliaryDataDigestFromBytes(bytes []byte) (*EffectsAuxiliaryDataDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_effectsauxiliarydatadigest_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *EffectsAuxiliaryDataDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterEffectsAuxiliaryDataDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func EffectsAuxiliaryDataDigestGenerate() *EffectsAuxiliaryDataDigest {
-	return FfiConverterEffectsAuxiliaryDataDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_effectsauxiliarydatadigest_generate(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *EffectsAuxiliaryDataDigest) ToBase58() string {
-	_pointer := _self.ffiObject.incrementPointer("*EffectsAuxiliaryDataDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_effectsauxiliarydatadigest_to_base58(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *EffectsAuxiliaryDataDigest) ToBytes() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*EffectsAuxiliaryDataDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_effectsauxiliarydatadigest_to_bytes(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *EffectsAuxiliaryDataDigest) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterEffectsAuxiliaryDataDigest struct {}
-
-var FfiConverterEffectsAuxiliaryDataDigestINSTANCE = FfiConverterEffectsAuxiliaryDataDigest{}
-
-
-func (c FfiConverterEffectsAuxiliaryDataDigest) Lift(pointer unsafe.Pointer) *EffectsAuxiliaryDataDigest {
-	result := &EffectsAuxiliaryDataDigest {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_effectsauxiliarydatadigest(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_effectsauxiliarydatadigest(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*EffectsAuxiliaryDataDigest).Destroy)
-	return result
-}
-
-func (c FfiConverterEffectsAuxiliaryDataDigest) Read(reader io.Reader) *EffectsAuxiliaryDataDigest {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterEffectsAuxiliaryDataDigest) Lower(value *EffectsAuxiliaryDataDigest) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*EffectsAuxiliaryDataDigest")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterEffectsAuxiliaryDataDigest) Write(writer io.Writer, value *EffectsAuxiliaryDataDigest) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerEffectsAuxiliaryDataDigest struct {}
-
-func (_ FfiDestroyerEffectsAuxiliaryDataDigest) Destroy(value *EffectsAuxiliaryDataDigest) {
 		value.Destroy()
 }
 
@@ -11356,7 +10540,7 @@ type GraphQlClientInterface interface {
 	// Get the [`CheckpointSummary`] for a given checkpoint digest or
 	// checkpoint id. If none is provided, it will use the last known
 	// checkpoint id.
-	Checkpoint(digest **CheckpointContentsDigest, seqNum *uint64) (**CheckpointSummary, error)
+	Checkpoint(digest **Digest, seqNum *uint64) (**CheckpointSummary, error)
 	// Get a page of [`CheckpointSummary`] for the provided parameters.
 	Checkpoints(paginationFilter PaginationFilter) (CheckpointSummaryPage, error)
 	// Get the coin metadata for the coin type.
@@ -11533,16 +10717,16 @@ type GraphQlClientInterface interface {
 	TotalTransactionBlocks() (*uint64, error)
 	// The total number of transaction blocks in the network by the end of the
 	// provided checkpoint digest.
-	TotalTransactionBlocksByDigest(digest *CheckpointContentsDigest) (*uint64, error)
+	TotalTransactionBlocksByDigest(digest *Digest) (*uint64, error)
 	// The total number of transaction blocks in the network by the end of the
 	// provided checkpoint sequence number.
 	TotalTransactionBlocksBySeqNum(seqNum uint64) (*uint64, error)
 	// Get a transaction by its digest.
-	Transaction(digest *TransactionDigest) (*SignedTransaction, error)
+	Transaction(digest *Digest) (*SignedTransaction, error)
 	// Get a transaction's data and effects by its digest.
-	TransactionDataEffects(digest *TransactionDigest) (*TransactionDataEffects, error)
+	TransactionDataEffects(digest *Digest) (*TransactionDataEffects, error)
 	// Get a transaction's effects by its digest.
-	TransactionEffects(digest *TransactionDigest) (**TransactionEffects, error)
+	TransactionEffects(digest *Digest) (**TransactionEffects, error)
 	// Get a page of transactions based on the provided filters.
 	Transactions(paginationFilter PaginationFilter, filter *TransactionsFilter) (SignedTransactionPage, error)
 	// Get a page of transactions' data and effects based on the provided
@@ -11706,7 +10890,7 @@ func (_self *GraphQlClient) ChainId() (string, error) {
 // Get the [`CheckpointSummary`] for a given checkpoint digest or
 // checkpoint id. If none is provided, it will use the last known
 // checkpoint id.
-func (_self *GraphQlClient) Checkpoint(digest **CheckpointContentsDigest, seqNum *uint64) (**CheckpointSummary, error) {
+func (_self *GraphQlClient) Checkpoint(digest **Digest, seqNum *uint64) (**CheckpointSummary, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -11723,7 +10907,7 @@ func (_self *GraphQlClient) Checkpoint(digest **CheckpointContentsDigest, seqNum
 			return FfiConverterOptionalCheckpointSummaryINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoint(
-		_pointer,FfiConverterOptionalCheckpointContentsDigestINSTANCE.Lower(digest), FfiConverterOptionalUint64INSTANCE.Lower(seqNum)),
+		_pointer,FfiConverterOptionalDigestINSTANCE.Lower(digest), FfiConverterOptionalUint64INSTANCE.Lower(seqNum)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12867,7 +12051,7 @@ func (_self *GraphQlClient) TotalTransactionBlocks() (*uint64, error) {
 
 // The total number of transaction blocks in the network by the end of the
 // provided checkpoint digest.
-func (_self *GraphQlClient) TotalTransactionBlocksByDigest(digest *CheckpointContentsDigest) (*uint64, error) {
+func (_self *GraphQlClient) TotalTransactionBlocksByDigest(digest *Digest) (*uint64, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12884,7 +12068,7 @@ func (_self *GraphQlClient) TotalTransactionBlocksByDigest(digest *CheckpointCon
 			return FfiConverterOptionalUint64INSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_total_transaction_blocks_by_digest(
-		_pointer,FfiConverterCheckpointContentsDigestINSTANCE.Lower(digest)),
+		_pointer,FfiConverterDigestINSTANCE.Lower(digest)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12932,7 +12116,7 @@ func (_self *GraphQlClient) TotalTransactionBlocksBySeqNum(seqNum uint64) (*uint
 }
 
 // Get a transaction by its digest.
-func (_self *GraphQlClient) Transaction(digest *TransactionDigest) (*SignedTransaction, error) {
+func (_self *GraphQlClient) Transaction(digest *Digest) (*SignedTransaction, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12949,7 +12133,7 @@ func (_self *GraphQlClient) Transaction(digest *TransactionDigest) (*SignedTrans
 			return FfiConverterOptionalSignedTransactionINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction(
-		_pointer,FfiConverterTransactionDigestINSTANCE.Lower(digest)),
+		_pointer,FfiConverterDigestINSTANCE.Lower(digest)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12964,7 +12148,7 @@ func (_self *GraphQlClient) Transaction(digest *TransactionDigest) (*SignedTrans
 }
 
 // Get a transaction's data and effects by its digest.
-func (_self *GraphQlClient) TransactionDataEffects(digest *TransactionDigest) (*TransactionDataEffects, error) {
+func (_self *GraphQlClient) TransactionDataEffects(digest *Digest) (*TransactionDataEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12981,7 +12165,7 @@ func (_self *GraphQlClient) TransactionDataEffects(digest *TransactionDigest) (*
 			return FfiConverterOptionalTransactionDataEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction_data_effects(
-		_pointer,FfiConverterTransactionDigestINSTANCE.Lower(digest)),
+		_pointer,FfiConverterDigestINSTANCE.Lower(digest)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12996,7 +12180,7 @@ func (_self *GraphQlClient) TransactionDataEffects(digest *TransactionDigest) (*
 }
 
 // Get a transaction's effects by its digest.
-func (_self *GraphQlClient) TransactionEffects(digest *TransactionDigest) (**TransactionEffects, error) {
+func (_self *GraphQlClient) TransactionEffects(digest *Digest) (**TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -13013,7 +12197,7 @@ func (_self *GraphQlClient) TransactionEffects(digest *TransactionDigest) (**Tra
 			return FfiConverterOptionalTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction_effects(
-		_pointer,FfiConverterTransactionDigestINSTANCE.Lower(digest)),
+		_pointer,FfiConverterDigestINSTANCE.Lower(digest)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -15121,7 +14305,7 @@ type ObjectInterface interface {
 	// Calculate the digest of this `Object`
 	//
 	// This is done by hashing the BCS bytes of this `Object` prefixed
-	Digest() *ObjectDigest
+	Digest() *Digest
 	// Return this object's id
 	ObjectId() *ObjectId
 	// Return this object's type
@@ -15129,7 +14313,7 @@ type ObjectInterface interface {
 	// Return this object's owner
 	Owner() *Owner
 	// Return the digest of the transaction that last modified this object
-	PreviousTransaction() *TransactionDigest
+	PreviousTransaction() *Digest
 	// Return the storage rebate locked in this object
 	//
 	// Storage rebates are credited to the gas coin used in a transaction that
@@ -15150,9 +14334,9 @@ type ObjectInterface interface {
 type Object struct {
 	ffiObject FfiObject
 }
-func NewObject(data *ObjectData, owner *Owner, previousTransaction *TransactionDigest, storageRebate uint64) *Object {
+func NewObject(data *ObjectData, owner *Owner, previousTransaction *Digest, storageRebate uint64) *Object {
 	return FfiConverterObjectINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_object_new(FfiConverterObjectDataINSTANCE.Lower(data), FfiConverterOwnerINSTANCE.Lower(owner), FfiConverterTransactionDigestINSTANCE.Lower(previousTransaction), FfiConverterUint64INSTANCE.Lower(storageRebate),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_object_new(FfiConverterObjectDataINSTANCE.Lower(data), FfiConverterOwnerINSTANCE.Lower(owner), FfiConverterDigestINSTANCE.Lower(previousTransaction), FfiConverterUint64INSTANCE.Lower(storageRebate),_uniffiStatus)
 	}))
 }
 
@@ -15184,10 +14368,10 @@ func (_self *Object) Data() *ObjectData {
 // Calculate the digest of this `Object`
 //
 // This is done by hashing the BCS bytes of this `Object` prefixed
-func (_self *Object) Digest() *ObjectDigest {
+func (_self *Object) Digest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*Object")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterObjectDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_object_digest(
 		_pointer,_uniffiStatus)
 	}))
@@ -15224,10 +14408,10 @@ func (_self *Object) Owner() *Owner {
 }
 
 // Return the digest of the transaction that last modified this object
-func (_self *Object) PreviousTransaction() *TransactionDigest {
+func (_self *Object) PreviousTransaction() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*Object")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_object_previous_transaction(
 		_pointer,_uniffiStatus)
 	}))
@@ -15457,120 +14641,6 @@ func (_ FfiDestroyerObjectData) Destroy(value *ObjectData) {
 
 
 
-type ObjectDigestInterface interface {
-	ToBase58() string
-	ToBytes() []byte
-}
-type ObjectDigest struct {
-	ffiObject FfiObject
-}
-
-
-func ObjectDigestFromBase58(base58 string) (*ObjectDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_objectdigest_from_base58(FfiConverterStringINSTANCE.Lower(base58),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ObjectDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterObjectDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func ObjectDigestFromBytes(bytes []byte) (*ObjectDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_objectdigest_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *ObjectDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterObjectDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func ObjectDigestGenerate() *ObjectDigest {
-	return FfiConverterObjectDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_objectdigest_generate(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *ObjectDigest) ToBase58() string {
-	_pointer := _self.ffiObject.incrementPointer("*ObjectDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_objectdigest_to_base58(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *ObjectDigest) ToBytes() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*ObjectDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_objectdigest_to_bytes(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *ObjectDigest) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterObjectDigest struct {}
-
-var FfiConverterObjectDigestINSTANCE = FfiConverterObjectDigest{}
-
-
-func (c FfiConverterObjectDigest) Lift(pointer unsafe.Pointer) *ObjectDigest {
-	result := &ObjectDigest {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_objectdigest(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_objectdigest(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*ObjectDigest).Destroy)
-	return result
-}
-
-func (c FfiConverterObjectDigest) Read(reader io.Reader) *ObjectDigest {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterObjectDigest) Lower(value *ObjectDigest) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*ObjectDigest")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterObjectDigest) Write(writer io.Writer, value *ObjectDigest) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerObjectDigest struct {}
-
-func (_ FfiDestroyerObjectDigest) Destroy(value *ObjectDigest) {
-		value.Destroy()
-}
-
-
-
 // An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 // the IOTA blockchain.
 //
@@ -15621,13 +14691,11 @@ type ObjectId struct {
 }
 
 
-// Create an ObjectId from `TransactionDigest` and `count`.
-//
-// `count` is the number of objects that have been created during a
-// transactions.
-func ObjectIdDeriveId(digest *TransactionDigest, count uint64) *ObjectId {
+// Create an ObjectId from a transaction digest and the number of objects
+// that have been created during a transactions.
+func ObjectIdDeriveId(digest *Digest, count uint64) *ObjectId {
 	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(FfiConverterTransactionDigestINSTANCE.Lower(digest), FfiConverterUint64INSTANCE.Lower(count),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(FfiConverterDigestINSTANCE.Lower(digest), FfiConverterUint64INSTANCE.Lower(count),_uniffiStatus)
 	}))
 }
 
@@ -19343,7 +18411,7 @@ func (_ FfiDestroyerSystemPackage) Destroy(value *SystemPackage) {
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
 type TransactionInterface interface {
-	Digest() *TransactionDigest
+	Digest() *Digest
 	Expiration() TransactionExpiration
 	GasPayment() GasPayment
 	Kind() *TransactionKind
@@ -19373,10 +18441,10 @@ func NewTransaction(kind *TransactionKind, sender *Address, gasPayment GasPaymen
 
 
 
-func (_self *Transaction) Digest() *TransactionDigest {
+func (_self *Transaction) Digest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*Transaction")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transaction_digest(
 		_pointer,_uniffiStatus)
 	}))
@@ -19952,120 +19020,6 @@ func (_ FfiDestroyerTransactionBuilder) Destroy(value *TransactionBuilder) {
 
 
 
-type TransactionDigestInterface interface {
-	ToBase58() string
-	ToBytes() []byte
-}
-type TransactionDigest struct {
-	ffiObject FfiObject
-}
-
-
-func TransactionDigestFromBase58(base58 string) (*TransactionDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactiondigest_from_base58(FfiConverterStringINSTANCE.Lower(base58),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *TransactionDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterTransactionDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func TransactionDigestFromBytes(bytes []byte) (*TransactionDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactiondigest_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *TransactionDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterTransactionDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func TransactionDigestGenerate() *TransactionDigest {
-	return FfiConverterTransactionDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactiondigest_generate(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *TransactionDigest) ToBase58() string {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactiondigest_to_base58(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *TransactionDigest) ToBytes() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactiondigest_to_bytes(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *TransactionDigest) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterTransactionDigest struct {}
-
-var FfiConverterTransactionDigestINSTANCE = FfiConverterTransactionDigest{}
-
-
-func (c FfiConverterTransactionDigest) Lift(pointer unsafe.Pointer) *TransactionDigest {
-	result := &TransactionDigest {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_transactiondigest(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_transactiondigest(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*TransactionDigest).Destroy)
-	return result
-}
-
-func (c FfiConverterTransactionDigest) Read(reader io.Reader) *TransactionDigest {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterTransactionDigest) Lower(value *TransactionDigest) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*TransactionDigest")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterTransactionDigest) Write(writer io.Writer, value *TransactionDigest) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerTransactionDigest struct {}
-
-func (_ FfiDestroyerTransactionDigest) Destroy(value *TransactionDigest) {
-		value.Destroy()
-}
-
-
-
 // The output or effects of executing a transaction
 //
 // # BCS
@@ -20078,7 +19032,7 @@ func (_ FfiDestroyerTransactionDigest) Destroy(value *TransactionDigest) {
 // ```
 type TransactionEffectsInterface interface {
 	AsV1() TransactionEffectsV1
-	Digest() *TransactionEffectsDigest
+	Digest() *Digest
 	IsV1() bool
 }
 // The output or effects of executing a transaction
@@ -20115,10 +19069,10 @@ func (_self *TransactionEffects) AsV1() TransactionEffectsV1 {
 	}))
 }
 
-func (_self *TransactionEffects) Digest() *TransactionEffectsDigest {
+func (_self *TransactionEffects) Digest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionEffects")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionEffectsDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactioneffects_digest(
 		_pointer,_uniffiStatus)
 	}))
@@ -20184,120 +19138,6 @@ func (_ FfiDestroyerTransactionEffects) Destroy(value *TransactionEffects) {
 
 
 
-type TransactionEffectsDigestInterface interface {
-	ToBase58() string
-	ToBytes() []byte
-}
-type TransactionEffectsDigest struct {
-	ffiObject FfiObject
-}
-
-
-func TransactionEffectsDigestFromBase58(base58 string) (*TransactionEffectsDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactioneffectsdigest_from_base58(FfiConverterStringINSTANCE.Lower(base58),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *TransactionEffectsDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterTransactionEffectsDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func TransactionEffectsDigestFromBytes(bytes []byte) (*TransactionEffectsDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactioneffectsdigest_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *TransactionEffectsDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterTransactionEffectsDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func TransactionEffectsDigestGenerate() *TransactionEffectsDigest {
-	return FfiConverterTransactionEffectsDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactioneffectsdigest_generate(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *TransactionEffectsDigest) ToBase58() string {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionEffectsDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactioneffectsdigest_to_base58(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *TransactionEffectsDigest) ToBytes() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionEffectsDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactioneffectsdigest_to_bytes(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *TransactionEffectsDigest) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterTransactionEffectsDigest struct {}
-
-var FfiConverterTransactionEffectsDigestINSTANCE = FfiConverterTransactionEffectsDigest{}
-
-
-func (c FfiConverterTransactionEffectsDigest) Lift(pointer unsafe.Pointer) *TransactionEffectsDigest {
-	result := &TransactionEffectsDigest {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_transactioneffectsdigest(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_transactioneffectsdigest(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*TransactionEffectsDigest).Destroy)
-	return result
-}
-
-func (c FfiConverterTransactionEffectsDigest) Read(reader io.Reader) *TransactionEffectsDigest {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterTransactionEffectsDigest) Lower(value *TransactionEffectsDigest) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*TransactionEffectsDigest")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterTransactionEffectsDigest) Write(writer io.Writer, value *TransactionEffectsDigest) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerTransactionEffectsDigest struct {}
-
-func (_ FfiDestroyerTransactionEffectsDigest) Destroy(value *TransactionEffectsDigest) {
-		value.Destroy()
-}
-
-
-
 // Events emitted during the successful execution of a transaction
 //
 // # BCS
@@ -20308,7 +19148,7 @@ func (_ FfiDestroyerTransactionEffectsDigest) Destroy(value *TransactionEffectsD
 // transaction-events = vector event
 // ```
 type TransactionEventsInterface interface {
-	Digest() *TransactionEventsDigest
+	Digest() *Digest
 	Events() []Event
 }
 // Events emitted during the successful execution of a transaction
@@ -20332,10 +19172,10 @@ func NewTransactionEvents(events []Event) *TransactionEvents {
 
 
 
-func (_self *TransactionEvents) Digest() *TransactionEventsDigest {
+func (_self *TransactionEvents) Digest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionEvents")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionEventsDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest(
 		_pointer,_uniffiStatus)
 	}))
@@ -20398,120 +19238,6 @@ func (c FfiConverterTransactionEvents) Write(writer io.Writer, value *Transactio
 type FfiDestroyerTransactionEvents struct {}
 
 func (_ FfiDestroyerTransactionEvents) Destroy(value *TransactionEvents) {
-		value.Destroy()
-}
-
-
-
-type TransactionEventsDigestInterface interface {
-	ToBase58() string
-	ToBytes() []byte
-}
-type TransactionEventsDigest struct {
-	ffiObject FfiObject
-}
-
-
-func TransactionEventsDigestFromBase58(base58 string) (*TransactionEventsDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactioneventsdigest_from_base58(FfiConverterStringINSTANCE.Lower(base58),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *TransactionEventsDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterTransactionEventsDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func TransactionEventsDigestFromBytes(bytes []byte) (*TransactionEventsDigest, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactioneventsdigest_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *TransactionEventsDigest
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterTransactionEventsDigestINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func TransactionEventsDigestGenerate() *TransactionEventsDigest {
-	return FfiConverterTransactionEventsDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactioneventsdigest_generate(_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *TransactionEventsDigest) ToBase58() string {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionEventsDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactioneventsdigest_to_base58(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *TransactionEventsDigest) ToBytes() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionEventsDigest")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactioneventsdigest_to_bytes(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *TransactionEventsDigest) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterTransactionEventsDigest struct {}
-
-var FfiConverterTransactionEventsDigestINSTANCE = FfiConverterTransactionEventsDigest{}
-
-
-func (c FfiConverterTransactionEventsDigest) Lift(pointer unsafe.Pointer) *TransactionEventsDigest {
-	result := &TransactionEventsDigest {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_transactioneventsdigest(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_transactioneventsdigest(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*TransactionEventsDigest).Destroy)
-	return result
-}
-
-func (c FfiConverterTransactionEventsDigest) Read(reader io.Reader) *TransactionEventsDigest {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterTransactionEventsDigest) Lower(value *TransactionEventsDigest) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*TransactionEventsDigest")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterTransactionEventsDigest) Write(writer io.Writer, value *TransactionEventsDigest) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerTransactionEventsDigest struct {}
-
-func (_ FfiDestroyerTransactionEventsDigest) Destroy(value *TransactionEventsDigest) {
 		value.Destroy()
 }
 
@@ -21116,7 +19842,7 @@ type UnresolvedInputInterface interface {
 	// by value.
 	ByVal() *UnresolvedInput
 	// Set the specified digest.
-	WithDigest(digest *ObjectDigest) *UnresolvedInput
+	WithDigest(digest *Digest) *UnresolvedInput
 	// Set the object kind to immutable.
 	WithImmutableKind() *UnresolvedInput
 	// Set the initial shared version.
@@ -21162,23 +19888,23 @@ func UnresolvedInputFromObjectId(objectId *ObjectId) *UnresolvedInput {
 }
 
 // Return an immutable kind of object with all required fields.
-func UnresolvedInputNewImmutable(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
+func UnresolvedInputNewImmutable(objectId *ObjectId, version uint64, digest *Digest) *UnresolvedInput {
 	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterDigestINSTANCE.Lower(digest),_uniffiStatus)
 	}))
 }
 
 // Return an owned kind of object with all required fields.
-func UnresolvedInputNewOwned(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
+func UnresolvedInputNewOwned(objectId *ObjectId, version uint64, digest *Digest) *UnresolvedInput {
 	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterDigestINSTANCE.Lower(digest),_uniffiStatus)
 	}))
 }
 
 // Return a receiving kind of object with all required fields.
-func UnresolvedInputNewReceiving(objectId *ObjectId, version uint64, digest *ObjectDigest) *UnresolvedInput {
+func UnresolvedInputNewReceiving(objectId *ObjectId, version uint64, digest *Digest) *UnresolvedInput {
 	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterDigestINSTANCE.Lower(digest),_uniffiStatus)
 	}))
 }
 
@@ -21229,12 +19955,12 @@ func (_self *UnresolvedInput) ByVal() *UnresolvedInput {
 }
 
 // Set the specified digest.
-func (_self *UnresolvedInput) WithDigest(digest *ObjectDigest) *UnresolvedInput {
+func (_self *UnresolvedInput) WithDigest(digest *Digest) *UnresolvedInput {
 	_pointer := _self.ffiObject.incrementPointer("*UnresolvedInput")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_digest(
-		_pointer,FfiConverterObjectDigestINSTANCE.Lower(digest),_uniffiStatus)
+		_pointer,FfiConverterDigestINSTANCE.Lower(digest),_uniffiStatus)
 	}))
 }
 
@@ -22283,10 +21009,16 @@ type ZkLoginInputsInterface interface {
 type ZkLoginInputs struct {
 	ffiObject FfiObject
 }
-func NewZkLoginInputs(proofPoints *ZkLoginProof, issBase64Details ZkLoginClaim, headerBase64 string, addressSeed *Bn254FieldElement) *ZkLoginInputs {
-	return FfiConverterZkLoginInputsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+func NewZkLoginInputs(proofPoints *ZkLoginProof, issBase64Details ZkLoginClaim, headerBase64 string, addressSeed *Bn254FieldElement) (*ZkLoginInputs, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(FfiConverterZkLoginProofINSTANCE.Lower(proofPoints), FfiConverterZkLoginClaimINSTANCE.Lower(issBase64Details), FfiConverterStringINSTANCE.Lower(headerBase64), FfiConverterBn254FieldElementINSTANCE.Lower(addressSeed),_uniffiStatus)
-	}))
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ZkLoginInputs
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterZkLoginInputsINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 
@@ -23147,6 +21879,8 @@ func (_ FfiDestroyerCheckpointSummaryPage) Destroy(value CheckpointSummaryPage) 
 }
 // The coin metadata associated with the given coin type.
 type CoinMetadata struct {
+	// The CoinMetadata object ID.
+	Address *ObjectId
 	// The number of decimal places used to represent the token.
 	Decimals *int32
 	// Optional description of the token, provided by the creator of the token.
@@ -23164,6 +21898,7 @@ type CoinMetadata struct {
 }
 
 func (r *CoinMetadata) Destroy() {
+		FfiDestroyerObjectId{}.Destroy(r.Address);
 		FfiDestroyerOptionalInt32{}.Destroy(r.Decimals);
 		FfiDestroyerOptionalString{}.Destroy(r.Description);
 		FfiDestroyerOptionalString{}.Destroy(r.IconUrl);
@@ -23183,6 +21918,7 @@ func (c FfiConverterCoinMetadata) Lift(rb RustBufferI) CoinMetadata {
 
 func (c FfiConverterCoinMetadata) Read(reader io.Reader) CoinMetadata {
 	return CoinMetadata {
+			FfiConverterObjectIdINSTANCE.Read(reader),
 			FfiConverterOptionalInt32INSTANCE.Read(reader),
 			FfiConverterOptionalStringINSTANCE.Read(reader),
 			FfiConverterOptionalStringINSTANCE.Read(reader),
@@ -23198,6 +21934,7 @@ func (c FfiConverterCoinMetadata) Lower(value CoinMetadata) C.RustBuffer {
 }
 
 func (c FfiConverterCoinMetadata) Write(writer io.Writer, value CoinMetadata) {
+		FfiConverterObjectIdINSTANCE.Write(writer, value.Address);
 		FfiConverterOptionalInt32INSTANCE.Write(writer, value.Decimals);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.Description);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.IconUrl);
@@ -25024,13 +23761,13 @@ func (_ FfiDestroyerObjectRef) Destroy(value ObjectRef) {
 type ObjectReference struct {
 	ObjectId *ObjectId
 	Version uint64
-	Digest *ObjectDigest
+	Digest *Digest
 }
 
 func (r *ObjectReference) Destroy() {
 		FfiDestroyerObjectId{}.Destroy(r.ObjectId);
 		FfiDestroyerUint64{}.Destroy(r.Version);
-		FfiDestroyerObjectDigest{}.Destroy(r.Digest);
+		FfiDestroyerDigest{}.Destroy(r.Digest);
 }
 
 type FfiConverterObjectReference struct {}
@@ -25045,7 +23782,7 @@ func (c FfiConverterObjectReference) Read(reader io.Reader) ObjectReference {
 	return ObjectReference {
 			FfiConverterObjectIdINSTANCE.Read(reader),
 			FfiConverterUint64INSTANCE.Read(reader),
-			FfiConverterObjectDigestINSTANCE.Read(reader),
+			FfiConverterDigestINSTANCE.Read(reader),
 	}
 }
 
@@ -25056,7 +23793,7 @@ func (c FfiConverterObjectReference) Lower(value ObjectReference) C.RustBuffer {
 func (c FfiConverterObjectReference) Write(writer io.Writer, value ObjectReference) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.ObjectId);
 		FfiConverterUint64INSTANCE.Write(writer, value.Version);
-		FfiConverterObjectDigestINSTANCE.Write(writer, value.Digest);
+		FfiConverterDigestINSTANCE.Write(writer, value.Digest);
 }
 
 type FfiDestroyerObjectReference struct {}
@@ -25751,16 +24488,16 @@ type TransactionEffectsV1 struct {
 	// The gas used by this transaction
 	GasUsed GasCostSummary
 	// The transaction digest
-	TransactionDigest *TransactionDigest
+	TransactionDigest *Digest
 	// The updated gas object reference, as an index into the `changed_objects`
 	// vector. Having a dedicated field for convenient access.
 	// System transaction that don't require gas will leave this as None.
 	GasObjectIndex *uint32
 	// The digest of the events emitted during execution,
 	// can be None if the transaction does not emit any event.
-	EventsDigest **TransactionEventsDigest
+	EventsDigest **Digest
 	// The set of transaction digests this transaction depends on.
-	Dependencies []*TransactionDigest
+	Dependencies []*Digest
 	// The version number of all the written Move objects by this transaction.
 	LamportVersion uint64
 	// Objects whose state are changed in the object store.
@@ -25775,21 +24512,21 @@ type TransactionEffectsV1 struct {
 	// effects but are stored separately. Storing it separately allows us
 	// to avoid bloating the effects with data that are not critical.
 	// It also provides more flexibility on the format and type of the data.
-	AuxiliaryDataDigest **EffectsAuxiliaryDataDigest
+	AuxiliaryDataDigest **Digest
 }
 
 func (r *TransactionEffectsV1) Destroy() {
 		FfiDestroyerExecutionStatus{}.Destroy(r.Status);
 		FfiDestroyerUint64{}.Destroy(r.Epoch);
 		FfiDestroyerGasCostSummary{}.Destroy(r.GasUsed);
-		FfiDestroyerTransactionDigest{}.Destroy(r.TransactionDigest);
+		FfiDestroyerDigest{}.Destroy(r.TransactionDigest);
 		FfiDestroyerOptionalUint32{}.Destroy(r.GasObjectIndex);
-		FfiDestroyerOptionalTransactionEventsDigest{}.Destroy(r.EventsDigest);
-		FfiDestroyerSequenceTransactionDigest{}.Destroy(r.Dependencies);
+		FfiDestroyerOptionalDigest{}.Destroy(r.EventsDigest);
+		FfiDestroyerSequenceDigest{}.Destroy(r.Dependencies);
 		FfiDestroyerUint64{}.Destroy(r.LamportVersion);
 		FfiDestroyerSequenceChangedObject{}.Destroy(r.ChangedObjects);
 		FfiDestroyerSequenceUnchangedSharedObject{}.Destroy(r.UnchangedSharedObjects);
-		FfiDestroyerOptionalEffectsAuxiliaryDataDigest{}.Destroy(r.AuxiliaryDataDigest);
+		FfiDestroyerOptionalDigest{}.Destroy(r.AuxiliaryDataDigest);
 }
 
 type FfiConverterTransactionEffectsV1 struct {}
@@ -25805,14 +24542,14 @@ func (c FfiConverterTransactionEffectsV1) Read(reader io.Reader) TransactionEffe
 			FfiConverterExecutionStatusINSTANCE.Read(reader),
 			FfiConverterUint64INSTANCE.Read(reader),
 			FfiConverterGasCostSummaryINSTANCE.Read(reader),
-			FfiConverterTransactionDigestINSTANCE.Read(reader),
+			FfiConverterDigestINSTANCE.Read(reader),
 			FfiConverterOptionalUint32INSTANCE.Read(reader),
-			FfiConverterOptionalTransactionEventsDigestINSTANCE.Read(reader),
-			FfiConverterSequenceTransactionDigestINSTANCE.Read(reader),
+			FfiConverterOptionalDigestINSTANCE.Read(reader),
+			FfiConverterSequenceDigestINSTANCE.Read(reader),
 			FfiConverterUint64INSTANCE.Read(reader),
 			FfiConverterSequenceChangedObjectINSTANCE.Read(reader),
 			FfiConverterSequenceUnchangedSharedObjectINSTANCE.Read(reader),
-			FfiConverterOptionalEffectsAuxiliaryDataDigestINSTANCE.Read(reader),
+			FfiConverterOptionalDigestINSTANCE.Read(reader),
 	}
 }
 
@@ -25824,14 +24561,14 @@ func (c FfiConverterTransactionEffectsV1) Write(writer io.Writer, value Transact
 		FfiConverterExecutionStatusINSTANCE.Write(writer, value.Status);
 		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
 		FfiConverterGasCostSummaryINSTANCE.Write(writer, value.GasUsed);
-		FfiConverterTransactionDigestINSTANCE.Write(writer, value.TransactionDigest);
+		FfiConverterDigestINSTANCE.Write(writer, value.TransactionDigest);
 		FfiConverterOptionalUint32INSTANCE.Write(writer, value.GasObjectIndex);
-		FfiConverterOptionalTransactionEventsDigestINSTANCE.Write(writer, value.EventsDigest);
-		FfiConverterSequenceTransactionDigestINSTANCE.Write(writer, value.Dependencies);
+		FfiConverterOptionalDigestINSTANCE.Write(writer, value.EventsDigest);
+		FfiConverterSequenceDigestINSTANCE.Write(writer, value.Dependencies);
 		FfiConverterUint64INSTANCE.Write(writer, value.LamportVersion);
 		FfiConverterSequenceChangedObjectINSTANCE.Write(writer, value.ChangedObjects);
 		FfiConverterSequenceUnchangedSharedObjectINSTANCE.Write(writer, value.UnchangedSharedObjects);
-		FfiConverterOptionalEffectsAuxiliaryDataDigestINSTANCE.Write(writer, value.AuxiliaryDataDigest);
+		FfiConverterOptionalDigestINSTANCE.Write(writer, value.AuxiliaryDataDigest);
 }
 
 type FfiDestroyerTransactionEffectsV1 struct {}
@@ -27741,13 +26478,13 @@ func (e ObjectInMissing) Destroy() {
 // The old version, digest and owner.
 type ObjectInData struct {
 	Version uint64
-	Digest *ObjectDigest
+	Digest *Digest
 	Owner *Owner
 }
 
 func (e ObjectInData) Destroy() {
 		FfiDestroyerUint64{}.Destroy(e.Version);
-		FfiDestroyerObjectDigest{}.Destroy(e.Digest);
+		FfiDestroyerDigest{}.Destroy(e.Digest);
 		FfiDestroyerOwner{}.Destroy(e.Owner);
 }
 
@@ -27771,7 +26508,7 @@ func (FfiConverterObjectIn) Read(reader io.Reader) ObjectIn {
 		case 2:
 			return ObjectInData{
 				FfiConverterUint64INSTANCE.Read(reader),
-				FfiConverterObjectDigestINSTANCE.Read(reader),
+				FfiConverterDigestINSTANCE.Read(reader),
 				FfiConverterOwnerINSTANCE.Read(reader),
 			};
 		default:
@@ -27786,7 +26523,7 @@ func (FfiConverterObjectIn) Write(writer io.Writer, value ObjectIn) {
 		case ObjectInData:
 			writeInt32(writer, 2)
 			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
-			FfiConverterObjectDigestINSTANCE.Write(writer, variant_value.Digest)
+			FfiConverterDigestINSTANCE.Write(writer, variant_value.Digest)
 			FfiConverterOwnerINSTANCE.Write(writer, variant_value.Owner)
 		default:
 			_ = variant_value
@@ -27828,24 +26565,24 @@ func (e ObjectOutMissing) Destroy() {
 }
 // Any written object, including all of mutated, created, unwrapped today.
 type ObjectOutObjectWrite struct {
-	Digest *ObjectDigest
+	Digest *Digest
 	Owner *Owner
 }
 
 func (e ObjectOutObjectWrite) Destroy() {
-		FfiDestroyerObjectDigest{}.Destroy(e.Digest);
+		FfiDestroyerDigest{}.Destroy(e.Digest);
 		FfiDestroyerOwner{}.Destroy(e.Owner);
 }
 // Packages writes need to be tracked separately with version because
 // we don't use lamport version for package publish and upgrades.
 type ObjectOutPackageWrite struct {
 	Version uint64
-	Digest *ObjectDigest
+	Digest *Digest
 }
 
 func (e ObjectOutPackageWrite) Destroy() {
 		FfiDestroyerUint64{}.Destroy(e.Version);
-		FfiDestroyerObjectDigest{}.Destroy(e.Digest);
+		FfiDestroyerDigest{}.Destroy(e.Digest);
 }
 
 type FfiConverterObjectOut struct {}
@@ -27867,13 +26604,13 @@ func (FfiConverterObjectOut) Read(reader io.Reader) ObjectOut {
 			};
 		case 2:
 			return ObjectOutObjectWrite{
-				FfiConverterObjectDigestINSTANCE.Read(reader),
+				FfiConverterDigestINSTANCE.Read(reader),
 				FfiConverterOwnerINSTANCE.Read(reader),
 			};
 		case 3:
 			return ObjectOutPackageWrite{
 				FfiConverterUint64INSTANCE.Read(reader),
-				FfiConverterObjectDigestINSTANCE.Read(reader),
+				FfiConverterDigestINSTANCE.Read(reader),
 			};
 		default:
 			panic(fmt.Sprintf("invalid enum value %v in FfiConverterObjectOut.Read()", id));
@@ -27886,12 +26623,12 @@ func (FfiConverterObjectOut) Write(writer io.Writer, value ObjectOut) {
 			writeInt32(writer, 1)
 		case ObjectOutObjectWrite:
 			writeInt32(writer, 2)
-			FfiConverterObjectDigestINSTANCE.Write(writer, variant_value.Digest)
+			FfiConverterDigestINSTANCE.Write(writer, variant_value.Digest)
 			FfiConverterOwnerINSTANCE.Write(writer, variant_value.Owner)
 		case ObjectOutPackageWrite:
 			writeInt32(writer, 3)
 			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
-			FfiConverterObjectDigestINSTANCE.Write(writer, variant_value.Digest)
+			FfiConverterDigestINSTANCE.Write(writer, variant_value.Digest)
 		default:
 			_ = variant_value
 			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterObjectOut.Write", value))
@@ -28389,12 +27126,12 @@ type UnchangedSharedKind interface {
 // verify untrusted read.
 type UnchangedSharedKindReadOnlyRoot struct {
 	Version uint64
-	Digest *ObjectDigest
+	Digest *Digest
 }
 
 func (e UnchangedSharedKindReadOnlyRoot) Destroy() {
 		FfiDestroyerUint64{}.Destroy(e.Version);
-		FfiDestroyerObjectDigest{}.Destroy(e.Digest);
+		FfiDestroyerDigest{}.Destroy(e.Digest);
 }
 // Deleted shared objects that appear mutably/owned in the input.
 type UnchangedSharedKindMutateDeleted struct {
@@ -28446,7 +27183,7 @@ func (FfiConverterUnchangedSharedKind) Read(reader io.Reader) UnchangedSharedKin
 		case 1:
 			return UnchangedSharedKindReadOnlyRoot{
 				FfiConverterUint64INSTANCE.Read(reader),
-				FfiConverterObjectDigestINSTANCE.Read(reader),
+				FfiConverterDigestINSTANCE.Read(reader),
 			};
 		case 2:
 			return UnchangedSharedKindMutateDeleted{
@@ -28473,7 +27210,7 @@ func (FfiConverterUnchangedSharedKind) Write(writer io.Writer, value UnchangedSh
 		case UnchangedSharedKindReadOnlyRoot:
 			writeInt32(writer, 1)
 			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
-			FfiConverterObjectDigestINSTANCE.Write(writer, variant_value.Digest)
+			FfiConverterDigestINSTANCE.Write(writer, variant_value.Digest)
 		case UnchangedSharedKindMutateDeleted:
 			writeInt32(writer, 2)
 			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
@@ -28830,80 +27567,6 @@ func (_ FfiDestroyerOptionalBatchSendStatus) Destroy(value **BatchSendStatus) {
 	}
 }
 
-type FfiConverterOptionalCheckpointContentsDigest struct{}
-
-var FfiConverterOptionalCheckpointContentsDigestINSTANCE = FfiConverterOptionalCheckpointContentsDigest{}
-
-func (c FfiConverterOptionalCheckpointContentsDigest) Lift(rb RustBufferI) **CheckpointContentsDigest {
-	return LiftFromRustBuffer[**CheckpointContentsDigest](c, rb)
-}
-
-func (_ FfiConverterOptionalCheckpointContentsDigest) Read(reader io.Reader) **CheckpointContentsDigest {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterCheckpointContentsDigestINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalCheckpointContentsDigest) Lower(value **CheckpointContentsDigest) C.RustBuffer {
-	return LowerIntoRustBuffer[**CheckpointContentsDigest](c, value)
-}
-
-func (_ FfiConverterOptionalCheckpointContentsDigest) Write(writer io.Writer, value **CheckpointContentsDigest) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterCheckpointContentsDigestINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalCheckpointContentsDigest struct {}
-
-func (_ FfiDestroyerOptionalCheckpointContentsDigest) Destroy(value **CheckpointContentsDigest) {
-	if value != nil {
-		FfiDestroyerCheckpointContentsDigest{}.Destroy(*value)
-	}
-}
-
-type FfiConverterOptionalCheckpointDigest struct{}
-
-var FfiConverterOptionalCheckpointDigestINSTANCE = FfiConverterOptionalCheckpointDigest{}
-
-func (c FfiConverterOptionalCheckpointDigest) Lift(rb RustBufferI) **CheckpointDigest {
-	return LiftFromRustBuffer[**CheckpointDigest](c, rb)
-}
-
-func (_ FfiConverterOptionalCheckpointDigest) Read(reader io.Reader) **CheckpointDigest {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterCheckpointDigestINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalCheckpointDigest) Lower(value **CheckpointDigest) C.RustBuffer {
-	return LowerIntoRustBuffer[**CheckpointDigest](c, value)
-}
-
-func (_ FfiConverterOptionalCheckpointDigest) Write(writer io.Writer, value **CheckpointDigest) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterCheckpointDigestINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalCheckpointDigest struct {}
-
-func (_ FfiDestroyerOptionalCheckpointDigest) Destroy(value **CheckpointDigest) {
-	if value != nil {
-		FfiDestroyerCheckpointDigest{}.Destroy(*value)
-	}
-}
-
 type FfiConverterOptionalCheckpointSummary struct{}
 
 var FfiConverterOptionalCheckpointSummaryINSTANCE = FfiConverterOptionalCheckpointSummary{}
@@ -28938,6 +27601,43 @@ type FfiDestroyerOptionalCheckpointSummary struct {}
 func (_ FfiDestroyerOptionalCheckpointSummary) Destroy(value **CheckpointSummary) {
 	if value != nil {
 		FfiDestroyerCheckpointSummary{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalDigest struct{}
+
+var FfiConverterOptionalDigestINSTANCE = FfiConverterOptionalDigest{}
+
+func (c FfiConverterOptionalDigest) Lift(rb RustBufferI) **Digest {
+	return LiftFromRustBuffer[**Digest](c, rb)
+}
+
+func (_ FfiConverterOptionalDigest) Read(reader io.Reader) **Digest {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterDigestINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalDigest) Lower(value **Digest) C.RustBuffer {
+	return LowerIntoRustBuffer[**Digest](c, value)
+}
+
+func (_ FfiConverterOptionalDigest) Write(writer io.Writer, value **Digest) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterDigestINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalDigest struct {}
+
+func (_ FfiDestroyerOptionalDigest) Destroy(value **Digest) {
+	if value != nil {
+		FfiDestroyerDigest{}.Destroy(*value)
 	}
 }
 
@@ -29012,43 +27712,6 @@ type FfiDestroyerOptionalEd25519Signature struct {}
 func (_ FfiDestroyerOptionalEd25519Signature) Destroy(value **Ed25519Signature) {
 	if value != nil {
 		FfiDestroyerEd25519Signature{}.Destroy(*value)
-	}
-}
-
-type FfiConverterOptionalEffectsAuxiliaryDataDigest struct{}
-
-var FfiConverterOptionalEffectsAuxiliaryDataDigestINSTANCE = FfiConverterOptionalEffectsAuxiliaryDataDigest{}
-
-func (c FfiConverterOptionalEffectsAuxiliaryDataDigest) Lift(rb RustBufferI) **EffectsAuxiliaryDataDigest {
-	return LiftFromRustBuffer[**EffectsAuxiliaryDataDigest](c, rb)
-}
-
-func (_ FfiConverterOptionalEffectsAuxiliaryDataDigest) Read(reader io.Reader) **EffectsAuxiliaryDataDigest {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterEffectsAuxiliaryDataDigestINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalEffectsAuxiliaryDataDigest) Lower(value **EffectsAuxiliaryDataDigest) C.RustBuffer {
-	return LowerIntoRustBuffer[**EffectsAuxiliaryDataDigest](c, value)
-}
-
-func (_ FfiConverterOptionalEffectsAuxiliaryDataDigest) Write(writer io.Writer, value **EffectsAuxiliaryDataDigest) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterEffectsAuxiliaryDataDigestINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalEffectsAuxiliaryDataDigest struct {}
-
-func (_ FfiDestroyerOptionalEffectsAuxiliaryDataDigest) Destroy(value **EffectsAuxiliaryDataDigest) {
-	if value != nil {
-		FfiDestroyerEffectsAuxiliaryDataDigest{}.Destroy(*value)
 	}
 }
 
@@ -29567,43 +28230,6 @@ type FfiDestroyerOptionalTransactionEffects struct {}
 func (_ FfiDestroyerOptionalTransactionEffects) Destroy(value **TransactionEffects) {
 	if value != nil {
 		FfiDestroyerTransactionEffects{}.Destroy(*value)
-	}
-}
-
-type FfiConverterOptionalTransactionEventsDigest struct{}
-
-var FfiConverterOptionalTransactionEventsDigestINSTANCE = FfiConverterOptionalTransactionEventsDigest{}
-
-func (c FfiConverterOptionalTransactionEventsDigest) Lift(rb RustBufferI) **TransactionEventsDigest {
-	return LiftFromRustBuffer[**TransactionEventsDigest](c, rb)
-}
-
-func (_ FfiConverterOptionalTransactionEventsDigest) Read(reader io.Reader) **TransactionEventsDigest {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterTransactionEventsDigestINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalTransactionEventsDigest) Lower(value **TransactionEventsDigest) C.RustBuffer {
-	return LowerIntoRustBuffer[**TransactionEventsDigest](c, value)
-}
-
-func (_ FfiConverterOptionalTransactionEventsDigest) Write(writer io.Writer, value **TransactionEventsDigest) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterTransactionEventsDigestINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalTransactionEventsDigest struct {}
-
-func (_ FfiDestroyerOptionalTransactionEventsDigest) Destroy(value **TransactionEventsDigest) {
-	if value != nil {
-		FfiDestroyerTransactionEventsDigest{}.Destroy(*value)
 	}
 }
 
@@ -31406,6 +30032,49 @@ func (FfiDestroyerSequenceCommand) Destroy(sequence []*Command) {
 	}
 }
 
+type FfiConverterSequenceDigest struct{}
+
+var FfiConverterSequenceDigestINSTANCE = FfiConverterSequenceDigest{}
+
+func (c FfiConverterSequenceDigest) Lift(rb RustBufferI) []*Digest {
+	return LiftFromRustBuffer[[]*Digest](c, rb)
+}
+
+func (c FfiConverterSequenceDigest) Read(reader io.Reader) []*Digest {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*Digest, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterDigestINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceDigest) Lower(value []*Digest) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*Digest](c, value)
+}
+
+func (c FfiConverterSequenceDigest) Write(writer io.Writer, value []*Digest) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*Digest is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterDigestINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceDigest struct {}
+
+func (FfiDestroyerSequenceDigest) Destroy(sequence []*Digest) {
+	for _, value := range sequence {
+		FfiDestroyerDigest{}.Destroy(value)
+	}
+}
+
 type FfiConverterSequenceEndOfEpochTransactionKind struct{}
 
 var FfiConverterSequenceEndOfEpochTransactionKindINSTANCE = FfiConverterSequenceEndOfEpochTransactionKind{}
@@ -31876,49 +30545,6 @@ type FfiDestroyerSequenceSystemPackage struct {}
 func (FfiDestroyerSequenceSystemPackage) Destroy(sequence []*SystemPackage) {
 	for _, value := range sequence {
 		FfiDestroyerSystemPackage{}.Destroy(value)
-	}
-}
-
-type FfiConverterSequenceTransactionDigest struct{}
-
-var FfiConverterSequenceTransactionDigestINSTANCE = FfiConverterSequenceTransactionDigest{}
-
-func (c FfiConverterSequenceTransactionDigest) Lift(rb RustBufferI) []*TransactionDigest {
-	return LiftFromRustBuffer[[]*TransactionDigest](c, rb)
-}
-
-func (c FfiConverterSequenceTransactionDigest) Read(reader io.Reader) []*TransactionDigest {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]*TransactionDigest, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterTransactionDigestINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceTransactionDigest) Lower(value []*TransactionDigest) C.RustBuffer {
-	return LowerIntoRustBuffer[[]*TransactionDigest](c, value)
-}
-
-func (c FfiConverterSequenceTransactionDigest) Write(writer io.Writer, value []*TransactionDigest) {
-	if len(value) > math.MaxInt32 {
-		panic("[]*TransactionDigest is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterTransactionDigestINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceTransactionDigest struct {}
-
-func (FfiDestroyerSequenceTransactionDigest) Destroy(sequence []*TransactionDigest) {
-	for _, value := range sequence {
-		FfiDestroyerTransactionDigest{}.Destroy(value)
 	}
 }
 
