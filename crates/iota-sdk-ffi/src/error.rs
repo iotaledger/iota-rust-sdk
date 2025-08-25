@@ -3,11 +3,9 @@
 
 use std::fmt;
 
-use uniffi::Error;
-
 pub type Result<T, E = SdkFfiError> = std::result::Result<T, E>;
 
-#[derive(Debug, Error)]
+#[derive(Debug, uniffi::Error)]
 #[uniffi(flat_error)]
 pub enum SdkFfiError {
     Generic(String),

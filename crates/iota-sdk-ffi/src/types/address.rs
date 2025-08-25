@@ -56,7 +56,7 @@ use crate::error::Result;
 /// ```text
 /// address = 32OCTET
 /// ```
-#[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Address(pub iota_types::Address);
 
 #[uniffi::export]

@@ -13,7 +13,7 @@ use crate::{error::Result, types::signature::SimpleSignature};
 macro_rules! impl_crypto_object {
     ($(#[$meta:meta])* $t:ident) => {
         $(#[$meta])*
-        #[derive(Copy, Clone, Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+        #[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
         pub struct $t(pub iota_types::$t);
 
         #[uniffi::export]

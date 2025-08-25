@@ -36,7 +36,7 @@ use crate::types::struct_tag::StructTag;
 /// type-tag-vector = %x06 type-tag
 /// type-tag-struct = %x07 struct-tag
 /// ```
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct TypeTag(pub iota_types::TypeTag);
 
 #[uniffi::export]

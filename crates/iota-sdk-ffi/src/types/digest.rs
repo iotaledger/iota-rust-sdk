@@ -7,15 +7,6 @@ macro_rules! impl_digest_wrapper {
     ($(#[$meta:meta])* $t:ident) => {
         $(#[$meta])*
         #[derive(
-            Copy,
-            Clone,
-            Debug,
-            Default,
-            Hash,
-            PartialEq,
-            Eq,
-            PartialOrd,
-            Ord,
             derive_more::From,
             derive_more::Deref,
             uniffi::Object,

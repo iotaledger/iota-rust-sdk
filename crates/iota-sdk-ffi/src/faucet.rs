@@ -81,8 +81,8 @@ impl FaucetClient {
     }
 }
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct FaucetReceipt(pub iota_graphql_client::faucet::FaucetReceipt);
 
-#[derive(Clone, Debug, derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, uniffi::Object)]
 pub struct BatchSendStatus(pub iota_graphql_client::faucet::BatchSendStatus);
