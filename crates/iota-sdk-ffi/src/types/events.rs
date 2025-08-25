@@ -5,7 +5,7 @@ use std::{str::FromStr, sync::Arc};
 
 use iota_types::{Identifier, StructTag};
 
-use crate::types::{address::Address, object::ObjectId};
+use crate::types::{address::Address, digest::TransactionEventsDigest, object::ObjectId};
 
 /// An event
 ///
@@ -54,5 +54,35 @@ impl From<Event> for iota_types::Event {
             type_: StructTag::from_str(&value.type_).unwrap(),
             contents: value.contents,
         }
+    }
+}
+
+/// Events emitted during the successful execution of a transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction-events = vector event
+/// ```
+#[derive(derive_more::From, uniffi::Object)]
+pub struct TransactionEvents(pub iota_types::TransactionEvents);
+
+#[uniffi::export]
+impl TransactionEvents {
+    #[uniffi::constructor]
+    pub fn new(events: Vec<Event>) -> Self {
+        Self(iota_types::TransactionEvents(
+            events.into_iter().map(Into::into).collect(),
+        ))
+    }
+
+    pub fn events(&self) -> Vec<Event> {
+        self.0.0.iter().cloned().map(Into::into).collect()
+    }
+
+    pub fn digest(&self) -> TransactionEventsDigest {
+        self.0.digest().into()
     }
 }

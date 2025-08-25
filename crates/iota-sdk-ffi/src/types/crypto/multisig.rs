@@ -5,10 +5,13 @@ use std::sync::Arc;
 
 use iota_types::SignatureScheme;
 
-use crate::types::crypto::{
-    Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
-    Secp256r1Signature,
-    zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
+use crate::types::{
+    address::Address,
+    crypto::{
+        Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
+        Secp256r1PublicKey, Secp256r1Signature,
+        zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
+    },
 };
 
 /// A signature from a member of a multisig committee.
@@ -45,8 +48,8 @@ impl MultisigMemberSignature {
             .map(Arc::new)
     }
 
-    pub fn as_ed25519(&self) -> Arc<Ed25519Signature> {
-        Arc::new((*self.0.as_ed25519()).into())
+    pub fn as_ed25519(&self) -> Ed25519Signature {
+        (*self.0.as_ed25519()).into()
     }
 
     pub fn is_secp256k1(&self) -> bool {
@@ -61,8 +64,8 @@ impl MultisigMemberSignature {
             .map(Arc::new)
     }
 
-    pub fn as_secp256k1(&self) -> Arc<Secp256k1Signature> {
-        Arc::new((*self.0.as_secp256k1()).into())
+    pub fn as_secp256k1(&self) -> Secp256k1Signature {
+        (*self.0.as_secp256k1()).into()
     }
 
     pub fn is_secp256r1(&self) -> bool {
@@ -77,8 +80,8 @@ impl MultisigMemberSignature {
             .map(Arc::new)
     }
 
-    pub fn as_secp256r1(&self) -> Arc<Secp256r1Signature> {
-        Arc::new((*self.0.as_secp256r1()).into())
+    pub fn as_secp256r1(&self) -> Secp256r1Signature {
+        (*self.0.as_secp256r1()).into()
     }
 
     pub fn is_zklogin(&self) -> bool {
@@ -93,8 +96,8 @@ impl MultisigMemberSignature {
             .map(Arc::new)
     }
 
-    pub fn as_zklogin(&self) -> Arc<ZkLoginAuthenticator> {
-        Arc::new(self.0.as_zklogin().clone().into())
+    pub fn as_zklogin(&self) -> ZkLoginAuthenticator {
+        self.0.as_zklogin().clone().into()
     }
 }
 
@@ -143,8 +146,8 @@ impl MultisigMemberPublicKey {
             .map(Arc::new)
     }
 
-    pub fn as_ed25519(&self) -> Arc<Ed25519PublicKey> {
-        Arc::new((*self.0.as_ed25519()).into())
+    pub fn as_ed25519(&self) -> Ed25519PublicKey {
+        (*self.0.as_ed25519()).into()
     }
 
     pub fn is_secp256k1(&self) -> bool {
@@ -159,8 +162,8 @@ impl MultisigMemberPublicKey {
             .map(Arc::new)
     }
 
-    pub fn as_secp256k1(&self) -> Arc<Secp256k1PublicKey> {
-        Arc::new((*self.0.as_secp256k1()).into())
+    pub fn as_secp256k1(&self) -> Secp256k1PublicKey {
+        (*self.0.as_secp256k1()).into()
     }
 
     pub fn is_secp256r1(&self) -> bool {
@@ -175,8 +178,8 @@ impl MultisigMemberPublicKey {
             .map(Arc::new)
     }
 
-    pub fn as_secp256r1(&self) -> Arc<Secp256r1PublicKey> {
-        Arc::new((*self.0.as_secp256r1()).into())
+    pub fn as_secp256r1(&self) -> Secp256r1PublicKey {
+        (*self.0.as_secp256r1()).into()
     }
 
     pub fn is_zklogin(&self) -> bool {
@@ -191,8 +194,8 @@ impl MultisigMemberPublicKey {
             .map(Arc::new)
     }
 
-    pub fn as_zklogin(&self) -> Arc<ZkLoginPublicIdentifier> {
-        Arc::new(self.0.as_zklogin().clone().into())
+    pub fn as_zklogin(&self) -> ZkLoginPublicIdentifier {
+        self.0.as_zklogin().clone().into()
     }
 }
 
@@ -342,6 +345,27 @@ impl MultisigCommittee {
     ///  - contains no duplicate members
     pub fn is_valid(&self) -> bool {
         self.0.is_valid()
+    }
+
+    /// Derive an `Address` from this MultisigCommittee.
+    ///
+    /// A MultiSig address
+    /// is defined as the 32-byte Blake2b hash of serializing the
+    /// `SignatureScheme` flag (0x03), the threshold (in little endian), and
+    /// the concatenation of all n flag, public keys and its weight.
+    ///
+    /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
+    /// || ... || flag_n || pk_n || weight_n)`.
+    ///
+    /// When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+    /// refers to the same input used when deriving the address using the
+    /// [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+    /// full 32-byte `address_seed` value).
+    ///
+    /// [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
+    /// [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
     }
 }
 

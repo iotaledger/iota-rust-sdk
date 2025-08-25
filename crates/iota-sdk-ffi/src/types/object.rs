@@ -15,6 +15,7 @@ use crate::{
         address::Address,
         digest::{ObjectDigest, TransactionDigest},
         struct_tag::{Identifier, StructTag},
+        type_tag::TypeTag,
     },
 };
 
@@ -64,6 +65,24 @@ impl ObjectId {
 
     pub fn to_hex(&self) -> String {
         self.0.as_address().to_hex()
+    }
+
+    /// Create an ObjectId from `TransactionDigest` and `count`.
+    ///
+    /// `count` is the number of objects that have been created during a
+    /// transactions.
+    #[uniffi::constructor]
+    pub fn derive_id(digest: &TransactionDigest, count: u64) -> Self {
+        Self(iota_types::ObjectId::derive_id(**digest, count))
+    }
+
+    /// Derive an ObjectId for a Dynamic Child Object.
+    ///
+    /// hash(parent || len(key) || key || key_type_tag)
+    pub fn derive_dynamic_child_id(&self, key_type_tag: &TypeTag, key_bytes: &[u8]) -> Self {
+        self.0
+            .derive_dynamic_child_id(&key_type_tag.0, key_bytes)
+            .into()
     }
 }
 
@@ -171,6 +190,13 @@ impl Object {
     /// deletes this object.
     pub fn storage_rebate(&self) -> u64 {
         self.0.storage_rebate
+    }
+
+    /// Calculate the digest of this `Object`
+    ///
+    /// This is done by hashing the BCS bytes of this `Object` prefixed
+    pub fn digest(&self) -> ObjectDigest {
+        self.0.digest().into()
     }
 }
 

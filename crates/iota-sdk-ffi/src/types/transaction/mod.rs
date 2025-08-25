@@ -12,7 +12,10 @@ use crate::types::{
     address::Address,
     checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
     crypto::Bls12381PublicKey,
-    digest::{CheckpointDigest, ConsensusCommitDigest, TransactionDigest, TransactionEventsDigest},
+    digest::{
+        CheckpointDigest, ConsensusCommitDigest, TransactionDigest, TransactionEffectsDigest,
+        TransactionEventsDigest,
+    },
     events::Event,
     execution_status::ExecutionStatus,
     object::{GenesisObject, ObjectId, ObjectReference, Version},
@@ -69,6 +72,14 @@ impl Transaction {
 
     pub fn expiration(&self) -> TransactionExpiration {
         self.0.expiration
+    }
+
+    pub fn digest(&self) -> TransactionDigest {
+        self.0.digest().into()
+    }
+
+    pub fn signing_digest(&self) -> Vec<u8> {
+        self.0.signing_digest().to_vec()
     }
 }
 
@@ -1453,6 +1464,10 @@ impl TransactionEffects {
 
     pub fn as_v1(&self) -> TransactionEffectsV1 {
         self.0.as_v1().clone().into()
+    }
+
+    pub fn digest(&self) -> TransactionEffectsDigest {
+        self.0.digest().into()
     }
 }
 

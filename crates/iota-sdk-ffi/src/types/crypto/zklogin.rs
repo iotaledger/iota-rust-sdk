@@ -7,7 +7,7 @@ use iota_types::{Jwk, JwkId, ZkLoginClaim};
 
 use crate::{
     error::{Result, SdkFfiError},
-    types::signature::SimpleSignature,
+    types::{address::Address, signature::SimpleSignature},
 };
 
 /// A zklogin authenticator
@@ -126,6 +126,42 @@ impl ZkLoginPublicIdentifier {
 
     pub fn address_seed(&self) -> Bn254FieldElement {
         self.0.address_seed().clone().into()
+    }
+
+    /// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
+    /// byte length of the `iss` followed by the `iss` bytes themselves and
+    /// the full 32 byte `address_seed` value, all prefixed with the zklogin
+    /// `SignatureScheme` flag (`0x05`).
+    ///
+    /// `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
+    pub fn derive_address_padded(&self) -> Address {
+        self.0.derive_address_padded().into()
+    }
+
+    /// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
+    /// byte length of the `iss` followed by the `iss` bytes themselves and
+    /// the `address_seed` bytes with any leading zero-bytes stripped, all
+    /// prefixed with the zklogin `SignatureScheme` flag (`0x05`).
+    ///
+    /// `hash( 0x05 || iss_bytes_len || iss_bytes ||
+    /// unpadded_32_byte_address_seed )`
+    pub fn derive_address_unpadded(&self) -> Address {
+        self.0.derive_address_unpadded().into()
+    }
+
+    /// Provides an iterator over the addresses that correspond to this zklogin
+    /// authenticator.
+    ///
+    /// In the majority of instances this will only yield a single address,
+    /// except for the instances where the `address_seed` value has a
+    /// leading zero-byte, in such cases the returned iterator will yield
+    /// two addresses.
+    pub fn derive_address(&self) -> Vec<Arc<Address>> {
+        self.0
+            .derive_address()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
     }
 }
 

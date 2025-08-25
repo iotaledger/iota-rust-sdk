@@ -7,7 +7,11 @@ use iota_types::GasCostSummary;
 
 use crate::types::{
     crypto::validator::ValidatorCommitteeMember,
-    digest::{CheckpointContentsDigest, CheckpointDigest, Digest},
+    digest::{
+        CheckpointContentsDigest, CheckpointDigest, Digest, TransactionDigest,
+        TransactionEffectsDigest,
+    },
+    signature::UserSignature,
 };
 
 pub type CheckpointSequenceNumber = u64;
@@ -55,81 +59,193 @@ pub type ProtocolVersion = u64;
 ///                      (option end-of-epoch-data)     ; end_of_epoch_data
 ///                      bytes                          ; version_specific_data
 /// ```
-#[derive(uniffi::Record)]
-pub struct CheckpointSummary {
+#[derive(derive_more::From, uniffi::Object)]
+pub struct CheckpointSummary(pub iota_types::CheckpointSummary);
+
+#[uniffi::export]
+impl CheckpointSummary {
+    #[uniffi::constructor]
+    pub fn new(
+        epoch: EpochId,
+        sequence_number: CheckpointSequenceNumber,
+        network_total_transactions: u64,
+        content_digest: &CheckpointContentsDigest,
+        previous_digest: Option<Arc<CheckpointDigest>>,
+        epoch_rolling_gas_cost_summary: GasCostSummary,
+        timestamp_ms: CheckpointTimestamp,
+        checkpoint_commitments: Vec<Arc<CheckpointCommitment>>,
+        end_of_epoch_data: Option<EndOfEpochData>,
+        version_specific_data: Vec<u8>,
+    ) -> Self {
+        Self(iota_types::CheckpointSummary {
+            epoch,
+            sequence_number,
+            network_total_transactions,
+            content_digest: **content_digest,
+            previous_digest: previous_digest.map(|v| **v),
+            epoch_rolling_gas_cost_summary,
+            timestamp_ms,
+            checkpoint_commitments: checkpoint_commitments
+                .into_iter()
+                .map(|v| v.0.clone())
+                .collect(),
+            end_of_epoch_data: end_of_epoch_data.map(Into::into),
+            version_specific_data,
+        })
+    }
+
     /// Epoch that this checkpoint belongs to.
-    pub epoch: u64,
+    pub fn epoch(&self) -> u64 {
+        self.0.epoch
+    }
+
     /// The height of this checkpoint.
-    pub sequence_number: u64,
+    pub fn sequence_number(&self) -> u64 {
+        self.0.sequence_number
+    }
+
     /// Total number of transactions committed since genesis, including those in
     /// this checkpoint.
-    pub network_total_transactions: u64,
+    pub fn network_total_transactions(&self) -> u64 {
+        self.0.network_total_transactions
+    }
+
     /// The hash of the `CheckpointContents` for this checkpoint.
-    pub content_digest: Arc<CheckpointContentsDigest>,
+    pub fn content_digest(&self) -> CheckpointContentsDigest {
+        self.0.content_digest.into()
+    }
+
     /// The hash of the previous `CheckpointSummary`.
     ///
     /// This will be only be `None` for the first, or genesis checkpoint.
-    pub previous_digest: Option<Arc<CheckpointDigest>>,
+    pub fn previous_digest(&self) -> Option<Arc<CheckpointDigest>> {
+        self.0.previous_digest.map(Into::into).map(Arc::new)
+    }
+
     /// The running total gas costs of all transactions included in the current
     /// epoch so far until this checkpoint.
-    pub epoch_rolling_gas_cost_summary: GasCostSummary,
+    pub fn epoch_rolling_gas_cost_summary(&self) -> GasCostSummary {
+        self.0.epoch_rolling_gas_cost_summary.clone()
+    }
+
     /// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
     /// Checkpoint timestamps are monotonic, but not strongly monotonic -
     /// subsequent checkpoints can have same timestamp if they originate
     /// from the same underlining consensus commit
-    pub timestamp_ms: u64,
+    pub fn timestamp_ms(&self) -> u64 {
+        self.0.timestamp_ms
+    }
+
     /// Commitments to checkpoint-specific state.
-    pub checkpoint_commitments: Vec<Arc<CheckpointCommitment>>,
+    pub fn checkpoint_commitments(&self) -> Vec<Arc<CheckpointCommitment>> {
+        self.0
+            .checkpoint_commitments
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+
     /// Extra data only present in the final checkpoint of an epoch.
-    pub end_of_epoch_data: Option<EndOfEpochData>,
+    pub fn end_of_epoch_data(&self) -> Option<EndOfEpochData> {
+        self.0.end_of_epoch_data.clone().map(Into::into)
+    }
+
     /// CheckpointSummary is not an evolvable structure - it must be readable by
     /// any version of the code. Therefore, in order to allow extensions to
     /// be added to CheckpointSummary, we allow opaque data to be added to
     /// checkpoints which can be deserialized based on the current
     /// protocol version.
-    pub version_specific_data: Vec<u8>,
-}
+    pub fn version_specific_data(&self) -> Vec<u8> {
+        self.0.version_specific_data.clone()
+    }
 
-impl From<iota_types::CheckpointSummary> for CheckpointSummary {
-    fn from(value: iota_types::CheckpointSummary) -> Self {
-        Self {
-            epoch: value.epoch,
-            sequence_number: value.sequence_number,
-            network_total_transactions: value.network_total_transactions,
-            content_digest: Arc::new(value.content_digest.into()),
-            previous_digest: value.previous_digest.map(Into::into).map(Arc::new),
-            epoch_rolling_gas_cost_summary: value.epoch_rolling_gas_cost_summary,
-            timestamp_ms: value.timestamp_ms,
-            checkpoint_commitments: value
-                .checkpoint_commitments
-                .into_iter()
-                .map(Into::into)
-                .map(Arc::new)
-                .collect(),
-            end_of_epoch_data: value.end_of_epoch_data.map(Into::into),
-            version_specific_data: value.version_specific_data,
-        }
+    pub fn digest(&self) -> CheckpointDigest {
+        self.0.digest().into()
     }
 }
 
-impl From<CheckpointSummary> for iota_types::CheckpointSummary {
-    fn from(value: CheckpointSummary) -> Self {
-        Self {
-            epoch: value.epoch,
-            sequence_number: value.sequence_number,
-            network_total_transactions: value.network_total_transactions,
-            content_digest: **value.content_digest,
-            previous_digest: value.previous_digest.map(|v| **v),
-            epoch_rolling_gas_cost_summary: value.epoch_rolling_gas_cost_summary,
-            timestamp_ms: value.timestamp_ms,
-            checkpoint_commitments: value
-                .checkpoint_commitments
-                .into_iter()
-                .map(|v| v.0.clone())
-                .collect(),
-            end_of_epoch_data: value.end_of_epoch_data.map(Into::into),
-            version_specific_data: value.version_specific_data,
-        }
+/// The committed to contents of a checkpoint.
+///
+/// `CheckpointContents` contains a list of digests of Transactions, their
+/// effects, and the user signatures that authorized their execution included in
+/// a checkpoint.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+///
+/// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
+///                          (vector (vector bcs-user-signature)) ; set of user signatures for each
+///                                                               ; transaction. MUST be the same
+///                                                               ; length as the vector of digests
+/// ```
+#[derive(derive_more::From, uniffi::Object)]
+pub struct CheckpointContents(pub iota_types::CheckpointContents);
+
+#[uniffi::export]
+impl CheckpointContents {
+    #[uniffi::constructor]
+    pub fn new(transaction_info: Vec<Arc<CheckpointTransactionInfo>>) -> Self {
+        Self(iota_types::CheckpointContents::new(
+            transaction_info.into_iter().map(|v| v.0.clone()).collect(),
+        ))
+    }
+
+    pub fn transaction_info(&self) -> Vec<Arc<CheckpointTransactionInfo>> {
+        self.0
+            .0
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+
+    pub fn digest(&self) -> CheckpointContentsDigest {
+        self.0.digest().into()
+    }
+}
+
+/// Transaction information committed to in a checkpoint
+#[derive(derive_more::From, uniffi::Object)]
+pub struct CheckpointTransactionInfo(pub iota_types::CheckpointTransactionInfo);
+
+#[uniffi::export]
+impl CheckpointTransactionInfo {
+    #[uniffi::constructor]
+    pub fn new(
+        transaction: &TransactionDigest,
+        effects: &TransactionEffectsDigest,
+        signatures: Vec<Arc<UserSignature>>,
+    ) -> Self {
+        Self(iota_types::CheckpointTransactionInfo {
+            transaction: **transaction,
+            effects: **effects,
+            signatures: signatures.into_iter().map(|v| v.0.clone()).collect(),
+        })
+    }
+
+    pub fn transaction(&self) -> TransactionDigest {
+        self.0.transaction.into()
+    }
+
+    pub fn effects(&self) -> TransactionEffectsDigest {
+        self.0.effects.into()
+    }
+
+    pub fn signatures(&self) -> Vec<Arc<UserSignature>> {
+        self.0
+            .signatures
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
     }
 }
 
