@@ -843,6 +843,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() != 20272:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key() != 12246:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature() != 5489:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify() != 19101:
@@ -3697,6 +3699,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json.a
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6274,6 +6281,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_challenge.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature.restype = ctypes.c_uint16
@@ -10605,6 +10615,35 @@ class _UniffiConverterTypePaginationFilter(_UniffiConverterRustBuffer):
         _UniffiConverterTypeDirection.write(value.direction, buf)
         _UniffiConverterOptionalString.write(value.cursor, buf)
         _UniffiConverterOptionalInt32.write(value.limit, buf)
+
+
+class PasskeyPublicKey:
+    public_key: "Secp256r1PublicKey"
+    def __init__(self, *, public_key: "Secp256r1PublicKey"):
+        self.public_key = public_key
+
+    def __str__(self):
+        return "PasskeyPublicKey(public_key={})".format(self.public_key)
+
+    def __eq__(self, other):
+        if self.public_key != other.public_key:
+            return False
+        return True
+
+class _UniffiConverterTypePasskeyPublicKey(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return PasskeyPublicKey(
+            public_key=_UniffiConverterTypeSecp256r1PublicKey.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeSecp256r1PublicKey.check_lower(value.public_key)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeSecp256r1PublicKey.write(value.public_key, buf)
 
 
 class ProtocolConfigAttr:
@@ -28163,6 +28202,12 @@ class PasskeyAuthenticatorProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def public_key(self, ):
+        """
+        The passkey public key
+        """
+
+        raise NotImplementedError
     def signature(self, ):
         """
         The passkey signature.
@@ -28267,6 +28312,19 @@ class PasskeyAuthenticator():
 
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def public_key(self, ) -> "PasskeyPublicKey":
+        """
+        The passkey public key
+        """
+
+        return _UniffiConverterTypePasskeyPublicKey.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key,self._uniffi_clone_pointer(),)
         )
 
 
@@ -34761,6 +34819,7 @@ __all__ = [
     "OpenMoveType",
     "PageInfo",
     "PaginationFilter",
+    "PasskeyPublicKey",
     "ProtocolConfigAttr",
     "ProtocolConfigFeatureFlag",
     "ProtocolConfigs",

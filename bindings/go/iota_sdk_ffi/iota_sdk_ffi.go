@@ -2079,6 +2079,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key()
+	})
+	if checksum != 12246 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature()
 	})
 	if checksum != 5489 {
@@ -14223,6 +14232,8 @@ type PasskeyAuthenticatorInterface interface {
 	// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
 	// for more information on this field.
 	ClientDataJson() string
+	// The passkey public key
+	PublicKey() PasskeyPublicKey
 	// The passkey signature.
 	Signature() *SimpleSignature
 }
@@ -14300,6 +14311,18 @@ func (_self *PasskeyAuthenticator) ClientDataJson() string {
 	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// The passkey public key
+func (_self *PasskeyAuthenticator) PublicKey() PasskeyPublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterPasskeyPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -22708,6 +22731,41 @@ func (c FfiConverterPaginationFilter) Write(writer io.Writer, value PaginationFi
 type FfiDestroyerPaginationFilter struct {}
 
 func (_ FfiDestroyerPaginationFilter) Destroy(value PaginationFilter) {
+	value.Destroy()
+}
+type PasskeyPublicKey struct {
+	PublicKey *Secp256r1PublicKey
+}
+
+func (r *PasskeyPublicKey) Destroy() {
+		FfiDestroyerSecp256r1PublicKey{}.Destroy(r.PublicKey);
+}
+
+type FfiConverterPasskeyPublicKey struct {}
+
+var FfiConverterPasskeyPublicKeyINSTANCE = FfiConverterPasskeyPublicKey{}
+
+func (c FfiConverterPasskeyPublicKey) Lift(rb RustBufferI) PasskeyPublicKey {
+	return LiftFromRustBuffer[PasskeyPublicKey](c, rb)
+}
+
+func (c FfiConverterPasskeyPublicKey) Read(reader io.Reader) PasskeyPublicKey {
+	return PasskeyPublicKey {
+			FfiConverterSecp256r1PublicKeyINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterPasskeyPublicKey) Lower(value PasskeyPublicKey) C.RustBuffer {
+	return LowerIntoRustBuffer[PasskeyPublicKey](c, value)
+}
+
+func (c FfiConverterPasskeyPublicKey) Write(writer io.Writer, value PasskeyPublicKey) {
+		FfiConverterSecp256r1PublicKeyINSTANCE.Write(writer, value.PublicKey);
+}
+
+type FfiDestroyerPasskeyPublicKey struct {}
+
+func (_ FfiDestroyerPasskeyPublicKey) Destroy(value PasskeyPublicKey) {
 	value.Destroy()
 }
 // A key-value protocol configuration attribute.

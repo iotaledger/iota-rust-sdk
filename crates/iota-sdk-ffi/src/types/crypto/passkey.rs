@@ -1,9 +1,14 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::sync::Arc;
+
 use iota_crypto::Verifier;
 
-use crate::{error::Result, types::signature::SimpleSignature};
+use crate::{
+    error::Result,
+    types::{crypto::Secp256r1PublicKey, signature::SimpleSignature},
+};
 
 /// A passkey authenticator.
 ///
@@ -64,5 +69,29 @@ impl PasskeyAuthenticator {
     /// The passkey signature.
     pub fn signature(&self) -> SimpleSignature {
         self.0.signature().into()
+    }
+
+    /// The passkey public key
+    pub fn public_key(&self) -> PasskeyPublicKey {
+        self.0.public_key().into()
+    }
+}
+
+#[derive(uniffi::Record)]
+pub struct PasskeyPublicKey {
+    public_key: Arc<Secp256r1PublicKey>,
+}
+
+impl From<iota_types::PasskeyPublicKey> for PasskeyPublicKey {
+    fn from(value: iota_types::PasskeyPublicKey) -> Self {
+        Self {
+            public_key: Arc::new(value.inner().clone().into()),
+        }
+    }
+}
+
+impl From<PasskeyPublicKey> for iota_types::PasskeyPublicKey {
+    fn from(value: PasskeyPublicKey) -> Self {
+        Self::new((*value.public_key).clone())
     }
 }

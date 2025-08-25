@@ -1989,6 +1989,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2385,6 +2387,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data(
 fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_challenge(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature(
 ): Short
@@ -3929,6 +3933,8 @@ fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_challenge(`ptr`: Pointer,
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5290,6 +5296,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() != 20272.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key() != 12246.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature() != 5489.toShort()) {
@@ -24456,6 +24465,11 @@ public interface PasskeyAuthenticatorInterface {
     fun `clientDataJson`(): kotlin.String
     
     /**
+     * The passkey public key
+     */
+    fun `publicKey`(): PasskeyPublicKey
+    
+    /**
      * The passkey signature.
      */
     fun `signature`(): SimpleSignature
@@ -24621,6 +24635,21 @@ open class PasskeyAuthenticator: Disposable, AutoCloseable, PasskeyAuthenticator
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_client_data_json(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The passkey public key
+     */override fun `publicKey`(): PasskeyPublicKey {
+            return FfiConverterTypePasskeyPublicKey.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key(
         it, _status)
 }
     }
@@ -40166,6 +40195,42 @@ public object FfiConverterTypePaginationFilter: FfiConverterRustBuffer<Paginatio
             FfiConverterTypeDirection.write(value.`direction`, buf)
             FfiConverterOptionalString.write(value.`cursor`, buf)
             FfiConverterOptionalInt.write(value.`limit`, buf)
+    }
+}
+
+
+
+data class PasskeyPublicKey (
+    var `publicKey`: Secp256r1PublicKey
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`publicKey`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypePasskeyPublicKey: FfiConverterRustBuffer<PasskeyPublicKey> {
+    override fun read(buf: ByteBuffer): PasskeyPublicKey {
+        return PasskeyPublicKey(
+            FfiConverterTypeSecp256r1PublicKey.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: PasskeyPublicKey) = (
+            FfiConverterTypeSecp256r1PublicKey.allocationSize(value.`publicKey`)
+    )
+
+    override fun write(value: PasskeyPublicKey, buf: ByteBuffer) {
+            FfiConverterTypeSecp256r1PublicKey.write(value.`publicKey`, buf)
     }
 }
 
