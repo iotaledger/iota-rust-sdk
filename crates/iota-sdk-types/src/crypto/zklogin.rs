@@ -58,6 +58,7 @@ pub struct ZkLoginInputs {
     iss_base64_details: ZkLoginClaim,
     header_base64: String,
 
+    // Validated types
     jwt_header: JwtHeader,
     jwk_id: JwkId,
     public_identifier: ZkLoginPublicIdentifier,

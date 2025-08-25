@@ -23,8 +23,6 @@
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[doc(alias = "CheckpointDigest")]
-#[doc(alias = "TransactionDigest")]
 pub struct Digest(
     #[cfg_attr(feature = "serde", serde(with = "DigestSerialization"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base58"))]
