@@ -213,6 +213,18 @@ impl ZkLoginInputs {
     pub fn address_seed(&self) -> Bn254FieldElement {
         self.0.address_seed().clone().into()
     }
+
+    pub fn jwk_id(&self) -> JwkId {
+        self.0.jwk_id().clone().into()
+    }
+
+    pub fn iss(&self) -> String {
+        self.0.iss().to_owned()
+    }
+
+    pub fn public_identifier(&self) -> ZkLoginPublicIdentifier {
+        self.0.public_identifier().clone().into()
+    }
 }
 
 /// A zklogin groth16 proof
