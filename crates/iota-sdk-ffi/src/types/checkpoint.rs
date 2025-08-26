@@ -274,7 +274,7 @@ impl CheckpointCommitment {
     }
 }
 
-#[derive(Clone, uniffi::Record)]
+#[derive(uniffi::Record)]
 pub struct EndOfEpochData {
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
     pub next_epoch_protocol_version: u64,
