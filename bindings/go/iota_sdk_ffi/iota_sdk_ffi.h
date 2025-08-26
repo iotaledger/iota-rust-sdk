@@ -4387,14 +4387,29 @@ void* uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(void* ptr, RustCa
 RustBuffer uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ZKLOGININPUTS_ISS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ZKLOGININPUTS_ISS
+RustBuffer uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ZKLOGININPUTS_ISS_BASE64_DETAILS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ZKLOGININPUTS_ISS_BASE64_DETAILS
 RustBuffer uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ZKLOGININPUTS_JWK_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ZKLOGININPUTS_JWK_ID
+RustBuffer uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ZKLOGININPUTS_PROOF_POINTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ZKLOGININPUTS_PROOF_POINTS
 void* uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ZKLOGININPUTS_PUBLIC_IDENTIFIER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ZKLOGININPUTS_PUBLIC_IDENTIFIER
+void* uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ZKLOGINPROOF
@@ -7184,15 +7199,33 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ZKLOGININPUTS_ISS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ZKLOGININPUTS_ISS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ZKLOGININPUTS_ISS_BASE64_DETAILS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ZKLOGININPUTS_ISS_BASE64_DETAILS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ZKLOGININPUTS_JWK_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ZKLOGININPUTS_JWK_ID
+uint16_t uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ZKLOGININPUTS_PROOF_POINTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ZKLOGININPUTS_PROOF_POINTS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ZKLOGININPUTS_PUBLIC_IDENTIFIER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ZKLOGININPUTS_PUBLIC_IDENTIFIER
+uint16_t uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier(void
     
 );
 #endif

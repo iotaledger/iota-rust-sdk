@@ -1261,9 +1261,15 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64() != 32056:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss() != 1099:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details() != 20914:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id() != 37580:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points() != 28172:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier() != 48158:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a() != 6891:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5932,16 +5938,31 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_zkloginproof.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7519,12 +7540,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a.restype = ctypes.c_uint16
@@ -36630,9 +36660,15 @@ class ZkLoginInputsProtocol(typing.Protocol):
         raise NotImplementedError
     def header_base64(self, ):
         raise NotImplementedError
+    def iss(self, ):
+        raise NotImplementedError
     def iss_base64_details(self, ):
         raise NotImplementedError
+    def jwk_id(self, ):
+        raise NotImplementedError
     def proof_points(self, ):
+        raise NotImplementedError
+    def public_identifier(self, ):
         raise NotImplementedError
 # ZkLoginInputs is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ZkLoginInputs():
@@ -36705,6 +36741,15 @@ class ZkLoginInputs():
 
 
 
+    def iss(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def iss_base64_details(self, ) -> "ZkLoginClaim":
         return _UniffiConverterTypeZkLoginClaim.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details,self._uniffi_clone_pointer(),)
@@ -36714,9 +36759,27 @@ class ZkLoginInputs():
 
 
 
+    def jwk_id(self, ) -> "JwkId":
+        return _UniffiConverterTypeJwkId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def proof_points(self, ) -> "ZkLoginProof":
         return _UniffiConverterTypeZkLoginProof.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def public_identifier(self, ) -> "ZkLoginPublicIdentifier":
+        return _UniffiConverterTypeZkLoginPublicIdentifier.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier,self._uniffi_clone_pointer(),)
         )
 
 

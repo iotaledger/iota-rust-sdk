@@ -3960,6 +3960,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss()
+	})
+	if checksum != 1099 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details()
 	})
 	if checksum != 20914 {
@@ -3969,11 +3978,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id()
+	})
+	if checksum != 37580 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points()
 	})
 	if checksum != 28172 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier()
+	})
+	if checksum != 48158 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -22008,8 +22035,11 @@ func (_ FfiDestroyerZkLoginAuthenticator) Destroy(value *ZkLoginAuthenticator) {
 type ZkLoginInputsInterface interface {
 	AddressSeed() *Bn254FieldElement
 	HeaderBase64() string
+	Iss() string
 	IssBase64Details() ZkLoginClaim
+	JwkId() JwkId
 	ProofPoints() *ZkLoginProof
+	PublicIdentifier() *ZkLoginPublicIdentifier
 }
 // A zklogin groth16 proof and the required inputs to perform proof
 // verification.
@@ -22062,6 +22092,17 @@ func (_self *ZkLoginInputs) HeaderBase64() string {
 	}))
 }
 
+func (_self *ZkLoginInputs) Iss() string {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
 func (_self *ZkLoginInputs) IssBase64Details() ZkLoginClaim {
 	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
 	defer _self.ffiObject.decrementPointer()
@@ -22073,11 +22114,31 @@ func (_self *ZkLoginInputs) IssBase64Details() ZkLoginClaim {
 	}))
 }
 
+func (_self *ZkLoginInputs) JwkId() JwkId {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterJwkIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
 func (_self *ZkLoginInputs) ProofPoints() *ZkLoginProof {
 	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterZkLoginProofINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *ZkLoginInputs) PublicIdentifier() *ZkLoginPublicIdentifier {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterZkLoginPublicIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
 		_pointer,_uniffiStatus)
 	}))
 }
