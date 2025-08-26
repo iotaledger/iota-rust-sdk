@@ -36,7 +36,6 @@ macro_rules! define_paged_record {
     };
 }
 
-define_paged_record!(CheckpointSummaryPage, CheckpointSummary);
 define_paged_record!(SignedTransactionPage, SignedTransaction);
 define_paged_record!(TransactionDataEffectsPage, TransactionDataEffects);
 define_paged_record!(DynamicFieldOutputPage, DynamicFieldOutput);
@@ -76,6 +75,7 @@ define_paged_object!(ObjectPage, Object);
 define_paged_object!(TransactionEffectsPage, TransactionEffects);
 define_paged_object!(MovePackagePage, MovePackage);
 define_paged_object!(EpochPage, Epoch);
+define_paged_object!(CheckpointSummaryPage, CheckpointSummary);
 
 uniffi::custom_type!(Value, String, {
     remote,

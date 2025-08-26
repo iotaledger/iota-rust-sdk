@@ -123,8 +123,8 @@ impl UserSignature {
             .map(Arc::new)
     }
 
-    pub fn as_simple(&self) -> Arc<SimpleSignature> {
-        Arc::new(self.0.as_simple().clone().into())
+    pub fn as_simple(&self) -> SimpleSignature {
+        self.0.as_simple().clone().into()
     }
 
     pub fn is_multisig(&self) -> bool {
@@ -139,8 +139,8 @@ impl UserSignature {
             .map(Arc::new)
     }
 
-    pub fn as_multisig(&self) -> Arc<MultisigAggregatedSignature> {
-        Arc::new(self.0.as_multisig().clone().into())
+    pub fn as_multisig(&self) -> MultisigAggregatedSignature {
+        self.0.as_multisig().clone().into()
     }
 
     pub fn is_zklogin(&self) -> bool {
@@ -155,8 +155,8 @@ impl UserSignature {
             .map(Arc::new)
     }
 
-    pub fn as_zklogin(&self) -> Arc<ZkLoginAuthenticator> {
-        Arc::new(self.0.as_zklogin().clone().into())
+    pub fn as_zklogin(&self) -> ZkLoginAuthenticator {
+        self.0.as_zklogin().clone().into()
     }
 
     pub fn is_passkey(&self) -> bool {
@@ -171,8 +171,8 @@ impl UserSignature {
             .map(Arc::new)
     }
 
-    pub fn as_passkey(&self) -> Arc<PasskeyAuthenticator> {
-        Arc::new(self.0.as_passkey().clone().into())
+    pub fn as_passkey(&self) -> PasskeyAuthenticator {
+        self.0.as_passkey().clone().into()
     }
 }
 
@@ -247,8 +247,8 @@ impl SimpleSignature {
             .map(Arc::new)
     }
 
-    pub fn ed25519_sig(&self) -> Arc<Ed25519Signature> {
-        Arc::new((*self.0.as_ed25519_sig()).into())
+    pub fn ed25519_sig(&self) -> Ed25519Signature {
+        (*self.0.as_ed25519_sig()).into()
     }
 
     pub fn ed25519_pub_key_opt(&self) -> Option<Arc<Ed25519PublicKey>> {
@@ -259,8 +259,8 @@ impl SimpleSignature {
             .map(Arc::new)
     }
 
-    pub fn ed25519_pub_key(&self) -> Arc<Ed25519PublicKey> {
-        Arc::new((*self.0.as_ed25519_pub_key()).into())
+    pub fn ed25519_pub_key(&self) -> Ed25519PublicKey {
+        (*self.0.as_ed25519_pub_key()).into()
     }
 
     pub fn is_secp256k1(&self) -> bool {
@@ -275,8 +275,8 @@ impl SimpleSignature {
             .map(Arc::new)
     }
 
-    pub fn secp256k1_sig(&self) -> Arc<Secp256k1Signature> {
-        Arc::new((*self.0.as_secp256k1_sig()).into())
+    pub fn secp256k1_sig(&self) -> Secp256k1Signature {
+        (*self.0.as_secp256k1_sig()).into()
     }
 
     pub fn secp256k1_pub_key_opt(&self) -> Option<Arc<Secp256k1PublicKey>> {
@@ -287,8 +287,8 @@ impl SimpleSignature {
             .map(Arc::new)
     }
 
-    pub fn secp256k1_pub_key(&self) -> Arc<Secp256k1PublicKey> {
-        Arc::new((*self.0.as_secp256k1_pub_key()).into())
+    pub fn secp256k1_pub_key(&self) -> Secp256k1PublicKey {
+        (*self.0.as_secp256k1_pub_key()).into()
     }
 
     pub fn is_secp256r1(&self) -> bool {
@@ -303,8 +303,8 @@ impl SimpleSignature {
             .map(Arc::new)
     }
 
-    pub fn secp256r1_sig(&self) -> Arc<Secp256r1Signature> {
-        Arc::new((*self.0.as_secp256r1_sig()).into())
+    pub fn secp256r1_sig(&self) -> Secp256r1Signature {
+        (*self.0.as_secp256r1_sig()).into()
     }
 
     pub fn secp256r1_pub_key_opt(&self) -> Option<Arc<Secp256r1PublicKey>> {
@@ -315,7 +315,7 @@ impl SimpleSignature {
             .map(Arc::new)
     }
 
-    pub fn secp256r1_pub_key(&self) -> Arc<Secp256r1PublicKey> {
-        Arc::new((*self.0.as_secp256r1_pub_key()).into())
+    pub fn secp256r1_pub_key(&self) -> Secp256r1PublicKey {
+        (*self.0.as_secp256r1_pub_key()).into()
     }
 }

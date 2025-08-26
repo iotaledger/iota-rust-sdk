@@ -612,6 +612,159 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_digest()
+	})
+	if checksum != 22345 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_transaction_info()
+	})
+	if checksum != 56465 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointcontents_transaction_info: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_checkpoint_commitments()
+	})
+	if checksum != 61600 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_checkpoint_commitments: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_content_digest()
+	})
+	if checksum != 31627 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_content_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_digest()
+	})
+	if checksum != 14291 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_end_of_epoch_data()
+	})
+	if checksum != 49930 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_end_of_epoch_data: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch()
+	})
+	if checksum != 35840 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch_rolling_gas_cost_summary()
+	})
+	if checksum != 10205 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_epoch_rolling_gas_cost_summary: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_network_total_transactions()
+	})
+	if checksum != 50558 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_network_total_transactions: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest()
+	})
+	if checksum != 933 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number()
+	})
+	if checksum != 33896 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message()
+	})
+	if checksum != 59962 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms()
+	})
+	if checksum != 62474 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data()
+	})
+	if checksum != 43828 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects()
+	})
+	if checksum != 54822 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_signatures()
+	})
+	if checksum != 36925 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_signatures: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction()
+	})
+	if checksum != 58570 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_coin_balance()
 	})
 	if checksum != 29928 {
@@ -1010,7 +1163,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint()
 	})
-	if checksum != 13597 {
+	if checksum != 11584 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint: UniFFI API checksum mismatch")
 	}
@@ -1530,6 +1683,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address()
+	})
+	if checksum != 12725 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid()
 	})
 	if checksum != 45468 {
@@ -1845,6 +2007,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_object_digest()
+	})
+	if checksum != 48655 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_object_object_id()
 	})
 	if checksum != 6575 {
@@ -1931,6 +2102,15 @@ func uniffiCheckChecksums() {
 	if checksum != 58579 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id()
+	})
+	if checksum != 47819 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2079,6 +2259,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key()
+	})
+	if checksum != 18555 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature()
 	})
 	if checksum != 5489 {
@@ -2088,11 +2277,47 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_derive_address()
+	})
+	if checksum != 61803 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_derive_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_inner()
+	})
+	if checksum != 65008 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_inner: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify()
 	})
 	if checksum != 19101 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes()
+	})
+	if checksum != 347 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest()
+	})
+	if checksum != 39344 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2790,6 +3015,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_digest()
+	})
+	if checksum != 52429 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration()
 	})
 	if checksum != 47752 {
@@ -2822,6 +3056,15 @@ func uniffiCheckChecksums() {
 	if checksum != 38190 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_sender: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest()
+	})
+	if checksum != 36608 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2979,11 +3222,38 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_digest()
+	})
+	if checksum != 46963 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactioneffects_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1()
 	})
 	if checksum != 39808 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest()
+	})
+	if checksum != 55750 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events()
+	})
+	if checksum != 36651 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionevents_events: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3564,6 +3834,33 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address()
+	})
+	if checksum != 14353 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded()
+	})
+	if checksum != 45141 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded()
+	})
+	if checksum != 51424 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss()
 	})
 	if checksum != 58864 {
@@ -3767,6 +4064,33 @@ func uniffiCheckChecksums() {
 	if checksum != 52433 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontents_new()
+	})
+	if checksum != 27130 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontents_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new()
+	})
+	if checksum != 16062 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new()
+	})
+	if checksum != 65327 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_checkpointtransactioninfo_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4401,6 +4725,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id()
+	})
+	if checksum != 16970 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes()
 	})
 	if checksum != 41789 {
@@ -4473,11 +4806,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new()
+	})
+	if checksum != 30856 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new()
 	})
 	if checksum != 23457 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new()
+	})
+	if checksum != 3617 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4901,6 +5252,15 @@ func uniffiCheckChecksums() {
 	if checksum != 63561 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new()
+	})
+	if checksum != 1310 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7084,6 +7444,545 @@ func (c FfiConverterCheckpointCommitment) Write(writer io.Writer, value *Checkpo
 type FfiDestroyerCheckpointCommitment struct {}
 
 func (_ FfiDestroyerCheckpointCommitment) Destroy(value *CheckpointCommitment) {
+		value.Destroy()
+}
+
+
+
+// The committed to contents of a checkpoint.
+//
+// `CheckpointContents` contains a list of digests of Transactions, their
+// effects, and the user signatures that authorized their execution included in
+// a checkpoint.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+//
+// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
+// (vector (vector bcs-user-signature)) ; set of user signatures for each
+// ; transaction. MUST be the same
+// ; length as the vector of digests
+// ```
+type CheckpointContentsInterface interface {
+	Digest() *Digest
+	TransactionInfo() []*CheckpointTransactionInfo
+}
+// The committed to contents of a checkpoint.
+//
+// `CheckpointContents` contains a list of digests of Transactions, their
+// effects, and the user signatures that authorized their execution included in
+// a checkpoint.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+//
+// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
+// (vector (vector bcs-user-signature)) ; set of user signatures for each
+// ; transaction. MUST be the same
+// ; length as the vector of digests
+// ```
+type CheckpointContents struct {
+	ffiObject FfiObject
+}
+func NewCheckpointContents(transactionInfo []*CheckpointTransactionInfo) *CheckpointContents {
+	return FfiConverterCheckpointContentsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointcontents_new(FfiConverterSequenceCheckpointTransactionInfoINSTANCE.Lower(transactionInfo),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *CheckpointContents) Digest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointContents")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_checkpointcontents_digest(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *CheckpointContents) TransactionInfo() []*CheckpointTransactionInfo {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointContents")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceCheckpointTransactionInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointcontents_transaction_info(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *CheckpointContents) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterCheckpointContents struct {}
+
+var FfiConverterCheckpointContentsINSTANCE = FfiConverterCheckpointContents{}
+
+
+func (c FfiConverterCheckpointContents) Lift(pointer unsafe.Pointer) *CheckpointContents {
+	result := &CheckpointContents {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_checkpointcontents(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_checkpointcontents(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*CheckpointContents).Destroy)
+	return result
+}
+
+func (c FfiConverterCheckpointContents) Read(reader io.Reader) *CheckpointContents {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterCheckpointContents) Lower(value *CheckpointContents) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*CheckpointContents")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterCheckpointContents) Write(writer io.Writer, value *CheckpointContents) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerCheckpointContents struct {}
+
+func (_ FfiDestroyerCheckpointContents) Destroy(value *CheckpointContents) {
+		value.Destroy()
+}
+
+
+
+// A header for a Checkpoint on the IOTA blockchain.
+//
+// On the IOTA network, checkpoints define the history of the blockchain. They
+// are quite similar to the concept of blocks used by other blockchains like
+// Bitcoin or Ethereum. The IOTA blockchain, however, forms checkpoints after
+// transaction execution has already happened to provide a certified history of
+// the chain, instead of being formed before execution.
+//
+// Checkpoints commit to a variety of state including but not limited to:
+// - The hash of the previous checkpoint.
+// - The set of transaction digests, their corresponding effects digests, as
+// well as the set of user signatures which authorized its execution.
+// - The object's produced by a transaction.
+// - The set of live objects that make up the current state of the chain.
+// - On epoch transitions, the next validator committee.
+//
+// `CheckpointSummary`s themselves don't directly include all of the above
+// information but they are the top-level type by which all the above are
+// committed to transitively via cryptographic hashes included in the summary.
+// `CheckpointSummary`s are signed and certified by a quorum of the validator
+// committee in a given epoch in order to allow verification of the chain's
+// state.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// checkpoint-summary = u64                            ; epoch
+// u64                            ; sequence_number
+// u64                            ; network_total_transactions
+// digest                         ; content_digest
+// (option digest)                ; previous_digest
+// gas-cost-summary               ; epoch_rolling_gas_cost_summary
+// u64                            ; timestamp_ms
+// (vector checkpoint-commitment) ; checkpoint_commitments
+// (option end-of-epoch-data)     ; end_of_epoch_data
+// bytes                          ; version_specific_data
+// ```
+type CheckpointSummaryInterface interface {
+	// Commitments to checkpoint-specific state.
+	CheckpointCommitments() []*CheckpointCommitment
+	// The hash of the `CheckpointContents` for this checkpoint.
+	ContentDigest() *Digest
+	Digest() *Digest
+	// Extra data only present in the final checkpoint of an epoch.
+	EndOfEpochData() *EndOfEpochData
+	// Epoch that this checkpoint belongs to.
+	Epoch() uint64
+	// The running total gas costs of all transactions included in the current
+	// epoch so far until this checkpoint.
+	EpochRollingGasCostSummary() GasCostSummary
+	// Total number of transactions committed since genesis, including those in
+	// this checkpoint.
+	NetworkTotalTransactions() uint64
+	// The hash of the previous `CheckpointSummary`.
+	//
+	// This will be only be `None` for the first, or genesis checkpoint.
+	PreviousDigest() **Digest
+	// The height of this checkpoint.
+	SequenceNumber() uint64
+	SigningMessage() []byte
+	// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
+	// Checkpoint timestamps are monotonic, but not strongly monotonic -
+	// subsequent checkpoints can have same timestamp if they originate
+	// from the same underlining consensus commit
+	TimestampMs() uint64
+	// CheckpointSummary is not an evolvable structure - it must be readable by
+	// any version of the code. Therefore, in order to allow extensions to
+	// be added to CheckpointSummary, we allow opaque data to be added to
+	// checkpoints which can be deserialized based on the current
+	// protocol version.
+	VersionSpecificData() []byte
+}
+// A header for a Checkpoint on the IOTA blockchain.
+//
+// On the IOTA network, checkpoints define the history of the blockchain. They
+// are quite similar to the concept of blocks used by other blockchains like
+// Bitcoin or Ethereum. The IOTA blockchain, however, forms checkpoints after
+// transaction execution has already happened to provide a certified history of
+// the chain, instead of being formed before execution.
+//
+// Checkpoints commit to a variety of state including but not limited to:
+// - The hash of the previous checkpoint.
+// - The set of transaction digests, their corresponding effects digests, as
+// well as the set of user signatures which authorized its execution.
+// - The object's produced by a transaction.
+// - The set of live objects that make up the current state of the chain.
+// - On epoch transitions, the next validator committee.
+//
+// `CheckpointSummary`s themselves don't directly include all of the above
+// information but they are the top-level type by which all the above are
+// committed to transitively via cryptographic hashes included in the summary.
+// `CheckpointSummary`s are signed and certified by a quorum of the validator
+// committee in a given epoch in order to allow verification of the chain's
+// state.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// checkpoint-summary = u64                            ; epoch
+// u64                            ; sequence_number
+// u64                            ; network_total_transactions
+// digest                         ; content_digest
+// (option digest)                ; previous_digest
+// gas-cost-summary               ; epoch_rolling_gas_cost_summary
+// u64                            ; timestamp_ms
+// (vector checkpoint-commitment) ; checkpoint_commitments
+// (option end-of-epoch-data)     ; end_of_epoch_data
+// bytes                          ; version_specific_data
+// ```
+type CheckpointSummary struct {
+	ffiObject FfiObject
+}
+func NewCheckpointSummary(epoch uint64, sequenceNumber uint64, networkTotalTransactions uint64, contentDigest *Digest, previousDigest **Digest, epochRollingGasCostSummary GasCostSummary, timestampMs uint64, checkpointCommitments []*CheckpointCommitment, endOfEpochData *EndOfEpochData, versionSpecificData []byte) *CheckpointSummary {
+	return FfiConverterCheckpointSummaryINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointsummary_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterUint64INSTANCE.Lower(sequenceNumber), FfiConverterUint64INSTANCE.Lower(networkTotalTransactions), FfiConverterDigestINSTANCE.Lower(contentDigest), FfiConverterOptionalDigestINSTANCE.Lower(previousDigest), FfiConverterGasCostSummaryINSTANCE.Lower(epochRollingGasCostSummary), FfiConverterUint64INSTANCE.Lower(timestampMs), FfiConverterSequenceCheckpointCommitmentINSTANCE.Lower(checkpointCommitments), FfiConverterOptionalEndOfEpochDataINSTANCE.Lower(endOfEpochData), FfiConverterBytesINSTANCE.Lower(versionSpecificData),_uniffiStatus)
+	}))
+}
+
+
+
+
+// Commitments to checkpoint-specific state.
+func (_self *CheckpointSummary) CheckpointCommitments() []*CheckpointCommitment {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceCheckpointCommitmentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_checkpoint_commitments(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// The hash of the `CheckpointContents` for this checkpoint.
+func (_self *CheckpointSummary) ContentDigest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_content_digest(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *CheckpointSummary) Digest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_digest(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Extra data only present in the final checkpoint of an epoch.
+func (_self *CheckpointSummary) EndOfEpochData() *EndOfEpochData {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalEndOfEpochDataINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_end_of_epoch_data(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Epoch that this checkpoint belongs to.
+func (_self *CheckpointSummary) Epoch() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_epoch(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The running total gas costs of all transactions included in the current
+// epoch so far until this checkpoint.
+func (_self *CheckpointSummary) EpochRollingGasCostSummary() GasCostSummary {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterGasCostSummaryINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_epoch_rolling_gas_cost_summary(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Total number of transactions committed since genesis, including those in
+// this checkpoint.
+func (_self *CheckpointSummary) NetworkTotalTransactions() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_network_total_transactions(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The hash of the previous `CheckpointSummary`.
+//
+// This will be only be `None` for the first, or genesis checkpoint.
+func (_self *CheckpointSummary) PreviousDigest() **Digest {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_previous_digest(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// The height of this checkpoint.
+func (_self *CheckpointSummary) SequenceNumber() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_sequence_number(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *CheckpointSummary) SigningMessage() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
+// Checkpoint timestamps are monotonic, but not strongly monotonic -
+// subsequent checkpoints can have same timestamp if they originate
+// from the same underlining consensus commit
+func (_self *CheckpointSummary) TimestampMs() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_timestamp_ms(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// CheckpointSummary is not an evolvable structure - it must be readable by
+// any version of the code. Therefore, in order to allow extensions to
+// be added to CheckpointSummary, we allow opaque data to be added to
+// checkpoints which can be deserialized based on the current
+// protocol version.
+func (_self *CheckpointSummary) VersionSpecificData() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_version_specific_data(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *CheckpointSummary) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterCheckpointSummary struct {}
+
+var FfiConverterCheckpointSummaryINSTANCE = FfiConverterCheckpointSummary{}
+
+
+func (c FfiConverterCheckpointSummary) Lift(pointer unsafe.Pointer) *CheckpointSummary {
+	result := &CheckpointSummary {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_checkpointsummary(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_checkpointsummary(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*CheckpointSummary).Destroy)
+	return result
+}
+
+func (c FfiConverterCheckpointSummary) Read(reader io.Reader) *CheckpointSummary {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterCheckpointSummary) Lower(value *CheckpointSummary) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*CheckpointSummary")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterCheckpointSummary) Write(writer io.Writer, value *CheckpointSummary) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerCheckpointSummary struct {}
+
+func (_ FfiDestroyerCheckpointSummary) Destroy(value *CheckpointSummary) {
+		value.Destroy()
+}
+
+
+
+// Transaction information committed to in a checkpoint
+type CheckpointTransactionInfoInterface interface {
+	Effects() *Digest
+	Signatures() []*UserSignature
+	Transaction() *Digest
+}
+// Transaction information committed to in a checkpoint
+type CheckpointTransactionInfo struct {
+	ffiObject FfiObject
+}
+func NewCheckpointTransactionInfo(transaction *Digest, effects *Digest, signatures []*UserSignature) *CheckpointTransactionInfo {
+	return FfiConverterCheckpointTransactionInfoINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_checkpointtransactioninfo_new(FfiConverterDigestINSTANCE.Lower(transaction), FfiConverterDigestINSTANCE.Lower(effects), FfiConverterSequenceUserSignatureINSTANCE.Lower(signatures),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *CheckpointTransactionInfo) Effects() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointTransactionInfo")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_effects(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *CheckpointTransactionInfo) Signatures() []*UserSignature {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointTransactionInfo")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_signatures(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *CheckpointTransactionInfo) Transaction() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointTransactionInfo")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_checkpointtransactioninfo_transaction(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *CheckpointTransactionInfo) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterCheckpointTransactionInfo struct {}
+
+var FfiConverterCheckpointTransactionInfoINSTANCE = FfiConverterCheckpointTransactionInfo{}
+
+
+func (c FfiConverterCheckpointTransactionInfo) Lift(pointer unsafe.Pointer) *CheckpointTransactionInfo {
+	result := &CheckpointTransactionInfo {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_checkpointtransactioninfo(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_checkpointtransactioninfo(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*CheckpointTransactionInfo).Destroy)
+	return result
+}
+
+func (c FfiConverterCheckpointTransactionInfo) Read(reader io.Reader) *CheckpointTransactionInfo {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterCheckpointTransactionInfo) Lower(value *CheckpointTransactionInfo) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*CheckpointTransactionInfo")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterCheckpointTransactionInfo) Write(writer io.Writer, value *CheckpointTransactionInfo) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerCheckpointTransactionInfo struct {}
+
+func (_ FfiDestroyerCheckpointTransactionInfo) Destroy(value *CheckpointTransactionInfo) {
 		value.Destroy()
 }
 
@@ -9680,7 +10579,7 @@ type GraphQlClientInterface interface {
 	// Get the [`CheckpointSummary`] for a given checkpoint digest or
 	// checkpoint id. If none is provided, it will use the last known
 	// checkpoint id.
-	Checkpoint(digest **Digest, seqNum *uint64) (*CheckpointSummary, error)
+	Checkpoint(digest **Digest, seqNum *uint64) (**CheckpointSummary, error)
 	// Get a page of [`CheckpointSummary`] for the provided parameters.
 	Checkpoints(paginationFilter PaginationFilter) (CheckpointSummaryPage, error)
 	// Get the coin metadata for the coin type.
@@ -10030,7 +10929,7 @@ func (_self *GraphQlClient) ChainId() (string, error) {
 // Get the [`CheckpointSummary`] for a given checkpoint digest or
 // checkpoint id. If none is provided, it will use the last known
 // checkpoint id.
-func (_self *GraphQlClient) Checkpoint(digest **Digest, seqNum *uint64) (*CheckpointSummary, error) {
+func (_self *GraphQlClient) Checkpoint(digest **Digest, seqNum *uint64) (**CheckpointSummary, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -10043,7 +10942,7 @@ func (_self *GraphQlClient) Checkpoint(digest **Digest, seqNum *uint64) (*Checkp
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) *CheckpointSummary {
+		func(ffi RustBufferI) **CheckpointSummary {
 			return FfiConverterOptionalCheckpointSummaryINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoint(
@@ -12532,6 +13431,24 @@ func (_ FfiDestroyerMultisigAggregator) Destroy(value *MultisigAggregator) {
 // u16     ; threshold
 // ```
 type MultisigCommitteeInterface interface {
+	// Derive an `Address` from this MultisigCommittee.
+	//
+	// A MultiSig address
+	// is defined as the 32-byte Blake2b hash of serializing the
+	// `SignatureScheme` flag (0x03), the threshold (in little endian), and
+	// the concatenation of all n flag, public keys and its weight.
+	//
+	// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
+	// || ... || flag_n || pk_n || weight_n)`.
+	//
+	// When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+	// refers to the same input used when deriving the address using the
+	// [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+	// full 32-byte `address_seed` value).
+	//
+	// [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
+	// [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
+	DeriveAddress() *Address
 	// Checks if the Committee is valid.
 	//
 	// A valid committee is one that:
@@ -12589,6 +13506,32 @@ func NewMultisigCommittee(members []*MultisigMember, threshold uint16) *Multisig
 
 
 
+
+// Derive an `Address` from this MultisigCommittee.
+//
+// A MultiSig address
+// is defined as the 32-byte Blake2b hash of serializing the
+// `SignatureScheme` flag (0x03), the threshold (in little endian), and
+// the concatenation of all n flag, public keys and its weight.
+//
+// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
+// || ... || flag_n || pk_n || weight_n)`.
+//
+// When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+// refers to the same input used when deriving the address using the
+// [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+// full 32-byte `address_seed` value).
+//
+// [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
+// [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
+func (_self *MultisigCommittee) DeriveAddress() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigCommittee")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_derive_address(
+		_pointer,_uniffiStatus)
+	}))
+}
 
 // Checks if the Committee is valid.
 //
@@ -13398,6 +14341,10 @@ type ObjectInterface interface {
 	AsStruct() *MoveStruct
 	// Return this object's data
 	Data() *ObjectData
+	// Calculate the digest of this `Object`
+	//
+	// This is done by hashing the BCS bytes of this `Object` prefixed
+	Digest() *Digest
 	// Return this object's id
 	ObjectId() *ObjectId
 	// Return this object's type
@@ -13453,6 +14400,18 @@ func (_self *Object) Data() *ObjectData {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterObjectDataINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_object_data(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Calculate the digest of this `Object`
+//
+// This is done by hashing the BCS bytes of this `Object` prefixed
+func (_self *Object) Digest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_object_digest(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -13740,6 +14699,10 @@ func (_ FfiDestroyerObjectData) Destroy(value *ObjectData) {
 // object-id = 32*OCTET
 // ```
 type ObjectIdInterface interface {
+	// Derive an ObjectId for a Dynamic Child Object.
+	//
+	// hash(parent || len(key) || key || key_type_tag)
+	DeriveDynamicChildId(keyTypeTag *TypeTag, keyBytes []byte) *ObjectId
 	ToAddress() *Address
 	ToBytes() []byte
 	ToHex() string
@@ -13767,6 +14730,14 @@ type ObjectId struct {
 }
 
 
+// Create an ObjectId from a transaction digest and the number of objects
+// that have been created during a transactions.
+func ObjectIdDeriveId(digest *Digest, count uint64) *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(FfiConverterDigestINSTANCE.Lower(digest), FfiConverterUint64INSTANCE.Lower(count),_uniffiStatus)
+	}))
+}
+
 func ObjectIdFromBytes(bytes []byte) (*ObjectId, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
@@ -13792,6 +14763,18 @@ func ObjectIdFromHex(hex string) (*ObjectId, error) {
 }
 
 
+
+// Derive an ObjectId for a Dynamic Child Object.
+//
+// hash(parent || len(key) || key || key_type_tag)
+func (_self *ObjectId) DeriveDynamicChildId(keyTypeTag *TypeTag, keyBytes []byte) *ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(
+		_pointer,FfiConverterTypeTagINSTANCE.Lower(keyTypeTag), FfiConverterBytesINSTANCE.Lower(keyBytes),_uniffiStatus)
+	}))
+}
 
 func (_self *ObjectId) ToAddress() *Address {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
@@ -14223,6 +15206,8 @@ type PasskeyAuthenticatorInterface interface {
 	// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
 	// for more information on this field.
 	ClientDataJson() string
+	// The passkey public key
+	PublicKey() *PasskeyPublicKey
 	// The passkey signature.
 	Signature() *SimpleSignature
 }
@@ -14305,6 +15290,16 @@ func (_self *PasskeyAuthenticator) ClientDataJson() string {
 	}))
 }
 
+// The passkey public key
+func (_self *PasskeyAuthenticator) PublicKey() *PasskeyPublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterPasskeyPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
 // The passkey signature.
 func (_self *PasskeyAuthenticator) Signature() *SimpleSignature {
 	_pointer := _self.ffiObject.incrementPointer("*PasskeyAuthenticator")
@@ -14361,6 +15356,127 @@ func (c FfiConverterPasskeyAuthenticator) Write(writer io.Writer, value *Passkey
 type FfiDestroyerPasskeyAuthenticator struct {}
 
 func (_ FfiDestroyerPasskeyAuthenticator) Destroy(value *PasskeyAuthenticator) {
+		value.Destroy()
+}
+
+
+
+// Public key of a `PasskeyAuthenticator`.
+//
+// This is used to derive the onchain `Address` for a `PasskeyAuthenticator`.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// passkey-public-key = passkey-flag secp256r1-public-key
+// ```
+type PasskeyPublicKeyInterface interface {
+	// Derive an `Address` from this Passkey Public Key
+	//
+	// An `Address` can be derived from a `PasskeyPublicKey` by hashing the
+	// bytes of the `Secp256r1PublicKey` that corresponds to this passkey
+	// prefixed with the Passkey `SignatureScheme` flag (`0x06`).
+	//
+	// `hash( 0x06 || 33-byte secp256r1 public key)`
+	DeriveAddress() *Address
+	Inner() *Secp256r1PublicKey
+}
+// Public key of a `PasskeyAuthenticator`.
+//
+// This is used to derive the onchain `Address` for a `PasskeyAuthenticator`.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// passkey-public-key = passkey-flag secp256r1-public-key
+// ```
+type PasskeyPublicKey struct {
+	ffiObject FfiObject
+}
+func NewPasskeyPublicKey(publicKey *Secp256r1PublicKey) *PasskeyPublicKey {
+	return FfiConverterPasskeyPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_passkeypublickey_new(FfiConverterSecp256r1PublicKeyINSTANCE.Lower(publicKey),_uniffiStatus)
+	}))
+}
+
+
+
+
+// Derive an `Address` from this Passkey Public Key
+//
+// An `Address` can be derived from a `PasskeyPublicKey` by hashing the
+// bytes of the `Secp256r1PublicKey` that corresponds to this passkey
+// prefixed with the Passkey `SignatureScheme` flag (`0x06`).
+//
+// `hash( 0x06 || 33-byte secp256r1 public key)`
+func (_self *PasskeyPublicKey) DeriveAddress() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_derive_address(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *PasskeyPublicKey) Inner() *Secp256r1PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSecp256r1PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_inner(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *PasskeyPublicKey) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterPasskeyPublicKey struct {}
+
+var FfiConverterPasskeyPublicKeyINSTANCE = FfiConverterPasskeyPublicKey{}
+
+
+func (c FfiConverterPasskeyPublicKey) Lift(pointer unsafe.Pointer) *PasskeyPublicKey {
+	result := &PasskeyPublicKey {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_passkeypublickey(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_passkeypublickey(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*PasskeyPublicKey).Destroy)
+	return result
+}
+
+func (c FfiConverterPasskeyPublicKey) Read(reader io.Reader) *PasskeyPublicKey {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterPasskeyPublicKey) Lower(value *PasskeyPublicKey) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*PasskeyPublicKey")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterPasskeyPublicKey) Write(writer io.Writer, value *PasskeyPublicKey) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerPasskeyPublicKey struct {}
+
+func (_ FfiDestroyerPasskeyPublicKey) Destroy(value *PasskeyPublicKey) {
 		value.Destroy()
 }
 
@@ -14438,6 +15554,95 @@ func (c FfiConverterPasskeyVerifier) Write(writer io.Writer, value *PasskeyVerif
 type FfiDestroyerPasskeyVerifier struct {}
 
 func (_ FfiDestroyerPasskeyVerifier) Destroy(value *PasskeyVerifier) {
+		value.Destroy()
+}
+
+
+
+type PersonalMessageInterface interface {
+	MessageBytes() []byte
+	SigningDigest() []byte
+}
+type PersonalMessage struct {
+	ffiObject FfiObject
+}
+func NewPersonalMessage(messageBytes []byte) *PersonalMessage {
+	return FfiConverterPersonalMessageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_personalmessage_new(FfiConverterBytesINSTANCE.Lower(messageBytes),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *PersonalMessage) MessageBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*PersonalMessage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_personalmessage_message_bytes(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *PersonalMessage) SigningDigest() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*PersonalMessage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *PersonalMessage) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterPersonalMessage struct {}
+
+var FfiConverterPersonalMessageINSTANCE = FfiConverterPersonalMessage{}
+
+
+func (c FfiConverterPersonalMessage) Lift(pointer unsafe.Pointer) *PersonalMessage {
+	result := &PersonalMessage {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_personalmessage(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_personalmessage(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*PersonalMessage).Destroy)
+	return result
+}
+
+func (c FfiConverterPersonalMessage) Read(reader io.Reader) *PersonalMessage {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterPersonalMessage) Lower(value *PersonalMessage) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*PersonalMessage")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterPersonalMessage) Write(writer io.Writer, value *PersonalMessage) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerPersonalMessage struct {}
+
+func (_ FfiDestroyerPersonalMessage) Destroy(value *PersonalMessage) {
 		value.Destroy()
 }
 
@@ -17262,10 +18467,12 @@ func (_ FfiDestroyerSystemPackage) Destroy(value *SystemPackage) {
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
 type TransactionInterface interface {
+	Digest() *Digest
 	Expiration() TransactionExpiration
 	GasPayment() GasPayment
 	Kind() *TransactionKind
 	Sender() *Address
+	SigningDigest() []byte
 }
 // A transaction
 //
@@ -17289,6 +18496,15 @@ func NewTransaction(kind *TransactionKind, sender *Address, gasPayment GasPaymen
 
 
 
+
+func (_self *Transaction) Digest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*Transaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transaction_digest(
+		_pointer,_uniffiStatus)
+	}))
+}
 
 func (_self *Transaction) Expiration() TransactionExpiration {
 	_pointer := _self.ffiObject.incrementPointer("*Transaction")
@@ -17327,6 +18543,17 @@ func (_self *Transaction) Sender() *Address {
 	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transaction_sender(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *Transaction) SigningDigest() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Transaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(
+		_pointer,_uniffiStatus),
+	}
 	}))
 }
 func (object *Transaction) Destroy() {
@@ -17861,6 +19088,7 @@ func (_ FfiDestroyerTransactionBuilder) Destroy(value *TransactionBuilder) {
 // ```
 type TransactionEffectsInterface interface {
 	AsV1() TransactionEffectsV1
+	Digest() *Digest
 	IsV1() bool
 }
 // The output or effects of executing a transaction
@@ -17894,6 +19122,15 @@ func (_self *TransactionEffects) AsV1() TransactionEffectsV1 {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1(
 		_pointer,_uniffiStatus),
 	}
+	}))
+}
+
+func (_self *TransactionEffects) Digest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionEffects")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactioneffects_digest(
+		_pointer,_uniffiStatus)
 	}))
 }
 
@@ -17952,6 +19189,111 @@ func (c FfiConverterTransactionEffects) Write(writer io.Writer, value *Transacti
 type FfiDestroyerTransactionEffects struct {}
 
 func (_ FfiDestroyerTransactionEffects) Destroy(value *TransactionEffects) {
+		value.Destroy()
+}
+
+
+
+// Events emitted during the successful execution of a transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// transaction-events = vector event
+// ```
+type TransactionEventsInterface interface {
+	Digest() *Digest
+	Events() []Event
+}
+// Events emitted during the successful execution of a transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// transaction-events = vector event
+// ```
+type TransactionEvents struct {
+	ffiObject FfiObject
+}
+func NewTransactionEvents(events []Event) *TransactionEvents {
+	return FfiConverterTransactionEventsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new(FfiConverterSequenceEventINSTANCE.Lower(events),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *TransactionEvents) Digest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionEvents")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *TransactionEvents) Events() []Event {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionEvents")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceEventINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionevents_events(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *TransactionEvents) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterTransactionEvents struct {}
+
+var FfiConverterTransactionEventsINSTANCE = FfiConverterTransactionEvents{}
+
+
+func (c FfiConverterTransactionEvents) Lift(pointer unsafe.Pointer) *TransactionEvents {
+	result := &TransactionEvents {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_transactionevents(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_transactionevents(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*TransactionEvents).Destroy)
+	return result
+}
+
+func (c FfiConverterTransactionEvents) Read(reader io.Reader) *TransactionEvents {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterTransactionEvents) Lower(value *TransactionEvents) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*TransactionEvents")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterTransactionEvents) Write(writer io.Writer, value *TransactionEvents) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerTransactionEvents struct {}
+
+func (_ FfiDestroyerTransactionEvents) Destroy(value *TransactionEvents) {
 		value.Destroy()
 }
 
@@ -19996,6 +21338,29 @@ func (_ FfiDestroyerZkLoginProof) Destroy(value *ZkLoginProof) {
 // [`Address`]: crate::Address
 type ZkLoginPublicIdentifierInterface interface {
 	AddressSeed() *Bn254FieldElement
+	// Provides an iterator over the addresses that correspond to this zklogin
+	// authenticator.
+	//
+	// In the majority of instances this will only yield a single address,
+	// except for the instances where the `address_seed` value has a
+	// leading zero-byte, in such cases the returned iterator will yield
+	// two addresses.
+	DeriveAddress() []*Address
+	// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
+	// byte length of the `iss` followed by the `iss` bytes themselves and
+	// the full 32 byte `address_seed` value, all prefixed with the zklogin
+	// `SignatureScheme` flag (`0x05`).
+	//
+	// `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
+	DeriveAddressPadded() *Address
+	// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
+	// byte length of the `iss` followed by the `iss` bytes themselves and
+	// the `address_seed` bytes with any leading zero-bytes stripped, all
+	// prefixed with the zklogin `SignatureScheme` flag (`0x05`).
+	//
+	// `hash( 0x05 || iss_bytes_len || iss_bytes ||
+	// unpadded_32_byte_address_seed )`
+	DeriveAddressUnpadded() *Address
 	Iss() string
 }
 // Public Key equivalent for Zklogin authenticators
@@ -20073,6 +21438,55 @@ func (_self *ZkLoginPublicIdentifier) AddressSeed() *Bn254FieldElement {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBn254FieldElementINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Provides an iterator over the addresses that correspond to this zklogin
+// authenticator.
+//
+// In the majority of instances this will only yield a single address,
+// except for the instances where the `address_seed` value has a
+// leading zero-byte, in such cases the returned iterator will yield
+// two addresses.
+func (_self *ZkLoginPublicIdentifier) DeriveAddress() []*Address {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
+// byte length of the `iss` followed by the `iss` bytes themselves and
+// the full 32 byte `address_seed` value, all prefixed with the zklogin
+// `SignatureScheme` flag (`0x05`).
+//
+// `hash( 0x05 || iss_bytes_len || iss_bytes || 32_byte_address_seed )`
+func (_self *ZkLoginPublicIdentifier) DeriveAddressPadded() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Derive an `Address` from this `ZkLoginPublicIdentifier` by hashing the
+// byte length of the `iss` followed by the `iss` bytes themselves and
+// the `address_seed` bytes with any leading zero-bytes stripped, all
+// prefixed with the zklogin `SignatureScheme` flag (`0x05`).
+//
+// `hash( 0x05 || iss_bytes_len || iss_bytes ||
+// unpadded_32_byte_address_seed )`
+func (_self *ZkLoginPublicIdentifier) DeriveAddressUnpadded() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -20476,144 +21890,13 @@ type FfiDestroyerChangedObject struct {}
 func (_ FfiDestroyerChangedObject) Destroy(value ChangedObject) {
 	value.Destroy()
 }
-// A header for a Checkpoint on the IOTA blockchain.
-//
-// On the IOTA network, checkpoints define the history of the blockchain. They
-// are quite similar to the concept of blocks used by other blockchains like
-// Bitcoin or Ethereum. The IOTA blockchain, however, forms checkpoints after
-// transaction execution has already happened to provide a certified history of
-// the chain, instead of being formed before execution.
-//
-// Checkpoints commit to a variety of state including but not limited to:
-// - The hash of the previous checkpoint.
-// - The set of transaction digests, their corresponding effects digests, as
-// well as the set of user signatures which authorized its execution.
-// - The object's produced by a transaction.
-// - The set of live objects that make up the current state of the chain.
-// - On epoch transitions, the next validator committee.
-//
-// `CheckpointSummary`s themselves don't directly include all of the above
-// information but they are the top-level type by which all the above are
-// committed to transitively via cryptographic hashes included in the summary.
-// `CheckpointSummary`s are signed and certified by a quorum of the validator
-// committee in a given epoch in order to allow verification of the chain's
-// state.
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// checkpoint-summary = u64                            ; epoch
-// u64                            ; sequence_number
-// u64                            ; network_total_transactions
-// digest                         ; content_digest
-// (option digest)                ; previous_digest
-// gas-cost-summary               ; epoch_rolling_gas_cost_summary
-// u64                            ; timestamp_ms
-// (vector checkpoint-commitment) ; checkpoint_commitments
-// (option end-of-epoch-data)     ; end_of_epoch_data
-// bytes                          ; version_specific_data
-// ```
-type CheckpointSummary struct {
-	// Epoch that this checkpoint belongs to.
-	Epoch uint64
-	// The height of this checkpoint.
-	SequenceNumber uint64
-	// Total number of transactions committed since genesis, including those in
-	// this checkpoint.
-	NetworkTotalTransactions uint64
-	// The hash of the `CheckpointContents` for this checkpoint.
-	ContentDigest *Digest
-	// The hash of the previous `CheckpointSummary`.
-	//
-	// This will be only be `None` for the first, or genesis checkpoint.
-	PreviousDigest **Digest
-	// The running total gas costs of all transactions included in the current
-	// epoch so far until this checkpoint.
-	EpochRollingGasCostSummary GasCostSummary
-	// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
-	// Checkpoint timestamps are monotonic, but not strongly monotonic -
-	// subsequent checkpoints can have same timestamp if they originate
-	// from the same underlining consensus commit
-	TimestampMs uint64
-	// Commitments to checkpoint-specific state.
-	CheckpointCommitments []*CheckpointCommitment
-	// Extra data only present in the final checkpoint of an epoch.
-	EndOfEpochData *EndOfEpochData
-	// CheckpointSummary is not an evolvable structure - it must be readable by
-	// any version of the code. Therefore, in order to allow extensions to
-	// be added to CheckpointSummary, we allow opaque data to be added to
-	// checkpoints which can be deserialized based on the current
-	// protocol version.
-	VersionSpecificData []byte
-}
-
-func (r *CheckpointSummary) Destroy() {
-		FfiDestroyerUint64{}.Destroy(r.Epoch);
-		FfiDestroyerUint64{}.Destroy(r.SequenceNumber);
-		FfiDestroyerUint64{}.Destroy(r.NetworkTotalTransactions);
-		FfiDestroyerDigest{}.Destroy(r.ContentDigest);
-		FfiDestroyerOptionalDigest{}.Destroy(r.PreviousDigest);
-		FfiDestroyerGasCostSummary{}.Destroy(r.EpochRollingGasCostSummary);
-		FfiDestroyerUint64{}.Destroy(r.TimestampMs);
-		FfiDestroyerSequenceCheckpointCommitment{}.Destroy(r.CheckpointCommitments);
-		FfiDestroyerOptionalEndOfEpochData{}.Destroy(r.EndOfEpochData);
-		FfiDestroyerBytes{}.Destroy(r.VersionSpecificData);
-}
-
-type FfiConverterCheckpointSummary struct {}
-
-var FfiConverterCheckpointSummaryINSTANCE = FfiConverterCheckpointSummary{}
-
-func (c FfiConverterCheckpointSummary) Lift(rb RustBufferI) CheckpointSummary {
-	return LiftFromRustBuffer[CheckpointSummary](c, rb)
-}
-
-func (c FfiConverterCheckpointSummary) Read(reader io.Reader) CheckpointSummary {
-	return CheckpointSummary {
-			FfiConverterUint64INSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
-			FfiConverterDigestINSTANCE.Read(reader),
-			FfiConverterOptionalDigestINSTANCE.Read(reader),
-			FfiConverterGasCostSummaryINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
-			FfiConverterSequenceCheckpointCommitmentINSTANCE.Read(reader),
-			FfiConverterOptionalEndOfEpochDataINSTANCE.Read(reader),
-			FfiConverterBytesINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterCheckpointSummary) Lower(value CheckpointSummary) C.RustBuffer {
-	return LowerIntoRustBuffer[CheckpointSummary](c, value)
-}
-
-func (c FfiConverterCheckpointSummary) Write(writer io.Writer, value CheckpointSummary) {
-		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
-		FfiConverterUint64INSTANCE.Write(writer, value.SequenceNumber);
-		FfiConverterUint64INSTANCE.Write(writer, value.NetworkTotalTransactions);
-		FfiConverterDigestINSTANCE.Write(writer, value.ContentDigest);
-		FfiConverterOptionalDigestINSTANCE.Write(writer, value.PreviousDigest);
-		FfiConverterGasCostSummaryINSTANCE.Write(writer, value.EpochRollingGasCostSummary);
-		FfiConverterUint64INSTANCE.Write(writer, value.TimestampMs);
-		FfiConverterSequenceCheckpointCommitmentINSTANCE.Write(writer, value.CheckpointCommitments);
-		FfiConverterOptionalEndOfEpochDataINSTANCE.Write(writer, value.EndOfEpochData);
-		FfiConverterBytesINSTANCE.Write(writer, value.VersionSpecificData);
-}
-
-type FfiDestroyerCheckpointSummary struct {}
-
-func (_ FfiDestroyerCheckpointSummary) Destroy(value CheckpointSummary) {
-	value.Destroy()
-}
 // A page of items returned by the GraphQL server.
 type CheckpointSummaryPage struct {
 	// Information about the page, such as the cursor and whether there are
 	// more pages.
 	PageInfo PageInfo
 	// The data returned by the server.
-	Data []CheckpointSummary
+	Data []*CheckpointSummary
 }
 
 func (r *CheckpointSummaryPage) Destroy() {
@@ -26340,6 +27623,43 @@ func (_ FfiDestroyerOptionalBatchSendStatus) Destroy(value **BatchSendStatus) {
 	}
 }
 
+type FfiConverterOptionalCheckpointSummary struct{}
+
+var FfiConverterOptionalCheckpointSummaryINSTANCE = FfiConverterOptionalCheckpointSummary{}
+
+func (c FfiConverterOptionalCheckpointSummary) Lift(rb RustBufferI) **CheckpointSummary {
+	return LiftFromRustBuffer[**CheckpointSummary](c, rb)
+}
+
+func (_ FfiConverterOptionalCheckpointSummary) Read(reader io.Reader) **CheckpointSummary {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterCheckpointSummaryINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalCheckpointSummary) Lower(value **CheckpointSummary) C.RustBuffer {
+	return LowerIntoRustBuffer[**CheckpointSummary](c, value)
+}
+
+func (_ FfiConverterOptionalCheckpointSummary) Write(writer io.Writer, value **CheckpointSummary) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterCheckpointSummaryINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalCheckpointSummary struct {}
+
+func (_ FfiDestroyerOptionalCheckpointSummary) Destroy(value **CheckpointSummary) {
+	if value != nil {
+		FfiDestroyerCheckpointSummary{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalDigest struct{}
 
 var FfiConverterOptionalDigestINSTANCE = FfiConverterOptionalDigest{}
@@ -27114,43 +28434,6 @@ type FfiDestroyerOptionalZkloginVerifier struct {}
 func (_ FfiDestroyerOptionalZkloginVerifier) Destroy(value **ZkloginVerifier) {
 	if value != nil {
 		FfiDestroyerZkloginVerifier{}.Destroy(*value)
-	}
-}
-
-type FfiConverterOptionalCheckpointSummary struct{}
-
-var FfiConverterOptionalCheckpointSummaryINSTANCE = FfiConverterOptionalCheckpointSummary{}
-
-func (c FfiConverterOptionalCheckpointSummary) Lift(rb RustBufferI) *CheckpointSummary {
-	return LiftFromRustBuffer[*CheckpointSummary](c, rb)
-}
-
-func (_ FfiConverterOptionalCheckpointSummary) Read(reader io.Reader) *CheckpointSummary {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterCheckpointSummaryINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalCheckpointSummary) Lower(value *CheckpointSummary) C.RustBuffer {
-	return LowerIntoRustBuffer[*CheckpointSummary](c, value)
-}
-
-func (_ FfiConverterOptionalCheckpointSummary) Write(writer io.Writer, value *CheckpointSummary) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterCheckpointSummaryINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalCheckpointSummary struct {}
-
-func (_ FfiDestroyerOptionalCheckpointSummary) Destroy(value *CheckpointSummary) {
-	if value != nil {
-		FfiDestroyerCheckpointSummary{}.Destroy(*value)
 	}
 }
 
@@ -28461,6 +29744,49 @@ func (FfiDestroyerSequenceBytes) Destroy(sequence [][]byte) {
 	}
 }
 
+type FfiConverterSequenceAddress struct{}
+
+var FfiConverterSequenceAddressINSTANCE = FfiConverterSequenceAddress{}
+
+func (c FfiConverterSequenceAddress) Lift(rb RustBufferI) []*Address {
+	return LiftFromRustBuffer[[]*Address](c, rb)
+}
+
+func (c FfiConverterSequenceAddress) Read(reader io.Reader) []*Address {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*Address, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterAddressINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceAddress) Lower(value []*Address) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*Address](c, value)
+}
+
+func (c FfiConverterSequenceAddress) Write(writer io.Writer, value []*Address) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*Address is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterAddressINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceAddress struct {}
+
+func (FfiDestroyerSequenceAddress) Destroy(sequence []*Address) {
+	for _, value := range sequence {
+		FfiDestroyerAddress{}.Destroy(value)
+	}
+}
+
 type FfiConverterSequenceArgument struct{}
 
 var FfiConverterSequenceArgumentINSTANCE = FfiConverterSequenceArgument{}
@@ -28587,6 +29913,92 @@ type FfiDestroyerSequenceCheckpointCommitment struct {}
 func (FfiDestroyerSequenceCheckpointCommitment) Destroy(sequence []*CheckpointCommitment) {
 	for _, value := range sequence {
 		FfiDestroyerCheckpointCommitment{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceCheckpointSummary struct{}
+
+var FfiConverterSequenceCheckpointSummaryINSTANCE = FfiConverterSequenceCheckpointSummary{}
+
+func (c FfiConverterSequenceCheckpointSummary) Lift(rb RustBufferI) []*CheckpointSummary {
+	return LiftFromRustBuffer[[]*CheckpointSummary](c, rb)
+}
+
+func (c FfiConverterSequenceCheckpointSummary) Read(reader io.Reader) []*CheckpointSummary {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*CheckpointSummary, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterCheckpointSummaryINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceCheckpointSummary) Lower(value []*CheckpointSummary) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*CheckpointSummary](c, value)
+}
+
+func (c FfiConverterSequenceCheckpointSummary) Write(writer io.Writer, value []*CheckpointSummary) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*CheckpointSummary is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterCheckpointSummaryINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceCheckpointSummary struct {}
+
+func (FfiDestroyerSequenceCheckpointSummary) Destroy(sequence []*CheckpointSummary) {
+	for _, value := range sequence {
+		FfiDestroyerCheckpointSummary{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceCheckpointTransactionInfo struct{}
+
+var FfiConverterSequenceCheckpointTransactionInfoINSTANCE = FfiConverterSequenceCheckpointTransactionInfo{}
+
+func (c FfiConverterSequenceCheckpointTransactionInfo) Lift(rb RustBufferI) []*CheckpointTransactionInfo {
+	return LiftFromRustBuffer[[]*CheckpointTransactionInfo](c, rb)
+}
+
+func (c FfiConverterSequenceCheckpointTransactionInfo) Read(reader io.Reader) []*CheckpointTransactionInfo {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*CheckpointTransactionInfo, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterCheckpointTransactionInfoINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceCheckpointTransactionInfo) Lower(value []*CheckpointTransactionInfo) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*CheckpointTransactionInfo](c, value)
+}
+
+func (c FfiConverterSequenceCheckpointTransactionInfo) Write(writer io.Writer, value []*CheckpointTransactionInfo) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*CheckpointTransactionInfo is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterCheckpointTransactionInfoINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceCheckpointTransactionInfo struct {}
+
+func (FfiDestroyerSequenceCheckpointTransactionInfo) Destroy(sequence []*CheckpointTransactionInfo) {
+	for _, value := range sequence {
+		FfiDestroyerCheckpointTransactionInfo{}.Destroy(value)
 	}
 }
 
@@ -29533,49 +30945,6 @@ type FfiDestroyerSequenceChangedObject struct {}
 func (FfiDestroyerSequenceChangedObject) Destroy(sequence []ChangedObject) {
 	for _, value := range sequence {
 		FfiDestroyerChangedObject{}.Destroy(value)
-	}
-}
-
-type FfiConverterSequenceCheckpointSummary struct{}
-
-var FfiConverterSequenceCheckpointSummaryINSTANCE = FfiConverterSequenceCheckpointSummary{}
-
-func (c FfiConverterSequenceCheckpointSummary) Lift(rb RustBufferI) []CheckpointSummary {
-	return LiftFromRustBuffer[[]CheckpointSummary](c, rb)
-}
-
-func (c FfiConverterSequenceCheckpointSummary) Read(reader io.Reader) []CheckpointSummary {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]CheckpointSummary, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterCheckpointSummaryINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceCheckpointSummary) Lower(value []CheckpointSummary) C.RustBuffer {
-	return LowerIntoRustBuffer[[]CheckpointSummary](c, value)
-}
-
-func (c FfiConverterSequenceCheckpointSummary) Write(writer io.Writer, value []CheckpointSummary) {
-	if len(value) > math.MaxInt32 {
-		panic("[]CheckpointSummary is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterCheckpointSummaryINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceCheckpointSummary struct {}
-
-func (FfiDestroyerSequenceCheckpointSummary) Destroy(sequence []CheckpointSummary) {
-	for _, value := range sequence {
-		FfiDestroyerCheckpointSummary{}.Destroy(value)
 	}
 }
 

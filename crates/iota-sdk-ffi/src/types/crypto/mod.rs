@@ -8,7 +8,10 @@ pub mod zklogin;
 
 use std::sync::Arc;
 
-use crate::{error::Result, types::signature::SimpleSignature};
+use crate::{
+    error::Result,
+    types::{address::Address, signature::SimpleSignature},
+};
 
 macro_rules! impl_crypto_object {
     ($(#[$meta:meta])* $t:ident) => {
@@ -70,6 +73,19 @@ impl_crypto_object!(
     /// ```
     Ed25519PublicKey
 );
+
+impl Ed25519PublicKey {
+    /// Derive an `Address` from this Public Key
+    ///
+    /// An `Address` can be derived from an `Ed25519PublicKey` by hashing the
+    /// bytes of the public key with no prefix flag.
+    ///
+    /// `hash(32-byte ed25519 public key)`
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
+    }
+}
+
 impl_crypto_object!(
     /// A secp256k1 signature.
     ///
@@ -82,6 +98,20 @@ impl_crypto_object!(
     /// ```
     Secp256k1PublicKey
 );
+
+impl Secp256k1PublicKey {
+    /// Derive an `Address` from this Public Key
+    ///
+    /// An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
+    /// bytes of the public key prefixed with the Secp256r1
+    /// `SignatureScheme` flag (`0x02`).
+    ///
+    /// `hash( 0x02 || 33-byte secp256r1 public key)`
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
+    }
+}
+
 impl_crypto_object!(
     /// A secp256r1 signature.
     ///
@@ -94,6 +124,20 @@ impl_crypto_object!(
     /// ```
     Secp256r1PublicKey
 );
+
+impl Secp256r1PublicKey {
+    /// Derive an `Address` from this Public Key
+    ///
+    /// An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
+    /// bytes of the public key prefixed with the Secp256r1
+    /// `SignatureScheme` flag (`0x02`).
+    ///
+    /// `hash( 0x02 || 33-byte secp256r1 public key)`
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
+    }
+}
+
 impl_crypto_object!(
     /// An ed25519 signature.
     ///

@@ -70,6 +70,14 @@ impl Transaction {
     pub fn expiration(&self) -> TransactionExpiration {
         self.0.expiration
     }
+
+    pub fn digest(&self) -> Digest {
+        self.0.digest().into()
+    }
+
+    pub fn signing_digest(&self) -> Vec<u8> {
+        self.0.signing_digest().to_vec()
+    }
 }
 
 #[derive(uniffi::Record)]
@@ -1450,6 +1458,10 @@ impl TransactionEffects {
 
     pub fn as_v1(&self) -> TransactionEffectsV1 {
         self.0.as_v1().clone().into()
+    }
+
+    pub fn digest(&self) -> Digest {
+        self.0.digest().into()
     }
 }
 
