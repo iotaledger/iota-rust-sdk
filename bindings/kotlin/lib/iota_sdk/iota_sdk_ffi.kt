@@ -2147,6 +2147,12 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2962,9 +2968,15 @@ fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_address_seed(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a(
 ): Short
@@ -5021,9 +5033,15 @@ fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(`ptr`: Pointer,unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_zkloginproof(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6393,10 +6411,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_header_base64() != 32056.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss() != 1099.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_iss_base64_details() != 20914.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_jwk_id() != 37580.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_proof_points() != 28172.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_zklogininputs_public_identifier() != 48158.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginproof_a() != 6891.toShort()) {
@@ -40936,9 +40963,15 @@ public interface ZkLoginInputsInterface {
     
     fun `headerBase64`(): kotlin.String
     
+    fun `iss`(): kotlin.String
+    
     fun `issBase64Details`(): ZkLoginClaim
     
+    fun `jwkId`(): JwkId
+    
     fun `proofPoints`(): ZkLoginProof
+    
+    fun `publicIdentifier`(): ZkLoginPublicIdentifier
     
     companion object
 }
@@ -41071,6 +41104,18 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
     }
     
 
+    override fun `iss`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `issBase64Details`(): ZkLoginClaim {
             return FfiConverterTypeZkLoginClaim.lift(
     callWithPointer {
@@ -41083,11 +41128,35 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
     }
     
 
+    override fun `jwkId`(): JwkId {
+            return FfiConverterTypeJwkId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `proofPoints`(): ZkLoginProof {
             return FfiConverterTypeZkLoginProof.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `publicIdentifier`(): ZkLoginPublicIdentifier {
+            return FfiConverterTypeZkLoginPublicIdentifier.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
         it, _status)
 }
     }
