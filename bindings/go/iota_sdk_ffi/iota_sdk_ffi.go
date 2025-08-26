@@ -3762,6 +3762,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes()
+	})
+	if checksum != 59039 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch()
 	})
 	if checksum != 54283 {
@@ -21165,6 +21174,7 @@ func (_ FfiDestroyerUserSignatureVerifier) Destroy(value *UserSignatureVerifier)
 // See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
 // serialized format of RoaringBitmaps.
 type ValidatorAggregatedSignatureInterface interface {
+	BitmapBytes() ([]byte, error)
 	Epoch() uint64
 	Signature() *Bls12381Signature
 }
@@ -21202,6 +21212,23 @@ func NewValidatorAggregatedSignature(epoch uint64, signature *Bls12381Signature,
 
 
 
+
+func (_self *ValidatorAggregatedSignature) BitmapBytes() ([]byte, error) {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorAggregatedSignature")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 func (_self *ValidatorAggregatedSignature) Epoch() uint64 {
 	_pointer := _self.ffiObject.incrementPointer("*ValidatorAggregatedSignature")

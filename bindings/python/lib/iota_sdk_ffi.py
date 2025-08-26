@@ -1217,6 +1217,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier() != 9821:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes() != 59039:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch() != 54283:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature() != 39125:
@@ -5698,6 +5700,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_validatoraggregatedsignature_new.a
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_validatoraggregatedsignature_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_epoch.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7446,6 +7453,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogi
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch.restype = ctypes.c_uint16
@@ -35786,6 +35796,8 @@ class ValidatorAggregatedSignatureProtocol(typing.Protocol):
     serialized format of RoaringBitmaps.
     """
 
+    def bitmap_bytes(self, ):
+        raise NotImplementedError
     def epoch(self, ):
         raise NotImplementedError
     def signature(self, ):
@@ -35842,6 +35854,15 @@ class ValidatorAggregatedSignature():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def bitmap_bytes(self, ) -> "bytes":
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
     def epoch(self, ) -> "int":

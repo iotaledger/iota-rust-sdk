@@ -2145,6 +2145,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2915,6 +2917,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify(
 fun uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch(
 ): Short
@@ -4931,6 +4935,8 @@ fun uniffi_iota_sdk_ffi_fn_free_validatoraggregatedsignature(`ptr`: Pointer,unif
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_validatoraggregatedsignature_new(`epoch`: Long,`signature`: Pointer,`bitmapBytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6319,6 +6325,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier() != 9821.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes() != 59039.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch() != 54283.toShort()) {
@@ -38883,6 +38892,8 @@ public object FfiConverterTypeUserSignatureVerifier: FfiConverter<UserSignatureV
  */
 public interface ValidatorAggregatedSignatureInterface {
     
+    fun `bitmapBytes`(): kotlin.ByteArray
+    
     fun `epoch`(): kotlin.ULong
     
     fun `signature`(): Bls12381Signature
@@ -38997,6 +39008,19 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(pointer!!, status)
         }
     }
+
+    
+    @Throws(SdkFfiException::class)override fun `bitmapBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     override fun `epoch`(): kotlin.ULong {
             return FfiConverterULong.lift(
