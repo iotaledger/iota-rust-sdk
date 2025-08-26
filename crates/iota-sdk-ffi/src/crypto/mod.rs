@@ -1,6 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+pub mod bls12381;
 pub mod ed25519;
 pub mod multisig;
 pub mod passkey;

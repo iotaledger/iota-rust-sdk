@@ -387,6 +387,51 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_public_key()
+	})
+	if checksum != 53765 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_scheme()
+	})
+	if checksum != 8293 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_scheme: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary()
+	})
+	if checksum != 1487 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_try_sign()
+	})
+	if checksum != 59341 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_try_sign: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_verifying_key()
+	})
+	if checksum != 36438 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_verifying_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes()
 	})
 	if checksum != 9890 {
@@ -401,6 +446,24 @@ func uniffiCheckChecksums() {
 	if checksum != 56969 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key()
+	})
+	if checksum != 59353 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify()
+	})
+	if checksum != 54718 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3699,6 +3762,96 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes()
+	})
+	if checksum != 59039 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch()
+	})
+	if checksum != 54283 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature()
+	})
+	if checksum != 39125 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature()
+	})
+	if checksum != 13923 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee()
+	})
+	if checksum != 36159 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish()
+	})
+	if checksum != 7324 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee()
+	})
+	if checksum != 5093 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify()
+	})
+	if checksum != 29238 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated()
+	})
+	if checksum != 46271 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary()
+	})
+	if checksum != 36331 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration()
 	})
 	if checksum != 59803 {
@@ -3713,6 +3866,33 @@ func uniffiCheckChecksums() {
 	if checksum != 10003 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch()
+	})
+	if checksum != 15301 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key()
+	})
+	if checksum != 16384 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature()
+	})
+	if checksum != 58273 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3960,6 +4140,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_generate()
+	})
+	if checksum != 14780 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_generate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_new()
+	})
+	if checksum != 52467 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes()
 	})
 	if checksum != 6069 {
@@ -4010,6 +4208,15 @@ func uniffiCheckChecksums() {
 	if checksum != 58435 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new()
+	})
+	if checksum != 22402 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5562,11 +5769,47 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new()
+	})
+	if checksum != 15846 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary()
+	})
+	if checksum != 25823 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new()
+	})
+	if checksum != 17424 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new()
 	})
 	if checksum != 47546 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new()
+	})
+	if checksum != 2599 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6428,6 +6671,141 @@ func (_ FfiDestroyerBatchSendStatus) Destroy(value *BatchSendStatus) {
 
 
 
+type Bls12381PrivateKeyInterface interface {
+	PublicKey() *Bls12381PublicKey
+	Scheme() SignatureScheme
+	SignCheckpointSummary(summary *CheckpointSummary) *ValidatorSignature
+	TrySign(message []byte) (*Bls12381Signature, error)
+	VerifyingKey() *Bls12381VerifyingKey
+}
+type Bls12381PrivateKey struct {
+	ffiObject FfiObject
+}
+func NewBls12381PrivateKey(bytes []byte) (*Bls12381PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_new(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Bls12381PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBls12381PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+func Bls12381PrivateKeyGenerate() *Bls12381PrivateKey {
+	return FfiConverterBls12381PrivateKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_generate(_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Bls12381PrivateKey) PublicKey() *Bls12381PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBls12381PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_public_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *Bls12381PrivateKey) Scheme() SignatureScheme {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *Bls12381PrivateKey) SignCheckpointSummary(summary *CheckpointSummary) *ValidatorSignature {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterValidatorSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_sign_checkpoint_summary(
+		_pointer,FfiConverterCheckpointSummaryINSTANCE.Lower(summary),_uniffiStatus)
+	}))
+}
+
+func (_self *Bls12381PrivateKey) TrySign(message []byte) (*Bls12381Signature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_try_sign(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Bls12381Signature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBls12381SignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *Bls12381PrivateKey) VerifyingKey() *Bls12381VerifyingKey {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBls12381VerifyingKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_verifying_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *Bls12381PrivateKey) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterBls12381PrivateKey struct {}
+
+var FfiConverterBls12381PrivateKeyINSTANCE = FfiConverterBls12381PrivateKey{}
+
+
+func (c FfiConverterBls12381PrivateKey) Lift(pointer unsafe.Pointer) *Bls12381PrivateKey {
+	result := &Bls12381PrivateKey {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_bls12381privatekey(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Bls12381PrivateKey).Destroy)
+	return result
+}
+
+func (c FfiConverterBls12381PrivateKey) Read(reader io.Reader) *Bls12381PrivateKey {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterBls12381PrivateKey) Lower(value *Bls12381PrivateKey) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Bls12381PrivateKey")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterBls12381PrivateKey) Write(writer io.Writer, value *Bls12381PrivateKey) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerBls12381PrivateKey struct {}
+
+func (_ FfiDestroyerBls12381PrivateKey) Destroy(value *Bls12381PrivateKey) {
+		value.Destroy()
+}
+
+
+
 // A bls12381 min-sig public key.
 //
 // # BCS
@@ -6683,6 +7061,99 @@ func (c FfiConverterBls12381Signature) Write(writer io.Writer, value *Bls12381Si
 type FfiDestroyerBls12381Signature struct {}
 
 func (_ FfiDestroyerBls12381Signature) Destroy(value *Bls12381Signature) {
+		value.Destroy()
+}
+
+
+
+type Bls12381VerifyingKeyInterface interface {
+	PublicKey() *Bls12381PublicKey
+	Verify(message []byte, signature *Bls12381Signature) error
+}
+type Bls12381VerifyingKey struct {
+	ffiObject FfiObject
+}
+func NewBls12381VerifyingKey(publicKey *Bls12381PublicKey) (*Bls12381VerifyingKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_bls12381verifyingkey_new(FfiConverterBls12381PublicKeyINSTANCE.Lower(publicKey),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Bls12381VerifyingKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBls12381VerifyingKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+
+
+func (_self *Bls12381VerifyingKey) PublicKey() *Bls12381PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBls12381PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_public_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *Bls12381VerifyingKey) Verify(message []byte, signature *Bls12381Signature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_verify(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterBls12381SignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+func (object *Bls12381VerifyingKey) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterBls12381VerifyingKey struct {}
+
+var FfiConverterBls12381VerifyingKeyINSTANCE = FfiConverterBls12381VerifyingKey{}
+
+
+func (c FfiConverterBls12381VerifyingKey) Lift(pointer unsafe.Pointer) *Bls12381VerifyingKey {
+	result := &Bls12381VerifyingKey {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_bls12381verifyingkey(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_bls12381verifyingkey(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Bls12381VerifyingKey).Destroy)
+	return result
+}
+
+func (c FfiConverterBls12381VerifyingKey) Read(reader io.Reader) *Bls12381VerifyingKey {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterBls12381VerifyingKey) Lower(value *Bls12381VerifyingKey) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Bls12381VerifyingKey")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterBls12381VerifyingKey) Write(writer io.Writer, value *Bls12381VerifyingKey) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerBls12381VerifyingKey struct {}
+
+func (_ FfiDestroyerBls12381VerifyingKey) Destroy(value *Bls12381VerifyingKey) {
 		value.Destroy()
 }
 
@@ -20685,6 +21156,380 @@ func (_ FfiDestroyerUserSignatureVerifier) Destroy(value *UserSignatureVerifier)
 
 
 
+// An aggregated signature from multiple Validators.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// validator-aggregated-signature = u64               ; epoch
+// bls-signature
+// roaring-bitmap
+// roaring-bitmap = bytes  ; where the contents of the bytes are valid
+// ; according to the serialized spec for
+// ; roaring bitmaps
+// ```
+//
+// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+// serialized format of RoaringBitmaps.
+type ValidatorAggregatedSignatureInterface interface {
+	BitmapBytes() ([]byte, error)
+	Epoch() uint64
+	Signature() *Bls12381Signature
+}
+// An aggregated signature from multiple Validators.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// validator-aggregated-signature = u64               ; epoch
+// bls-signature
+// roaring-bitmap
+// roaring-bitmap = bytes  ; where the contents of the bytes are valid
+// ; according to the serialized spec for
+// ; roaring bitmaps
+// ```
+//
+// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+// serialized format of RoaringBitmaps.
+type ValidatorAggregatedSignature struct {
+	ffiObject FfiObject
+}
+func NewValidatorAggregatedSignature(epoch uint64, signature *Bls12381Signature, bitmapBytes []byte) (*ValidatorAggregatedSignature, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_validatoraggregatedsignature_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterBls12381SignatureINSTANCE.Lower(signature), FfiConverterBytesINSTANCE.Lower(bitmapBytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ValidatorAggregatedSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterValidatorAggregatedSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+
+
+func (_self *ValidatorAggregatedSignature) BitmapBytes() ([]byte, error) {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorAggregatedSignature")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *ValidatorAggregatedSignature) Epoch() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorAggregatedSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_epoch(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *ValidatorAggregatedSignature) Signature() *Bls12381Signature {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorAggregatedSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBls12381SignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *ValidatorAggregatedSignature) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterValidatorAggregatedSignature struct {}
+
+var FfiConverterValidatorAggregatedSignatureINSTANCE = FfiConverterValidatorAggregatedSignature{}
+
+
+func (c FfiConverterValidatorAggregatedSignature) Lift(pointer unsafe.Pointer) *ValidatorAggregatedSignature {
+	result := &ValidatorAggregatedSignature {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_validatoraggregatedsignature(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ValidatorAggregatedSignature).Destroy)
+	return result
+}
+
+func (c FfiConverterValidatorAggregatedSignature) Read(reader io.Reader) *ValidatorAggregatedSignature {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterValidatorAggregatedSignature) Lower(value *ValidatorAggregatedSignature) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ValidatorAggregatedSignature")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterValidatorAggregatedSignature) Write(writer io.Writer, value *ValidatorAggregatedSignature) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerValidatorAggregatedSignature struct {}
+
+func (_ FfiDestroyerValidatorAggregatedSignature) Destroy(value *ValidatorAggregatedSignature) {
+		value.Destroy()
+}
+
+
+
+type ValidatorCommitteeSignatureAggregatorInterface interface {
+	AddSignature(signature *ValidatorSignature) error
+	Committee() ValidatorCommittee
+	Finish() (*ValidatorAggregatedSignature, error)
+}
+type ValidatorCommitteeSignatureAggregator struct {
+	ffiObject FfiObject
+}
+
+
+func ValidatorCommitteeSignatureAggregatorNewCheckpointSummary(committee ValidatorCommittee, summary *CheckpointSummary) (*ValidatorCommitteeSignatureAggregator, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(FfiConverterValidatorCommitteeINSTANCE.Lower(committee), FfiConverterCheckpointSummaryINSTANCE.Lower(summary),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ValidatorCommitteeSignatureAggregator
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterValidatorCommitteeSignatureAggregatorINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+
+func (_self *ValidatorCommitteeSignatureAggregator) AddSignature(signature *ValidatorSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorCommitteeSignatureAggregator")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(
+		_pointer,FfiConverterValidatorSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *ValidatorCommitteeSignatureAggregator) Committee() ValidatorCommittee {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorCommitteeSignatureAggregator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterValidatorCommitteeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *ValidatorCommitteeSignatureAggregator) Finish() (*ValidatorAggregatedSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorCommitteeSignatureAggregator")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ValidatorAggregatedSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterValidatorAggregatedSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+func (object *ValidatorCommitteeSignatureAggregator) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterValidatorCommitteeSignatureAggregator struct {}
+
+var FfiConverterValidatorCommitteeSignatureAggregatorINSTANCE = FfiConverterValidatorCommitteeSignatureAggregator{}
+
+
+func (c FfiConverterValidatorCommitteeSignatureAggregator) Lift(pointer unsafe.Pointer) *ValidatorCommitteeSignatureAggregator {
+	result := &ValidatorCommitteeSignatureAggregator {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ValidatorCommitteeSignatureAggregator).Destroy)
+	return result
+}
+
+func (c FfiConverterValidatorCommitteeSignatureAggregator) Read(reader io.Reader) *ValidatorCommitteeSignatureAggregator {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterValidatorCommitteeSignatureAggregator) Lower(value *ValidatorCommitteeSignatureAggregator) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ValidatorCommitteeSignatureAggregator")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterValidatorCommitteeSignatureAggregator) Write(writer io.Writer, value *ValidatorCommitteeSignatureAggregator) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerValidatorCommitteeSignatureAggregator struct {}
+
+func (_ FfiDestroyerValidatorCommitteeSignatureAggregator) Destroy(value *ValidatorCommitteeSignatureAggregator) {
+		value.Destroy()
+}
+
+
+
+type ValidatorCommitteeSignatureVerifierInterface interface {
+	Committee() ValidatorCommittee
+	Verify(message []byte, signature *ValidatorSignature) error
+	VerifyAggregated(message []byte, signature *ValidatorAggregatedSignature) error
+	VerifyCheckpointSummary(summary *CheckpointSummary, signature *ValidatorAggregatedSignature) error
+}
+type ValidatorCommitteeSignatureVerifier struct {
+	ffiObject FfiObject
+}
+func NewValidatorCommitteeSignatureVerifier(committee ValidatorCommittee) (*ValidatorCommitteeSignatureVerifier, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(FfiConverterValidatorCommitteeINSTANCE.Lower(committee),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ValidatorCommitteeSignatureVerifier
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterValidatorCommitteeSignatureVerifierINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+
+
+func (_self *ValidatorCommitteeSignatureVerifier) Committee() ValidatorCommittee {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorCommitteeSignatureVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterValidatorCommitteeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *ValidatorCommitteeSignatureVerifier) Verify(message []byte, signature *ValidatorSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorCommitteeSignatureVerifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterValidatorSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *ValidatorCommitteeSignatureVerifier) VerifyAggregated(message []byte, signature *ValidatorAggregatedSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorCommitteeSignatureVerifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterValidatorAggregatedSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *ValidatorCommitteeSignatureVerifier) VerifyCheckpointSummary(summary *CheckpointSummary, signature *ValidatorAggregatedSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorCommitteeSignatureVerifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
+		_pointer,FfiConverterCheckpointSummaryINSTANCE.Lower(summary), FfiConverterValidatorAggregatedSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+func (object *ValidatorCommitteeSignatureVerifier) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterValidatorCommitteeSignatureVerifier struct {}
+
+var FfiConverterValidatorCommitteeSignatureVerifierINSTANCE = FfiConverterValidatorCommitteeSignatureVerifier{}
+
+
+func (c FfiConverterValidatorCommitteeSignatureVerifier) Lift(pointer unsafe.Pointer) *ValidatorCommitteeSignatureVerifier {
+	result := &ValidatorCommitteeSignatureVerifier {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ValidatorCommitteeSignatureVerifier).Destroy)
+	return result
+}
+
+func (c FfiConverterValidatorCommitteeSignatureVerifier) Read(reader io.Reader) *ValidatorCommitteeSignatureVerifier {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterValidatorCommitteeSignatureVerifier) Lower(value *ValidatorCommitteeSignatureVerifier) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ValidatorCommitteeSignatureVerifier")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterValidatorCommitteeSignatureVerifier) Write(writer io.Writer, value *ValidatorCommitteeSignatureVerifier) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerValidatorCommitteeSignatureVerifier struct {}
+
+func (_ FfiDestroyerValidatorCommitteeSignatureVerifier) Destroy(value *ValidatorCommitteeSignatureVerifier) {
+		value.Destroy()
+}
+
+
+
 // An execution time observation from a particular validator
 //
 // # BCS
@@ -20789,6 +21634,123 @@ func (c FfiConverterValidatorExecutionTimeObservation) Write(writer io.Writer, v
 type FfiDestroyerValidatorExecutionTimeObservation struct {}
 
 func (_ FfiDestroyerValidatorExecutionTimeObservation) Destroy(value *ValidatorExecutionTimeObservation) {
+		value.Destroy()
+}
+
+
+
+// A signature from a Validator
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// validator-signature = u64               ; epoch
+// bls-public-key
+// bls-signature
+// ```
+type ValidatorSignatureInterface interface {
+	Epoch() uint64
+	PublicKey() *Bls12381PublicKey
+	Signature() *Bls12381Signature
+}
+// A signature from a Validator
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// validator-signature = u64               ; epoch
+// bls-public-key
+// bls-signature
+// ```
+type ValidatorSignature struct {
+	ffiObject FfiObject
+}
+func NewValidatorSignature(epoch uint64, publicKey *Bls12381PublicKey, signature *Bls12381Signature) *ValidatorSignature {
+	return FfiConverterValidatorSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_validatorsignature_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterBls12381PublicKeyINSTANCE.Lower(publicKey), FfiConverterBls12381SignatureINSTANCE.Lower(signature),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *ValidatorSignature) Epoch() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatorsignature_epoch(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *ValidatorSignature) PublicKey() *Bls12381PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBls12381PublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatorsignature_public_key(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *ValidatorSignature) Signature() *Bls12381Signature {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBls12381SignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatorsignature_signature(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *ValidatorSignature) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterValidatorSignature struct {}
+
+var FfiConverterValidatorSignatureINSTANCE = FfiConverterValidatorSignature{}
+
+
+func (c FfiConverterValidatorSignature) Lift(pointer unsafe.Pointer) *ValidatorSignature {
+	result := &ValidatorSignature {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_validatorsignature(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_validatorsignature(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ValidatorSignature).Destroy)
+	return result
+}
+
+func (c FfiConverterValidatorSignature) Read(reader io.Reader) *ValidatorSignature {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterValidatorSignature) Lower(value *ValidatorSignature) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ValidatorSignature")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterValidatorSignature) Write(writer io.Writer, value *ValidatorSignature) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerValidatorSignature struct {}
+
+func (_ FfiDestroyerValidatorSignature) Destroy(value *ValidatorSignature) {
 		value.Destroy()
 }
 
@@ -25066,6 +26028,55 @@ func (c FfiConverterValidator) Write(writer io.Writer, value Validator) {
 type FfiDestroyerValidator struct {}
 
 func (_ FfiDestroyerValidator) Destroy(value Validator) {
+	value.Destroy()
+}
+// The Validator Set for a particular epoch.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// validator-committee = u64 ; epoch
+// (vector validator-committee-member)
+// ```
+type ValidatorCommittee struct {
+	Epoch uint64
+	Members []ValidatorCommitteeMember
+}
+
+func (r *ValidatorCommittee) Destroy() {
+		FfiDestroyerUint64{}.Destroy(r.Epoch);
+		FfiDestroyerSequenceValidatorCommitteeMember{}.Destroy(r.Members);
+}
+
+type FfiConverterValidatorCommittee struct {}
+
+var FfiConverterValidatorCommitteeINSTANCE = FfiConverterValidatorCommittee{}
+
+func (c FfiConverterValidatorCommittee) Lift(rb RustBufferI) ValidatorCommittee {
+	return LiftFromRustBuffer[ValidatorCommittee](c, rb)
+}
+
+func (c FfiConverterValidatorCommittee) Read(reader io.Reader) ValidatorCommittee {
+	return ValidatorCommittee {
+			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterSequenceValidatorCommitteeMemberINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterValidatorCommittee) Lower(value ValidatorCommittee) C.RustBuffer {
+	return LowerIntoRustBuffer[ValidatorCommittee](c, value)
+}
+
+func (c FfiConverterValidatorCommittee) Write(writer io.Writer, value ValidatorCommittee) {
+		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
+		FfiConverterSequenceValidatorCommitteeMemberINSTANCE.Write(writer, value.Members);
+}
+
+type FfiDestroyerValidatorCommittee struct {}
+
+func (_ FfiDestroyerValidatorCommittee) Destroy(value ValidatorCommittee) {
 	value.Destroy()
 }
 // A member of a Validator Committee
