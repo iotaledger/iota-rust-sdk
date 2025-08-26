@@ -209,14 +209,15 @@ impl GraphQLClient {
         &self,
         digest: Option<Arc<Digest>>,
         seq_num: Option<u64>,
-    ) -> Result<Option<CheckpointSummary>> {
+    ) -> Result<Option<Arc<CheckpointSummary>>> {
         Ok(self
             .0
             .read()
             .await
             .checkpoint(digest.map(|d| **d), seq_num)
             .await?
-            .map(Into::into))
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Get a page of [`CheckpointSummary`] for the provided parameters.

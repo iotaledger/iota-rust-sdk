@@ -49,9 +49,7 @@ impl Bls12381PrivateKey {
     }
 
     pub fn sign_checkpoint_summary(&self, summary: &CheckpointSummary) -> ValidatorSignature {
-        self.0
-            .sign_checkpoint_summary(&(summary.clone().into()))
-            .into()
+        self.0.sign_checkpoint_summary(&summary.0).into()
     }
 
     pub fn try_sign(&self, message: &[u8]) -> Result<Bls12381Signature> {
@@ -110,9 +108,7 @@ impl ValidatorCommitteeSignatureVerifier {
         summary: &CheckpointSummary,
         signature: &ValidatorAggregatedSignature,
     ) -> Result<()> {
-        Ok(self
-            .0
-            .verify_checkpoint_summary(&(summary.clone().into()), &signature.0)?)
+        Ok(self.0.verify_checkpoint_summary(&summary.0, &signature.0)?)
     }
 
     pub fn verify(&self, message: &[u8], signature: &ValidatorSignature) -> Result<()> {
@@ -146,12 +142,12 @@ impl ValidatorCommitteeSignatureAggregator {
     #[uniffi::constructor]
     pub fn new_checkpoint_summary(
         committee: ValidatorCommittee,
-        summary: CheckpointSummary,
+        summary: &CheckpointSummary,
     ) -> Result<Self> {
         Ok(Self(
             iota_crypto::bls12381::ValidatorCommitteeSignatureAggregator::new_checkpoint_summary(
                 committee.into(),
-                &(summary.into()),
+                &summary.0,
             )?
             .into(),
         ))
