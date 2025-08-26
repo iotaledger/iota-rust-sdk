@@ -215,7 +215,7 @@ impl ZkLoginInputs {
     }
 
     pub fn jwk_id(&self) -> JwkId {
-        self.0.jwk_id().clone().into()
+        self.0.jwk_id().clone()
     }
 
     pub fn iss(&self) -> String {
