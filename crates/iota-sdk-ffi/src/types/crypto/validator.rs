@@ -160,4 +160,10 @@ impl ValidatorAggregatedSignature {
     pub fn signature(&self) -> Bls12381Signature {
         self.0.signature.into()
     }
+
+    pub fn bitmap_bytes(&self) -> Result<Vec<u8>> {
+        let mut bytes = Vec::new();
+        self.0.bitmap.serialize_into(&mut bytes)?;
+        Ok(bytes)
+    }
 }
