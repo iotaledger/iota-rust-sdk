@@ -2079,6 +2079,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2171,6 +2173,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_network_total_transact
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms(
 ): Short
@@ -3481,6 +3485,8 @@ fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_previous_digest(`ptr`: Point
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_sequence_number(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_timestamp_ms(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_version_specific_data(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5104,6 +5110,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number() != 33896.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message() != 59962.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms() != 62474.toShort()) {
@@ -10991,6 +11000,8 @@ public interface CheckpointSummaryInterface {
      */
     fun `sequenceNumber`(): kotlin.ULong
     
+    fun `signingMessage`(): kotlin.ByteArray
+    
     /**
      * Timestamp of the checkpoint - number of milliseconds from the Unix epoch
      * Checkpoint timestamps are monotonic, but not strongly monotonic -
@@ -11270,6 +11281,18 @@ open class CheckpointSummary: Disposable, AutoCloseable, CheckpointSummaryInterf
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_sequence_number(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `signingMessage`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message(
         it, _status)
 }
     }

@@ -160,6 +160,10 @@ impl CheckpointSummary {
     pub fn digest(&self) -> Digest {
         self.0.digest().into()
     }
+
+    pub fn signing_message(&self) -> Vec<u8> {
+        self.0.signing_message()
+    }
 }
 
 /// The committed to contents of a checkpoint.
