@@ -1,0 +1,74 @@
+name: Lints
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+  schedule: [cron: "40 1 * * *"]
+
+concurrency:
+  group: lints-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+
+permissions:
+  contents: read
+
+env:
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: taiki-e/install-action@cargo-hack
+
+      - name: Install latest nightly
+        run: rustup toolchain install nightly --component rustfmt --allow-downgrade
+
+      - name: rustfmt
+        run: make check-fmt
+
+      - name: clippy
+        run: make clippy
+
+      - name: rustdoc
+        run: make doc
+
+      - name: feature compatibility
+        run: make check-features
+
+      - run: make is-dirty
+
+  deny-bans-licenses-sources:
+    name: cargo deny (bans, licenses, sources)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
+      - run: cargo deny --manifest-path ${{ inputs.manifest-path || './Cargo.toml' }} check bans licenses sources --hide-inclusion-graph
+
+  deny-advisories:
+    name: cargo deny (advisories)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
+      - run: cargo deny --manifest-path ${{ inputs.manifest-path || './Cargo.toml' }} check advisories --hide-inclusion-graph
+
+  check-unused-deps:
+    name: Check Unused Dependencies (${{ matrix.flags }})
+    strategy:
+      matrix:
+        flags: ["--all-features", "--no-default-features"]
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
+      - name: Install latest nightly
+        run: rustup toolchain install nightly --component udeps --allow-downgrade
+      - name: Run Cargo Udeps
+        run: cargo +nightly udeps ${{ matrix.flags }}
