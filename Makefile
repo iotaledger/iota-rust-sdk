@@ -74,6 +74,12 @@ bindings-examples: ## Run all bindings examples
 	$(MAKE) kotlin-examples
 	$(MAKE) python-examples
 
+.PHONY: bindings-example
+bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
+# 	$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
+# 	$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
+	$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
+
 # Build ffi crate and detect platform
 define build_binding
 cargo build -p iota-sdk-ffi --lib --release; \
