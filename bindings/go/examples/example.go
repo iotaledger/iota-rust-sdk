@@ -17,12 +17,6 @@ func isNilError(err error) bool {
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	chainID, err := client.ChainId()
-	if !isNilError(err) {
-		log.Fatalf("Failed to get chain ID: %v", err)
-	}
-	fmt.Println("Chain ID:", chainID)
-
 	address, err := sdk.AddressFromHex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
