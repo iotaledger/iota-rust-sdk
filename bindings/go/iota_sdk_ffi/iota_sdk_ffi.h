@@ -2322,9 +2322,24 @@ void uniffi_iota_sdk_ffi_fn_free_object(void* ptr, RustCallStatus *out_status
 void* uniffi_iota_sdk_ffi_fn_constructor_object_new(void* data, void* owner, void* previous_transaction, uint64_t storage_rebate, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_PACKAGE
+void* uniffi_iota_sdk_ffi_fn_method_object_as_package(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_PACKAGE_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_PACKAGE_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_object_as_package_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_STRUCT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_STRUCT
 RustBuffer uniffi_iota_sdk_ffi_fn_method_object_as_struct(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_STRUCT_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_STRUCT_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_DATA
@@ -5927,9 +5942,27 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier(v
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_PACKAGE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_object_as_package(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_PACKAGE_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_PACKAGE_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_STRUCT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_STRUCT
 uint16_t uniffi_iota_sdk_ffi_checksum_method_object_as_struct(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_STRUCT_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_STRUCT_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt(void
     
 );
 #endif

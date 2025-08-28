@@ -2052,11 +2052,38 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_object_as_package()
+	})
+	if checksum != 21763 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_as_package: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt()
+	})
+	if checksum != 61571 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_object_as_struct()
 	})
-	if checksum != 37303 {
+	if checksum != 5928 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_as_struct: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt()
+	})
+	if checksum != 49657 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -14835,8 +14862,14 @@ func (_ FfiDestroyerMultisigVerifier) Destroy(value *MultisigVerifier) {
 // object = object-data owner digest u64
 // ```
 type ObjectInterface interface {
+	// Interpret this object as a move package
+	AsPackage() *MovePackage
+	// Try to interpret this object as a move package
+	AsPackageOpt() **MovePackage
+	// Interpret this object as a move struct
+	AsStruct() MoveStruct
 	// Try to interpret this object as a move struct
-	AsStruct() *MoveStruct
+	AsStructOpt() *MoveStruct
 	// Return this object's data
 	Data() *ObjectData
 	// Calculate the digest of this `Object`
@@ -14880,13 +14913,47 @@ func NewObject(data *ObjectData, owner *Owner, previousTransaction *Digest, stor
 
 
 
+// Interpret this object as a move package
+func (_self *Object) AsPackage() *MovePackage {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterMovePackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_object_as_package(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Try to interpret this object as a move package
+func (_self *Object) AsPackageOpt() **MovePackage {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalMovePackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_object_as_package_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Interpret this object as a move struct
+func (_self *Object) AsStruct() MoveStruct {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterMoveStructINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_object_as_struct(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
 // Try to interpret this object as a move struct
-func (_self *Object) AsStruct() *MoveStruct {
+func (_self *Object) AsStructOpt() *MoveStruct {
 	_pointer := _self.ffiObject.incrementPointer("*Object")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalMoveStructINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_object_as_struct(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt(
 		_pointer,_uniffiStatus),
 	}
 	}))

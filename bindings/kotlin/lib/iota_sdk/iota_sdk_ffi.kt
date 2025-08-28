@@ -2153,6 +2153,12 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2544,7 +2550,13 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_object_as_package(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_as_struct(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_data(
 ): Short
@@ -4217,7 +4229,13 @@ fun uniffi_iota_sdk_ffi_fn_free_object(`ptr`: Pointer,uniffi_out_err: UniffiRust
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_object_new(`data`: Pointer,`owner`: Pointer,`previousTransaction`: Pointer,`storageRebate`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_object_as_package(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_object_as_package_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_object_as_struct(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_object_data(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5775,7 +5793,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier() != 5971.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct() != 37303.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_as_package() != 21763.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt() != 61571.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct() != 5928.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt() != 49657.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_object_data() != 4330.toShort()) {
@@ -25076,9 +25103,24 @@ public object FfiConverterTypeMultisigVerifier: FfiConverter<MultisigVerifier, P
 public interface ObjectInterface {
     
     /**
+     * Interpret this object as a move package
+     */
+    fun `asPackage`(): MovePackage
+    
+    /**
+     * Try to interpret this object as a move package
+     */
+    fun `asPackageOpt`(): MovePackage?
+    
+    /**
+     * Interpret this object as a move struct
+     */
+    fun `asStruct`(): MoveStruct
+    
+    /**
      * Try to interpret this object as a move struct
      */
-    fun `asStruct`(): MoveStruct?
+    fun `asStructOpt`(): MoveStruct?
     
     /**
      * Return this object's data
@@ -25230,12 +25272,57 @@ open class Object: Disposable, AutoCloseable, ObjectInterface
 
     
     /**
-     * Try to interpret this object as a move struct
-     */override fun `asStruct`(): MoveStruct? {
-            return FfiConverterOptionalTypeMoveStruct.lift(
+     * Interpret this object as a move package
+     */override fun `asPackage`(): MovePackage {
+            return FfiConverterTypeMovePackage.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_as_package(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Try to interpret this object as a move package
+     */override fun `asPackageOpt`(): MovePackage? {
+            return FfiConverterOptionalTypeMovePackage.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_as_package_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Interpret this object as a move struct
+     */override fun `asStruct`(): MoveStruct {
+            return FfiConverterTypeMoveStruct.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_as_struct(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Try to interpret this object as a move struct
+     */override fun `asStructOpt`(): MoveStruct? {
+            return FfiConverterOptionalTypeMoveStruct.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt(
         it, _status)
 }
     }

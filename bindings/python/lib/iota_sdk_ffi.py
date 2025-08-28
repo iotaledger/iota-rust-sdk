@@ -837,7 +837,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier() != 5971:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct() != 37303:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_object_as_package() != 21763:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt() != 61571:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct() != 5928:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt() != 49657:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_data() != 4330:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3813,11 +3819,26 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_object_new.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_object_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_package.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_package.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_package_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_package_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_struct.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_struct.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_data.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6904,9 +6925,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_ver
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_as_package.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_as_package.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_data.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_data.restype = ctypes.c_uint16
@@ -28889,7 +28919,25 @@ class ObjectProtocol(typing.Protocol):
     ```
     """
 
+    def as_package(self, ):
+        """
+        Interpret this object as a move package
+        """
+
+        raise NotImplementedError
+    def as_package_opt(self, ):
+        """
+        Try to interpret this object as a move package
+        """
+
+        raise NotImplementedError
     def as_struct(self, ):
+        """
+        Interpret this object as a move struct
+        """
+
+        raise NotImplementedError
+    def as_struct_opt(self, ):
         """
         Try to interpret this object as a move struct
         """
@@ -28997,13 +29045,52 @@ class Object():
         return inst
 
 
-    def as_struct(self, ) -> "typing.Optional[MoveStruct]":
+    def as_package(self, ) -> "MovePackage":
+        """
+        Interpret this object as a move package
+        """
+
+        return _UniffiConverterTypeMovePackage.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_package,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_package_opt(self, ) -> "typing.Optional[MovePackage]":
+        """
+        Try to interpret this object as a move package
+        """
+
+        return _UniffiConverterOptionalTypeMovePackage.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_package_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_struct(self, ) -> "MoveStruct":
+        """
+        Interpret this object as a move struct
+        """
+
+        return _UniffiConverterTypeMoveStruct.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_struct,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def as_struct_opt(self, ) -> "typing.Optional[MoveStruct]":
         """
         Try to interpret this object as a move struct
         """
 
         return _UniffiConverterOptionalTypeMoveStruct.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_struct,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt,self._uniffi_clone_pointer(),)
         )
 
 
