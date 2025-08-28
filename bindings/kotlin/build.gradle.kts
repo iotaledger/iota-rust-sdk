@@ -16,11 +16,16 @@ dependencies {
 
 kotlin { jvmToolchain(21) }
 
-application { mainClass.set("ExampleKt") }
+application {
+    mainClass.set("ExampleKt")
+    applicationDefaultJvmArgs = listOf(
+        "-Djna.library.path=${projectDir}/lib"
+    )
+}
 
 sourceSets {
     main {
-        kotlin { srcDirs("lib", "src/main/kotlin") }
+        kotlin { srcDirs("lib", "examples") }
         // Explicitly disable Java source sets since we only have Kotlin
         java { setSrcDirs(emptyList<String>()) }
     }
