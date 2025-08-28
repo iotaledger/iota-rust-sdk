@@ -207,8 +207,210 @@ impl From<ObjectRef> for iota_graphql_client::query_types::ObjectRef {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
-pub struct Epoch(pub iota_graphql_client::query_types::Epoch);
+#[derive(uniffi::Record)]
+pub struct Epoch {
+    /// The epoch's id as a sequence number that starts at 0 and is incremented
+    /// by one at every epoch change.
+    pub epoch_id: u64,
+    /// The storage fees paid for transactions executed during the epoch.
+    #[uniffi(default = None)]
+    pub fund_inflow: Option<String>,
+    /// The storage fee rebates paid to users who deleted the data associated
+    /// with past transactions.
+    #[uniffi(default = None)]
+    pub fund_outflow: Option<String>,
+    /// The storage fund available in this epoch.
+    /// This fund is used to redistribute storage fees from past transactions
+    /// to future validators.
+    #[uniffi(default = None)]
+    pub fund_size: Option<String>,
+    /// A commitment by the committee at the end of epoch on the contents of the
+    /// live object set at that time. This can be used to verify state
+    /// snapshots.
+    #[uniffi(default = None)]
+    pub live_object_set_digest: Option<String>,
+    /// The difference between the fund inflow and outflow, representing
+    /// the net amount of storage fees accumulated in this epoch.
+    #[uniffi(default = None)]
+    pub net_inflow: Option<String>,
+    /// The epoch's corresponding protocol configuration, including the feature
+    /// flags and the configuration options.
+    #[uniffi(default = None)]
+    pub protocol_configs: Option<ProtocolConfigs>,
+    /// The minimum gas price that a quorum of validators are guaranteed to sign
+    /// a transaction for.
+    #[uniffi(default = None)]
+    pub reference_gas_price: Option<String>,
+    /// The epoch's starting timestamp.
+    pub start_timestamp: u64,
+    /// The epoch's ending timestamp. Note that this is available only on epochs
+    /// that have ended.
+    #[uniffi(default = None)]
+    pub end_timestamp: Option<u64>,
+    /// The value of the `version` field of `0x5`, the
+    /// `0x3::iota::IotaSystemState` object.  This version changes whenever
+    /// the fields contained in the system state object (held in a dynamic
+    /// field attached to `0x5`) change.
+    #[uniffi(default = None)]
+    pub system_state_version: Option<u64>,
+    /// The total number of checkpoints in this epoch.
+    #[uniffi(default = None)]
+    pub total_checkpoints: Option<u64>,
+    /// The total amount of gas fees (in IOTA) that were paid in this epoch.
+    #[uniffi(default = None)]
+    pub total_gas_fees: Option<String>,
+    /// The total IOTA rewarded as stake.
+    #[uniffi(default = None)]
+    pub total_stake_rewards: Option<String>,
+    /// The total number of transaction in this epoch.
+    #[uniffi(default = None)]
+    pub total_transactions: Option<u64>,
+    /// Validator related properties. For active validators, see
+    /// `active_validators` API.
+    #[uniffi(default = None)]
+    pub validator_set: Option<ValidatorSet>,
+}
+
+impl From<iota_graphql_client::query_types::Epoch> for Epoch {
+    fn from(value: iota_graphql_client::query_types::Epoch) -> Self {
+        Self {
+            epoch_id: value.epoch_id,
+            fund_inflow: value.fund_inflow.map(|v| v.0),
+            fund_outflow: value.fund_outflow.map(|v| v.0),
+            fund_size: value.fund_size.map(|v| v.0),
+            live_object_set_digest: value.live_object_set_digest,
+            net_inflow: value.net_inflow.map(|v| v.0),
+            protocol_configs: value.protocol_configs,
+            reference_gas_price: value.reference_gas_price.map(|v| v.0),
+            start_timestamp: value.start_timestamp.0.parse().unwrap_or(0),
+            end_timestamp: value.end_timestamp.map(|dt| dt.0.parse().unwrap_or(0)),
+            system_state_version: value.system_state_version,
+            total_checkpoints: value.total_checkpoints,
+            total_gas_fees: value.total_gas_fees.map(|v| v.0),
+            total_stake_rewards: value.total_stake_rewards.map(|v| v.0),
+            total_transactions: value.total_transactions,
+            validator_set: value.validator_set.map(|vs| ValidatorSet {
+                inactive_pools_id: vs.inactive_pools_id.map(Into::into).map(Arc::new),
+                inactive_pools_size: vs.inactive_pools_size,
+                pending_active_validators_id: vs
+                    .pending_active_validators_id
+                    .map(Into::into)
+                    .map(Arc::new),
+                pending_active_validators_size: vs.pending_active_validators_size,
+                pending_removals: vs.pending_removals,
+                staking_pool_mappings_id: vs.staking_pool_mappings_id.map(Into::into).map(Arc::new),
+                staking_pool_mappings_size: vs.staking_pool_mappings_size,
+                total_stake: vs.total_stake.map(|v| v.0),
+                validator_candidates_size: vs.validator_candidates_size,
+                validator_candidates_id: vs.validator_candidates_id.map(Into::into).map(Arc::new),
+            }),
+        }
+    }
+}
+
+impl From<Epoch> for iota_graphql_client::query_types::Epoch {
+    fn from(value: Epoch) -> Self {
+        Self {
+            epoch_id: value.epoch_id,
+            fund_inflow: value.fund_inflow.map(|v| v.into()),
+            fund_outflow: value.fund_outflow.map(|v| v.into()),
+            fund_size: value.fund_size.map(|v| v.into()),
+            live_object_set_digest: value.live_object_set_digest,
+            net_inflow: value.net_inflow.map(|v| v.into()),
+            protocol_configs: value.protocol_configs,
+            reference_gas_price: value.reference_gas_price.map(|v| v.into()),
+            start_timestamp: iota_graphql_client::query_types::DateTime(
+                value.start_timestamp.to_string(),
+            ),
+            end_timestamp: value
+                .end_timestamp
+                .map(|ts| iota_graphql_client::query_types::DateTime(ts.to_string())),
+            system_state_version: value.system_state_version,
+            total_checkpoints: value.total_checkpoints,
+            total_gas_fees: value.total_gas_fees.map(|v| v.into()),
+            total_stake_rewards: value.total_stake_rewards.map(|v| v.into()),
+            total_transactions: value.total_transactions,
+            validator_set: value.validator_set.map(Into::into),
+        }
+    }
+}
+
+#[derive(uniffi::Record)]
+pub struct ValidatorSet {
+    /// Object ID of the `Table` storing the inactive staking pools.
+    #[uniffi(default = None)]
+    pub inactive_pools_id: Option<Arc<ObjectId>>,
+    /// Size of the inactive pools `Table`.
+    #[uniffi(default = None)]
+    pub inactive_pools_size: Option<i32>,
+    /// Object ID of the wrapped object `TableVec` storing the pending active
+    /// validators.
+    #[uniffi(default = None)]
+    pub pending_active_validators_id: Option<Arc<ObjectId>>,
+    /// Size of the pending active validators table.
+    #[uniffi(default = None)]
+    pub pending_active_validators_size: Option<i32>,
+    /// Validators that are pending removal from the active validator set,
+    /// expressed as indices in to `activeValidators`.
+    #[uniffi(default = None)]
+    pub pending_removals: Option<Vec<i32>>,
+    /// Object ID of the `Table` storing the mapping from staking pool ids to
+    /// the addresses of the corresponding validators. This is needed
+    /// because a validator's address can potentially change but the object
+    /// ID of its pool will not.
+    #[uniffi(default = None)]
+    pub staking_pool_mappings_id: Option<Arc<ObjectId>>,
+    /// Size of the stake pool mappings `Table`.
+    #[uniffi(default = None)]
+    pub staking_pool_mappings_size: Option<i32>,
+    /// Total amount of stake for all active validators at the beginning of the
+    /// epoch.
+    #[uniffi(default = None)]
+    pub total_stake: Option<String>,
+    /// Size of the validator candidates `Table`.
+    #[uniffi(default = None)]
+    pub validator_candidates_size: Option<i32>,
+    /// Object ID of the `Table` storing the validator candidates.
+    #[uniffi(default = None)]
+    pub validator_candidates_id: Option<Arc<ObjectId>>,
+}
+
+impl From<iota_graphql_client::query_types::EpochValidatorSet> for ValidatorSet {
+    fn from(value: iota_graphql_client::query_types::EpochValidatorSet) -> Self {
+        Self {
+            inactive_pools_id: value.inactive_pools_id.map(Into::into).map(Arc::new),
+            inactive_pools_size: value.inactive_pools_size,
+            pending_active_validators_id: value
+                .pending_active_validators_id
+                .map(Into::into)
+                .map(Arc::new),
+            pending_active_validators_size: value.pending_active_validators_size,
+            pending_removals: value.pending_removals,
+            staking_pool_mappings_id: value.staking_pool_mappings_id.map(Into::into).map(Arc::new),
+            staking_pool_mappings_size: value.staking_pool_mappings_size,
+            total_stake: value.total_stake.map(|v| v.0),
+            validator_candidates_size: value.validator_candidates_size,
+            validator_candidates_id: value.validator_candidates_id.map(Into::into).map(Arc::new),
+        }
+    }
+}
+
+impl From<ValidatorSet> for iota_graphql_client::query_types::EpochValidatorSet {
+    fn from(value: ValidatorSet) -> Self {
+        Self {
+            inactive_pools_id: value.inactive_pools_id.map(|v| **v),
+            inactive_pools_size: value.inactive_pools_size,
+            pending_active_validators_id: value.pending_active_validators_id.map(|v| **v),
+            pending_active_validators_size: value.pending_active_validators_size,
+            pending_removals: value.pending_removals,
+            staking_pool_mappings_id: value.staking_pool_mappings_id.map(|v| **v),
+            staking_pool_mappings_size: value.staking_pool_mappings_size,
+            total_stake: value.total_stake.map(|v| v.into()),
+            validator_candidates_size: value.validator_candidates_size,
+            validator_candidates_id: value.validator_candidates_id.map(|v| **v),
+        }
+    }
+}
 
 #[derive(uniffi::Record)]
 pub struct EventFilter {
@@ -568,20 +770,20 @@ pub enum Direction {
 }
 
 #[derive(uniffi::Record)]
-pub struct ValidatorSet {
+pub struct ActiveValidatorSet {
     pub active_validators: ValidatorConnection,
 }
 
-impl From<iota_graphql_client::query_types::ValidatorSet> for ValidatorSet {
+impl From<iota_graphql_client::query_types::ValidatorSet> for ActiveValidatorSet {
     fn from(value: iota_graphql_client::query_types::ValidatorSet) -> Self {
-        ValidatorSet {
+        ActiveValidatorSet {
             active_validators: value.active_validators.into(),
         }
     }
 }
 
-impl From<ValidatorSet> for iota_graphql_client::query_types::ValidatorSet {
-    fn from(value: ValidatorSet) -> Self {
+impl From<ActiveValidatorSet> for iota_graphql_client::query_types::ValidatorSet {
+    fn from(value: ActiveValidatorSet) -> Self {
         iota_graphql_client::query_types::ValidatorSet {
             active_validators: value.active_validators.into(),
         }

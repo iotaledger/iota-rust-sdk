@@ -36,7 +36,9 @@ pub use dynamic_fields::{
     DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
     DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
 };
-pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery};
+pub use epoch::{
+    Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, ValidatorSet as EpochValidatorSet,
+};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
 pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
 use iota_types::{Address, ObjectId};
