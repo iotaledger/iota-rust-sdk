@@ -63,7 +63,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
-      - name: Install latest nightly
-        run: rustup toolchain install nightly --component udeps --allow-downgrade
+      # - name: Install latest nightly
+      #   run: rustup toolchain install nightly --component udeps --allow-downgrade
+      - name: Install nightly cargo-udeps
+        run: cargo +nightly install cargo-udeps
       - name: Run Cargo Udeps
         run: cargo +nightly udeps ${{ matrix.flags }}
