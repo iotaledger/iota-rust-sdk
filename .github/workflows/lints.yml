@@ -45,19 +45,14 @@ jobs:
 
       - run: make is-dirty
 
-  deny-bans-licenses-sources:
-    name: cargo deny (bans, licenses, sources)
+  cargo-deny:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
-      - run: cargo deny --manifest-path ${{ inputs.manifest-path || './Cargo.toml' }} check bans licenses sources --hide-inclusion-graph
-
-  deny-advisories:
-    name: cargo deny (advisories)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
-      - run: cargo deny --manifest-path ${{ inputs.manifest-path || './Cargo.toml' }} check advisories --hide-inclusion-graph
+      - name: Install cargo-deny
+        run: cargo install cargo-deny
+      - name: cargo deny (bans, licenses, sources, advisories)
+        run: cargo deny --manifest-path './Cargo.toml' check bans licenses sources advisories --hide-inclusion-graph
 
   check-unused-deps:
     name: Check Unused Dependencies (${{ matrix.flags }})
