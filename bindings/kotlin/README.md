@@ -19,7 +19,7 @@ cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_
 cp target/release/libiota_sdk_ffi${LIB_EXT} bindings/$LANGUAGE/lib/
 ```
 
-# Run example
+# Run an example
 
 Install gradle:
 
@@ -35,5 +35,11 @@ sdk install gradle
 cd bindings/kotlin
 
 ./gradlew build clean
-LD_LIBRARY_PATH=./lib ./gradlew run -q
+LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=chain_id
+```
+
+or
+
+```sh
+make kotlin-example chain_id
 ```
