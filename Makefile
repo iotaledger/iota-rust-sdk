@@ -76,7 +76,7 @@ bindings-examples: ## Run all bindings examples
 
 .PHONY: bindings-example
 bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
-# 	$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
+	$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
 # 	$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
 	$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
 
@@ -108,11 +108,20 @@ python: ## Build Python bindings
 	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
 
-.PHONY: go-examples
-go-examples: ## Run Go bindings examples
+.PHONY: go-example
+go-example: ## Run a specific Go example. Usage: make go-example example
+%:
+	@true
+go-example:
 	cd bindings/go/examples; \
-	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run test.go \
+	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS)).go \
 	cd -
+
+.PHONY: go-examples
+go-examples: ## Run all Go bindings examples
+	@for example in $$(find bindings/go/examples -name "*.go" -exec basename {} .go \;); do \
+		$(MAKE) go-example "$$example"; \
+	done
 
 .PHONY: kotlin-examples
 kotlin-examples: ## Run Kotlin bindings examples
