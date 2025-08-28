@@ -1,4 +1,4 @@
-# Kotlin
+# IOTA SDK - Kotlin Bindings
 
 ## Generate Binding
 
