@@ -77,7 +77,7 @@ bindings-examples: ## Run all bindings examples
 .PHONY: bindings-example
 bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
 	$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
-# 	$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
+	$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
 	$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
 
 # Build ffi crate and detect platform
@@ -123,12 +123,21 @@ go-examples: ## Run all Go bindings examples
 		$(MAKE) go-example "$$example"; \
 	done
 
-.PHONY: kotlin-examples
-kotlin-examples: ## Run Kotlin bindings examples
+.PHONY: kotlin-example
+kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example example
+%:
+	@true
+kotlin-example:
 	cd bindings/kotlin; \
 	./gradlew build clean; \
-	LD_LIBRARY_PATH=./lib ./gradlew run -q; \
+	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q; \
 	cd -
+
+.PHONY: kotlin-examples
+kotlin-examples: ## Run Kotlin bindings examples
+	@for example in $$(find bindings/kotlin/examples -name "*.kt" -exec basename {} .kt \;); do \
+		$(MAKE) kotlin-example "$$example"; \
+	done
 
 .PHONY: python-example
 python-example: ## Run a specific Python example. Usage: make python-example example

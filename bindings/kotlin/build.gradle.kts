@@ -16,11 +16,26 @@ dependencies {
 
 kotlin { jvmToolchain(21) }
 
+// Generic task to run any example
+tasks.register<JavaExec>("example") {
+    classpath = sourceSets["main"].runtimeClasspath
+    jvmArgs = listOf("-Djna.library.path=${projectDir}/lib")
+    
+    // Get the example name from the command line argument -Pexample=<name>
+    val exampleProperty = "example"
+    inputs.property(exampleProperty, project.findProperty(exampleProperty) ?: "example")
+    
+    mainClass.set(provider {
+        val example = project.findProperty(exampleProperty)?.toString() ?: "example"
+        // Capitalize first letter and append Kt
+        "${example.replaceFirstChar { it.uppercaseChar() }}Kt"
+    })
+}
+
+// Keep default application config for backward compatibility
 application {
     mainClass.set("ExampleKt")
-    applicationDefaultJvmArgs = listOf(
-        "-Djna.library.path=${projectDir}/lib"
-    )
+    applicationDefaultJvmArgs = listOf("-Djna.library.path=${projectDir}/lib")
 }
 
 sourceSets {
