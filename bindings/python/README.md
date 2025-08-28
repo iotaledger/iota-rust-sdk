@@ -4,7 +4,7 @@
 cargo build --all-features -p iota-sdk-ffi --lib --release
 ```
 
-# Generate the Go bindings
+# Generate the Python bindings
 
 ## MacOS
 
