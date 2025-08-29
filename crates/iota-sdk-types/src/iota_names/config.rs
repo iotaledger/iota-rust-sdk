@@ -8,9 +8,9 @@ use crate::{Address, ObjectId};
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
+    derive(serde_derive::Serialize, serde_derive::Deserialize),
+    serde(rename_all = "kebab-case")
 )]
-#[serde(rename_all = "kebab-case")]
 pub struct IotaNamesConfig {
     /// Address of the `iota_names` package.
     pub package_address: Address,

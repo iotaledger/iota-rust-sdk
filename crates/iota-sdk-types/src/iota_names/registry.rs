@@ -7,10 +7,8 @@ use std::{
 };
 
 use crate::{
-    Address, Object, ObjectId,
-    iota_names::{
-        constants::IOTA_NAMES_LEAF_EXPIRATION_TIMESTAMP, error::IotaNamesError, name::Name,
-    },
+    Address, ObjectId,
+    iota_names::{constants::IOTA_NAMES_LEAF_EXPIRATION_TIMESTAMP, name::Name},
 };
 
 /// Rust version of the Move `iota::table::Table` type.
@@ -32,10 +30,10 @@ pub struct Table {
 pub struct Registry {
     /// The `registry` table maps `Name` to `NameRecord`.
     /// Added / replaced in the `add_record` function.
-    registry: Table,
+    pub registry: Table,
     /// The `reverse_registry` table maps `Address` to `Name`.
     /// Updated in the `set_reverse_lookup` function.
-    reverse_registry: Table,
+    pub reverse_registry: Table,
 }
 
 #[derive(Debug)]
@@ -127,10 +125,10 @@ mod serde_vecmap {
 }
 
 #[cfg(feature = "serde")]
-impl TryFrom<Object> for NameRecord {
-    type Error = IotaNamesError;
+impl TryFrom<crate::Object> for NameRecord {
+    type Error = crate::iota_names::error::IotaNamesError;
 
-    fn try_from(object: Object) -> Result<Self, IotaNamesError> {
+    fn try_from(object: crate::Object) -> Result<Self, crate::iota_names::error::IotaNamesError> {
         #[derive(Clone, serde::Serialize, serde::Deserialize, Debug)]
         pub struct Field<N, V> {
             pub id: ObjectId,
@@ -141,7 +139,9 @@ impl TryFrom<Object> for NameRecord {
         object
             .to_rust::<Field<Name, Self>>()
             .map(|record| record.value)
-            .map_err(|_| IotaNamesError::MalformedObject(object.object_id()))
+            .map_err(|_| {
+                crate::iota_names::error::IotaNamesError::MalformedObject(object.object_id())
+            })
     }
 }
 
