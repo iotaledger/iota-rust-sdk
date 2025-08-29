@@ -1,0 +1,28 @@
+name: Dprint
+
+on:
+  push:
+    branches: [develop, sdk-bindings]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+concurrency:
+  group: dprint-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+
+permissions:
+  contents: read
+
+env:
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  dprint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Install dprint
+        run: curl -fsSL https://dprint.dev/install.sh | sh
+      - name: Check dprint formatting
+        run: ~/.dprint/bin/dprint check

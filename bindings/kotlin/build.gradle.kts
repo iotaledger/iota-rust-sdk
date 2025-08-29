@@ -16,11 +16,28 @@ dependencies {
 
 kotlin { jvmToolchain(21) }
 
-application { mainClass.set("ExampleKt") }
+// Generic task to run any example
+tasks.register<JavaExec>("example") {
+    classpath = sourceSets["main"].runtimeClasspath
+    jvmArgs = listOf("-Djna.library.path=${projectDir}/lib")
+    
+    // Get the example name from the command line argument -Pexample=<name>
+    val exampleProperty = "example"
+    inputs.property(exampleProperty, project.findProperty(exampleProperty) ?: "example")
+    
+    mainClass.set(provider {
+        val example = project.findProperty(exampleProperty)?.toString() ?: "example"
+        // Convert snake_case to CamelCase and append Kt
+        val className = example.split('_')
+            .map { it.replaceFirstChar { c -> c.uppercaseChar() } }
+            .joinToString("")
+        "${className}Kt"
+    })
+}
 
 sourceSets {
     main {
-        kotlin { srcDirs("lib", "src/main/kotlin") }
+        kotlin { srcDirs("lib", "examples") }
         // Explicitly disable Java source sets since we only have Kotlin
         java { setSrcDirs(emptyList<String>()) }
     }
