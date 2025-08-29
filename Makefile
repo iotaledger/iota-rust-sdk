@@ -134,7 +134,7 @@ kotlin-example:
 	cd -
 
 .PHONY: kotlin-examples
-kotlin-examples: ## Run Kotlin bindings examples
+kotlin-examples: ## Run all Kotlin bindings examples
 	@for example in $$(find bindings/kotlin/examples -name "*.kt" -exec basename {} .kt \;); do \
 		$(MAKE) kotlin-example "$$example"; \
 	done
