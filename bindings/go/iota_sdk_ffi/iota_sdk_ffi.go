@@ -1352,7 +1352,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name()
 	})
-	if checksum != 55795 {
+	if checksum != 53764 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name: UniFFI API checksum mismatch")
 	}
@@ -1361,7 +1361,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup()
 	})
-	if checksum != 26177 {
+	if checksum != 20908 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup: UniFFI API checksum mismatch")
 	}
@@ -1370,7 +1370,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations()
 	})
-	if checksum != 58110 {
+	if checksum != 44467 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations: UniFFI API checksum mismatch")
 	}
@@ -11301,8 +11301,11 @@ type GraphQlClientInterface interface {
 	Events(paginationFilter PaginationFilter, filter *EventFilter) (EventPage, error)
 	// Execute a transaction.
 	ExecuteTx(signatures []*UserSignature, tx *Transaction) (**TransactionEffects, error)
+	// Get the default name pointing to this address, if one exists.
 	IotaNamesDefaultName(address *Address, format *NameFormat) (**Name, error)
+	// Return the resolved address for the given name.
 	IotaNamesLookup(name string) (**Address, error)
+	// Find all registration NFTs for the given address.
 	IotaNamesRegistrations(address *Address, paginationFilter PaginationFilter) (NameRegistrationPage, error)
 	// Return the sequence number of the latest checkpoint that has been
 	// executed.
@@ -12074,6 +12077,7 @@ func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transacti
 	return res, err 
 }
 
+// Get the default name pointing to this address, if one exists.
 func (_self *GraphQlClient) IotaNamesDefaultName(address *Address, format *NameFormat) (**Name, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -12105,6 +12109,7 @@ func (_self *GraphQlClient) IotaNamesDefaultName(address *Address, format *NameF
 	return res, err 
 }
 
+// Return the resolved address for the given name.
 func (_self *GraphQlClient) IotaNamesLookup(name string) (**Address, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -12136,6 +12141,7 @@ func (_self *GraphQlClient) IotaNamesLookup(name string) (**Address, error) {
 	return res, err 
 }
 
+// Find all registration NFTs for the given address.
 func (_self *GraphQlClient) IotaNamesRegistrations(address *Address, paginationFilter PaginationFilter) (NameRegistrationPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()

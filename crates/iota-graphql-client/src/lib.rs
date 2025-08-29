@@ -1747,6 +1747,7 @@ impl Client {
         ))
     }
 
+    /// Return the resolved address for the given name.
     pub async fn iota_names_lookup(&self, name: &str) -> Result<Option<Address>> {
         let operation = ResolveIotaNamesAddressQuery::build(ResolveIotaNamesAddressArgs {
             name: name.to_owned(),
@@ -1767,6 +1768,7 @@ impl Client {
         Ok(Some(address.address))
     }
 
+    /// Find all registration NFTs for the given address.
     pub async fn iota_names_registrations(
         &self,
         address: Address,
@@ -1811,6 +1813,7 @@ impl Client {
         ))
     }
 
+    /// Get the default name pointing to this address, if one exists.
     pub async fn iota_names_default_name(
         &self,
         address: Address,

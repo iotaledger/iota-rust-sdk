@@ -832,6 +832,7 @@ impl GraphQLClient {
         Ok(self.0.read().await.balance(**address, coin_type).await?)
     }
 
+    /// Return the resolved address for the given name.
     pub async fn iota_names_lookup(&self, name: &str) -> Result<Option<Arc<Address>>> {
         Ok(self
             .0
@@ -843,6 +844,7 @@ impl GraphQLClient {
             .map(Arc::new))
     }
 
+    /// Find all registration NFTs for the given address.
     pub async fn iota_names_registrations(
         &self,
         address: &Address,
@@ -858,6 +860,7 @@ impl GraphQLClient {
             .into())
     }
 
+    /// Get the default name pointing to this address, if one exists.
     pub async fn iota_names_default_name(
         &self,
         address: &Address,

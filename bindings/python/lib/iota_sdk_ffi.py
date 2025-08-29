@@ -681,11 +681,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name() != 55795:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name() != 53764:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup() != 26177:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup() != 20908:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations() != 58110:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations() != 44467:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -25437,10 +25437,22 @@ class GraphQlClientProtocol(typing.Protocol):
 
         raise NotImplementedError
     def iota_names_default_name(self, address: "Address",format: "typing.Optional[NameFormat]"):
+        """
+        Get the default name pointing to this address, if one exists.
+        """
+
         raise NotImplementedError
     def iota_names_lookup(self, name: "str"):
+        """
+        Return the resolved address for the given name.
+        """
+
         raise NotImplementedError
     def iota_names_registrations(self, address: "Address",pagination_filter: "PaginationFilter"):
+        """
+        Find all registration NFTs for the given address.
+        """
+
         raise NotImplementedError
     def latest_checkpoint_sequence_number(self, ):
         """
@@ -26292,6 +26304,10 @@ _UniffiConverterTypeSdkFfiError,
 
 
     async def iota_names_default_name(self, address: "Address",format: "typing.Optional[NameFormat]") -> "typing.Optional[Name]":
+        """
+        Get the default name pointing to this address, if one exists.
+        """
+
         _UniffiConverterTypeAddress.check_lower(address)
         
         _UniffiConverterOptionalTypeNameFormat.check_lower(format)
@@ -26316,6 +26332,10 @@ _UniffiConverterTypeSdkFfiError,
 
 
     async def iota_names_lookup(self, name: "str") -> "typing.Optional[Address]":
+        """
+        Return the resolved address for the given name.
+        """
+
         _UniffiConverterString.check_lower(name)
         
         return await _uniffi_rust_call_async(
@@ -26337,6 +26357,10 @@ _UniffiConverterTypeSdkFfiError,
 
 
     async def iota_names_registrations(self, address: "Address",pagination_filter: "PaginationFilter") -> "NameRegistrationPage":
+        """
+        Find all registration NFTs for the given address.
+        """
+
         _UniffiConverterTypeAddress.check_lower(address)
         
         _UniffiConverterTypePaginationFilter.check_lower(pagination_filter)

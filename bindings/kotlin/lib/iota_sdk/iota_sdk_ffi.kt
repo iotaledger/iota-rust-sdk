@@ -5649,13 +5649,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name() != 55795.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name() != 53764.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup() != 26177.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup() != 20908.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations() != 58110.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations() != 44467.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336.toShort()) {
@@ -19207,10 +19207,19 @@ public interface GraphQlClientInterface {
      */
     suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction): TransactionEffects?
     
+    /**
+     * Get the default name pointing to this address, if one exists.
+     */
     suspend fun `iotaNamesDefaultName`(`address`: Address, `format`: NameFormat?): Name?
     
+    /**
+     * Return the resolved address for the given name.
+     */
     suspend fun `iotaNamesLookup`(`name`: kotlin.String): Address?
     
+    /**
+     * Find all registration NFTs for the given address.
+     */
     suspend fun `iotaNamesRegistrations`(`address`: Address, `paginationFilter`: PaginationFilter): NameRegistrationPage
     
     /**
@@ -19974,6 +19983,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     }
 
     
+    /**
+     * Get the default name pointing to this address, if one exists.
+     */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
     override suspend fun `iotaNamesDefaultName`(`address`: Address, `format`: NameFormat?) : Name? {
@@ -19995,6 +20007,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     }
 
     
+    /**
+     * Return the resolved address for the given name.
+     */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
     override suspend fun `iotaNamesLookup`(`name`: kotlin.String) : Address? {
@@ -20016,6 +20031,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     }
 
     
+    /**
+     * Find all registration NFTs for the given address.
+     */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
     override suspend fun `iotaNamesRegistrations`(`address`: Address, `paginationFilter`: PaginationFilter) : NameRegistrationPage {
