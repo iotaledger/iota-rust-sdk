@@ -1706,6 +1706,21 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(void* ptr, RustBuffe
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(void* ptr, RustBuffer signatures, void* tx
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_IOTA_NAMES_DEFAULT_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_IOTA_NAMES_DEFAULT_NAME
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_default_name(void* ptr, void* address, RustBuffer format
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_IOTA_NAMES_LOOKUP
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_IOTA_NAMES_LOOKUP
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_lookup(void* ptr, RustBuffer name
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_IOTA_NAMES_REGISTRATIONS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_IOTA_NAMES_REGISTRATIONS
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations(void* ptr, void* address, RustBuffer pagination_filter
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_LATEST_CHECKPOINT_SEQUENCE_NUMBER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_LATEST_CHECKPOINT_SEQUENCE_NUMBER
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_latest_checkpoint_sequence_number(void* ptr
@@ -2305,6 +2320,91 @@ void* uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(void*
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MULTISIGVERIFIER_ZKLOGIN_VERIFIER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MULTISIGVERIFIER_ZKLOGIN_VERIFIER
 RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_NAME
+void* uniffi_iota_sdk_ffi_fn_clone_name(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_NAME
+void uniffi_iota_sdk_ffi_fn_free_name(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_NAME_FROM_STR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_NAME_FROM_STR
+void* uniffi_iota_sdk_ffi_fn_constructor_name_from_str(RustBuffer s, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_FORMAT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_FORMAT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_name_format(void* ptr, RustBuffer format, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_IS_SLN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_IS_SLN
+int8_t uniffi_iota_sdk_ffi_fn_method_name_is_sln(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_IS_SUBNAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_IS_SUBNAME
+int8_t uniffi_iota_sdk_ffi_fn_method_name_is_subname(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_LABEL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_LABEL
+RustBuffer uniffi_iota_sdk_ffi_fn_method_name_label(void* ptr, uint32_t index, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_LABELS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_LABELS
+RustBuffer uniffi_iota_sdk_ffi_fn_method_name_labels(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_NUM_LABELS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_NUM_LABELS
+uint32_t uniffi_iota_sdk_ffi_fn_method_name_num_labels(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_PARENT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAME_PARENT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_name_parent(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_NAMEREGISTRATION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_NAMEREGISTRATION
+void* uniffi_iota_sdk_ffi_fn_clone_nameregistration(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_NAMEREGISTRATION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_NAMEREGISTRATION
+void uniffi_iota_sdk_ffi_fn_free_nameregistration(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_NAMEREGISTRATION_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_NAMEREGISTRATION_NEW
+void* uniffi_iota_sdk_ffi_fn_constructor_nameregistration_new(void* id, void* name, RustBuffer name_str, uint64_t expiration_timestamp_ms, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAMEREGISTRATION_EXPIRATION_TIMESTAMP_MS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAMEREGISTRATION_EXPIRATION_TIMESTAMP_MS
+uint64_t uniffi_iota_sdk_ffi_fn_method_nameregistration_expiration_timestamp_ms(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAMEREGISTRATION_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAMEREGISTRATION_ID
+void* uniffi_iota_sdk_ffi_fn_method_nameregistration_id(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAMEREGISTRATION_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAMEREGISTRATION_NAME
+void* uniffi_iota_sdk_ffi_fn_method_nameregistration_name(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAMEREGISTRATION_NAME_STR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_NAMEREGISTRATION_NAME_STR
+RustBuffer uniffi_iota_sdk_ffi_fn_method_nameregistration_name_str(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OBJECT
@@ -5459,6 +5559,24 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_IOTA_NAMES_DEFAULT_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_IOTA_NAMES_DEFAULT_NAME
+uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_IOTA_NAMES_LOOKUP
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_IOTA_NAMES_LOOKUP
+uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_IOTA_NAMES_REGISTRATIONS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_IOTA_NAMES_REGISTRATIONS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_LATEST_CHECKPOINT_SEQUENCE_NUMBER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_LATEST_CHECKPOINT_SEQUENCE_NUMBER
 uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number(void
@@ -5924,6 +6042,72 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MULTISIGVERIFIER_ZKLOGIN_VERIFIER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MULTISIGVERIFIER_ZKLOGIN_VERIFIER
 uint16_t uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_FORMAT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_FORMAT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_name_format(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_IS_SLN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_IS_SLN
+uint16_t uniffi_iota_sdk_ffi_checksum_method_name_is_sln(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_IS_SUBNAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_IS_SUBNAME
+uint16_t uniffi_iota_sdk_ffi_checksum_method_name_is_subname(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_LABEL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_LABEL
+uint16_t uniffi_iota_sdk_ffi_checksum_method_name_label(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_LABELS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_LABELS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_name_labels(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_NUM_LABELS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_NUM_LABELS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_name_num_labels(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_PARENT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAME_PARENT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_name_parent(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAMEREGISTRATION_EXPIRATION_TIMESTAMP_MS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAMEREGISTRATION_EXPIRATION_TIMESTAMP_MS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_nameregistration_expiration_timestamp_ms(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAMEREGISTRATION_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAMEREGISTRATION_ID
+uint16_t uniffi_iota_sdk_ffi_checksum_method_nameregistration_id(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAMEREGISTRATION_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAMEREGISTRATION_NAME
+uint16_t uniffi_iota_sdk_ffi_checksum_method_nameregistration_name(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAMEREGISTRATION_NAME_STR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_NAMEREGISTRATION_NAME_STR
+uint16_t uniffi_iota_sdk_ffi_checksum_method_nameregistration_name_str(void
     
 );
 #endif
@@ -7844,6 +8028,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_MULTISIGVERIFIER_NEW
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_MULTISIGVERIFIER_NEW
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_multisigverifier_new(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_NAME_FROM_STR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_NAME_FROM_STR
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_name_from_str(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_NAMEREGISTRATION_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_NAMEREGISTRATION_NEW
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_nameregistration_new(void
     
 );
 #endif

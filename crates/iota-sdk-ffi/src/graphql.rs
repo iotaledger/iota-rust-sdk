@@ -1,13 +1,13 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
+use std::{str::FromStr, sync::Arc};
 
 use iota_graphql_client::{
     pagination::PaginationFilter,
     query_types::{MoveFunction, ProtocolConfigs, ServiceConfig},
 };
-use iota_types::CheckpointSequenceNumber;
+use iota_types::{CheckpointSequenceNumber, iota_names::NameFormat};
 use tokio::sync::RwLock;
 
 use crate::{
@@ -20,6 +20,7 @@ use crate::{
             CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveModule,
             ObjectFilter, TransactionDataEffects, TransactionMetadata, TransactionsFilter,
         },
+        iota_names::Name,
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
         transaction::{SignedTransaction, Transaction, TransactionEffects, TransactionKind},
@@ -27,8 +28,8 @@ use crate::{
     },
     uniffi_helpers::{
         CheckpointSummaryPage, CoinPage, DynamicFieldOutputPage, EpochPage, EventPage,
-        MovePackagePage, ObjectPage, SignedTransactionPage, TransactionDataEffectsPage,
-        TransactionEffectsPage, ValidatorPage,
+        MovePackagePage, NameRegistrationPage, ObjectPage, SignedTransactionPage,
+        TransactionDataEffectsPage, TransactionEffectsPage, ValidatorPage,
     },
 };
 
@@ -829,5 +830,46 @@ impl GraphQLClient {
         coin_type: Option<String>,
     ) -> Result<Option<u64>> {
         Ok(self.0.read().await.balance(**address, coin_type).await?)
+    }
+
+    pub async fn iota_names_lookup(&self, name: &str) -> Result<Option<Arc<Address>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .iota_names_lookup(name)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
+    }
+
+    pub async fn iota_names_registrations(
+        &self,
+        address: &Address,
+        pagination_filter: PaginationFilter,
+    ) -> Result<NameRegistrationPage> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .iota_names_registrations(**address, pagination_filter)
+            .await?
+            .map(Into::into)
+            .into())
+    }
+
+    pub async fn iota_names_default_name(
+        &self,
+        address: &Address,
+        format: Option<NameFormat>,
+    ) -> Result<Option<Arc<Name>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .iota_names_default_name(**address, format)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 }

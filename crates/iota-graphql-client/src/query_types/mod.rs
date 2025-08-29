@@ -12,6 +12,7 @@ mod dynamic_fields;
 mod epoch;
 mod events;
 mod execute_tx;
+mod iota_names;
 mod normalized_move;
 mod object;
 mod packages;
@@ -39,6 +40,12 @@ pub use dynamic_fields::{
 pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
 pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
+pub use iota_names::{
+    IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs,
+    IotaNamesDefaultNameQuery, IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery,
+    NameRegistration, NameRegistrationConnection, ResolveIotaNamesAddressArgs,
+    ResolveIotaNamesAddressQuery,
+};
 use iota_types::{Address, ObjectId};
 pub use normalized_move::{
     MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunction,
