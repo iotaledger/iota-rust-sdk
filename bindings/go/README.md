@@ -32,8 +32,14 @@ uniffi-bindgen-go --library target/release/libiota_sdk_ffi.so --out-dir ./bindin
 uniffi-bindgen-go --library target/release/libiota_sdk_ffi.dll --out-dir ./bindings/go --no-format
 ```
 
-# Test it
+# Run an example
 
 ```sh
-LD_LIBRARY_PATH="../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../target/release" go run test.go
+LD_LIBRARY_PATH="../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../target/release" go run examples/chain_id.go
+```
+
+or
+
+```sh
+make go-example chain_id
 ```
