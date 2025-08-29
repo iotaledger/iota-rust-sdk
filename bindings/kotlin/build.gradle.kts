@@ -27,8 +27,11 @@ tasks.register<JavaExec>("example") {
     
     mainClass.set(provider {
         val example = project.findProperty(exampleProperty)?.toString() ?: "example"
-        // Capitalize first letter and append Kt
-        "${example.replaceFirstChar { it.uppercaseChar() }}Kt"
+        // Convert snake_case to CamelCase and append Kt
+        val className = example.split('_')
+            .map { it.replaceFirstChar { c -> c.uppercaseChar() } }
+            .joinToString("")
+        "${className}Kt"
     })
 }
 
