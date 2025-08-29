@@ -42071,42 +42071,6 @@ public object FfiConverterTypeActiveJwk: FfiConverterRustBuffer<ActiveJwk> {
 
 
 
-data class ActiveValidatorSet (
-    var `activeValidators`: ValidatorConnection
-) : Disposable {
-    
-    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
-    override fun destroy() {
-        
-    Disposable.destroy(
-        this.`activeValidators`
-    )
-    }
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeActiveValidatorSet: FfiConverterRustBuffer<ActiveValidatorSet> {
-    override fun read(buf: ByteBuffer): ActiveValidatorSet {
-        return ActiveValidatorSet(
-            FfiConverterTypeValidatorConnection.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: ActiveValidatorSet) = (
-            FfiConverterTypeValidatorConnection.allocationSize(value.`activeValidators`)
-    )
-
-    override fun write(value: ActiveValidatorSet, buf: ByteBuffer) {
-            FfiConverterTypeValidatorConnection.write(value.`activeValidators`, buf)
-    }
-}
-
-
-
 /**
  * Expire old JWKs
  *
@@ -46335,6 +46299,42 @@ public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet>
             FfiConverterOptionalString.write(value.`totalStake`, buf)
             FfiConverterOptionalInt.write(value.`validatorCandidatesSize`, buf)
             FfiConverterOptionalTypeObjectId.write(value.`validatorCandidatesId`, buf)
+    }
+}
+
+
+
+data class ValidatorSetQuery (
+    var `activeValidators`: ValidatorConnection
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`activeValidators`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeValidatorSetQuery: FfiConverterRustBuffer<ValidatorSetQuery> {
+    override fun read(buf: ByteBuffer): ValidatorSetQuery {
+        return ValidatorSetQuery(
+            FfiConverterTypeValidatorConnection.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ValidatorSetQuery) = (
+            FfiConverterTypeValidatorConnection.allocationSize(value.`activeValidators`)
+    )
+
+    override fun write(value: ValidatorSetQuery, buf: ByteBuffer) {
+            FfiConverterTypeValidatorConnection.write(value.`activeValidators`, buf)
     }
 }
 

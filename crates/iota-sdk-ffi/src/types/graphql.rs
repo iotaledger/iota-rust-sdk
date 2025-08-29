@@ -375,8 +375,8 @@ pub struct ValidatorSet {
     pub validator_candidates_id: Option<Arc<ObjectId>>,
 }
 
-impl From<iota_graphql_client::query_types::EpochValidatorSet> for ValidatorSet {
-    fn from(value: iota_graphql_client::query_types::EpochValidatorSet) -> Self {
+impl From<iota_graphql_client::query_types::ValidatorSet> for ValidatorSet {
+    fn from(value: iota_graphql_client::query_types::ValidatorSet) -> Self {
         Self {
             inactive_pools_id: value.inactive_pools_id.map(Into::into).map(Arc::new),
             inactive_pools_size: value.inactive_pools_size,
@@ -395,7 +395,7 @@ impl From<iota_graphql_client::query_types::EpochValidatorSet> for ValidatorSet 
     }
 }
 
-impl From<ValidatorSet> for iota_graphql_client::query_types::EpochValidatorSet {
+impl From<ValidatorSet> for iota_graphql_client::query_types::ValidatorSet {
     fn from(value: ValidatorSet) -> Self {
         Self {
             inactive_pools_id: value.inactive_pools_id.map(|v| **v),
@@ -770,21 +770,21 @@ pub enum Direction {
 }
 
 #[derive(uniffi::Record)]
-pub struct ActiveValidatorSet {
+pub struct ValidatorSetQuery {
     pub active_validators: ValidatorConnection,
 }
 
-impl From<iota_graphql_client::query_types::ValidatorSet> for ActiveValidatorSet {
-    fn from(value: iota_graphql_client::query_types::ValidatorSet) -> Self {
-        ActiveValidatorSet {
+impl From<iota_graphql_client::query_types::ValidatorSetQuery> for ValidatorSetQuery {
+    fn from(value: iota_graphql_client::query_types::ValidatorSetQuery) -> Self {
+        ValidatorSetQuery {
             active_validators: value.active_validators.into(),
         }
     }
 }
 
-impl From<ActiveValidatorSet> for iota_graphql_client::query_types::ValidatorSet {
-    fn from(value: ActiveValidatorSet) -> Self {
-        iota_graphql_client::query_types::ValidatorSet {
+impl From<ValidatorSetQuery> for iota_graphql_client::query_types::ValidatorSetQuery {
+    fn from(value: ValidatorSetQuery) -> Self {
+        iota_graphql_client::query_types::ValidatorSetQuery {
             active_validators: value.active_validators.into(),
         }
     }

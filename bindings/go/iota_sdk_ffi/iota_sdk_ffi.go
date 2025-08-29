@@ -22679,41 +22679,6 @@ type FfiDestroyerActiveJwk struct {}
 func (_ FfiDestroyerActiveJwk) Destroy(value ActiveJwk) {
 	value.Destroy()
 }
-type ActiveValidatorSet struct {
-	ActiveValidators ValidatorConnection
-}
-
-func (r *ActiveValidatorSet) Destroy() {
-		FfiDestroyerValidatorConnection{}.Destroy(r.ActiveValidators);
-}
-
-type FfiConverterActiveValidatorSet struct {}
-
-var FfiConverterActiveValidatorSetINSTANCE = FfiConverterActiveValidatorSet{}
-
-func (c FfiConverterActiveValidatorSet) Lift(rb RustBufferI) ActiveValidatorSet {
-	return LiftFromRustBuffer[ActiveValidatorSet](c, rb)
-}
-
-func (c FfiConverterActiveValidatorSet) Read(reader io.Reader) ActiveValidatorSet {
-	return ActiveValidatorSet {
-			FfiConverterValidatorConnectionINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterActiveValidatorSet) Lower(value ActiveValidatorSet) C.RustBuffer {
-	return LowerIntoRustBuffer[ActiveValidatorSet](c, value)
-}
-
-func (c FfiConverterActiveValidatorSet) Write(writer io.Writer, value ActiveValidatorSet) {
-		FfiConverterValidatorConnectionINSTANCE.Write(writer, value.ActiveValidators);
-}
-
-type FfiDestroyerActiveValidatorSet struct {}
-
-func (_ FfiDestroyerActiveValidatorSet) Destroy(value ActiveValidatorSet) {
-	value.Destroy()
-}
 // Expire old JWKs
 //
 // # BCS
@@ -26516,6 +26481,41 @@ func (c FfiConverterValidatorSet) Write(writer io.Writer, value ValidatorSet) {
 type FfiDestroyerValidatorSet struct {}
 
 func (_ FfiDestroyerValidatorSet) Destroy(value ValidatorSet) {
+	value.Destroy()
+}
+type ValidatorSetQuery struct {
+	ActiveValidators ValidatorConnection
+}
+
+func (r *ValidatorSetQuery) Destroy() {
+		FfiDestroyerValidatorConnection{}.Destroy(r.ActiveValidators);
+}
+
+type FfiConverterValidatorSetQuery struct {}
+
+var FfiConverterValidatorSetQueryINSTANCE = FfiConverterValidatorSetQuery{}
+
+func (c FfiConverterValidatorSetQuery) Lift(rb RustBufferI) ValidatorSetQuery {
+	return LiftFromRustBuffer[ValidatorSetQuery](c, rb)
+}
+
+func (c FfiConverterValidatorSetQuery) Read(reader io.Reader) ValidatorSetQuery {
+	return ValidatorSetQuery {
+			FfiConverterValidatorConnectionINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterValidatorSetQuery) Lower(value ValidatorSetQuery) C.RustBuffer {
+	return LowerIntoRustBuffer[ValidatorSetQuery](c, value)
+}
+
+func (c FfiConverterValidatorSetQuery) Write(writer io.Writer, value ValidatorSetQuery) {
+		FfiConverterValidatorConnectionINSTANCE.Write(writer, value.ActiveValidators);
+}
+
+type FfiDestroyerValidatorSetQuery struct {}
+
+func (_ FfiDestroyerValidatorSetQuery) Destroy(value ValidatorSetQuery) {
 	value.Destroy()
 }
 // A claim of the iss in a zklogin proof
