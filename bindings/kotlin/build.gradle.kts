@@ -35,12 +35,6 @@ tasks.register<JavaExec>("example") {
     })
 }
 
-// Keep default application config for backward compatibility
-application {
-    mainClass.set("ExampleKt")
-    applicationDefaultJvmArgs = listOf("-Djna.library.path=${projectDir}/lib")
-}
-
 sourceSets {
     main {
         kotlin { srcDirs("lib", "examples") }
