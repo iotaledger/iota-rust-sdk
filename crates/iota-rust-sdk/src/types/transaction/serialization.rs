@@ -280,7 +280,8 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
     use crate::types::transaction::{
-        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, EndOfEpochTransactionKind,
+        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3,
+        EndOfEpochTransactionKind,
     };
 
     #[derive(serde_derive::Serialize)]
