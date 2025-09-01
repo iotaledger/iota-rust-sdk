@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	sdk "example.com/bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk_ffi"
 )
 
 func isNilError(err error) bool {
