@@ -68,11 +68,17 @@ bindings: ## Build all bindings
 	$(MAKE) kotlin
 	$(MAKE) python
 
-.PHONY: test-bindings
-test-bindings: ## Test all bindings
-	$(MAKE) test-go
-	$(MAKE) test-kotlin
-	$(MAKE) test-python
+.PHONY: bindings-examples
+bindings-examples: ## Run all bindings examples
+	$(MAKE) go-examples
+	$(MAKE) kotlin-examples
+	$(MAKE) python-examples
+
+.PHONY: bindings-example
+bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
+	$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
+	$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
+	$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
 
 # Build ffi crate and detect platform
 define build_binding
@@ -102,22 +108,49 @@ python: ## Build Python bindings
 	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
 
-.PHONY: test-go
-test-go: ## Test Go bindings
-	cd bindings/go/; \
-	LD_LIBRARY_PATH="../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../target/release" go run test.go \
+.PHONY: go-example
+go-example: ## Run a specific Go example. Usage: make go-example example
+%:
+	@true
+go-example:
+	cd bindings/go/examples; \
+	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS)).go \
 	cd -
 
-.PHONY: test-kotlin
-test-kotlin: ## Test Kotlin bindings
+.PHONY: go-examples
+go-examples: ## Run all Go bindings examples
+	@for example in $$(find bindings/go/examples -name "*.go" -exec basename {} .go \;); do \
+		$(MAKE) go-example "$$example"; \
+	done
+
+.PHONY: kotlin-example
+kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example example
+%:
+	@true
+kotlin-example:
 	cd bindings/kotlin; \
 	./gradlew build clean; \
-	LD_LIBRARY_PATH=./lib ./gradlew run -q; \
+	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q; \
 	cd -
 
-.PHONY: test-python
-test-python: ## Test Python bindings
-	python3 bindings/python/test.py
+.PHONY: kotlin-examples
+kotlin-examples: ## Run all Kotlin bindings examples
+	@for example in $$(find bindings/kotlin/examples -name "*.kt" -exec basename {} .kt \;); do \
+		$(MAKE) kotlin-example "$$example"; \
+	done
+
+.PHONY: python-example
+python-example: ## Run a specific Python example. Usage: make python-example example
+%:
+	@true
+python-example:
+	PYTHONPATH=bindings/python python3 bindings/python/examples/$(word 2,$(MAKECMDGOALS)).py
+
+.PHONY: python-examples
+python-examples: ## Run all Python bindings examples
+	@for example in $$(find bindings/python/examples -name "*.py" -exec basename {} .py \;); do \
+		$(MAKE) python-example "$$example"; \
+	done
 
 .PHONY: help
 help: ## Show this help
