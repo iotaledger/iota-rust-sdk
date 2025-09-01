@@ -27,7 +27,7 @@ func main() {
 	}
 
 	obj, err := client.MoveObjectContents(objectID, nil)
-	if err != nil {
+	if !isNilError(err) {
 		log.Fatalf("Failed to get object contents: %v", err)
 	}
 
