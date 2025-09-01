@@ -1,7 +1,9 @@
 [package]
 name = "iota-sdk-ffi"
 version = "0.0.1"
+authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
+license = "Apache-2.0"
 
 [[bin]]
 name = "iota_sdk_bindings"
