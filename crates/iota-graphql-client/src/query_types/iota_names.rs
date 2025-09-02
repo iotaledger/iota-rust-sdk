@@ -109,9 +109,9 @@ impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
                 .0
                 .as_str(),
         )?;
-        Ok(bcs::from_bytes::<iota_types::Object>(&bytes)?
+        bcs::from_bytes::<iota_types::Object>(&bytes)?
             .to_rust()
-            .map_err(|e| Error::from_error(crate::error::Kind::Deserialization, e))?)
+            .map_err(|e| Error::from_error(crate::error::Kind::Deserialization, e))
     }
 }
 
