@@ -1,3 +1,6 @@
+// Copyright (c) 2025 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 import iota_sdk.Address
 import iota_sdk.Direction
 import iota_sdk.EventFilter
