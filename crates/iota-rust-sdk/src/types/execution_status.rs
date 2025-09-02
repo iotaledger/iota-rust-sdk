@@ -236,6 +236,9 @@ pub enum CommandArgumentError {
     /// Shared object operations such a wrapping, freezing, or converting to
     /// owned are not allowed.
     SharedObjectOperationNotAllowed,
+    /// Invalid argument arity. Expected a single argument but found a result
+    /// that expanded to multiple arguments.
+    InvalidArgumentArity,
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -1083,6 +1086,7 @@ mod serialization {
         InvalidObjectByValue,
         InvalidObjectByMutRef,
         SharedObjectOperationNotAllowed,
+        InvalidArgumentArity,
     }
 
     #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
@@ -1099,6 +1103,7 @@ mod serialization {
         InvalidObjectByValue,
         InvalidObjectByMutRef,
         SharedObjectOperationNotAllowed,
+        InvalidArgumentArity,
     }
 
     impl Serialize for CommandArgumentError {
@@ -1139,6 +1144,9 @@ mod serialization {
                     Self::SharedObjectOperationNotAllowed => {
                         ReadableCommandArgumentError::SharedObjectOperationNotAllowed
                     }
+                    Self::InvalidArgumentArity => {
+                        ReadableCommandArgumentError::InvalidArgumentArity
+                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -1169,6 +1177,7 @@ mod serialization {
                     Self::SharedObjectOperationNotAllowed => {
                         BinaryCommandArgumentError::SharedObjectOperationNotAllowed
                     }
+                    Self::InvalidArgumentArity => BinaryCommandArgumentError::InvalidArgumentArity,
                 };
                 binary.serialize(serializer)
             }
@@ -1214,6 +1223,9 @@ mod serialization {
                         ReadableCommandArgumentError::SharedObjectOperationNotAllowed => {
                             Self::SharedObjectOperationNotAllowed
                         }
+                        ReadableCommandArgumentError::InvalidArgumentArity => {
+                            Self::InvalidArgumentArity
+                        }
                     }
                 })
             } else {
@@ -1244,6 +1256,7 @@ mod serialization {
                     BinaryCommandArgumentError::SharedObjectOperationNotAllowed => {
                         Self::SharedObjectOperationNotAllowed
                     }
+                    BinaryCommandArgumentError::InvalidArgumentArity => Self::InvalidArgumentArity,
                 })
             }
         }
