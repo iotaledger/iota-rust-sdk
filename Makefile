@@ -117,7 +117,7 @@ go-example:
 	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS)).go; \
 	code=$$?; \
 	cd -; \
-	if [ $$code -ne 0 ]; then exit $$code; fi
+	exit $$code
 
 .PHONY: go-examples
 go-examples: ## Run all Go bindings examples
@@ -135,7 +135,7 @@ kotlin-example:
 	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q; \
 	code=$$?; \
 	cd -; \
-	if [ $$code -ne 0 ]; then exit $$code; fi
+	exit $$code
 
 .PHONY: kotlin-examples
 kotlin-examples: ## Run all Kotlin bindings examples

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "example.com/bindings/iota_sdk_ffi"
 )
 
 func isNilError(err error) bool {
