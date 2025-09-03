@@ -36,8 +36,16 @@ use crate::types::struct_tag::StructTag;
 /// type-tag-vector = %x06 type-tag
 /// type-tag-struct = %x07 struct-tag
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Display)]
 pub struct TypeTag(pub iota_types::TypeTag);
+
+impl std::fmt::Display for TypeTag {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
 
 #[uniffi::export]
 impl TypeTag {

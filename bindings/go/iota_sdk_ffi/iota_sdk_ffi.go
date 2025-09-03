@@ -20422,6 +20422,19 @@ func (_self *TypeTag) IsVector() bool {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *TypeTag) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *TypeTag) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
