@@ -671,7 +671,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 47284:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch() != 46788:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch() != 62805:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_checkpoints() != 29086:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2813,16 +2813,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_chan
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v2.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_epoch.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_epoch.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_epoch.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_epoch.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8574,8 +8564,6 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
 
 
 
-
-
 class ActiveJwk:
     """
     A new Jwk
@@ -9384,6 +9372,260 @@ class _UniffiConverterTypeEndOfEpochData(_UniffiConverterRustBuffer):
         _UniffiConverterUInt64.write(value.next_epoch_protocol_version, buf)
         _UniffiConverterSequenceTypeCheckpointCommitment.write(value.epoch_commitments, buf)
         _UniffiConverterInt64.write(value.epoch_supply_change, buf)
+
+
+class Epoch:
+    epoch_id: "int"
+    """
+    The epoch's id as a sequence number that starts at 0 and is incremented
+    by one at every epoch change.
+    """
+
+    fund_inflow: "typing.Optional[str]"
+    """
+    The storage fees paid for transactions executed during the epoch.
+    """
+
+    fund_outflow: "typing.Optional[str]"
+    """
+    The storage fee rebates paid to users who deleted the data associated
+    with past transactions.
+    """
+
+    fund_size: "typing.Optional[str]"
+    """
+    The storage fund available in this epoch.
+    This fund is used to redistribute storage fees from past transactions
+    to future validators.
+    """
+
+    live_object_set_digest: "typing.Optional[str]"
+    """
+    A commitment by the committee at the end of epoch on the contents of the
+    live object set at that time. This can be used to verify state
+    snapshots.
+    """
+
+    net_inflow: "typing.Optional[str]"
+    """
+    The difference between the fund inflow and outflow, representing
+    the net amount of storage fees accumulated in this epoch.
+    """
+
+    protocol_configs: "typing.Optional[ProtocolConfigs]"
+    """
+    The epoch's corresponding protocol configuration, including the feature
+    flags and the configuration options.
+    """
+
+    reference_gas_price: "typing.Optional[str]"
+    """
+    The minimum gas price that a quorum of validators are guaranteed to sign
+    a transaction for.
+    """
+
+    start_timestamp: "int"
+    """
+    The epoch's starting timestamp.
+    """
+
+    end_timestamp: "typing.Optional[int]"
+    """
+    The epoch's ending timestamp. Note that this is available only on epochs
+    that have ended.
+    """
+
+    system_state_version: "typing.Optional[int]"
+    """
+    The value of the `version` field of `0x5`, the
+    `0x3::iota::IotaSystemState` object.  This version changes whenever
+    the fields contained in the system state object (held in a dynamic
+    field attached to `0x5`) change.
+    """
+
+    total_checkpoints: "typing.Optional[int]"
+    """
+    The total number of checkpoints in this epoch.
+    """
+
+    total_gas_fees: "typing.Optional[str]"
+    """
+    The total amount of gas fees (in IOTA) that were paid in this epoch.
+    """
+
+    total_stake_rewards: "typing.Optional[str]"
+    """
+    The total IOTA rewarded as stake.
+    """
+
+    total_transactions: "typing.Optional[int]"
+    """
+    The total number of transaction in this epoch.
+    """
+
+    validator_set: "typing.Optional[ValidatorSet]"
+    """
+    Validator related properties. For active validators, see
+    `active_validators` API.
+    """
+
+    def __init__(self, *, epoch_id: "int", fund_inflow: "typing.Optional[str]" = _DEFAULT, fund_outflow: "typing.Optional[str]" = _DEFAULT, fund_size: "typing.Optional[str]" = _DEFAULT, live_object_set_digest: "typing.Optional[str]" = _DEFAULT, net_inflow: "typing.Optional[str]" = _DEFAULT, protocol_configs: "typing.Optional[ProtocolConfigs]" = _DEFAULT, reference_gas_price: "typing.Optional[str]" = _DEFAULT, start_timestamp: "int", end_timestamp: "typing.Optional[int]" = _DEFAULT, system_state_version: "typing.Optional[int]" = _DEFAULT, total_checkpoints: "typing.Optional[int]" = _DEFAULT, total_gas_fees: "typing.Optional[str]" = _DEFAULT, total_stake_rewards: "typing.Optional[str]" = _DEFAULT, total_transactions: "typing.Optional[int]" = _DEFAULT, validator_set: "typing.Optional[ValidatorSet]" = _DEFAULT):
+        self.epoch_id = epoch_id
+        if fund_inflow is _DEFAULT:
+            self.fund_inflow = None
+        else:
+            self.fund_inflow = fund_inflow
+        if fund_outflow is _DEFAULT:
+            self.fund_outflow = None
+        else:
+            self.fund_outflow = fund_outflow
+        if fund_size is _DEFAULT:
+            self.fund_size = None
+        else:
+            self.fund_size = fund_size
+        if live_object_set_digest is _DEFAULT:
+            self.live_object_set_digest = None
+        else:
+            self.live_object_set_digest = live_object_set_digest
+        if net_inflow is _DEFAULT:
+            self.net_inflow = None
+        else:
+            self.net_inflow = net_inflow
+        if protocol_configs is _DEFAULT:
+            self.protocol_configs = None
+        else:
+            self.protocol_configs = protocol_configs
+        if reference_gas_price is _DEFAULT:
+            self.reference_gas_price = None
+        else:
+            self.reference_gas_price = reference_gas_price
+        self.start_timestamp = start_timestamp
+        if end_timestamp is _DEFAULT:
+            self.end_timestamp = None
+        else:
+            self.end_timestamp = end_timestamp
+        if system_state_version is _DEFAULT:
+            self.system_state_version = None
+        else:
+            self.system_state_version = system_state_version
+        if total_checkpoints is _DEFAULT:
+            self.total_checkpoints = None
+        else:
+            self.total_checkpoints = total_checkpoints
+        if total_gas_fees is _DEFAULT:
+            self.total_gas_fees = None
+        else:
+            self.total_gas_fees = total_gas_fees
+        if total_stake_rewards is _DEFAULT:
+            self.total_stake_rewards = None
+        else:
+            self.total_stake_rewards = total_stake_rewards
+        if total_transactions is _DEFAULT:
+            self.total_transactions = None
+        else:
+            self.total_transactions = total_transactions
+        if validator_set is _DEFAULT:
+            self.validator_set = None
+        else:
+            self.validator_set = validator_set
+
+    def __str__(self):
+        return "Epoch(epoch_id={}, fund_inflow={}, fund_outflow={}, fund_size={}, live_object_set_digest={}, net_inflow={}, protocol_configs={}, reference_gas_price={}, start_timestamp={}, end_timestamp={}, system_state_version={}, total_checkpoints={}, total_gas_fees={}, total_stake_rewards={}, total_transactions={}, validator_set={})".format(self.epoch_id, self.fund_inflow, self.fund_outflow, self.fund_size, self.live_object_set_digest, self.net_inflow, self.protocol_configs, self.reference_gas_price, self.start_timestamp, self.end_timestamp, self.system_state_version, self.total_checkpoints, self.total_gas_fees, self.total_stake_rewards, self.total_transactions, self.validator_set)
+
+    def __eq__(self, other):
+        if self.epoch_id != other.epoch_id:
+            return False
+        if self.fund_inflow != other.fund_inflow:
+            return False
+        if self.fund_outflow != other.fund_outflow:
+            return False
+        if self.fund_size != other.fund_size:
+            return False
+        if self.live_object_set_digest != other.live_object_set_digest:
+            return False
+        if self.net_inflow != other.net_inflow:
+            return False
+        if self.protocol_configs != other.protocol_configs:
+            return False
+        if self.reference_gas_price != other.reference_gas_price:
+            return False
+        if self.start_timestamp != other.start_timestamp:
+            return False
+        if self.end_timestamp != other.end_timestamp:
+            return False
+        if self.system_state_version != other.system_state_version:
+            return False
+        if self.total_checkpoints != other.total_checkpoints:
+            return False
+        if self.total_gas_fees != other.total_gas_fees:
+            return False
+        if self.total_stake_rewards != other.total_stake_rewards:
+            return False
+        if self.total_transactions != other.total_transactions:
+            return False
+        if self.validator_set != other.validator_set:
+            return False
+        return True
+
+class _UniffiConverterTypeEpoch(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return Epoch(
+            epoch_id=_UniffiConverterUInt64.read(buf),
+            fund_inflow=_UniffiConverterOptionalString.read(buf),
+            fund_outflow=_UniffiConverterOptionalString.read(buf),
+            fund_size=_UniffiConverterOptionalString.read(buf),
+            live_object_set_digest=_UniffiConverterOptionalString.read(buf),
+            net_inflow=_UniffiConverterOptionalString.read(buf),
+            protocol_configs=_UniffiConverterOptionalTypeProtocolConfigs.read(buf),
+            reference_gas_price=_UniffiConverterOptionalString.read(buf),
+            start_timestamp=_UniffiConverterUInt64.read(buf),
+            end_timestamp=_UniffiConverterOptionalUInt64.read(buf),
+            system_state_version=_UniffiConverterOptionalUInt64.read(buf),
+            total_checkpoints=_UniffiConverterOptionalUInt64.read(buf),
+            total_gas_fees=_UniffiConverterOptionalString.read(buf),
+            total_stake_rewards=_UniffiConverterOptionalString.read(buf),
+            total_transactions=_UniffiConverterOptionalUInt64.read(buf),
+            validator_set=_UniffiConverterOptionalTypeValidatorSet.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterUInt64.check_lower(value.epoch_id)
+        _UniffiConverterOptionalString.check_lower(value.fund_inflow)
+        _UniffiConverterOptionalString.check_lower(value.fund_outflow)
+        _UniffiConverterOptionalString.check_lower(value.fund_size)
+        _UniffiConverterOptionalString.check_lower(value.live_object_set_digest)
+        _UniffiConverterOptionalString.check_lower(value.net_inflow)
+        _UniffiConverterOptionalTypeProtocolConfigs.check_lower(value.protocol_configs)
+        _UniffiConverterOptionalString.check_lower(value.reference_gas_price)
+        _UniffiConverterUInt64.check_lower(value.start_timestamp)
+        _UniffiConverterOptionalUInt64.check_lower(value.end_timestamp)
+        _UniffiConverterOptionalUInt64.check_lower(value.system_state_version)
+        _UniffiConverterOptionalUInt64.check_lower(value.total_checkpoints)
+        _UniffiConverterOptionalString.check_lower(value.total_gas_fees)
+        _UniffiConverterOptionalString.check_lower(value.total_stake_rewards)
+        _UniffiConverterOptionalUInt64.check_lower(value.total_transactions)
+        _UniffiConverterOptionalTypeValidatorSet.check_lower(value.validator_set)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterUInt64.write(value.epoch_id, buf)
+        _UniffiConverterOptionalString.write(value.fund_inflow, buf)
+        _UniffiConverterOptionalString.write(value.fund_outflow, buf)
+        _UniffiConverterOptionalString.write(value.fund_size, buf)
+        _UniffiConverterOptionalString.write(value.live_object_set_digest, buf)
+        _UniffiConverterOptionalString.write(value.net_inflow, buf)
+        _UniffiConverterOptionalTypeProtocolConfigs.write(value.protocol_configs, buf)
+        _UniffiConverterOptionalString.write(value.reference_gas_price, buf)
+        _UniffiConverterUInt64.write(value.start_timestamp, buf)
+        _UniffiConverterOptionalUInt64.write(value.end_timestamp, buf)
+        _UniffiConverterOptionalUInt64.write(value.system_state_version, buf)
+        _UniffiConverterOptionalUInt64.write(value.total_checkpoints, buf)
+        _UniffiConverterOptionalString.write(value.total_gas_fees, buf)
+        _UniffiConverterOptionalString.write(value.total_stake_rewards, buf)
+        _UniffiConverterOptionalUInt64.write(value.total_transactions, buf)
+        _UniffiConverterOptionalTypeValidatorSet.write(value.validator_set, buf)
 
 
 class EpochPage:
@@ -13025,15 +13267,127 @@ class _UniffiConverterTypeValidatorPage(_UniffiConverterRustBuffer):
 
 
 class ValidatorSet:
-    active_validators: "ValidatorConnection"
-    def __init__(self, *, active_validators: "ValidatorConnection"):
-        self.active_validators = active_validators
+    inactive_pools_id: "typing.Optional[ObjectId]"
+    """
+    Object ID of the `Table` storing the inactive staking pools.
+    """
+
+    inactive_pools_size: "typing.Optional[int]"
+    """
+    Size of the inactive pools `Table`.
+    """
+
+    pending_active_validators_id: "typing.Optional[ObjectId]"
+    """
+    Object ID of the wrapped object `TableVec` storing the pending active
+    validators.
+    """
+
+    pending_active_validators_size: "typing.Optional[int]"
+    """
+    Size of the pending active validators table.
+    """
+
+    pending_removals: "typing.Optional[typing.List[int]]"
+    """
+    Validators that are pending removal from the active validator set,
+    expressed as indices in to `activeValidators`.
+    """
+
+    staking_pool_mappings_id: "typing.Optional[ObjectId]"
+    """
+    Object ID of the `Table` storing the mapping from staking pool ids to
+    the addresses of the corresponding validators. This is needed
+    because a validator's address can potentially change but the object
+    ID of its pool will not.
+    """
+
+    staking_pool_mappings_size: "typing.Optional[int]"
+    """
+    Size of the stake pool mappings `Table`.
+    """
+
+    total_stake: "typing.Optional[str]"
+    """
+    Total amount of stake for all active validators at the beginning of the
+    epoch.
+    """
+
+    validator_candidates_size: "typing.Optional[int]"
+    """
+    Size of the validator candidates `Table`.
+    """
+
+    validator_candidates_id: "typing.Optional[ObjectId]"
+    """
+    Object ID of the `Table` storing the validator candidates.
+    """
+
+    def __init__(self, *, inactive_pools_id: "typing.Optional[ObjectId]" = _DEFAULT, inactive_pools_size: "typing.Optional[int]" = _DEFAULT, pending_active_validators_id: "typing.Optional[ObjectId]" = _DEFAULT, pending_active_validators_size: "typing.Optional[int]" = _DEFAULT, pending_removals: "typing.Optional[typing.List[int]]" = _DEFAULT, staking_pool_mappings_id: "typing.Optional[ObjectId]" = _DEFAULT, staking_pool_mappings_size: "typing.Optional[int]" = _DEFAULT, total_stake: "typing.Optional[str]" = _DEFAULT, validator_candidates_size: "typing.Optional[int]" = _DEFAULT, validator_candidates_id: "typing.Optional[ObjectId]" = _DEFAULT):
+        if inactive_pools_id is _DEFAULT:
+            self.inactive_pools_id = None
+        else:
+            self.inactive_pools_id = inactive_pools_id
+        if inactive_pools_size is _DEFAULT:
+            self.inactive_pools_size = None
+        else:
+            self.inactive_pools_size = inactive_pools_size
+        if pending_active_validators_id is _DEFAULT:
+            self.pending_active_validators_id = None
+        else:
+            self.pending_active_validators_id = pending_active_validators_id
+        if pending_active_validators_size is _DEFAULT:
+            self.pending_active_validators_size = None
+        else:
+            self.pending_active_validators_size = pending_active_validators_size
+        if pending_removals is _DEFAULT:
+            self.pending_removals = None
+        else:
+            self.pending_removals = pending_removals
+        if staking_pool_mappings_id is _DEFAULT:
+            self.staking_pool_mappings_id = None
+        else:
+            self.staking_pool_mappings_id = staking_pool_mappings_id
+        if staking_pool_mappings_size is _DEFAULT:
+            self.staking_pool_mappings_size = None
+        else:
+            self.staking_pool_mappings_size = staking_pool_mappings_size
+        if total_stake is _DEFAULT:
+            self.total_stake = None
+        else:
+            self.total_stake = total_stake
+        if validator_candidates_size is _DEFAULT:
+            self.validator_candidates_size = None
+        else:
+            self.validator_candidates_size = validator_candidates_size
+        if validator_candidates_id is _DEFAULT:
+            self.validator_candidates_id = None
+        else:
+            self.validator_candidates_id = validator_candidates_id
 
     def __str__(self):
-        return "ValidatorSet(active_validators={})".format(self.active_validators)
+        return "ValidatorSet(inactive_pools_id={}, inactive_pools_size={}, pending_active_validators_id={}, pending_active_validators_size={}, pending_removals={}, staking_pool_mappings_id={}, staking_pool_mappings_size={}, total_stake={}, validator_candidates_size={}, validator_candidates_id={})".format(self.inactive_pools_id, self.inactive_pools_size, self.pending_active_validators_id, self.pending_active_validators_size, self.pending_removals, self.staking_pool_mappings_id, self.staking_pool_mappings_size, self.total_stake, self.validator_candidates_size, self.validator_candidates_id)
 
     def __eq__(self, other):
-        if self.active_validators != other.active_validators:
+        if self.inactive_pools_id != other.inactive_pools_id:
+            return False
+        if self.inactive_pools_size != other.inactive_pools_size:
+            return False
+        if self.pending_active_validators_id != other.pending_active_validators_id:
+            return False
+        if self.pending_active_validators_size != other.pending_active_validators_size:
+            return False
+        if self.pending_removals != other.pending_removals:
+            return False
+        if self.staking_pool_mappings_id != other.staking_pool_mappings_id:
+            return False
+        if self.staking_pool_mappings_size != other.staking_pool_mappings_size:
+            return False
+        if self.total_stake != other.total_stake:
+            return False
+        if self.validator_candidates_size != other.validator_candidates_size:
+            return False
+        if self.validator_candidates_id != other.validator_candidates_id:
             return False
         return True
 
@@ -13041,16 +13395,43 @@ class _UniffiConverterTypeValidatorSet(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return ValidatorSet(
-            active_validators=_UniffiConverterTypeValidatorConnection.read(buf),
+            inactive_pools_id=_UniffiConverterOptionalTypeObjectId.read(buf),
+            inactive_pools_size=_UniffiConverterOptionalInt32.read(buf),
+            pending_active_validators_id=_UniffiConverterOptionalTypeObjectId.read(buf),
+            pending_active_validators_size=_UniffiConverterOptionalInt32.read(buf),
+            pending_removals=_UniffiConverterOptionalSequenceInt32.read(buf),
+            staking_pool_mappings_id=_UniffiConverterOptionalTypeObjectId.read(buf),
+            staking_pool_mappings_size=_UniffiConverterOptionalInt32.read(buf),
+            total_stake=_UniffiConverterOptionalString.read(buf),
+            validator_candidates_size=_UniffiConverterOptionalInt32.read(buf),
+            validator_candidates_id=_UniffiConverterOptionalTypeObjectId.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterTypeValidatorConnection.check_lower(value.active_validators)
+        _UniffiConverterOptionalTypeObjectId.check_lower(value.inactive_pools_id)
+        _UniffiConverterOptionalInt32.check_lower(value.inactive_pools_size)
+        _UniffiConverterOptionalTypeObjectId.check_lower(value.pending_active_validators_id)
+        _UniffiConverterOptionalInt32.check_lower(value.pending_active_validators_size)
+        _UniffiConverterOptionalSequenceInt32.check_lower(value.pending_removals)
+        _UniffiConverterOptionalTypeObjectId.check_lower(value.staking_pool_mappings_id)
+        _UniffiConverterOptionalInt32.check_lower(value.staking_pool_mappings_size)
+        _UniffiConverterOptionalString.check_lower(value.total_stake)
+        _UniffiConverterOptionalInt32.check_lower(value.validator_candidates_size)
+        _UniffiConverterOptionalTypeObjectId.check_lower(value.validator_candidates_id)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterTypeValidatorConnection.write(value.active_validators, buf)
+        _UniffiConverterOptionalTypeObjectId.write(value.inactive_pools_id, buf)
+        _UniffiConverterOptionalInt32.write(value.inactive_pools_size, buf)
+        _UniffiConverterOptionalTypeObjectId.write(value.pending_active_validators_id, buf)
+        _UniffiConverterOptionalInt32.write(value.pending_active_validators_size, buf)
+        _UniffiConverterOptionalSequenceInt32.write(value.pending_removals, buf)
+        _UniffiConverterOptionalTypeObjectId.write(value.staking_pool_mappings_id, buf)
+        _UniffiConverterOptionalInt32.write(value.staking_pool_mappings_size, buf)
+        _UniffiConverterOptionalString.write(value.total_stake, buf)
+        _UniffiConverterOptionalInt32.write(value.validator_candidates_size, buf)
+        _UniffiConverterOptionalTypeObjectId.write(value.validator_candidates_id, buf)
 
 
 class ZkLoginClaim:
@@ -16949,33 +17330,6 @@ class _UniffiConverterOptionalTypeEd25519Signature(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterOptionalTypeEpoch(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeEpoch.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeEpoch.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeEpoch.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalTypeFaucetReceipt(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -17543,6 +17897,33 @@ class _UniffiConverterOptionalTypeEndOfEpochData(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeEpoch(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeEpoch.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeEpoch.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeEpoch.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeEventFilter(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -17948,6 +18329,33 @@ class _UniffiConverterOptionalTypeValidatorCredentials(_UniffiConverterRustBuffe
 
 
 
+class _UniffiConverterOptionalTypeValidatorSet(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeValidatorSet.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeValidatorSet.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeValidatorSet.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeMoveVisibility(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -17997,6 +18405,33 @@ class _UniffiConverterOptionalTypeTransactionBlockKindInput(_UniffiConverterRust
             return None
         elif flag == 1:
             return _UniffiConverterTypeTransactionBlockKindInput.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceInt32(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceInt32.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceInt32.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceInt32.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -18326,6 +18761,31 @@ class _UniffiConverterOptionalTypeValue(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceInt32(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterInt32.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterInt32.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterInt32.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceString(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -18622,31 +19082,6 @@ class _UniffiConverterSequenceTypeEndOfEpochTransactionKind(_UniffiConverterRust
 
         return [
             _UniffiConverterTypeEndOfEpochTransactionKind.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceTypeEpoch(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeEpoch.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeEpoch.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeEpoch.read(buf) for i in range(count)
         ]
 
 
@@ -19097,6 +19532,31 @@ class _UniffiConverterSequenceTypeDynamicFieldOutput(_UniffiConverterRustBuffer)
 
         return [
             _UniffiConverterTypeDynamicFieldOutput.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeEpoch(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeEpoch.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeEpoch.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeEpoch.read(buf) for i in range(count)
         ]
 
 
@@ -24003,62 +24463,6 @@ class _UniffiConverterTypeEndOfEpochTransactionKind:
 
     @classmethod
     def write(cls, value: EndOfEpochTransactionKindProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class EpochProtocol(typing.Protocol):
-    pass
-# Epoch is a Rust-only trait - it's a wrapper around a Rust implementation.
-class Epoch():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_epoch, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_epoch, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeEpoch:
-
-    @staticmethod
-    def lift(value: int):
-        return Epoch._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: Epoch):
-        if not isinstance(value, Epoch):
-            raise TypeError("Expected Epoch instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: EpochProtocol):
-        if not isinstance(value, Epoch):
-            raise TypeError("Expected Epoch instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: EpochProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class ExecutionTimeObservationProtocol(typing.Protocol):
     def key(self, ):
@@ -37430,6 +37834,7 @@ __all__ = [
     "DynamicFieldOutputPage",
     "DynamicFieldValue",
     "EndOfEpochData",
+    "Epoch",
     "EpochPage",
     "Event",
     "EventFilter",
@@ -37517,7 +37922,6 @@ __all__ = [
     "Ed25519Verifier",
     "Ed25519VerifyingKey",
     "EndOfEpochTransactionKind",
-    "Epoch",
     "ExecutionTimeObservation",
     "ExecutionTimeObservationKey",
     "ExecutionTimeObservations",

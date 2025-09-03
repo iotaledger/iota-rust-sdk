@@ -255,15 +255,8 @@ impl GraphQLClient {
     /// Return the epoch information for the provided epoch. If no epoch is
     /// provided, it will return the last known epoch.
     #[uniffi::method(default(epoch = None))]
-    pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<Arc<Epoch>>> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .epoch(epoch)
-            .await?
-            .map(Into::into)
-            .map(Arc::new))
+    pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<Epoch>> {
+        Ok(self.0.read().await.epoch(epoch).await?.map(Into::into))
     }
 
     /// Return the number of checkpoints in this epoch. This will return
