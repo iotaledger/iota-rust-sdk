@@ -26,7 +26,7 @@ jobs:
         run: make go
       - name: Checks for uncommitted changes
         run: git diff --exit-code
-      - name: Run the example
+      - name: Run the examples
         run: make go-examples
   kotlin:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
           curl -s "https://get.sdkman.io" | bash
           source "$HOME/.sdkman/bin/sdkman-init.sh"
           sdk install gradle
-      - name: Run the example
+      - name: Run the examples
         run: make kotlin-examples
   python:
     runs-on: ubuntu-latest
@@ -53,5 +53,5 @@ jobs:
         run: make python
       - name: Checks for uncommitted changes
         run: git diff --exit-code
-      - name: Run the example
+      - name: Run the examples
         run: make python-examples
