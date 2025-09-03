@@ -1358,16 +1358,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_ep
 void* uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v2(void* tx, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_EPOCH
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_EPOCH
-void* uniffi_iota_sdk_ffi_fn_clone_epoch(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_EPOCH
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_EPOCH
-void uniffi_iota_sdk_ffi_fn_free_epoch(void* ptr, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_EXECUTIONTIMEOBSERVATION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_EXECUTIONTIMEOBSERVATION
 void* uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation(void* ptr, RustCallStatus *out_status
