@@ -26483,41 +26483,6 @@ type FfiDestroyerValidatorSet struct {}
 func (_ FfiDestroyerValidatorSet) Destroy(value ValidatorSet) {
 	value.Destroy()
 }
-type ValidatorSetQuery struct {
-	ActiveValidators ValidatorConnection
-}
-
-func (r *ValidatorSetQuery) Destroy() {
-		FfiDestroyerValidatorConnection{}.Destroy(r.ActiveValidators);
-}
-
-type FfiConverterValidatorSetQuery struct {}
-
-var FfiConverterValidatorSetQueryINSTANCE = FfiConverterValidatorSetQuery{}
-
-func (c FfiConverterValidatorSetQuery) Lift(rb RustBufferI) ValidatorSetQuery {
-	return LiftFromRustBuffer[ValidatorSetQuery](c, rb)
-}
-
-func (c FfiConverterValidatorSetQuery) Read(reader io.Reader) ValidatorSetQuery {
-	return ValidatorSetQuery {
-			FfiConverterValidatorConnectionINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterValidatorSetQuery) Lower(value ValidatorSetQuery) C.RustBuffer {
-	return LowerIntoRustBuffer[ValidatorSetQuery](c, value)
-}
-
-func (c FfiConverterValidatorSetQuery) Write(writer io.Writer, value ValidatorSetQuery) {
-		FfiConverterValidatorConnectionINSTANCE.Write(writer, value.ActiveValidators);
-}
-
-type FfiDestroyerValidatorSetQuery struct {}
-
-func (_ FfiDestroyerValidatorSetQuery) Destroy(value ValidatorSetQuery) {
-	value.Destroy()
-}
 // A claim of the iss in a zklogin proof
 //
 // # BCS

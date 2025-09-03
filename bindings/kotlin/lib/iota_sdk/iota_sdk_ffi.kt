@@ -46304,42 +46304,6 @@ public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet>
 
 
 
-data class ValidatorSetQuery (
-    var `activeValidators`: ValidatorConnection
-) : Disposable {
-    
-    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
-    override fun destroy() {
-        
-    Disposable.destroy(
-        this.`activeValidators`
-    )
-    }
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeValidatorSetQuery: FfiConverterRustBuffer<ValidatorSetQuery> {
-    override fun read(buf: ByteBuffer): ValidatorSetQuery {
-        return ValidatorSetQuery(
-            FfiConverterTypeValidatorConnection.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: ValidatorSetQuery) = (
-            FfiConverterTypeValidatorConnection.allocationSize(value.`activeValidators`)
-    )
-
-    override fun write(value: ValidatorSetQuery, buf: ByteBuffer) {
-            FfiConverterTypeValidatorConnection.write(value.`activeValidators`, buf)
-    }
-}
-
-
-
 /**
  * A claim of the iss in a zklogin proof
  *

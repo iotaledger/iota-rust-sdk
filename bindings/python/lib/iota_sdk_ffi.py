@@ -13434,35 +13434,6 @@ class _UniffiConverterTypeValidatorSet(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalTypeObjectId.write(value.validator_candidates_id, buf)
 
 
-class ValidatorSetQuery:
-    active_validators: "ValidatorConnection"
-    def __init__(self, *, active_validators: "ValidatorConnection"):
-        self.active_validators = active_validators
-
-    def __str__(self):
-        return "ValidatorSetQuery(active_validators={})".format(self.active_validators)
-
-    def __eq__(self, other):
-        if self.active_validators != other.active_validators:
-            return False
-        return True
-
-class _UniffiConverterTypeValidatorSetQuery(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return ValidatorSetQuery(
-            active_validators=_UniffiConverterTypeValidatorConnection.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterTypeValidatorConnection.check_lower(value.active_validators)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterTypeValidatorConnection.write(value.active_validators, buf)
-
-
 class ZkLoginClaim:
     """
     A claim of the iss in a zklogin proof
@@ -37922,7 +37893,6 @@ __all__ = [
     "ValidatorCredentials",
     "ValidatorPage",
     "ValidatorSet",
-    "ValidatorSetQuery",
     "ZkLoginClaim",
     "Address",
     "Argument",

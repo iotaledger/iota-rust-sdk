@@ -770,27 +770,6 @@ pub enum Direction {
 }
 
 #[derive(uniffi::Record)]
-pub struct ValidatorSetQuery {
-    pub active_validators: ValidatorConnection,
-}
-
-impl From<iota_graphql_client::query_types::ValidatorSetQuery> for ValidatorSetQuery {
-    fn from(value: iota_graphql_client::query_types::ValidatorSetQuery) -> Self {
-        ValidatorSetQuery {
-            active_validators: value.active_validators.into(),
-        }
-    }
-}
-
-impl From<ValidatorSetQuery> for iota_graphql_client::query_types::ValidatorSetQuery {
-    fn from(value: ValidatorSetQuery) -> Self {
-        iota_graphql_client::query_types::ValidatorSetQuery {
-            active_validators: value.active_validators.into(),
-        }
-    }
-}
-
-#[derive(uniffi::Record)]
 pub struct ValidatorConnection {
     pub page_info: PageInfo,
     pub nodes: Vec<Validator>,
