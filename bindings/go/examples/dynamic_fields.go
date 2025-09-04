@@ -39,7 +39,7 @@ func main() {
 	fmt.Printf("Page info: %+v\n", page.PageInfo)
 	fmt.Printf("Page size: %d\n", len(page.Data))
 	if len(page.Data) > 0 {
-		fmt.Printf("First field name: %v\n", page.Data[0].Name)
+		fmt.Printf("First field name: %+v\n", page.Data[0].Name)
 		fmt.Printf("First field value: %v\n", *page.Data[0].ValueAsJson)
 	}
 }
