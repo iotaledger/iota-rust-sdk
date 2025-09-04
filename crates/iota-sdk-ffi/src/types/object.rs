@@ -382,6 +382,39 @@ impl MovePackage {
                 .collect(),
         }))
     }
+
+    pub fn id(&self) -> ObjectId {
+        self.0.id.into()
+    }
+
+    pub fn version(&self) -> Version {
+        self.0.version
+    }
+
+    pub fn modules(&self) -> HashMap<Arc<Identifier>, Vec<u8>> {
+        self.0
+            .modules
+            .iter()
+            .map(|(k, v)| (Arc::new(k.clone().into()), v.clone()))
+            .collect()
+    }
+
+    pub fn type_origin_table(&self) -> Vec<TypeOrigin> {
+        self.0
+            .type_origin_table
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .collect()
+    }
+
+    pub fn linkage_table(&self) -> HashMap<Arc<ObjectId>, UpgradeInfo> {
+        self.0
+            .linkage_table
+            .iter()
+            .map(|(k, v)| (Arc::new((*k).into()), v.clone().into()))
+            .collect()
+    }
 }
 
 /// A move struct

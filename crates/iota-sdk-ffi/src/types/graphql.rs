@@ -8,10 +8,10 @@ use iota_graphql_client::{
     pagination::{Direction, PaginationFilter},
     query_types::{
         Base64, BigInt, Feature, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant,
-        MoveField, MoveFunction, MoveFunctionConnection, MoveFunctionTypeParameter, MoveObject,
-        MoveStructConnection, MoveStructQuery, MoveStructTypeParameter, MoveVisibility,
-        OpenMoveType, PageInfo, ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigs,
-        ServiceConfig, TransactionBlockKindInput, ValidatorCredentials,
+        MoveField, MoveFunctionTypeParameter, MoveObject, MoveStructConnection, MoveStructQuery,
+        MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo, ProtocolConfigAttr,
+        ProtocolConfigFeatureFlag, ProtocolConfigs, ServiceConfig, TransactionBlockKindInput,
+        ValidatorCredentials,
     },
 };
 use iota_types::{Digest, Identifier, StructTag};
@@ -914,19 +914,49 @@ impl From<CoinMetadata> for iota_graphql_client::query_types::CoinMetadata {
     }
 }
 
-#[uniffi::remote(Record)]
-pub struct MoveFunction {
-    #[uniffi(default = None)]
-    pub is_entry: Option<bool>,
-    pub name: String,
-    #[uniffi(default = None)]
-    pub parameters: Option<Vec<OpenMoveType>>,
-    #[uniffi(default = None)]
-    pub return_: Option<Vec<OpenMoveType>>,
-    #[uniffi(default = None)]
-    pub type_parameters: Option<Vec<MoveFunctionTypeParameter>>,
-    #[uniffi(default = None)]
-    pub visibility: Option<MoveVisibility>,
+#[derive(derive_more::From, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Display)]
+pub struct MoveFunction(iota_graphql_client::query_types::MoveFunction);
+
+// {
+//     #[uniffi(default = None)]
+//     pub is_entry: Option<bool>,
+//     pub name: String,
+//     #[uniffi(default = None)]
+//     pub parameters: Option<Vec<OpenMoveType>>,
+//     #[uniffi(default = None)]
+//     pub return_: Option<Vec<OpenMoveType>>,
+//     #[uniffi(default = None)]
+//     pub type_parameters: Option<Vec<MoveFunctionTypeParameter>>,
+//     #[uniffi(default = None)]
+//     pub visibility: Option<MoveVisibility>,
+// }
+
+#[uniffi::export]
+impl MoveFunction {
+    pub fn is_entry(&self) -> bool {
+        self.0.is_entry.is_some_and(|v| v)
+    }
+
+    pub fn name(&self) -> String {
+        self.0.name.clone()
+    }
+
+    pub fn parameters(&self) -> Option<Vec<OpenMoveType>> {
+        self.0.parameters.clone()
+    }
+
+    pub fn return_type(&self) -> Option<Vec<OpenMoveType>> {
+        self.0.return_.clone()
+    }
+
+    pub fn type_parameters(&self) -> Option<Vec<MoveFunctionTypeParameter>> {
+        self.0.type_parameters.clone()
+    }
+
+    pub fn visibility(&self) -> Option<MoveVisibility> {
+        self.0.visibility
+    }
 }
 
 #[uniffi::remote(Enum)]
@@ -972,7 +1002,7 @@ impl From<iota_graphql_client::query_types::MoveModule> for MoveModule {
             file_format_version: value.file_format_version,
             enums: value.enums,
             friends: value.friends.into(),
-            functions: value.functions,
+            functions: value.functions.map(Into::into),
             structs: value.structs,
         }
     }
@@ -984,7 +1014,7 @@ impl From<MoveModule> for iota_graphql_client::query_types::MoveModule {
             file_format_version: value.file_format_version,
             enums: value.enums,
             friends: value.friends.into(),
-            functions: value.functions,
+            functions: value.functions.map(Into::into),
             structs: value.structs,
         }
     }
@@ -1089,10 +1119,34 @@ pub struct MoveStructConnection {
     pub nodes: Vec<MoveStructQuery>,
 }
 
-#[uniffi::remote(Record)]
+#[derive(uniffi::Record)]
 pub struct MoveFunctionConnection {
-    pub nodes: Vec<MoveFunction>,
+    pub nodes: Vec<Arc<MoveFunction>>,
     pub page_info: PageInfo,
+}
+
+impl From<iota_graphql_client::query_types::MoveFunctionConnection> for MoveFunctionConnection {
+    fn from(value: iota_graphql_client::query_types::MoveFunctionConnection) -> Self {
+        Self {
+            nodes: value
+                .nodes
+                .iter()
+                .cloned()
+                .map(Into::into)
+                .map(Arc::new)
+                .collect(),
+            page_info: value.page_info,
+        }
+    }
+}
+
+impl From<MoveFunctionConnection> for iota_graphql_client::query_types::MoveFunctionConnection {
+    fn from(value: MoveFunctionConnection) -> Self {
+        Self {
+            nodes: value.nodes.iter().map(|v| v.0.clone()).collect(),
+            page_info: value.page_info,
+        }
+    }
 }
 
 #[uniffi::remote(Record)]

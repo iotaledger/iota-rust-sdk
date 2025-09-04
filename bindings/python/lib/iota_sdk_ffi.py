@@ -689,9 +689,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 15206:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 49066:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 46991:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 37900:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 51508:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -754,6 +754,28 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_movecall_package() != 24481:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_movecall_type_arguments() != 46468:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movefunction_is_entry() != 5688:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movefunction_name() != 15389:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movefunction_parameters() != 34373:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movefunction_return_type() != 2574:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movefunction_type_parameters() != 3798:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movefunction_visibility() != 3892:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_id() != 28435:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_linkage_table() != 40601:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_modules() != 49866:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table() != 7308:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 22970:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap() != 41489:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3189,7 +3211,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function.
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module.argtypes = (
     ctypes.c_void_p,
-    _UniffiRustBuffer,
+    ctypes.c_void_p,
     _UniffiRustBuffer,
     _UniffiRustBuffer,
     _UniffiRustBuffer,
@@ -3465,6 +3487,51 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_type_arguments.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_type_arguments.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movefunction.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movefunction.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movefunction.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movefunction.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_is_entry.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_is_entry.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_name.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_name.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_parameters.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_parameters.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_return_type.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_return_type.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_type_parameters.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_type_parameters.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_visibility.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_visibility.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_uniffi_trait_display.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movepackage.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3484,6 +3551,31 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_id.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_id.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_linkage_table.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_linkage_table.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_modules.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_modules.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_type_origin_table.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_type_origin_table.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_version.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigaggregatedsignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6825,6 +6917,39 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movecall_package.restype = ctypes
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movecall_type_arguments.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movecall_type_arguments.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_is_entry.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_is_entry.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_name.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_name.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_parameters.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_parameters.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_return_type.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_return_type.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_type_parameters.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_type_parameters.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_visibility.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movefunction_visibility.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movepackage_id.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movepackage_id.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movepackage_linkage_table.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movepackage_linkage_table.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movepackage_modules.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movepackage_modules.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap.restype = ctypes.c_uint16
@@ -8439,6 +8564,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -10557,85 +10684,6 @@ class _UniffiConverterTypeMoveField(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterString.write(value.name, buf)
         _UniffiConverterOptionalTypeOpenMoveType.write(value.type, buf)
-
-
-class MoveFunction:
-    is_entry: "typing.Optional[bool]"
-    name: "str"
-    parameters: "typing.Optional[typing.List[OpenMoveType]]"
-    _return: "typing.Optional[typing.List[OpenMoveType]]"
-    type_parameters: "typing.Optional[typing.List[MoveFunctionTypeParameter]]"
-    visibility: "typing.Optional[MoveVisibility]"
-    def __init__(self, *, is_entry: "typing.Optional[bool]" = _DEFAULT, name: "str", parameters: "typing.Optional[typing.List[OpenMoveType]]" = _DEFAULT, _return: "typing.Optional[typing.List[OpenMoveType]]" = _DEFAULT, type_parameters: "typing.Optional[typing.List[MoveFunctionTypeParameter]]" = _DEFAULT, visibility: "typing.Optional[MoveVisibility]" = _DEFAULT):
-        if is_entry is _DEFAULT:
-            self.is_entry = None
-        else:
-            self.is_entry = is_entry
-        self.name = name
-        if parameters is _DEFAULT:
-            self.parameters = None
-        else:
-            self.parameters = parameters
-        if _return is _DEFAULT:
-            self._return = None
-        else:
-            self._return = _return
-        if type_parameters is _DEFAULT:
-            self.type_parameters = None
-        else:
-            self.type_parameters = type_parameters
-        if visibility is _DEFAULT:
-            self.visibility = None
-        else:
-            self.visibility = visibility
-
-    def __str__(self):
-        return "MoveFunction(is_entry={}, name={}, parameters={}, _return={}, type_parameters={}, visibility={})".format(self.is_entry, self.name, self.parameters, self._return, self.type_parameters, self.visibility)
-
-    def __eq__(self, other):
-        if self.is_entry != other.is_entry:
-            return False
-        if self.name != other.name:
-            return False
-        if self.parameters != other.parameters:
-            return False
-        if self._return != other._return:
-            return False
-        if self.type_parameters != other.type_parameters:
-            return False
-        if self.visibility != other.visibility:
-            return False
-        return True
-
-class _UniffiConverterTypeMoveFunction(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return MoveFunction(
-            is_entry=_UniffiConverterOptionalBool.read(buf),
-            name=_UniffiConverterString.read(buf),
-            parameters=_UniffiConverterOptionalSequenceTypeOpenMoveType.read(buf),
-            _return=_UniffiConverterOptionalSequenceTypeOpenMoveType.read(buf),
-            type_parameters=_UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter.read(buf),
-            visibility=_UniffiConverterOptionalTypeMoveVisibility.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterOptionalBool.check_lower(value.is_entry)
-        _UniffiConverterString.check_lower(value.name)
-        _UniffiConverterOptionalSequenceTypeOpenMoveType.check_lower(value.parameters)
-        _UniffiConverterOptionalSequenceTypeOpenMoveType.check_lower(value._return)
-        _UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter.check_lower(value.type_parameters)
-        _UniffiConverterOptionalTypeMoveVisibility.check_lower(value.visibility)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterOptionalBool.write(value.is_entry, buf)
-        _UniffiConverterString.write(value.name, buf)
-        _UniffiConverterOptionalSequenceTypeOpenMoveType.write(value.parameters, buf)
-        _UniffiConverterOptionalSequenceTypeOpenMoveType.write(value._return, buf)
-        _UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter.write(value.type_parameters, buf)
-        _UniffiConverterOptionalTypeMoveVisibility.write(value.visibility, buf)
 
 
 class MoveFunctionConnection:
@@ -17432,6 +17480,33 @@ class _UniffiConverterOptionalTypeFaucetReceipt(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeMoveFunction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveFunction.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveFunction.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveFunction.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeMovePackage(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -18048,33 +18123,6 @@ class _UniffiConverterOptionalTypeMoveEnumConnection(_UniffiConverterRustBuffer)
             return None
         elif flag == 1:
             return _UniffiConverterTypeMoveEnumConnection.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
-class _UniffiConverterOptionalTypeMoveFunction(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeMoveFunction.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeMoveFunction.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeMoveFunction.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -19236,6 +19284,31 @@ class _UniffiConverterSequenceTypeInput(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeMoveFunction(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveFunction.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveFunction.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveFunction.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeMovePackage(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -19732,31 +19805,6 @@ class _UniffiConverterSequenceTypeMoveField(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeMoveField.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceTypeMoveFunction(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeMoveFunction.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeMoveFunction.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeMoveFunction.read(buf) for i in range(count)
         ]
 
 
@@ -25593,7 +25641,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def normalized_move_module(self, package: "str",module: "str",pagination_filter_enums: "PaginationFilter",pagination_filter_friends: "PaginationFilter",pagination_filter_functions: "PaginationFilter",pagination_filter_structs: "PaginationFilter",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def normalized_move_module(self, package: "Address",module: "str",pagination_filter_enums: "PaginationFilter",pagination_filter_friends: "PaginationFilter",pagination_filter_functions: "PaginationFilter",pagination_filter_structs: "PaginationFilter",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
         """
         Return the normalized Move module data for the provided module.
         """
@@ -26552,12 +26600,12 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def normalized_move_module(self, package: "str",module: "str",pagination_filter_enums: "PaginationFilter",pagination_filter_friends: "PaginationFilter",pagination_filter_functions: "PaginationFilter",pagination_filter_structs: "PaginationFilter",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[MoveModule]":
+    async def normalized_move_module(self, package: "Address",module: "str",pagination_filter_enums: "PaginationFilter",pagination_filter_friends: "PaginationFilter",pagination_filter_functions: "PaginationFilter",pagination_filter_structs: "PaginationFilter",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[MoveModule]":
         """
         Return the normalized Move module data for the provided module.
         """
 
-        _UniffiConverterString.check_lower(package)
+        _UniffiConverterTypeAddress.check_lower(package)
         
         _UniffiConverterString.check_lower(module)
         
@@ -26576,7 +26624,7 @@ _UniffiConverterTypeSdkFfiError,
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterString.lower(package),
+        _UniffiConverterTypeAddress.lower(package),
         _UniffiConverterString.lower(module),
         _UniffiConverterTypePaginationFilter.lower(pagination_filter_enums),
         _UniffiConverterTypePaginationFilter.lower(pagination_filter_friends),
@@ -27966,6 +28014,136 @@ class _UniffiConverterTypeMoveCall:
     @classmethod
     def write(cls, value: MoveCallProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class MoveFunctionProtocol(typing.Protocol):
+    def is_entry(self, ):
+        raise NotImplementedError
+    def name(self, ):
+        raise NotImplementedError
+    def parameters(self, ):
+        raise NotImplementedError
+    def return_type(self, ):
+        raise NotImplementedError
+    def type_parameters(self, ):
+        raise NotImplementedError
+    def visibility(self, ):
+        raise NotImplementedError
+# MoveFunction is a Rust-only trait - it's a wrapper around a Rust implementation.
+class MoveFunction():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movefunction, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movefunction, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def is_entry(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_is_entry,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def name(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_name,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def parameters(self, ) -> "typing.Optional[typing.List[OpenMoveType]]":
+        return _UniffiConverterOptionalSequenceTypeOpenMoveType.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_parameters,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def return_type(self, ) -> "typing.Optional[typing.List[OpenMoveType]]":
+        return _UniffiConverterOptionalSequenceTypeOpenMoveType.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_return_type,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def type_parameters(self, ) -> "typing.Optional[typing.List[MoveFunctionTypeParameter]]":
+        return _UniffiConverterOptionalSequenceTypeMoveFunctionTypeParameter.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_type_parameters,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def visibility(self, ) -> "typing.Optional[MoveVisibility]":
+        return _UniffiConverterOptionalTypeMoveVisibility.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_visibility,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeMoveFunction:
+
+    @staticmethod
+    def lift(value: int):
+        return MoveFunction._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: MoveFunction):
+        if not isinstance(value, MoveFunction):
+            raise TypeError("Expected MoveFunction instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: MoveFunctionProtocol):
+        if not isinstance(value, MoveFunction):
+            raise TypeError("Expected MoveFunction instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: MoveFunctionProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class MovePackageProtocol(typing.Protocol):
     """
     A move package
@@ -27983,7 +28161,16 @@ class MovePackageProtocol(typing.Protocol):
     ```
     """
 
-    pass
+    def id(self, ):
+        raise NotImplementedError
+    def linkage_table(self, ):
+        raise NotImplementedError
+    def modules(self, ):
+        raise NotImplementedError
+    def type_origin_table(self, ):
+        raise NotImplementedError
+    def version(self, ):
+        raise NotImplementedError
 # MovePackage is a Rust-only trait - it's a wrapper around a Rust implementation.
 class MovePackage():
     """
@@ -28038,6 +28225,51 @@ class MovePackage():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def id(self, ) -> "ObjectId":
+        return _UniffiConverterTypeObjectId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_id,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def linkage_table(self, ) -> "dict[ObjectId, UpgradeInfo]":
+        return _UniffiConverterMapTypeObjectIdTypeUpgradeInfo.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_linkage_table,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def modules(self, ) -> "dict[Identifier, bytes]":
+        return _UniffiConverterMapTypeIdentifierBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_modules,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def type_origin_table(self, ) -> "typing.List[TypeOrigin]":
+        return _UniffiConverterSequenceTypeTypeOrigin.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_type_origin_table,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def version(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_version,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -38034,7 +38266,6 @@ __all__ = [
     "MoveEnumConnection",
     "MoveEnumVariant",
     "MoveField",
-    "MoveFunction",
     "MoveFunctionConnection",
     "MoveFunctionTypeParameter",
     "MoveLocation",
@@ -38120,6 +38351,7 @@ __all__ = [
     "MakeMoveVector",
     "MergeCoins",
     "MoveCall",
+    "MoveFunction",
     "MovePackage",
     "MultisigAggregatedSignature",
     "MultisigAggregator",

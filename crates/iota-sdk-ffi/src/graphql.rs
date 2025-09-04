@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use iota_graphql_client::{
     pagination::PaginationFilter,
-    query_types::{MoveFunction, ProtocolConfigs, ServiceConfig},
+    query_types::{ProtocolConfigs, ServiceConfig},
 };
 use iota_types::CheckpointSequenceNumber;
 use tokio::sync::RwLock;
@@ -17,8 +17,9 @@ use crate::{
         checkpoint::CheckpointSummary,
         digest::Digest,
         graphql::{
-            CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveModule,
-            ObjectFilter, TransactionDataEffects, TransactionMetadata, TransactionsFilter,
+            CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveFunction,
+            MoveModule, ObjectFilter, TransactionDataEffects, TransactionMetadata,
+            TransactionsFilter,
         },
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
@@ -604,13 +605,15 @@ impl GraphQLClient {
         module: &str,
         function: &str,
         version: Option<u64>,
-    ) -> Result<Option<MoveFunction>> {
+    ) -> Result<Option<Arc<MoveFunction>>> {
         Ok(self
             .0
             .read()
             .await
             .normalized_move_function(package, module, function, version)
-            .await?)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Return the contents' JSON of an object that is a Move object.
@@ -639,7 +642,7 @@ impl GraphQLClient {
     #[uniffi::method(default(version = None))]
     pub async fn normalized_move_module(
         &self,
-        package: &str,
+        package: &Address,
         module: &str,
         pagination_filter_enums: PaginationFilter,
         pagination_filter_friends: PaginationFilter,
@@ -652,7 +655,7 @@ impl GraphQLClient {
             .read()
             .await
             .normalized_move_module(
-                package,
+                **package,
                 module,
                 version,
                 pagination_filter_enums,
