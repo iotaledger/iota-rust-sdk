@@ -41,6 +41,7 @@ define_paged_record!(SignedTransactionPage, SignedTransaction);
 define_paged_record!(TransactionDataEffectsPage, TransactionDataEffects);
 define_paged_record!(DynamicFieldOutputPage, DynamicFieldOutput);
 define_paged_record!(EventPage, Event);
+define_paged_record!(EpochPage, Epoch);
 define_paged_record!(ValidatorPage, Validator);
 
 macro_rules! define_paged_object {
@@ -75,7 +76,6 @@ define_paged_object!(CoinPage, Coin);
 define_paged_object!(ObjectPage, Object);
 define_paged_object!(TransactionEffectsPage, TransactionEffects);
 define_paged_object!(MovePackagePage, MovePackage);
-define_paged_object!(EpochPage, Epoch);
 define_paged_object!(CheckpointSummaryPage, CheckpointSummary);
 define_paged_object!(NameRegistrationPage, NameRegistration);
 

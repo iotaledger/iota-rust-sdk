@@ -31,7 +31,7 @@ pub struct ActiveValidatorsArgs<'a> {
     variables = "ActiveValidatorsArgs"
 )]
 pub struct EpochValidator {
-    pub validator_set: Option<ValidatorSet>,
+    pub validator_set: Option<ValidatorSetQuery>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -40,7 +40,7 @@ pub struct EpochValidator {
     graphql_type = "ValidatorSet",
     variables = "ActiveValidatorsArgs"
 )]
-pub struct ValidatorSet {
+pub struct ValidatorSetQuery {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub active_validators: ValidatorConnection,
 }

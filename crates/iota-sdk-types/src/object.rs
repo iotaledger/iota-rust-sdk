@@ -392,11 +392,29 @@ impl Object {
     }
 
     /// Try to interpret this object as a move struct
-    pub fn as_struct(&self) -> Option<&MoveStruct> {
+    pub fn as_struct_opt(&self) -> Option<&MoveStruct> {
         match &self.data {
             ObjectData::Struct(struct_) => Some(struct_),
             _ => None,
         }
+    }
+
+    /// Interpret this object as a move struct
+    pub fn as_struct(&self) -> &MoveStruct {
+        self.as_struct_opt().expect("not a move struct")
+    }
+
+    /// Try to interpret this object as a move package
+    pub fn as_package_opt(&self) -> Option<&MovePackage> {
+        match &self.data {
+            ObjectData::Package(package) => Some(package),
+            _ => None,
+        }
+    }
+
+    /// Interpret this object as a move package
+    pub fn as_package(&self) -> &MovePackage {
+        self.as_package_opt().expect("not a move package")
     }
 
     /// Return this object's owner
@@ -427,7 +445,7 @@ impl Object {
         use anyhow::Context;
 
         Ok(bcs::from_bytes::<T>(
-            &self.as_struct().context("not a struct")?.contents,
+            &self.as_struct_opt().context("not a struct")?.contents,
         )?)
     }
 }

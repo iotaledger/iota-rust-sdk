@@ -1307,7 +1307,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch()
 	})
-	if checksum != 46788 {
+	if checksum != 62805 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch: UniFFI API checksum mismatch")
 	}
@@ -2178,11 +2178,38 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_object_as_package()
+	})
+	if checksum != 21763 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_as_package: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt()
+	})
+	if checksum != 61571 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_object_as_struct()
 	})
-	if checksum != 37303 {
+	if checksum != 5928 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_as_struct: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt()
+	})
+	if checksum != 49657 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2331,6 +2358,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct()
+	})
+	if checksum != 15094 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt()
 	})
 	if checksum != 14701 {
@@ -2358,6 +2394,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address()
+	})
+	if checksum != 19200 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt()
 	})
 	if checksum != 36265 {
@@ -2367,11 +2412,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object()
+	})
+	if checksum != 42917 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_object: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt()
 	})
 	if checksum != 17159 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared()
+	})
+	if checksum != 56096 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10308,66 +10371,6 @@ func (_ FfiDestroyerEndOfEpochTransactionKind) Destroy(value *EndOfEpochTransact
 
 
 
-type EpochInterface interface {
-}
-type Epoch struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *Epoch) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterEpoch struct {}
-
-var FfiConverterEpochINSTANCE = FfiConverterEpoch{}
-
-
-func (c FfiConverterEpoch) Lift(pointer unsafe.Pointer) *Epoch {
-	result := &Epoch {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_epoch(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_epoch(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*Epoch).Destroy)
-	return result
-}
-
-func (c FfiConverterEpoch) Read(reader io.Reader) *Epoch {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterEpoch) Lower(value *Epoch) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*Epoch")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterEpoch) Write(writer io.Writer, value *Epoch) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerEpoch struct {}
-
-func (_ FfiDestroyerEpoch) Destroy(value *Epoch) {
-		value.Destroy()
-}
-
-
-
 type ExecutionTimeObservationInterface interface {
 	Key() *ExecutionTimeObservationKey
 	Observations() []*ValidatorExecutionTimeObservation
@@ -11287,7 +11290,7 @@ type GraphQlClientInterface interface {
 	DynamicObjectField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error)
 	// Return the epoch information for the provided epoch. If no epoch is
 	// provided, it will return the last known epoch.
-	Epoch(epoch *uint64) (**Epoch, error)
+	Epoch(epoch *uint64) (*Epoch, error)
 	// Return the number of checkpoints in this epoch. This will return
 	// `Ok(None)` if the epoch requested is not available in the GraphQL
 	// service (e.g., due to pruning).
@@ -11913,7 +11916,7 @@ func (_self *GraphQlClient) DynamicObjectField(address *Address, typeTag *TypeTa
 
 // Return the epoch information for the provided epoch. If no epoch is
 // provided, it will return the last known epoch.
-func (_self *GraphQlClient) Epoch(epoch *uint64) (**Epoch, error) {
+func (_self *GraphQlClient) Epoch(epoch *uint64) (*Epoch, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -11926,7 +11929,7 @@ func (_self *GraphQlClient) Epoch(epoch *uint64) (**Epoch, error) {
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) **Epoch {
+		func(ffi RustBufferI) *Epoch {
 			return FfiConverterOptionalEpochINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch(
@@ -15358,8 +15361,14 @@ func (_ FfiDestroyerNameRegistration) Destroy(value *NameRegistration) {
 // object = object-data owner digest u64
 // ```
 type ObjectInterface interface {
+	// Interpret this object as a move package
+	AsPackage() *MovePackage
+	// Try to interpret this object as a move package
+	AsPackageOpt() **MovePackage
+	// Interpret this object as a move struct
+	AsStruct() MoveStruct
 	// Try to interpret this object as a move struct
-	AsStruct() *MoveStruct
+	AsStructOpt() *MoveStruct
 	// Return this object's data
 	Data() *ObjectData
 	// Calculate the digest of this `Object`
@@ -15403,13 +15412,47 @@ func NewObject(data *ObjectData, owner *Owner, previousTransaction *Digest, stor
 
 
 
+// Interpret this object as a move package
+func (_self *Object) AsPackage() *MovePackage {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterMovePackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_object_as_package(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Try to interpret this object as a move package
+func (_self *Object) AsPackageOpt() **MovePackage {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalMovePackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_object_as_package_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Interpret this object as a move struct
+func (_self *Object) AsStruct() MoveStruct {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterMoveStructINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_object_as_struct(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
 // Try to interpret this object as a move struct
-func (_self *Object) AsStruct() *MoveStruct {
+func (_self *Object) AsStructOpt() *MoveStruct {
 	_pointer := _self.ffiObject.incrementPointer("*Object")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalMoveStructINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_object_as_struct(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -15892,6 +15935,7 @@ func (_ FfiDestroyerObjectId) Destroy(value *ObjectId) {
 
 // Type of an IOTA object
 type ObjectTypeInterface interface {
+	AsStruct() *StructTag
 	AsStructOpt() **StructTag
 	IsPackage() bool
 	IsStruct() bool
@@ -15915,6 +15959,15 @@ func ObjectTypeNewStruct(structTag *StructTag) *ObjectType {
 }
 
 
+
+func (_self *ObjectType) AsStruct() *StructTag {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(
+		_pointer,_uniffiStatus)
+	}))
+}
 
 func (_self *ObjectType) AsStructOpt() **StructTag {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
@@ -16011,8 +16064,11 @@ func (_ FfiDestroyerObjectType) Destroy(value *ObjectType) {
 // owner-immutable = %x03
 // ```
 type OwnerInterface interface {
+	AsAddress() *Address
 	AsAddressOpt() **Address
+	AsObject() *ObjectId
 	AsObjectOpt() **ObjectId
+	AsShared() uint64
 	AsSharedOpt() *uint64
 	IsAddress() bool
 	IsImmutable() bool
@@ -16064,6 +16120,15 @@ func OwnerNewShared(version uint64) *Owner {
 
 
 
+func (_self *Owner) AsAddress() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_as_address(
+		_pointer,_uniffiStatus)
+	}))
+}
+
 func (_self *Owner) AsAddressOpt() **Address {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -16075,6 +16140,15 @@ func (_self *Owner) AsAddressOpt() **Address {
 	}))
 }
 
+func (_self *Owner) AsObject() *ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_as_object(
+		_pointer,_uniffiStatus)
+	}))
+}
+
 func (_self *Owner) AsObjectOpt() **ObjectId {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -16083,6 +16157,15 @@ func (_self *Owner) AsObjectOpt() **ObjectId {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(
 		_pointer,_uniffiStatus),
 	}
+	}))
+}
+
+func (_self *Owner) AsShared() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(
+		_pointer,_uniffiStatus)
 	}))
 }
 
@@ -19303,6 +19386,19 @@ func (_self *StructTag) CoinTypeOpt() **TypeTag {
 	}
 	}))
 }
+
+func (_self *StructTag) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *StructTag) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -23861,13 +23957,138 @@ type FfiDestroyerEndOfEpochData struct {}
 func (_ FfiDestroyerEndOfEpochData) Destroy(value EndOfEpochData) {
 	value.Destroy()
 }
+type Epoch struct {
+	// The epoch's id as a sequence number that starts at 0 and is incremented
+	// by one at every epoch change.
+	EpochId uint64
+	// The storage fees paid for transactions executed during the epoch.
+	FundInflow *string
+	// The storage fee rebates paid to users who deleted the data associated
+	// with past transactions.
+	FundOutflow *string
+	// The storage fund available in this epoch.
+	// This fund is used to redistribute storage fees from past transactions
+	// to future validators.
+	FundSize *string
+	// A commitment by the committee at the end of epoch on the contents of the
+	// live object set at that time. This can be used to verify state
+	// snapshots.
+	LiveObjectSetDigest *string
+	// The difference between the fund inflow and outflow, representing
+	// the net amount of storage fees accumulated in this epoch.
+	NetInflow *string
+	// The epoch's corresponding protocol configuration, including the feature
+	// flags and the configuration options.
+	ProtocolConfigs *ProtocolConfigs
+	// The minimum gas price that a quorum of validators are guaranteed to sign
+	// a transaction for.
+	ReferenceGasPrice *string
+	// The epoch's starting timestamp.
+	StartTimestamp uint64
+	// The epoch's ending timestamp. Note that this is available only on epochs
+	// that have ended.
+	EndTimestamp *uint64
+	// The value of the `version` field of `0x5`, the
+	// `0x3::iota::IotaSystemState` object.  This version changes whenever
+	// the fields contained in the system state object (held in a dynamic
+	// field attached to `0x5`) change.
+	SystemStateVersion *uint64
+	// The total number of checkpoints in this epoch.
+	TotalCheckpoints *uint64
+	// The total amount of gas fees (in IOTA) that were paid in this epoch.
+	TotalGasFees *string
+	// The total IOTA rewarded as stake.
+	TotalStakeRewards *string
+	// The total number of transaction in this epoch.
+	TotalTransactions *uint64
+	// Validator related properties. For active validators, see
+	// `active_validators` API.
+	ValidatorSet *ValidatorSet
+}
+
+func (r *Epoch) Destroy() {
+		FfiDestroyerUint64{}.Destroy(r.EpochId);
+		FfiDestroyerOptionalString{}.Destroy(r.FundInflow);
+		FfiDestroyerOptionalString{}.Destroy(r.FundOutflow);
+		FfiDestroyerOptionalString{}.Destroy(r.FundSize);
+		FfiDestroyerOptionalString{}.Destroy(r.LiveObjectSetDigest);
+		FfiDestroyerOptionalString{}.Destroy(r.NetInflow);
+		FfiDestroyerOptionalProtocolConfigs{}.Destroy(r.ProtocolConfigs);
+		FfiDestroyerOptionalString{}.Destroy(r.ReferenceGasPrice);
+		FfiDestroyerUint64{}.Destroy(r.StartTimestamp);
+		FfiDestroyerOptionalUint64{}.Destroy(r.EndTimestamp);
+		FfiDestroyerOptionalUint64{}.Destroy(r.SystemStateVersion);
+		FfiDestroyerOptionalUint64{}.Destroy(r.TotalCheckpoints);
+		FfiDestroyerOptionalString{}.Destroy(r.TotalGasFees);
+		FfiDestroyerOptionalString{}.Destroy(r.TotalStakeRewards);
+		FfiDestroyerOptionalUint64{}.Destroy(r.TotalTransactions);
+		FfiDestroyerOptionalValidatorSet{}.Destroy(r.ValidatorSet);
+}
+
+type FfiConverterEpoch struct {}
+
+var FfiConverterEpochINSTANCE = FfiConverterEpoch{}
+
+func (c FfiConverterEpoch) Lift(rb RustBufferI) Epoch {
+	return LiftFromRustBuffer[Epoch](c, rb)
+}
+
+func (c FfiConverterEpoch) Read(reader io.Reader) Epoch {
+	return Epoch {
+			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalProtocolConfigsINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalValidatorSetINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterEpoch) Lower(value Epoch) C.RustBuffer {
+	return LowerIntoRustBuffer[Epoch](c, value)
+}
+
+func (c FfiConverterEpoch) Write(writer io.Writer, value Epoch) {
+		FfiConverterUint64INSTANCE.Write(writer, value.EpochId);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.FundInflow);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.FundOutflow);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.FundSize);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.LiveObjectSetDigest);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.NetInflow);
+		FfiConverterOptionalProtocolConfigsINSTANCE.Write(writer, value.ProtocolConfigs);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.ReferenceGasPrice);
+		FfiConverterUint64INSTANCE.Write(writer, value.StartTimestamp);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.EndTimestamp);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.SystemStateVersion);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.TotalCheckpoints);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.TotalGasFees);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.TotalStakeRewards);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.TotalTransactions);
+		FfiConverterOptionalValidatorSetINSTANCE.Write(writer, value.ValidatorSet);
+}
+
+type FfiDestroyerEpoch struct {}
+
+func (_ FfiDestroyerEpoch) Destroy(value Epoch) {
+	value.Destroy()
+}
 // A page of items returned by the GraphQL server.
 type EpochPage struct {
 	// Information about the page, such as the cursor and whether there are
 	// more pages.
 	PageInfo PageInfo
 	// The data returned by the server.
-	Data []*Epoch
+	Data []Epoch
 }
 
 func (r *EpochPage) Destroy() {
@@ -26898,11 +27119,45 @@ func (_ FfiDestroyerValidatorPage) Destroy(value ValidatorPage) {
 	value.Destroy()
 }
 type ValidatorSet struct {
-	ActiveValidators ValidatorConnection
+	// Object ID of the `Table` storing the inactive staking pools.
+	InactivePoolsId **ObjectId
+	// Size of the inactive pools `Table`.
+	InactivePoolsSize *int32
+	// Object ID of the wrapped object `TableVec` storing the pending active
+	// validators.
+	PendingActiveValidatorsId **ObjectId
+	// Size of the pending active validators table.
+	PendingActiveValidatorsSize *int32
+	// Validators that are pending removal from the active validator set,
+	// expressed as indices in to `activeValidators`.
+	PendingRemovals *[]int32
+	// Object ID of the `Table` storing the mapping from staking pool ids to
+	// the addresses of the corresponding validators. This is needed
+	// because a validator's address can potentially change but the object
+	// ID of its pool will not.
+	StakingPoolMappingsId **ObjectId
+	// Size of the stake pool mappings `Table`.
+	StakingPoolMappingsSize *int32
+	// Total amount of stake for all active validators at the beginning of the
+	// epoch.
+	TotalStake *string
+	// Size of the validator candidates `Table`.
+	ValidatorCandidatesSize *int32
+	// Object ID of the `Table` storing the validator candidates.
+	ValidatorCandidatesId **ObjectId
 }
 
 func (r *ValidatorSet) Destroy() {
-		FfiDestroyerValidatorConnection{}.Destroy(r.ActiveValidators);
+		FfiDestroyerOptionalObjectId{}.Destroy(r.InactivePoolsId);
+		FfiDestroyerOptionalInt32{}.Destroy(r.InactivePoolsSize);
+		FfiDestroyerOptionalObjectId{}.Destroy(r.PendingActiveValidatorsId);
+		FfiDestroyerOptionalInt32{}.Destroy(r.PendingActiveValidatorsSize);
+		FfiDestroyerOptionalSequenceInt32{}.Destroy(r.PendingRemovals);
+		FfiDestroyerOptionalObjectId{}.Destroy(r.StakingPoolMappingsId);
+		FfiDestroyerOptionalInt32{}.Destroy(r.StakingPoolMappingsSize);
+		FfiDestroyerOptionalString{}.Destroy(r.TotalStake);
+		FfiDestroyerOptionalInt32{}.Destroy(r.ValidatorCandidatesSize);
+		FfiDestroyerOptionalObjectId{}.Destroy(r.ValidatorCandidatesId);
 }
 
 type FfiConverterValidatorSet struct {}
@@ -26915,7 +27170,16 @@ func (c FfiConverterValidatorSet) Lift(rb RustBufferI) ValidatorSet {
 
 func (c FfiConverterValidatorSet) Read(reader io.Reader) ValidatorSet {
 	return ValidatorSet {
-			FfiConverterValidatorConnectionINSTANCE.Read(reader),
+			FfiConverterOptionalObjectIdINSTANCE.Read(reader),
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+			FfiConverterOptionalObjectIdINSTANCE.Read(reader),
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+			FfiConverterOptionalSequenceInt32INSTANCE.Read(reader),
+			FfiConverterOptionalObjectIdINSTANCE.Read(reader),
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+			FfiConverterOptionalObjectIdINSTANCE.Read(reader),
 	}
 }
 
@@ -26924,7 +27188,16 @@ func (c FfiConverterValidatorSet) Lower(value ValidatorSet) C.RustBuffer {
 }
 
 func (c FfiConverterValidatorSet) Write(writer io.Writer, value ValidatorSet) {
-		FfiConverterValidatorConnectionINSTANCE.Write(writer, value.ActiveValidators);
+		FfiConverterOptionalObjectIdINSTANCE.Write(writer, value.InactivePoolsId);
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.InactivePoolsSize);
+		FfiConverterOptionalObjectIdINSTANCE.Write(writer, value.PendingActiveValidatorsId);
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.PendingActiveValidatorsSize);
+		FfiConverterOptionalSequenceInt32INSTANCE.Write(writer, value.PendingRemovals);
+		FfiConverterOptionalObjectIdINSTANCE.Write(writer, value.StakingPoolMappingsId);
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.StakingPoolMappingsSize);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.TotalStake);
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.ValidatorCandidatesSize);
+		FfiConverterOptionalObjectIdINSTANCE.Write(writer, value.ValidatorCandidatesId);
 }
 
 type FfiDestroyerValidatorSet struct {}
@@ -29444,43 +29717,6 @@ func (_ FfiDestroyerOptionalEd25519Signature) Destroy(value **Ed25519Signature) 
 	}
 }
 
-type FfiConverterOptionalEpoch struct{}
-
-var FfiConverterOptionalEpochINSTANCE = FfiConverterOptionalEpoch{}
-
-func (c FfiConverterOptionalEpoch) Lift(rb RustBufferI) **Epoch {
-	return LiftFromRustBuffer[**Epoch](c, rb)
-}
-
-func (_ FfiConverterOptionalEpoch) Read(reader io.Reader) **Epoch {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterEpochINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalEpoch) Lower(value **Epoch) C.RustBuffer {
-	return LowerIntoRustBuffer[**Epoch](c, value)
-}
-
-func (_ FfiConverterOptionalEpoch) Write(writer io.Writer, value **Epoch) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterEpochINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalEpoch struct {}
-
-func (_ FfiDestroyerOptionalEpoch) Destroy(value **Epoch) {
-	if value != nil {
-		FfiDestroyerEpoch{}.Destroy(*value)
-	}
-}
-
 type FfiConverterOptionalFaucetReceipt struct{}
 
 var FfiConverterOptionalFaucetReceiptINSTANCE = FfiConverterOptionalFaucetReceipt{}
@@ -30295,6 +30531,43 @@ func (_ FfiDestroyerOptionalEndOfEpochData) Destroy(value *EndOfEpochData) {
 	}
 }
 
+type FfiConverterOptionalEpoch struct{}
+
+var FfiConverterOptionalEpochINSTANCE = FfiConverterOptionalEpoch{}
+
+func (c FfiConverterOptionalEpoch) Lift(rb RustBufferI) *Epoch {
+	return LiftFromRustBuffer[*Epoch](c, rb)
+}
+
+func (_ FfiConverterOptionalEpoch) Read(reader io.Reader) *Epoch {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterEpochINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalEpoch) Lower(value *Epoch) C.RustBuffer {
+	return LowerIntoRustBuffer[*Epoch](c, value)
+}
+
+func (_ FfiConverterOptionalEpoch) Write(writer io.Writer, value *Epoch) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterEpochINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalEpoch struct {}
+
+func (_ FfiDestroyerOptionalEpoch) Destroy(value *Epoch) {
+	if value != nil {
+		FfiDestroyerEpoch{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalEventFilter struct{}
 
 var FfiConverterOptionalEventFilterINSTANCE = FfiConverterOptionalEventFilter{}
@@ -30850,6 +31123,43 @@ func (_ FfiDestroyerOptionalValidatorCredentials) Destroy(value *ValidatorCreden
 	}
 }
 
+type FfiConverterOptionalValidatorSet struct{}
+
+var FfiConverterOptionalValidatorSetINSTANCE = FfiConverterOptionalValidatorSet{}
+
+func (c FfiConverterOptionalValidatorSet) Lift(rb RustBufferI) *ValidatorSet {
+	return LiftFromRustBuffer[*ValidatorSet](c, rb)
+}
+
+func (_ FfiConverterOptionalValidatorSet) Read(reader io.Reader) *ValidatorSet {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterValidatorSetINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalValidatorSet) Lower(value *ValidatorSet) C.RustBuffer {
+	return LowerIntoRustBuffer[*ValidatorSet](c, value)
+}
+
+func (_ FfiConverterOptionalValidatorSet) Write(writer io.Writer, value *ValidatorSet) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterValidatorSetINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalValidatorSet struct {}
+
+func (_ FfiDestroyerOptionalValidatorSet) Destroy(value *ValidatorSet) {
+	if value != nil {
+		FfiDestroyerValidatorSet{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalMoveVisibility struct{}
 
 var FfiConverterOptionalMoveVisibilityINSTANCE = FfiConverterOptionalMoveVisibility{}
@@ -30958,6 +31268,43 @@ type FfiDestroyerOptionalTransactionBlockKindInput struct {}
 func (_ FfiDestroyerOptionalTransactionBlockKindInput) Destroy(value *TransactionBlockKindInput) {
 	if value != nil {
 		FfiDestroyerTransactionBlockKindInput{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSequenceInt32 struct{}
+
+var FfiConverterOptionalSequenceInt32INSTANCE = FfiConverterOptionalSequenceInt32{}
+
+func (c FfiConverterOptionalSequenceInt32) Lift(rb RustBufferI) *[]int32 {
+	return LiftFromRustBuffer[*[]int32](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceInt32) Read(reader io.Reader) *[]int32 {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceInt32INSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceInt32) Lower(value *[]int32) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]int32](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceInt32) Write(writer io.Writer, value *[]int32) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceInt32INSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceInt32 struct {}
+
+func (_ FfiDestroyerOptionalSequenceInt32) Destroy(value *[]int32) {
+	if value != nil {
+		FfiDestroyerSequenceInt32{}.Destroy(*value)
 	}
 }
 
@@ -31402,6 +31749,49 @@ type FfiDestroyerOptionalTypeValue struct {}
 func (_ FfiDestroyerOptionalTypeValue) Destroy(value *Value) {
 	if value != nil {
 		FfiDestroyerTypeValue{}.Destroy(*value)
+	}
+}
+
+type FfiConverterSequenceInt32 struct{}
+
+var FfiConverterSequenceInt32INSTANCE = FfiConverterSequenceInt32{}
+
+func (c FfiConverterSequenceInt32) Lift(rb RustBufferI) []int32 {
+	return LiftFromRustBuffer[[]int32](c, rb)
+}
+
+func (c FfiConverterSequenceInt32) Read(reader io.Reader) []int32 {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]int32, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterInt32INSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceInt32) Lower(value []int32) C.RustBuffer {
+	return LowerIntoRustBuffer[[]int32](c, value)
+}
+
+func (c FfiConverterSequenceInt32) Write(writer io.Writer, value []int32) {
+	if len(value) > math.MaxInt32 {
+		panic("[]int32 is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterInt32INSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceInt32 struct {}
+
+func (FfiDestroyerSequenceInt32) Destroy(sequence []int32) {
+	for _, value := range sequence {
+		FfiDestroyerInt32{}.Destroy(value)
 	}
 }
 
@@ -31918,49 +32308,6 @@ type FfiDestroyerSequenceEndOfEpochTransactionKind struct {}
 func (FfiDestroyerSequenceEndOfEpochTransactionKind) Destroy(sequence []*EndOfEpochTransactionKind) {
 	for _, value := range sequence {
 		FfiDestroyerEndOfEpochTransactionKind{}.Destroy(value)
-	}
-}
-
-type FfiConverterSequenceEpoch struct{}
-
-var FfiConverterSequenceEpochINSTANCE = FfiConverterSequenceEpoch{}
-
-func (c FfiConverterSequenceEpoch) Lift(rb RustBufferI) []*Epoch {
-	return LiftFromRustBuffer[[]*Epoch](c, rb)
-}
-
-func (c FfiConverterSequenceEpoch) Read(reader io.Reader) []*Epoch {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]*Epoch, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterEpochINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceEpoch) Lower(value []*Epoch) C.RustBuffer {
-	return LowerIntoRustBuffer[[]*Epoch](c, value)
-}
-
-func (c FfiConverterSequenceEpoch) Write(writer io.Writer, value []*Epoch) {
-	if len(value) > math.MaxInt32 {
-		panic("[]*Epoch is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterEpochINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceEpoch struct {}
-
-func (FfiDestroyerSequenceEpoch) Destroy(sequence []*Epoch) {
-	for _, value := range sequence {
-		FfiDestroyerEpoch{}.Destroy(value)
 	}
 }
 
@@ -32778,6 +33125,49 @@ type FfiDestroyerSequenceDynamicFieldOutput struct {}
 func (FfiDestroyerSequenceDynamicFieldOutput) Destroy(sequence []DynamicFieldOutput) {
 	for _, value := range sequence {
 		FfiDestroyerDynamicFieldOutput{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceEpoch struct{}
+
+var FfiConverterSequenceEpochINSTANCE = FfiConverterSequenceEpoch{}
+
+func (c FfiConverterSequenceEpoch) Lift(rb RustBufferI) []Epoch {
+	return LiftFromRustBuffer[[]Epoch](c, rb)
+}
+
+func (c FfiConverterSequenceEpoch) Read(reader io.Reader) []Epoch {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]Epoch, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterEpochINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceEpoch) Lower(value []Epoch) C.RustBuffer {
+	return LowerIntoRustBuffer[[]Epoch](c, value)
+}
+
+func (c FfiConverterSequenceEpoch) Write(writer io.Writer, value []Epoch) {
+	if len(value) > math.MaxInt32 {
+		panic("[]Epoch is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterEpochINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceEpoch struct {}
+
+func (FfiDestroyerSequenceEpoch) Destroy(sequence []Epoch) {
+	for _, value := range sequence {
+		FfiDestroyerEpoch{}.Destroy(value)
 	}
 }
 
