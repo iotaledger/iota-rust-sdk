@@ -2312,9 +2312,24 @@ void uniffi_iota_sdk_ffi_fn_free_object(void* ptr, RustCallStatus *out_status
 void* uniffi_iota_sdk_ffi_fn_constructor_object_new(void* data, void* owner, void* previous_transaction, uint64_t storage_rebate, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_PACKAGE
+void* uniffi_iota_sdk_ffi_fn_method_object_as_package(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_PACKAGE_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_PACKAGE_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_object_as_package_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_STRUCT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_STRUCT
 RustBuffer uniffi_iota_sdk_ffi_fn_method_object_as_struct(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_STRUCT_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_AS_STRUCT_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_DATA
@@ -2468,6 +2483,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(RustCallStatus *
 void* uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct(void* struct_tag, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_AS_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_AS_STRUCT
+void* uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_AS_STRUCT_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_AS_STRUCT_OPT
 RustBuffer uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(void* ptr, RustCallStatus *out_status
@@ -2514,14 +2534,29 @@ void* uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(void* id, RustCallStat
 void* uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(uint64_t version, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS
+void* uniffi_iota_sdk_ffi_fn_method_owner_as_address(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS_OPT
 RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_OBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_OBJECT
+void* uniffi_iota_sdk_ffi_fn_method_owner_as_object(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_OBJECT_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_OBJECT_OPT
 RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_SHARED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_SHARED
+uint64_t uniffi_iota_sdk_ffi_fn_method_owner_as_shared(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_SHARED_OPT
@@ -3429,6 +3464,11 @@ void* uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(void* ptr, RustCallStatu
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_COIN_TYPE_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_COIN_TYPE_OPT
 RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_UNIFFI_TRAIT_DISPLAY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_UNIFFI_TRAIT_DISPLAY
+RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SYSTEMPACKAGE
@@ -5917,9 +5957,27 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier(v
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_PACKAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_PACKAGE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_object_as_package(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_PACKAGE_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_PACKAGE_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_STRUCT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_STRUCT
 uint16_t uniffi_iota_sdk_ffi_checksum_method_object_as_struct(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_STRUCT_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_AS_STRUCT_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt(void
     
 );
 #endif
@@ -6019,6 +6077,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_AS_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_AS_STRUCT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_AS_STRUCT_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_AS_STRUCT_OPT
 uint16_t uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt(void
@@ -6037,15 +6101,33 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_address(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_ADDRESS_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_ADDRESS_OPT
 uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_OBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_OBJECT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_object(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_OBJECT_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_OBJECT_OPT
 uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_SHARED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_SHARED
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_shared(void
     
 );
 #endif
