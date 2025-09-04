@@ -116,7 +116,7 @@ go-example: ## Run a specific Go example. Usage: make go-example example
 %:
 	@true
 go-example:
-	@echo "\nRunning Go example: $(word 2,$(MAKECMDGOALS))"
+	@echo "\nRunning Go example \"$(word 2,$(MAKECMDGOALS))\""
 	@cd bindings/go/examples; \
 	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS)).go \
 	cd -
@@ -132,7 +132,7 @@ kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example exa
 %:
 	@true
 kotlin-example:
-	@echo "\nRunning Kotlin example: $(word 2,$(MAKECMDGOALS))"
+	@echo "\nRunning Kotlin example \"$(word 2,$(MAKECMDGOALS))\""
 	@cd bindings/kotlin; \
 	./gradlew build clean; \
 	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q; \
@@ -149,7 +149,7 @@ python-example: ## Run a specific Python example. Usage: make python-example exa
 %:
 	@true
 python-example:
-	@echo "\nRunning Python example: $(word 2,$(MAKECMDGOALS))"
+	@echo "\nRunning Python example \"$(word 2,$(MAKECMDGOALS))\""
 	@PYTHONPATH=bindings/python python3 bindings/python/examples/$(word 2,$(MAKECMDGOALS)).py
 
 .PHONY: python-examples
