@@ -25,7 +25,15 @@ async fn main() -> Result<()> {
         "Previous transaction: {}",
         obj.previous_transaction().to_base58()
     );
-    println!("Shared: {}", obj.owner().is_shared());
+    println!(
+        "Owner: {}",
+        match obj.owner() {
+            iota_types::Owner::Address(address) => format!("Address({address})"),
+            iota_types::Owner::Object(object_id) => format!("Object({object_id})"),
+            iota_types::Owner::Shared(version) => format!("Shared({version})"),
+            iota_types::Owner::Immutable => "Immutable".to_owned(),
+        }
+    );
     println!("Storage rebate: {}", obj.storage_rebate());
     println!(
         "Type: {}",

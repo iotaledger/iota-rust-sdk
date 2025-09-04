@@ -2268,6 +2268,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address()
+	})
+	if checksum != 19200 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt()
 	})
 	if checksum != 36265 {
@@ -2277,11 +2286,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object()
+	})
+	if checksum != 42917 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_object: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt()
 	})
 	if checksum != 17159 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared()
+	})
+	if checksum != 56096 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -15514,8 +15541,11 @@ func (_ FfiDestroyerObjectType) Destroy(value *ObjectType) {
 // owner-immutable = %x03
 // ```
 type OwnerInterface interface {
+	AsAddress() *Address
 	AsAddressOpt() **Address
+	AsObject() *ObjectId
 	AsObjectOpt() **ObjectId
+	AsShared() uint64
 	AsSharedOpt() *uint64
 	IsAddress() bool
 	IsImmutable() bool
@@ -15567,6 +15597,15 @@ func OwnerNewShared(version uint64) *Owner {
 
 
 
+func (_self *Owner) AsAddress() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_as_address(
+		_pointer,_uniffiStatus)
+	}))
+}
+
 func (_self *Owner) AsAddressOpt() **Address {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -15578,6 +15617,15 @@ func (_self *Owner) AsAddressOpt() **Address {
 	}))
 }
 
+func (_self *Owner) AsObject() *ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_as_object(
+		_pointer,_uniffiStatus)
+	}))
+}
+
 func (_self *Owner) AsObjectOpt() **ObjectId {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -15586,6 +15634,15 @@ func (_self *Owner) AsObjectOpt() **ObjectId {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(
 		_pointer,_uniffiStatus),
 	}
+	}))
+}
+
+func (_self *Owner) AsShared() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(
+		_pointer,_uniffiStatus)
 	}))
 }
 

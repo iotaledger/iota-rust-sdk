@@ -2534,14 +2534,29 @@ void* uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(void* id, RustCallStat
 void* uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(uint64_t version, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS
+void* uniffi_iota_sdk_ffi_fn_method_owner_as_address(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_ADDRESS_OPT
 RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_OBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_OBJECT
+void* uniffi_iota_sdk_ffi_fn_method_owner_as_object(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_OBJECT_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_OBJECT_OPT
 RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_SHARED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_SHARED
+uint64_t uniffi_iota_sdk_ffi_fn_method_owner_as_shared(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_AS_SHARED_OPT
@@ -6086,15 +6101,33 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_address(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_ADDRESS_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_ADDRESS_OPT
 uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_OBJECT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_OBJECT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_object(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_OBJECT_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_OBJECT_OPT
 uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_SHARED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OWNER_AS_SHARED
+uint16_t uniffi_iota_sdk_ffi_checksum_method_owner_as_shared(void
     
 );
 #endif

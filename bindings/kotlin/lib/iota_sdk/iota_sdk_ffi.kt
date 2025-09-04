@@ -2160,6 +2160,12 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2599,9 +2605,15 @@ fun uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_as_address(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_as_object(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_as_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt(
 ): Short
@@ -4316,10 +4328,16 @@ fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(`id`: Pointer,uniffi_out
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(`version`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_owner_as_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_owner_as_object(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_owner_as_shared(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_owner_is_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5868,10 +5886,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 19200.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 36265.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 42917.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 56096.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 4209.toShort()) {
@@ -26429,9 +26456,15 @@ public object FfiConverterTypeObjectType: FfiConverter<ObjectType, Pointer> {
  */
 public interface OwnerInterface {
     
+    fun `asAddress`(): Address
+    
     fun `asAddressOpt`(): Address?
     
+    fun `asObject`(): ObjectId
+    
     fun `asObjectOpt`(): ObjectId?
+    
+    fun `asShared`(): kotlin.ULong
     
     fun `asSharedOpt`(): kotlin.ULong?
     
@@ -26544,6 +26577,18 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
         }
     }
 
+    override fun `asAddress`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_address(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `asAddressOpt`(): Address? {
             return FfiConverterOptionalTypeAddress.lift(
     callWithPointer {
@@ -26556,11 +26601,35 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
+    override fun `asObject`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_object(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `asObjectOpt`(): ObjectId? {
             return FfiConverterOptionalTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asShared`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(
         it, _status)
 }
     }

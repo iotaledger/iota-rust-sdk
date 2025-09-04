@@ -17,19 +17,27 @@ async def main():
     if obj is None:
         return
 
+    objType = (
+        "Package"
+        if obj.object_type().is_package()
+        else str(obj.object_type().as_struct())
+    )
+
+    if obj.owner().is_address():
+        objOwner = f"Address({obj.owner().as_address().to_hex()})"
+    elif obj.owner().is_object():
+        objOwner = f"Object({obj.owner().as_object().to_hex()})"
+    elif obj.owner().is_shared():
+        objOwner = f"Shared({obj.owner().as_shared()})"
+    else:
+        objOwner = "Immutable"
+
     print("Object ID:", obj.object_id().to_hex())
     print("Version:", obj.version())
     print("Previous transaction:", obj.previous_transaction().to_base58())
-    print("Shared:", obj.owner().is_shared())
+    print("Owner:", objOwner)
     print("Storage rebate:", obj.storage_rebate())
-    print(
-        "Type:",
-        (
-            "Package"
-            if obj.object_type().is_package()
-            else str(obj.object_type().as_struct())
-        ),
-    )
+    print("Type:", objType)
     print("BCS bytes:", obj.as_struct().contents.hex())
 
 

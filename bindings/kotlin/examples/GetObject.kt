@@ -20,10 +20,20 @@ fun main() = runBlocking {
 
         val objType = if (obj.objectType().isPackage()) { "Package"} else { obj.objectType().asStruct().toString() };
 
+        val objOwner = if (obj.owner().isAddress()) {
+            "Address(${obj.owner().asAddress().toHex()})"
+        } else if (obj.owner().isObject()) {
+            "Object(${obj.owner().asObject().toHex()})"
+        } else if (obj.owner().isShared()) {
+            "Shared(${obj.owner().asShared()})"
+        } else {
+            "Immutable"
+        };
+
         println("Object ID: ${obj.objectId().toHex()}")
         println("Version: ${obj.version()}")
         println("Previous transaction: ${obj.previousTransaction().toBase58()}")
-        println("Shared: ${obj.owner().isShared()}")
+        println("Owner: $objOwner")
         println("Storage rebate: ${obj.storageRebate()}")
         println("Type: $objType")
         @OptIn(kotlin.ExperimentalStdlibApi::class)

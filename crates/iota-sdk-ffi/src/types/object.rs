@@ -489,6 +489,10 @@ impl Owner {
         self.0.is_immutable()
     }
 
+    pub fn as_address(&self) -> Address {
+        (*self.0.as_address()).into()
+    }
+
     pub fn as_address_opt(&self) -> Option<Arc<Address>> {
         self.0
             .as_address_opt()
@@ -497,12 +501,20 @@ impl Owner {
             .map(Arc::new)
     }
 
+    pub fn as_object(&self) -> ObjectId {
+        (*self.0.as_object()).into()
+    }
+
     pub fn as_object_opt(&self) -> Option<Arc<ObjectId>> {
         self.0
             .as_object_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
+    }
+
+    pub fn as_shared(&self) -> Version {
+        *self.0.as_shared()
     }
 
     pub fn as_shared_opt(&self) -> Option<Version> {
