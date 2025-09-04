@@ -122,7 +122,7 @@ go-example:
 .PHONY: go-examples
 go-examples: ## Run all Go bindings examples
 	@for example in $$(find bindings/go/examples -name "*.go" -exec basename {} .go \;); do \
-		$(MAKE) go-example "$$example"; \
+		$(MAKE) go-example "$$example" || exit $$?; \
 	done
 
 .PHONY: kotlin-example
@@ -140,7 +140,7 @@ kotlin-example:
 .PHONY: kotlin-examples
 kotlin-examples: ## Run all Kotlin bindings examples
 	@for example in $$(find bindings/kotlin/examples -name "*.kt" -exec basename {} .kt \;); do \
-		$(MAKE) kotlin-example "$$example"; \
+		$(MAKE) kotlin-example "$$example" || exit $$?; \
 	done
 
 .PHONY: python-example
@@ -153,7 +153,7 @@ python-example:
 .PHONY: python-examples
 python-examples: ## Run all Python bindings examples
 	@for example in $$(find bindings/python/examples -name "*.py" -exec basename {} .py \;); do \
-		$(MAKE) python-example "$$example"; \
+		$(MAKE) python-example "$$example" || exit $$?; \
 	done
 
 .PHONY: help

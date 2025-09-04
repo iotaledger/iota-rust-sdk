@@ -1,0 +1,49 @@
+// Copyright (c) 2025 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+package main
+
+import (
+	"fmt"
+	"log"
+
+	sdk "bindings/iota_sdk_ffi"
+)
+
+func isNilError(err error) bool {
+	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
+		return sdkErr == nil
+	}
+	return false
+}
+
+func main() {
+	client := sdk.GraphQlClientNewDevnet()
+
+	// Get current epoch
+	currentEpoch, err := client.Epoch(nil)
+	if !isNilError(err) {
+		log.Fatalf("Failed to get current epoch: %v", err)
+	}
+	if currentEpoch == nil {
+		log.Fatal("Current epoch is nil")
+	}
+
+	fmt.Printf("Current epoch: %d\n", currentEpoch.EpochId)
+	fmt.Printf("Current epoch start time: %d\n", currentEpoch.StartTimestamp)
+
+	// Get previous epoch
+	previousEpochId := currentEpoch.EpochId - 1
+	previousEpoch, err := client.Epoch(&previousEpochId)
+	if !isNilError(err) {
+		log.Fatalf("Failed to get previous epoch: %v", err)
+	}
+	if previousEpoch == nil {
+		log.Fatal("Previous epoch is nil")
+	}
+
+	fmt.Printf("Previous epoch: %d\n", previousEpoch.EpochId)
+	if previousEpoch.TotalStakeRewards != nil {
+		fmt.Printf("Previous epoch stake rewards: %s\n", *previousEpoch.TotalStakeRewards)
+	}
+}
