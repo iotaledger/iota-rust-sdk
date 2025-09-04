@@ -2157,6 +2157,9 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2587,6 +2590,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_address(
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt(
 ): Short
@@ -4291,6 +4296,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(uniffi_out_err: Un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objecttype_is_package(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4670,6 +4677,8 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_address(`ptr`: Pointer,uniffi_out_er
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5845,6 +5854,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt() != 14701.toShort()) {
@@ -26099,6 +26111,8 @@ public object FfiConverterTypeObjectId: FfiConverter<ObjectId, Pointer> {
  */
 public interface ObjectTypeInterface {
     
+    fun `asStruct`(): StructTag
+    
     fun `asStructOpt`(): StructTag?
     
     fun `isPackage`(): kotlin.Boolean
@@ -26192,6 +26206,18 @@ open class ObjectType: Disposable, AutoCloseable, ObjectTypeInterface
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_objecttype(pointer!!, status)
         }
     }
+
+    override fun `asStruct`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     override fun `asStructOpt`(): StructTag? {
             return FfiConverterOptionalTypeStructTag.lift(
@@ -33718,6 +33744,17 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
+    
+    override fun toString(): String {
+        return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(
+        it, _status)
+}
+    }
+    )
+    }
     
 
     

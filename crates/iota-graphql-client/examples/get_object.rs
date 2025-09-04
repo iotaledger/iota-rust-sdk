@@ -14,12 +14,27 @@ async fn main() -> Result<()> {
     let object_id =
         ObjectId::from_str("0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e")?;
 
-    let object_json = client
-        .move_object_contents(object_id, None)
+    let obj = client
+        .object(object_id, None)
         .await?
         .context("missing object")?;
 
-    println!("Domain: {}", object_json["domain_name"]);
+    println!("Object ID: {}", obj.object_id());
+    println!("Version: {}", obj.version());
+    println!(
+        "Previous transaction: {}",
+        obj.previous_transaction().to_base58()
+    );
+    println!("Shared: {}", obj.owner().is_shared());
+    println!("Storage rebate: {}", obj.storage_rebate());
+    println!(
+        "Type: {}",
+        match obj.object_type() {
+            iota_types::ObjectType::Package => "Package".to_owned(),
+            iota_types::ObjectType::Struct(tag) => format!("{tag}"),
+        }
+    );
+    println!("BCS bytes: {}", hex::encode(&obj.as_struct().contents));
 
     Ok(())
 }

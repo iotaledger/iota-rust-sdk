@@ -2483,6 +2483,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(RustCallStatus *
 void* uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct(void* struct_tag, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_AS_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_AS_STRUCT
+void* uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_AS_STRUCT_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_AS_STRUCT_OPT
 RustBuffer uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(void* ptr, RustCallStatus *out_status
@@ -3444,6 +3449,11 @@ void* uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(void* ptr, RustCallStatu
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_COIN_TYPE_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_COIN_TYPE_OPT
 RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_UNIFFI_TRAIT_DISPLAY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_UNIFFI_TRAIT_DISPLAY
+RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SYSTEMPACKAGE
@@ -6049,6 +6059,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_HEX
 uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_AS_STRUCT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTTYPE_AS_STRUCT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(void
     
 );
 #endif

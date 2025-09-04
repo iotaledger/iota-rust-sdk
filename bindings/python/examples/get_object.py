@@ -4,7 +4,6 @@
 from lib.iota_sdk_ffi import *
 
 import asyncio
-import json
 
 
 async def main():
@@ -14,11 +13,24 @@ async def main():
         "0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e"
     )
 
-    obj = await client.move_object_contents(object_id)
+    obj = await client.object(object_id)
+    if obj is None:
+        return
 
-    obj_json = json.loads(obj or "")
-
-    print("Domain:", obj_json["domain_name"])
+    print("Object ID:", obj.object_id().to_hex())
+    print("Version:", obj.version())
+    print("Previous transaction:", obj.previous_transaction().to_base58())
+    print("Shared:", obj.owner().is_shared())
+    print("Storage rebate:", obj.storage_rebate())
+    print(
+        "Type:",
+        (
+            "Package"
+            if obj.object_type().is_package()
+            else str(obj.object_type().as_struct())
+        ),
+    )
+    print("BCS bytes:", obj.as_struct().contents.hex())
 
 
 if __name__ == "__main__":

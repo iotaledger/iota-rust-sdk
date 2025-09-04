@@ -2232,6 +2232,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct()
+	})
+	if checksum != 15094 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt()
 	})
 	if checksum != 14701 {
@@ -15376,6 +15385,7 @@ func (_ FfiDestroyerObjectId) Destroy(value *ObjectId) {
 
 // Type of an IOTA object
 type ObjectTypeInterface interface {
+	AsStruct() *StructTag
 	AsStructOpt() **StructTag
 	IsPackage() bool
 	IsStruct() bool
@@ -15399,6 +15409,15 @@ func ObjectTypeNewStruct(structTag *StructTag) *ObjectType {
 }
 
 
+
+func (_self *ObjectType) AsStruct() *StructTag {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(
+		_pointer,_uniffiStatus)
+	}))
+}
 
 func (_self *ObjectType) AsStructOpt() **StructTag {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
@@ -18787,6 +18806,19 @@ func (_self *StructTag) CoinTypeOpt() **TypeTag {
 	}
 	}))
 }
+
+func (_self *StructTag) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *StructTag) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()

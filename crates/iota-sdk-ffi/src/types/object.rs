@@ -534,6 +534,10 @@ impl ObjectType {
         self.0.is_struct()
     }
 
+    pub fn as_struct(&self) -> StructTag {
+        self.0.as_struct().clone().into()
+    }
+
     pub fn as_struct_opt(&self) -> Option<Arc<StructTag>> {
         self.0
             .as_struct_opt()

@@ -9,8 +9,6 @@ import iota_sdk.ObjectId
 import iota_sdk.PaginationFilter
 import iota_sdk.TransactionsFilter
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
 
 fun main() = runBlocking {
     try {
@@ -18,11 +16,19 @@ fun main() = runBlocking {
 
         val objectId = ObjectId.fromHex("0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e")
 
-        val obj = client.moveObjectContents(objectId)!!
+        val obj = client.`object`(objectId)!!
 
-        val objJson = Json.parseToJsonElement(obj).jsonObject
+        val objType = if (obj.objectType().isPackage()) { "Package"} else { obj.objectType().asStruct().toString() };
 
-        println("Domain: ${objJson.get("domain_name")}");
+        println("Object ID: ${obj.objectId().toHex()}")
+        println("Version: ${obj.version()}")
+        println("Previous transaction: ${obj.previousTransaction().toBase58()}")
+        println("Shared: ${obj.owner().isShared()}")
+        println("Storage rebate: ${obj.storageRebate()}")
+        println("Type: $objType")
+        @OptIn(kotlin.ExperimentalStdlibApi::class)
+        println("BCS bytes: ${obj.asStruct().contents.toHexString()}")
+
     } catch (e: Exception) {
         e.printStackTrace()
     }

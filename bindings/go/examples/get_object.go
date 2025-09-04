@@ -4,11 +4,11 @@
 package main
 
 import (
-	"encoding/json"
+	"encoding/hex"
 	"fmt"
 	"log"
 
-	sdk "example.com/bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk_ffi"
 )
 
 func isNilError(err error) bool {
@@ -26,17 +26,26 @@ func main() {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
 
-	obj, err := client.MoveObjectContents(objectID, nil)
+	objOpt, err := client.Object(objectID, nil)
 	if !isNilError(err) {
 		log.Fatalf("Failed to get object contents: %v", err)
 	}
-
-	var objJson interface{}
-	jsonErr := json.Unmarshal([]byte(*obj), &objJson)
-	if jsonErr != nil {
-		log.Fatalf("Failed to get object json: %v", err)
+	if objOpt == nil {
+		log.Fatal("Missing object")
 	}
-	objJsonMap := objJson.(map[string]interface{})
+	obj := *objOpt
 
-	fmt.Println("Domain:", objJsonMap["domain_name"])
+	objType := "Package"
+	if obj.ObjectType().IsStruct() { 
+		objType = obj.ObjectType().AsStruct().String()
+	}
+
+	fmt.Println("Object ID:", obj.ObjectId().ToHex())
+    fmt.Println("Version:", obj.Version())
+    fmt.Println("Previous transaction:", obj.PreviousTransaction().ToBase58())
+    fmt.Println("Shared:", obj.Owner().IsShared())
+    fmt.Println("Storage rebate:", obj.StorageRebate())
+    fmt.Println("Type:", objType)
+    fmt.Println("BCS bytes:", hex.EncodeToString(obj.AsStruct().Contents))
+
 }
