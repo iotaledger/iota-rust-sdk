@@ -22,7 +22,7 @@ func main() {
 		log.Fatalf("Failed to create object ID: %v", err)
 	}
 
-	transactions, err := client.Transactions(sdk.PaginationFilter{}, &sdk.TransactionsFilter{InputObject: &sharedObjId})
+	transactions, err := client.Transactions(sdk.PaginationFilter{Direction: sdk.DirectionForward}, &sdk.TransactionsFilter{InputObject: &sharedObjId})
 	if !isNilError(err) {
 		log.Fatalf("Failed to get transactions: %v", err)
 	}
