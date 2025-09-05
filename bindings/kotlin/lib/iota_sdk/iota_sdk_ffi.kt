@@ -44537,7 +44537,7 @@ public object FfiConverterTypeMoveStructTypeParameter: FfiConverterRustBuffer<Mo
 data class ObjectFilter (
     var `typeTag`: kotlin.String? = null, 
     var `owner`: Address? = null, 
-    var `objectIds`: List<ObjectId>?
+    var `objectIds`: List<ObjectId>? = null
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here

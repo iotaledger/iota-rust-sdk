@@ -11279,7 +11279,7 @@ class ObjectFilter:
     type_tag: "typing.Optional[str]"
     owner: "typing.Optional[Address]"
     object_ids: "typing.Optional[typing.List[ObjectId]]"
-    def __init__(self, *, type_tag: "typing.Optional[str]" = _DEFAULT, owner: "typing.Optional[Address]" = _DEFAULT, object_ids: "typing.Optional[typing.List[ObjectId]]"):
+    def __init__(self, *, type_tag: "typing.Optional[str]" = _DEFAULT, owner: "typing.Optional[Address]" = _DEFAULT, object_ids: "typing.Optional[typing.List[ObjectId]]" = _DEFAULT):
         if type_tag is _DEFAULT:
             self.type_tag = None
         else:
@@ -11288,7 +11288,10 @@ class ObjectFilter:
             self.owner = None
         else:
             self.owner = owner
-        self.object_ids = object_ids
+        if object_ids is _DEFAULT:
+            self.object_ids = None
+        else:
+            self.object_ids = object_ids
 
     def __str__(self):
         return "ObjectFilter(type_tag={}, owner={}, object_ids={})".format(self.type_tag, self.owner, self.object_ids)

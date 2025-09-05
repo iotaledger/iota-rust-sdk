@@ -452,6 +452,7 @@ pub struct ObjectFilter {
     pub type_tag: Option<String>,
     #[uniffi(default = None)]
     pub owner: Option<Arc<Address>>,
+    #[uniffi(default = None)]
     pub object_ids: Option<Vec<Arc<ObjectId>>>,
 }
 
