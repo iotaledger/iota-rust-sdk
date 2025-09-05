@@ -1318,7 +1318,7 @@ impl Client {
     /// Get a page of transactions based on the provided filters.
     pub async fn transactions(
         &self,
-        filter: Option<TransactionsFilter>,
+        filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<SignedTransaction>> {
         let PaginationFilterResponse {
@@ -1331,7 +1331,7 @@ impl Client {
         let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
             after,
             before,
-            filter,
+            filter: filter.into(),
             first,
             last,
         });
