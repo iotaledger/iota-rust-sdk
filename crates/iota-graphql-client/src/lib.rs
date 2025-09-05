@@ -290,10 +290,10 @@ impl Client {
     /// Dry run a [`Transaction`] and return the transaction effects and dry run
     /// error (if any).
     ///
-    /// `skipChecks` optional flag disables the usual verification checks that
+    /// The `skip_checks` flag disables the usual verification checks that
     /// prevent access to objects that are owned by addresses other than the
     /// sender, and calling non-public, non-entry functions, and some other
-    /// checks. Defaults to false.
+    /// checks.
     pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx)?);
         self.dry_run(tx_bytes, skip_checks, None).await
