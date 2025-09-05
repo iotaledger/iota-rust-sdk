@@ -4007,7 +4007,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_mainnet(uniffi_out_err:
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_testnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_active_validators(`ptr`: Pointer,`paginationFilter`: RustBuffer.ByValue,`epoch`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_active_validators(`ptr`: Pointer,`epoch`: RustBuffer.ByValue,`paginationFilter`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_balance(`ptr`: Pointer,`address`: Pointer,`coinType`: RustBuffer.ByValue,
 ): Long
@@ -4049,9 +4049,9 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(`ptr`: Poin
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(`ptr`: Pointer,`objectId`: Pointer,`version`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(`ptr`: Pointer,`package`: RustBuffer.ByValue,`module`: RustBuffer.ByValue,`function`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`function`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`paginationFilterEnums`: RustBuffer.ByValue,`paginationFilterFriends`: RustBuffer.ByValue,`paginationFilterFunctions`: RustBuffer.ByValue,`paginationFilterStructs`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,`paginationFilterEnums`: RustBuffer.ByValue,`paginationFilterFriends`: RustBuffer.ByValue,`paginationFilterFunctions`: RustBuffer.ByValue,`paginationFilterStructs`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(`ptr`: Pointer,`objectId`: Pointer,`version`: RustBuffer.ByValue,
 ): Long
@@ -5604,7 +5604,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_objects() != 14715.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators() != 26965.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_active_validators() != 29559.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_balance() != 9953.toShort()) {
@@ -5616,13 +5616,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint() != 11584.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 8422.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 44363.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 48442.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 50359.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 12272.toShort()) {
@@ -5634,7 +5634,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 29988.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 43452.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 6963.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 47284.toShort()) {
@@ -5649,7 +5649,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_transaction_blocks() != 61978.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 41916.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 11909.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079.toShort()) {
@@ -5667,10 +5667,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 49066.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 37900.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 51508.toShort()) {
@@ -5679,7 +5679,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 1970.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 37555.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 13039.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913.toShort()) {
@@ -5688,10 +5688,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() != 55024.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 33869.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 47360.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 3319.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 25568.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 62867.toShort()) {
@@ -5727,13 +5727,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_effects() != 27010.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions() != 31273.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions() != 8777.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects() != 14121.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects() != 29942.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 2687.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 27644.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815.toShort()) {
@@ -18858,7 +18858,7 @@ public interface GraphQlClientInterface {
      * related metadata. If no epoch is provided, it will return the active
      * validators for the current epoch.
      */
-    suspend fun `activeValidators`(`paginationFilter`: PaginationFilter, `epoch`: kotlin.ULong? = null): ValidatorPage
+    suspend fun `activeValidators`(`epoch`: kotlin.ULong? = null, `paginationFilter`: PaginationFilter? = null): ValidatorPage
     
     /**
      * Get the balance of all the coins owned by address for the provided coin
@@ -18882,7 +18882,7 @@ public interface GraphQlClientInterface {
     /**
      * Get a page of [`CheckpointSummary`] for the provided parameters.
      */
-    suspend fun `checkpoints`(`paginationFilter`: PaginationFilter): CheckpointSummaryPage
+    suspend fun `checkpoints`(`paginationFilter`: PaginationFilter? = null): CheckpointSummaryPage
     
     /**
      * Get the coin metadata for the coin type.
@@ -18896,7 +18896,7 @@ public interface GraphQlClientInterface {
      * which will return all coins. For IOTA coin, pass in the coin type:
      * `0x2::coin::Coin<0x2::iota::IOTA>`.
      */
-    suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter, `coinType`: kotlin.String? = null): CoinPage
+    suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter? = null, `coinType`: kotlin.String? = null): CoinPage
     
     /**
      * Dry run a [`Transaction`] and return the transaction effects and dry run
@@ -18952,7 +18952,7 @@ public interface GraphQlClientInterface {
      *
      * This returns [`Page`] of [`DynamicFieldOutput`]s.
      */
-    suspend fun `dynamicFields`(`address`: Address, `paginationFilter`: PaginationFilter): DynamicFieldOutputPage
+    suspend fun `dynamicFields`(`address`: Address, `paginationFilter`: PaginationFilter? = null): DynamicFieldOutputPage
     
     /**
      * Access a dynamic object field on an object using its name. Names are
@@ -18990,7 +18990,7 @@ public interface GraphQlClientInterface {
      * Return a page of tuple (event, transaction digest) based on the
      * (optional) event filter.
      */
-    suspend fun `events`(`paginationFilter`: PaginationFilter, `filter`: EventFilter? = null): EventPage
+    suspend fun `events`(`paginationFilter`: PaginationFilter? = null, `filter`: EventFilter? = null): EventPage
     
     /**
      * Execute a transaction.
@@ -19030,12 +19030,12 @@ public interface GraphQlClientInterface {
      * Return the normalized Move function data for the provided package,
      * module, and function.
      */
-    suspend fun `normalizedMoveFunction`(`package`: kotlin.String, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong? = null): MoveFunction?
+    suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong? = null): MoveFunction?
     
     /**
      * Return the normalized Move module data for the provided module.
      */
-    suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `paginationFilterEnums`: PaginationFilter, `paginationFilterFriends`: PaginationFilter, `paginationFilterFunctions`: PaginationFilter, `paginationFilterStructs`: PaginationFilter, `version`: kotlin.ULong? = null): MoveModule?
+    suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
     
     /**
      * Return an object based on the provided [`Address`].
@@ -19070,7 +19070,7 @@ public interface GraphQlClientInterface {
      * let owned_objects = client.objects(None, None, Some(filter), None, None).await;
      * ```
      */
-    suspend fun `objects`(`paginationFilter`: PaginationFilter, `filter`: ObjectFilter? = null): ObjectPage
+    suspend fun `objects`(`paginationFilter`: PaginationFilter? = null, `filter`: ObjectFilter? = null): ObjectPage
     
     /**
      * The package corresponding to the given address (at the optionally given
@@ -19099,7 +19099,7 @@ public interface GraphQlClientInterface {
      * package's original ID), optionally bounding the versions exclusively
      * from below with afterVersion, or from above with beforeVersion.
      */
-    suspend fun `packageVersions`(`address`: Address, `paginationFilter`: PaginationFilter, `afterVersion`: kotlin.ULong? = null, `beforeVersion`: kotlin.ULong? = null): MovePackagePage
+    suspend fun `packageVersions`(`address`: Address, `paginationFilter`: PaginationFilter? = null, `afterVersion`: kotlin.ULong? = null, `beforeVersion`: kotlin.ULong? = null): MovePackagePage
     
     /**
      * The Move packages that exist in the network, optionally filtered to be
@@ -19110,7 +19110,7 @@ public interface GraphQlClientInterface {
      * between the specified checkpoints, but only records the latest
      * versions of system packages.
      */
-    suspend fun `packages`(`paginationFilter`: PaginationFilter, `afterCheckpoint`: kotlin.ULong? = null, `beforeCheckpoint`: kotlin.ULong? = null): MovePackagePage
+    suspend fun `packages`(`paginationFilter`: PaginationFilter? = null, `afterCheckpoint`: kotlin.ULong? = null, `beforeCheckpoint`: kotlin.ULong? = null): MovePackagePage
     
     /**
      * Get the protocol configuration.
@@ -19179,18 +19179,18 @@ public interface GraphQlClientInterface {
     /**
      * Get a page of transactions based on the provided filters.
      */
-    suspend fun `transactions`(`paginationFilter`: PaginationFilter, `filter`: TransactionsFilter? = null): SignedTransactionPage
+    suspend fun `transactions`(`paginationFilter`: PaginationFilter? = null, `filter`: TransactionsFilter? = null): SignedTransactionPage
     
     /**
      * Get a page of transactions' data and effects based on the provided
      * filters.
      */
-    suspend fun `transactionsDataEffects`(`paginationFilter`: PaginationFilter, `filter`: TransactionsFilter? = null): TransactionDataEffectsPage
+    suspend fun `transactionsDataEffects`(`paginationFilter`: PaginationFilter? = null, `filter`: TransactionsFilter? = null): TransactionDataEffectsPage
     
     /**
      * Get a page of transactions' effects based on the provided filters.
      */
-    suspend fun `transactionsEffects`(`paginationFilter`: PaginationFilter, `filter`: TransactionsFilter? = null): TransactionEffectsPage
+    suspend fun `transactionsEffects`(`paginationFilter`: PaginationFilter? = null, `filter`: TransactionsFilter? = null): TransactionEffectsPage
     
     companion object
 }
@@ -19298,12 +19298,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `activeValidators`(`paginationFilter`: PaginationFilter, `epoch`: kotlin.ULong?) : ValidatorPage {
+    override suspend fun `activeValidators`(`epoch`: kotlin.ULong?, `paginationFilter`: PaginationFilter?) : ValidatorPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_active_validators(
                 thisPtr,
-                FfiConverterTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalULong.lower(`epoch`),
+                FfiConverterOptionalULong.lower(`epoch`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -19398,12 +19398,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `checkpoints`(`paginationFilter`: PaginationFilter) : CheckpointSummaryPage {
+    override suspend fun `checkpoints`(`paginationFilter`: PaginationFilter?) : CheckpointSummaryPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoints(
                 thisPtr,
-                FfiConverterTypePaginationFilter.lower(`paginationFilter`),
+                FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -19450,12 +19450,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter, `coinType`: kotlin.String?) : CoinPage {
+    override suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter?, `coinType`: kotlin.String?) : CoinPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`owner`),FfiConverterTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalString.lower(`coinType`),
+                FfiConverterTypeAddress.lower(`owner`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalString.lower(`coinType`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -19582,12 +19582,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `dynamicFields`(`address`: Address, `paginationFilter`: PaginationFilter) : DynamicFieldOutputPage {
+    override suspend fun `dynamicFields`(`address`: Address, `paginationFilter`: PaginationFilter?) : DynamicFieldOutputPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_fields(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`address`),FfiConverterTypePaginationFilter.lower(`paginationFilter`),
+                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -19715,12 +19715,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `events`(`paginationFilter`: PaginationFilter, `filter`: EventFilter?) : EventPage {
+    override suspend fun `events`(`paginationFilter`: PaginationFilter?, `filter`: EventFilter?) : EventPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(
                 thisPtr,
-                FfiConverterTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeEventFilter.lower(`filter`),
+                FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeEventFilter.lower(`filter`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -19869,12 +19869,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `normalizedMoveFunction`(`package`: kotlin.String, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong?) : MoveFunction? {
+    override suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong?) : MoveFunction? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
                 thisPtr,
-                FfiConverterString.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalULong.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -19893,12 +19893,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `paginationFilterEnums`: PaginationFilter, `paginationFilterFriends`: PaginationFilter, `paginationFilterFunctions`: PaginationFilter, `paginationFilterStructs`: PaginationFilter, `version`: kotlin.ULong?) : MoveModule? {
+    override suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong?, `paginationFilterEnums`: PaginationFilter?, `paginationFilterFriends`: PaginationFilter?, `paginationFilterFunctions`: PaginationFilter?, `paginationFilterStructs`: PaginationFilter?) : MoveModule? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterTypePaginationFilter.lower(`paginationFilterStructs`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterOptionalULong.lower(`version`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterStructs`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -19985,12 +19985,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `objects`(`paginationFilter`: PaginationFilter, `filter`: ObjectFilter?) : ObjectPage {
+    override suspend fun `objects`(`paginationFilter`: PaginationFilter?, `filter`: ObjectFilter?) : ObjectPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(
                 thisPtr,
-                FfiConverterTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeObjectFilter.lower(`filter`),
+                FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeObjectFilter.lower(`filter`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20071,12 +20071,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `packageVersions`(`address`: Address, `paginationFilter`: PaginationFilter, `afterVersion`: kotlin.ULong?, `beforeVersion`: kotlin.ULong?) : MovePackagePage {
+    override suspend fun `packageVersions`(`address`: Address, `paginationFilter`: PaginationFilter?, `afterVersion`: kotlin.ULong?, `beforeVersion`: kotlin.ULong?) : MovePackagePage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`address`),FfiConverterTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalULong.lower(`afterVersion`),FfiConverterOptionalULong.lower(`beforeVersion`),
+                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalULong.lower(`afterVersion`),FfiConverterOptionalULong.lower(`beforeVersion`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20101,12 +20101,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `packages`(`paginationFilter`: PaginationFilter, `afterCheckpoint`: kotlin.ULong?, `beforeCheckpoint`: kotlin.ULong?) : MovePackagePage {
+    override suspend fun `packages`(`paginationFilter`: PaginationFilter?, `afterCheckpoint`: kotlin.ULong?, `beforeCheckpoint`: kotlin.ULong?) : MovePackagePage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(
                 thisPtr,
-                FfiConverterTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalULong.lower(`afterCheckpoint`),FfiConverterOptionalULong.lower(`beforeCheckpoint`),
+                FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalULong.lower(`afterCheckpoint`),FfiConverterOptionalULong.lower(`beforeCheckpoint`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20399,12 +20399,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `transactions`(`paginationFilter`: PaginationFilter, `filter`: TransactionsFilter?) : SignedTransactionPage {
+    override suspend fun `transactions`(`paginationFilter`: PaginationFilter?, `filter`: TransactionsFilter?) : SignedTransactionPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(
                 thisPtr,
-                FfiConverterTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeTransactionsFilter.lower(`filter`),
+                FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeTransactionsFilter.lower(`filter`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20424,12 +20424,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `transactionsDataEffects`(`paginationFilter`: PaginationFilter, `filter`: TransactionsFilter?) : TransactionDataEffectsPage {
+    override suspend fun `transactionsDataEffects`(`paginationFilter`: PaginationFilter?, `filter`: TransactionsFilter?) : TransactionDataEffectsPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(
                 thisPtr,
-                FfiConverterTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeTransactionsFilter.lower(`filter`),
+                FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeTransactionsFilter.lower(`filter`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20448,12 +20448,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `transactionsEffects`(`paginationFilter`: PaginationFilter, `filter`: TransactionsFilter?) : TransactionEffectsPage {
+    override suspend fun `transactionsEffects`(`paginationFilter`: PaginationFilter?, `filter`: TransactionsFilter?) : TransactionEffectsPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(
                 thisPtr,
-                FfiConverterTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeTransactionsFilter.lower(`filter`),
+                FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeTransactionsFilter.lower(`filter`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -51076,6 +51076,38 @@ public object FfiConverterOptionalTypeOpenMoveType: FfiConverterRustBuffer<OpenM
         } else {
             buf.put(1)
             FfiConverterTypeOpenMoveType.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypePaginationFilter: FfiConverterRustBuffer<PaginationFilter?> {
+    override fun read(buf: ByteBuffer): PaginationFilter? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypePaginationFilter.read(buf)
+    }
+
+    override fun allocationSize(value: PaginationFilter?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypePaginationFilter.allocationSize(value)
+        }
+    }
+
+    override fun write(value: PaginationFilter?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypePaginationFilter.write(value, buf)
         }
     }
 }

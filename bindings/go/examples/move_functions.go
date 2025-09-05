@@ -37,10 +37,10 @@ func main() {
 		moduleOpt, err := client.NormalizedMoveModule(
 			packageAddress,
 			moduleId.AsStr(),
-			sdk.PaginationFilter{Direction: sdk.DirectionForward},
-			sdk.PaginationFilter{Direction: sdk.DirectionForward},
-			sdk.PaginationFilter{Direction: sdk.DirectionForward},
-			sdk.PaginationFilter{Direction: sdk.DirectionForward},
+			nil,
+			nil,
+			nil,
+			nil,
 			nil,
 		)
 		if !isNilError(err) {

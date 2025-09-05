@@ -22,10 +22,6 @@ async def main():
         module = await client.normalized_move_module(
             package_address,
             module_id.as_str(),
-            PaginationFilter(direction=Direction.FORWARD),
-            PaginationFilter(direction=Direction.FORWARD),
-            PaginationFilter(direction=Direction.FORWARD),
-            PaginationFilter(direction=Direction.FORWARD),
         )
         if module is None:
             print(f"module `{module_id.as_str()}` not found")

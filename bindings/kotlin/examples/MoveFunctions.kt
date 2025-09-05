@@ -26,11 +26,6 @@ fun main() = runBlocking {
             var module = client.normalizedMoveModule(
                 packageAddress,
                 moduleId.asStr(),
-                PaginationFilter(Direction.FORWARD), 
-                PaginationFilter(Direction.FORWARD),
-                PaginationFilter(Direction.FORWARD),
-                PaginationFilter(Direction.FORWARD),
-                null
             )
             if (module == null) {
                 println("module `${moduleId.asStr()}` not found")

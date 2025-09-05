@@ -10,8 +10,6 @@ pub mod pagination;
 pub mod query_types;
 pub mod streams;
 
-use std::str::FromStr;
-
 use base64ct::Encoding;
 use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::Error;
@@ -1506,13 +1504,13 @@ impl Client {
     /// module, and function.
     pub async fn normalized_move_function(
         &self,
-        package: &str,
+        package: Address,
         module: &str,
         function: &str,
         version: Option<u64>,
     ) -> Result<Option<MoveFunction>> {
         let operation = NormalizedMoveFunctionQuery::build(NormalizedMoveFunctionQueryArgs {
-            address: Address::from_str(package)?,
+            address: package,
             module,
             function,
             version,
