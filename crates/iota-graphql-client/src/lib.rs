@@ -10,8 +10,6 @@ pub mod pagination;
 pub mod query_types;
 pub mod streams;
 
-use std::str::FromStr;
-
 use base64ct::Encoding;
 use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::Error;
@@ -1077,9 +1075,12 @@ impl Client {
     pub async fn package(
         &self,
         address: Address,
-        version: Option<u64>,
+        version: impl Into<Option<u64>>,
     ) -> Result<Option<MovePackage>> {
-        let operation = PackageQuery::build(PackageArgs { address, version });
+        let operation = PackageQuery::build(PackageArgs {
+            address,
+            version: version.into(),
+        });
 
         let response = self.run_query(&operation).await?;
 
@@ -1503,13 +1504,13 @@ impl Client {
     /// module, and function.
     pub async fn normalized_move_function(
         &self,
-        package: &str,
+        package: Address,
         module: &str,
         function: &str,
         version: Option<u64>,
     ) -> Result<Option<MoveFunction>> {
         let operation = NormalizedMoveFunctionQuery::build(NormalizedMoveFunctionQueryArgs {
-            address: Address::from_str(package)?,
+            address: package,
             module,
             function,
             version,
@@ -1562,9 +1563,9 @@ impl Client {
     #[allow(clippy::too_many_arguments)]
     pub async fn normalized_move_module(
         &self,
-        package: &str,
+        package: Address,
         module: &str,
-        version: Option<u64>,
+        version: impl Into<Option<u64>>,
         pagination_filter_enums: PaginationFilter,
         pagination_filter_friends: PaginationFilter,
         pagination_filter_functions: PaginationFilter,
@@ -1575,9 +1576,9 @@ impl Client {
         let functions = self.pagination_filter(pagination_filter_functions).await;
         let structs = self.pagination_filter(pagination_filter_structs).await;
         let operation = NormalizedMoveModuleQuery::build(NormalizedMoveModuleQueryArgs {
-            package: Address::from_str(package)?,
+            package,
             module,
-            version,
+            version: version.into(),
             after_enums: enums.after.as_deref(),
             after_functions: functions.after.as_deref(),
             after_structs: structs.after.as_deref(),
