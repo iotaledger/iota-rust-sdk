@@ -14,12 +14,6 @@ async def main():
         my_address,
         PaginationFilter(direction=Direction.FORWARD, cursor=None, limit=None),
     )
-    for coin in coins.data:
-        print(f"ID = {coin.id().to_hex()} Balance = {coin.balance()}")
-
-    balance = await client.balance(my_address)
-
-    print(f"Total Balance = {balance}")
 
     filter = TransactionsFilter(
         at_checkpoint=3,
