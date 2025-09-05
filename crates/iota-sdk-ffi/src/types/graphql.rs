@@ -918,20 +918,6 @@ impl From<CoinMetadata> for iota_graphql_client::query_types::CoinMetadata {
 #[uniffi::export(Display)]
 pub struct MoveFunction(iota_graphql_client::query_types::MoveFunction);
 
-// {
-//     #[uniffi(default = None)]
-//     pub is_entry: Option<bool>,
-//     pub name: String,
-//     #[uniffi(default = None)]
-//     pub parameters: Option<Vec<OpenMoveType>>,
-//     #[uniffi(default = None)]
-//     pub return_: Option<Vec<OpenMoveType>>,
-//     #[uniffi(default = None)]
-//     pub type_parameters: Option<Vec<MoveFunctionTypeParameter>>,
-//     #[uniffi(default = None)]
-//     pub visibility: Option<MoveVisibility>,
-// }
-
 #[uniffi::export]
 impl MoveFunction {
     pub fn is_entry(&self) -> bool {
