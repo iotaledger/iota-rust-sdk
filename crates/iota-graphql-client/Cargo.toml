@@ -20,11 +20,13 @@ iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features 
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
 serde = { version = "1.0.144" }
 serde_json = { version = "1.0.95" }
+strum = { version = "0.27.2", features = ["derive"] }
 tokio = { version = "1.36.0", features = ["time"] }
 tracing = "0.1.37"
 url = "2.5.3"
 
 [dev-dependencies]
+hex = "0.4.3"
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde", "rand", "hash"] }
 rand = "0.8.5"
 tokio = { version = "1.40.0", features = ["full"] }

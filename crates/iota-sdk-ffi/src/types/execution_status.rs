@@ -546,6 +546,7 @@ pub struct MoveLocation {
     pub instruction: u16,
 
     /// The name of the function if available
+    #[uniffi(default = None)]
     pub function_name: Option<String>,
 }
 

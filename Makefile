@@ -94,18 +94,18 @@ endef
 .PHONY: go
 go: ## Build Go bindings
 	$(build_binding) \
-	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format
+	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format || exit $$?
 
 .PHONY: kotlin
 kotlin: ## Build Kotlin bindings
 	$(build_binding) \
-	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml; \
+	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
 
 .PHONY: python
 python: ## Build Python bindings
 	$(build_binding) \
-	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format; \
+	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
 
 .PHONY: go-example
@@ -114,7 +114,7 @@ go-example: ## Run a specific Go example. Usage: make go-example example
 	@true
 go-example:
 	cd bindings/go/examples; \
-	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS)).go \
+	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS)).go || exit $$?; \
 	cd -
 
 .PHONY: go-examples
@@ -129,8 +129,8 @@ kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example exa
 	@true
 kotlin-example:
 	cd bindings/kotlin; \
-	./gradlew build clean; \
-	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q; \
+	./gradlew build clean || exit $$?; \
+	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q || exit $$?; \
 	cd -
 
 .PHONY: kotlin-examples
@@ -144,7 +144,7 @@ python-example: ## Run a specific Python example. Usage: make python-example exa
 %:
 	@true
 python-example:
-	PYTHONPATH=bindings/python python3 bindings/python/examples/$(word 2,$(MAKECMDGOALS)).py
+	PYTHONPATH=bindings/python python3 bindings/python/examples/$(word 2,$(MAKECMDGOALS)).py || exit $$?;
 
 .PHONY: python-examples
 python-examples: ## Run all Python bindings examples

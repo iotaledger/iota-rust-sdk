@@ -163,8 +163,27 @@ impl Object {
     }
 
     /// Try to interpret this object as a move struct
-    pub fn as_struct(&self) -> Option<MoveStruct> {
-        self.0.as_struct().cloned().map(Into::into)
+    pub fn as_struct_opt(&self) -> Option<MoveStruct> {
+        self.0.as_struct_opt().cloned().map(Into::into)
+    }
+
+    /// Interpret this object as a move struct
+    pub fn as_struct(&self) -> MoveStruct {
+        self.0.as_struct().clone().into()
+    }
+
+    /// Try to interpret this object as a move package
+    pub fn as_package_opt(&self) -> Option<Arc<MovePackage>> {
+        self.0
+            .as_package_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+    }
+
+    /// Interpret this object as a move package
+    pub fn as_package(&self) -> MovePackage {
+        self.0.as_package().clone().into()
     }
 
     /// Return this object's owner
@@ -363,6 +382,39 @@ impl MovePackage {
                 .collect(),
         }))
     }
+
+    pub fn id(&self) -> ObjectId {
+        self.0.id.into()
+    }
+
+    pub fn version(&self) -> Version {
+        self.0.version
+    }
+
+    pub fn modules(&self) -> HashMap<Arc<Identifier>, Vec<u8>> {
+        self.0
+            .modules
+            .iter()
+            .map(|(k, v)| (Arc::new(k.clone().into()), v.clone()))
+            .collect()
+    }
+
+    pub fn type_origin_table(&self) -> Vec<TypeOrigin> {
+        self.0
+            .type_origin_table
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .collect()
+    }
+
+    pub fn linkage_table(&self) -> HashMap<Arc<ObjectId>, UpgradeInfo> {
+        self.0
+            .linkage_table
+            .iter()
+            .map(|(k, v)| (Arc::new((*k).into()), v.clone().into()))
+            .collect()
+    }
 }
 
 /// A move struct
@@ -470,6 +522,10 @@ impl Owner {
         self.0.is_immutable()
     }
 
+    pub fn as_address(&self) -> Address {
+        (*self.0.as_address()).into()
+    }
+
     pub fn as_address_opt(&self) -> Option<Arc<Address>> {
         self.0
             .as_address_opt()
@@ -478,12 +534,20 @@ impl Owner {
             .map(Arc::new)
     }
 
+    pub fn as_object(&self) -> ObjectId {
+        (*self.0.as_object()).into()
+    }
+
     pub fn as_object_opt(&self) -> Option<Arc<ObjectId>> {
         self.0
             .as_object_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
+    }
+
+    pub fn as_shared(&self) -> Version {
+        *self.0.as_shared()
     }
 
     pub fn as_shared_opt(&self) -> Option<Version> {
@@ -513,6 +577,10 @@ impl ObjectType {
 
     pub fn is_struct(&self) -> bool {
         self.0.is_struct()
+    }
+
+    pub fn as_struct(&self) -> StructTag {
+        self.0.as_struct().clone().into()
     }
 
     pub fn as_struct_opt(&self) -> Option<Arc<StructTag>> {
