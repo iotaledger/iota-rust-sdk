@@ -215,9 +215,10 @@ impl Client {
     pub async fn coins_stream(
         &self,
         address: Address,
-        coin_type: Option<String>,
+        coin_type: impl Into<Option<String>>,
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<Coin>> + '_ {
+        let coin_type = coin_type.into();
         stream_paginated_query(
             move |filter| self.coins(address, coin_type.clone(), filter),
             streaming_direction,
@@ -259,9 +260,10 @@ impl Client {
     /// Return a stream of events based on the (optional) event filter.
     pub async fn events_stream(
         &self,
-        filter: Option<EventFilter>,
+        filter: impl Into<Option<EventFilter>>,
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<Event>> + '_ {
+        let filter = filter.into();
         stream_paginated_query(
             move |pag_filter| self.events(filter.clone(), pag_filter),
             streaming_direction,
@@ -271,9 +273,10 @@ impl Client {
     /// Return a stream of objects based on the (optional) object filter.
     pub async fn objects_stream(
         &self,
-        filter: Option<ObjectFilter>,
+        filter: impl Into<Option<ObjectFilter>>,
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<Object>> + '_ {
+        let filter = filter.into();
         stream_paginated_query(
             move |pag_filter| self.objects(filter.clone(), pag_filter),
             streaming_direction,
@@ -291,11 +294,7 @@ impl Client {
     /// prevent access to objects that are owned by addresses other than the
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks. Defaults to false.
-    pub async fn dry_run_tx(
-        &self,
-        tx: &Transaction,
-        skip_checks: Option<bool>,
-    ) -> Result<DryRunResult> {
+    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx)?);
         self.dry_run(tx_bytes, skip_checks, None).await
     }
@@ -312,7 +311,7 @@ impl Client {
     pub async fn dry_run_tx_kind(
         &self,
         tx_kind: &TransactionKind,
-        skip_checks: Option<bool>,
+        skip_checks: bool,
         tx_meta: TransactionMetadata,
     ) -> Result<DryRunResult> {
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx_kind)?);
@@ -323,14 +322,13 @@ impl Client {
     async fn dry_run(
         &self,
         tx_bytes: String,
-        skip_checks: Option<bool>,
-        tx_meta: Option<TransactionMetadata>,
+        skip_checks: bool,
+        tx_meta: impl Into<Option<TransactionMetadata>>,
     ) -> Result<DryRunResult> {
-        let skip_checks = skip_checks.unwrap_or(false);
         let operation = DryRunQuery::build(DryRunArgs {
             tx_bytes,
             skip_checks,
-            tx_meta,
+            tx_meta: tx_meta.into(),
         });
         let response = self.run_query(&operation).await?;
 
@@ -362,9 +360,10 @@ impl Client {
     /// Get a stream of transactions based on the (optional) transaction filter.
     pub async fn transactions_stream(
         &self,
-        filter: Option<TransactionsFilter>,
+        filter: impl Into<Option<TransactionsFilter>>,
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<SignedTransaction>> + '_ {
+        let filter = filter.into();
         stream_paginated_query(
             move |pag_filter| self.transactions(filter.clone(), pag_filter),
             streaming_direction,
@@ -375,9 +374,10 @@ impl Client {
     /// transaction filter.
     pub async fn transactions_effects_stream(
         &self,
-        filter: Option<TransactionsFilter>,
+        filter: impl Into<Option<TransactionsFilter>>,
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<TransactionEffects>> + '_ {
+        let filter = filter.into();
         stream_paginated_query(
             move |pag_filter| self.transactions_effects(filter.clone(), pag_filter),
             streaming_direction,
@@ -413,11 +413,11 @@ impl Client {
     pub async fn balance(
         &self,
         address: Address,
-        coin_type: Option<String>,
+        coin_type: impl Into<Option<String>>,
     ) -> Result<Option<u64>> {
         let operation = BalanceQuery::build(BalanceArgs {
             address,
-            coin_type: coin_type.map(|x| x.to_string()),
+            coin_type: coin_type.into(),
         });
         let response = self.run_query(&operation).await?;
 
@@ -526,8 +526,8 @@ impl Client {
     ///
     /// This will return `Ok(None)` if the epoch requested is not available in
     /// the GraphQL service (e.g., due to pruning).
-    pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
+    pub async fn reference_gas_price(&self, epoch: impl Into<Option<u64>>) -> Result<Option<u64>> {
+        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch.into() });
         let response = self.run_query(&operation).await?;
 
         if let Some(errors) = response.errors {
@@ -543,8 +543,11 @@ impl Client {
     }
 
     /// Get the protocol configuration.
-    pub async fn protocol_config(&self, version: Option<u64>) -> Result<Option<ProtocolConfigs>> {
-        let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version });
+    pub async fn protocol_config(
+        &self,
+        version: impl Into<Option<u64>>,
+    ) -> Result<Option<ProtocolConfigs>> {
+        let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version.into() });
         let response = self.run_query(&operation).await?;
         Ok(response.data.map(|p| p.protocol_config))
     }
@@ -554,7 +557,7 @@ impl Client {
     /// validators for the current epoch.
     pub async fn active_validators(
         &self,
-        epoch: Option<u64>,
+        epoch: impl Into<Option<u64>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Validator>> {
         let PaginationFilterResponse {
@@ -565,7 +568,7 @@ impl Client {
         } = self.pagination_filter(pagination_filter).await;
 
         let operation = ActiveValidatorsQuery::build(ActiveValidatorsArgs {
-            id: epoch,
+            id: epoch.into(),
             after: after.as_deref(),
             before: before.as_deref(),
             first,
@@ -658,13 +661,17 @@ impl Client {
     pub async fn coins(
         &self,
         owner: Address,
-        coin_type: Option<String>,
+        coin_type: impl Into<Option<String>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Coin>> {
         let response = self
             .objects(
                 Some(ObjectFilter {
-                    type_: Some(coin_type.unwrap_or_else(|| "0x2::coin::Coin".to_owned())),
+                    type_: Some(
+                        coin_type
+                            .into()
+                            .unwrap_or_else(|| "0x2::coin::Coin".to_owned()),
+                    ),
                     owner: Some(owner),
                     object_ids: None,
                 }),
@@ -713,9 +720,11 @@ impl Client {
     /// checkpoint id.
     pub async fn checkpoint(
         &self,
-        digest: Option<Digest>,
-        seq_num: Option<u64>,
+        digest: impl Into<Option<Digest>>,
+        seq_num: impl Into<Option<u64>>,
     ) -> Result<Option<CheckpointSummary>> {
+        let digest = digest.into();
+        let seq_num = seq_num.into();
         if digest.is_some() && seq_num.is_some() {
             return Err(Error::from_error(
                 Kind::Other,
@@ -797,8 +806,8 @@ impl Client {
 
     /// Return the epoch information for the provided epoch. If no epoch is
     /// provided, it will return the last known epoch.
-    pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<Epoch>> {
-        let operation = EpochQuery::build(EpochArgs { id: epoch });
+    pub async fn epoch(&self, epoch: impl Into<Option<u64>>) -> Result<Option<Epoch>> {
+        let operation = EpochQuery::build(EpochArgs { id: epoch.into() });
         let response = self.run_query(&operation).await?;
 
         if let Some(errors) = response.errors {
@@ -811,8 +820,11 @@ impl Client {
     /// Return the number of checkpoints in this epoch. This will return
     /// `Ok(None)` if the epoch requested is not available in the GraphQL
     /// service (e.g., due to pruning).
-    pub async fn epoch_total_checkpoints(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        let response = self.epoch_summary(epoch).await?;
+    pub async fn epoch_total_checkpoints(
+        &self,
+        epoch: impl Into<Option<u64>>,
+    ) -> Result<Option<u64>> {
+        let response = self.epoch_summary(epoch.into()).await?;
 
         if let Some(errors) = response.errors {
             return Err(Error::graphql_error(errors));
@@ -827,8 +839,11 @@ impl Client {
     /// Return the number of transaction blocks in this epoch. This will return
     /// `Ok(None)` if the epoch requested is not available in the GraphQL
     /// service (e.g., due to pruning).
-    pub async fn epoch_total_transaction_blocks(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        let response = self.epoch_summary(epoch).await?;
+    pub async fn epoch_total_transaction_blocks(
+        &self,
+        epoch: impl Into<Option<u64>>,
+    ) -> Result<Option<u64>> {
+        let response = self.epoch_summary(epoch.into()).await?;
 
         if let Some(errors) = response.errors {
             return Err(Error::graphql_error(errors));
@@ -847,7 +862,7 @@ impl Client {
     /// Return a page of events based on the (optional) event filter.
     pub async fn events(
         &self,
-        filter: Option<EventFilter>,
+        filter: impl Into<Option<EventFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Event>> {
         let PaginationFilterResponse {
@@ -858,7 +873,7 @@ impl Client {
         } = self.pagination_filter(pagination_filter).await;
 
         let operation = EventsQuery::build(EventsQueryArgs {
-            filter,
+            filter: filter.into(),
             after: after.as_deref(),
             before: before.as_deref(),
             first,
@@ -913,9 +928,12 @@ impl Client {
     pub async fn object(
         &self,
         object_id: ObjectId,
-        version: Option<u64>,
+        version: impl Into<Option<u64>>,
     ) -> Result<Option<Object>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs { object_id, version });
+        let operation = ObjectQuery::build(ObjectQueryArgs {
+            object_id,
+            version: version.into(),
+        });
 
         let response = self.run_query(&operation).await?;
 
@@ -958,7 +976,7 @@ impl Client {
     /// ```
     pub async fn objects(
         &self,
-        filter: Option<ObjectFilter>,
+        filter: impl Into<Option<ObjectFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Object>> {
         let PaginationFilterResponse {
@@ -970,7 +988,7 @@ impl Client {
         let operation = ObjectsQuery::build(ObjectsQueryArgs {
             after,
             before,
-            filter,
+            filter: filter.into(),
             first,
             last,
         });
@@ -1035,9 +1053,12 @@ impl Client {
     pub async fn move_object_contents_bcs(
         &self,
         object_id: ObjectId,
-        version: Option<u64>,
+        version: impl Into<Option<u64>>,
     ) -> Result<Option<Vec<u8>>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs { object_id, version });
+        let operation = ObjectQuery::build(ObjectQueryArgs {
+            object_id,
+            version: version.into(),
+        });
 
         let response = self.run_query(&operation).await?;
 
@@ -1106,8 +1127,8 @@ impl Client {
         &self,
         address: Address,
         pagination_filter: PaginationFilter,
-        after_version: Option<u64>,
-        before_version: Option<u64>,
+        after_version: impl Into<Option<u64>>,
+        before_version: impl Into<Option<u64>>,
     ) -> Result<Page<MovePackage>> {
         let PaginationFilterResponse {
             after,
@@ -1122,8 +1143,8 @@ impl Client {
             first,
             last,
             filter: Some(MovePackageVersionFilter {
-                after_version,
-                before_version,
+                after_version: after_version.into(),
+                before_version: before_version.into(),
             }),
         });
 
@@ -1194,8 +1215,8 @@ impl Client {
     pub async fn packages(
         &self,
         pagination_filter: PaginationFilter,
-        after_checkpoint: Option<u64>,
-        before_checkpoint: Option<u64>,
+        after_checkpoint: impl Into<Option<u64>>,
+        before_checkpoint: impl Into<Option<u64>>,
     ) -> Result<Page<MovePackage>> {
         let PaginationFilterResponse {
             after,
@@ -1210,8 +1231,8 @@ impl Client {
             first,
             last,
             filter: Some(PackageCheckpointFilter {
-                after_checkpoint,
-                before_checkpoint,
+                after_checkpoint: after_checkpoint.into(),
+                before_checkpoint: before_checkpoint.into(),
             }),
         });
 
@@ -1361,7 +1382,7 @@ impl Client {
     /// Get a page of transactions' effects based on the provided filters.
     pub async fn transactions_effects(
         &self,
-        filter: Option<TransactionsFilter>,
+        filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<TransactionEffects>> {
         let PaginationFilterResponse {
@@ -1374,7 +1395,7 @@ impl Client {
         let operation = TransactionBlocksEffectsQuery::build(TransactionBlocksQueryArgs {
             after,
             before,
-            filter,
+            filter: filter.into(),
             first,
             last,
         });
@@ -1401,7 +1422,7 @@ impl Client {
     /// filters.
     pub async fn transactions_data_effects(
         &self,
-        filter: Option<TransactionsFilter>,
+        filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<TransactionDataEffects>> {
         let PaginationFilterResponse {
@@ -1414,7 +1435,7 @@ impl Client {
         let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksQueryArgs {
             after,
             before,
-            filter,
+            filter: filter.into(),
             first,
             last,
         });
@@ -1507,13 +1528,13 @@ impl Client {
         package: Address,
         module: &str,
         function: &str,
-        version: Option<u64>,
+        version: impl Into<Option<u64>>,
     ) -> Result<Option<MoveFunction>> {
         let operation = NormalizedMoveFunctionQuery::build(NormalizedMoveFunctionQueryArgs {
             address: package,
             module,
             function,
-            version,
+            version: version.into(),
         });
         let response = self.run_query(&operation).await?;
 
@@ -1536,9 +1557,12 @@ impl Client {
     pub async fn move_object_contents(
         &self,
         object_id: ObjectId,
-        version: Option<u64>,
+        version: impl Into<Option<u64>>,
     ) -> Result<Option<serde_json::Value>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs { object_id, version });
+        let operation = ObjectQuery::build(ObjectQueryArgs {
+            object_id,
+            version: version.into(),
+        });
 
         let response = self.run_query(&operation).await?;
 
@@ -2226,7 +2250,7 @@ mod tests {
         let tx_bytes = "AAACAAgAypo7AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgABAQAAAQEDAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACg9WqbvnpQmublI1+/dnonzEvhVPHnGEX++ianEHLIZmoiqRAAAAAAAgmrviNLnSJMjhRUZ8il2SFFjZ60cdJWv9v3M7pTsTQaA0FjZwX1JlYTftfc/+nF7J1QTfVacG+5wc2teKJoJHBDf/BgAAAAAAIOFdV7nQyvw+7AJpDmJFifAa4SqrI5qqXqAq1IKZsSxKVTI1Cd7yJVFzIqi4nnPX1ShmHEJWweFl5BId7OSkHXViNQ0AAAAAACA4U7t1jiQwTs87xenAvOkQWAAMWbElg0Exz1annhowtXPQJaMX5mcenWnm/aFAXhUM2rGsvqqa2zM2OOQyEKqbNP8GAAAAAAAg7pHVs4Z58mP71Y53cDuY3X/TbTgfmBHkDWe16J+kBOqhnfl+yRNiYZ3fpWvyc4rB2u+a2qjUGqcw7yFnlhJAj1w00w8AAAAAIDEjW30S0iN4lnDXpigCjEmOA0tUYKf339ZayYUU9PG6s1wmB/dndlMUdTZGe5MOz1baxXMESHbVd5L7XTObgECAQpEAAAAAACBCkCOAwD6Dl2DkdXj/eFRBTsNPWg3XYATTPxeThLuhzrTmcYf4XqT8ceMAoKbQBjtzyaTv+xb0K0MzHfvJR1NFgUKRAAAAAAAgxUVPvQUU/R1jcC2+AxZ7uC3ls+09G7xAk0xusdBSUkXPNNWDsV8xzw6ipjnf5pk9W3R9P0RD6iORRe+0JKaLtmE1DQAAAAAAIPhsUoriBlzhLc4SHds72JTbjeI37VhyjlFVtQurLY+26e+jqKb2TsdARpYEvxPl31WAelj2RMuUyK8S5NeluEWjKpEAAAAAACCR/0nc3l5UIXpl6I6SEpWABP/vJewHhZ5iMDpIDXdMqf0VCu+y2k/TZIpRFMDRiBO0oUW+L8+06uAi3pZkwpbFNf8GAAAAAAAgyIfExjdHxdt7+eiOLRh4N4/iSMZCrHf2t5iYI+Kl8ysAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOgDAAAAAAAA4G88AAAAAAAA";
 
         client
-            .dry_run(tx_bytes.to_string(), None, None)
+            .dry_run(tx_bytes.to_string(), false, None)
             .await
             .map_err(|e| {
                 format!(
