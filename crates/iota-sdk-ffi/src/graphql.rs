@@ -666,10 +666,10 @@ impl GraphQLClient {
     #[allow(clippy::too_many_arguments)]
     #[uniffi::method(default(
         version = None,
-        pagination_filter_enums = None, 
-        pagination_filter_friends = None, 
-        pagination_filter_functions = None, 
-        pagination_filter_structs = None, 
+        pagination_filter_enums = None,
+        pagination_filter_friends = None,
+        pagination_filter_functions = None,
+        pagination_filter_structs = None,
     ))]
     pub async fn normalized_move_module(
         &self,
