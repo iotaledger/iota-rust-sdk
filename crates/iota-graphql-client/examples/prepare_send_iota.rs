@@ -60,7 +60,7 @@ async fn main() -> Result<()> {
     builder.add_gas_objects([Input::from(&gas_coin).with_owned_kind()]);
     let txn = builder.finish()?;
     let txn_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn)?);
-    println!("Signing Digest: {}", hex::encode(&txn.signing_digest()));
+    println!("Signing Digest: {}", hex::encode(txn.signing_digest()));
     println!("Txn Bytes: {txn_bytes}");
 
     Ok(())
