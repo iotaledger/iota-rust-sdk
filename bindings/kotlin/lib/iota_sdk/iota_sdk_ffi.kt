@@ -42713,7 +42713,7 @@ data class DynamicFieldName (
     /**
      * The json representation of the dynamic field name
      */
-    var `json`: Value?
+    var `json`: Value? = null
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here

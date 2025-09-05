@@ -523,6 +523,7 @@ pub struct DynamicFieldName {
     /// The bcs bytes of this dynamic field name
     pub bcs: Vec<u8>,
     /// The json representation of the dynamic field name
+    #[uniffi(default = None)]
     pub json: Option<serde_json::Value>,
 }
 

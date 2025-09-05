@@ -9211,10 +9211,13 @@ class DynamicFieldName:
     The json representation of the dynamic field name
     """
 
-    def __init__(self, *, type_tag: "TypeTag", bcs: "bytes", json: "typing.Optional[Value]"):
+    def __init__(self, *, type_tag: "TypeTag", bcs: "bytes", json: "typing.Optional[Value]" = _DEFAULT):
         self.type_tag = type_tag
         self.bcs = bcs
-        self.json = json
+        if json is _DEFAULT:
+            self.json = None
+        else:
+            self.json = json
 
     def __str__(self):
         return "DynamicFieldName(type_tag={}, bcs={}, json={})".format(self.type_tag, self.bcs, self.json)
