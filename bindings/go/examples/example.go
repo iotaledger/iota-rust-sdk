@@ -1,3 +1,6 @@
+// Copyright (c) 2025 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 package main
 
 import (
@@ -22,13 +25,7 @@ func main() {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
-	pagination := sdk.PaginationFilter{
-		Direction: sdk.DirectionForward,
-		Cursor:    nil,
-		Limit:     nil,
-	}
-
-	coins, err := client.Coins(address, pagination, nil)
+	coins, err := client.Coins(address, nil, nil)
 	if !isNilError(err) {
 		log.Fatalf("Failed to get coins: %v", err)
 	}
