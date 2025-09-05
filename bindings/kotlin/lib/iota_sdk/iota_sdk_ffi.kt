@@ -2151,6 +2151,21 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2542,7 +2557,13 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_object_as_package(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_as_struct(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_data(
 ): Short
@@ -2576,15 +2597,23 @@ fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_is_package(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_as_address(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_as_object(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_owner_as_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt(
 ): Short
@@ -4211,7 +4240,13 @@ fun uniffi_iota_sdk_ffi_fn_free_object(`ptr`: Pointer,uniffi_out_err: UniffiRust
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_object_new(`data`: Pointer,`owner`: Pointer,`previousTransaction`: Pointer,`storageRebate`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_object_as_package(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_object_as_package_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_object_as_struct(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_object_data(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -4273,6 +4308,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_package(uniffi_out_err: Un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objecttype_new_struct(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objecttype_is_package(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4291,10 +4328,16 @@ fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(`id`: Pointer,uniffi_out
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(`version`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_owner_as_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_address_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_owner_as_object(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_owner_as_shared(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_owner_is_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4652,6 +4695,8 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_address(`ptr`: Pointer,uniffi_out_er
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5769,7 +5814,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier() != 5971.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct() != 37303.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_as_package() != 21763.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_as_package_opt() != 61571.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct() != 5928.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt() != 49657.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_object_data() != 4330.toShort()) {
@@ -5820,6 +5874,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct_opt() != 14701.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -5829,10 +5886,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 19200.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_address_opt() != 36265.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object() != 42917.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 56096.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 4209.toShort()) {
@@ -24848,9 +24914,24 @@ public object FfiConverterTypeMultisigVerifier: FfiConverter<MultisigVerifier, P
 public interface ObjectInterface {
     
     /**
+     * Interpret this object as a move package
+     */
+    fun `asPackage`(): MovePackage
+    
+    /**
+     * Try to interpret this object as a move package
+     */
+    fun `asPackageOpt`(): MovePackage?
+    
+    /**
+     * Interpret this object as a move struct
+     */
+    fun `asStruct`(): MoveStruct
+    
+    /**
      * Try to interpret this object as a move struct
      */
-    fun `asStruct`(): MoveStruct?
+    fun `asStructOpt`(): MoveStruct?
     
     /**
      * Return this object's data
@@ -25002,12 +25083,57 @@ open class Object: Disposable, AutoCloseable, ObjectInterface
 
     
     /**
-     * Try to interpret this object as a move struct
-     */override fun `asStruct`(): MoveStruct? {
-            return FfiConverterOptionalTypeMoveStruct.lift(
+     * Interpret this object as a move package
+     */override fun `asPackage`(): MovePackage {
+            return FfiConverterTypeMovePackage.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_as_package(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Try to interpret this object as a move package
+     */override fun `asPackageOpt`(): MovePackage? {
+            return FfiConverterOptionalTypeMovePackage.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_as_package_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Interpret this object as a move struct
+     */override fun `asStruct`(): MoveStruct {
+            return FfiConverterTypeMoveStruct.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_as_struct(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Try to interpret this object as a move struct
+     */override fun `asStructOpt`(): MoveStruct? {
+            return FfiConverterOptionalTypeMoveStruct.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt(
         it, _status)
 }
     }
@@ -26012,6 +26138,8 @@ public object FfiConverterTypeObjectId: FfiConverter<ObjectId, Pointer> {
  */
 public interface ObjectTypeInterface {
     
+    fun `asStruct`(): StructTag
+    
     fun `asStructOpt`(): StructTag?
     
     fun `isPackage`(): kotlin.Boolean
@@ -26105,6 +26233,18 @@ open class ObjectType: Disposable, AutoCloseable, ObjectTypeInterface
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_objecttype(pointer!!, status)
         }
     }
+
+    override fun `asStruct`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objecttype_as_struct(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     override fun `asStructOpt`(): StructTag? {
             return FfiConverterOptionalTypeStructTag.lift(
@@ -26316,9 +26456,15 @@ public object FfiConverterTypeObjectType: FfiConverter<ObjectType, Pointer> {
  */
 public interface OwnerInterface {
     
+    fun `asAddress`(): Address
+    
     fun `asAddressOpt`(): Address?
     
+    fun `asObject`(): ObjectId
+    
     fun `asObjectOpt`(): ObjectId?
+    
+    fun `asShared`(): kotlin.ULong
     
     fun `asSharedOpt`(): kotlin.ULong?
     
@@ -26431,6 +26577,18 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
         }
     }
 
+    override fun `asAddress`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_address(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `asAddressOpt`(): Address? {
             return FfiConverterOptionalTypeAddress.lift(
     callWithPointer {
@@ -26443,11 +26601,35 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
+    override fun `asObject`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_object(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `asObjectOpt`(): ObjectId? {
             return FfiConverterOptionalTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asShared`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(
         it, _status)
 }
     }
@@ -33631,6 +33813,17 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
+    
+    override fun toString(): String {
+        return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(
+        it, _status)
+}
+    }
+    )
+    }
     
 
     
