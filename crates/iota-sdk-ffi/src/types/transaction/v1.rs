@@ -43,9 +43,11 @@ pub struct TransactionEffectsV1 {
     /// The updated gas object reference, as an index into the `changed_objects`
     /// vector. Having a dedicated field for convenient access.
     /// System transaction that don't require gas will leave this as None.
+    #[uniffi(default = None)]
     pub gas_object_index: Option<u32>,
     /// The digest of the events emitted during execution,
     /// can be None if the transaction does not emit any event.
+    #[uniffi(default = None)]
     pub events_digest: Option<Arc<Digest>>,
     /// The set of transaction digests this transaction depends on.
     pub dependencies: Vec<Arc<Digest>>,
@@ -63,6 +65,7 @@ pub struct TransactionEffectsV1 {
     /// effects but are stored separately. Storing it separately allows us
     /// to avoid bloating the effects with data that are not critical.
     /// It also provides more flexibility on the format and type of the data.
+    #[uniffi(default = None)]
     pub auxiliary_data_digest: Option<Arc<Digest>>,
 }
 

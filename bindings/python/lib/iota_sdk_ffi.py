@@ -9338,10 +9338,13 @@ class DynamicFieldName:
     The json representation of the dynamic field name
     """
 
-    def __init__(self, *, type_tag: "TypeTag", bcs: "bytes", json: "typing.Optional[Value]"):
+    def __init__(self, *, type_tag: "TypeTag", bcs: "bytes", json: "typing.Optional[Value]" = _DEFAULT):
         self.type_tag = type_tag
         self.bcs = bcs
-        self.json = json
+        if json is _DEFAULT:
+            self.json = None
+        else:
+            self.json = json
 
     def __str__(self):
         return "DynamicFieldName(type_tag={}, bcs={}, json={})".format(self.type_tag, self.bcs, self.json)
@@ -9398,10 +9401,16 @@ class DynamicFieldOutput:
     The json representation of the dynamic field value object
     """
 
-    def __init__(self, *, name: "DynamicFieldName", value: "typing.Optional[DynamicFieldValue]", value_as_json: "typing.Optional[Value]"):
+    def __init__(self, *, name: "DynamicFieldName", value: "typing.Optional[DynamicFieldValue]" = _DEFAULT, value_as_json: "typing.Optional[Value]" = _DEFAULT):
         self.name = name
-        self.value = value
-        self.value_as_json = value_as_json
+        if value is _DEFAULT:
+            self.value = None
+        else:
+            self.value = value
+        if value_as_json is _DEFAULT:
+            self.value_as_json = None
+        else:
+            self.value_as_json = value_as_json
 
     def __str__(self):
         return "DynamicFieldOutput(name={}, value={}, value_as_json={})".format(self.name, self.value, self.value_as_json)
@@ -10617,8 +10626,11 @@ class _UniffiConverterTypeMoveEnumConnection(_UniffiConverterRustBuffer):
 class MoveEnumVariant:
     fields: "typing.Optional[typing.List[MoveField]]"
     name: "str"
-    def __init__(self, *, fields: "typing.Optional[typing.List[MoveField]]", name: "str"):
-        self.fields = fields
+    def __init__(self, *, fields: "typing.Optional[typing.List[MoveField]]" = _DEFAULT, name: "str"):
+        if fields is _DEFAULT:
+            self.fields = None
+        else:
+            self.fields = fields
         self.name = name
 
     def __str__(self):
@@ -10653,9 +10665,12 @@ class _UniffiConverterTypeMoveEnumVariant(_UniffiConverterRustBuffer):
 class MoveField:
     name: "str"
     type: "typing.Optional[OpenMoveType]"
-    def __init__(self, *, name: "str", type: "typing.Optional[OpenMoveType]"):
+    def __init__(self, *, name: "str", type: "typing.Optional[OpenMoveType]" = _DEFAULT):
         self.name = name
-        self.type = type
+        if type is _DEFAULT:
+            self.type = None
+        else:
+            self.type = type
 
     def __str__(self):
         return "MoveField(name={}, type={})".format(self.name, self.type)
@@ -10790,12 +10805,15 @@ class MoveLocation:
     The name of the function if available
     """
 
-    def __init__(self, *, package: "ObjectId", module: "str", function: "int", instruction: "int", function_name: "typing.Optional[str]"):
+    def __init__(self, *, package: "ObjectId", module: "str", function: "int", instruction: "int", function_name: "typing.Optional[str]" = _DEFAULT):
         self.package = package
         self.module = module
         self.function = function
         self.instruction = instruction
-        self.function_name = function_name
+        if function_name is _DEFAULT:
+            self.function_name = None
+        else:
+            self.function_name = function_name
 
     def __str__(self):
         return "MoveLocation(package={}, module={}, function={}, instruction={}, function_name={})".format(self.package, self.module, self.function, self.instruction, self.function_name)
@@ -11063,9 +11081,12 @@ class _UniffiConverterTypeMovePackagePage(_UniffiConverterRustBuffer):
 class MovePackageQuery:
     address: "Address"
     bcs: "typing.Optional[Base64]"
-    def __init__(self, *, address: "Address", bcs: "typing.Optional[Base64]"):
+    def __init__(self, *, address: "Address", bcs: "typing.Optional[Base64]" = _DEFAULT):
         self.address = address
-        self.bcs = bcs
+        if bcs is _DEFAULT:
+            self.bcs = None
+        else:
+            self.bcs = bcs
 
     def __str__(self):
         return "MovePackageQuery(address={}, bcs={})".format(self.address, self.bcs)
@@ -11215,11 +11236,20 @@ class MoveStructQuery:
     name: "str"
     fields: "typing.Optional[typing.List[MoveField]]"
     type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]"
-    def __init__(self, *, abilities: "typing.Optional[typing.List[MoveAbility]]", name: "str", fields: "typing.Optional[typing.List[MoveField]]", type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]"):
-        self.abilities = abilities
+    def __init__(self, *, abilities: "typing.Optional[typing.List[MoveAbility]]" = _DEFAULT, name: "str", fields: "typing.Optional[typing.List[MoveField]]" = _DEFAULT, type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]" = _DEFAULT):
+        if abilities is _DEFAULT:
+            self.abilities = None
+        else:
+            self.abilities = abilities
         self.name = name
-        self.fields = fields
-        self.type_parameters = type_parameters
+        if fields is _DEFAULT:
+            self.fields = None
+        else:
+            self.fields = fields
+        if type_parameters is _DEFAULT:
+            self.type_parameters = None
+        else:
+            self.type_parameters = type_parameters
 
     def __str__(self):
         return "MoveStructQuery(abilities={}, name={}, fields={}, type_parameters={})".format(self.abilities, self.name, self.fields, self.type_parameters)
@@ -11300,10 +11330,19 @@ class ObjectFilter:
     type_tag: "typing.Optional[str]"
     owner: "typing.Optional[Address]"
     object_ids: "typing.Optional[typing.List[ObjectId]]"
-    def __init__(self, *, type_tag: "typing.Optional[str]", owner: "typing.Optional[Address]", object_ids: "typing.Optional[typing.List[ObjectId]]"):
-        self.type_tag = type_tag
-        self.owner = owner
-        self.object_ids = object_ids
+    def __init__(self, *, type_tag: "typing.Optional[str]" = _DEFAULT, owner: "typing.Optional[Address]" = _DEFAULT, object_ids: "typing.Optional[typing.List[ObjectId]]" = _DEFAULT):
+        if type_tag is _DEFAULT:
+            self.type_tag = None
+        else:
+            self.type_tag = type_tag
+        if owner is _DEFAULT:
+            self.owner = None
+        else:
+            self.owner = owner
+        if object_ids is _DEFAULT:
+            self.object_ids = None
+        else:
+            self.object_ids = object_ids
 
     def __str__(self):
         return "ObjectFilter(type_tag={}, owner={}, object_ids={})".format(self.type_tag, self.owner, self.object_ids)
@@ -12383,18 +12422,27 @@ class TransactionEffectsV1:
     It also provides more flexibility on the format and type of the data.
     """
 
-    def __init__(self, *, status: "ExecutionStatus", epoch: "int", gas_used: "GasCostSummary", transaction_digest: "Digest", gas_object_index: "typing.Optional[int]", events_digest: "typing.Optional[Digest]", dependencies: "typing.List[Digest]", lamport_version: "int", changed_objects: "typing.List[ChangedObject]", unchanged_shared_objects: "typing.List[UnchangedSharedObject]", auxiliary_data_digest: "typing.Optional[Digest]"):
+    def __init__(self, *, status: "ExecutionStatus", epoch: "int", gas_used: "GasCostSummary", transaction_digest: "Digest", gas_object_index: "typing.Optional[int]" = _DEFAULT, events_digest: "typing.Optional[Digest]" = _DEFAULT, dependencies: "typing.List[Digest]", lamport_version: "int", changed_objects: "typing.List[ChangedObject]", unchanged_shared_objects: "typing.List[UnchangedSharedObject]", auxiliary_data_digest: "typing.Optional[Digest]" = _DEFAULT):
         self.status = status
         self.epoch = epoch
         self.gas_used = gas_used
         self.transaction_digest = transaction_digest
-        self.gas_object_index = gas_object_index
-        self.events_digest = events_digest
+        if gas_object_index is _DEFAULT:
+            self.gas_object_index = None
+        else:
+            self.gas_object_index = gas_object_index
+        if events_digest is _DEFAULT:
+            self.events_digest = None
+        else:
+            self.events_digest = events_digest
         self.dependencies = dependencies
         self.lamport_version = lamport_version
         self.changed_objects = changed_objects
         self.unchanged_shared_objects = unchanged_shared_objects
-        self.auxiliary_data_digest = auxiliary_data_digest
+        if auxiliary_data_digest is _DEFAULT:
+            self.auxiliary_data_digest = None
+        else:
+            self.auxiliary_data_digest = auxiliary_data_digest
 
     def __str__(self):
         return "TransactionEffectsV1(status={}, epoch={}, gas_used={}, transaction_digest={}, gas_object_index={}, events_digest={}, dependencies={}, lamport_version={}, changed_objects={}, unchanged_shared_objects={}, auxiliary_data_digest={})".format(self.status, self.epoch, self.gas_used, self.transaction_digest, self.gas_object_index, self.events_digest, self.dependencies, self.lamport_version, self.changed_objects, self.unchanged_shared_objects, self.auxiliary_data_digest)
@@ -12966,31 +13014,97 @@ class Validator:
     voting power).
     """
 
-    def __init__(self, *, apy: "typing.Optional[int]", address: "Address", commission_rate: "typing.Optional[int]", credentials: "typing.Optional[ValidatorCredentials]", description: "typing.Optional[str]", exchange_rates_size: "typing.Optional[int]", gas_price: "typing.Optional[int]", name: "typing.Optional[str]", image_url: "typing.Optional[str]", next_epoch_commission_rate: "typing.Optional[int]", next_epoch_credentials: "typing.Optional[ValidatorCredentials]", next_epoch_gas_price: "typing.Optional[int]", next_epoch_stake: "typing.Optional[int]", operation_cap: "typing.Optional[bytes]", pending_pool_token_withdraw: "typing.Optional[int]", pending_stake: "typing.Optional[int]", pending_total_iota_withdraw: "typing.Optional[int]", pool_token_balance: "typing.Optional[int]", project_url: "typing.Optional[str]", rewards_pool: "typing.Optional[int]", staking_pool_activation_epoch: "typing.Optional[int]", staking_pool_id: "ObjectId", staking_pool_iota_balance: "typing.Optional[int]", voting_power: "typing.Optional[int]"):
-        self.apy = apy
+    def __init__(self, *, apy: "typing.Optional[int]" = _DEFAULT, address: "Address", commission_rate: "typing.Optional[int]" = _DEFAULT, credentials: "typing.Optional[ValidatorCredentials]" = _DEFAULT, description: "typing.Optional[str]" = _DEFAULT, exchange_rates_size: "typing.Optional[int]" = _DEFAULT, gas_price: "typing.Optional[int]" = _DEFAULT, name: "typing.Optional[str]" = _DEFAULT, image_url: "typing.Optional[str]" = _DEFAULT, next_epoch_commission_rate: "typing.Optional[int]" = _DEFAULT, next_epoch_credentials: "typing.Optional[ValidatorCredentials]" = _DEFAULT, next_epoch_gas_price: "typing.Optional[int]" = _DEFAULT, next_epoch_stake: "typing.Optional[int]" = _DEFAULT, operation_cap: "typing.Optional[bytes]" = _DEFAULT, pending_pool_token_withdraw: "typing.Optional[int]" = _DEFAULT, pending_stake: "typing.Optional[int]" = _DEFAULT, pending_total_iota_withdraw: "typing.Optional[int]" = _DEFAULT, pool_token_balance: "typing.Optional[int]" = _DEFAULT, project_url: "typing.Optional[str]" = _DEFAULT, rewards_pool: "typing.Optional[int]" = _DEFAULT, staking_pool_activation_epoch: "typing.Optional[int]" = _DEFAULT, staking_pool_id: "ObjectId", staking_pool_iota_balance: "typing.Optional[int]" = _DEFAULT, voting_power: "typing.Optional[int]" = _DEFAULT):
+        if apy is _DEFAULT:
+            self.apy = None
+        else:
+            self.apy = apy
         self.address = address
-        self.commission_rate = commission_rate
-        self.credentials = credentials
-        self.description = description
-        self.exchange_rates_size = exchange_rates_size
-        self.gas_price = gas_price
-        self.name = name
-        self.image_url = image_url
-        self.next_epoch_commission_rate = next_epoch_commission_rate
-        self.next_epoch_credentials = next_epoch_credentials
-        self.next_epoch_gas_price = next_epoch_gas_price
-        self.next_epoch_stake = next_epoch_stake
-        self.operation_cap = operation_cap
-        self.pending_pool_token_withdraw = pending_pool_token_withdraw
-        self.pending_stake = pending_stake
-        self.pending_total_iota_withdraw = pending_total_iota_withdraw
-        self.pool_token_balance = pool_token_balance
-        self.project_url = project_url
-        self.rewards_pool = rewards_pool
-        self.staking_pool_activation_epoch = staking_pool_activation_epoch
+        if commission_rate is _DEFAULT:
+            self.commission_rate = None
+        else:
+            self.commission_rate = commission_rate
+        if credentials is _DEFAULT:
+            self.credentials = None
+        else:
+            self.credentials = credentials
+        if description is _DEFAULT:
+            self.description = None
+        else:
+            self.description = description
+        if exchange_rates_size is _DEFAULT:
+            self.exchange_rates_size = None
+        else:
+            self.exchange_rates_size = exchange_rates_size
+        if gas_price is _DEFAULT:
+            self.gas_price = None
+        else:
+            self.gas_price = gas_price
+        if name is _DEFAULT:
+            self.name = None
+        else:
+            self.name = name
+        if image_url is _DEFAULT:
+            self.image_url = None
+        else:
+            self.image_url = image_url
+        if next_epoch_commission_rate is _DEFAULT:
+            self.next_epoch_commission_rate = None
+        else:
+            self.next_epoch_commission_rate = next_epoch_commission_rate
+        if next_epoch_credentials is _DEFAULT:
+            self.next_epoch_credentials = None
+        else:
+            self.next_epoch_credentials = next_epoch_credentials
+        if next_epoch_gas_price is _DEFAULT:
+            self.next_epoch_gas_price = None
+        else:
+            self.next_epoch_gas_price = next_epoch_gas_price
+        if next_epoch_stake is _DEFAULT:
+            self.next_epoch_stake = None
+        else:
+            self.next_epoch_stake = next_epoch_stake
+        if operation_cap is _DEFAULT:
+            self.operation_cap = None
+        else:
+            self.operation_cap = operation_cap
+        if pending_pool_token_withdraw is _DEFAULT:
+            self.pending_pool_token_withdraw = None
+        else:
+            self.pending_pool_token_withdraw = pending_pool_token_withdraw
+        if pending_stake is _DEFAULT:
+            self.pending_stake = None
+        else:
+            self.pending_stake = pending_stake
+        if pending_total_iota_withdraw is _DEFAULT:
+            self.pending_total_iota_withdraw = None
+        else:
+            self.pending_total_iota_withdraw = pending_total_iota_withdraw
+        if pool_token_balance is _DEFAULT:
+            self.pool_token_balance = None
+        else:
+            self.pool_token_balance = pool_token_balance
+        if project_url is _DEFAULT:
+            self.project_url = None
+        else:
+            self.project_url = project_url
+        if rewards_pool is _DEFAULT:
+            self.rewards_pool = None
+        else:
+            self.rewards_pool = rewards_pool
+        if staking_pool_activation_epoch is _DEFAULT:
+            self.staking_pool_activation_epoch = None
+        else:
+            self.staking_pool_activation_epoch = staking_pool_activation_epoch
         self.staking_pool_id = staking_pool_id
-        self.staking_pool_iota_balance = staking_pool_iota_balance
-        self.voting_power = voting_power
+        if staking_pool_iota_balance is _DEFAULT:
+            self.staking_pool_iota_balance = None
+        else:
+            self.staking_pool_iota_balance = staking_pool_iota_balance
+        if voting_power is _DEFAULT:
+            self.voting_power = None
+        else:
+            self.voting_power = voting_power
 
     def __str__(self):
         return "Validator(apy={}, address={}, commission_rate={}, credentials={}, description={}, exchange_rates_size={}, gas_price={}, name={}, image_url={}, next_epoch_commission_rate={}, next_epoch_credentials={}, next_epoch_gas_price={}, next_epoch_stake={}, operation_cap={}, pending_pool_token_withdraw={}, pending_stake={}, pending_total_iota_withdraw={}, pool_token_balance={}, project_url={}, rewards_pool={}, staking_pool_activation_epoch={}, staking_pool_id={}, staking_pool_iota_balance={}, voting_power={})".format(self.apy, self.address, self.commission_rate, self.credentials, self.description, self.exchange_rates_size, self.gas_price, self.name, self.image_url, self.next_epoch_commission_rate, self.next_epoch_credentials, self.next_epoch_gas_price, self.next_epoch_stake, self.operation_cap, self.pending_pool_token_withdraw, self.pending_stake, self.pending_total_iota_withdraw, self.pool_token_balance, self.project_url, self.rewards_pool, self.staking_pool_activation_epoch, self.staking_pool_id, self.staking_pool_iota_balance, self.voting_power)
@@ -13277,14 +13391,35 @@ class ValidatorCredentials:
     net_address: "typing.Optional[str]"
     p2p_address: "typing.Optional[str]"
     primary_address: "typing.Optional[str]"
-    def __init__(self, *, authority_pub_key: "typing.Optional[Base64]", network_pub_key: "typing.Optional[Base64]", protocol_pub_key: "typing.Optional[Base64]", proof_of_possession: "typing.Optional[Base64]", net_address: "typing.Optional[str]", p2p_address: "typing.Optional[str]", primary_address: "typing.Optional[str]"):
-        self.authority_pub_key = authority_pub_key
-        self.network_pub_key = network_pub_key
-        self.protocol_pub_key = protocol_pub_key
-        self.proof_of_possession = proof_of_possession
-        self.net_address = net_address
-        self.p2p_address = p2p_address
-        self.primary_address = primary_address
+    def __init__(self, *, authority_pub_key: "typing.Optional[Base64]" = _DEFAULT, network_pub_key: "typing.Optional[Base64]" = _DEFAULT, protocol_pub_key: "typing.Optional[Base64]" = _DEFAULT, proof_of_possession: "typing.Optional[Base64]" = _DEFAULT, net_address: "typing.Optional[str]" = _DEFAULT, p2p_address: "typing.Optional[str]" = _DEFAULT, primary_address: "typing.Optional[str]" = _DEFAULT):
+        if authority_pub_key is _DEFAULT:
+            self.authority_pub_key = None
+        else:
+            self.authority_pub_key = authority_pub_key
+        if network_pub_key is _DEFAULT:
+            self.network_pub_key = None
+        else:
+            self.network_pub_key = network_pub_key
+        if protocol_pub_key is _DEFAULT:
+            self.protocol_pub_key = None
+        else:
+            self.protocol_pub_key = protocol_pub_key
+        if proof_of_possession is _DEFAULT:
+            self.proof_of_possession = None
+        else:
+            self.proof_of_possession = proof_of_possession
+        if net_address is _DEFAULT:
+            self.net_address = None
+        else:
+            self.net_address = net_address
+        if p2p_address is _DEFAULT:
+            self.p2p_address = None
+        else:
+            self.p2p_address = p2p_address
+        if primary_address is _DEFAULT:
+            self.primary_address = None
+        else:
+            self.primary_address = primary_address
 
     def __str__(self):
         return "ValidatorCredentials(authority_pub_key={}, network_pub_key={}, protocol_pub_key={}, proof_of_possession={}, net_address={}, p2p_address={}, primary_address={})".format(self.authority_pub_key, self.network_pub_key, self.protocol_pub_key, self.proof_of_possession, self.net_address, self.p2p_address, self.primary_address)
