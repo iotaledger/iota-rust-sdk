@@ -28,13 +28,11 @@ func main() {
 	objectFilter := sdk.ObjectFilter{
 		Owner: &address,
 	}
-	pagination := sdk.PaginationFilter{
+	paginationFilter := sdk.PaginationFilter{
 		Direction: sdk.DirectionForward,
-		Cursor:    nil,
-		Limit:     nil,
 	}
 
-	objectsPage, err := client.Objects(pagination, &objectFilter)
+	objectsPage, err := client.Objects(&paginationFilter, &objectFilter)
 	if !isNilError(err) {
 		log.Fatalf("Failed to get owned objects: %v", err)
 	}

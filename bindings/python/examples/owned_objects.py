@@ -10,7 +10,7 @@ async def main():
     address = Address.from_hex(address)
     objects_page = await client.objects(
         PaginationFilter(direction=Direction.FORWARD),
-        ObjectFilter(type_tag=None, owner=address, object_ids=None)
+        ObjectFilter(owner=address)
     )
     print(f"Owned objects({len(objects_page.data)}):")
     for obj in objects_page.data:
