@@ -813,7 +813,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .dry_run_tx(&tx.0, skip_checks)
+            .dry_run_tx(&tx.0, skip_checks.unwrap_or(false))
             .await?
             .into())
     }
@@ -838,7 +838,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.into())
+            .dry_run_tx_kind(&tx_kind.0, skip_checks.unwrap_or(false), tx_meta.into())
             .await?
             .into())
     }
