@@ -25,18 +25,15 @@ func main() {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
-	pagination := sdk.PaginationFilter{
+	paginationFilter := sdk.PaginationFilter{
 		Direction: sdk.DirectionForward,
-		Cursor:    nil,
-		Limit:     nil,
 	}
 
-	page, err := client.DynamicFields(parentObjectId, pagination)
+	page, err := client.DynamicFields(parentObjectId, &paginationFilter)
 	if !isNilError(err) {
 		log.Fatalf("Failed to get dynamic fields: %v", err)
 	}
 
-	fmt.Printf("Page info: %+v\n", page.PageInfo)
 	fmt.Printf("Page size: %d\n", len(page.Data))
 	if len(page.Data) > 0 {
 		fmt.Printf("First field name: %+v\n", page.Data[0].Name)
