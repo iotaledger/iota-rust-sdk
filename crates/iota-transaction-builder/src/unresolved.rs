@@ -198,7 +198,7 @@ impl Input {
     pub fn pure_bytes(bytes: &[u8]) -> Self {
         Self {
             kind: Some(InputKind::Pure),
-            value: Some(Value::String(base64ct::Base64::encode_string(&bytes))),
+            value: Some(Value::String(base64ct::Base64::encode_string(bytes))),
             ..Default::default()
         }
     }
