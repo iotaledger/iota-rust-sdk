@@ -37,7 +37,7 @@ func main() {
 	}
 
 	for _, coin := range coins.Data {
-		fmt.Printf("ID = 0x%s Balance = %d\n", coin.Id().ToHex(), coin.Balance())
+		fmt.Printf("Coin = 0x%s Balance = %d\n", coin.Id().ToHex(), coin.Balance())
 	}
 
 	balance, err := client.Balance(address, nil)

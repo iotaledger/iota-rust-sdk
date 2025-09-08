@@ -14,7 +14,7 @@ async def main():
 
     coins = await client.coins(address, PaginationFilter(direction=Direction.FORWARD))
     for coin in coins.data:
-        print(f"ID = {coin.id().to_hex()} Balance = {coin.balance()}")
+        print(f"Coin = {coin.id().to_hex()} Balance = {coin.balance()}")
 
     balance = await client.balance(address)
     print(f"Total Balance = {balance}")
