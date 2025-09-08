@@ -5,7 +5,7 @@ use std::{str::FromStr, sync::Arc};
 
 use iota_graphql_client::{
     pagination::PaginationFilter,
-    query_types::{MoveFunction, ProtocolConfigs, ServiceConfig},
+    query_types::{ProtocolConfigs, ServiceConfig},
 };
 use iota_types::{CheckpointSequenceNumber, iota_names::NameFormat};
 use tokio::sync::RwLock;
@@ -17,8 +17,9 @@ use crate::{
         checkpoint::CheckpointSummary,
         digest::Digest,
         graphql::{
-            CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveModule,
-            ObjectFilter, TransactionDataEffects, TransactionMetadata, TransactionsFilter,
+            CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveFunction,
+            MoveModule, ObjectFilter, TransactionDataEffects, TransactionMetadata,
+            TransactionsFilter,
         },
         iota_names::Name,
         object::{MovePackage, Object, ObjectId},
@@ -112,17 +113,17 @@ impl GraphQLClient {
     /// Get the list of active validators for the provided epoch, including
     /// related metadata. If no epoch is provided, it will return the active
     /// validators for the current epoch.
-    #[uniffi::method(default(epoch = None))]
+    #[uniffi::method(default(epoch = None, pagination_filter = None))]
     pub async fn active_validators(
         &self,
-        pagination_filter: PaginationFilter,
         epoch: Option<u64>,
+        pagination_filter: Option<PaginationFilter>,
     ) -> Result<ValidatorPage> {
         Ok(self
             .0
             .read()
             .await
-            .active_validators(epoch, pagination_filter)
+            .active_validators(epoch, pagination_filter.unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -165,18 +166,18 @@ impl GraphQLClient {
     /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
     /// which will return all coins. For IOTA coin, pass in the coin type:
     /// `0x2::coin::Coin<0x2::iota::IOTA>`.
-    #[uniffi::method(default(coin_type = None))]
+    #[uniffi::method(default(pagination_filter = None, coin_type = None))]
     pub async fn coins(
         &self,
         owner: &Address,
-        pagination_filter: PaginationFilter,
+        pagination_filter: Option<PaginationFilter>,
         coin_type: Option<String>,
     ) -> Result<CoinPage> {
         Ok(self
             .0
             .read()
             .await
-            .coins(**owner, coin_type, pagination_filter)
+            .coins(**owner, coin_type, pagination_filter.unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -222,15 +223,16 @@ impl GraphQLClient {
     }
 
     /// Get a page of [`CheckpointSummary`] for the provided parameters.
+    #[uniffi::method(default(pagination_filter = None))]
     pub async fn checkpoints(
         &self,
-        pagination_filter: PaginationFilter,
+        pagination_filter: Option<PaginationFilter>,
     ) -> Result<CheckpointSummaryPage> {
         Ok(self
             .0
             .read()
             .await
-            .checkpoints(pagination_filter)
+            .checkpoints(pagination_filter.unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -287,17 +289,20 @@ impl GraphQLClient {
 
     /// Return a page of tuple (event, transaction digest) based on the
     /// (optional) event filter.
-    #[uniffi::method(default(filter = None))]
+    #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn events(
         &self,
-        pagination_filter: PaginationFilter,
+        pagination_filter: Option<PaginationFilter>,
         filter: Option<EventFilter>,
     ) -> Result<EventPage> {
         Ok(self
             .0
             .read()
             .await
-            .events(filter.map(|f| f.into()), pagination_filter)
+            .events(
+                filter.map(|f| f.into()),
+                pagination_filter.unwrap_or_default(),
+            )
             .await?
             .map(Into::into)
             .into())
@@ -344,17 +349,20 @@ impl GraphQLClient {
     ///
     /// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
     /// ```
-    #[uniffi::method(default(filter = None))]
+    #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn objects(
         &self,
-        pagination_filter: PaginationFilter,
+        pagination_filter: Option<PaginationFilter>,
         filter: Option<ObjectFilter>,
     ) -> Result<ObjectPage> {
         Ok(self
             .0
             .read()
             .await
-            .objects(filter.map(Into::into), pagination_filter)
+            .objects(
+                filter.map(Into::into),
+                pagination_filter.unwrap_or_default(),
+            )
             .await?
             .map(Into::into)
             .into())
@@ -419,11 +427,11 @@ impl GraphQLClient {
     /// Fetch all versions of package at address (packages that share this
     /// package's original ID), optionally bounding the versions exclusively
     /// from below with afterVersion, or from above with beforeVersion.
-    #[uniffi::method(default(after_version = None, before_version = None))]
+    #[uniffi::method(default(pagination_filter = None, after_version = None, before_version = None))]
     pub async fn package_versions(
         &self,
         address: &Address,
-        pagination_filter: PaginationFilter,
+        pagination_filter: Option<PaginationFilter>,
         after_version: Option<u64>,
         before_version: Option<u64>,
     ) -> Result<MovePackagePage> {
@@ -431,7 +439,12 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .package_versions(**address, pagination_filter, after_version, before_version)
+            .package_versions(
+                **address,
+                pagination_filter.unwrap_or_default(),
+                after_version,
+                before_version,
+            )
             .await?
             .map(Into::into)
             .into())
@@ -458,10 +471,10 @@ impl GraphQLClient {
     /// This query returns all versions of a given user package that appear
     /// between the specified checkpoints, but only records the latest
     /// versions of system packages.
-    #[uniffi::method(default(after_checkpoint = None, before_checkpoint = None))]
+    #[uniffi::method(default(pagination_filter = None, after_checkpoint = None, before_checkpoint = None))]
     pub async fn packages(
         &self,
-        pagination_filter: PaginationFilter,
+        pagination_filter: Option<PaginationFilter>,
         after_checkpoint: Option<u64>,
         before_checkpoint: Option<u64>,
     ) -> Result<MovePackagePage> {
@@ -469,7 +482,11 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .packages(pagination_filter, after_checkpoint, before_checkpoint)
+            .packages(
+                pagination_filter.unwrap_or_default(),
+                after_checkpoint,
+                before_checkpoint,
+            )
             .await?
             .map(Into::into)
             .into())
@@ -520,34 +537,40 @@ impl GraphQLClient {
     }
 
     /// Get a page of transactions based on the provided filters.
-    #[uniffi::method(default(filter = None))]
+    #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions(
         &self,
-        pagination_filter: PaginationFilter,
+        pagination_filter: Option<PaginationFilter>,
         filter: Option<TransactionsFilter>,
     ) -> Result<SignedTransactionPage> {
         Ok(self
             .0
             .read()
             .await
-            .transactions(filter.map(Into::into), pagination_filter)
+            .transactions(
+                filter.map(Into::into),
+                pagination_filter.unwrap_or_default(),
+            )
             .await?
             .map(Into::into)
             .into())
     }
 
     /// Get a page of transactions' effects based on the provided filters.
-    #[uniffi::method(default(filter = None))]
+    #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_effects(
         &self,
-        pagination_filter: PaginationFilter,
+        pagination_filter: Option<PaginationFilter>,
         filter: Option<TransactionsFilter>,
     ) -> Result<TransactionEffectsPage> {
         Ok(self
             .0
             .read()
             .await
-            .transactions_effects(filter.map(Into::into), pagination_filter)
+            .transactions_effects(
+                filter.map(Into::into),
+                pagination_filter.unwrap_or_default(),
+            )
             .await?
             .map(Into::into)
             .into())
@@ -555,17 +578,20 @@ impl GraphQLClient {
 
     /// Get a page of transactions' data and effects based on the provided
     /// filters.
-    #[uniffi::method(default(filter = None))]
+    #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_data_effects(
         &self,
-        pagination_filter: PaginationFilter,
+        pagination_filter: Option<PaginationFilter>,
         filter: Option<TransactionsFilter>,
     ) -> Result<TransactionDataEffectsPage> {
         Ok(self
             .0
             .read()
             .await
-            .transactions_data_effects(filter.map(Into::into), pagination_filter)
+            .transactions_data_effects(
+                filter.map(Into::into),
+                pagination_filter.unwrap_or_default(),
+            )
             .await?
             .map(Into::into)
             .into())
@@ -601,17 +627,19 @@ impl GraphQLClient {
     #[uniffi::method(default(version = None))]
     pub async fn normalized_move_function(
         &self,
-        package: &str,
+        package: &Address,
         module: &str,
         function: &str,
         version: Option<u64>,
-    ) -> Result<Option<MoveFunction>> {
+    ) -> Result<Option<Arc<MoveFunction>>> {
         Ok(self
             .0
             .read()
             .await
-            .normalized_move_function(package, module, function, version)
-            .await?)
+            .normalized_move_function(**package, module, function, version)
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
     }
 
     /// Return the contents' JSON of an object that is a Move object.
@@ -637,29 +665,35 @@ impl GraphQLClient {
     // TODO: do we want to self paginate everything and return all the data, or keep pagination
     // options?
     #[allow(clippy::too_many_arguments)]
-    #[uniffi::method(default(version = None))]
+    #[uniffi::method(default(
+        version = None,
+        pagination_filter_enums = None,
+        pagination_filter_friends = None,
+        pagination_filter_functions = None,
+        pagination_filter_structs = None,
+    ))]
     pub async fn normalized_move_module(
         &self,
-        package: &str,
+        package: &Address,
         module: &str,
-        pagination_filter_enums: PaginationFilter,
-        pagination_filter_friends: PaginationFilter,
-        pagination_filter_functions: PaginationFilter,
-        pagination_filter_structs: PaginationFilter,
         version: Option<u64>,
+        pagination_filter_enums: Option<PaginationFilter>,
+        pagination_filter_friends: Option<PaginationFilter>,
+        pagination_filter_functions: Option<PaginationFilter>,
+        pagination_filter_structs: Option<PaginationFilter>,
     ) -> Result<Option<MoveModule>> {
         Ok(self
             .0
             .read()
             .await
             .normalized_move_module(
-                package,
+                **package,
                 module,
                 version,
-                pagination_filter_enums,
-                pagination_filter_friends,
-                pagination_filter_functions,
-                pagination_filter_structs,
+                pagination_filter_enums.unwrap_or_default(),
+                pagination_filter_friends.unwrap_or_default(),
+                pagination_filter_functions.unwrap_or_default(),
+                pagination_filter_structs.unwrap_or_default(),
             )
             .await?
             .map(Into::into))
@@ -731,16 +765,17 @@ impl GraphQLClient {
     /// will also fetch dynamic fields on wrapped objects.
     ///
     /// This returns [`Page`] of [`DynamicFieldOutput`]s.
+    #[uniffi::method(default(pagination_filter = None))]
     pub async fn dynamic_fields(
         &self,
         address: &Address,
-        pagination_filter: PaginationFilter,
+        pagination_filter: Option<PaginationFilter>,
     ) -> Result<DynamicFieldOutputPage> {
         Ok(self
             .0
             .read()
             .await
-            .dynamic_fields(**address, pagination_filter)
+            .dynamic_fields(**address, pagination_filter.unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -779,7 +814,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .dry_run_tx(&tx.0, skip_checks)
+            .dry_run_tx(&tx.0, skip_checks.unwrap_or(false))
             .await?
             .into())
     }
@@ -804,7 +839,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.into())
+            .dry_run_tx_kind(&tx_kind.0, skip_checks.unwrap_or(false), tx_meta.into())
             .await?
             .into())
     }
