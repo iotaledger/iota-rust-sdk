@@ -69,10 +69,10 @@ async fn main() -> Result<()> {
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to unstake iota: {err}");
+        anyhow::bail!("Failed to unstake: {err}");
     }
 
-    println!("Successfully unstaked iota!");
+    println!("Successfully unstaked!");
 
     Ok(())
 }

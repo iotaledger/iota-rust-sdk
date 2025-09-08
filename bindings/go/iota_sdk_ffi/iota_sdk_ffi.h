@@ -4016,6 +4016,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(void* obj
 void* uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(void* object_id, uint64_t version, void* digest, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_PURE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_PURE
+void* uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure(RustBuffer bytes, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_RECEIVING
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_RECEIVING
 void* uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving(void* object_id, uint64_t version, void* digest, RustCallStatus *out_status
@@ -8568,6 +8573,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable(
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_OWNED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_OWNED
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_PURE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_PURE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure(void
     
 );
 #endif

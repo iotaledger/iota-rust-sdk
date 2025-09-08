@@ -2191,6 +2191,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3429,6 +3431,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object_id(
 fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving(
 ): Short
@@ -4958,6 +4962,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object_id(`objectId`
 fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7159,6 +7165,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned() != 26285.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure() != 7951.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving() != 50820.toShort()) {
@@ -38039,6 +38048,16 @@ open class UnresolvedInput: Disposable, AutoCloseable, UnresolvedInputInterface
     }
     
 
+         fun `newPure`(`bytes`: kotlin.ByteArray): UnresolvedInput {
+            return FfiConverterTypeUnresolvedInput.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure(
+        FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
         
     /**
      * Return a receiving kind of object with all required fields.
@@ -43887,7 +43906,7 @@ data class Function (
     /**
      * The type arguments for the function.
      */
-    var `typeArgs`: List<TypeTag>
+    var `typeArgs`: List<TypeTag> = listOf()
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here

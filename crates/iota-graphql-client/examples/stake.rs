@@ -4,20 +4,16 @@
 use std::str::FromStr;
 
 use anyhow::{Context, Result};
-use base64ct::Encoding;
 use iota_graphql_client::Client;
-use iota_transaction_builder::{
-    Function, TransactionBuilder,
-    unresolved::{Input, InputKind, Value},
-};
+use iota_transaction_builder::{Function, TransactionBuilder, unresolved::Input};
 use iota_types::{Address, Identifier, ObjectId};
-use rand::SeedableRng;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let client = Client::new_devnet();
 
-    let my_address = Address::generate(rand::rngs::StdRng::seed_from_u64(1));
+    let my_address =
+        Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
 
     let validator = client
         .active_validators(None, Default::default())
@@ -50,13 +46,7 @@ async fn main() -> Result<()> {
     let inputs = vec![
         builder.input(Input::shared(ObjectId::from_str("0x5")?, 1, true)),
         builder.input(Input::from(&coin).with_owned_kind()),
-        builder.input(Input {
-            kind: Some(InputKind::Pure),
-            value: Some(Value::String(base64ct::Base64::encode_string(
-                validator.address.address.as_bytes(),
-            ))),
-            ..Default::default()
-        }),
+        builder.input(Input::pure(&validator.address.address)?),
     ];
     builder.move_call(
         Function::new(
@@ -80,7 +70,7 @@ async fn main() -> Result<()> {
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to stake iota: {err}");
+        anyhow::bail!("Failed to stake: {err}");
     }
 
     println!("Successfully staked!");

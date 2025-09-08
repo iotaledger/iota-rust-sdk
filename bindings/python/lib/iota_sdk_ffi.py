@@ -1685,6 +1685,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned() != 26285:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure() != 7951:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving() != 50820:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared() != 41623:
@@ -5573,6 +5575,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint64,
@@ -8312,6 +8319,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutabl
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving.restype = ctypes.c_uint16
@@ -10117,11 +10127,14 @@ class Function:
     The type arguments for the function.
     """
 
-    def __init__(self, *, package: "Address", module: "Identifier", function: "Identifier", type_args: "typing.List[TypeTag]"):
+    def __init__(self, *, package: "Address", module: "Identifier", function: "Identifier", type_args: "typing.List[TypeTag]" = _DEFAULT):
         self.package = package
         self.module = module
         self.function = function
-        self.type_args = type_args
+        if type_args is _DEFAULT:
+            self.type_args = []
+        else:
+            self.type_args = type_args
 
     def __str__(self):
         return "Function(package={}, module={}, function={}, type_args={})".format(self.package, self.module, self.function, self.type_args)
@@ -36001,6 +36014,15 @@ class UnresolvedInput():
         _UniffiConverterTypeObjectId.lower(object_id),
         _UniffiConverterUInt64.lower(version),
         _UniffiConverterTypeDigest.lower(digest))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_pure(cls, bytes: "bytes"):
+        _UniffiConverterBytes.check_lower(bytes)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure,
+        _UniffiConverterBytes.lower(bytes))
         return cls._make_instance_(pointer)
 
     @classmethod
