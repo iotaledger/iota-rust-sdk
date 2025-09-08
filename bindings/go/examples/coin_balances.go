@@ -25,13 +25,7 @@ func main() {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
-	pagination := sdk.PaginationFilter{
-		Direction: sdk.DirectionForward,
-		Cursor:    nil,
-		Limit:     nil,
-	}
-
-	coins, err := client.Coins(address, pagination, nil)
+	coins, err := client.Coins(address, nil, nil)
 	if !isNilError(err) {
 		log.Fatalf("Failed to get coins: %v", err)
 	}

@@ -12,7 +12,7 @@ async def main():
         "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f"
     )
 
-    coins = await client.coins(address, PaginationFilter(direction=Direction.FORWARD))
+    coins = await client.coins(address)
     for coin in coins.data:
         print(f"Coin = {coin.id().to_hex()} Balance = {coin.balance()}")
 

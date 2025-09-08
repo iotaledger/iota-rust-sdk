@@ -8,10 +8,10 @@ use iota_graphql_client::{
     pagination::{Direction, PaginationFilter},
     query_types::{
         Base64, BigInt, Feature, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant,
-        MoveField, MoveFunction, MoveFunctionConnection, MoveFunctionTypeParameter, MoveObject,
-        MoveStructConnection, MoveStructQuery, MoveStructTypeParameter, MoveVisibility,
-        OpenMoveType, PageInfo, ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigs,
-        ServiceConfig, TransactionBlockKindInput, ValidatorCredentials,
+        MoveField, MoveFunctionTypeParameter, MoveObject, MoveStructConnection, MoveStructQuery,
+        MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo, ProtocolConfigAttr,
+        ProtocolConfigFeatureFlag, ProtocolConfigs, ServiceConfig, TransactionBlockKindInput,
+        ValidatorCredentials,
     },
 };
 use iota_types::{Digest, Identifier, StructTag};
@@ -448,8 +448,11 @@ impl From<EventFilter> for iota_graphql_client::query_types::EventFilter {
 
 #[derive(uniffi::Record)]
 pub struct ObjectFilter {
+    #[uniffi(default = None)]
     pub type_tag: Option<String>,
+    #[uniffi(default = None)]
     pub owner: Option<Arc<Address>>,
+    #[uniffi(default = None)]
     pub object_ids: Option<Vec<Arc<ObjectId>>>,
 }
 
@@ -484,8 +487,10 @@ pub struct DynamicFieldOutput {
     /// The name of the dynamic field
     pub name: DynamicFieldName,
     /// The dynamic field value typename and bcs
+    #[uniffi(default = None)]
     pub value: Option<DynamicFieldValue>,
     /// The json representation of the dynamic field value object
+    #[uniffi(default = None)]
     pub value_as_json: Option<serde_json::Value>,
 }
 
@@ -518,6 +523,7 @@ pub struct DynamicFieldName {
     /// The bcs bytes of this dynamic field name
     pub bcs: Vec<u8>,
     /// The json representation of the dynamic field name
+    #[uniffi(default = None)]
     pub json: Option<serde_json::Value>,
 }
 
@@ -571,59 +577,81 @@ impl From<DynamicFieldValue> for iota_graphql_client::DynamicFieldValue {
 pub struct Validator {
     /// The APY of this validator in basis points.
     /// To get the APY in percentage, divide by 100.
+    #[uniffi(default = None)]
     pub apy: Option<i32>,
     /// The validator's address.
     pub address: Arc<Address>,
     /// The fee charged by the validator for staking services.
+    #[uniffi(default = None)]
     pub commission_rate: Option<i32>,
     /// Validator's credentials.
+    #[uniffi(default = None)]
     pub credentials: Option<ValidatorCredentials>,
     /// Validator's description.
+    #[uniffi(default = None)]
     pub description: Option<String>,
     /// Number of exchange rates in the table.
+    #[uniffi(default = None)]
     pub exchange_rates_size: Option<u64>,
     /// The reference gas price for this epoch.
+    #[uniffi(default = None)]
     pub gas_price: Option<u64>,
     /// Validator's name.
+    #[uniffi(default = None)]
     pub name: Option<String>,
     /// Validator's url containing their custom image.
+    #[uniffi(default = None)]
     pub image_url: Option<String>,
     /// The proposed next epoch fee for the validator's staking services.
+    #[uniffi(default = None)]
     pub next_epoch_commission_rate: Option<i32>,
     /// Validator's credentials for the next epoch.
+    #[uniffi(default = None)]
     pub next_epoch_credentials: Option<ValidatorCredentials>,
     /// The validator's gas price quote for the next epoch.
+    #[uniffi(default = None)]
     pub next_epoch_gas_price: Option<u64>,
     /// The total number of IOTA tokens in this pool plus
     /// the pending stake amount for this epoch.
+    #[uniffi(default = None)]
     pub next_epoch_stake: Option<u64>,
     /// The validator's current valid `Cap` object. Validators can delegate
     /// the operation ability to another address. The address holding this `Cap`
     /// object can then update the reference gas price and tallying rule on
     /// behalf of the validator.
+    #[uniffi(default = None)]
     pub operation_cap: Option<Vec<u8>>,
     /// Pending pool token withdrawn during the current epoch, emptied at epoch
     /// boundaries.
+    #[uniffi(default = None)]
     pub pending_pool_token_withdraw: Option<u64>,
     /// Pending stake amount for this epoch.
+    #[uniffi(default = None)]
     pub pending_stake: Option<u64>,
     /// Pending stake withdrawn during the current epoch, emptied at epoch
     /// boundaries.
+    #[uniffi(default = None)]
     pub pending_total_iota_withdraw: Option<u64>,
     /// Total number of pool tokens issued by the pool.
+    #[uniffi(default = None)]
     pub pool_token_balance: Option<u64>,
     /// Validator's homepage URL.
+    #[uniffi(default = None)]
     pub project_url: Option<String>,
     /// The epoch stake rewards will be added here at the end of each epoch.
+    #[uniffi(default = None)]
     pub rewards_pool: Option<u64>,
     /// The epoch at which this pool became active.
+    #[uniffi(default = None)]
     pub staking_pool_activation_epoch: Option<u64>,
     /// The ID of this validator's `0x3::staking_pool::StakingPool`.
     pub staking_pool_id: Arc<ObjectId>,
     /// The total number of IOTA tokens in this pool.
+    #[uniffi(default = None)]
     pub staking_pool_iota_balance: Option<u64>,
     /// The voting power of this validator in basis points (e.g., 100 = 1%
     /// voting power).
+    #[uniffi(default = None)]
     pub voting_power: Option<i32>,
 }
 
@@ -711,12 +739,19 @@ impl From<Validator> for iota_graphql_client::query_types::Validator {
 /// The credentials related fields associated with a validator.
 #[uniffi::remote(Record)]
 pub struct ValidatorCredentials {
+    #[uniffi(default = None)]
     pub authority_pub_key: Option<Base64>,
+    #[uniffi(default = None)]
     pub network_pub_key: Option<Base64>,
+    #[uniffi(default = None)]
     pub protocol_pub_key: Option<Base64>,
+    #[uniffi(default = None)]
     pub proof_of_possession: Option<Base64>,
+    #[uniffi(default = None)]
     pub net_address: Option<String>,
+    #[uniffi(default = None)]
     pub p2p_address: Option<String>,
+    #[uniffi(default = None)]
     pub primary_address: Option<String>,
 }
 
@@ -914,19 +949,35 @@ impl From<CoinMetadata> for iota_graphql_client::query_types::CoinMetadata {
     }
 }
 
-#[uniffi::remote(Record)]
-pub struct MoveFunction {
-    #[uniffi(default = None)]
-    pub is_entry: Option<bool>,
-    pub name: String,
-    #[uniffi(default = None)]
-    pub parameters: Option<Vec<OpenMoveType>>,
-    #[uniffi(default = None)]
-    pub return_: Option<Vec<OpenMoveType>>,
-    #[uniffi(default = None)]
-    pub type_parameters: Option<Vec<MoveFunctionTypeParameter>>,
-    #[uniffi(default = None)]
-    pub visibility: Option<MoveVisibility>,
+#[derive(derive_more::From, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Display)]
+pub struct MoveFunction(iota_graphql_client::query_types::MoveFunction);
+
+#[uniffi::export]
+impl MoveFunction {
+    pub fn is_entry(&self) -> bool {
+        self.0.is_entry.is_some_and(|v| v)
+    }
+
+    pub fn name(&self) -> String {
+        self.0.name.clone()
+    }
+
+    pub fn parameters(&self) -> Option<Vec<OpenMoveType>> {
+        self.0.parameters.clone()
+    }
+
+    pub fn return_type(&self) -> Option<Vec<OpenMoveType>> {
+        self.0.return_.clone()
+    }
+
+    pub fn type_parameters(&self) -> Option<Vec<MoveFunctionTypeParameter>> {
+        self.0.type_parameters.clone()
+    }
+
+    pub fn visibility(&self) -> Option<MoveVisibility> {
+        self.0.visibility
+    }
 }
 
 #[uniffi::remote(Enum)]
@@ -972,7 +1023,7 @@ impl From<iota_graphql_client::query_types::MoveModule> for MoveModule {
             file_format_version: value.file_format_version,
             enums: value.enums,
             friends: value.friends.into(),
-            functions: value.functions,
+            functions: value.functions.map(Into::into),
             structs: value.structs,
         }
     }
@@ -984,7 +1035,7 @@ impl From<MoveModule> for iota_graphql_client::query_types::MoveModule {
             file_format_version: value.file_format_version,
             enums: value.enums,
             friends: value.friends.into(),
-            functions: value.functions,
+            functions: value.functions.map(Into::into),
             structs: value.structs,
         }
     }
@@ -1017,6 +1068,7 @@ impl From<MoveModuleConnection> for iota_graphql_client::query_types::MoveModule
 #[derive(uniffi::Record)]
 pub struct MovePackageQuery {
     pub address: Arc<Address>,
+    #[uniffi(default = None)]
     pub bcs: Option<Base64>,
 }
 
@@ -1072,14 +1124,18 @@ pub struct MoveStructTypeParameter {
 pub struct MoveField {
     pub name: String,
     #[uniffi::field(name = "type")]
+    #[uniffi(default = None)]
     pub type_: Option<OpenMoveType>,
 }
 
 #[uniffi::remote(Record)]
 pub struct MoveStructQuery {
+    #[uniffi(default = None)]
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
+    #[uniffi(default = None)]
     pub fields: Option<Vec<MoveField>>,
+    #[uniffi(default = None)]
     pub type_parameters: Option<Vec<MoveStructTypeParameter>>,
 }
 
@@ -1089,10 +1145,34 @@ pub struct MoveStructConnection {
     pub nodes: Vec<MoveStructQuery>,
 }
 
-#[uniffi::remote(Record)]
+#[derive(uniffi::Record)]
 pub struct MoveFunctionConnection {
-    pub nodes: Vec<MoveFunction>,
+    pub nodes: Vec<Arc<MoveFunction>>,
     pub page_info: PageInfo,
+}
+
+impl From<iota_graphql_client::query_types::MoveFunctionConnection> for MoveFunctionConnection {
+    fn from(value: iota_graphql_client::query_types::MoveFunctionConnection) -> Self {
+        Self {
+            nodes: value
+                .nodes
+                .iter()
+                .cloned()
+                .map(Into::into)
+                .map(Arc::new)
+                .collect(),
+            page_info: value.page_info,
+        }
+    }
+}
+
+impl From<MoveFunctionConnection> for iota_graphql_client::query_types::MoveFunctionConnection {
+    fn from(value: MoveFunctionConnection) -> Self {
+        Self {
+            nodes: value.nodes.iter().map(|v| v.0.clone()).collect(),
+            page_info: value.page_info,
+        }
+    }
 }
 
 #[uniffi::remote(Record)]
@@ -1103,6 +1183,7 @@ pub struct MoveEnumConnection {
 
 #[uniffi::remote(Record)]
 pub struct MoveEnumVariant {
+    #[uniffi(default = None)]
     pub fields: Option<Vec<MoveField>>,
     pub name: String,
 }
