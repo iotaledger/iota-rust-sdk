@@ -6,8 +6,7 @@ import asyncio
 
 async def main():
     client = GraphQlClient.new_devnet()
-    address = "0x0" # Example address, replace as needed
-    address = Address.from_hex(address)
+    address = Address.from_hex("0x0")
     objects_page = await client.objects(
         PaginationFilter(direction=Direction.FORWARD),
         ObjectFilter(owner=address)

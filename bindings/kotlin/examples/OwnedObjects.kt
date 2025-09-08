@@ -12,7 +12,7 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
         val address = Address.fromHex("0x0")
-        val objectFilter = ObjectFilter(typeTag = null, owner = address, objectIds = null)
+        val objectFilter = ObjectFilter(owner = address)
         val paginationFilter = PaginationFilter(direction = Direction.FORWARD)
         val objectsPage = client.objects(paginationFilter, objectFilter)
         println("Owned objects (${objectsPage.data.size}):")
