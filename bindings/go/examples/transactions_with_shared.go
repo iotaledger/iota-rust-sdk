@@ -25,7 +25,7 @@ func main() {
 		log.Fatalf("Failed to create object ID: %v", err)
 	}
 
-	transactions, err := client.Transactions(nil, &sdk.TransactionsFilter{InputObject: &sharedObjId})
+	transactions, err := client.Transactions(&sdk.TransactionsFilter{InputObject: &sharedObjId}, nil)
 	if !isNilError(err) {
 		log.Fatalf("Failed to get transactions: %v", err)
 	}

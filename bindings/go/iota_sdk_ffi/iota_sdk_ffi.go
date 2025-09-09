@@ -1334,7 +1334,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events()
 	})
-	if checksum != 11909 {
+	if checksum != 20245 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events: UniFFI API checksum mismatch")
 	}
@@ -1424,7 +1424,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects()
 	})
-	if checksum != 13039 {
+	if checksum != 14004 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects: UniFFI API checksum mismatch")
 	}
@@ -1451,7 +1451,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions()
 	})
-	if checksum != 47360 {
+	if checksum != 34213 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions: UniFFI API checksum mismatch")
 	}
@@ -1460,7 +1460,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages()
 	})
-	if checksum != 25568 {
+	if checksum != 45891 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages: UniFFI API checksum mismatch")
 	}
@@ -1568,7 +1568,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions()
 	})
-	if checksum != 8777 {
+	if checksum != 20537 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions: UniFFI API checksum mismatch")
 	}
@@ -1577,7 +1577,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects()
 	})
-	if checksum != 29942 {
+	if checksum != 46218 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects: UniFFI API checksum mismatch")
 	}
@@ -1586,7 +1586,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects()
 	})
-	if checksum != 27644 {
+	if checksum != 25858 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects: UniFFI API checksum mismatch")
 	}
@@ -11265,7 +11265,7 @@ type GraphQlClientInterface interface {
 	EpochTotalTransactionBlocks(epoch *uint64) (*uint64, error)
 	// Return a page of tuple (event, transaction digest) based on the
 	// (optional) event filter.
-	Events(paginationFilter *PaginationFilter, filter *EventFilter) (EventPage, error)
+	Events(filter *EventFilter, paginationFilter *PaginationFilter) (EventPage, error)
 	// Execute a transaction.
 	ExecuteTx(signatures []*UserSignature, tx *Transaction) (**TransactionEffects, error)
 	// Return the sequence number of the latest checkpoint that has been
@@ -11315,7 +11315,7 @@ type GraphQlClientInterface interface {
 	//
 	// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
 	// ```
-	Objects(paginationFilter *PaginationFilter, filter *ObjectFilter) (ObjectPage, error)
+	Objects(filter *ObjectFilter, paginationFilter *PaginationFilter) (ObjectPage, error)
 	// The package corresponding to the given address (at the optionally given
 	// version). When no version is given, the package is loaded directly
 	// from the address given. Otherwise, the address is translated before
@@ -11335,7 +11335,7 @@ type GraphQlClientInterface interface {
 	// Fetch all versions of package at address (packages that share this
 	// package's original ID), optionally bounding the versions exclusively
 	// from below with afterVersion, or from above with beforeVersion.
-	PackageVersions(address *Address, paginationFilter *PaginationFilter, afterVersion *uint64, beforeVersion *uint64) (MovePackagePage, error)
+	PackageVersions(address *Address, afterVersion *uint64, beforeVersion *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error)
 	// The Move packages that exist in the network, optionally filtered to be
 	// strictly before beforeCheckpoint and/or strictly after
 	// afterCheckpoint.
@@ -11343,7 +11343,7 @@ type GraphQlClientInterface interface {
 	// This query returns all versions of a given user package that appear
 	// between the specified checkpoints, but only records the latest
 	// versions of system packages.
-	Packages(paginationFilter *PaginationFilter, afterCheckpoint *uint64, beforeCheckpoint *uint64) (MovePackagePage, error)
+	Packages(afterCheckpoint *uint64, beforeCheckpoint *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error)
 	// Get the protocol configuration.
 	ProtocolConfig(version *uint64) (*ProtocolConfigs, error)
 	// Get the reference gas price for the provided epoch or the last known one
@@ -11376,12 +11376,12 @@ type GraphQlClientInterface interface {
 	// Get a transaction's effects by its digest.
 	TransactionEffects(digest *Digest) (**TransactionEffects, error)
 	// Get a page of transactions based on the provided filters.
-	Transactions(paginationFilter *PaginationFilter, filter *TransactionsFilter) (SignedTransactionPage, error)
+	Transactions(filter *TransactionsFilter, paginationFilter *PaginationFilter) (SignedTransactionPage, error)
 	// Get a page of transactions' data and effects based on the provided
 	// filters.
-	TransactionsDataEffects(paginationFilter *PaginationFilter, filter *TransactionsFilter) (TransactionDataEffectsPage, error)
+	TransactionsDataEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionDataEffectsPage, error)
 	// Get a page of transactions' effects based on the provided filters.
-	TransactionsEffects(paginationFilter *PaginationFilter, filter *TransactionsFilter) (TransactionEffectsPage, error)
+	TransactionsEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionEffectsPage, error)
 }
 // The GraphQL client for interacting with the IOTA blockchain.
 type GraphQlClient struct {
@@ -11975,7 +11975,7 @@ func (_self *GraphQlClient) EpochTotalTransactionBlocks(epoch *uint64) (*uint64,
 
 // Return a page of tuple (event, transaction digest) based on the
 // (optional) event filter.
-func (_self *GraphQlClient) Events(paginationFilter *PaginationFilter, filter *EventFilter) (EventPage, error) {
+func (_self *GraphQlClient) Events(filter *EventFilter, paginationFilter *PaginationFilter) (EventPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -11992,7 +11992,7 @@ func (_self *GraphQlClient) Events(paginationFilter *PaginationFilter, filter *E
 			return FfiConverterEventPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(
-		_pointer,FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalEventFilterINSTANCE.Lower(filter)),
+		_pointer,FfiConverterOptionalEventFilterINSTANCE.Lower(filter), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12323,7 +12323,7 @@ func (_self *GraphQlClient) ObjectBcs(objectId *ObjectId) (*[]byte, error) {
 //
 // let owned_objects = client.objects(None, None, Some(filter), None, None).await;
 // ```
-func (_self *GraphQlClient) Objects(paginationFilter *PaginationFilter, filter *ObjectFilter) (ObjectPage, error) {
+func (_self *GraphQlClient) Objects(filter *ObjectFilter, paginationFilter *PaginationFilter) (ObjectPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12340,7 +12340,7 @@ func (_self *GraphQlClient) Objects(paginationFilter *PaginationFilter, filter *
 			return FfiConverterObjectPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(
-		_pointer,FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalObjectFilterINSTANCE.Lower(filter)),
+		_pointer,FfiConverterOptionalObjectFilterINSTANCE.Lower(filter), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12433,7 +12433,7 @@ func (_self *GraphQlClient) PackageLatest(address *Address) (**MovePackage, erro
 // Fetch all versions of package at address (packages that share this
 // package's original ID), optionally bounding the versions exclusively
 // from below with afterVersion, or from above with beforeVersion.
-func (_self *GraphQlClient) PackageVersions(address *Address, paginationFilter *PaginationFilter, afterVersion *uint64, beforeVersion *uint64) (MovePackagePage, error) {
+func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion *uint64, beforeVersion *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12450,7 +12450,7 @@ func (_self *GraphQlClient) PackageVersions(address *Address, paginationFilter *
 			return FfiConverterMovePackagePageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
-		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalUint64INSTANCE.Lower(afterVersion), FfiConverterOptionalUint64INSTANCE.Lower(beforeVersion)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalUint64INSTANCE.Lower(afterVersion), FfiConverterOptionalUint64INSTANCE.Lower(beforeVersion), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12471,7 +12471,7 @@ func (_self *GraphQlClient) PackageVersions(address *Address, paginationFilter *
 // This query returns all versions of a given user package that appear
 // between the specified checkpoints, but only records the latest
 // versions of system packages.
-func (_self *GraphQlClient) Packages(paginationFilter *PaginationFilter, afterCheckpoint *uint64, beforeCheckpoint *uint64) (MovePackagePage, error) {
+func (_self *GraphQlClient) Packages(afterCheckpoint *uint64, beforeCheckpoint *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12488,7 +12488,7 @@ func (_self *GraphQlClient) Packages(paginationFilter *PaginationFilter, afterCh
 			return FfiConverterMovePackagePageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(
-		_pointer,FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalUint64INSTANCE.Lower(afterCheckpoint), FfiConverterOptionalUint64INSTANCE.Lower(beforeCheckpoint)),
+		_pointer,FfiConverterOptionalUint64INSTANCE.Lower(afterCheckpoint), FfiConverterOptionalUint64INSTANCE.Lower(beforeCheckpoint), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12860,7 +12860,7 @@ func (_self *GraphQlClient) TransactionEffects(digest *Digest) (**TransactionEff
 }
 
 // Get a page of transactions based on the provided filters.
-func (_self *GraphQlClient) Transactions(paginationFilter *PaginationFilter, filter *TransactionsFilter) (SignedTransactionPage, error) {
+func (_self *GraphQlClient) Transactions(filter *TransactionsFilter, paginationFilter *PaginationFilter) (SignedTransactionPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12877,7 +12877,7 @@ func (_self *GraphQlClient) Transactions(paginationFilter *PaginationFilter, fil
 			return FfiConverterSignedTransactionPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(
-		_pointer,FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalTransactionsFilterINSTANCE.Lower(filter)),
+		_pointer,FfiConverterOptionalTransactionsFilterINSTANCE.Lower(filter), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12893,7 +12893,7 @@ func (_self *GraphQlClient) Transactions(paginationFilter *PaginationFilter, fil
 
 // Get a page of transactions' data and effects based on the provided
 // filters.
-func (_self *GraphQlClient) TransactionsDataEffects(paginationFilter *PaginationFilter, filter *TransactionsFilter) (TransactionDataEffectsPage, error) {
+func (_self *GraphQlClient) TransactionsDataEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionDataEffectsPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12910,7 +12910,7 @@ func (_self *GraphQlClient) TransactionsDataEffects(paginationFilter *Pagination
 			return FfiConverterTransactionDataEffectsPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(
-		_pointer,FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalTransactionsFilterINSTANCE.Lower(filter)),
+		_pointer,FfiConverterOptionalTransactionsFilterINSTANCE.Lower(filter), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12925,7 +12925,7 @@ func (_self *GraphQlClient) TransactionsDataEffects(paginationFilter *Pagination
 }
 
 // Get a page of transactions' effects based on the provided filters.
-func (_self *GraphQlClient) TransactionsEffects(paginationFilter *PaginationFilter, filter *TransactionsFilter) (TransactionEffectsPage, error) {
+func (_self *GraphQlClient) TransactionsEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionEffectsPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12942,7 +12942,7 @@ func (_self *GraphQlClient) TransactionsEffects(paginationFilter *PaginationFilt
 			return FfiConverterTransactionEffectsPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(
-		_pointer,FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalTransactionsFilterINSTANCE.Lower(filter)),
+		_pointer,FfiConverterOptionalTransactionsFilterINSTANCE.Lower(filter), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
