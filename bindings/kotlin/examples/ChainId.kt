@@ -9,7 +9,6 @@ fun main() = runBlocking {
         val client = GraphQlClient.newDevnet()
         val chainId = client.chainId()
         println("Chain ID: $chainId")
-
     } catch (e: Exception) {
         e.printStackTrace()
     }
