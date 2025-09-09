@@ -10,13 +10,6 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
-
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
@@ -26,7 +19,7 @@ func main() {
 	}
 
 	coins, err := client.Coins(address, nil, nil)
-	if !isNilError(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get coins: %v", err)
 	}
 
@@ -35,7 +28,7 @@ func main() {
 	}
 
 	balance, err := client.Balance(address, nil)
-	if !isNilError(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get balance: %v", err)
 	}
 	fmt.Printf("Total Balance = %d\n", *balance)
@@ -47,7 +40,7 @@ func main() {
 	}
 	txFilter := sdk.TransactionsFilter{
 		AtCheckpoint: &atCheckpoint,
-		InputObject: &inputObject,
+		InputObject:  &inputObject,
 	}
 	eventFilter := sdk.EventFilter{
 		Sender: &address,

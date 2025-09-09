@@ -10,13 +10,6 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
-
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
@@ -25,8 +18,8 @@ func main() {
 		log.Fatalf("Failed to create object ID: %v", err)
 	}
 
-	transactions, err := client.Transactions(nil, &sdk.TransactionsFilter{InputObject: &sharedObjId})
-	if !isNilError(err) {
+	transactions, err := client.Transactions(&sdk.TransactionsFilter{InputObject: &sharedObjId}, nil)
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get transactions: %v", err)
 	}
 

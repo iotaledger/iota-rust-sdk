@@ -118,12 +118,12 @@ go-example: ## Run a specific Go example. Usage: make go-example example
 go-example:
 	@printf "\nRunning Go example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/go/examples; \
-	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS)).go || exit $$?; \
+	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS))/main.go || exit $$?; \
 	cd -
 
 .PHONY: go-examples
 go-examples: ## Run all Go bindings examples
-	@for example in $$(find bindings/go/examples -name "*.go" -exec basename {} .go \;); do \
+	@for example in $$(find bindings/go/examples/* -type d -exec basename {} \;); do \
 		$(MAKE) go-example "$$example" || exit $$?; \
 	done
 
