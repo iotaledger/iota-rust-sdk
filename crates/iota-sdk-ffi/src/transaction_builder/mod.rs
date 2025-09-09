@@ -299,6 +299,7 @@ pub struct Function {
     /// The function name.
     pub function: Arc<Identifier>,
     /// The type arguments for the function.
+    #[uniffi(default = [])]
     pub type_args: Vec<Arc<TypeTag>>,
 }
 

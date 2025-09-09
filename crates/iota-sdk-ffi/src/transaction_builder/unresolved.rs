@@ -74,6 +74,13 @@ impl UnresolvedInput {
         ))
     }
 
+    #[uniffi::constructor]
+    pub fn new_pure(bytes: &[u8]) -> Self {
+        Self(iota_transaction_builder::unresolved::Input::pure_bytes(
+            bytes,
+        ))
+    }
+
     /// Return an object with only its unique identifier.
     #[uniffi::constructor]
     pub fn by_id(object_id: &ObjectId) -> Self {

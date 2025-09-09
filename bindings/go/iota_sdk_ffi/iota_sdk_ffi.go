@@ -5868,6 +5868,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure()
+	})
+	if checksum != 7951 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving()
 	})
 	if checksum != 50820 {
@@ -20859,6 +20868,12 @@ func UnresolvedInputNewImmutable(objectId *ObjectId, version uint64, digest *Dig
 func UnresolvedInputNewOwned(objectId *ObjectId, version uint64, digest *Digest) *UnresolvedInput {
 	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version), FfiConverterDigestINSTANCE.Lower(digest),_uniffiStatus)
+	}))
+}
+
+func UnresolvedInputNewPure(bytes []byte) *UnresolvedInput {
+	return FfiConverterUnresolvedInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
 	}))
 }
 
