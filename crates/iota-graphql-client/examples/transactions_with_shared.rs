@@ -3,8 +3,9 @@
 
 use std::str::FromStr;
 
-use anyhow::Result;
-use iota_graphql_client::{Client, pagination::PaginationFilter, query_types::TransactionsFilter};
+use iota_graphql_client::{
+    Client, error::Result, pagination::PaginationFilter, query_types::TransactionsFilter,
+};
 use iota_types::ObjectId;
 
 #[tokio::main]

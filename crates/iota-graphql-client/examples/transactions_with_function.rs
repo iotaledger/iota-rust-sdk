@@ -1,8 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use anyhow::Result;
-use iota_graphql_client::{Client, pagination::PaginationFilter, query_types::TransactionsFilter};
+use iota_graphql_client::{
+    Client, error::Result, pagination::PaginationFilter, query_types::TransactionsFilter,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
