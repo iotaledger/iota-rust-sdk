@@ -3,9 +3,7 @@
 
 use std::str::FromStr;
 
-use iota_graphql_client::{
-    Client, error::Result, pagination::PaginationFilter, query_types::TransactionsFilter,
-};
+use iota_graphql_client::{Client, error::Result, query_types::TransactionsFilter};
 use iota_types::ObjectId;
 
 #[tokio::main]
@@ -20,7 +18,7 @@ async fn main() -> Result<()> {
                 input_object: Some(shared_obj_id),
                 ..Default::default()
             },
-            PaginationFilter::default(),
+            Default::default(),
         )
         .await?;
 

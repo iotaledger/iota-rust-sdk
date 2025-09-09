@@ -2,6 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use base64ct::Encoding;
 use iota_types::{Address, Command, Digest, ObjectId, TransactionExpiration, Version};
 
 // A potentially unresolved user transaction. Note that one can construct a
@@ -180,6 +181,24 @@ impl Input {
             object_id: Some(object_id),
             version: Some(initial_shared_version),
             mutable: Some(mutable),
+            ..Default::default()
+        }
+    }
+
+    pub fn pure<T: serde::Serialize>(value: &T) -> Result<Self, crate::error::Error> {
+        Ok(Self {
+            kind: Some(InputKind::Pure),
+            value: Some(Value::String(base64ct::Base64::encode_string(
+                &bcs::to_bytes(value).map_err(crate::Error::Bcs)?,
+            ))),
+            ..Default::default()
+        })
+    }
+
+    pub fn pure_bytes(bytes: &[u8]) -> Self {
+        Self {
+            kind: Some(InputKind::Pure),
+            value: Some(Value::String(base64ct::Base64::encode_string(bytes))),
             ..Default::default()
         }
     }

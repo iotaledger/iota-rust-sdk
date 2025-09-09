@@ -677,7 +677,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_transaction_blocks() != 61978:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 11909:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 20245:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -697,15 +697,15 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 1970:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 13039:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14004:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() != 55024:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 47360:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 34213:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 25568:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 62867:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -729,11 +729,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction_effects() != 27010:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions() != 8777:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions() != 20537:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects() != 29942:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects() != 46218:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 27644:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1684,6 +1684,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable() != 12892:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned() != 26285:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure() != 7951:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving() != 50820:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5578,6 +5580,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint64,
@@ -8317,6 +8324,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutabl
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving.restype = ctypes.c_uint16
@@ -10122,11 +10132,14 @@ class Function:
     The type arguments for the function.
     """
 
-    def __init__(self, *, package: "Address", module: "Identifier", function: "Identifier", type_args: "typing.List[TypeTag]"):
+    def __init__(self, *, package: "Address", module: "Identifier", function: "Identifier", type_args: "typing.List[TypeTag]" = _DEFAULT):
         self.package = package
         self.module = module
         self.function = function
-        self.type_args = type_args
+        if type_args is _DEFAULT:
+            self.type_args = []
+        else:
+            self.type_args = type_args
 
     def __str__(self):
         return "Function(package={}, module={}, function={}, type_args={})".format(self.package, self.module, self.function, self.type_args)
@@ -25755,7 +25768,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def events(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,filter: "typing.Union[object, typing.Optional[EventFilter]]" = _DEFAULT):
+    def events(self, filter: "typing.Union[object, typing.Optional[EventFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Return a page of tuple (event, transaction digest) based on the
         (optional) event filter.
@@ -25831,7 +25844,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def objects(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,filter: "typing.Union[object, typing.Optional[ObjectFilter]]" = _DEFAULT):
+    def objects(self, filter: "typing.Union[object, typing.Optional[ObjectFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Return a page of objects based on the provided parameters.
 
@@ -25876,7 +25889,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def package_versions(self, address: "Address",pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,after_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def package_versions(self, address: "Address",after_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Fetch all versions of package at address (packages that share this
         package's original ID), optionally bounding the versions exclusively
@@ -25884,7 +25897,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def packages(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,after_checkpoint: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_checkpoint: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def packages(self, after_checkpoint: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_checkpoint: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         The Move packages that exist in the network, optionally filtered to be
         strictly before beforeCheckpoint and/or strictly after
@@ -25971,20 +25984,20 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def transactions(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT):
+    def transactions(self, filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Get a page of transactions based on the provided filters.
         """
 
         raise NotImplementedError
-    def transactions_data_effects(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT):
+    def transactions_data_effects(self, filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Get a page of transactions' data and effects based on the provided
         filters.
         """
 
         raise NotImplementedError
-    def transactions_effects(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT):
+    def transactions_effects(self, filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Get a page of transactions' effects based on the provided filters.
         """
@@ -26566,25 +26579,25 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def events(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,filter: "typing.Union[object, typing.Optional[EventFilter]]" = _DEFAULT) -> "EventPage":
+    async def events(self, filter: "typing.Union[object, typing.Optional[EventFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "EventPage":
         """
         Return a page of tuple (event, transaction digest) based on the
         (optional) event filter.
         """
 
-        if pagination_filter is _DEFAULT:
-            pagination_filter = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
-        
         if filter is _DEFAULT:
             filter = None
         _UniffiConverterOptionalTypeEventFilter.check_lower(filter)
         
+        if pagination_filter is _DEFAULT:
+            pagination_filter = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
+        
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter),
-        _UniffiConverterOptionalTypeEventFilter.lower(filter)
+        _UniffiConverterOptionalTypeEventFilter.lower(filter),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -26890,7 +26903,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def objects(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,filter: "typing.Union[object, typing.Optional[ObjectFilter]]" = _DEFAULT) -> "ObjectPage":
+    async def objects(self, filter: "typing.Union[object, typing.Optional[ObjectFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "ObjectPage":
         """
         Return a page of objects based on the provided parameters.
 
@@ -26910,19 +26923,19 @@ _UniffiConverterTypeSdkFfiError,
         ```
         """
 
-        if pagination_filter is _DEFAULT:
-            pagination_filter = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
-        
         if filter is _DEFAULT:
             filter = None
         _UniffiConverterOptionalTypeObjectFilter.check_lower(filter)
         
+        if pagination_filter is _DEFAULT:
+            pagination_filter = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
+        
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter),
-        _UniffiConverterOptionalTypeObjectFilter.lower(filter)
+        _UniffiConverterOptionalTypeObjectFilter.lower(filter),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -27004,7 +27017,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def package_versions(self, address: "Address",pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,after_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "MovePackagePage":
+    async def package_versions(self, address: "Address",after_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "MovePackagePage":
         """
         Fetch all versions of package at address (packages that share this
         package's original ID), optionally bounding the versions exclusively
@@ -27012,10 +27025,6 @@ _UniffiConverterTypeSdkFfiError,
         """
 
         _UniffiConverterTypeAddress.check_lower(address)
-        
-        if pagination_filter is _DEFAULT:
-            pagination_filter = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
         
         if after_version is _DEFAULT:
             after_version = None
@@ -27025,13 +27034,17 @@ _UniffiConverterTypeSdkFfiError,
             before_version = None
         _UniffiConverterOptionalUInt64.check_lower(before_version)
         
+        if pagination_filter is _DEFAULT:
+            pagination_filter = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
+        
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(address),
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter),
         _UniffiConverterOptionalUInt64.lower(after_version),
-        _UniffiConverterOptionalUInt64.lower(before_version)
+        _UniffiConverterOptionalUInt64.lower(before_version),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -27046,7 +27059,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def packages(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,after_checkpoint: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_checkpoint: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "MovePackagePage":
+    async def packages(self, after_checkpoint: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_checkpoint: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "MovePackagePage":
         """
         The Move packages that exist in the network, optionally filtered to be
         strictly before beforeCheckpoint and/or strictly after
@@ -27057,10 +27070,6 @@ _UniffiConverterTypeSdkFfiError,
         versions of system packages.
         """
 
-        if pagination_filter is _DEFAULT:
-            pagination_filter = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
-        
         if after_checkpoint is _DEFAULT:
             after_checkpoint = None
         _UniffiConverterOptionalUInt64.check_lower(after_checkpoint)
@@ -27069,12 +27078,16 @@ _UniffiConverterTypeSdkFfiError,
             before_checkpoint = None
         _UniffiConverterOptionalUInt64.check_lower(before_checkpoint)
         
+        if pagination_filter is _DEFAULT:
+            pagination_filter = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
+        
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter),
         _UniffiConverterOptionalUInt64.lower(after_checkpoint),
-        _UniffiConverterOptionalUInt64.lower(before_checkpoint)
+        _UniffiConverterOptionalUInt64.lower(before_checkpoint),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -27373,24 +27386,24 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def transactions(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT) -> "SignedTransactionPage":
+    async def transactions(self, filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "SignedTransactionPage":
         """
         Get a page of transactions based on the provided filters.
         """
 
-        if pagination_filter is _DEFAULT:
-            pagination_filter = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
-        
         if filter is _DEFAULT:
             filter = None
         _UniffiConverterOptionalTypeTransactionsFilter.check_lower(filter)
         
+        if pagination_filter is _DEFAULT:
+            pagination_filter = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
+        
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter),
-        _UniffiConverterOptionalTypeTransactionsFilter.lower(filter)
+        _UniffiConverterOptionalTypeTransactionsFilter.lower(filter),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -27405,25 +27418,25 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def transactions_data_effects(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT) -> "TransactionDataEffectsPage":
+    async def transactions_data_effects(self, filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "TransactionDataEffectsPage":
         """
         Get a page of transactions' data and effects based on the provided
         filters.
         """
 
-        if pagination_filter is _DEFAULT:
-            pagination_filter = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
-        
         if filter is _DEFAULT:
             filter = None
         _UniffiConverterOptionalTypeTransactionsFilter.check_lower(filter)
         
+        if pagination_filter is _DEFAULT:
+            pagination_filter = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
+        
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter),
-        _UniffiConverterOptionalTypeTransactionsFilter.lower(filter)
+        _UniffiConverterOptionalTypeTransactionsFilter.lower(filter),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -27438,24 +27451,24 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def transactions_effects(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT) -> "TransactionEffectsPage":
+    async def transactions_effects(self, filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "TransactionEffectsPage":
         """
         Get a page of transactions' effects based on the provided filters.
         """
 
-        if pagination_filter is _DEFAULT:
-            pagination_filter = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
-        
         if filter is _DEFAULT:
             filter = None
         _UniffiConverterOptionalTypeTransactionsFilter.check_lower(filter)
         
+        if pagination_filter is _DEFAULT:
+            pagination_filter = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
+        
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter),
-        _UniffiConverterOptionalTypeTransactionsFilter.lower(filter)
+        _UniffiConverterOptionalTypeTransactionsFilter.lower(filter),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -36015,6 +36028,15 @@ class UnresolvedInput():
         _UniffiConverterTypeObjectId.lower(object_id),
         _UniffiConverterUInt64.lower(version),
         _UniffiConverterTypeDigest.lower(digest))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_pure(cls, bytes: "bytes"):
+        _UniffiConverterBytes.check_lower(bytes)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure,
+        _UniffiConverterBytes.lower(bytes))
         return cls._make_instance_(pointer)
 
     @classmethod
