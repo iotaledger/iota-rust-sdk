@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 
-	"bindings/common"
 	sdk "bindings/iota_sdk_ffi"
 )
 
@@ -20,7 +19,7 @@ func main() {
 	}
 
 	transactions, err := client.Transactions(&sdk.TransactionsFilter{InputObject: &sharedObjId}, nil)
-	if !common.IsClientErr(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get transactions: %v", err)
 	}
 

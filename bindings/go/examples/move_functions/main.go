@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 
-	"bindings/common"
 	sdk "bindings/iota_sdk_ffi"
 )
 
@@ -20,7 +19,7 @@ func main() {
 	}
 
 	packageOpt, err := client.Package(packageAddress, nil)
-	if !common.IsClientErr(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get package: %v", err)
 	}
 	if packageOpt == nil {
@@ -38,7 +37,7 @@ func main() {
 			nil,
 			nil,
 		)
-		if !common.IsClientErr(err) {
+		if err.(*sdk.SdkFfiError) != nil {
 			log.Fatalf("Failed to get module: %v", err)
 		}
 		if moduleOpt == nil {

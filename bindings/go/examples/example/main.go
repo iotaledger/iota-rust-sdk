@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 
-	"bindings/common"
 	sdk "bindings/iota_sdk_ffi"
 )
 
@@ -20,7 +19,7 @@ func main() {
 	}
 
 	coins, err := client.Coins(address, nil, nil)
-	if !common.IsClientErr(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get coins: %v", err)
 	}
 
@@ -29,7 +28,7 @@ func main() {
 	}
 
 	balance, err := client.Balance(address, nil)
-	if !common.IsClientErr(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get balance: %v", err)
 	}
 	fmt.Printf("Total Balance = %d\n", *balance)

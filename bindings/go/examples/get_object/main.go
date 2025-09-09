@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"log"
 
-	"bindings/common"
 	sdk "bindings/iota_sdk_ffi"
 )
 
@@ -21,7 +20,7 @@ func main() {
 	}
 
 	objOpt, err := client.Object(objectID, nil)
-	if !common.IsClientErr(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get object contents: %v", err)
 	}
 	if objOpt == nil {

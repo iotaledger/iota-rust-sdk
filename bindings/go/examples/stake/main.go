@@ -6,7 +6,6 @@ package main
 import (
 	"log"
 
-	"bindings/common"
 	sdk "bindings/iota_sdk_ffi"
 )
 
@@ -18,8 +17,8 @@ func main() {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
-	validators, err := client.ActiveValidators(nil, &sdk.PaginationFilter{Direction: sdk.DirectionForward})
-	if !common.IsClientErr(err) {
+	validators, err := client.ActiveValidators(nil, nil)
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get active validators: %v", err)
 	}
 
@@ -41,7 +40,7 @@ func main() {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
 	coin, err := client.Object(coinObjId, nil)
-	if !common.IsClientErr(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get coin: %v", err)
 	}
 
@@ -50,7 +49,7 @@ func main() {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
 	gasCoin, err := client.Object(gasCoinObjId, nil)
-	if !common.IsClientErr(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get gas coin: %v", err)
 	}
 
@@ -91,7 +90,7 @@ func main() {
 	builder.SetSender(myAddress)
 	builder.SetGasBudget(50000000)
 	gasPrice, err := client.ReferenceGasPrice(nil)
-	if !common.IsClientErr(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 	builder.SetGasPrice(*gasPrice)
@@ -103,7 +102,7 @@ func main() {
 	}
 
 	res, err := client.DryRunTx(txn, nil)
-	if !common.IsClientErr(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 
