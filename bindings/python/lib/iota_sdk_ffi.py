@@ -461,6 +461,14 @@ def _uniffi_check_contract_api_version(lib):
         raise InternalError("UniFFI contract version mismatch: try cleaning and rebuilding your project")
 
 def _uniffi_check_api_checksums(lib):
+    if lib.uniffi_iota_sdk_ffi_checksum_func_base64_decode() != 57367:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_base64_encode() != 54791:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_hex_decode() != 35424:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_hex_encode() != 34343:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032:
@@ -1100,6 +1108,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules() != 23597:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize() != 39185:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest() != 52429:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5137,6 +5147,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_digest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6220,6 +6235,26 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_base64_decode.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_base64_decode.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_base64_encode.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_base64_encode.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_hex_decode.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_hex_decode.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_hex_encode.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_hex_encode.restype = _UniffiRustBuffer
 _UniffiLib.ffi_iota_sdk_ffi_rustbuffer_alloc.argtypes = (
     ctypes.c_uint64,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6488,6 +6523,18 @@ _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_void.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_void.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_base64_decode.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_base64_decode.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_base64_encode.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_base64_encode.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_hex_decode.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_hex_decode.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_hex_encode.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_hex_encode.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.restype = ctypes.c_uint16
@@ -7448,6 +7495,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest.restype = ctypes.c_uint16
@@ -34216,6 +34266,8 @@ class TransactionProtocol(typing.Protocol):
     ```
     """
 
+    def bcs_serialize(self, ):
+        raise NotImplementedError
     def digest(self, ):
         raise NotImplementedError
     def expiration(self, ):
@@ -34277,6 +34329,15 @@ class Transaction():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def bcs_serialize(self, ) -> "bytes":
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
     def digest(self, ) -> "Digest":
@@ -38447,6 +38508,34 @@ async def _uniffi_rust_call_async(rust_future, ffi_poll, ffi_complete, ffi_free,
     finally:
         ffi_free(rust_future)
 
+def base64_decode(input: "str") -> "bytes":
+    _UniffiConverterString.check_lower(input)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_base64_decode,
+        _UniffiConverterString.lower(input)))
+
+
+def base64_encode(input: "bytes") -> "str":
+    _UniffiConverterBytes.check_lower(input)
+    
+    return _UniffiConverterString.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_func_base64_encode,
+        _UniffiConverterBytes.lower(input)))
+
+
+def hex_decode(input: "str") -> "bytes":
+    _UniffiConverterString.check_lower(input)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_hex_decode,
+        _UniffiConverterString.lower(input)))
+
+
+def hex_encode(input: "bytes") -> "str":
+    _UniffiConverterBytes.check_lower(input)
+    
+    return _UniffiConverterString.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_func_hex_encode,
+        _UniffiConverterBytes.lower(input)))
+
+
 __all__ = [
     "InternalError",
     "CommandArgumentError",
@@ -38538,6 +38627,10 @@ __all__ = [
     "ValidatorPage",
     "ValidatorSet",
     "ZkLoginClaim",
+    "base64_decode",
+    "base64_encode",
+    "hex_decode",
+    "hex_encode",
     "Address",
     "Argument",
     "BatchSendStatus",

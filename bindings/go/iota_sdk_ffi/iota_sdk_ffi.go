@@ -360,6 +360,42 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_base64_decode()
+	})
+	if checksum != 57367 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_base64_decode: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_base64_encode()
+	})
+	if checksum != 54791 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_base64_encode: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_hex_decode()
+	})
+	if checksum != 35424 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_hex_decode: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_hex_encode()
+	})
+	if checksum != 34343 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_hex_encode: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes()
 	})
 	if checksum != 57710 {
@@ -3236,6 +3272,15 @@ func uniffiCheckChecksums() {
 	if checksum != 39738 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_systempackage_version: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize()
+	})
+	if checksum != 39185 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -19368,6 +19413,7 @@ func (_ FfiDestroyerSystemPackage) Destroy(value *SystemPackage) {
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
 type TransactionInterface interface {
+	BcsSerialize() ([]byte, error)
 	Digest() *Digest
 	Expiration() TransactionExpiration
 	GasPayment() GasPayment
@@ -19397,6 +19443,23 @@ func NewTransaction(kind *TransactionKind, sender *Address, gasPayment GasPaymen
 
 
 
+
+func (_self *Transaction) BcsSerialize() ([]byte, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Transaction")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 func (_self *Transaction) Digest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*Transaction")
@@ -33928,5 +33991,49 @@ func iota_sdk_ffi_uniffiFreeGorutine(data C.uint64_t) {
 
 	guard := handle.Value().(chan struct{})
 	guard <- struct{}{}
+}
+
+func Base64Decode(input string) ([]byte, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_func_base64_decode(FfiConverterStringINSTANCE.Lower(input),_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func Base64Encode(input []byte) string {
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_func_base64_encode(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus),
+	}
+	}))
+}
+
+func HexDecode(input string) ([]byte, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_func_hex_decode(FfiConverterStringINSTANCE.Lower(input),_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func HexEncode(input []byte) string {
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_func_hex_encode(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus),
+	}
+	}))
 }
 

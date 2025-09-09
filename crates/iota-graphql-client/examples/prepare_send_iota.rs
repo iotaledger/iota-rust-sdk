@@ -53,9 +53,20 @@ async fn main() -> Result<()> {
     );
     builder.add_gas_objects([Input::from(&gas_coin).with_owned_kind()]);
     let txn = builder.finish()?;
-    let txn_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn)?);
+
     println!("Signing Digest: {}", hex::encode(txn.signing_digest()));
-    println!("Txn Bytes: {txn_bytes}");
+    println!(
+        "Txn Bytes: {}",
+        base64ct::Base64::encode_string(&bcs::to_bytes(&txn)?)
+    );
+
+    let res = client.dry_run_tx(&txn, false).await?;
+
+    if let Some(err) = res.error {
+        anyhow::bail!("Failed to send IOTA: {err}");
+    }
+
+    println!("Send IOTA dry run was successful!");
 
     Ok(())
 }

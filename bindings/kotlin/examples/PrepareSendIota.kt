@@ -55,6 +55,10 @@ fun main() = runBlocking {
         builder.addGasObjects(listOf(UnresolvedInput.fromObject(gasCoin).withOwnedKind()))
 
         val txn = builder.finish()
+
+        println("Signing Digest: ${hexEncode(txn.signingDigest())}")
+        println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")
+
         val res = client.dryRunTx(txn, false)
 
         if (res.error != null) {
