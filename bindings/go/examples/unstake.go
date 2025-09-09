@@ -20,7 +20,7 @@ func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
 	stakedIotaType := "0x3::staking_pool::StakedIota"
-	stakedIotas, err := client.Objects(&sdk.PaginationFilter{Direction: sdk.DirectionForward}, &sdk.ObjectFilter{TypeTag: &stakedIotaType})
+	stakedIotas, err := client.Objects(&sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
 	if !isNilError(err) {
 		log.Fatalf("Failed to get staked iota: %v", err)
 	}
@@ -30,7 +30,7 @@ func main() {
 	stakedIota := stakedIotas.Data[0]
 
 	gasCoinType := sdk.StructTagGasCoin().String()
-	gasCoins, err := client.Objects(&sdk.PaginationFilter{Direction: sdk.DirectionForward}, &sdk.ObjectFilter{TypeTag: &gasCoinType, Owner: stakedIota.Owner().AsAddressOpt()})
+	gasCoins, err := client.Objects(&sdk.ObjectFilter{TypeTag: &gasCoinType, Owner: stakedIota.Owner().AsAddressOpt()}, nil)
 	if !isNilError(err) {
 		log.Fatalf("Failed to get gas coin: %v", err)
 	}

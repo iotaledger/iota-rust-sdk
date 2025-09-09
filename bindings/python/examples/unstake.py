@@ -17,7 +17,7 @@ async def main():
         staked_iota = staked_iotas.data[0]
 
         gas_coins = await client.objects(
-            filter=ObjectFilter(
+            ObjectFilter(
                 type_tag=str(StructTag.gas_coin()),
                 owner=staked_iota.owner().as_address(),
             )
