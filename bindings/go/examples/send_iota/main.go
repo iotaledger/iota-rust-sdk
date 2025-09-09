@@ -9,13 +9,6 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
-
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
@@ -37,7 +30,7 @@ func main() {
 	}
 
 	gasCoin, err := client.Object(gasCoinId, nil)
-	if !isNilError(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get gas coin: %v", err)
 	}
 
@@ -76,7 +69,7 @@ func main() {
 	builder.SetSender(senderAddress)
 	builder.SetGasBudget(50_000_000)
 	gasPrice, err := client.ReferenceGasPrice(nil)
-	if !isNilError(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 	builder.SetGasPrice(*gasPrice)
@@ -88,7 +81,7 @@ func main() {
 	}
 
 	res, err := client.DryRunTx(txn, nil)
-	if !isNilError(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run send IOTA: %v", err)
 	}
 	if res.Error != nil {
