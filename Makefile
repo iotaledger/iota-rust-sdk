@@ -64,21 +64,21 @@ clean-all: clean ## Clean all generated files, including those ignored by Git. F
 
 .PHONY: bindings
 bindings: ## Build all bindings
-	$(MAKE) go
-	$(MAKE) kotlin
-	$(MAKE) python
+	@$(MAKE) go
+	@$(MAKE) kotlin
+	@$(MAKE) python
 
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
-	$(MAKE) go-examples
-	$(MAKE) kotlin-examples
-	$(MAKE) python-examples
+	@$(MAKE) go-examples
+	@$(MAKE) kotlin-examples
+	@$(MAKE) python-examples
 
 .PHONY: bindings-example
 bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
-	$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
-	$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
-	$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
 
 # Build ffi crate and detect platform
 define build_binding
@@ -93,18 +93,21 @@ endef
 
 .PHONY: go
 go: ## Build Go bindings
-	$(build_binding) \
+	@printf "Building Go bindings...\n"
+	@$(build_binding) \
 	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format || exit $$?
 
 .PHONY: kotlin
 kotlin: ## Build Kotlin bindings
-	$(build_binding) \
+	@printf "Building Kotlin bindings...\n"
+	@$(build_binding) \
 	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
 
 .PHONY: python
 python: ## Build Python bindings
-	$(build_binding) \
+	@printf "Building Python bindings...\n"
+	@$(build_binding) \
 	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
 
@@ -113,7 +116,8 @@ go-example: ## Run a specific Go example. Usage: make go-example example
 %:
 	@true
 go-example:
-	cd bindings/go/examples; \
+	@printf "\nRunning Go example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@cd bindings/go/examples; \
 	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS)).go || exit $$?; \
 	cd -
 
@@ -128,7 +132,8 @@ kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example exa
 %:
 	@true
 kotlin-example:
-	cd bindings/kotlin; \
+	@printf "\nRunning Kotlin example \"$(word 2,$(MAKECMDGOALS))" \n \"
+	@cd bindings/kotlin; \
 	./gradlew build clean || exit $$?; \
 	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q || exit $$?; \
 	cd -
@@ -144,7 +149,8 @@ python-example: ## Run a specific Python example. Usage: make python-example exa
 %:
 	@true
 python-example:
-	PYTHONPATH=bindings/python python3 bindings/python/examples/$(word 2,$(MAKECMDGOALS)).py || exit $$?;
+	@printf "\nRunning Python example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@PYTHONPATH=bindings/python python3 bindings/python/examples/$(word 2,$(MAKECMDGOALS)).py|| exit $$?;
 
 .PHONY: python-examples
 python-examples: ## Run all Python bindings examples
@@ -154,5 +160,5 @@ python-examples: ## Run all Python bindings examples
 
 .PHONY: help
 help: ## Show this help
-	@echo "Available targets:"
+	@printf "Available targets:\n"
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)

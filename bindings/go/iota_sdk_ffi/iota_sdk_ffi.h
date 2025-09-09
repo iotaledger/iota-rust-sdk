@@ -1688,7 +1688,7 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_transaction_blo
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_EVENTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_EVENTS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(void* ptr, RustBuffer pagination_filter, RustBuffer filter
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(void* ptr, RustBuffer filter, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_EXECUTE_TX
@@ -1738,7 +1738,7 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_object_bcs(void* ptr, void*
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_OBJECTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_OBJECTS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(void* ptr, RustBuffer pagination_filter, RustBuffer filter
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(void* ptr, RustBuffer filter, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PACKAGE
@@ -1753,12 +1753,12 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_latest(void* ptr, v
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PACKAGE_VERSIONS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PACKAGE_VERSIONS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(void* ptr, void* address, RustBuffer pagination_filter, RustBuffer after_version, RustBuffer before_version
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(void* ptr, void* address, RustBuffer after_version, RustBuffer before_version, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PACKAGES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PACKAGES
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(void* ptr, RustBuffer pagination_filter, RustBuffer after_checkpoint, RustBuffer before_checkpoint
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(void* ptr, RustBuffer after_checkpoint, RustBuffer before_checkpoint, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PROTOCOL_CONFIG
@@ -1818,17 +1818,17 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction_effects(void* p
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(void* ptr, RustBuffer pagination_filter, RustBuffer filter
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(void* ptr, RustBuffer filter, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS_DATA_EFFECTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS_DATA_EFFECTS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(void* ptr, RustBuffer pagination_filter, RustBuffer filter
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(void* ptr, RustBuffer filter, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS_EFFECTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS_EFFECTS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(void* ptr, RustBuffer pagination_filter, RustBuffer filter
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(void* ptr, RustBuffer filter, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_IDENTIFIER
@@ -3979,6 +3979,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(void* ptr, RustCallStatus *ou
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_VECTOR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_VECTOR
 int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_UNIFFI_TRAIT_DISPLAY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_UNIFFI_TRAIT_DISPLAY
+RustBuffer uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_UNRESOLVEDINPUT

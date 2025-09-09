@@ -2,11 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import iota_sdk.Address
-import iota_sdk.Direction
 import iota_sdk.EventFilter
 import iota_sdk.GraphQlClient
 import iota_sdk.ObjectId
-import iota_sdk.PaginationFilter
 import iota_sdk.TransactionsFilter
 import kotlinx.coroutines.runBlocking
 
