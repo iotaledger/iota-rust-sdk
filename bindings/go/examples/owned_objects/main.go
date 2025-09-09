@@ -10,13 +10,6 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
-
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
@@ -32,8 +25,8 @@ func main() {
 		Direction: sdk.DirectionForward,
 	}
 
-	objectsPage, err := client.Objects(&paginationFilter, &objectFilter)
-	if !isNilError(err) {
+	objectsPage, err := client.Objects(&objectFilter, &paginationFilter)
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get owned objects: %v", err)
 	}
 	fmt.Printf("Owned objects (%d):\n", len(objectsPage.Data))

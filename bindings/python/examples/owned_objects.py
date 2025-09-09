@@ -8,7 +8,6 @@ async def main():
     client = GraphQlClient.new_devnet()
     address = Address.from_hex("0x0")
     objects_page = await client.objects(
-        PaginationFilter(direction=Direction.FORWARD),
         ObjectFilter(owner=address)
     )
     print(f"Owned objects({len(objects_page.data)}):")
