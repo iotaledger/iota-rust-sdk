@@ -134,7 +134,7 @@ pub enum TransactionKind {
 pub enum EndOfEpochTransactionKind {
     ChangeEpoch(ChangeEpoch),
     ChangeEpochV2(ChangeEpochV2),
-    ChangeEpochV3(ChangeEpochV3),
+    ChangeEpochV4(ChangeEpochV4),
     AuthenticatorStateCreate,
     AuthenticatorStateExpire(AuthenticatorStateExpire),
 }
@@ -378,7 +378,7 @@ pub struct ChangeEpochV2 {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(test, derive(test_strategy::Arbitrary))]
-pub struct ChangeEpochV3 {
+pub struct ChangeEpochV4 {
     /// The next (to become) epoch ID.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -419,9 +419,9 @@ pub struct ChangeEpochV3 {
     /// their package ID), and a list of their transitive dependencies.
     #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
-    /// Vector of active validator indices eligible to take part in committee
-    /// selection because they support the new, target protocol version.
-    pub eligible_active_validators: Vec<u64>,
+    /// Vector of scores relative to the past epoch performance of each
+    /// validator, ordered by the past epoch's validator index.
+    pub scores: Vec<u64>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

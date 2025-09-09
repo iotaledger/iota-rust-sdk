@@ -107,11 +107,11 @@ async fn main() -> Result<(), anyhow::Error> {
                                 got_epoch_change = true;
                             }
                         }
-                        IotaEndOfEpochTransactionKind::ChangeEpochV3(_change_epoch_v3) => {
+                        IotaEndOfEpochTransactionKind::ChangeEpochV4(_change_epoch_v4) => {
                             if !got_epoch_change {
                                 write_bs64_tx_to_file(
                                     &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
-                                    "change-epoch-v3",
+                                    "change-epoch-v4",
                                 )?;
                                 got_epoch_change = true;
                             }
