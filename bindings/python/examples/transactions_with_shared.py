@@ -14,7 +14,6 @@ async def main():
         )
 
         transactions = await client.transactions(
-            PaginationFilter(direction=Direction.FORWARD),
             TransactionsFilter(input_object=shared_obj_id),
         )
 

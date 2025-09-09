@@ -1688,7 +1688,7 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_transaction_blo
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_EVENTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_EVENTS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(void* ptr, RustBuffer pagination_filter, RustBuffer filter
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(void* ptr, RustBuffer filter, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_EXECUTE_TX
@@ -1753,7 +1753,7 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_object_bcs(void* ptr, void*
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_OBJECTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_OBJECTS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(void* ptr, RustBuffer pagination_filter, RustBuffer filter
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_objects(void* ptr, RustBuffer filter, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PACKAGE
@@ -1768,12 +1768,12 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_latest(void* ptr, v
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PACKAGE_VERSIONS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PACKAGE_VERSIONS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(void* ptr, void* address, RustBuffer pagination_filter, RustBuffer after_version, RustBuffer before_version
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(void* ptr, void* address, RustBuffer after_version, RustBuffer before_version, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PACKAGES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PACKAGES
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(void* ptr, RustBuffer pagination_filter, RustBuffer after_checkpoint, RustBuffer before_checkpoint
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(void* ptr, RustBuffer after_checkpoint, RustBuffer before_checkpoint, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_PROTOCOL_CONFIG
@@ -1833,17 +1833,17 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transaction_effects(void* p
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(void* ptr, RustBuffer pagination_filter, RustBuffer filter
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(void* ptr, RustBuffer filter, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS_DATA_EFFECTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS_DATA_EFFECTS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(void* ptr, RustBuffer pagination_filter, RustBuffer filter
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(void* ptr, RustBuffer filter, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS_EFFECTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_TRANSACTIONS_EFFECTS
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(void* ptr, RustBuffer pagination_filter, RustBuffer filter
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(void* ptr, RustBuffer filter, RustBuffer pagination_filter
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_IDENTIFIER
@@ -4081,6 +4081,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(void* ptr, RustCallStatus *ou
 int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_UNIFFI_TRAIT_DISPLAY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_UNIFFI_TRAIT_DISPLAY
+RustBuffer uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_UNRESOLVEDINPUT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_UNRESOLVEDINPUT
 void* uniffi_iota_sdk_ffi_fn_clone_unresolvedinput(void* ptr, RustCallStatus *out_status
@@ -4114,6 +4119,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(void* obj
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_OWNED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_OWNED
 void* uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(void* object_id, uint64_t version, void* digest, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_PURE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_PURE
+void* uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure(RustBuffer bytes, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_RECEIVING
@@ -8764,6 +8774,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable(
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_OWNED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_OWNED
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_PURE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UNRESOLVEDINPUT_NEW_PURE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure(void
     
 );
 #endif

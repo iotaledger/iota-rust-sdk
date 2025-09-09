@@ -27,6 +27,7 @@ url = "2.5.3"
 
 [dev-dependencies]
 hex = "0.4.3"
+iota-transaction-builder = { path = "../iota-transaction-builder" }
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde", "rand", "hash"] }
 rand = "0.8.5"
 tokio = { version = "1.40.0", features = ["full"] }

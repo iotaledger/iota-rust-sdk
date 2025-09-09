@@ -292,8 +292,8 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn events(
         &self,
-        pagination_filter: Option<PaginationFilter>,
         filter: Option<EventFilter>,
+        pagination_filter: Option<PaginationFilter>,
     ) -> Result<EventPage> {
         Ok(self
             .0
@@ -352,8 +352,8 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn objects(
         &self,
-        pagination_filter: Option<PaginationFilter>,
         filter: Option<ObjectFilter>,
+        pagination_filter: Option<PaginationFilter>,
     ) -> Result<ObjectPage> {
         Ok(self
             .0
@@ -431,9 +431,9 @@ impl GraphQLClient {
     pub async fn package_versions(
         &self,
         address: &Address,
-        pagination_filter: Option<PaginationFilter>,
         after_version: Option<u64>,
         before_version: Option<u64>,
+        pagination_filter: Option<PaginationFilter>,
     ) -> Result<MovePackagePage> {
         Ok(self
             .0
@@ -474,9 +474,9 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, after_checkpoint = None, before_checkpoint = None))]
     pub async fn packages(
         &self,
-        pagination_filter: Option<PaginationFilter>,
         after_checkpoint: Option<u64>,
         before_checkpoint: Option<u64>,
+        pagination_filter: Option<PaginationFilter>,
     ) -> Result<MovePackagePage> {
         Ok(self
             .0
@@ -540,8 +540,8 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions(
         &self,
-        pagination_filter: Option<PaginationFilter>,
         filter: Option<TransactionsFilter>,
+        pagination_filter: Option<PaginationFilter>,
     ) -> Result<SignedTransactionPage> {
         Ok(self
             .0
@@ -560,8 +560,8 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_effects(
         &self,
-        pagination_filter: Option<PaginationFilter>,
         filter: Option<TransactionsFilter>,
+        pagination_filter: Option<PaginationFilter>,
     ) -> Result<TransactionEffectsPage> {
         Ok(self
             .0
@@ -581,8 +581,8 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_data_effects(
         &self,
-        pagination_filter: Option<PaginationFilter>,
         filter: Option<TransactionsFilter>,
+        pagination_filter: Option<PaginationFilter>,
     ) -> Result<TransactionDataEffectsPage> {
         Ok(self
             .0
