@@ -7,15 +7,9 @@ import (
 	"fmt"
 	"log"
 
+	"bindings/common"
 	sdk "bindings/iota_sdk_ffi"
 )
-
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
 
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
@@ -26,7 +20,7 @@ func main() {
 	}
 
 	transactions, err := client.Transactions(&sdk.TransactionsFilter{InputObject: &sharedObjId}, nil)
-	if !isNilError(err) {
+	if !common.IsClientErr(err) {
 		log.Fatalf("Failed to get transactions: %v", err)
 	}
 

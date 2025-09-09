@@ -6,22 +6,16 @@ package main
 import (
 	"log"
 
+	"bindings/common"
 	sdk "bindings/iota_sdk_ffi"
 )
-
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
 
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
 	stakedIotaType := "0x3::staking_pool::StakedIota"
 	stakedIotas, err := client.Objects(&sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
-	if !isNilError(err) {
+	if !common.IsClientErr(err) {
 		log.Fatalf("Failed to get staked iota: %v", err)
 	}
 	if len(stakedIotas.Data) == 0 {
@@ -31,7 +25,7 @@ func main() {
 
 	gasCoinType := sdk.StructTagGasCoin().String()
 	gasCoins, err := client.Objects(&sdk.ObjectFilter{TypeTag: &gasCoinType, Owner: stakedIota.Owner().AsAddressOpt()}, nil)
-	if !isNilError(err) {
+	if !common.IsClientErr(err) {
 		log.Fatalf("Failed to get gas coin: %v", err)
 	}
 	if len(gasCoins.Data) == 0 {
@@ -76,7 +70,7 @@ func main() {
 	builder.SetSender(gasCoin.Owner().AsAddress())
 	builder.SetGasBudget(50000000)
 	gasPrice, err := client.ReferenceGasPrice(nil)
-	if !isNilError(err) {
+	if !common.IsClientErr(err) {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 	builder.SetGasPrice(*gasPrice)
@@ -88,7 +82,7 @@ func main() {
 	}
 
 	res, err := client.DryRunTx(txn, nil)
-	if !isNilError(err) {
+	if !common.IsClientErr(err) {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 

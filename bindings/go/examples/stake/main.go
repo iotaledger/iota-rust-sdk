@@ -6,15 +6,9 @@ package main
 import (
 	"log"
 
+	"bindings/common"
 	sdk "bindings/iota_sdk_ffi"
 )
-
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
 
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
@@ -25,7 +19,7 @@ func main() {
 	}
 
 	validators, err := client.ActiveValidators(nil, &sdk.PaginationFilter{Direction: sdk.DirectionForward})
-	if !isNilError(err) {
+	if !common.IsClientErr(err) {
 		log.Fatalf("Failed to get active validators: %v", err)
 	}
 
@@ -47,7 +41,7 @@ func main() {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
 	coin, err := client.Object(coinObjId, nil)
-	if !isNilError(err) {
+	if !common.IsClientErr(err) {
 		log.Fatalf("Failed to get coin: %v", err)
 	}
 
@@ -56,7 +50,7 @@ func main() {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
 	gasCoin, err := client.Object(gasCoinObjId, nil)
-	if !isNilError(err) {
+	if !common.IsClientErr(err) {
 		log.Fatalf("Failed to get gas coin: %v", err)
 	}
 
@@ -97,7 +91,7 @@ func main() {
 	builder.SetSender(myAddress)
 	builder.SetGasBudget(50000000)
 	gasPrice, err := client.ReferenceGasPrice(nil)
-	if !isNilError(err) {
+	if !common.IsClientErr(err) {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 	builder.SetGasPrice(*gasPrice)
@@ -109,7 +103,7 @@ func main() {
 	}
 
 	res, err := client.DryRunTx(txn, nil)
-	if !isNilError(err) {
+	if !common.IsClientErr(err) {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 
