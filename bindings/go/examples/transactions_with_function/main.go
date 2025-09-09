@@ -10,21 +10,14 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
-
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
 	function := "0x3::iota_system::request_add_stake"
-	transactions, err := client.Transactions(nil, &sdk.TransactionsFilter{
+	transactions, err := client.Transactions(&sdk.TransactionsFilter{
 		Function: &function,
-	})
-	if !isNilError(err) {
+	}, nil)
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get transactions: %v", err)
 	}
 

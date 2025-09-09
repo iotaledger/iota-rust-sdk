@@ -9,7 +9,6 @@ async def main():
     try:
         client = GraphQlClient.new_devnet()
         transactions = await client.transactions(
-            PaginationFilter(direction=Direction.FORWARD),
             TransactionsFilter(function="0x3::iota_system::request_add_stake"),
         )
         for transaction in transactions.data:
