@@ -10,19 +10,12 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
-
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
 	// Get current epoch
 	currentEpoch, err := client.Epoch(nil)
-	if !isNilError(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get current epoch: %v", err)
 	}
 	if currentEpoch == nil {
@@ -35,7 +28,7 @@ func main() {
 	// Get previous epoch
 	previousEpochId := currentEpoch.EpochId - 1
 	previousEpoch, err := client.Epoch(&previousEpochId)
-	if !isNilError(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get previous epoch: %v", err)
 	}
 	if previousEpoch == nil {

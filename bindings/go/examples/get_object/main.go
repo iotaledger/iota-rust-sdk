@@ -11,13 +11,6 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
-
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
@@ -27,7 +20,7 @@ func main() {
 	}
 
 	objOpt, err := client.Object(objectID, nil)
-	if !isNilError(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get object contents: %v", err)
 	}
 	if objOpt == nil {
@@ -36,7 +29,7 @@ func main() {
 	obj := *objOpt
 
 	objType := "Package"
-	if obj.ObjectType().IsStruct() { 
+	if obj.ObjectType().IsStruct() {
 		objType = obj.ObjectType().AsStruct().String()
 	}
 
@@ -50,11 +43,11 @@ func main() {
 	}
 
 	fmt.Println("Object ID:", obj.ObjectId().ToHex())
-    fmt.Println("Version:", obj.Version())
-    fmt.Println("Previous transaction:", obj.PreviousTransaction().ToBase58())
-    fmt.Println("Owner:", objOwner)
-    fmt.Println("Storage rebate:", obj.StorageRebate())
-    fmt.Println("Type:", objType)
-    fmt.Println("BCS bytes:", hex.EncodeToString(obj.AsStruct().Contents))
+	fmt.Println("Version:", obj.Version())
+	fmt.Println("Previous transaction:", obj.PreviousTransaction().ToBase58())
+	fmt.Println("Owner:", objOwner)
+	fmt.Println("Storage rebate:", obj.StorageRebate())
+	fmt.Println("Type:", objType)
+	fmt.Println("BCS bytes:", hex.EncodeToString(obj.AsStruct().Contents))
 
 }

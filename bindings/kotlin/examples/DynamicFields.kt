@@ -11,11 +11,7 @@ fun main() = runBlocking {
                 iota_sdk.Address.fromHex(
                         "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
                 )
-        val pagination =
-                iota_sdk.PaginationFilter(
-                        direction = iota_sdk.Direction.FORWARD,
-                )
-        val page = client.dynamicFields(parentObjectId, pagination)
+        val page = client.dynamicFields(parentObjectId)
         println("Page size: ${page.data.size}")
         if (page.data.isNotEmpty()) {
             println("First field name:\n${page.data.first().name}")
