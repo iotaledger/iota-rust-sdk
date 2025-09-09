@@ -10,13 +10,6 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
-
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
@@ -25,12 +18,8 @@ func main() {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
-	paginationFilter := sdk.PaginationFilter{
-		Direction: sdk.DirectionForward,
-	}
-
-	page, err := client.DynamicFields(parentObjectId, &paginationFilter)
-	if !isNilError(err) {
+	page, err := client.DynamicFields(parentObjectId, nil)
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get dynamic fields: %v", err)
 	}
 

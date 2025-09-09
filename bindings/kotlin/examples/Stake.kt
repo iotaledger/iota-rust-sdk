@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import iota_sdk.Address
-import iota_sdk.Direction
 import iota_sdk.Function
 import iota_sdk.GraphQlClient
 import iota_sdk.Identifier
 import iota_sdk.ObjectId
-import iota_sdk.PaginationFilter
 import iota_sdk.TransactionBuilder
 import iota_sdk.UnresolvedInput
 import kotlinx.coroutines.runBlocking
@@ -21,7 +19,7 @@ fun main() = runBlocking {
                         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
                 )
 
-        val validators = client.activeValidators(null, PaginationFilter(Direction.FORWARD))
+        val validators = client.activeValidators()
         if (validators.data.isEmpty()) {
             throw Exception("no validators found")
         }
