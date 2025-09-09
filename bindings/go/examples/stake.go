@@ -34,6 +34,14 @@ func main() {
 	}
 	validator := validators.Data[0]
 
+	var validatorName string
+	if validator.Name == nil {
+		validatorName = "with no name"
+	} else {
+		validatorName = *validator.Name
+	}
+	log.Printf("Staking to validator %v", validatorName)
+
 	coinObjId, err := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
 	if err != nil {
 		log.Fatalf("Failed to parse object ID: %v", err)
@@ -80,8 +88,8 @@ func main() {
 	}
 	builder.MoveCall(
 		sdk.Function{
-			Package: iotaSystemAddress,
-			Module: iotaSystemModule,
+			Package:  iotaSystemAddress,
+			Module:   iotaSystemModule,
 			Function: requestAddStakeFn,
 		},
 		inputs,
@@ -109,5 +117,5 @@ func main() {
 		log.Fatalf("Failed to stake: %v", *res.Error)
 	}
 
-	log.Print("Successfully staked!")
+	log.Print("Stake dry run was successful!")
 }

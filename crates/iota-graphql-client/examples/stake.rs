@@ -23,6 +23,11 @@ async fn main() -> Result<()> {
         .next()
         .context("no validators found")?;
 
+    println!(
+        "Staking to validator {}",
+        validator.name.as_deref().unwrap_or("with no name")
+    );
+
     let coin = client
         .object(
             ObjectId::from_str(
@@ -73,7 +78,7 @@ async fn main() -> Result<()> {
         anyhow::bail!("Failed to stake: {err}");
     }
 
-    println!("Successfully staked!");
+    println!("Stake dry run was successful!");
 
     Ok(())
 }

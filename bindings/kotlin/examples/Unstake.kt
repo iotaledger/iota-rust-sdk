@@ -76,7 +76,7 @@ fun main() = runBlocking {
                         throw Exception(res.error)
                 }
 
-                println("Successfully unstaked!")
+                println("Unstake dry run was successful!")
         } catch (e: Exception) {
                 e.printStackTrace()
         }

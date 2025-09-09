@@ -72,7 +72,7 @@ async fn main() -> Result<()> {
         anyhow::bail!("Failed to unstake: {err}");
     }
 
-    println!("Successfully unstaked!");
+    println!("Unstake dry run was successful!");
 
     Ok(())
 }

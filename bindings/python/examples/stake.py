@@ -18,6 +18,8 @@ async def main():
             raise Exception("no validators found")
         validator = validators.data[0]
 
+        print("Staking to validator", validator.name or "with no name")
+
         coin = await client.object(
             ObjectId.from_hex(
                 "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
@@ -62,7 +64,7 @@ async def main():
         if res.error is not None:
             raise Exception("Failed to stake:", res.error)
 
-        print("Successfully staked!")
+        print("Stake dry run was successful!")
 
     except Exception as e:
         print(f"Error: {e}")

@@ -66,8 +66,8 @@ func main() {
 	}
 	builder.MoveCall(
 		sdk.Function{
-			Package: iotaSystemAddress,
-			Module: iotaSystemModule,
+			Package:  iotaSystemAddress,
+			Module:   iotaSystemModule,
 			Function: requestAddStakeFn,
 			TypeArgs: []*sdk.TypeTag{},
 		},
@@ -96,5 +96,5 @@ func main() {
 		log.Fatalf("Failed to unstake: %v", *res.Error)
 	}
 
-	log.Print("Successfully unstaked!")
+	log.Print("Unstake dry run was successful!")
 }

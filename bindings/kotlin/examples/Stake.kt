@@ -27,6 +27,8 @@ fun main() = runBlocking {
                 }
                 val validator = validators.data[0]
 
+                println("Staking to validator ${validator.name ?: "with no name"}")
+
                 val coin =
                         client.`object`(
                                 ObjectId.fromHex(
@@ -80,7 +82,7 @@ fun main() = runBlocking {
                         throw Exception(res.error)
                 }
 
-                println("Successfully staked!")
+                println("Stake dry run was successful!")
         } catch (e: Exception) {
                 e.printStackTrace()
         }

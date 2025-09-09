@@ -53,7 +53,7 @@ async def main():
         if res.error is not None:
             raise Exception("Failed to unstake:", res.error)
 
-        print("Successfully unstaked!")
+        print("Unstake dry run was successful!")
 
     except Exception as e:
         print(f"Error: {e}")
