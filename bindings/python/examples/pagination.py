@@ -22,7 +22,7 @@ async def main():
             next_cursor = page.page_info.end_cursor
         else:
             break
-    print(f"Total objects fetched({len(all_objects)}):")
+    print(f"{len(all_objects)} objects fetched:")
     for obj_id in all_objects:
         print(obj_id.object_id().to_hex())
 

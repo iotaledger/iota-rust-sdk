@@ -36,7 +36,7 @@ func main() {
 			break
 		}
 	}
-	fmt.Printf("Total objects fetched(%d):\n", len(allObjects))
+	fmt.Printf("%d objects fetched:\n", len(allObjects))
 	for _, obj := range allObjects {
 		fmt.Println(obj.ObjectId().ToHex())
 	}
