@@ -1,11 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::{
-    Client,
-    error::Result,
-    pagination::{Direction, PaginationFilter},
-};
+use iota_graphql_client::{Client, error::Result};
 
 #[tokio::main]
 async fn main() -> Result<()> {
