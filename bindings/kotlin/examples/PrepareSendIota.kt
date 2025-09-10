@@ -1,31 +1,22 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.Address
-import iota_sdk.Function
-import iota_sdk.GraphQlClient
-import iota_sdk.Identifier
-import iota_sdk.ObjectId
-import iota_sdk.TransactionBuilder
-import iota_sdk.UnresolvedInput
+import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
 
-        val myAddress =
+        val fromAddress =
                 Address.fromHex(
                         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
                 )
 
-        val validators = client.activeValidators()
-        if (validators.data.isEmpty()) {
-            throw Exception("no validators found")
-        }
-        val validator = validators.data[0]
-
-        println("Staking to validator ${validator.name ?: "with no name"}")
+        val toAddress =
+                Address.fromHex(
+                        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                )
 
         val coin =
                 client.`object`(
@@ -48,21 +39,13 @@ fun main() = runBlocking {
         }
 
         val builder = TransactionBuilder()
-        val inputs =
-                listOf(
-                        builder.input(UnresolvedInput.newShared(ObjectId.fromHex("0x5"), 1u, true)),
-                        builder.input(UnresolvedInput.fromObject(coin).withOwnedKind()),
-                        builder.input(UnresolvedInput.newPure(validator.address.toBytes())),
-                )
-        builder.moveCall(
-                Function(
-                        Address.fromHex("0x3"),
-                        Identifier("iota_system"),
-                        Identifier("request_add_stake"),
-                ),
-                inputs
+
+        builder.transferObjects(
+                listOf(builder.input(UnresolvedInput.fromObject(coin).withOwnedKind())),
+                builder.input(UnresolvedInput.newPure(toAddress.toBytes()))
         )
-        builder.setSender(myAddress)
+
+        builder.setSender(fromAddress)
         builder.setGasBudget(50000000u)
         val refGasPrice = client.referenceGasPrice(null)
         if (refGasPrice == null) {
@@ -72,13 +55,17 @@ fun main() = runBlocking {
         builder.addGasObjects(listOf(UnresolvedInput.fromObject(gasCoin).withOwnedKind()))
 
         val txn = builder.finish()
+
+        println("Signing Digest: ${hexEncode(txn.signingDigest())}")
+        println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")
+
         val res = client.dryRunTx(txn, false)
 
         if (res.error != null) {
-            throw Exception("Failed to stake: ${res.error}")
+            throw Exception("Failed to send IOTA: ${res.error}")
         }
 
-        println("Stake dry run was successful!")
+        println("Send IOTA dry run was successful!")
     } catch (e: Exception) {
         e.printStackTrace()
     }
