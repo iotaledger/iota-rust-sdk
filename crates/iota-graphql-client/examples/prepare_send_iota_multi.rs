@@ -4,6 +4,7 @@
 use std::str::FromStr;
 
 use anyhow::{Context, Result};
+use base64ct::Encoding;
 use iota_graphql_client::Client;
 use iota_transaction_builder::{TransactionBuilder, unresolved::Input};
 use iota_types::{Address, Argument, ObjectId};
@@ -74,6 +75,13 @@ async fn main() -> Result<()> {
     );
     builder.add_gas_objects([Input::from(&gas_coin).with_owned_kind()]);
     let txn = builder.finish()?;
+
+    println!("Signing Digest: {}", hex::encode(txn.signing_digest()));
+    println!(
+        "Txn Bytes: {}",
+        base64ct::Base64::encode_string(&bcs::to_bytes(&txn)?)
+    );
+
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {

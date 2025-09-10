@@ -1,11 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.Address
-import iota_sdk.GraphQlClient
-import iota_sdk.ObjectId
-import iota_sdk.TransactionBuilder
-import iota_sdk.UnresolvedInput
+import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
 // Helper to convert ULong to little-endian ByteArray
@@ -77,6 +73,10 @@ fun main() = runBlocking {
         builder.setGasPrice(refGasPrice)
         builder.addGasObjects(listOf(UnresolvedInput.fromObject(gasCoin).withOwnedKind()))
         val txn = builder.finish()
+
+        println("Signing Digest: ${hexEncode(txn.signingDigest())}")
+        println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")
+
         val res = client.dryRunTx(txn, false)
 
         if (res.error != null) {

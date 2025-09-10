@@ -34,6 +34,10 @@ async def main():
     builder.set_gas_price(await client.reference_gas_price())
     builder.add_gas_objects([UnresolvedInput.from_object(gas_coin).with_owned_kind()])
     txn = builder.finish()
+
+    print("Signing Digest:", hex_encode(txn.signing_digest()))
+    print("Txn Bytes:", base64_encode(txn.bcs_serialize()))
+    
     res = await client.dry_run_tx(txn, False)
 
     if res.error is not None:

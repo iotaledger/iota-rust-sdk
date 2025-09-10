@@ -80,6 +80,13 @@ func main() {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
+	txnBytes, err := txn.BcsSerialize()
+	if err != nil {
+		log.Fatalf("Failed to serialize transaction: %v", err)
+	}
+	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
+	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
+
 	res, err := client.DryRunTx(txn, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run send IOTA: %v", err)
