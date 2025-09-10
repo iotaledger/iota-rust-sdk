@@ -68,7 +68,7 @@ func main() {
 
 	res, err := client.DryRunTx(txn, nil)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas price: %v", err)
+		log.Fatalf("Failed to send IOTA: %v", err)
 	}
 
 	if res.Error != nil {
