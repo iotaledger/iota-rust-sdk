@@ -2573,6 +2573,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_objecttype_is_package(void* ptr, RustCallSt
 int8_t uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_UNIFFI_TRAIT_DISPLAY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTTYPE_UNIFFI_TRAIT_DISPLAY
+RustBuffer uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OWNER
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_OWNER
 void* uniffi_iota_sdk_ffi_fn_clone_owner(void* ptr, RustCallStatus *out_status
@@ -2652,6 +2657,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_owner_is_object(void* ptr, RustCallStatus *
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_IS_SHARED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_IS_SHARED
 int8_t uniffi_iota_sdk_ffi_fn_method_owner_is_shared(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_UNIFFI_TRAIT_DISPLAY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OWNER_UNIFFI_TRAIT_DISPLAY
+RustBuffer uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_PASSKEYAUTHENTICATOR
@@ -3584,6 +3594,11 @@ void uniffi_iota_sdk_ffi_fn_free_transaction(void* ptr, RustCallStatus *out_stat
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTION_NEW
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTION_NEW
 void* uniffi_iota_sdk_ffi_fn_constructor_transaction_new(void* kind, void* sender, RustBuffer gas_payment, RustBuffer expiration, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_BCS_SERIALIZE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_BCS_SERIALIZE
+RustBuffer uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_DIGEST
@@ -4629,6 +4644,26 @@ void uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(void* ptr, RustBuffer 
 void* uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(void* ptr, RustBuffer jwks, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BASE64_DECODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BASE64_DECODE
+RustBuffer uniffi_iota_sdk_ffi_fn_func_base64_decode(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BASE64_ENCODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BASE64_ENCODE
+RustBuffer uniffi_iota_sdk_ffi_fn_func_base64_encode(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_HEX_DECODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_HEX_DECODE
+RustBuffer uniffi_iota_sdk_ffi_fn_func_hex_decode(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_HEX_ENCODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_HEX_ENCODE
+RustBuffer uniffi_iota_sdk_ffi_fn_func_hex_encode(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_FFI_IOTA_SDK_FFI_RUSTBUFFER_ALLOC
 #define UNIFFI_FFIDEF_FFI_IOTA_SDK_FFI_RUSTBUFFER_ALLOC
 RustBuffer ffi_iota_sdk_ffi_rustbuffer_alloc(uint64_t size, RustCallStatus *out_status
@@ -4907,6 +4942,30 @@ void ffi_iota_sdk_ffi_rust_future_free_void(uint64_t handle
 #ifndef UNIFFI_FFIDEF_FFI_IOTA_SDK_FFI_RUST_FUTURE_COMPLETE_VOID
 #define UNIFFI_FFIDEF_FFI_IOTA_SDK_FFI_RUST_FUTURE_COMPLETE_VOID
 void ffi_iota_sdk_ffi_rust_future_complete_void(uint64_t handle, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BASE64_DECODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BASE64_DECODE
+uint16_t uniffi_iota_sdk_ffi_checksum_func_base64_decode(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BASE64_ENCODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BASE64_ENCODE
+uint16_t uniffi_iota_sdk_ffi_checksum_func_base64_encode(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_HEX_DECODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_HEX_DECODE
+uint16_t uniffi_iota_sdk_ffi_checksum_func_hex_decode(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_HEX_ENCODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_HEX_ENCODE
+uint16_t uniffi_iota_sdk_ffi_checksum_func_hex_encode(void
+    
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_BYTES
@@ -6826,6 +6885,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_systempackage_modules(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SYSTEMPACKAGE_VERSION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SYSTEMPACKAGE_VERSION
 uint16_t uniffi_iota_sdk_ffi_checksum_method_systempackage_version(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_BCS_SERIALIZE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_BCS_SERIALIZE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize(void
     
 );
 #endif

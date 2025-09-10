@@ -8,18 +8,21 @@ use iota_types::{
     RandomnessStateUpdate, TransactionExpiration,
 };
 
-use crate::types::{
-    address::Address,
-    checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
-    crypto::Bls12381PublicKey,
-    digest::Digest,
-    events::Event,
-    execution_status::ExecutionStatus,
-    object::{GenesisObject, ObjectId, ObjectReference, Version},
-    signature::UserSignature,
-    struct_tag::Identifier,
-    transaction::v1::TransactionEffectsV1,
-    type_tag::TypeTag,
+use crate::{
+    error::Result,
+    types::{
+        address::Address,
+        checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
+        crypto::Bls12381PublicKey,
+        digest::Digest,
+        events::Event,
+        execution_status::ExecutionStatus,
+        object::{GenesisObject, ObjectId, ObjectReference, Version},
+        signature::UserSignature,
+        struct_tag::Identifier,
+        transaction::v1::TransactionEffectsV1,
+        type_tag::TypeTag,
+    },
 };
 
 pub mod v1;
@@ -77,6 +80,10 @@ impl Transaction {
 
     pub fn signing_digest(&self) -> Vec<u8> {
         self.0.signing_digest().to_vec()
+    }
+
+    pub fn bcs_serialize(&self) -> Result<Vec<u8>> {
+        Ok(bcs::to_bytes(&self.0)?)
     }
 }
 

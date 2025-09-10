@@ -106,6 +106,8 @@
 #![expect(unused)]
 #![allow(clippy::wrong_self_convention)]
 
+use base64ct::Encoding;
+
 mod crypto;
 mod error;
 mod faucet;
@@ -115,3 +117,23 @@ mod types;
 mod uniffi_helpers;
 
 uniffi::setup_scaffolding!();
+
+#[uniffi::export]
+pub fn base64_encode(input: &[u8]) -> String {
+    base64ct::Base64::encode_string(input)
+}
+
+#[uniffi::export]
+pub fn base64_decode(input: String) -> crate::error::Result<Vec<u8>> {
+    Ok(base64ct::Base64::decode_vec(&input)?)
+}
+
+#[uniffi::export]
+pub fn hex_encode(input: &[u8]) -> String {
+    hex::encode(input)
+}
+
+#[uniffi::export]
+pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
+    Ok(hex::decode(input)?)
+}

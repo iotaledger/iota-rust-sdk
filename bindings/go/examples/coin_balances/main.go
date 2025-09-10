@@ -24,7 +24,7 @@ func main() {
 	}
 
 	for _, coin := range coins.Data {
-		fmt.Printf("ID = 0x%s Balance = %d\n", coin.Id().ToHex(), coin.Balance())
+		fmt.Printf("Coin = 0x%s Balance = %d\n", coin.Id().ToHex(), coin.Balance())
 	}
 
 	balance, err := client.Balance(address, nil)
@@ -32,20 +32,4 @@ func main() {
 		log.Fatalf("Failed to get balance: %v", err)
 	}
 	fmt.Printf("Total Balance = %d\n", *balance)
-
-	atCheckpoint := uint64(3)
-	inputObject, err := sdk.ObjectIdFromHex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")
-	if err != nil {
-		log.Fatalf("Failed to parse object ID: %v", err)
-	}
-	txFilter := sdk.TransactionsFilter{
-		AtCheckpoint: &atCheckpoint,
-		InputObject:  &inputObject,
-	}
-	eventFilter := sdk.EventFilter{
-		Sender: &address,
-	}
-
-	_ = txFilter
-	_ = eventFilter
 }
