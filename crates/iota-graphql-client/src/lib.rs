@@ -10,9 +10,11 @@ pub mod pagination;
 pub mod query_types;
 pub mod streams;
 
+use std::str::FromStr;
+
 use base64ct::Encoding;
 use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
-use error::Error;
+use error::{Error, Kind};
 use futures::Stream;
 use iota_types::{
     Address, CheckpointSequenceNumber, CheckpointSummary, Digest, MovePackage, Object, ObjectId,
@@ -22,8 +24,9 @@ use iota_types::{
 use query_types::{
     ActiveValidatorsArgs, ActiveValidatorsQuery, BalanceArgs, BalanceQuery, ChainIdentifierQuery,
     CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointsArgs, CheckpointsQuery, CoinMetadata,
-    CoinMetadataArgs, CoinMetadataQuery, DryRunArgs, DryRunQuery, DynamicFieldArgs,
-    DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
+    CoinMetadataArgs, CoinMetadataQuery, DryRunArgs, DryRunEffect as GraphQLDryRunEffect,
+    DryRunMutation as GraphQLDryRunMutation, DryRunQuery, DryRunReturn as GraphQLDryRunReturn,
+    DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
     DynamicObjectFieldQuery, Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, Event, EventFilter,
     EventsQuery, EventsQueryArgs, ExecuteTransactionArgs, ExecuteTransactionQuery,
     LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
@@ -31,17 +34,17 @@ use query_types::{
     NormalizedMoveModuleQueryArgs, ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery,
     ObjectsQueryArgs, PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs,
     PackageVersionsQuery, PackagesQuery, PackagesQueryArgs, ProtocolConfigQuery, ProtocolConfigs,
-    ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery, TransactionBlockArgs,
-    TransactionBlockEffectsQuery, TransactionBlockQuery, TransactionBlocksEffectsQuery,
-    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionMetadata, TransactionsFilter,
-    Validator,
+    ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery, TransactionArgumentEnum,
+    TransactionBlockArgs, TransactionBlockEffectsQuery, TransactionBlockQuery,
+    TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
+    TransactionMetadata, TransactionsFilter, Validator,
 };
 use reqwest::Url;
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use streams::stream_paginated_query;
 
 use crate::{
-    error::{Kind, Result},
+    error::Result,
     pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         CheckpointTotalTxQuery, TransactionBlockWithEffectsQuery, TransactionBlocksWithEffectsQuery,
@@ -59,12 +62,141 @@ static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_V
 // Output Types
 // ===========================================================================
 
-/// The result of a dry run, which includes the effects of the transaction and
-/// any errors that may have occurred.
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+/// The result of a simulation (dry run), which includes the effects of the
+/// transaction, any errors that may have occurred, and intermediate results for
+/// each command.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DryRunResult {
-    pub effects: Option<TransactionEffects>,
+    /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
+    /// The intermediate results for each command of the dry run execution,
+    /// including contents of mutated references and return values.
+    pub results: Vec<DryRunEffect>,
+    /// The transaction block representing the dry run execution.
+    pub transaction: Option<SignedTransaction>,
+}
+
+/// Effects of a single command in the dry run, including mutated references
+/// and return values.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct DryRunEffect {
+    /// Changes made to arguments that were mutably borrowed by this command.
+    pub mutated_references: Vec<DryRunMutation>,
+    /// Return results of this command.
+    pub return_values: Vec<DryRunReturn>,
+}
+
+impl TryFrom<&GraphQLDryRunEffect> for DryRunEffect {
+    type Error = Error;
+
+    fn try_from(effect: &GraphQLDryRunEffect) -> Result<Self> {
+        let mutated_references = effect
+            .mutated_references
+            .as_ref()
+            .unwrap_or(&Vec::new())
+            .iter()
+            .map(DryRunMutation::try_from)
+            .collect::<Result<Vec<_>>>()?;
+
+        let return_values = effect
+            .return_values
+            .as_ref()
+            .unwrap_or(&Vec::new())
+            .iter()
+            .map(DryRunReturn::try_from)
+            .collect::<Result<Vec<_>>>()?;
+
+        Ok(DryRunEffect {
+            mutated_references,
+            return_values,
+        })
+    }
+}
+
+/// A mutation to an argument that was mutably borrowed by a command.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct DryRunMutation {
+    /// The transaction argument that was mutated.
+    pub input: TransactionArgument,
+    /// The Move type of the mutated value.
+    pub type_: TypeTag,
+    /// The BCS representation of the mutated value.
+    pub bcs: Vec<u8>,
+}
+
+impl TryFrom<&GraphQLDryRunMutation> for DryRunMutation {
+    type Error = Error;
+
+    fn try_from(mutation: &GraphQLDryRunMutation) -> Result<Self> {
+        let input = TransactionArgument::try_from(&mutation.input)?;
+        let type_ = TypeTag::from_str(&mutation.type_.repr)?;
+        let bcs = base64ct::Base64::decode_vec(&mutation.bcs.0)?;
+
+        Ok(DryRunMutation { input, type_, bcs })
+    }
+}
+
+/// A return value from a command in the dry run.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct DryRunReturn {
+    /// The Move type of the return value.
+    pub type_: TypeTag,
+    /// The BCS representation of the return value.
+    pub bcs: Vec<u8>,
+}
+
+impl TryFrom<&GraphQLDryRunReturn> for DryRunReturn {
+    type Error = Error;
+
+    fn try_from(return_val: &GraphQLDryRunReturn) -> Result<Self> {
+        let type_ = TypeTag::from_str(&return_val.type_.repr)?;
+        let bcs = base64ct::Base64::decode_vec(&return_val.bcs.0)?;
+
+        Ok(DryRunReturn { type_, bcs })
+    }
+}
+
+/// A transaction argument used in programmable transactions.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub enum TransactionArgument {
+    /// Reference to the gas coin.
+    GasCoin,
+    /// An input to the programmable transaction block.
+    Input {
+        /// Index of the programmable transaction block input (0-indexed).
+        ix: u32,
+    },
+    /// The result of another transaction command.
+    Result {
+        /// The index of the previous command (0-indexed) that returned this
+        /// result.
+        cmd: u32,
+        /// If the previous command returns multiple values, this is the index
+        /// of the individual result among the multiple results from
+        /// that command (also 0-indexed).
+        ix: Option<u32>,
+    },
+}
+
+impl TryFrom<&TransactionArgumentEnum> for TransactionArgument {
+    type Error = Error;
+
+    fn try_from(arg: &TransactionArgumentEnum) -> Result<Self> {
+        match arg {
+            TransactionArgumentEnum::GasCoin(_) => Ok(TransactionArgument::GasCoin),
+            TransactionArgumentEnum::Input(input) => Ok(TransactionArgument::Input {
+                ix: input.ix as u32,
+            }),
+            TransactionArgumentEnum::Result(result) => Ok(TransactionArgument::Result {
+                cmd: result.cmd as u32,
+                ix: result.ix.map(|ix| ix as u32),
+            }),
+            TransactionArgumentEnum::Unknown => Err(Error::from_error(
+                Kind::Deserialization,
+                "Unknown transaction argument type",
+            )),
+        }
+    }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
@@ -343,18 +475,32 @@ impl Client {
             .as_ref()
             .and_then(|tx| tx.dry_run_transaction_block.error.clone());
 
-        let effects = response
+        // Convert DryRunEffect to DryRunEffect
+        let results = response
+            .data
+            .as_ref()
+            .and_then(|tx| tx.dry_run_transaction_block.results.as_ref())
+            .unwrap_or(&Vec::new())
+            .iter()
+            .map(DryRunEffect::try_from)
+            .collect::<Result<Vec<_>>>()?;
+
+        // Extract transaction
+        let transaction = response
             .data
             .map(|tx| tx.dry_run_transaction_block)
             .and_then(|tx| tx.transaction)
-            .and_then(|tx| tx.effects)
-            .and_then(|bcs| bcs.bcs)
+            .and_then(|tx| tx.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
+            .map(|bcs| bcs::from_bytes::<SignedTransaction>(&bcs))
             .transpose()?;
 
-        Ok(DryRunResult { effects, error })
+        Ok(DryRunResult {
+            error,
+            results,
+            transaction,
+        })
     }
 
     /// Get a stream of transactions based on the (optional) transaction filter.

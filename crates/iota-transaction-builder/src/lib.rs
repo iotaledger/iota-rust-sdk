@@ -279,9 +279,6 @@ impl TransactionBuilder {
         let Some(sender) = self.sender else {
             return Err(Error::MissingSender);
         };
-        if self.gas.is_empty() {
-            return Err(Error::MissingGasObjects);
-        }
         let Some(budget) = self.gas_budget else {
             return Err(Error::MissingGasBudget);
         };

@@ -43108,20 +43108,142 @@ public object FfiConverterTypeCoinPage: FfiConverterRustBuffer<CoinPage> {
 
 
 /**
- * The result of a dry run, which includes the effects of the transaction and
- * any errors that may have occurred.
+ * Effects of a single command in the dry run, including mutated references
+ * and return values.
  */
-data class DryRunResult (
-    var `effects`: TransactionEffects?, 
-    var `error`: kotlin.String?
+data class DryRunEffect (
+    /**
+     * Changes made to arguments that were mutably borrowed by this command.
+     */
+    var `mutatedReferences`: List<DryRunMutation>, 
+    /**
+     * Return results of this command.
+     */
+    var `returnValues`: List<DryRunReturn>
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
     override fun destroy() {
         
     Disposable.destroy(
-        this.`effects`,
-        this.`error`
+        this.`mutatedReferences`,
+        this.`returnValues`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDryRunEffect: FfiConverterRustBuffer<DryRunEffect> {
+    override fun read(buf: ByteBuffer): DryRunEffect {
+        return DryRunEffect(
+            FfiConverterSequenceTypeDryRunMutation.read(buf),
+            FfiConverterSequenceTypeDryRunReturn.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DryRunEffect) = (
+            FfiConverterSequenceTypeDryRunMutation.allocationSize(value.`mutatedReferences`) +
+            FfiConverterSequenceTypeDryRunReturn.allocationSize(value.`returnValues`)
+    )
+
+    override fun write(value: DryRunEffect, buf: ByteBuffer) {
+            FfiConverterSequenceTypeDryRunMutation.write(value.`mutatedReferences`, buf)
+            FfiConverterSequenceTypeDryRunReturn.write(value.`returnValues`, buf)
+    }
+}
+
+
+
+/**
+ * A mutation to an argument that was mutably borrowed by a command.
+ */
+data class DryRunMutation (
+    /**
+     * The transaction argument that was mutated.
+     */
+    var `input`: TransactionArgument, 
+    /**
+     * The Move type of the mutated value.
+     */
+    var `typeTag`: TypeTag, 
+    /**
+     * The BCS representation of the mutated value.
+     */
+    var `bcs`: kotlin.ByteArray
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`input`,
+        this.`typeTag`,
+        this.`bcs`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDryRunMutation: FfiConverterRustBuffer<DryRunMutation> {
+    override fun read(buf: ByteBuffer): DryRunMutation {
+        return DryRunMutation(
+            FfiConverterTypeTransactionArgument.read(buf),
+            FfiConverterTypeTypeTag.read(buf),
+            FfiConverterByteArray.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DryRunMutation) = (
+            FfiConverterTypeTransactionArgument.allocationSize(value.`input`) +
+            FfiConverterTypeTypeTag.allocationSize(value.`typeTag`) +
+            FfiConverterByteArray.allocationSize(value.`bcs`)
+    )
+
+    override fun write(value: DryRunMutation, buf: ByteBuffer) {
+            FfiConverterTypeTransactionArgument.write(value.`input`, buf)
+            FfiConverterTypeTypeTag.write(value.`typeTag`, buf)
+            FfiConverterByteArray.write(value.`bcs`, buf)
+    }
+}
+
+
+
+/**
+ * The result of a simulation (dry run), which includes the effects of the
+ * transaction, any errors that may have occurred, and intermediate results for
+ * each command.
+ */
+data class DryRunResult (
+    /**
+     * The error that occurred during dry run execution, if any.
+     */
+    var `error`: kotlin.String?, 
+    /**
+     * The intermediate results for each command of the dry run execution,
+     * including contents of mutated references and return values.
+     */
+    var `results`: List<DryRunEffect>, 
+    /**
+     * The transaction block representing the dry run execution.
+     */
+    var `transaction`: SignedTransaction?
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`error`,
+        this.`results`,
+        this.`transaction`
     )
     }
     
@@ -43134,19 +43256,72 @@ data class DryRunResult (
 public object FfiConverterTypeDryRunResult: FfiConverterRustBuffer<DryRunResult> {
     override fun read(buf: ByteBuffer): DryRunResult {
         return DryRunResult(
-            FfiConverterOptionalTypeTransactionEffects.read(buf),
             FfiConverterOptionalString.read(buf),
+            FfiConverterSequenceTypeDryRunEffect.read(buf),
+            FfiConverterOptionalTypeSignedTransaction.read(buf),
         )
     }
 
     override fun allocationSize(value: DryRunResult) = (
-            FfiConverterOptionalTypeTransactionEffects.allocationSize(value.`effects`) +
-            FfiConverterOptionalString.allocationSize(value.`error`)
+            FfiConverterOptionalString.allocationSize(value.`error`) +
+            FfiConverterSequenceTypeDryRunEffect.allocationSize(value.`results`) +
+            FfiConverterOptionalTypeSignedTransaction.allocationSize(value.`transaction`)
     )
 
     override fun write(value: DryRunResult, buf: ByteBuffer) {
-            FfiConverterOptionalTypeTransactionEffects.write(value.`effects`, buf)
             FfiConverterOptionalString.write(value.`error`, buf)
+            FfiConverterSequenceTypeDryRunEffect.write(value.`results`, buf)
+            FfiConverterOptionalTypeSignedTransaction.write(value.`transaction`, buf)
+    }
+}
+
+
+
+/**
+ * A return value from a command in the dry run.
+ */
+data class DryRunReturn (
+    /**
+     * The Move type of the return value.
+     */
+    var `typeTag`: TypeTag, 
+    /**
+     * The BCS representation of the return value.
+     */
+    var `bcs`: kotlin.ByteArray
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`typeTag`,
+        this.`bcs`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDryRunReturn: FfiConverterRustBuffer<DryRunReturn> {
+    override fun read(buf: ByteBuffer): DryRunReturn {
+        return DryRunReturn(
+            FfiConverterTypeTypeTag.read(buf),
+            FfiConverterByteArray.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DryRunReturn) = (
+            FfiConverterTypeTypeTag.allocationSize(value.`typeTag`) +
+            FfiConverterByteArray.allocationSize(value.`bcs`)
+    )
+
+    override fun write(value: DryRunReturn, buf: ByteBuffer) {
+            FfiConverterTypeTypeTag.write(value.`typeTag`, buf)
+            FfiConverterByteArray.write(value.`bcs`, buf)
     }
 }
 
@@ -49314,6 +49489,118 @@ public object FfiConverterTypeSignatureScheme: FfiConverterRustBuffer<SignatureS
 
     override fun write(value: SignatureScheme, buf: ByteBuffer) {
         buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+/**
+ * A transaction argument used in programmable transactions.
+ */
+sealed class TransactionArgument {
+    
+    /**
+     * Reference to the gas coin.
+     */
+    object GasCoin : TransactionArgument()
+    
+    
+    /**
+     * An input to the programmable transaction block.
+     */
+    data class Input(
+        /**
+         * Index of the programmable transaction block input (0-indexed).
+         */
+        val `ix`: kotlin.UInt) : TransactionArgument() {
+        companion object
+    }
+    
+    /**
+     * The result of another transaction command.
+     */
+    data class Result(
+        /**
+         * The index of the previous command (0-indexed) that returned this
+         * result.
+         */
+        val `cmd`: kotlin.UInt, 
+        /**
+         * If the previous command returns multiple values, this is the index
+         * of the individual result among the multiple results from
+         * that command (also 0-indexed).
+         */
+        val `ix`: kotlin.UInt?) : TransactionArgument() {
+        companion object
+    }
+    
+
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTransactionArgument : FfiConverterRustBuffer<TransactionArgument>{
+    override fun read(buf: ByteBuffer): TransactionArgument {
+        return when(buf.getInt()) {
+            1 -> TransactionArgument.GasCoin
+            2 -> TransactionArgument.Input(
+                FfiConverterUInt.read(buf),
+                )
+            3 -> TransactionArgument.Result(
+                FfiConverterUInt.read(buf),
+                FfiConverterOptionalUInt.read(buf),
+                )
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: TransactionArgument) = when(value) {
+        is TransactionArgument.GasCoin -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is TransactionArgument.Input -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUInt.allocationSize(value.`ix`)
+            )
+        }
+        is TransactionArgument.Result -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUInt.allocationSize(value.`cmd`)
+                + FfiConverterOptionalUInt.allocationSize(value.`ix`)
+            )
+        }
+    }
+
+    override fun write(value: TransactionArgument, buf: ByteBuffer) {
+        when(value) {
+            is TransactionArgument.GasCoin -> {
+                buf.putInt(1)
+                Unit
+            }
+            is TransactionArgument.Input -> {
+                buf.putInt(2)
+                FfiConverterUInt.write(value.`ix`, buf)
+                Unit
+            }
+            is TransactionArgument.Result -> {
+                buf.putInt(3)
+                FfiConverterUInt.write(value.`cmd`, buf)
+                FfiConverterOptionalUInt.write(value.`ix`, buf)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
     }
 }
 

@@ -31,7 +31,10 @@ pub use checkpoint::{
 };
 pub use coin::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery};
 use cynic::impl_scalar;
-pub use dry_run::{DryRunArgs, DryRunQuery, DryRunResult, ObjectRef, TransactionMetadata};
+pub use dry_run::{
+    DryRunArgs, DryRunEffect, DryRunMutation, DryRunQuery, DryRunResult, DryRunReturn, GasCoin,
+    Input, ObjectRef, ResultArg, TransactionArgumentEnum, TransactionMetadata,
+};
 pub use dynamic_fields::{
     DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
     DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
