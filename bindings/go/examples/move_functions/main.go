@@ -4,17 +4,11 @@
 package main
 
 import (
-	sdk "bindings/iota_sdk_ffi"
 	"fmt"
 	"log"
-)
 
-func isNilError(err error) bool {
-	if sdkErr, ok := err.(*sdk.SdkFfiError); ok {
-		return sdkErr == nil
-	}
-	return false
-}
+	sdk "bindings/iota_sdk_ffi"
+)
 
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
@@ -23,9 +17,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
-	
+
 	packageOpt, err := client.Package(packageAddress, nil)
-	if !isNilError(err) {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get package: %v", err)
 	}
 	if packageOpt == nil {
@@ -33,7 +27,7 @@ func main() {
 	}
 	pkg := *packageOpt
 
-	for moduleId, _ := range pkg.Modules() {
+	for moduleId := range pkg.Modules() {
 		moduleOpt, err := client.NormalizedMoveModule(
 			packageAddress,
 			moduleId.AsStr(),
@@ -43,7 +37,7 @@ func main() {
 			nil,
 			nil,
 		)
-		if !isNilError(err) {
+		if err.(*sdk.SdkFfiError) != nil {
 			log.Fatalf("Failed to get module: %v", err)
 		}
 		if moduleOpt == nil {

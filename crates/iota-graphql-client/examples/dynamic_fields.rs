@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use anyhow::Result;
-use iota_graphql_client::{Client, pagination::PaginationFilter};
+use iota_graphql_client::Client;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -11,7 +11,7 @@ async fn main() -> Result<()> {
     let parent_object_id =
         "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342".parse()?;
     let dynamic_fields_page = client
-        .dynamic_fields(parent_object_id, PaginationFilter::default())
+        .dynamic_fields(parent_object_id, Default::default())
         .await?;
     println!("{:#?}", dynamic_fields_page.page_info());
     println!("Page size: {}", dynamic_fields_page.data().len());

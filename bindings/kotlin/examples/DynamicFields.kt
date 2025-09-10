@@ -2,22 +2,20 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import iota_sdk.GraphQlClient
-import iota_sdk.ObjectId
-import iota_sdk.TransactionsFilter
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
-
-        val sharedObjId =
-                ObjectId.fromHex(
+        val parentObjectId =
+                iota_sdk.Address.fromHex(
                         "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
                 )
-        val transactions = client.transactions(TransactionsFilter(inputObject = sharedObjId))
-
-        for (transaction in transactions.data) {
-            println("Digest: ${transaction.transaction.digest().toBase58()}")
+        val page = client.dynamicFields(parentObjectId)
+        println("Page size: ${page.data.size}")
+        if (page.data.isNotEmpty()) {
+            println("First field name:\n${page.data.first().name}")
+            println("First field value:\n${page.data.first().valueAsJson}")
         }
     } catch (e: Exception) {
         e.printStackTrace()

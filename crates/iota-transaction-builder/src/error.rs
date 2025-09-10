@@ -12,6 +12,8 @@ pub enum Error {
     Input(String),
     #[error("Gas object should be an immutable or owned object")]
     WrongGasObject,
+    #[error("BCS serialization error: {0}")]
+    Bcs(bcs::Error),
     #[error("Decoding error: {0}")]
     Decoding(#[from] Base64Error),
     #[error("Missing object id")]
