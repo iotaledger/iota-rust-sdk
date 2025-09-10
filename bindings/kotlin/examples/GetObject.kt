@@ -7,6 +7,7 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
+
         val client = GraphQlClient.newDevnet()
 
         val objectId =

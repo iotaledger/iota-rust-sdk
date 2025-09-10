@@ -1,8 +1,9 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-import asyncio
 from lib.iota_sdk_ffi import GraphQlClient
+
+import asyncio
 
 
 async def main():
@@ -10,7 +11,7 @@ async def main():
         client = GraphQlClient.new_devnet()
 
         # Get current epoch
-        current_epoch = await client.epoch(None)
+        current_epoch = await client.epoch()
         if current_epoch is None:
             print("Current epoch is None")
             return
