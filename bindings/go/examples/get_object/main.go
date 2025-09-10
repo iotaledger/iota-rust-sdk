@@ -4,7 +4,6 @@
 package main
 
 import (
-	"encoding/hex"
 	"fmt"
 	"log"
 
@@ -28,26 +27,12 @@ func main() {
 	}
 	obj := *objOpt
 
-	objType := "Package"
-	if obj.ObjectType().IsStruct() {
-		objType = obj.ObjectType().AsStruct().String()
-	}
-
-	objOwner := "Immutable"
-	if obj.Owner().IsAddress() {
-		objOwner = fmt.Sprintf("Address(%v)", obj.Owner().AsAddress().ToHex())
-	} else if obj.Owner().IsObject() {
-		objOwner = fmt.Sprintf("Object(%v)", obj.Owner().AsObject().ToHex())
-	} else if obj.Owner().IsShared() {
-		objOwner = fmt.Sprintf("Shared(%v)", obj.Owner().AsShared())
-	}
-
 	fmt.Println("Object ID:", obj.ObjectId().ToHex())
 	fmt.Println("Version:", obj.Version())
 	fmt.Println("Previous transaction:", obj.PreviousTransaction().ToBase58())
-	fmt.Println("Owner:", objOwner)
+	fmt.Println("Owner:", obj.Owner())
 	fmt.Println("Storage rebate:", obj.StorageRebate())
-	fmt.Println("Type:", objType)
-	fmt.Println("BCS bytes:", hex.EncodeToString(obj.AsStruct().Contents))
+	fmt.Println("Type:", obj.ObjectType())
+	fmt.Println("BCS bytes:", sdk.HexEncode(obj.AsStruct().Contents))
 
 }
