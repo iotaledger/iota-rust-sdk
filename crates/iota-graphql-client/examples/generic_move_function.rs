@@ -14,10 +14,11 @@ async fn main() -> Result<()> {
 
     let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
 
-    let gas_coin_id =
-        "0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a".parse()?;
     let gas_coin = client
-        .object(gas_coin_id, None)
+        .object(
+            "0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a".parse()?,
+            None,
+        )
         .await?
         .context("missing gas coin")?;
 
@@ -38,38 +39,34 @@ async fn main() -> Result<()> {
         builder.input(Input::pure(&20000000u64)?),
     ];
     let balances = builder.make_move_vec(Some(TypeTag::u64()), balances);
-    let inputs = vec![addresses, balances];
-    let package = "0x2".parse()?;
-    let module = Identifier::new("vec_map")?;
-    let function = Identifier::new("from_keys_values")?;
 
     builder.move_call(
         Function::new(
-            package,
-            module,
-            function,
+            Address::TWO,
+            Identifier::new("vec_map")?,
+            Identifier::new("from_keys_values")?,
             vec![TypeTag::address(), TypeTag::u64()],
         ),
-        inputs,
+        vec![addresses, balances],
     );
     builder.set_sender(sender);
+    builder.set_gas_budget(50_000_000);
     builder.set_gas_price(
         client
             .reference_gas_price(None)
             .await?
             .context("missing gas price")?,
     );
-    builder.set_gas_budget(50000000);
     builder.add_gas_objects([Input::from(&gas_coin).with_owned_kind()]);
 
     let txn = builder.finish()?;
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to call `0x2::vec_map::from_keys_values`: {err}");
+        anyhow::bail!("Failed to call generic Move function: {err}");
     }
 
-    println!("Successfully called generic Move function `0x2::vec_map::from_keys_values`.");
+    println!("Successfully called generic Move function!");
 
     Ok(())
 }
