@@ -4113,6 +4113,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_owner.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4192,6 +4197,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_shared.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_shared.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_passkeyauthenticator.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -30659,6 +30669,15 @@ class ObjectType():
 
 
 
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
 
 class _UniffiConverterTypeObjectType:
 
@@ -30885,6 +30904,15 @@ class Owner():
     def is_shared(self, ) -> "bool":
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_shared,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display,self._uniffi_clone_pointer(),)
         )
 
 

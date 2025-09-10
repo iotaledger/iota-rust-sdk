@@ -481,7 +481,8 @@ impl From<MoveStruct> for iota_types::MoveStruct {
 /// owner-shared    = %x02 u64
 /// owner-immutable = %x03
 /// ```
-#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
+#[derive(derive_more::From, derive_more::Deref, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Display)]
 pub struct Owner(pub iota_types::Owner);
 
 #[uniffi::export]
@@ -556,7 +557,8 @@ impl Owner {
 }
 
 /// Type of an IOTA object
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Display)]
 pub struct ObjectType(pub iota_types::ObjectType);
 
 #[uniffi::export]

@@ -15826,6 +15826,19 @@ func (_self *ObjectType) IsStruct() bool {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *ObjectType) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *ObjectType) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -16044,6 +16057,19 @@ func (_self *Owner) IsShared() bool {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *Owner) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *Owner) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()

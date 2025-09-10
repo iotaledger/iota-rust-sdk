@@ -3,6 +3,7 @@
 
 import iota_sdk.GraphQlClient
 import iota_sdk.ObjectId
+import iota_sdk.hexEncode
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -16,32 +17,14 @@ fun main() = runBlocking {
 
         val obj = client.`object`(objectId)!!
 
-        val objType =
-                if (obj.objectType().isPackage()) {
-                    "Package"
-                } else {
-                    obj.objectType().asStruct().toString()
-                }
-
-        val objOwner =
-                if (obj.owner().isAddress()) {
-                    "Address(${obj.owner().asAddress().toHex()})"
-                } else if (obj.owner().isObject()) {
-                    "Object(${obj.owner().asObject().toHex()})"
-                } else if (obj.owner().isShared()) {
-                    "Shared(${obj.owner().asShared()})"
-                } else {
-                    "Immutable"
-                }
-
         println("Object ID: ${obj.objectId().toHex()}")
         println("Version: ${obj.version()}")
         println("Previous transaction: ${obj.previousTransaction().toBase58()}")
-        println("Owner: $objOwner")
+        println("Owner: ${obj.owner().toString()}")
         println("Storage rebate: ${obj.storageRebate()}")
-        println("Type: $objType")
+        println("Type: ${obj.objectType().toString()}")
         @OptIn(kotlin.ExperimentalStdlibApi::class)
-        println("BCS bytes: ${obj.asStruct().contents.toHexString()}")
+        println("BCS bytes: ${hexEncode(obj.asStruct().contents)}")
     } catch (e: Exception) {
         e.printStackTrace()
     }
