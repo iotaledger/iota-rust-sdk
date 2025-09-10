@@ -122,6 +122,17 @@ impl Owner {
     crate::def_is_as_into_opt!(Address, Object(ObjectId), Shared(Version));
 }
 
+impl std::fmt::Display for Owner {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Owner::Address(address) => write!(f, "Address({address})"),
+            Owner::Object(object_id) => write!(f, "Object({object_id})"),
+            Owner::Shared(version) => write!(f, "Shared({version})"),
+            Owner::Immutable => write!(f, "Immutable"),
+        }
+    }
+}
+
 /// Object data, either a package or struct
 ///
 /// # BCS
@@ -325,6 +336,15 @@ impl ObjectType {
     crate::def_is!(Package);
 
     crate::def_is_as_into_opt!(Struct(StructTag));
+}
+
+impl std::fmt::Display for ObjectType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ObjectType::Package => write!(f, "Package"),
+            ObjectType::Struct(struct_tag) => write!(f, "Struct({struct_tag})"),
+        }
+    }
 }
 
 /// An object on the IOTA blockchain
