@@ -15,7 +15,7 @@ async def main():
 
     obj = await client.object(object_id)
     if obj is None:
-        return
+        raise Exception("missing object")
 
     print("Object ID:", obj.object_id().to_hex())
     print("Version:", obj.version())
