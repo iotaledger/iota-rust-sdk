@@ -1521,6 +1521,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query()
+	})
+	if checksum != 28040 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config()
 	})
 	if checksum != 11931 {
@@ -11397,6 +11406,8 @@ type GraphQlClientInterface interface {
 	// This will return `Ok(None)` if the epoch requested is not available in
 	// the GraphQL service (e.g., due to pruning).
 	ReferenceGasPrice(epoch *uint64) (*uint64, error)
+	// Run a custom query.
+	RunCustomQuery(query CustomQuery) (Value, error)
 	// Get the GraphQL service configuration, including complexity limits, read
 	// and mutation limits, supported versions, and others.
 	ServiceConfig() (ServiceConfig, error)
@@ -12602,6 +12613,38 @@ func (_self *GraphQlClient) ReferenceGasPrice(epoch *uint64) (*uint64, error) {
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price(
 		_pointer,FfiConverterOptionalUint64INSTANCE.Lower(epoch)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Run a custom query.
+func (_self *GraphQlClient) RunCustomQuery(query CustomQuery) (Value, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) Value {
+			return FfiConverterTypeValueINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_custom_query(
+		_pointer,FfiConverterCustomQueryINSTANCE.Lower(query)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -23580,6 +23623,45 @@ func (c FfiConverterCoinPage) Write(writer io.Writer, value CoinPage) {
 type FfiDestroyerCoinPage struct {}
 
 func (_ FfiDestroyerCoinPage) Destroy(value CoinPage) {
+	value.Destroy()
+}
+type CustomQuery struct {
+	Query string
+	Variables *Value
+}
+
+func (r *CustomQuery) Destroy() {
+		FfiDestroyerString{}.Destroy(r.Query);
+		FfiDestroyerOptionalTypeValue{}.Destroy(r.Variables);
+}
+
+type FfiConverterCustomQuery struct {}
+
+var FfiConverterCustomQueryINSTANCE = FfiConverterCustomQuery{}
+
+func (c FfiConverterCustomQuery) Lift(rb RustBufferI) CustomQuery {
+	return LiftFromRustBuffer[CustomQuery](c, rb)
+}
+
+func (c FfiConverterCustomQuery) Read(reader io.Reader) CustomQuery {
+	return CustomQuery {
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalTypeValueINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterCustomQuery) Lower(value CustomQuery) C.RustBuffer {
+	return LowerIntoRustBuffer[CustomQuery](c, value)
+}
+
+func (c FfiConverterCustomQuery) Write(writer io.Writer, value CustomQuery) {
+		FfiConverterStringINSTANCE.Write(writer, value.Query);
+		FfiConverterOptionalTypeValueINSTANCE.Write(writer, value.Variables);
+}
+
+type FfiDestroyerCustomQuery struct {}
+
+func (_ FfiDestroyerCustomQuery) Destroy(value CustomQuery) {
 	value.Destroy()
 }
 // The result of a dry run, which includes the effects of the transaction and
