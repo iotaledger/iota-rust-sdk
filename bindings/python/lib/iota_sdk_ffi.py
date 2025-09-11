@@ -719,6 +719,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query() != 28040:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 31958:
@@ -3285,6 +3287,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price.argty
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_custom_query.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_custom_query.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config.argtypes = (
     ctypes.c_void_p,
 )
@@ -6920,6 +6927,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config.restype = ctypes.c_uint16
@@ -9349,6 +9359,42 @@ class _UniffiConverterTypeCoinPage(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypePageInfo.write(value.page_info, buf)
         _UniffiConverterSequenceTypeCoin.write(value.data, buf)
+
+
+class CustomQuery:
+    query: "str"
+    variables: "typing.Optional[Value]"
+    def __init__(self, *, query: "str", variables: "typing.Optional[Value]"):
+        self.query = query
+        self.variables = variables
+
+    def __str__(self):
+        return "CustomQuery(query={}, variables={})".format(self.query, self.variables)
+
+    def __eq__(self, other):
+        if self.query != other.query:
+            return False
+        if self.variables != other.variables:
+            return False
+        return True
+
+class _UniffiConverterTypeCustomQuery(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return CustomQuery(
+            query=_UniffiConverterString.read(buf),
+            variables=_UniffiConverterOptionalTypeValue.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.query)
+        _UniffiConverterOptionalTypeValue.check_lower(value.variables)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.query, buf)
+        _UniffiConverterOptionalTypeValue.write(value.variables, buf)
 
 
 class DryRunResult:
@@ -25985,6 +26031,12 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def run_custom_query(self, query: "CustomQuery"):
+        """
+        Run a custom query.
+        """
+
+        raise NotImplementedError
     def service_config(self, ):
         """
         Get the GraphQL service configuration, including complexity limits, read
@@ -27212,6 +27264,31 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
             _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def run_custom_query(self, query: "CustomQuery") -> "Value":
+        """
+        Run a custom query.
+        """
+
+        _UniffiConverterTypeCustomQuery.check_lower(query)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_custom_query(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeCustomQuery.lower(query)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeValue.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -38590,6 +38667,7 @@ __all__ = [
     "CheckpointSummaryPage",
     "CoinMetadata",
     "CoinPage",
+    "CustomQuery",
     "DryRunResult",
     "DynamicFieldName",
     "DynamicFieldOutput",
