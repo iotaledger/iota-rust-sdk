@@ -23,14 +23,20 @@ async def main():
     """
     variables = {"id": 1}
 
-    query = CustomQuery(
+    payload1 = CustomQuery(
         query=query,
         variables=json.dumps(variables),
     )
-
-    res = await client.run_custom_query(query)
-
+    res = await client.run_custom_query(payload1)
     print(res)
+
+    payload2 = CustomQuery(
+        query=query,
+        variables=None,
+    )
+    res = await client.run_custom_query(payload2)
+    print(res)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -24,12 +24,13 @@ fun main() = runBlocking {
     """.trimIndent()
 
     val variables = mapOf("id" to 1)
-
     val jsonVariables = Json.encodeToString(variables)
 
-    val payload = CustomQuery(query = query, variables = jsonVariables)
+    val payload1 = CustomQuery(query = query, variables = jsonVariables)
+    val res1 = client.runCustomQuery(payload1)
+    println(res1)
 
-    val res = client.runCustomQuery(payload)
-
-    println(res)
+    val payload2 = CustomQuery(query = query, null)
+    val res2 = client.runCustomQuery(payload2)
+    println(res2)
 }
