@@ -18,7 +18,7 @@ async def main():
         )
     )
     if gas_coin is None:
-        raise InternalError
+        raise Exception("missing gas coin")
 
     builder = TransactionBuilder()
 
@@ -75,7 +75,7 @@ async def main():
     res = await client.dry_run_tx(txn, False)
 
     if res.error is not None:
-        print(f"Failed to call generic Move function: {res.error}")
+        raise Exception(f"Failed to call generic Move function: {res.error}")
 
     print("Successfully called generic Move function!")
 

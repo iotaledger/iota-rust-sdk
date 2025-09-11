@@ -5,6 +5,7 @@ from lib.iota_sdk_ffi import *
 
 import asyncio
 
+
 async def main():
     client = GraphQlClient.new_devnet()
 
