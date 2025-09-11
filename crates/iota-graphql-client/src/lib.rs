@@ -403,6 +403,18 @@ impl Client {
         Ok(res)
     }
 
+    pub async fn run_custom_query<T: Serialize>(&self, query: &T) -> Result<serde_json::Value> {
+        let res = self
+            .inner
+            .post(self.rpc_server().clone())
+            .json(query)
+            .send()
+            .await?
+            .json::<serde_json::Value>()
+            .await?;
+        Ok(res)
+    }
+
     // ===========================================================================
     // Balance API
     // ===========================================================================

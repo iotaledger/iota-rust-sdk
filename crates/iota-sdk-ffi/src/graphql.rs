@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 
 use iota_graphql_client::{
     pagination::PaginationFilter,
@@ -843,6 +843,11 @@ impl GraphQLClient {
             .into())
     }
 
+    /// Run a custom query.
+    pub async fn run_custom_query(&self, query: CustomQuery) -> Result<serde_json::Value> {
+        Ok(self.0.read().await.run_custom_query(&query).await?)
+    }
+
     // ===========================================================================
     // Balance API
     // ===========================================================================
@@ -858,4 +863,11 @@ impl GraphQLClient {
     ) -> Result<Option<u64>> {
         Ok(self.0.read().await.balance(**address, coin_type).await?)
     }
+}
+
+#[derive(Debug, serde::Serialize, uniffi::Record)]
+pub struct CustomQuery {
+    pub query: String,
+    #[serde(default)]
+    pub variables: Option<serde_json::Value>,
 }
