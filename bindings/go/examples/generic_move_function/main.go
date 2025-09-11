@@ -77,5 +77,5 @@ func main() {
 		log.Fatalf("Failed to call generic Move function: %v", err)
 	}
 
-	fmt.Print("Successfull called generic Move function")
+	fmt.Print("Successfully called generic Move function")
 }
