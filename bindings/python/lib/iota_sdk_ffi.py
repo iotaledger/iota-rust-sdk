@@ -20486,6 +20486,81 @@ class _UniffiConverterSequenceTypeCoinInfo(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeDryRunEffect(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeDryRunEffect.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeDryRunEffect.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeDryRunEffect.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeDryRunMutation(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeDryRunMutation.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeDryRunMutation.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeDryRunMutation.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeDryRunReturn(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeDryRunReturn.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeDryRunReturn.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeDryRunReturn.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeDynamicFieldOutput(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):

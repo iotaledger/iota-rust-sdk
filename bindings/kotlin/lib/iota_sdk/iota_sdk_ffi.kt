@@ -53024,6 +53024,90 @@ public object FfiConverterSequenceTypeCoinInfo: FfiConverterRustBuffer<List<Coin
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypeDryRunEffect: FfiConverterRustBuffer<List<DryRunEffect>> {
+    override fun read(buf: ByteBuffer): List<DryRunEffect> {
+        val len = buf.getInt()
+        return List<DryRunEffect>(len) {
+            FfiConverterTypeDryRunEffect.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<DryRunEffect>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeDryRunEffect.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<DryRunEffect>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeDryRunEffect.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeDryRunMutation: FfiConverterRustBuffer<List<DryRunMutation>> {
+    override fun read(buf: ByteBuffer): List<DryRunMutation> {
+        val len = buf.getInt()
+        return List<DryRunMutation>(len) {
+            FfiConverterTypeDryRunMutation.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<DryRunMutation>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeDryRunMutation.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<DryRunMutation>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeDryRunMutation.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeDryRunReturn: FfiConverterRustBuffer<List<DryRunReturn>> {
+    override fun read(buf: ByteBuffer): List<DryRunReturn> {
+        val len = buf.getInt()
+        return List<DryRunReturn>(len) {
+            FfiConverterTypeDryRunReturn.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<DryRunReturn>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeDryRunReturn.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<DryRunReturn>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeDryRunReturn.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceTypeDynamicFieldOutput: FfiConverterRustBuffer<List<DynamicFieldOutput>> {
     override fun read(buf: ByteBuffer): List<DynamicFieldOutput> {
         val len = buf.getInt()

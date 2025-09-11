@@ -32,7 +32,7 @@ pub struct DryRunEffect {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DryRunMutation")]
 pub struct DryRunMutation {
-    pub input: TransactionArgumentEnum,
+    pub input: TransactionArgument,
     #[cynic(rename = "type")]
     pub type_: MoveType,
     pub bcs: Base64,
@@ -48,7 +48,7 @@ pub struct DryRunReturn {
 
 #[derive(cynic::InlineFragments, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionArgument")]
-pub enum TransactionArgumentEnum {
+pub enum TransactionArgument {
     GasCoin(GasCoin),
     Input(Input),
     Result(ResultArg),

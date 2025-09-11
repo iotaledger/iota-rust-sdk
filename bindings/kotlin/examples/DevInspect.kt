@@ -112,7 +112,6 @@ fun main() = runBlocking {
                                 iotaNamesPackageAddress,
                                 nameRecordModule,
                                 targetAddressFn,
-                                listOf()
                         ),
                         listOf(nameRecord)
                 )

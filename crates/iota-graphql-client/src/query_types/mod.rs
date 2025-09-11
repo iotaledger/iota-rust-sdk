@@ -33,7 +33,7 @@ pub use coin::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery};
 use cynic::impl_scalar;
 pub use dry_run::{
     DryRunArgs, DryRunEffect, DryRunMutation, DryRunQuery, DryRunResult, DryRunReturn, GasCoin,
-    Input, ObjectRef, ResultArg, TransactionArgumentEnum, TransactionMetadata,
+    Input, ObjectRef, ResultArg, TransactionArgument, TransactionMetadata,
 };
 pub use dynamic_fields::{
     DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
