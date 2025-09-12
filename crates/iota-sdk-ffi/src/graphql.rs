@@ -843,9 +843,14 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Run a custom query.
+    /// Run a query.
     pub async fn run_custom_query(&self, query: CustomQuery) -> Result<serde_json::Value> {
-        Ok(self.0.read().await.run_custom_query(&query).await?)
+        Ok(self
+            .0
+            .read()
+            .await
+            .run_unchecked_query(&query.into())
+            .await?)
     }
 
     // ===========================================================================
@@ -865,9 +870,17 @@ impl GraphQLClient {
     }
 }
 
-#[derive(Debug, serde::Serialize, uniffi::Record)]
+#[derive(Debug, uniffi::Record)]
 pub struct CustomQuery {
     pub query: String,
-    #[serde(default)]
     pub variables: Option<serde_json::Value>,
+}
+
+impl From<CustomQuery> for iota_graphql_client::UncheckedQuery {
+    fn from(value: CustomQuery) -> Self {
+        Self {
+            query: value.query,
+            variables: value.variables,
+        }
+    }
 }

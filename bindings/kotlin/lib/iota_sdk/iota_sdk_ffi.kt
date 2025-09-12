@@ -5763,7 +5763,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query() != 28040.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query() != 49655.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931.toShort()) {
@@ -19199,7 +19199,7 @@ public interface GraphQlClientInterface {
     suspend fun `referenceGasPrice`(`epoch`: kotlin.ULong? = null): kotlin.ULong?
     
     /**
-     * Run a custom query.
+     * Run a query.
      */
     suspend fun `runCustomQuery`(`query`: CustomQuery): Value
     
@@ -20250,7 +20250,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Run a custom query.
+     * Run a query.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")

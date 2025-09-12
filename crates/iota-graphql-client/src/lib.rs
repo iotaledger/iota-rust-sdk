@@ -154,6 +154,14 @@ impl DynamicFieldOutput {
     }
 }
 
+/// A type to allow GraphQl queries across the FFI boundary.
+#[derive(Debug, serde::Serialize)]
+pub struct UncheckedQuery {
+    pub query: String,
+    #[serde(default)]
+    pub variables: Option<serde_json::Value>,
+}
+
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
 pub struct Client {
@@ -403,7 +411,12 @@ impl Client {
         Ok(res)
     }
 
-    pub async fn run_custom_query<T: Serialize>(&self, query: &T) -> Result<serde_json::Value> {
+    /// Run a query on the GraphQL server and return the response.
+    /// This method expects a valid GraphQL query string and valid JSON for the
+    /// variables. It performs no validation of the input. It returns
+    /// [`serde_json::Value`] and it is intended to be used with queries
+    /// that need to cross the FFI boundary.
+    pub async fn run_unchecked_query(&self, query: &UncheckedQuery) -> Result<serde_json::Value> {
         let res = self
             .inner
             .post(self.rpc_server().clone())
