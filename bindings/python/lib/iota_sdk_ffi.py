@@ -719,7 +719,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query() != 49655:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query() != 28040:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -26036,7 +26036,7 @@ class GraphQlClientProtocol(typing.Protocol):
         raise NotImplementedError
     def run_custom_query(self, query: "CustomQuery"):
         """
-        Run a query.
+        Run a custom query.
         """
 
         raise NotImplementedError
@@ -27277,7 +27277,7 @@ _UniffiConverterTypeSdkFfiError,
 
     async def run_custom_query(self, query: "CustomQuery") -> "Value":
         """
-        Run a query.
+        Run a custom query.
         """
 
         _UniffiConverterTypeCustomQuery.check_lower(query)

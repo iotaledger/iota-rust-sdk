@@ -1523,7 +1523,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query()
 	})
-	if checksum != 49655 {
+	if checksum != 28040 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query: UniFFI API checksum mismatch")
 	}
@@ -11406,7 +11406,7 @@ type GraphQlClientInterface interface {
 	// This will return `Ok(None)` if the epoch requested is not available in
 	// the GraphQL service (e.g., due to pruning).
 	ReferenceGasPrice(epoch *uint64) (*uint64, error)
-	// Run a query.
+	// Run a custom query.
 	RunCustomQuery(query CustomQuery) (Value, error)
 	// Get the GraphQL service configuration, including complexity limits, read
 	// and mutation limits, supported versions, and others.
@@ -12626,7 +12626,7 @@ func (_self *GraphQlClient) ReferenceGasPrice(epoch *uint64) (*uint64, error) {
 	return res, err 
 }
 
-// Run a query.
+// Run a custom query.
 func (_self *GraphQlClient) RunCustomQuery(query CustomQuery) (Value, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()

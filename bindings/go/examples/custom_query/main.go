@@ -46,15 +46,14 @@ func main() {
 	}
 	fmt.Println(res2)
 
-	queryChainIdentifierStr := `
+	queryChainIdStr := `
 	query CustomQuery {
 		chainIdentifier
 	}`
-	queryChainIdentifier := sdk.CustomQuery{
-		Query:     queryChainIdentifierStr,
-		Variables: nil,
+	queryChainId := sdk.CustomQuery{
+		Query: queryChainIdStr,
 	}
-	res3, err := client.RunCustomQuery(queryChainIdentifier)
+	res3, err := client.RunCustomQuery(queryChainId)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to run a custom query: %v", err)
 	}

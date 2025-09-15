@@ -10,7 +10,7 @@ import kotlinx.serialization.json.Json
 fun main() = runBlocking {
     val client = GraphQlClient.newDevnet()
 
-    val query_epoch_data_str =
+    val queryEpochDataStr =
             """
         query CustomQuery(${'$'}id: UInt53) {
             epoch(id: ${'$'}id) {
@@ -23,23 +23,23 @@ fun main() = runBlocking {
         }
     """.trimIndent()
 
-    val queryEpochData = CustomQuery(query_epoch_data_str)
+    val queryEpochData = CustomQuery(queryEpochDataStr)
     val res1 = client.runCustomQuery(queryEpochData)
     println(res1)
 
     val variablesMap = mapOf("id" to 1)
     val variables = Json.encodeToString(variablesMap)
-    val queryEpochDataWithVariables = CustomQuery(query_epoch_data_str, variables)
+    val queryEpochDataWithVariables = CustomQuery(queryEpochDataStr, variables)
     val res2 = client.runCustomQuery(queryEpochDataWithVariables)
     println(res2)
 
-    val query_chain_id_str =
+    val queryChainIdStr =
             """
         query CustomQuery {
             chainIdentifier
         }
     """.trimIndent()
-    val queryChainIdentifier = CustomQuery(query_chain_id_str)
-    val res3 = client.runCustomQuery(queryChainIdentifier)
+    val queryChainId = CustomQuery(queryChainIdStr)
+    val res3 = client.runCustomQuery(queryChainId)
     println(res3)
 }
