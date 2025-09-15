@@ -11,7 +11,7 @@ use iota_types::CheckpointSequenceNumber;
 use tokio::sync::RwLock;
 
 use crate::{
-    error::Result,
+    error::{Result, SdkFfiError},
     types::{
         address::Address,
         checkpoint::CheckpointSummary,
@@ -843,14 +843,15 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Run a query.
+    /// Run a custom query.
     pub async fn run_custom_query(&self, query: CustomQuery) -> Result<serde_json::Value> {
-        Ok(self
-            .0
+        self.0
             .read()
             .await
             .run_unchecked_query(&query.into())
-            .await?)
+            .await?
+            .data
+            .ok_or_else(|| SdkFfiError::Generic("custom query yielded no data".to_string()))
     }
 
     // ===========================================================================
