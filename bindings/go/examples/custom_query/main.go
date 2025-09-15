@@ -27,23 +27,23 @@ func main() {
 	variablesJson := `{"id": 1}`
 	variables := string(variablesJson)
 
-	payload1 := sdk.CustomQuery{
+	customQueryWithVariables := sdk.CustomQuery{
 		Query:     query,
 		Variables: &variables,
 	}
-	res1, err := client.RunCustomQuery(payload1)
+	res1, err := client.RunCustomQuery(customQueryWithVariables)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to perform a custom query: %v", err)
+		log.Fatalf("Failed to run a custom query with variables: %v", err)
 	}
 	fmt.Println(res1)
 
-	payload2 := sdk.CustomQuery{
+	customQuery := sdk.CustomQuery{
 		Query:     query,
 		Variables: nil,
 	}
-	res2, err := client.RunCustomQuery(payload2)
+	res2, err := client.RunCustomQuery(customQuery)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to perform a custom query: %v", err)
+		log.Fatalf("Failed to run a custom query: %v", err)
 	}
 	fmt.Println(res2)
 }

@@ -873,6 +873,7 @@ impl GraphQLClient {
 #[derive(Debug, uniffi::Record)]
 pub struct CustomQuery {
     pub query: String,
+    #[uniffi(default = None)]
     pub variables: Option<serde_json::Value>,
 }
 

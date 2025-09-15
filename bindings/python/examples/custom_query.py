@@ -23,18 +23,17 @@ async def main():
     """
     variables = {"id": 1}
 
-    payload1 = CustomQuery(
+    custom_query_with_variables = CustomQuery(
         query=query,
         variables=json.dumps(variables),
     )
-    res = await client.run_custom_query(payload1)
+    res = await client.run_custom_query(custom_query_with_variables)
     print(res)
 
-    payload2 = CustomQuery(
+    custom_query = CustomQuery(
         query=query,
-        variables=None,
     )
-    res = await client.run_custom_query(payload2)
+    res = await client.run_custom_query(custom_query)
     print(res)
 
 

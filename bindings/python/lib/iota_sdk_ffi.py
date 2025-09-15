@@ -9364,9 +9364,12 @@ class _UniffiConverterTypeCoinPage(_UniffiConverterRustBuffer):
 class CustomQuery:
     query: "str"
     variables: "typing.Optional[Value]"
-    def __init__(self, *, query: "str", variables: "typing.Optional[Value]"):
+    def __init__(self, *, query: "str", variables: "typing.Optional[Value]" = _DEFAULT):
         self.query = query
-        self.variables = variables
+        if variables is _DEFAULT:
+            self.variables = None
+        else:
+            self.variables = variables
 
     def __str__(self):
         return "CustomQuery(query={}, variables={})".format(self.query, self.variables)

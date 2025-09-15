@@ -411,11 +411,11 @@ impl Client {
         Ok(res)
     }
 
-    /// Run a query on the GraphQL server and return the response.
-    /// This method expects a valid GraphQL query string and valid JSON for the
-    /// variables. It performs no validation of the input. It returns
-    /// [`serde_json::Value`] and it is intended to be used with queries
-    /// that need to cross the FFI boundary.
+    /// Run an unchecked query on the GraphQL server and return the response.
+    /// This method assumes a valid GraphQL query string and valid JSON for the
+    /// GraphQL variables. It returns a [`serde_json::Value`].
+    /// In general, it is recommended to use the [`run_query`] method instead
+    /// which guarantees a valid GraphQL query.
     pub async fn run_unchecked_query(&self, query: &UncheckedQuery) -> Result<serde_json::Value> {
         let res = self
             .inner

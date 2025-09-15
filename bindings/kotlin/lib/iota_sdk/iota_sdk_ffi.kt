@@ -43308,7 +43308,7 @@ public object FfiConverterTypeCoinPage: FfiConverterRustBuffer<CoinPage> {
 
 data class CustomQuery (
     var `query`: kotlin.String, 
-    var `variables`: Value?
+    var `variables`: Value? = null
 ) {
     
     companion object
