@@ -25,8 +25,7 @@ func main() {
 	}`
 
 	queryEpochData := sdk.CustomQuery{
-		Query:     queryEpochDataStr,
-		Variables: nil,
+		Query: queryEpochDataStr,
 	}
 	res1, err := client.RunCustomQuery(queryEpochData)
 	if err.(*sdk.SdkFfiError) != nil {
