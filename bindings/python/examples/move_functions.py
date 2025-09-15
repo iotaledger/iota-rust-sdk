@@ -15,8 +15,7 @@ async def main():
 
     package = await client.package(package_address)
     if package is None:
-        print("no package found")
-        return
+        raise Exception("missing package")
 
     for module_id in package.modules():
         module = await client.normalized_move_module(
