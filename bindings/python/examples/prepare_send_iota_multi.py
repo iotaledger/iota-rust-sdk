@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from lib.iota_sdk_ffi import *
+
 import asyncio
 
 

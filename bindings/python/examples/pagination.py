@@ -1,14 +1,9 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
+from lib.iota_sdk_ffi import *
+
 import asyncio
-from lib.iota_sdk_ffi import (
-    Address,
-    Direction,
-    GraphQlClient,
-    ObjectFilter,
-    PaginationFilter,
-)
 
 
 async def main():
