@@ -11,6 +11,8 @@ pub mod error;
 pub(crate) mod publish_type;
 pub mod types;
 
+pub use builder::TransactionBuilder;
+
 pub use self::types::CustomMoveType;
 
 #[cfg(test)]
@@ -133,10 +135,10 @@ mod tests {
 
         let recipient = Address::generate(rand::thread_rng());
 
-        let result = tx.clone().finish().await;
+        let result = tx.clone().finish();
         assert!(result.is_err());
 
-        tx.transfer_objects(recipient, vec![coin]).await.unwrap();
+        tx.transfer_objects(recipient, vec![coin]).unwrap();
         tx.gas(ObjectReference::new(
             "0xd8792bce2743e002673752902c0e7348dfffd78638cb5367b0b85857bceb9821"
                 .parse()
@@ -146,12 +148,11 @@ mod tests {
                 .parse()
                 .unwrap(),
         ))
-        .await
         .unwrap();
         tx.gas_price(1000);
         tx.gas_budget(500000000);
 
-        tx.finish().await.unwrap();
+        tx.finish().unwrap();
     }
 
     #[tokio::test]
@@ -181,7 +182,7 @@ mod tests {
         // set up the sender, gas object, gas budget, and gas price and return the pk to
         // sign
         let (mut tx, _, pk, _) = helper_setup().await;
-        tx.move_call(Address::ONE.into(), "option", "is_none")
+        tx.move_call(Address::ONE, "option", "is_none")
             .generics::<u64>()
             .params(Some(1u64))
             .finish()
@@ -340,7 +341,7 @@ mod tests {
         let updated_package = move_package_data("package_test_example_v2.json");
 
         // we need this ticket to authorize the upgrade
-        tx.move_call(Address::TWO.into(), "package", "authorize_upgrade")
+        tx.move_call(Address::TWO, "package", "authorize_upgrade")
             .params((upgrade_cap.unwrap(), 0u8, &updated_package.digest))
             .result("ticket")
             .await
@@ -356,7 +357,7 @@ mod tests {
         .unwrap();
 
         // commit the upgrade
-        tx.move_call(Address::TWO.into(), "package", "commit_upgrade")
+        tx.move_call(Address::TWO, "package", "commit_upgrade")
             .params((upgrade_cap.unwrap(), Res("receipt")))
             .finish()
             .await

@@ -7,7 +7,7 @@ use core::marker::PhantomData;
 use std::{collections::HashMap, future::Future};
 
 use iota_crypto::IotaSigner;
-use iota_graphql_client::Client;
+use iota_graphql_client::{Client, DryRunResult};
 use iota_types::{
     Address, Argument, Command, GasPayment, Identifier, IdentifierRef, Input, MakeMoveVector,
     MergeCoins, MoveCall, ObjectId, ObjectReference, Owner, Publish, SplitCoins, Transaction,
@@ -95,7 +95,7 @@ impl<C> TransactionBuilder<C> {
     }
 
     /// Transfer IOTA to a recipient address.
-    pub async fn transfer_iota(
+    pub fn transfer_iota(
         &mut self,
         recipient: Address,
         amount: impl Into<Option<u64>> + Send,
@@ -137,7 +137,7 @@ impl<C> TransactionBuilder<C> {
 
     /// Set the gas coins that will be consumed with all object reference data.
     /// Optional.
-    pub async fn gas_ref(&mut self, obj_ref: ObjectReference) -> Result<&mut Self, Error> {
+    pub fn gas_ref(&mut self, obj_ref: ObjectReference) -> Result<&mut Self, Error> {
         self.gas.push(obj_ref);
         Ok(self)
     }
@@ -172,7 +172,7 @@ impl<C> TransactionBuilder<C> {
 
 impl TransactionBuilder<()> {
     /// Set the gas coins that will be consumed. Optional.
-    pub async fn gas(&mut self, obj_ref: ObjectReference) -> Result<&mut Self, Error> {
+    pub fn gas(&mut self, obj_ref: ObjectReference) -> Result<&mut Self, Error> {
         self.gas.push(obj_ref);
         Ok(self)
     }
@@ -188,7 +188,7 @@ impl TransactionBuilder<()> {
     }
 
     /// Merge multiple coins into one.
-    pub async fn merge_coins(
+    pub fn merge_coins(
         &mut self,
         primary_coin: ObjectReference,
         consumed_coins: impl IntoIterator<Item = ObjectReference> + Send,
@@ -206,7 +206,7 @@ impl TransactionBuilder<()> {
     }
 
     /// Split a coin into many.
-    pub async fn split_coins(
+    pub fn split_coins(
         &mut self,
         coin: ObjectReference,
         split_amounts: impl IntoIterator<Item = u64> + Send,
@@ -235,7 +235,7 @@ impl TransactionBuilder<()> {
     }
 
     /// Transfer objects to a recipient address.
-    pub async fn transfer_objects(
+    pub fn transfer_objects(
         &mut self,
         recipient: Address,
         objects: impl IntoIterator<Item = ObjectReference>,
@@ -253,7 +253,7 @@ impl TransactionBuilder<()> {
     }
 
     /// Convert this builder into a transaction.
-    pub async fn finish(self) -> Result<Transaction, Error> {
+    pub fn finish(self) -> Result<Transaction, Error> {
         let Some(price) = self.gas_price else {
             return Err(Error::MissingGasPrice);
         };
@@ -310,11 +310,11 @@ impl TransactionBuilder<Client> {
     /// Begin building a move call.
     pub fn move_call(
         &mut self,
-        package_id: ObjectId,
+        package_id: impl Into<ObjectId>,
         module: &'static str,
         function: &'static str,
     ) -> MoveCallCommandBuilder<'_, Client> {
-        MoveCallCommandBuilder::<Client>::new(self, package_id, module, function)
+        MoveCallCommandBuilder::<Client>::new(self, package_id.into(), module, function)
     }
 
     /// Transfer objects to a recipient address.
@@ -496,7 +496,6 @@ impl TransactionBuilder<Client> {
             },
             expiration: self.expiration,
         };
-        println!("{txn:#?}");
         txn.gas_payment.budget = match self.gas_budget {
             Some(budget) => budget,
             None => {
@@ -515,7 +514,44 @@ impl TransactionBuilder<Client> {
         Ok(txn)
     }
 
-    /// Execute the publish with the given data.
+    /// Dry run the transaction.
+    pub async fn dry_run(self, skip_checks: bool) -> Result<DryRunResult, Error> {
+        let price = match self.gas_price {
+            Some(price) => price,
+            None => self
+                .client
+                .reference_gas_price(None)
+                .await
+                .map_err(Error::Client)?
+                .ok_or_else(|| Error::MissingGasPrice)?,
+        };
+        let txn = Transaction {
+            kind: iota_types::TransactionKind::ProgrammableTransaction(
+                iota_types::ProgrammableTransaction {
+                    inputs: self.inputs,
+                    commands: self.commands,
+                },
+            ),
+            sender: self.sender,
+            gas_payment: {
+                GasPayment {
+                    objects: self.gas,
+                    owner: self.sponsor.unwrap_or(self.sender),
+                    price,
+                    budget: 0,
+                }
+            },
+            expiration: self.expiration,
+        };
+        let res = self
+            .client
+            .dry_run_tx(&txn, skip_checks)
+            .await
+            .map_err(Error::Client)?;
+        Ok(res)
+    }
+
+    /// Execute the transaction and optionally wait for finalization.
     pub async fn execute(
         self,
         keypairs: &[iota_crypto::simple::SimpleKeypair],
@@ -684,7 +720,7 @@ impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Input>> {
     }
 
     /// Finish the move call and return the PTB.
-    pub async fn finish(self) -> Result<&'a mut TransactionBuilder<()>, Error> {
+    pub fn finish(self) -> Result<&'a mut TransactionBuilder<()>, Error> {
         let args = if let Some(a) = self.args {
             a.into_iter().map(|i| self.ptb.input(i)).collect()
         } else {
@@ -703,11 +739,8 @@ impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Input>> {
     }
 
     /// Finish the move call by naming the output and return the PTB.
-    pub async fn result(
-        self,
-        name: impl NamedCommands,
-    ) -> Result<&'a mut TransactionBuilder<()>, Error> {
-        let ptb = self.finish().await?;
+    pub fn result(self, name: impl NamedCommands) -> Result<&'a mut TransactionBuilder<()>, Error> {
+        let ptb = self.finish()?;
 
         name.push_named_commands(ptb);
 
@@ -749,7 +782,7 @@ impl<'a> PublishBuilder<'a> {
         name: impl NamedCommand,
     ) -> Result<&'a mut TransactionBuilder<Client>, Error> {
         self.ptb
-            .move_call(Address::TWO.into(), "package", "upgrade_package")
+            .move_call(Address::TWO, "package", "upgrade_package")
             .params(self.cap)
             .result(name)
             .await?;
