@@ -33,7 +33,7 @@ pub trait CustomMoveType {
 }
 
 /// A parameter type.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum ParamType {
     /// An object, referenced by ID.
     Object(ObjectId),
@@ -44,7 +44,7 @@ pub enum ParamType {
 /// A trait which defines how types are serialized for move calls.
 pub trait MoveParam {
     /// Get the param type.
-    fn param(&self) -> anyhow::Result<ParamType>;
+    fn param(&self) -> ParamType;
 }
 
 /// A trait which defines the iota tag of the type.
@@ -103,8 +103,8 @@ macro_rules! impl_simple_move_type {
         }
 
         impl MoveParam for $rust_ty {
-            fn param(&self) -> anyhow::Result<ParamType> {
-                Ok(ParamType::Pure(bcs::to_bytes(self)?))
+            fn param(&self) -> ParamType {
+                ParamType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
             }
         }
     };
@@ -131,71 +131,74 @@ impl<T: CustomMoveType> MoveType for T {
 }
 
 impl MoveParam for ObjectId {
-    fn param(&self) -> anyhow::Result<ParamType> {
-        Ok(ParamType::Object(*self))
+    fn param(&self) -> ParamType {
+        ParamType::Object(*self)
     }
 }
 
 impl MoveParam for Digest {
-    fn param(&self) -> anyhow::Result<ParamType> {
-        Ok(ParamType::Pure(bcs::to_bytes(self)?))
+    fn param(&self) -> ParamType {
+        ParamType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
     }
 }
 
 impl MoveParam for ParamType {
-    fn param(&self) -> anyhow::Result<ParamType> {
-        Ok(self.clone())
+    fn param(&self) -> ParamType {
+        self.clone()
     }
 }
 
 impl MoveParam for () {
-    fn param(&self) -> anyhow::Result<ParamType> {
-        Ok(ParamType::Pure(Vec::new()))
+    fn param(&self) -> ParamType {
+        ParamType::Pure(Vec::new())
     }
 }
 
 impl<T: Serialize> MoveParam for Vec<T> {
-    fn param(&self) -> anyhow::Result<ParamType> {
-        Ok(ParamType::Pure(bcs::to_bytes(self)?))
+    fn param(&self) -> ParamType {
+        ParamType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
     }
 }
 
 impl<T: Serialize> MoveParam for Box<T> {
-    fn param(&self) -> anyhow::Result<ParamType> {
-        Ok(ParamType::Pure(bcs::to_bytes(self)?))
+    fn param(&self) -> ParamType {
+        ParamType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
     }
 }
 
 impl<T: MoveParam + Serialize + DeserializeOwned> MoveParam for Option<T> {
-    fn param(&self) -> anyhow::Result<ParamType> {
+    fn param(&self) -> ParamType {
         match self {
-            Some(value) => match value.param()? {
-                ParamType::Object(object_id) => {
-                    Ok(ParamType::Pure(bcs::to_bytes(&Some(object_id))?))
-                }
-                ParamType::Pure(items) => Ok(ParamType::Pure(bcs::to_bytes(&Some(
-                    bcs::from_bytes::<T>(&items)?,
-                ))?)),
+            Some(value) => match value.param() {
+                ParamType::Object(object_id) => ParamType::Pure(
+                    bcs::to_bytes(&Some(object_id)).expect("bcs serialization failed"),
+                ),
+                ParamType::Pure(items) => ParamType::Pure(
+                    bcs::to_bytes(&Some(
+                        bcs::from_bytes::<T>(&items).expect("bcs deserialization failed"),
+                    ))
+                    .expect("bcs serialization failed"),
+                ),
             },
-            None => Ok(ParamType::Pure(vec![0; core::mem::size_of::<T>() + 1])),
+            None => ParamType::Pure(vec![0; core::mem::size_of::<T>() + 1]),
         }
     }
 }
 
 impl MoveParam for [u8] {
-    fn param(&self) -> anyhow::Result<ParamType> {
-        Ok(ParamType::Pure(self.to_vec()))
+    fn param(&self) -> ParamType {
+        ParamType::Pure(self.to_vec())
     }
 }
 
 impl<const N: usize> MoveParam for [u8; N] {
-    fn param(&self) -> anyhow::Result<ParamType> {
-        Ok(ParamType::Pure(self.to_vec()))
+    fn param(&self) -> ParamType {
+        ParamType::Pure(self.to_vec())
     }
 }
 
 impl<T: MoveParam> MoveParam for &T {
-    fn param(&self) -> anyhow::Result<ParamType> {
+    fn param(&self) -> ParamType {
         (*self).param()
     }
 }

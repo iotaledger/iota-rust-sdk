@@ -4,7 +4,7 @@
 //! Builder for Programmable Transactions.
 
 use core::marker::PhantomData;
-use std::{collections::HashMap, future::Future};
+use std::collections::HashMap;
 
 use iota_crypto::IotaSigner;
 use iota_graphql_client::{Client, DryRunResult};
@@ -21,6 +21,22 @@ use crate::{
     types::{MoveParam, MoveType, MoveTypes, ParamType},
 };
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum UnresolvedInput {
+    /// A move object that is either immutable or address owned
+    ImmutableOrOwned(ObjectId),
+    /// A move object whose owner is "Shared"
+    Shared {
+        object_id: ObjectId,
+        /// Controls whether the caller asks for a mutable reference to the
+        /// shared object.
+        mutable: bool,
+    },
+    /// A move object that is attempted to be received in this transaction.
+    Receiving(ObjectId),
+    Resolved(Input),
+}
+
 /// A builder for a programmable transaction which provides a better API vs.
 /// IOTAs [`ProgrammableTransactionBuilder`](IotaPTB).
 ///
@@ -35,7 +51,7 @@ use crate::{
 #[derive(Debug, Clone)]
 pub struct TransactionBuilder<C> {
     /// The inputs to the transaction.
-    inputs: Vec<Input>,
+    inputs: Vec<UnresolvedInput>,
     /// The list of commands in the transaction. A command is a single operation
     /// in a programmable transaction.
     commands: Vec<Command>,
@@ -44,6 +60,7 @@ pub struct TransactionBuilder<C> {
     /// a gas object and use the [`add_gas_objects`](Self::add_gas_objects)
     /// method to set the gas objects.
     pub(crate) gas: Vec<ObjectReference>,
+    gas_to_resolve: Vec<ObjectId>,
     /// The gas budget for the transaction.
     gas_budget: Option<u64>,
     /// The gas price for the transaction.
@@ -66,6 +83,7 @@ impl TransactionBuilder<()> {
             inputs: Default::default(),
             commands: Default::default(),
             gas: Default::default(),
+            gas_to_resolve: Default::default(),
             gas_budget: Default::default(),
             gas_price: Default::default(),
             sender,
@@ -84,6 +102,7 @@ impl<C> TransactionBuilder<C> {
             inputs: self.inputs,
             commands: self.commands,
             gas: self.gas,
+            gas_to_resolve: self.gas_to_resolve,
             gas_budget: self.gas_budget,
             gas_price: self.gas_price,
             sender: self.sender,
@@ -99,10 +118,10 @@ impl<C> TransactionBuilder<C> {
         &mut self,
         recipient: Address,
         amount: impl Into<Option<u64>> + Send,
-    ) -> Result<&mut Self, Error> {
-        let rec_arg = self.pure(recipient)?;
+    ) -> &mut Self {
+        let rec_arg = self.pure(recipient);
         let coin_arg = if let Some(amount) = amount.into() {
-            let amt_arg = self.pure(amount)?;
+            let amt_arg = self.pure(amount);
             self.command(Command::SplitCoins(SplitCoins {
                 coin: Argument::Gas,
                 amounts: vec![amt_arg],
@@ -114,7 +133,7 @@ impl<C> TransactionBuilder<C> {
             objects: vec![coin_arg],
             address: rec_arg,
         }));
-        Ok(self)
+        self
     }
 
     /// Set the gas budget. Optional.
@@ -135,31 +154,26 @@ impl<C> TransactionBuilder<C> {
         self
     }
 
-    /// Set the gas coins that will be consumed with all object reference data.
-    /// Optional.
-    pub fn gas_ref(&mut self, obj_ref: ObjectReference) -> Result<&mut Self, Error> {
-        self.gas.push(obj_ref);
-        Ok(self)
-    }
-
-    /// Make a value available to the transaction as an input.
-    pub fn input(&mut self, i: Input) -> Argument {
-        let input = i.into();
-        if let Some(i) = self.inputs.iter().position(|i| i == &input) {
+    /// Make a value available to the transaction as an input. These will be
+    /// resolved later into Arguments.
+    fn input(&mut self, param: UnresolvedInput) -> Argument {
+        if let Some(i) = self.inputs.iter().position(|i| i == &param) {
             return Argument::Input(i as _);
         }
-        self.inputs.push(input);
+        self.inputs.push(param);
         Argument::Input((self.inputs.len() - 1) as _)
     }
 
     /// Add a pure input using the BCS serialized bytes
     pub fn pure_bytes(&mut self, bytes: Vec<u8>) -> Argument {
-        self.input(Input::Pure { value: bytes })
+        self.input(UnresolvedInput::Resolved(Input::Pure { value: bytes }))
     }
 
     /// Add a pure input
-    pub fn pure<T: Serialize>(&mut self, value: T) -> Result<Argument, Error> {
-        Ok(self.pure_bytes(bcs::to_bytes(&value).map_err(Error::Bcs)?))
+    pub fn pure<T: Serialize>(&mut self, value: T) -> Argument {
+        // This serialization should never fail, so we will forego error propagation
+        // here for convenience
+        self.pure_bytes(bcs::to_bytes(&value).expect("bcs serialization failed"))
     }
 
     /// Add a new command to the PTB
@@ -172,9 +186,9 @@ impl<C> TransactionBuilder<C> {
 
 impl TransactionBuilder<()> {
     /// Set the gas coins that will be consumed. Optional.
-    pub fn gas(&mut self, obj_ref: ObjectReference) -> Result<&mut Self, Error> {
+    pub fn gas(&mut self, obj_ref: ObjectReference) -> &mut Self {
         self.gas.push(obj_ref);
-        Ok(self)
+        self
     }
 
     /// Begin building a move call.
@@ -183,8 +197,8 @@ impl TransactionBuilder<()> {
         package_id: ObjectId,
         module: &'static str,
         function: &'static str,
-    ) -> MoveCallCommandBuilder<'_, (), (), Vec<Input>> {
-        MoveCallCommandBuilder::<(), (), Vec<Input>>::new(self, package_id, module, function)
+    ) -> MoveCallCommandBuilder<'_, (), (), Vec<Argument>> {
+        MoveCallCommandBuilder::<(), (), Vec<Argument>>::new(self, package_id, module, function)
     }
 
     /// Merge multiple coins into one.
@@ -192,17 +206,19 @@ impl TransactionBuilder<()> {
         &mut self,
         primary_coin: ObjectReference,
         consumed_coins: impl IntoIterator<Item = ObjectReference> + Send,
-    ) -> Result<&mut Self, Error> {
-        let primary_coin = self.input(Input::ImmutableOrOwned(primary_coin));
+    ) -> &mut Self {
+        let primary_coin = self.input(UnresolvedInput::Resolved(Input::ImmutableOrOwned(
+            primary_coin,
+        )));
         let mut consumed = Vec::new();
         for coin in consumed_coins {
-            consumed.push(self.input(Input::ImmutableOrOwned(coin)));
+            consumed.push(self.input(UnresolvedInput::Resolved(Input::ImmutableOrOwned(coin))));
         }
         self.command(Command::MergeCoins(MergeCoins {
             coin: primary_coin,
             coins_to_merge: consumed,
         }));
-        Ok(self)
+        self
     }
 
     /// Split a coin into many.
@@ -211,7 +227,7 @@ impl TransactionBuilder<()> {
         coin: ObjectReference,
         split_amounts: impl IntoIterator<Item = u64> + Send,
         name: impl NamedCommands,
-    ) -> Result<&mut Self, Error> {
+    ) -> &mut Self {
         let coin = if self
             .gas
             .iter()
@@ -220,18 +236,15 @@ impl TransactionBuilder<()> {
         {
             Argument::Gas
         } else {
-            self.input(Input::ImmutableOrOwned(coin))
+            self.input(UnresolvedInput::Resolved(Input::ImmutableOrOwned(coin)))
         };
-        let split_amounts = split_amounts
-            .into_iter()
-            .map(|v| self.pure(v))
-            .collect::<Result<_, _>>()?;
+        let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
         self.command(Command::SplitCoins(SplitCoins {
             coin,
             amounts: split_amounts,
         }));
         name.push_named_commands(self);
-        Ok(self)
+        self
     }
 
     /// Transfer objects to a recipient address.
@@ -239,21 +252,41 @@ impl TransactionBuilder<()> {
         &mut self,
         recipient: Address,
         objects: impl IntoIterator<Item = ObjectReference>,
-    ) -> Result<&mut Self, Error> {
+    ) -> &mut Self {
         let objects = objects
             .into_iter()
-            .map(|o| self.input(Input::ImmutableOrOwned(o)))
+            .map(|o| self.input(UnresolvedInput::Resolved(Input::ImmutableOrOwned(o))))
             .collect();
         let cmd = Command::TransferObjects(TransferObjects {
             objects,
-            address: self.pure(recipient)?,
+            address: self.pure(recipient),
         });
         self.commands.push(cmd);
-        Ok(self)
+        self
+    }
+
+    fn resolve_inputs(&mut self) -> Result<Vec<Input>, Error> {
+        let mut inputs = Vec::new();
+        for input in self.inputs.drain(..) {
+            match input {
+                UnresolvedInput::Resolved(input) => inputs.push(input),
+                _ => {
+                    return Err(Error::Input(
+                        "cannot resolve inputs without client".to_owned(),
+                    ));
+                }
+            }
+        }
+        Ok(inputs)
     }
 
     /// Convert this builder into a transaction.
-    pub fn finish(self) -> Result<Transaction, Error> {
+    pub fn finish(mut self) -> Result<Transaction, Error> {
+        if !self.gas_to_resolve.is_empty() {
+            return Err(Error::Input(
+                "gas cannot be resolved without a client".to_owned(),
+            ));
+        }
         let Some(price) = self.gas_price else {
             return Err(Error::MissingGasPrice);
         };
@@ -263,7 +296,7 @@ impl TransactionBuilder<()> {
         Ok(Transaction {
             kind: iota_types::TransactionKind::ProgrammableTransaction(
                 iota_types::ProgrammableTransaction {
-                    inputs: self.inputs,
+                    inputs: self.resolve_inputs()?,
                     commands: self.commands,
                 },
             ),
@@ -288,23 +321,9 @@ impl TransactionBuilder<Client> {
     }
 
     /// Set the gas coins that will be consumed. Optional.
-    pub async fn gas(&mut self, object_id: ObjectId) -> Result<&mut Self, Error> {
-        let obj = self
-            .client
-            .object(object_id, None)
-            .await
-            .map_err(Error::Client)?
-            .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
-
-        let obj_ref = match obj.owner() {
-            Owner::Address(_) | Owner::Object(_) | Owner::Immutable => {
-                ObjectReference::new(object_id, obj.version(), obj.digest())
-            }
-            Owner::Shared(_) => return Err(Error::WrongGasObject),
-        };
-
-        self.gas.push(obj_ref);
-        Ok(self)
+    pub fn gas(&mut self, object_id: ObjectId) -> &mut Self {
+        self.gas_to_resolve.push(object_id);
+        self
     }
 
     /// Begin building a move call.
@@ -318,63 +337,57 @@ impl TransactionBuilder<Client> {
     }
 
     /// Transfer objects to a recipient address.
-    pub async fn transfer_objects<U: PTBArguments>(
+    pub fn transfer_objects<U: PTBArguments>(
         &mut self,
         recipient: Address,
         objects: U,
-    ) -> Result<&mut Self, Error> {
-        let objects = objects
-            .args(self)
-            .await
-            .map_err(|e| Error::Input(e.to_string()))?;
+    ) -> &mut Self {
+        let objects = objects.args(self);
         let cmd = Command::TransferObjects(TransferObjects {
             objects,
-            address: self.pure(recipient)?,
+            address: self.pure(recipient),
         });
         self.commands.push(cmd);
-        Ok(self)
+        self
     }
 
     /// Merge multiple coins into one.
-    pub async fn merge_coins(
+    pub fn merge_coins(
         &mut self,
         primary_coin: ObjectId,
         consumed_coins: impl IntoIterator<Item = ObjectId> + Send,
-    ) -> Result<&mut Self, Error> {
-        let primary_coin = self.resolve_obj(primary_coin, true, false).await?;
+    ) -> &mut Self {
+        let primary_coin = self.input(UnresolvedInput::ImmutableOrOwned(primary_coin));
         let mut consumed = Vec::new();
         for coin in consumed_coins {
-            consumed.push(self.resolve_obj(coin, true, false).await?);
+            consumed.push(self.input(UnresolvedInput::ImmutableOrOwned(coin)));
         }
         self.command(Command::MergeCoins(MergeCoins {
             coin: primary_coin,
             coins_to_merge: consumed,
         }));
-        Ok(self)
+        self
     }
 
     /// Split a coin into many.
-    pub async fn split_coins(
+    pub fn split_coins(
         &mut self,
         coin: ObjectId,
         split_amounts: impl IntoIterator<Item = u64> + Send,
         name: impl NamedCommands,
-    ) -> Result<&mut Self, Error> {
+    ) -> &mut Self {
         let coin = if self.gas.iter().find(|g| g.object_id() == &coin).is_some() {
             Argument::Gas
         } else {
-            self.resolve_obj(coin, true, false).await?
+            self.input(UnresolvedInput::ImmutableOrOwned(coin))
         };
-        let split_amounts = split_amounts
-            .into_iter()
-            .map(|v| self.pure(v))
-            .collect::<Result<_, _>>()?;
+        let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
         self.command(Command::SplitCoins(SplitCoins {
             coin,
             amounts: split_amounts,
         }));
         name.push_named_commands(self);
-        Ok(self)
+        self
     }
 
     /// Publish a move package. Returns the upgrade capability, if there is one.
@@ -386,23 +399,21 @@ impl TransactionBuilder<Client> {
     }
 
     /// Upgrade a move package.
-    pub async fn upgrade<U: PTBArguments>(
+    pub fn upgrade<U: PTBArguments>(
         &mut self,
         package_id: ObjectId,
         upgrade_cap: U,
         kind: impl Into<PublishType> + Send,
         name: impl NamedCommands,
-    ) -> Result<&mut Self, Error> {
+    ) -> &mut Self {
         let module = match kind.into() {
             PublishType::Path(_path) => todo!("load the package from the path"),
             PublishType::Compiled(m) => m,
         };
-        let ticket = upgrade_cap
-            .args(self)
-            .await
-            .map_err(|e| Error::Input(e.to_string()))?;
+        let ticket = upgrade_cap.args(self);
         if ticket.len() != 1 {
-            return Err(Error::Input("invalid upgrade cap".to_owned()));
+            // TODO: Maybe there's a better way
+            panic!("invalid upgrade cap");
         }
         self.command(Command::Upgrade(Upgrade {
             modules: module.modules,
@@ -411,22 +422,18 @@ impl TransactionBuilder<Client> {
             ticket: ticket.into_iter().next().unwrap(),
         }));
         name.push_named_commands(self);
-        Ok(self)
+        self
     }
 
     /// Make a move vector from a list of elements.
-    pub async fn make_move_vec<U: PTBArguments + MoveType>(
+    pub fn make_move_vec<U: PTBArguments + MoveType>(
         &mut self,
         elements: impl IntoIterator<Item = U> + Send,
         name: impl NamedCommands,
-    ) -> Result<&mut Self, Error> {
+    ) -> &mut Self {
         let mut args = Vec::new();
         for e in elements {
-            args.extend(
-                e.args(self)
-                    .await
-                    .map_err(|e| Error::Input(e.to_string()))?,
-            );
+            args.extend(e.args(self));
         }
         let cmd = Command::MakeMoveVector(MakeMoveVector {
             type_: Some(U::type_tag()),
@@ -434,41 +441,66 @@ impl TransactionBuilder<Client> {
         });
         self.commands.push(cmd);
         name.push_named_commands(self);
-        Ok(self)
+        self
     }
 
-    async fn resolve_obj(
-        &mut self,
-        object_id: ObjectId,
-        mutable: bool,
-        receiving: bool,
-    ) -> Result<Argument, Error> {
-        let obj = self
-            .client
-            .object(object_id, None)
-            .await
-            .map_err(Error::Client)?
-            .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
-
-        Ok(match obj.owner() {
-            Owner::Address(_) | Owner::Object(_) | Owner::Immutable => {
-                let obj_ref = ObjectReference::new(object_id, obj.version(), obj.digest());
-                if receiving {
-                    self.input(Input::Receiving(obj_ref))
-                } else {
-                    self.input(Input::ImmutableOrOwned(obj_ref))
+    async fn resolve_inputs(&mut self) -> Result<Vec<Input>, Error> {
+        let mut inputs = Vec::new();
+        for input in self.inputs.drain(..) {
+            let (object_id, mutable) = match input {
+                UnresolvedInput::ImmutableOrOwned(object_id)
+                | UnresolvedInput::Receiving(object_id) => (object_id, false),
+                UnresolvedInput::Shared { object_id, mutable } => (object_id, mutable),
+                UnresolvedInput::Resolved(input) => {
+                    inputs.push(input);
+                    continue;
                 }
-            }
-            Owner::Shared(version) => self.input(Input::Shared {
-                object_id,
-                initial_shared_version: *version,
-                mutable,
-            }),
-        })
+            };
+            let obj = self
+                .client
+                .object(object_id, None)
+                .await
+                .map_err(Error::Client)?
+                .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+
+            inputs.push(match obj.owner() {
+                Owner::Address(_) | Owner::Object(_) | Owner::Immutable => Input::ImmutableOrOwned(
+                    ObjectReference::new(object_id, obj.version(), obj.digest()),
+                ),
+                Owner::Shared(_) => Input::Shared {
+                    object_id,
+                    initial_shared_version: obj.version(),
+                    mutable,
+                },
+            });
+        }
+        Ok(inputs)
+    }
+
+    async fn resolve_gas(&mut self) -> Result<(), Error> {
+        for gas_to_resolve in self.gas_to_resolve.drain(..) {
+            let obj = self
+                .client
+                .object(gas_to_resolve, None)
+                .await
+                .map_err(Error::Client)?
+                .ok_or_else(|| Error::Input(format!("missing object {gas_to_resolve}")))?;
+
+            let obj_ref = match obj.owner() {
+                Owner::Address(_) | Owner::Object(_) | Owner::Immutable => {
+                    ObjectReference::new(gas_to_resolve, obj.version(), obj.digest())
+                }
+                Owner::Shared(_) => return Err(Error::WrongGasObject),
+            };
+
+            self.gas.push(obj_ref);
+        }
+        Ok(())
     }
 
     /// Convert this builder into a transaction.
-    pub async fn finish(self) -> Result<Transaction, Error> {
+    pub async fn finish(mut self) -> Result<Transaction, Error> {
+        self.resolve_gas().await?;
         let price = match self.gas_price {
             Some(price) => price,
             None => self
@@ -481,7 +513,7 @@ impl TransactionBuilder<Client> {
         let mut txn = Transaction {
             kind: iota_types::TransactionKind::ProgrammableTransaction(
                 iota_types::ProgrammableTransaction {
-                    inputs: self.inputs,
+                    inputs: self.resolve_inputs().await?,
                     commands: self.commands,
                 },
             ),
@@ -515,7 +547,8 @@ impl TransactionBuilder<Client> {
     }
 
     /// Dry run the transaction.
-    pub async fn dry_run(self, skip_checks: bool) -> Result<DryRunResult, Error> {
+    pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
+        self.resolve_gas().await?;
         let price = match self.gas_price {
             Some(price) => price,
             None => self
@@ -528,7 +561,7 @@ impl TransactionBuilder<Client> {
         let txn = Transaction {
             kind: iota_types::TransactionKind::ProgrammableTransaction(
                 iota_types::ProgrammableTransaction {
-                    inputs: self.inputs,
+                    inputs: self.resolve_inputs().await?,
                     commands: self.commands,
                 },
             ),
@@ -636,11 +669,9 @@ impl<'a, G: MoveTypes, A: PTBArguments> MoveCallCommandBuilder<'a, Client, G, A>
     }
 
     /// Finish the move call and return the PTB.
-    pub async fn finish(self) -> Result<&'a mut TransactionBuilder<Client>, Error> {
+    pub fn end(self) -> &'a mut TransactionBuilder<Client> {
         let args = if let Some(a) = self.args {
             a.args(self.ptb)
-                .await
-                .map_err(|e| Error::Input(e.to_string()))?
         } else {
             Vec::new()
         };
@@ -653,23 +684,20 @@ impl<'a, G: MoveTypes, A: PTBArguments> MoveCallCommandBuilder<'a, Client, G, A>
             arguments: args,
         }));
 
-        Ok(self.ptb)
+        self.ptb
     }
 
     /// Finish the move call by naming the output and return the PTB.
-    pub async fn result(
-        self,
-        name: impl NamedCommands,
-    ) -> Result<&'a mut TransactionBuilder<Client>, Error> {
-        let ptb = self.finish().await?;
+    pub fn result(self, name: impl NamedCommands) -> &'a mut TransactionBuilder<Client> {
+        let ptb = self.end();
 
         name.push_named_commands(ptb);
 
-        Ok(ptb)
+        ptb
     }
 }
 
-impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Input>> {
+impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Argument>> {
     /// Instantiate a move call command builder.
     pub fn new(
         ptb: &'a mut TransactionBuilder<()>,
@@ -708,7 +736,7 @@ impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Input>> {
     }
 
     /// Set the generic type arguments. Optional.
-    pub fn generics<U: MoveTypes>(self) -> MoveCallCommandBuilder<'a, (), U, Vec<Input>> {
+    pub fn generics<U: MoveTypes>(self) -> MoveCallCommandBuilder<'a, (), U, Vec<Argument>> {
         MoveCallCommandBuilder {
             package: self.package,
             module: self.module,
@@ -720,12 +748,8 @@ impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Input>> {
     }
 
     /// Finish the move call and return the PTB.
-    pub fn finish(self) -> Result<&'a mut TransactionBuilder<()>, Error> {
-        let args = if let Some(a) = self.args {
-            a.into_iter().map(|i| self.ptb.input(i)).collect()
-        } else {
-            Vec::new()
-        };
+    pub fn finish(self) -> &'a mut TransactionBuilder<()> {
+        let args = self.args.unwrap_or_default();
 
         self.ptb.command(Command::MoveCall(MoveCall {
             package: self.package,
@@ -735,16 +759,16 @@ impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Input>> {
             arguments: args,
         }));
 
-        Ok(self.ptb)
+        self.ptb
     }
 
     /// Finish the move call by naming the output and return the PTB.
-    pub fn result(self, name: impl NamedCommands) -> Result<&'a mut TransactionBuilder<()>, Error> {
-        let ptb = self.finish()?;
+    pub fn result(self, name: impl NamedCommands) -> &'a mut TransactionBuilder<()> {
+        let ptb = self.finish();
 
         name.push_named_commands(ptb);
 
-        Ok(ptb)
+        ptb
     }
 }
 
@@ -777,49 +801,33 @@ impl<'a> PublishBuilder<'a> {
     ///
     /// **NOTE:** This is currently not usable for move calls because the IOTA
     /// PTB does not support using an argument for the package ID.
-    pub async fn package_id(
-        self,
-        name: impl NamedCommand,
-    ) -> Result<&'a mut TransactionBuilder<Client>, Error> {
+    pub fn package_id(self, name: impl NamedCommand) -> &'a mut TransactionBuilder<Client> {
         self.ptb
             .move_call(Address::TWO, "package", "upgrade_package")
             .params(self.cap)
-            .result(name)
-            .await?;
-        Ok(self.ptb)
+            .result(name);
+        self.ptb
     }
 
     /// Finish the move call and return the UpgradeCap.
-    pub fn upgrade_cap(
-        self,
-        name: impl NamedCommand,
-    ) -> Result<&'a mut TransactionBuilder<Client>, Error> {
+    pub fn upgrade_cap(self, name: impl NamedCommand) -> &'a mut TransactionBuilder<Client> {
         name.push_named_commands(self.ptb);
 
-        Ok(self.ptb)
+        self.ptb
     }
 }
 
 /// A trait which defines arguments for a [`TransactionBuilder`].
 pub trait PTBArguments: Send + Sync {
     /// Get the arguments.
-    fn args(
-        &self,
-        ptb: &mut TransactionBuilder<Client>,
-    ) -> impl Future<Output = anyhow::Result<Vec<Argument>>> + Send {
-        async {
-            let mut args = Vec::new();
-            self.push_args(ptb, &mut args).await?;
-            Ok(args)
-        }
+    fn args(&self, ptb: &mut TransactionBuilder<Client>) -> Vec<Argument> {
+        let mut args = Vec::new();
+        self.push_args(ptb, &mut args);
+        args
     }
 
     /// Push the args onto the list.
-    fn push_args(
-        &self,
-        ptb: &mut TransactionBuilder<Client>,
-        args: &mut Vec<Argument>,
-    ) -> impl Future<Output = anyhow::Result<()>> + Send;
+    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>);
 }
 
 macro_rules! impl_ptb_args_tuple {
@@ -827,11 +835,10 @@ macro_rules! impl_ptb_args_tuple {
         impl<$($tup),+> PTBArguments for ($($tup),+)
         where $($tup: PTBArguments),+
         {
-            async fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) -> anyhow::Result<()> {
+            fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
                 $(
-                    self.$idx.push_args(ptb, args).await?;
+                    self.$idx.push_args(ptb, args);
                 )+
-                Ok(())
             }
         }
     };
@@ -842,28 +849,18 @@ impl_ptb_args_tuple!(T1.0, T2.1, T3.2, T4.3);
 impl_ptb_args_tuple!(T1.0, T2.1, T3.2, T4.3, T5.4);
 
 impl<T: MoveParam + Send + Sync> PTBArguments for T {
-    async fn push_args(
-        &self,
-        ptb: &mut TransactionBuilder<Client>,
-        args: &mut Vec<Argument>,
-    ) -> anyhow::Result<()> {
-        let arg = match self.param()? {
-            ParamType::Object(id) => ptb.resolve_obj(id, false, false).await?,
+    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
+        let arg = match self.param() {
+            ParamType::Object(id) => ptb.input(UnresolvedInput::ImmutableOrOwned(id)),
             ParamType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);
-        Ok(())
     }
 }
 
 impl PTBArguments for Argument {
-    async fn push_args(
-        &self,
-        _: &mut TransactionBuilder<Client>,
-        args: &mut Vec<Argument>,
-    ) -> anyhow::Result<()> {
+    fn push_args(&self, _: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
         args.push(*self);
-        Ok(())
     }
 }
 
@@ -871,17 +868,15 @@ impl PTBArguments for Argument {
 pub struct Mut<T>(pub T);
 
 impl<T: MoveParam + Send + Sync> PTBArguments for Mut<T> {
-    async fn push_args(
-        &self,
-        ptb: &mut TransactionBuilder<Client>,
-        args: &mut Vec<Argument>,
-    ) -> anyhow::Result<()> {
-        let arg = match self.0.param()? {
-            ParamType::Object(id) => ptb.resolve_obj(id, true, false).await?,
+    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
+        let arg = match self.0.param() {
+            ParamType::Object(id) => ptb.input(UnresolvedInput::Shared {
+                object_id: id,
+                mutable: true,
+            }),
             ParamType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);
-        Ok(())
     }
 }
 
@@ -889,17 +884,12 @@ impl<T: MoveParam + Send + Sync> PTBArguments for Mut<T> {
 pub struct Receiving<T>(pub T);
 
 impl<T: MoveParam + Send + Sync> PTBArguments for Receiving<T> {
-    async fn push_args(
-        &self,
-        ptb: &mut TransactionBuilder<Client>,
-        args: &mut Vec<Argument>,
-    ) -> anyhow::Result<()> {
-        let arg = match self.0.param()? {
-            ParamType::Object(id) => ptb.resolve_obj(id, false, true).await?,
+    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
+        let arg = match self.0.param() {
+            ParamType::Object(id) => ptb.input(UnresolvedInput::Receiving(id)),
             ParamType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);
-        Ok(())
     }
 }
 
@@ -907,17 +897,12 @@ impl<T: MoveParam + Send + Sync> PTBArguments for Receiving<T> {
 pub struct Res(pub &'static str);
 
 impl PTBArguments for Res {
-    async fn push_args(
-        &self,
-        ptb: &mut TransactionBuilder<Client>,
-        args: &mut Vec<Argument>,
-    ) -> anyhow::Result<()> {
+    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
         if let Some(arg) = ptb.named_commands.get(self.0) {
             args.push(*arg);
         } else {
-            anyhow::bail!("no command named `{}` exists", self.0)
+            panic!("no command named `{}` exists", self.0)
         }
-        Ok(())
     }
 }
 

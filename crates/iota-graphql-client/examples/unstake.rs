@@ -47,10 +47,8 @@ async fn main() -> Result<()> {
     builder
         .move_call(Address::THREE, "iota_system", "request_withdraw_stake")
         .params((ObjectId::from_str("0x5")?, staked_iota.object_id()))
-        .finish()
-        .await?
-        .gas(gas_coin.object_id())
-        .await?;
+        .end()
+        .gas(gas_coin.object_id());
 
     let res = builder.dry_run(false).await?;
 

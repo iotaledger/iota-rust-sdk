@@ -25,10 +25,8 @@ async fn main() -> Result<()> {
         .move_call(Address::TWO, "vec_map", "from_keys_values")
         .generics::<(Address, u64)>()
         .params((vec![address1, address2], vec![10000000u64, 20000000u64]))
-        .finish()
-        .await?
-        .gas("0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a".parse()?)
-        .await?;
+        .end()
+        .gas("0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a".parse()?);
 
     let res = builder.dry_run(false).await?;
 

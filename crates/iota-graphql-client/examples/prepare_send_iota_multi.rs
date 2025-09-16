@@ -23,23 +23,19 @@ async fn main() -> Result<()> {
 
     builder
         .split_coins(gas_coin, [1_000_000_000, 2_000_000_000], ("coin1", "coin2"))
-        .await?
         .transfer_objects(
             Address::from_str(
                 "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11",
             )?,
             Res("coin1"),
         )
-        .await?
         .transfer_objects(
             Address::from_str(
                 "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522",
             )?,
             Res("coin2"),
         )
-        .await?
-        .gas(gas_coin)
-        .await?;
+        .gas(gas_coin);
 
     let txn = builder.finish().await?;
 
