@@ -5,8 +5,8 @@ use std::str::FromStr;
 
 use anyhow::{Context, Result};
 use iota_graphql_client::{Client, query_types::ObjectFilter};
-use iota_transaction_builder::{Function, TransactionBuilder, unresolved::Input};
-use iota_types::{Address, Identifier, ObjectId, StructTag};
+use iota_transaction_builder::builder::TransactionBuilder;
+use iota_types::{Address, ObjectId, StructTag};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -42,31 +42,17 @@ async fn main() -> Result<()> {
         .next()
         .context("no gas coin found")?;
 
-    let mut builder = TransactionBuilder::new();
-    let inputs = vec![
-        builder.input(Input::shared(ObjectId::from_str("0x5")?, 1, true)),
-        builder.input(Input::from(&staked_iota).with_owned_kind()),
-    ];
-    builder.move_call(
-        Function::new(
-            Address::THREE,
-            Identifier::new("iota_system")?,
-            Identifier::new("request_withdraw_stake")?,
-            Default::default(),
-        ),
-        inputs,
-    );
-    builder.set_sender(*gas_coin.owner().as_address());
-    builder.set_gas_budget(50000000);
-    builder.set_gas_price(
-        client
-            .reference_gas_price(None)
-            .await?
-            .expect("missing ref gas price"),
-    );
-    builder.add_gas_objects([Input::from(&gas_coin).with_owned_kind()]);
-    let txn = builder.finish()?;
-    let res = client.dry_run_tx(&txn, false).await?;
+    let mut builder = TransactionBuilder::new(*gas_coin.owner().as_address()).with_client(client);
+
+    builder
+        .move_call(Address::THREE, "iota_system", "request_withdraw_stake")
+        .params((ObjectId::from_str("0x5")?, staked_iota.object_id()))
+        .finish()
+        .await?
+        .gas(gas_coin.object_id())
+        .await?;
+
+    let res = builder.dry_run(false).await?;
 
     if let Some(err) = res.error {
         anyhow::bail!("Failed to unstake: {err}");
