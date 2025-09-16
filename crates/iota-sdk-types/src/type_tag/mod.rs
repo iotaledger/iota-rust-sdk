@@ -243,6 +243,39 @@ impl Identifier {
     pub fn as_str(&self) -> &str {
         &self.0
     }
+
+    pub const fn is_valid(s: &str) -> bool {
+        /// Returns `true` if all bytes in `b` after the offset `start_offset`
+        /// are valid ASCII identifier characters.
+        const fn all_bytes_valid(b: &[u8], start_offset: usize) -> bool {
+            let mut i = start_offset;
+            while i < b.len() {
+                if !Identifier::is_valid_char(b[i] as char) {
+                    return false;
+                }
+                i += 1;
+            }
+            true
+        }
+        // Rust const fn's don't currently support slicing or indexing &str's, so we
+        // have to operate on the underlying byte slice. This is not a problem as
+        // valid identifiers are (currently) ASCII-only.
+        let b = s.as_bytes();
+        match b {
+            b"<SELF>" => true,
+            [b'a'..=b'z', ..] | [b'A'..=b'Z', ..] => all_bytes_valid(b, 1),
+            [b'_', ..] if b.len() > 1 => all_bytes_valid(b, 1),
+            _ => false,
+        }
+    }
+    /// Return true if this character can appear in a Move identifier.
+    ///
+    /// Note: there are stricter restrictions on whether a character can begin a
+    /// Move identifier--only alphabetic characters are allowed here.
+    #[inline]
+    pub const fn is_valid_char(c: char) -> bool {
+        matches!(c, '_' | 'a'..='z' | 'A'..='Z' | '0'..='9')
+    }
 }
 
 impl std::fmt::Display for Identifier {
@@ -264,6 +297,76 @@ impl std::str::FromStr for Identifier {
 impl PartialEq<str> for Identifier {
     fn eq(&self, other: &str) -> bool {
         self.0.as_ref() == other
+    }
+}
+
+impl std::ops::Deref for Identifier {
+    type Target = IdentifierRef;
+    fn deref(&self) -> &IdentifierRef {
+        unsafe { std::mem::transmute::<&str, &IdentifierRef>(self.0.as_ref()) }
+    }
+}
+
+impl std::borrow::Borrow<IdentifierRef> for Identifier {
+    fn borrow(&self) -> &IdentifierRef {
+        self
+    }
+}
+#[derive(Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[repr(transparent)]
+pub struct IdentifierRef(str);
+
+impl IdentifierRef {
+    pub const fn const_new(s: &'static str) -> &'static Self {
+        if !Identifier::is_valid(s) {
+            panic!("String is not a valid Move identifier");
+        }
+        // SAFETY: the following transmute is safe because
+        // (1) it's equivalent to the unsafe-reborrow inside IdentStr::ref_cast()
+        //     (which we can't use b/c it's not const).
+        // (2) we've just asserted that IdentStr impls RefCast<From = str>, which
+        //     already guarantees the transmute is safe (RefCast checks that
+        //     IdentStr(str) is #[repr(transparent)]).
+        // (3) both in and out lifetimes are 'static, so we're not widening the
+        // lifetime. (4) we've just asserted that the IdentStr passes the
+        // is_valid check.
+        unsafe { std::mem::transmute::<&'static str, &'static Self>(s) }
+    }
+    /// Returns true if this string is a valid identifier.
+    pub fn is_valid(s: &str) -> bool {
+        Identifier::is_valid(s)
+    }
+    /// Returns the length of `self` in bytes.
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+    /// Returns `true` if `self` has a length of zero bytes.
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+    /// Converts `self` to a `&str`.
+    ///
+    /// This is not implemented as a `From` trait to discourage automatic
+    /// conversions -- these conversions should not typically happen.
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+    /// Converts `self` to a byte slice.
+    pub fn as_bytes(&self) -> &[u8] {
+        self.0.as_bytes()
+    }
+}
+
+impl From<&IdentifierRef> for Identifier {
+    fn from(value: &IdentifierRef) -> Self {
+        value.to_owned()
+    }
+}
+
+impl ToOwned for IdentifierRef {
+    type Owned = Identifier;
+    fn to_owned(&self) -> Identifier {
+        Identifier(self.0.into())
     }
 }
 

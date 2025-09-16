@@ -827,7 +827,7 @@ pub struct ProgrammableTransaction {
 /// input-shared                = %x02 object-id u64 bool
 /// input-receiving             = %x04 object-ref
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),

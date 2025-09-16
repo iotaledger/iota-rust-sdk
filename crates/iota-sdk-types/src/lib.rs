@@ -171,7 +171,7 @@ pub use transaction::{
     TransactionExpiration, TransactionKind, TransferObjects, Upgrade,
     ValidatorExecutionTimeObservation, VersionAssignment,
 };
-pub use type_tag::{Identifier, StructTag, TypeParseError, TypeTag};
+pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag};
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;

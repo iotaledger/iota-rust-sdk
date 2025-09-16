@@ -72,6 +72,7 @@ pub struct Address(
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
+    pub const ONE: Self = Self::from_u8(1);
     pub const TWO: Self = Self::from_u8(2);
     pub const THREE: Self = Self::from_u8(3);
 
