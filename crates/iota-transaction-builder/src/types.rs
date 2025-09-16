@@ -3,11 +3,9 @@
 
 //! Types for use with these tools.
 
-use base64ct::Encoding;
 use iota_types::{Address, Digest, IdentifierRef, ObjectId, StructTag, TypeTag};
 use primitive_types::U256;
 use serde::{Serialize, de::DeserializeOwned};
-use serde_json::Value as JsonValue;
 
 /// A trait for defining a custom move struct in rust code.
 /// NOTE: Ideally this type is derived.
@@ -45,9 +43,6 @@ pub enum ParamType {
 
 /// A trait which defines how types are serialized for move calls.
 pub trait MoveParam {
-    /// Get the serialized argument.
-    fn iota_arg(&self) -> anyhow::Result<JsonValue>;
-
     /// Get the param type.
     fn param(&self) -> anyhow::Result<ParamType>;
 }
@@ -56,19 +51,6 @@ pub trait MoveParam {
 pub trait MoveType {
     /// Return the type tag.
     fn type_tag() -> TypeTag;
-}
-
-/// A trait which defines multiple params for use with tuples.
-pub trait MoveParams {
-    /// Get the aui args.
-    fn iota_args(&self) -> anyhow::Result<Vec<JsonValue>> {
-        let mut values = Vec::new();
-        self.push_iota_args(&mut values)?;
-        Ok(values)
-    }
-
-    /// Push the iota args onto the list.
-    fn push_iota_args(&self, values: &mut Vec<JsonValue>) -> anyhow::Result<()>;
 }
 
 /// A trait which defines multiple types for use with tuples.
@@ -95,17 +77,6 @@ macro_rules! impl_move_types_tuple {
                 )+
             }
         }
-
-        impl<$($tup),+> MoveParams for ($($tup),+)
-        where $($tup: MoveParams),+
-        {
-            fn push_iota_args(&self, values: &mut Vec<JsonValue>) -> anyhow::Result<()> {
-                $(
-                    self.$idx.push_iota_args(values)?;
-                )+
-                Ok(())
-            }
-        }
     };
 }
 impl_move_types_tuple!(T1.0, T2.1);
@@ -123,13 +94,6 @@ impl<T: MoveType> MoveTypes for T {
     }
 }
 
-impl<T: MoveParam> MoveParams for T {
-    fn push_iota_args(&self, values: &mut Vec<JsonValue>) -> anyhow::Result<()> {
-        values.push(self.iota_arg()?);
-        Ok(())
-    }
-}
-
 macro_rules! impl_simple_move_type {
     ($rust_ty:ident, $move_ty:ident) => {
         impl MoveType for $rust_ty {
@@ -139,10 +103,6 @@ macro_rules! impl_simple_move_type {
         }
 
         impl MoveParam for $rust_ty {
-            fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-                Ok(serde_json::Value::String(self.to_string()))
-            }
-
             fn param(&self) -> anyhow::Result<ParamType> {
                 Ok(ParamType::Pure(bcs::to_bytes(self)?))
             }
@@ -171,78 +131,42 @@ impl<T: CustomMoveType> MoveType for T {
 }
 
 impl MoveParam for ObjectId {
-    fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-        Ok(JsonValue::String(self.to_string()))
-    }
-
     fn param(&self) -> anyhow::Result<ParamType> {
         Ok(ParamType::Object(*self))
     }
 }
 
 impl MoveParam for Digest {
-    fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-        Ok(JsonValue::String(base64ct::Base64::encode_string(
-            self.as_bytes(),
-        )))
-    }
-
     fn param(&self) -> anyhow::Result<ParamType> {
         Ok(ParamType::Pure(bcs::to_bytes(self)?))
     }
 }
 
 impl MoveParam for ParamType {
-    fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-        match self {
-            ParamType::Object(object_id) => object_id.iota_arg(),
-            ParamType::Pure(items) => Ok(JsonValue::String(base64ct::Base64::encode_string(items))),
-        }
-    }
-
     fn param(&self) -> anyhow::Result<ParamType> {
         Ok(self.clone())
     }
 }
 
 impl MoveParam for () {
-    fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-        Ok(JsonValue::Null)
-    }
-
     fn param(&self) -> anyhow::Result<ParamType> {
         Ok(ParamType::Pure(Vec::new()))
     }
 }
 
 impl<T: Serialize> MoveParam for Vec<T> {
-    fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-        Ok(serde_json::to_value(self)?)
-    }
-
     fn param(&self) -> anyhow::Result<ParamType> {
         Ok(ParamType::Pure(bcs::to_bytes(self)?))
     }
 }
 
 impl<T: Serialize> MoveParam for Box<T> {
-    fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-        Ok(serde_json::to_value(self)?)
-    }
-
     fn param(&self) -> anyhow::Result<ParamType> {
         Ok(ParamType::Pure(bcs::to_bytes(self)?))
     }
 }
 
 impl<T: MoveParam + Serialize + DeserializeOwned> MoveParam for Option<T> {
-    fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-        match self {
-            Some(value) => value.iota_arg(),
-            None => Ok(JsonValue::Null),
-        }
-    }
-
     fn param(&self) -> anyhow::Result<ParamType> {
         match self {
             Some(value) => match value.param()? {
@@ -259,30 +183,18 @@ impl<T: MoveParam + Serialize + DeserializeOwned> MoveParam for Option<T> {
 }
 
 impl MoveParam for [u8] {
-    fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-        Ok(JsonValue::String(base64ct::Base64::encode_string(self)))
-    }
-
     fn param(&self) -> anyhow::Result<ParamType> {
         Ok(ParamType::Pure(self.to_vec()))
     }
 }
 
 impl<const N: usize> MoveParam for [u8; N] {
-    fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-        Ok(JsonValue::String(base64ct::Base64::encode_string(self)))
-    }
-
     fn param(&self) -> anyhow::Result<ParamType> {
         Ok(ParamType::Pure(self.to_vec()))
     }
 }
 
 impl<T: MoveParam> MoveParam for &T {
-    fn iota_arg(&self) -> anyhow::Result<JsonValue> {
-        (*self).iota_arg()
-    }
-
     fn param(&self) -> anyhow::Result<ParamType> {
         (*self).param()
     }
