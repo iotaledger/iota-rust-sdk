@@ -165,23 +165,21 @@ impl<C> TransactionBuilder<C> {
         if self
             .gas
             .iter()
-            .find(
+            .any(
                 |g| {
-                    matches!(&param, UnresolvedInput::ImmutableOrOwned(id) if id == g.object_id()) 
+                    matches!(&param, UnresolvedInput::ImmutableOrOwned(id) if id == g.object_id())
                     || matches!(&param, UnresolvedInput::Resolved(Input::ImmutableOrOwned(id)) if id.object_id() == g.object_id())
                 },
-            )
-            .is_some() ||
+            ) ||
             self
                 .gas_to_resolve
                 .iter()
-                .find(
+                .any(
                     |g| {
-                        matches!(&param, UnresolvedInput::ImmutableOrOwned(id) if id == *g) 
-                        || matches!(&param, UnresolvedInput::Resolved(Input::ImmutableOrOwned(id)) if id.object_id() == *g)
+                        matches!(&param, UnresolvedInput::ImmutableOrOwned(id) if id == g)
+                        || matches!(&param, UnresolvedInput::Resolved(Input::ImmutableOrOwned(id)) if id.object_id() == g)
                     },
                 )
-                .is_some()
         {
             return Argument::Gas;
         };
@@ -650,8 +648,10 @@ impl<'a, G: MoveTypes, A: PTBArguments> MoveCallCommandBuilder<'a, Client, G, A>
     ) -> Self {
         Self {
             package: package_id,
-            module: Identifier::new(module).expect(&format!("invalid identifier: {module}")),
-            function: Identifier::new(function).expect(&format!("invalid identifier: {function}")),
+            module: Identifier::new(module)
+                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
+            function: Identifier::new(function)
+                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
             args: None,
             generics: Ok(PhantomData),
             ptb,
@@ -739,8 +739,10 @@ impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Argument>> {
     ) -> Self {
         Self {
             package: package_id,
-            module: Identifier::new(module).expect(&format!("invalid identifier: {module}")),
-            function: Identifier::new(function).expect(&format!("invalid identifier: {function}")),
+            module: Identifier::new(module)
+                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
+            function: Identifier::new(function)
+                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
             args: None,
             generics: Ok(PhantomData),
             ptb,

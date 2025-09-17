@@ -36,7 +36,7 @@ impl TransactionBuilder {
         F: FnOnce(&iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>) -> T,
     {
         let lock = self.0.read().expect("error reading from builder");
-        f(&*lock)
+        f(&lock)
     }
 
     fn write<F, T>(&self, f: F) -> T
@@ -46,7 +46,7 @@ impl TransactionBuilder {
         ) -> T,
     {
         let mut lock = self.0.write().expect("error writing to builder");
-        f(&mut *lock)
+        f(&mut lock)
     }
 }
 
@@ -321,10 +321,7 @@ impl TransactionBuilder {
         keypairs: &[Arc<SimpleKeypair>],
         wait_for_finalization: bool,
     ) -> Result<Option<Arc<TransactionEffects>>> {
-        let keypairs = keypairs
-            .into_iter()
-            .map(|v| v.0.clone())
-            .collect::<Vec<_>>();
+        let keypairs = keypairs.iter().map(|v| v.0.clone()).collect::<Vec<_>>();
         Ok(self
             .read(|builder| builder.clone().execute(&keypairs, wait_for_finalization))
             .await?
