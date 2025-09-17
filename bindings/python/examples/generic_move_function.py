@@ -12,67 +12,48 @@ async def main():
     sender = Address.from_hex(
         "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e"
     )
-    gas_coin = await client.object(
-        ObjectId.from_hex(
-            "0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a"
-        )
+    gas_coin_id = ObjectId.from_hex(
+        "0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a"
     )
-    if gas_coin is None:
-        raise Exception("missing gas coin")
 
-    builder = TransactionBuilder()
+    builder = await TransactionBuilder.build(sender, client)
 
-    addresses = builder.make_move_vec(
+    builder.make_move_vec(
+        [
+            PtbArgument.address(
+                Address.from_hex(
+                    "0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e"
+                )
+            ),
+            PtbArgument.address(
+                Address.from_hex(
+                    "0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3"
+                )
+            ),
+        ],
         TypeTag.new_address(),
-        [
-            builder.input(
-                UnresolvedInput.new_pure(
-                    Address.from_hex(
-                        "0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e"
-                    ).to_bytes(),
-                )
-            ),
-            builder.input(
-                UnresolvedInput.new_pure(
-                    Address.from_hex(
-                        "0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3"
-                    ).to_bytes()
-                )
-            ),
-        ],
+        "addresses",
     )
-    balances = builder.make_move_vec(
-        TypeTag.new_u64(),
+    builder.make_move_vec(
         [
-            builder.input(
-                UnresolvedInput.new_pure(
-                    (10_000_000).to_bytes(8, "little", signed=False)
-                )
-            ),
-            builder.input(
-                UnresolvedInput.new_pure(
-                    (20_000_000).to_bytes(8, "little", signed=False)
-                )
-            ),
+            PtbArgument.u64(10_000_000),
+            PtbArgument.u64(20_000_000),
         ],
+        TypeTag.new_u64(),
+        "amounts",
     )
 
     builder.move_call(
-        Function(
-            package=Address.from_hex("0x2"),
-            module=Identifier("vec_map"),
-            function=Identifier("from_keys_values"),
-            type_args=[TypeTag.new_address(), TypeTag.new_u64()],
-        ),
-        [addresses, balances],
+        Address.from_hex("0x2"),
+        Identifier("vec_map"),
+        Identifier("from_keys_values"),
+        [PtbArgument.res("addresses"), PtbArgument.res("amounts")],
+        [TypeTag.new_address(), TypeTag.new_u64()],
     )
-    builder.set_sender(sender)
-    builder.set_gas_budget(50_000_000)
-    builder.set_gas_price(await client.reference_gas_price())
-    builder.add_gas_objects([UnresolvedInput.from_object(gas_coin).with_owned_kind()])
 
-    txn = builder.finish()
-    res = await client.dry_run_tx(txn, False)
+    builder.gas(gas_coin_id).gas_budget(1000000000)
+
+    res = await builder.dry_run()
 
     if res.error is not None:
         raise Exception(f"Failed to call generic Move function: {res.error}")

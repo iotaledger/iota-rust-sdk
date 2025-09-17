@@ -18,40 +18,27 @@ async def main():
             "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
         )
 
-        coin = await client.object(
-            ObjectId.from_hex(
-                "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
-            )
+        coin_id = ObjectId.from_hex(
+            "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
         )
-        if coin is None:
-            raise Exception("missing coin")
 
-        gas_coin = await client.object(
-            ObjectId.from_hex(
-                "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
-            )
+        gas_coin_id = ObjectId.from_hex(
+            "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
         )
-        if gas_coin is None:
-            raise Exception("missing gas coin")
 
-        builder = TransactionBuilder()
+        builder = await TransactionBuilder.build(from_address, client)
         builder.transfer_objects(
-            [builder.input(UnresolvedInput.from_object(coin).with_owned_kind())],
-            builder.input(UnresolvedInput.new_pure(to_address.to_bytes())),
+            to_address,
+            [PtbArgument.object_id(coin_id)],
         )
-        builder.set_sender(from_address)
-        builder.set_gas_budget(50000000)
-        builder.set_gas_price(await client.reference_gas_price() or 100)
-        builder.add_gas_objects(
-            [UnresolvedInput.from_object(gas_coin).with_owned_kind()]
-        )
+        builder.gas(gas_coin_id).gas_budget(1000000000)
 
-        txn = builder.finish()
+        txn = await builder.finish()
 
         print("Signing Digest:", hex_encode(txn.signing_digest()))
         print("Txn Bytes:", base64_encode(txn.bcs_serialize()))
 
-        res = await client.dry_run_tx(txn)
+        res = await builder.dry_run()
         if res.error is not None:
             raise Exception("Failed to send IOTA:", res.error)
 

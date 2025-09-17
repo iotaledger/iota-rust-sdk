@@ -11,9 +11,7 @@ pub mod error;
 pub(crate) mod publish_type;
 pub mod types;
 
-pub use builder::TransactionBuilder;
-
-pub use self::types::CustomMoveType;
+pub use self::{builder::TransactionBuilder, publish_type::MovePackageData, types::CustomMoveType};
 
 #[cfg(test)]
 mod tests {
@@ -269,7 +267,6 @@ mod tests {
 
         let package = move_package_data("package_test_example_v1.json");
         tx.publish(package)
-            .unwrap()
             .upgrade_cap("cap")
             .transfer_objects(address, Res("cap"));
 
@@ -284,7 +281,6 @@ mod tests {
 
         let package = move_package_data("package_test_example_v2.json");
         tx.publish(package)
-            .unwrap()
             .upgrade_cap("cap")
             .transfer_objects(address, Res("cap"));
 

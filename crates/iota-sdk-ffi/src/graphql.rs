@@ -37,6 +37,16 @@ use crate::{
 #[derive(uniffi::Object)]
 pub struct GraphQLClient(RwLock<iota_graphql_client::Client>);
 
+impl GraphQLClient {
+    pub fn inner(&self) -> &RwLock<iota_graphql_client::Client> {
+        &self.0
+    }
+
+    pub fn into_inner(self) -> iota_graphql_client::Client {
+        self.0.into_inner()
+    }
+}
+
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
     // ===========================================================================

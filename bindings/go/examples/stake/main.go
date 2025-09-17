@@ -12,10 +12,7 @@ import (
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	myAddress, err := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
-	if err != nil {
-		log.Fatalf("Failed to parse address: %v", err)
-	}
+	myAddress, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
 	validators, err := client.ActiveValidators(nil, nil)
 	if err.(*sdk.SdkFfiError) != nil {
@@ -35,73 +32,35 @@ func main() {
 	}
 	log.Printf("Staking to validator %v", validatorName)
 
-	coinObjId, err := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
-	if err != nil {
-		log.Fatalf("Failed to parse object ID: %v", err)
-	}
-	coin, err := client.Object(coinObjId, nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get coin: %v", err)
-	}
+	coinObjId, _ := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
 
-	gasCoinObjId, err := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
-	if err != nil {
-		log.Fatalf("Failed to parse object ID: %v", err)
-	}
-	gasCoin, err := client.Object(gasCoinObjId, nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas coin: %v", err)
-	}
+	gasCoinObjId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 
-	iotaSystemAddress, err := sdk.AddressFromHex("0x3")
-	if err != nil {
-		log.Fatalf("Failed to parse address: %v", err)
-	}
+	iotaSystemAddress, _ := sdk.AddressFromHex("0x3")
 
-	iotaSystemId, err := sdk.ObjectIdFromHex("0x5")
-	if err != nil {
-		log.Fatalf("Failed to parse object ID: %v", err)
-	}
+	iotaSystemId, _ := sdk.ObjectIdFromHex("0x5")
 
-	iotaSystemModule, err := sdk.NewIdentifier("iota_system")
-	if err != nil {
-		log.Fatalf("Failed to parse identifier: %v", err)
-	}
+	iotaSystemModule, _ := sdk.NewIdentifier("iota_system")
 
-	requestAddStakeFn, err := sdk.NewIdentifier("request_add_stake")
-	if err != nil {
-		log.Fatalf("Failed to parse identifier: %v", err)
-	}
+	requestAddStakeFn, _ := sdk.NewIdentifier("request_add_stake")
 
-	builder := sdk.NewTransactionBuilder()
-	inputs := []*sdk.Argument{
-		builder.Input(sdk.UnresolvedInputNewShared(iotaSystemId, 1, true)),
-		builder.Input(sdk.UnresolvedInputFromObject(*coin).WithOwnedKind()),
-		builder.Input(sdk.UnresolvedInputNewPure(validator.Address.ToBytes())),
-	}
+	builder := sdk.NewTransactionBuilder(myAddress, client)
+
 	builder.MoveCall(
-		sdk.Function{
-			Package:  iotaSystemAddress,
-			Module:   iotaSystemModule,
-			Function: requestAddStakeFn,
+		iotaSystemAddress,
+		iotaSystemModule,
+		requestAddStakeFn,
+		[]*sdk.PtbArgument{
+			sdk.PtbArgumentMutable(iotaSystemId),
+			sdk.PtbArgumentObjectId(coinObjId),
+			sdk.PtbArgumentAddress(validator.Address),
 		},
-		inputs,
+		nil,
+		nil,
 	)
-	builder.SetSender(myAddress)
-	builder.SetGasBudget(50000000)
-	gasPrice, err := client.ReferenceGasPrice(nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas price: %v", err)
-	}
-	builder.SetGasPrice(*gasPrice)
-	builder.AddGasObjects([]*sdk.UnresolvedInput{sdk.UnresolvedInputFromObject(*gasCoin).WithOwnedKind()})
+	builder.Gas(gasCoinObjId).GasBudget(1000000000)
 
-	txn, err := builder.Finish()
-	if err != nil {
-		log.Fatalf("Failed to create transaction: %v", err)
-	}
-
-	res, err := client.DryRunTx(txn, nil)
+	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}

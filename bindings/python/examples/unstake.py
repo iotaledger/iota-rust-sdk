@@ -27,30 +27,20 @@ async def main():
             raise Exception("no gas coin found")
         gas_coin = gas_coins.data[0]
 
-        builder = TransactionBuilder()
-        inputs = [
-            builder.input(
-                UnresolvedInput.new_shared(ObjectId.from_hex("0x5"), 1, True)
-            ),
-            builder.input(UnresolvedInput.from_object(staked_iota).with_owned_kind()),
-        ]
-        builder.move_call(
-            Function(
-                package=Address.from_hex("0x3"),
-                module=Identifier("iota_system"),
-                function=Identifier("request_withdraw_stake"),
-            ),
-            inputs,
-        )
-        builder.set_sender(gas_coin.owner().as_address())
-        builder.set_gas_budget(50000000)
-        builder.set_gas_price(await client.reference_gas_price() or 100)
-        builder.add_gas_objects(
-            [UnresolvedInput.from_object(gas_coin).with_owned_kind()]
-        )
+        builder = await TransactionBuilder.build(gas_coin.owner().as_address(), client)
 
-        txn = builder.finish()
-        res = await client.dry_run_tx(txn)
+        builder.move_call(
+            Address.from_hex("0x3"),
+            Identifier("iota_system"),
+            Identifier("request_withdraw_stake"),
+            [
+                PtbArgument.mutable(ObjectId.from_hex("0x5")),
+                PtbArgument.object_id(staked_iota.object_id()),
+            ],
+        )
+        builder.gas(gas_coin.object_id()).gas_budget(1000000000)
+
+        res = await builder.dry_run()
         if res.error is not None:
             raise Exception("Failed to unstake:", res.error)
 

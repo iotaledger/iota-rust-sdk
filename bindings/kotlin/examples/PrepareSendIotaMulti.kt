@@ -18,7 +18,7 @@ fun ULong.toLeByteArray(): ByteArray {
 fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
-        val senderAddress =
+        val sender =
                 Address.fromHex(
                         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
                 )
@@ -27,57 +27,32 @@ fun main() = runBlocking {
                         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
                 )
 
-        val recipients =
-                listOf(
-                        Pair(
-                                Address.fromHex(
-                                        "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11"
-                                ),
-                                1_000_000_000UL
-                        ),
-                        Pair(
-                                Address.fromHex(
-                                        "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522"
-                                ),
-                                2_000_000_000UL
-                        )
+        val recipient1 =
+                Address.fromHex(
+                        "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11"
+                )
+        val recipient2 =
+                Address.fromHex(
+                        "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522"
                 )
 
-        val gasCoin = client.`object`(gasCoinId)
-        if (gasCoin == null) {
-            throw Exception("missing gas coin")
-        }
+        val builder = TransactionBuilder.build(sender, client)
 
-        val builder = TransactionBuilder()
-        val splitAmountArgs =
-                recipients.map { builder.input(UnresolvedInput.newPure(it.second.toLeByteArray())) }
-        val recipientArgs =
-                recipients.map { builder.input(UnresolvedInput.newPure(it.first.toBytes())) }
+        builder.gas(gasCoinId).gasBudget(1000000000uL)
+        builder.splitCoins(
+                gasCoinId,
+                listOf(1_000_000_000uL, 2_000_000_000uL),
+                listOf("coin1", "coin2")
+        )
+        builder.transferObjects(recipient1, listOf(PtbArgument.res("coin1")))
+        builder.transferObjects(recipient2, listOf(PtbArgument.res("coin2")))
 
-        val splitCoinsResult = builder.splitCoins(builder.gas(), splitAmountArgs)
-
-        for ((i, recipientArg) in recipientArgs.withIndex()) {
-            val coinArg = splitCoinsResult.getNestedResult(i.toUShort())
-            if (coinArg == null) {
-                throw Exception("Failed to get split coin result at index $i")
-            }
-            builder.transferObjects(listOf(coinArg), recipientArg)
-        }
-
-        builder.setSender(senderAddress)
-        builder.setGasBudget(50_000_000UL)
-        val refGasPrice = client.referenceGasPrice(null)
-        if (refGasPrice == null) {
-            throw Exception("missing ref gas price")
-        }
-        builder.setGasPrice(refGasPrice)
-        builder.addGasObjects(listOf(UnresolvedInput.fromObject(gasCoin).withOwnedKind()))
         val txn = builder.finish()
 
         println("Signing Digest: ${hexEncode(txn.signingDigest())}")
         println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")
 
-        val res = client.dryRunTx(txn, false)
+        val res = builder.dryRun()
 
         if (res.error != null) {
             throw Exception("Failed to send IOTA: ${res.error}")

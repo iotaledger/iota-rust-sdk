@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 use anyhow::{Context, Result};
 use iota_graphql_client::Client;
-use iota_transaction_builder::builder::TransactionBuilder;
+use iota_transaction_builder::builder::{Mut, TransactionBuilder};
 use iota_types::{Address, ObjectId};
 
 #[tokio::main]
@@ -33,7 +33,7 @@ async fn main() -> Result<()> {
     builder
         .move_call(Address::THREE, "iota_system", "request_add_stake")
         .params((
-            ObjectId::from_str("0x5")?,
+            Mut(ObjectId::from_str("0x5")?),
             ObjectId::from_str(
                 "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
             )?,
@@ -42,7 +42,8 @@ async fn main() -> Result<()> {
         .end()
         .gas(ObjectId::from_str(
             "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
-        )?);
+        )?)
+        .gas_budget(1000000000);
 
     let res = builder.dry_run(false).await?;
 

@@ -32,57 +32,29 @@ func main() {
 	}
 	gasCoin := gasCoins.Data[0]
 
-	iotaSystemAddress, err := sdk.AddressFromHex("0x3")
-	if err != nil {
-		log.Fatalf("Failed to parse address: %v", err)
-	}
+	iotaSystemAddress, _ := sdk.AddressFromHex("0x3")
 
-	iotaSystemId, err := sdk.ObjectIdFromHex("0x5")
-	if err != nil {
-		log.Fatalf("Failed to parse object ID: %v", err)
-	}
+	iotaSystemId, _ := sdk.ObjectIdFromHex("0x5")
 
-	iotaSystemModule, err := sdk.NewIdentifier("iota_system")
-	if err != nil {
-		log.Fatalf("Failed to parse identifier: %v", err)
-	}
+	iotaSystemModule, _ := sdk.NewIdentifier("iota_system")
 
-	requestAddStakeFn, err := sdk.NewIdentifier("request_withdraw_stake")
-	if err != nil {
-		log.Fatalf("Failed to parse identifier: %v", err)
-	}
+	requestAddStakeFn, _ := sdk.NewIdentifier("request_withdraw_stake")
 
-	builder := sdk.NewTransactionBuilder()
-	inputs := []*sdk.Argument{
-		builder.Input(sdk.UnresolvedInputNewShared(iotaSystemId, 1, true)),
-		builder.Input(sdk.UnresolvedInputFromObject(stakedIota).WithOwnedKind()),
-	}
+	builder := sdk.NewTransactionBuilder(gasCoin.Owner().AsAddress(), client)
 	builder.MoveCall(
-		sdk.Function{
-			Package:  iotaSystemAddress,
-			Module:   iotaSystemModule,
-			Function: requestAddStakeFn,
-			TypeArgs: []*sdk.TypeTag{},
-		},
-		inputs,
+		iotaSystemAddress,
+		iotaSystemModule,
+		requestAddStakeFn,
+		[]*sdk.PtbArgument{sdk.PtbArgumentMutable(iotaSystemId), sdk.PtbArgumentObjectId(stakedIota.ObjectId())},
+		nil,
+		nil,
 	)
-	builder.SetSender(gasCoin.Owner().AsAddress())
-	builder.SetGasBudget(50000000)
-	gasPrice, err := client.ReferenceGasPrice(nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas price: %v", err)
-	}
-	builder.SetGasPrice(*gasPrice)
-	builder.AddGasObjects([]*sdk.UnresolvedInput{sdk.UnresolvedInputFromObject(gasCoin).WithOwnedKind()})
 
-	txn, err := builder.Finish()
-	if err != nil {
-		log.Fatalf("Failed to create transaction: %v", err)
-	}
+	builder.Gas(gasCoin.ObjectId()).GasBudget(1000000000)
 
-	res, err := client.DryRunTx(txn, nil)
+	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas price: %v", err)
+		log.Fatalf("Failed to unstake: %v", err)
 	}
 
 	if res.Error != nil {

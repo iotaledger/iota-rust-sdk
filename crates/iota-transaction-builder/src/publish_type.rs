@@ -41,12 +41,15 @@ impl From<MovePackageData> for PublishType {
 /// --dump-bytecode-as-base64`
 #[derive(serde::Deserialize, Debug)]
 pub struct MovePackageData {
+    /// The package modules as a series of bytes
     #[serde(deserialize_with = "bcs_from_str")]
     pub modules: Vec<Vec<u8>>,
+    /// The package dependencies, specified by their object IDs.
     #[serde(deserialize_with = "deps_from_str")]
     pub dependencies: Vec<ObjectId>,
+    /// The package digest.
     #[serde(deserialize_with = "deser_digest")]
-    pub digest: Digest,
+    pub digest: Option<Digest>,
 }
 
 fn bcs_from_str<'de, D>(deserializer: D) -> Result<Vec<Vec<u8>>, D::Error>
@@ -69,10 +72,12 @@ where
         .collect()
 }
 
-fn deser_digest<'de, D>(deserializer: D) -> Result<Digest, D::Error>
+fn deser_digest<'de, D>(deserializer: D) -> Result<Option<Digest>, D::Error>
 where
     D: Deserializer<'de>,
 {
     let bytes = Vec::<u8>::deserialize(deserializer)?;
-    Digest::from_bytes(bytes).map_err(|e| serde::de::Error::custom(format!("{e}")))
+    Digest::from_bytes(bytes)
+        .map(Some)
+        .map_err(|e| serde::de::Error::custom(format!("{e}")))
 }
