@@ -178,12 +178,13 @@ impl TransactionBuilder {
         type_tag: &TypeTag,
         name: String,
     ) -> Arc<Self> {
+        use iota_transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
             let mut args = Vec::new();
             for e in elements {
                 args.extend(e.args(builder));
             }
-            let cmd = iota_types::Command::MakeMoveVector(iota_types::MakeMoveVector {
+            let cmd = Command::MakeMoveVector(MakeMoveVector {
                 type_: Some(type_tag.0.clone()),
                 elements: args,
             });

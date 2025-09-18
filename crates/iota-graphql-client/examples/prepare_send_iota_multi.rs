@@ -22,8 +22,6 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(sender_address).with_client(client.clone());
 
     builder
-        .gas(gas_coin)
-        .gas_budget(1000000000)
         .split_coins(gas_coin, [1_000_000_000, 2_000_000_000], ("coin1", "coin2"))
         .transfer_objects(
             Address::from_str(
@@ -36,7 +34,9 @@ async fn main() -> Result<()> {
                 "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522",
             )?,
             Res("coin2"),
-        );
+        )
+        .gas(gas_coin)
+        .gas_budget(1000000000);
 
     let txn = builder.finish().await?;
 

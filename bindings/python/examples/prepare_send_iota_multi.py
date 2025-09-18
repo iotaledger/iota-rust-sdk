@@ -24,10 +24,10 @@ async def main():
 
     builder = await TransactionBuilder.build(sender, client)
 
-    builder.gas(gas_coin_id).gas_budget(1000000000)
     builder.split_coins(gas_coin_id, [1_000_000_000, 2_000_000_000], ["coin1", "coin2"])
     builder.transfer_objects(recipient1, [PtbArgument.res("coin1")])
     builder.transfer_objects(recipient2, [PtbArgument.res("coin2")])
+    builder.gas(gas_coin_id).gas_budget(1000000000)
 
     txn = await builder.finish()
 

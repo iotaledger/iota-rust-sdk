@@ -12,22 +12,6 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
 type PTBArguments = Box<dyn iota_transaction_builder::builder::PTBArguments + Send + Sync>;
 
-pub struct Res(String);
-
-impl iota_transaction_builder::builder::PTBArguments for Res {
-    fn push_args(
-        &self,
-        ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
-        args: &mut Vec<iota_types::Argument>,
-    ) {
-        if let Some(arg) = ptb.get_named_command(&self.0) {
-            args.push(arg);
-        } else {
-            panic!("no command named `{}` exists", self.0)
-        }
-    }
-}
-
 #[derive(uniffi::Object)]
 pub struct PTBArgument(PTBArguments);
 
@@ -100,7 +84,7 @@ impl iota_transaction_builder::builder::PTBArguments for PTBArgument {
     fn push_args(
         &self,
         ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
-        args: &mut Vec<iota_types::Argument>,
+        args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
     ) {
         self.0.push_args(ptb, args);
     }
@@ -110,8 +94,24 @@ impl iota_transaction_builder::builder::PTBArguments for &PTBArgument {
     fn push_args(
         &self,
         ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
-        args: &mut Vec<iota_types::Argument>,
+        args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
     ) {
         self.0.push_args(ptb, args);
+    }
+}
+
+pub struct Res(String);
+
+impl iota_transaction_builder::builder::PTBArguments for Res {
+    fn push_args(
+        &self,
+        ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
+        args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
+    ) {
+        if let Some(arg) = ptb.get_named_command(&self.0) {
+            args.push(arg);
+        } else {
+            panic!("no command named `{}` exists", self.0)
+        }
     }
 }

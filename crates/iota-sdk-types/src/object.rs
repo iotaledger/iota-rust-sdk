@@ -28,13 +28,13 @@ pub type Version = u64;
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ObjectReference {
     /// The object id of this object.
-    object_id: ObjectId,
+    pub object_id: ObjectId,
     /// The version of this object.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    version: Version,
+    pub version: Version,
     /// The digest of this object.
-    digest: Digest,
+    pub digest: Digest,
 }
 
 impl ObjectReference {

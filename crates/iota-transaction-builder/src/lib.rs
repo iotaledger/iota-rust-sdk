@@ -10,6 +10,8 @@ pub mod builder;
 pub mod error;
 pub(crate) mod publish_type;
 pub mod types;
+#[allow(missing_docs)]
+pub mod unresolved;
 
 pub use self::{builder::TransactionBuilder, publish_type::MovePackageData, types::CustomMoveType};
 
@@ -194,7 +196,8 @@ mod tests {
         let (mut tx, _, pk, _) = helper_setup().await;
 
         // transfer 1 IOTA from Gas coin
-        tx.split_coins(*tx.gas[0].object_id(), [1_000_000_000], "coin");
+        let gas = tx.get_gas().next().unwrap();
+        tx.split_coins(gas, [1_000_000_000], "coin");
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, Res("coin"));
 

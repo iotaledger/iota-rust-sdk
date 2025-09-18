@@ -4,14 +4,13 @@
 //! Builder for Programmable Transactions.
 
 use core::marker::PhantomData;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 use iota_crypto::IotaSigner;
 use iota_graphql_client::{Client, DryRunResult};
 use iota_types::{
-    Address, Argument, Command, GasPayment, Identifier, Input, MakeMoveVector, MergeCoins,
-    MoveCall, ObjectId, ObjectReference, Owner, Publish, SplitCoins, Transaction,
-    TransactionEffects, TransactionExpiration, TransferObjects, TypeTag, Upgrade,
+    Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
+    Transaction, TransactionEffects, TransactionExpiration, TypeTag,
 };
 use serde::Serialize;
 
@@ -19,23 +18,11 @@ use crate::{
     error::Error,
     publish_type::PublishType,
     types::{MoveParam, MoveType, MoveTypes, ParamType},
-};
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-enum UnresolvedInput {
-    /// A move object that is either immutable or address owned
-    ImmutableOrOwned(ObjectId),
-    /// A move object whose owner is "Shared"
-    Shared {
-        object_id: ObjectId,
-        /// Controls whether the caller asks for a mutable reference to the
-        /// shared object.
-        mutable: bool,
+    unresolved::{
+        Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
+        Publish, SplitCoins, TransferObjects, Upgrade,
     },
-    /// A move object that is attempted to be received in this transaction.
-    Receiving(ObjectId),
-    Resolved(Input),
-}
+};
 
 /// A builder for a programmable transaction which provides a better API vs.
 /// IOTAs [`ProgrammableTransactionBuilder`](IotaPTB).
@@ -51,16 +38,10 @@ enum UnresolvedInput {
 #[derive(Debug, Clone)]
 pub struct TransactionBuilder<C> {
     /// The inputs to the transaction.
-    inputs: Vec<UnresolvedInput>,
+    inputs: BTreeMap<InputId, Input>,
     /// The list of commands in the transaction. A command is a single operation
     /// in a programmable transaction.
     commands: Vec<Command>,
-    /// The gas objects that will be used to pay for the transaction. The most
-    /// common way is to use [`Input::owned`] function to create
-    /// a gas object and use the [`add_gas_objects`](Self::add_gas_objects)
-    /// method to set the gas objects.
-    pub(crate) gas: Vec<ObjectReference>,
-    gas_to_resolve: Vec<ObjectId>,
     /// The gas budget for the transaction.
     gas_budget: Option<u64>,
     /// The gas price for the transaction.
@@ -82,8 +63,6 @@ impl TransactionBuilder<()> {
         TransactionBuilder {
             inputs: Default::default(),
             commands: Default::default(),
-            gas: Default::default(),
-            gas_to_resolve: Default::default(),
             gas_budget: Default::default(),
             gas_price: Default::default(),
             sender,
@@ -101,8 +80,6 @@ impl<C> TransactionBuilder<C> {
         TransactionBuilder {
             inputs: self.inputs,
             commands: self.commands,
-            gas: self.gas,
-            gas_to_resolve: self.gas_to_resolve,
             gas_budget: self.gas_budget,
             gas_price: self.gas_price,
             sender: self.sender,
@@ -136,6 +113,17 @@ impl<C> TransactionBuilder<C> {
         self
     }
 
+    /// Get the current set gas coins.
+    pub fn get_gas(&self) -> impl Iterator<Item = ObjectId> + '_ {
+        self.inputs.values().filter_map(|i| {
+            if i.is_gas {
+                i.object_id().copied()
+            } else {
+                None
+            }
+        })
+    }
+
     /// Set the gas budget. Optional.
     pub fn gas_budget(&mut self, gas_budget: u64) -> &mut Self {
         self.gas_budget = Some(gas_budget);
@@ -161,38 +149,28 @@ impl<C> TransactionBuilder<C> {
     }
 
     /// Make a value available to the transaction as an input.
-    fn input(&mut self, param: UnresolvedInput) -> Argument {
-        if self
-            .gas
-            .iter()
-            .any(
-                |g| {
-                    matches!(&param, UnresolvedInput::ImmutableOrOwned(id) if id == g.object_id())
-                    || matches!(&param, UnresolvedInput::Resolved(Input::ImmutableOrOwned(id)) if id.object_id() == g.object_id())
-                },
-            ) ||
-            self
-                .gas_to_resolve
-                .iter()
-                .any(
-                    |g| {
-                        matches!(&param, UnresolvedInput::ImmutableOrOwned(id) if id == g)
-                        || matches!(&param, UnresolvedInput::Resolved(Input::ImmutableOrOwned(id)) if id.object_id() == g)
-                    },
-                )
-        {
-            return Argument::Gas;
-        };
-        if let Some(i) = self.inputs.iter().position(|i| i == &param) {
-            return Argument::Input(i as _);
+    fn input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
+        if let Some((i, input)) = self.inputs.iter_mut().find(|(_, input)| input.kind == kind) {
+            if is_gas {
+                input.is_gas = true;
+            }
+            return Argument::Input(*i as _);
         }
-        self.inputs.push(param);
-        Argument::Input((self.inputs.len() - 1) as _)
+        let idx = self
+            .inputs
+            .last_entry()
+            .map(|e| *e.key() + 1)
+            .unwrap_or_default();
+        self.inputs.insert(idx, Input { kind, is_gas });
+        Argument::Input(idx as _)
     }
 
     /// Add a pure input using the BCS serialized bytes
     pub fn pure_bytes(&mut self, bytes: Vec<u8>) -> Argument {
-        self.input(UnresolvedInput::Resolved(Input::Pure { value: bytes }))
+        self.input(
+            InputKind::Input(iota_types::Input::Pure { value: bytes }),
+            false,
+        )
     }
 
     /// Add a pure input
@@ -209,6 +187,12 @@ impl<C> TransactionBuilder<C> {
         Argument::Result(i as u16)
     }
 
+    /// Manually set a command with an optional name
+    pub fn named_command(&mut self, cmd: Command, name: impl NamedCommands) {
+        self.command(cmd);
+        name.push_named_commands(self);
+    }
+
     /// Get the value for the given string in the named commands map
     pub fn get_named_command(&self, name: &str) -> Option<Argument> {
         self.named_commands.get(name).copied()
@@ -218,7 +202,10 @@ impl<C> TransactionBuilder<C> {
 impl TransactionBuilder<()> {
     /// Set the gas coins that will be consumed. Optional.
     pub fn gas(&mut self, obj_ref: ObjectReference) -> &mut Self {
-        self.gas.push(obj_ref);
+        self.input(
+            InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+            true,
+        );
         self
     }
 
@@ -238,12 +225,16 @@ impl TransactionBuilder<()> {
         primary_coin: ObjectReference,
         consumed_coins: impl IntoIterator<Item = ObjectReference> + Send,
     ) -> &mut Self {
-        let primary_coin = self.input(UnresolvedInput::Resolved(Input::ImmutableOrOwned(
-            primary_coin,
-        )));
+        let primary_coin = self.input(
+            InputKind::Input(iota_types::Input::ImmutableOrOwned(primary_coin)),
+            false,
+        );
         let mut consumed = Vec::new();
         for coin in consumed_coins {
-            consumed.push(self.input(UnresolvedInput::Resolved(Input::ImmutableOrOwned(coin))));
+            consumed.push(self.input(
+                InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
+                false,
+            ));
         }
         self.command(Command::MergeCoins(MergeCoins {
             coin: primary_coin,
@@ -259,7 +250,10 @@ impl TransactionBuilder<()> {
         split_amounts: impl IntoIterator<Item = u64> + Send,
         name: impl NamedCommands,
     ) -> &mut Self {
-        let coin = self.input(UnresolvedInput::Resolved(Input::ImmutableOrOwned(coin)));
+        let coin = self.input(
+            InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
+            false,
+        );
         let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
         self.command(Command::SplitCoins(SplitCoins {
             coin,
@@ -277,51 +271,65 @@ impl TransactionBuilder<()> {
     ) -> &mut Self {
         let objects = objects
             .into_iter()
-            .map(|o| self.input(UnresolvedInput::Resolved(Input::ImmutableOrOwned(o))))
+            .map(|o| {
+                self.input(
+                    InputKind::Input(iota_types::Input::ImmutableOrOwned(o)),
+                    false,
+                )
+            })
             .collect();
         let cmd = Command::TransferObjects(TransferObjects {
             objects,
             address: self.pure(recipient),
         });
-        self.commands.push(cmd);
+        self.command(cmd);
         self
-    }
-
-    fn resolve_inputs(&mut self) -> Result<Vec<Input>, Error> {
-        let mut inputs = Vec::new();
-        for input in self.inputs.drain(..) {
-            match input {
-                UnresolvedInput::Resolved(input) => inputs.push(input),
-                _ => {
-                    return Err(Error::Input(
-                        "cannot resolve inputs without client".to_owned(),
-                    ));
-                }
-            }
-        }
-        Ok(inputs)
     }
 
     /// Convert this builder into a transaction.
     pub fn finish(mut self) -> Result<Transaction, Error> {
-        if !self.gas_to_resolve.is_empty() {
-            return Err(Error::Input(
-                "gas cannot be resolved without a client".to_owned(),
-            ));
-        }
         let Some(price) = self.gas_price else {
             return Err(Error::MissingGasPrice);
         };
+        let mut inputs = Vec::new();
+        let mut gas = Vec::new();
+        let mut input_map = HashMap::new();
+        for (id, input) in std::mem::take(&mut self.inputs) {
+            match input.kind {
+                InputKind::Input(inp) => {
+                    if input.is_gas {
+                        match inp {
+                            iota_types::Input::ImmutableOrOwned(obj_ref) => gas.push(obj_ref),
+                            _ => return Err(Error::WrongGasObject),
+                        }
+                    } else {
+                        let idx = inputs.len();
+                        inputs.push(inp);
+                        input_map.insert(id, idx as u16);
+                    }
+                }
+                InputKind::ImmutableOrOwned(object_id)
+                | InputKind::Shared { object_id, .. }
+                | InputKind::Receiving(object_id) => {
+                    return Err(Error::Input(format!(
+                        "object {object_id} cannot be resolved without a client"
+                    )));
+                }
+            };
+        }
+        let commands = self
+            .commands
+            .drain(..)
+            .map(|c| c.resolve(&input_map))
+            .collect();
         Ok(Transaction {
-            kind: iota_types::TransactionKind::ProgrammableTransaction(
-                iota_types::ProgrammableTransaction {
-                    inputs: self.resolve_inputs()?,
-                    commands: self.commands,
-                },
-            ),
+            kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
+                inputs,
+                commands,
+            }),
             sender: self.sender,
             gas_payment: GasPayment {
-                objects: self.gas,
+                objects: gas,
                 owner: self.sponsor.unwrap_or(self.sender),
                 price,
                 budget: self.gas_budget.unwrap_or(0),
@@ -339,7 +347,7 @@ impl TransactionBuilder<Client> {
 
     /// Set the gas coins that will be consumed. Optional.
     pub fn gas(&mut self, object_id: ObjectId) -> &mut Self {
-        self.gas_to_resolve.push(object_id);
+        self.input(InputKind::ImmutableOrOwned(object_id), true);
         self
     }
 
@@ -364,7 +372,7 @@ impl TransactionBuilder<Client> {
             objects,
             address: self.pure(recipient),
         });
-        self.commands.push(cmd);
+        self.command(cmd);
         self
     }
 
@@ -374,10 +382,10 @@ impl TransactionBuilder<Client> {
         primary_coin: ObjectId,
         consumed_coins: impl IntoIterator<Item = ObjectId> + Send,
     ) -> &mut Self {
-        let primary_coin = self.input(UnresolvedInput::ImmutableOrOwned(primary_coin));
+        let primary_coin = self.input(InputKind::ImmutableOrOwned(primary_coin), false);
         let mut consumed = Vec::new();
         for coin in consumed_coins {
-            consumed.push(self.input(UnresolvedInput::ImmutableOrOwned(coin)));
+            consumed.push(self.input(InputKind::ImmutableOrOwned(coin), false));
         }
         self.command(Command::MergeCoins(MergeCoins {
             coin: primary_coin,
@@ -393,7 +401,7 @@ impl TransactionBuilder<Client> {
         split_amounts: impl IntoIterator<Item = u64> + Send,
         name: impl NamedCommands,
     ) -> &mut Self {
-        let coin = self.input(UnresolvedInput::ImmutableOrOwned(coin));
+        let coin = self.input(InputKind::ImmutableOrOwned(coin), false);
         let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
         self.command(Command::SplitCoins(SplitCoins {
             coin,
@@ -449,75 +457,99 @@ impl TransactionBuilder<Client> {
             type_: Some(U::type_tag()),
             elements: args,
         });
-        self.commands.push(cmd);
+        self.command(cmd);
         name.push_named_commands(self);
         self
     }
 
-    /// Manually set a command with an optional name
-    pub fn named_command(&mut self, cmd: Command, name: impl NamedCommands) -> &mut Self {
-        self.commands.push(cmd);
-        name.push_named_commands(self);
-        self
-    }
-
-    async fn resolve_inputs(&mut self) -> Result<Vec<Input>, Error> {
+    async fn resolve_ptb(&mut self) -> Result<Transaction, Error> {
         let mut inputs = Vec::new();
-        for input in self.inputs.drain(..) {
-            let (object_id, mutable) = match input {
-                UnresolvedInput::ImmutableOrOwned(object_id)
-                | UnresolvedInput::Receiving(object_id) => (object_id, false),
-                UnresolvedInput::Shared { object_id, mutable } => (object_id, mutable),
-                UnresolvedInput::Resolved(input) => {
+        let mut gas = Vec::new();
+        let mut input_map = HashMap::new();
+        for (id, input) in std::mem::take(&mut self.inputs) {
+            match input.kind {
+                InputKind::ImmutableOrOwned(object_id) | InputKind::Receiving(object_id) => {
+                    let obj = self
+                        .client
+                        .object(object_id, None)
+                        .await
+                        .map_err(Error::Client)?
+                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+
+                    if input.is_gas {
+                        let obj_ref = match obj.owner() {
+                            Owner::Address(_) | Owner::Object(_) => {
+                                ObjectReference::new(object_id, obj.version(), obj.digest())
+                            }
+                            Owner::Shared(_) | Owner::Immutable => {
+                                return Err(Error::WrongGasObject);
+                            }
+                        };
+
+                        gas.push(obj_ref);
+                    } else {
+                        let input = match obj.owner() {
+                            Owner::Address(_) | Owner::Object(_) | Owner::Immutable => {
+                                iota_types::Input::ImmutableOrOwned(ObjectReference::new(
+                                    object_id,
+                                    obj.version(),
+                                    obj.digest(),
+                                ))
+                            }
+                            _ => {
+                                return Err(Error::Input(format!(
+                                    "object {object_id} was passed as owned or immutable, but is not"
+                                )));
+                            }
+                        };
+                        let idx = inputs.len();
+                        inputs.push(input);
+                        input_map.insert(id, idx as u16);
+                    }
+                }
+                InputKind::Shared { object_id, mutable } => {
+                    let obj = self
+                        .client
+                        .object(object_id, None)
+                        .await
+                        .map_err(Error::Client)?
+                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+
+                    let input = match obj.owner() {
+                        Owner::Shared(version) => iota_types::Input::Shared {
+                            object_id,
+                            initial_shared_version: *version,
+                            mutable,
+                        },
+                        _ => {
+                            return Err(Error::Input(format!(
+                                "object {object_id} was passed as shared, but is not"
+                            )));
+                        }
+                    };
+                    let idx = inputs.len();
                     inputs.push(input);
-                    continue;
+                    input_map.insert(id, idx as u16);
+                }
+                InputKind::Input(inp) => {
+                    if input.is_gas {
+                        match inp {
+                            iota_types::Input::ImmutableOrOwned(obj_ref) => gas.push(obj_ref),
+                            _ => return Err(Error::WrongGasObject),
+                        }
+                    } else {
+                        let idx = inputs.len();
+                        inputs.push(inp);
+                        input_map.insert(id, idx as u16);
+                    }
                 }
             };
-            let obj = self
-                .client
-                .object(object_id, None)
-                .await
-                .map_err(Error::Client)?
-                .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
-
-            inputs.push(match obj.owner() {
-                Owner::Address(_) | Owner::Object(_) | Owner::Immutable => Input::ImmutableOrOwned(
-                    ObjectReference::new(object_id, obj.version(), obj.digest()),
-                ),
-                Owner::Shared(version) => Input::Shared {
-                    object_id,
-                    initial_shared_version: *version,
-                    mutable,
-                },
-            });
         }
-        Ok(inputs)
-    }
-
-    async fn resolve_gas(&mut self) -> Result<(), Error> {
-        for gas_to_resolve in self.gas_to_resolve.drain(..) {
-            let obj = self
-                .client
-                .object(gas_to_resolve, None)
-                .await
-                .map_err(Error::Client)?
-                .ok_or_else(|| Error::Input(format!("missing object {gas_to_resolve}")))?;
-
-            let obj_ref = match obj.owner() {
-                Owner::Address(_) | Owner::Object(_) | Owner::Immutable => {
-                    ObjectReference::new(gas_to_resolve, obj.version(), obj.digest())
-                }
-                Owner::Shared(_) => return Err(Error::WrongGasObject),
-            };
-
-            self.gas.push(obj_ref);
-        }
-        Ok(())
-    }
-
-    /// Convert this builder into a transaction.
-    pub async fn finish(mut self) -> Result<Transaction, Error> {
-        self.resolve_gas().await?;
+        let commands = self
+            .commands
+            .drain(..)
+            .map(|c| c.resolve(&input_map))
+            .collect();
         let price = match self.gas_price {
             Some(price) => price,
             None => self
@@ -527,22 +559,25 @@ impl TransactionBuilder<Client> {
                 .map_err(Error::Client)?
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
-        let mut txn = Transaction {
-            kind: iota_types::TransactionKind::ProgrammableTransaction(
-                iota_types::ProgrammableTransaction {
-                    inputs: self.resolve_inputs().await?,
-                    commands: self.commands,
-                },
-            ),
+        Ok(Transaction {
+            kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
+                inputs,
+                commands,
+            }),
             sender: self.sender,
             gas_payment: GasPayment {
-                objects: self.gas,
+                objects: gas,
                 owner: self.sponsor.unwrap_or(self.sender),
                 price,
                 budget: self.gas_budget.unwrap_or(0),
             },
             expiration: self.expiration,
-        };
+        })
+    }
+
+    /// Convert this builder into a transaction.
+    pub async fn finish(mut self) -> Result<Transaction, Error> {
+        let mut txn = self.resolve_ptb().await?;
         if self.gas_budget.is_none() {
             let res = self
                 .client
@@ -561,33 +596,7 @@ impl TransactionBuilder<Client> {
 
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
-        self.resolve_gas().await?;
-        let price = match self.gas_price {
-            Some(price) => price,
-            None => self
-                .client
-                .reference_gas_price(None)
-                .await
-                .map_err(Error::Client)?
-                .ok_or_else(|| Error::MissingGasPrice)?,
-        };
-        let txn = Transaction {
-            kind: iota_types::TransactionKind::ProgrammableTransaction(
-                iota_types::ProgrammableTransaction {
-                    inputs: self.resolve_inputs().await?,
-                    commands: self.commands,
-                },
-            ),
-            sender: self.sender,
-            gas_payment: GasPayment {
-                objects: self.gas,
-                owner: self.sponsor.unwrap_or(self.sender),
-                price,
-                budget: self.gas_budget.unwrap_or(0),
-            },
-            expiration: self.expiration,
-        };
-        println!("{txn:#?}");
+        let txn = self.resolve_ptb().await?;
         let res = self
             .client
             .dry_run_tx(&txn, skip_checks)
@@ -762,8 +771,10 @@ impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Argument>> {
                 params
                     .into_iter()
                     .map(|o| {
-                        self.ptb
-                            .input(UnresolvedInput::Resolved(Input::ImmutableOrOwned(o)))
+                        self.ptb.input(
+                            InputKind::Input(iota_types::Input::ImmutableOrOwned(o)),
+                            false,
+                        )
                     })
                     .collect::<Vec<_>>(),
             ),
@@ -903,7 +914,7 @@ impl_ptb_args_tuple!(T1.0, T2.1, T3.2, T4.3, T5.4);
 impl<T: MoveParam> PTBArguments for T {
     fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
         let arg = match self.param() {
-            ParamType::Object(id) => ptb.input(UnresolvedInput::ImmutableOrOwned(id)),
+            ParamType::Object(id) => ptb.input(InputKind::ImmutableOrOwned(id), false),
             ParamType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);
@@ -942,10 +953,13 @@ pub struct Mut<T>(pub T);
 impl<T: MoveParam> PTBArguments for Mut<T> {
     fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
         let arg = match self.0.param() {
-            ParamType::Object(id) => ptb.input(UnresolvedInput::Shared {
-                object_id: id,
-                mutable: true,
-            }),
+            ParamType::Object(id) => ptb.input(
+                InputKind::Shared {
+                    object_id: id,
+                    mutable: true,
+                },
+                false,
+            ),
             ParamType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);
@@ -958,7 +972,7 @@ pub struct Receiving<T>(pub T);
 impl<T: MoveParam> PTBArguments for Receiving<T> {
     fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
         let arg = match self.0.param() {
-            ParamType::Object(id) => ptb.input(UnresolvedInput::Receiving(id)),
+            ParamType::Object(id) => ptb.input(InputKind::Receiving(id), false),
             ParamType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);
