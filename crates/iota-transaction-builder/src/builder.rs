@@ -24,17 +24,7 @@ use crate::{
     },
 };
 
-/// A builder for a programmable transaction which provides a better API vs.
-/// IOTAs [`ProgrammableTransactionBuilder`](IotaPTB).
-///
-/// Additional Features:
-/// - Command results can be bound by a static name, and referenced by later
-///   calls with that name using [`Res`].
-/// - Parameters can be passed in without fiddling with inputs, and will be
-///   automatically handled.
-/// - Mixed parameters (new inputs and named references) can be defined in a
-///   single tuple.
-/// - The builder is 100% chainable, start-to-finish.
+/// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
 pub struct TransactionBuilder<C> {
     /// The inputs to the transaction.
