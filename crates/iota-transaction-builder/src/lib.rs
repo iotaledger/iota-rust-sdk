@@ -330,7 +330,11 @@ mod tests {
 
         // we need this ticket to authorize the upgrade
         tx.move_call(Address::TWO, "package", "authorize_upgrade")
-            .params((upgrade_cap.unwrap(), 0u8, &updated_package.digest))
+            .params((
+                upgrade_cap.unwrap(),
+                0u8,
+                updated_package.digest.as_ref().unwrap(),
+            ))
             .result("ticket");
         // now we can upgrade the package
         tx.upgrade(
