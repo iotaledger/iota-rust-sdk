@@ -16,7 +16,7 @@ func main() {
 	sender, _ := sdk.AddressFromHex("0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e")
 	gas_coin_id, _ := sdk.ObjectIdFromHex("0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a")
 
-	builder := sdk.NewTransactionBuilder(sender, client)
+	builder := sdk.TransactionBuilderInit(sender, client)
 
 	addr1, _ := sdk.AddressFromHex("0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e")
 	addr2, _ := sdk.AddressFromHex("0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")

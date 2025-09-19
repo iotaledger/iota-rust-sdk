@@ -44,7 +44,7 @@ func main() {
 
 	requestAddStakeFn, _ := sdk.NewIdentifier("request_add_stake")
 
-	builder := sdk.NewTransactionBuilder(myAddress, client)
+	builder := sdk.TransactionBuilderInit(myAddress, client)
 
 	builder.MoveCall(
 		iotaSystemAddress,

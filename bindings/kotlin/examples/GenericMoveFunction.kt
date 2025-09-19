@@ -26,7 +26,7 @@ fun main() = runBlocking {
                         "0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a"
                 )
 
-        val builder = TransactionBuilder.build(sender, client)
+        val builder = TransactionBuilder.init(sender, client)
 
         val address1 =
                 Address.fromHex(

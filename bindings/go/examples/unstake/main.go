@@ -40,7 +40,7 @@ func main() {
 
 	requestAddStakeFn, _ := sdk.NewIdentifier("request_withdraw_stake")
 
-	builder := sdk.NewTransactionBuilder(gasCoin.Owner().AsAddress(), client)
+	builder := sdk.TransactionBuilderInit(gasCoin.Owner().AsAddress(), client)
 	builder.MoveCall(
 		iotaSystemAddress,
 		iotaSystemModule,

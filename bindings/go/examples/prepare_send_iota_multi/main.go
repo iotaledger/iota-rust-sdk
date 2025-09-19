@@ -20,7 +20,7 @@ func main() {
 
 	recipient2, _ := sdk.AddressFromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
 
-	builder := sdk.NewTransactionBuilder(sender, client)
+	builder := sdk.TransactionBuilderInit(sender, client)
 
 	// Split the gas coin into multiple coins
 	builder.SplitCoins(gasCoinId, []uint64{1_000_000_000, 2_000_000_000}, []string{"coin1", "coin2"})

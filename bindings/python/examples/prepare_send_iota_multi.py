@@ -22,7 +22,7 @@ async def main():
         "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522"
     )
 
-    builder = await TransactionBuilder.build(sender, client)
+    builder = await TransactionBuilder.init(sender, client)
 
     builder.split_coins(gas_coin_id, [1_000_000_000, 2_000_000_000], ["coin1", "coin2"])
     builder.transfer_objects(recipient1, [PtbArgument.res("coin1")])

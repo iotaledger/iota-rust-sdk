@@ -36,7 +36,7 @@ fun main() = runBlocking {
                         "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522"
                 )
 
-        val builder = TransactionBuilder.build(sender, client)
+        val builder = TransactionBuilder.init(sender, client)
 
         builder.splitCoins(
                 gasCoinId,

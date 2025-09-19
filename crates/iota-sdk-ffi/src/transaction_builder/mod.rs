@@ -53,19 +53,13 @@ impl TransactionBuilder {
 #[uniffi::export(async_runtime = "tokio")]
 impl TransactionBuilder {
     /// Create a new transaction builder and initialize its elements to default.
-    #[uniffi::constructor]
+    #[uniffi::constructor(name = "init")]
     pub async fn new(sender: &Address, client: &GraphQLClient) -> Self {
         Self(
             iota_transaction_builder::TransactionBuilder::new(**sender)
                 .with_client(client.inner().read().await.clone())
                 .into(),
         )
-    }
-
-    // Workaround for kotlin
-    #[uniffi::constructor]
-    pub async fn build(sender: &Address, client: &GraphQLClient) -> Self {
-        Self::new(sender, client).await
     }
 
     /// Add a gas object to use to pay for the transaction.

@@ -27,7 +27,7 @@ async def main():
             raise Exception("no gas coin found")
         gas_coin = gas_coins.data[0]
 
-        builder = await TransactionBuilder.build(gas_coin.owner().as_address(), client)
+        builder = await TransactionBuilder.init(gas_coin.owner().as_address(), client)
 
         builder.move_call(
             Address.from_hex("0x3"),

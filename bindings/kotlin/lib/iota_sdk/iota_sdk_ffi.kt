@@ -2192,8 +2192,6 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3393,9 +3391,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_build(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new(
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1(
 ): Short
@@ -4844,9 +4840,7 @@ fun uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(`ptr`: Pointer,uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_build(`sender`: Pointer,`client`: Pointer,
-): Long
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(`sender`: Pointer,`client`: Pointer,
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(`sender`: Pointer,`client`: Pointer,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run(`ptr`: Pointer,`skipChecks`: Byte,
 ): Long
@@ -7110,10 +7104,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new() != 4081.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_build() != 18529.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new() != 4739.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init() != 29935.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() != 63561.toShort()) {
@@ -35682,7 +35673,6 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    // Note no constructor generated for this object as it is async.
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -36070,10 +36060,13 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     companion object {
         
+    /**
+     * Create a new transaction builder and initialize its elements to default.
+     */
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-     suspend fun `build`(`sender`: Address, `client`: GraphQlClient) : TransactionBuilder {
+     suspend fun `init`(`sender`: Address, `client`: GraphQlClient) : TransactionBuilder {
         return uniffiRustCallAsync(
-        UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_build(FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGraphQLClient.lower(`client`),),
+        UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGraphQLClient.lower(`client`),),
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
         { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },

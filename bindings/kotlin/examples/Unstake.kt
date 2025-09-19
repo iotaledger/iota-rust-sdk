@@ -33,7 +33,7 @@ fun main() = runBlocking {
         }
         val gasCoin = gasCoins.data[0]
 
-        val builder = TransactionBuilder.build(gasCoin.owner().asAddress(), client)
+        val builder = TransactionBuilder.init(gasCoin.owner().asAddress(), client)
 
         builder.moveCall(
                 Address.fromHex("0x3"),

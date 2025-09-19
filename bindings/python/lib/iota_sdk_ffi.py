@@ -1645,9 +1645,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new() != 4081:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_build() != 18529:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new() != 4739:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init() != 29935:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() != 63561:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5260,16 +5258,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionbuilder.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionbuilder.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_build.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_build.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run.argtypes = (
     ctypes.c_void_p,
     ctypes.c_int8,
@@ -8263,12 +8256,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new.restype = 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_build.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_build.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1.restype = ctypes.c_uint16
@@ -34696,8 +34686,9 @@ class TransactionBuilder():
     """
 
     _pointer: ctypes.c_void_p
-    def __init__(self, *args, **kw):
-        raise ValueError("async constructors not supported.")
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -34717,14 +34708,18 @@ class TransactionBuilder():
         inst._pointer = pointer
         return inst
     @classmethod
-    async def build(cls, sender: "Address",client: "GraphQlClient"):
+    async def init(cls, sender: "Address",client: "GraphQlClient"):
+        """
+        Create a new transaction builder and initialize its elements to default.
+        """
+
         _UniffiConverterTypeAddress.check_lower(sender)
         
         _UniffiConverterTypeGraphQlClient.check_lower(client)
         
 
         return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_build(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(
         _UniffiConverterTypeAddress.lower(sender),
         _UniffiConverterTypeGraphQlClient.lower(client)),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,

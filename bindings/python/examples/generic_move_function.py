@@ -16,7 +16,7 @@ async def main():
         "0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a"
     )
 
-    builder = await TransactionBuilder.build(sender, client)
+    builder = await TransactionBuilder.init(sender, client)
 
     builder.make_move_vec(
         [

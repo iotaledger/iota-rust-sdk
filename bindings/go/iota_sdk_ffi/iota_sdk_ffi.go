@@ -5688,20 +5688,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_build()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init()
 	})
-	if checksum != 18529 {
+	if checksum != 29935 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_build: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new()
-	})
-	if checksum != 4739 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -19781,8 +19772,10 @@ type TransactionBuilderInterface interface {
 type TransactionBuilder struct {
 	ffiObject FfiObject
 }
+
+
 // Create a new transaction builder and initialize its elements to default.
-func NewTransactionBuilder(sender *Address, client *GraphQlClient) *TransactionBuilder {
+func TransactionBuilderInit(sender *Address, client *GraphQlClient) *TransactionBuilder {
 	 res, _ :=uniffiRustCallAsync[error](
         nil,
 		// completeFn
@@ -19794,34 +19787,7 @@ func NewTransactionBuilder(sender *Address, client *GraphQlClient) *TransactionB
 		func(ffi unsafe.Pointer) *TransactionBuilder {
 			return FfiConverterTransactionBuilderINSTANCE.Lift(ffi)
 		},
-		C.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(FfiConverterAddressINSTANCE.Lower(sender), FfiConverterGraphQlClientINSTANCE.Lower(client)),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
-		},
-	)
-
-	return res 
-}
-
-
-func TransactionBuilderBuild(sender *Address, client *GraphQlClient) *TransactionBuilder {
-	 res, _ :=uniffiRustCallAsync[error](
-        nil,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
-		},
-		// liftFn
-		func(ffi unsafe.Pointer) *TransactionBuilder {
-			return FfiConverterTransactionBuilderINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_build(FfiConverterAddressINSTANCE.Lower(sender), FfiConverterGraphQlClientINSTANCE.Lower(client)),
+		C.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(FfiConverterAddressINSTANCE.Lower(sender), FfiConverterGraphQlClientINSTANCE.Lower(client)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
