@@ -911,14 +911,6 @@ impl<T: MoveParam> PTBArguments for T {
     }
 }
 
-impl<T: PTBArguments> PTBArguments for Vec<T> {
-    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
-        for val in self {
-            val.push_args(ptb, args);
-        }
-    }
-}
-
 impl<T: PTBArguments> PTBArguments for std::sync::Arc<T> {
     fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
         self.as_ref().push_args(ptb, args);

@@ -13,7 +13,7 @@ pub mod types;
 #[allow(missing_docs)]
 pub mod unresolved;
 
-pub use self::{builder::TransactionBuilder, publish_type::MovePackageData, types::CustomMoveType};
+pub use self::{builder::TransactionBuilder, publish_type::MovePackageData};
 
 #[cfg(test)]
 mod tests {

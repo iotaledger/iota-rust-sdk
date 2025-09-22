@@ -5,15 +5,15 @@ use std::sync::Arc;
 
 use iota_transaction_builder::{
     builder::{Mut, Receiving},
-    types::Vector,
+    types::ParamType,
 };
 
 use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
-type PTBArguments = Box<dyn iota_transaction_builder::builder::PTBArguments + Send + Sync>;
+type DynPTBArg = Box<dyn iota_transaction_builder::builder::PTBArguments + Send + Sync>;
 
 #[derive(uniffi::Object)]
-pub struct PTBArgument(PTBArguments);
+pub struct PTBArgument(DynPTBArg);
 
 #[uniffi::export]
 impl PTBArgument {
@@ -76,7 +76,11 @@ impl PTBArgument {
 
     #[uniffi::constructor]
     pub fn vector(vec: Vec<Vec<u8>>) -> Self {
-        Self(Box::new(Vector(vec)))
+        Self(Box::new(
+            vec.into_iter()
+                .map(|b| ParamType::Pure(b))
+                .collect::<Vec<_>>(),
+        ))
     }
 }
 
@@ -97,6 +101,20 @@ impl iota_transaction_builder::builder::PTBArguments for &PTBArgument {
         args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
     ) {
         self.0.push_args(ptb, args);
+    }
+}
+
+pub struct PTBArgs(pub Vec<Arc<PTBArgument>>);
+
+impl iota_transaction_builder::builder::PTBArguments for PTBArgs {
+    fn push_args(
+        &self,
+        ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
+        args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
+    ) {
+        for arg in &self.0 {
+            arg.push_args(ptb, args);
+        }
     }
 }
 

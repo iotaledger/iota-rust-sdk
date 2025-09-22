@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_types::{Digest, ObjectId};
-use serde::{Serialize, de::DeserializeOwned};
 
-use crate::types::{ParamType, Vector};
+use crate::types::ParamType;
 
 /// A trait which defines how types are serialized for move calls.
 pub trait MoveParam {
@@ -36,10 +35,30 @@ impl MoveParam for () {
     }
 }
 
-impl<T: Serialize> MoveParam for Vector<T> {
+impl<T: MoveParam> MoveParam for Vec<T> {
     fn param(&self) -> ParamType {
-        ParamType::Pure(bcs::to_bytes(&self.0).expect("bcs serialization failed"))
+        let mut res = u32_as_uleb128(self.len() as u32);
+        for val in self {
+            match val.param() {
+                ParamType::Object(object_id) => res.extend(object_id.as_bytes()),
+                ParamType::Pure(items) => res.extend(items),
+            }
+        }
+        ParamType::Pure(res)
     }
+}
+
+fn u32_as_uleb128(mut value: u32) -> Vec<u8> {
+    let mut res = Vec::new();
+    while value >= 0x80 {
+        // Write 7 (lowest) bits of data and set the 8th bit to 1.
+        let byte = (value & 0x7f) as u8;
+        res.push(byte | 0x80);
+        value >>= 7;
+    }
+    // Write the remaining bits of data and set the highest bit to 0.
+    res.push(value as u8);
+    res
 }
 
 impl<T: MoveParam> MoveParam for Box<T> {
@@ -48,34 +67,17 @@ impl<T: MoveParam> MoveParam for Box<T> {
     }
 }
 
-impl<T: MoveParam + Serialize + DeserializeOwned> MoveParam for Option<T> {
+impl<T: MoveParam> MoveParam for Option<T> {
     fn param(&self) -> ParamType {
         match self {
             Some(value) => match value.param() {
-                ParamType::Object(object_id) => ParamType::Pure(
-                    bcs::to_bytes(&Some(object_id)).expect("bcs serialization failed"),
-                ),
-                ParamType::Pure(items) => ParamType::Pure(
-                    bcs::to_bytes(&Some(
-                        bcs::from_bytes::<T>(&items).expect("bcs deserialization failed"),
-                    ))
-                    .expect("bcs serialization failed"),
-                ),
+                ParamType::Object(object_id) => {
+                    ParamType::Pure([&[1], object_id.as_bytes()].concat())
+                }
+                ParamType::Pure(items) => ParamType::Pure([&[1], &items[..]].concat()),
             },
-            None => ParamType::Pure(vec![0; core::mem::size_of::<T>() + 1]),
+            None => ParamType::Pure(vec![0; 1]),
         }
-    }
-}
-
-impl MoveParam for [u8] {
-    fn param(&self) -> ParamType {
-        ParamType::Pure(self.to_vec())
-    }
-}
-
-impl<const N: usize> MoveParam for [u8; N] {
-    fn param(&self) -> ParamType {
-        ParamType::Pure(self.to_vec())
     }
 }
 

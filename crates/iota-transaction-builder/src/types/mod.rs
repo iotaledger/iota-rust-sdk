@@ -5,11 +5,9 @@
 
 use iota_types::{Address, ObjectId, TypeTag};
 
-mod custom;
 mod move_param;
 mod move_type;
 
-pub use custom::CustomMoveType;
 pub use move_param::MoveParam;
 pub use move_type::{MoveType, MoveTypes};
 use primitive_types::U256;
@@ -21,17 +19,6 @@ pub enum ParamType {
     Object(ObjectId),
     /// A bcs serialized value.
     Pure(Vec<u8>),
-}
-
-/// A Move `vector` type for specifying that type and not a rust `Vec`, which is
-/// used for passing multiple params.
-#[derive(Clone, Debug)]
-pub struct Vector<T>(pub Vec<T>);
-
-impl<T> From<Vec<T>> for Vector<T> {
-    fn from(value: Vec<T>) -> Self {
-        Self(value)
-    }
 }
 
 macro_rules! impl_simple_move_type {
