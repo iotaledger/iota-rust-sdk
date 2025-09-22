@@ -468,10 +468,10 @@ impl TransactionBuilder<Client> {
 
                     if input.is_gas {
                         let obj_ref = match obj.owner() {
-                            Owner::Address(_) | Owner::Object(_) => {
+                            Owner::Address(_) => {
                                 ObjectReference::new(object_id, obj.version(), obj.digest())
                             }
-                            Owner::Shared(_) | Owner::Immutable => {
+                            _ => {
                                 return Err(Error::WrongGasObject);
                             }
                         };
