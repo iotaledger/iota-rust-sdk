@@ -101,11 +101,16 @@ impl<T: MoveParam> PTBArguments for Receiving<T> {
 }
 
 /// The result of a previous command by name.
-pub struct Res(pub &'static str);
+pub struct Res(String);
+
+/// Get the result of a previous command by name.
+pub fn res(name: impl Into<String>) -> Res {
+    Res(name.into())
+}
 
 impl PTBArguments for Res {
     fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
-        if let Some(arg) = ptb.named_commands.get(self.0) {
+        if let Some(arg) = ptb.named_commands.get(&self.0) {
             args.push(*arg);
         } else {
             panic!("no command named `{}` exists", self.0)

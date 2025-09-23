@@ -16,7 +16,7 @@ pub mod unresolved;
 pub use self::{
     builder::{
         TransactionBuilder,
-        ptb_arguments::{Mut, PTBArguments, Receiving, Res},
+        ptb_arguments::{Mut, PTBArguments, Receiving, res},
     },
     publish_type::MovePackageData,
 };
@@ -35,11 +35,7 @@ mod tests {
         TransactionEffects,
     };
 
-    use crate::{
-        builder::{TransactionBuilder, ptb_arguments::Res},
-        error::Error,
-        publish_type::MovePackageData,
-    };
+    use crate::{TransactionBuilder, error::Error, publish_type::MovePackageData, res};
 
     /// This is used to read the json file that contains the modules/deps/digest
     /// generated with iota move build --dump-bytecode-as-base64 on the
@@ -205,7 +201,7 @@ mod tests {
         let gas = tx.get_gas().next().unwrap();
         tx.split_coins(gas, [1_000_000_000], "coin");
         let recipient = Address::generate(rand::thread_rng());
-        tx.transfer_objects(recipient, Res("coin"));
+        tx.transfer_objects(recipient, res("coin"));
 
         let effects = tx.execute(&[pk.into()], true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -277,7 +273,7 @@ mod tests {
         let package = move_package_data("package_test_example_v1.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, Res("cap"));
+            .transfer_objects(address, res("cap"));
 
         let effects = tx.execute(&[pk.into()], true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -291,7 +287,7 @@ mod tests {
         let package = move_package_data("package_test_example_v2.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, Res("cap"));
+            .transfer_objects(address, res("cap"));
 
         let effects = tx.execute(&keys, true).await;
         let mut package_id: Option<ObjectId> = None;
@@ -345,14 +341,14 @@ mod tests {
         // now we can upgrade the package
         tx.upgrade(
             package_id.unwrap(),
-            Res("ticket"),
+            res("ticket"),
             updated_package,
             "receipt",
         );
 
         // commit the upgrade
         tx.move_call(Address::TWO, "package", "commit_upgrade")
-            .params((upgrade_cap.unwrap(), Res("receipt")))
+            .params((upgrade_cap.unwrap(), res("receipt")))
             .end();
 
         tx.gas(coins.last().unwrap().id);

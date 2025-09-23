@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_transaction_builder::{Mut, Receiving, types::ParamType};
+use iota_transaction_builder::{Mut, Receiving, res, types::ParamType};
 
 use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
@@ -16,7 +16,7 @@ pub struct PTBArgument(DynPTBArg);
 impl PTBArgument {
     #[uniffi::constructor]
     pub fn res(name: String) -> Self {
-        Self(Box::new(Res(name)))
+        Self(Box::new(res(name)))
     }
 
     #[uniffi::constructor]
@@ -109,22 +109,6 @@ impl iota_transaction_builder::PTBArguments for PTBArgs {
     ) {
         for arg in &self.0 {
             arg.push_args(ptb, args);
-        }
-    }
-}
-
-pub struct Res(String);
-
-impl iota_transaction_builder::PTBArguments for Res {
-    fn push_args(
-        &self,
-        ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
-        args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
-    ) {
-        if let Some(arg) = ptb.get_named_command(&self.0) {
-            args.push(arg);
-        } else {
-            panic!("no command named `{}` exists", self.0)
         }
     }
 }

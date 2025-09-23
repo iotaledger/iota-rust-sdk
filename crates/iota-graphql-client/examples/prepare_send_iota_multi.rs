@@ -6,7 +6,7 @@ use std::str::FromStr;
 use anyhow::Result;
 use base64ct::Encoding;
 use iota_graphql_client::Client;
-use iota_transaction_builder::{Res, TransactionBuilder};
+use iota_transaction_builder::{TransactionBuilder, res};
 use iota_types::{Address, ObjectId};
 
 #[tokio::main]
@@ -27,13 +27,13 @@ async fn main() -> Result<()> {
             Address::from_str(
                 "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11",
             )?,
-            Res("coin1"),
+            res("coin1"),
         )
         .transfer_objects(
             Address::from_str(
                 "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522",
             )?,
-            Res("coin2"),
+            res("coin2"),
         )
         .gas(gas_coin)
         .gas_budget(1000000000);
