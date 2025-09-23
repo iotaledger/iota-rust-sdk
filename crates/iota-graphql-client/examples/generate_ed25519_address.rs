@@ -6,8 +6,7 @@ use iota_crypto::ed25519::Ed25519PrivateKey;
 use rand::rngs::OsRng;
 
 fn main() {
-    let mut rng = OsRng;
-    let private_key = Ed25519PrivateKey::generate(&mut rng);
+    let private_key = Ed25519PrivateKey::generate(OsRng);
     let public_key = private_key.public_key();
     let address = public_key.derive_address();
 
