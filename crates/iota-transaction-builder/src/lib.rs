@@ -185,7 +185,8 @@ mod tests {
         let (mut tx, _, pk, _) = helper_setup().await;
         tx.move_call(Address::ONE, "option", "is_none")
             .generics::<u64>()
-            .params(Some(1u64));
+            .params(Some(1u64))
+            .end();
 
         let effects = tx.execute(&[pk.into()], true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -220,7 +221,7 @@ mod tests {
         let coin = coins.first().unwrap().id;
 
         // transfer 1 IOTA
-        tx.split_coins(coin, [1_000_000_000]);
+        tx.split_coins(coin, [1_000_000_000]).end();
 
         let effects = tx.execute(&[pk.into()], true).await.unwrap();
 
@@ -259,7 +260,7 @@ mod tests {
     async fn test_make_move_vec() {
         let (mut tx, _, pk, _) = helper_setup().await;
 
-        tx.make_move_vec([1u64]);
+        tx.make_move_vec([1u64]).end();
 
         let effects = tx.execute(&[pk.into()], true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -344,7 +345,8 @@ mod tests {
 
         // commit the upgrade
         tx.move_call(Address::TWO, "package", "commit_upgrade")
-            .params((upgrade_cap.unwrap(), receipt));
+            .params((upgrade_cap.unwrap(), receipt))
+            .end();
 
         tx.gas(coins.last().unwrap().id);
 

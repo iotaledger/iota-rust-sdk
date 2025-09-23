@@ -14,29 +14,34 @@ use crate::{
 
 /// A wrapper which allows optionally setting names and returning arguments from
 /// the previous command.
+#[must_use = "Command Builder should be consumed by calling `end`, `name`, or `arg`"]
 pub struct CommandBuilder<'a, C, L> {
     pub(crate) ptb: &'a mut TransactionBuilder<C>,
     pub(crate) last_command: L,
 }
 
 impl<'a, C, L: Into<Command>> CommandBuilder<'a, C, L> {
-    fn finish_command(self) -> &'a mut TransactionBuilder<C> {
+    pub fn end(self) -> &'a mut TransactionBuilder<C> {
         let Self { ptb, last_command } = self;
         ptb.command(last_command.into());
         ptb
     }
-}
 
-impl<'a, C, L: Into<Command>> CommandBuilder<'a, C, L> {
     /// Set the name for the last command.
     pub fn name(self, name: impl NamedCommands) -> &'a mut TransactionBuilder<C> {
         name.push_named_commands(self.ptb);
-        self.finish_command()
+        self.end()
+    }
+
+    fn get_arg(&self) -> Argument {
+        Argument::Result(self.ptb.commands.len() as _)
     }
 
     /// Get the argument representing the last command.
-    pub fn arg(&self) -> Argument {
-        Argument::Result(self.ptb.commands.len() as _)
+    pub fn arg(self) -> Argument {
+        let res = self.get_arg();
+        self.end();
+        res
     }
 
     /// Get the current set gas coins.
@@ -46,26 +51,22 @@ impl<'a, C, L: Into<Command>> CommandBuilder<'a, C, L> {
 
     /// Set the gas budget. Optional.
     pub fn gas_budget(self, gas_budget: u64) -> &'a mut TransactionBuilder<C> {
-        self.ptb.gas_budget(gas_budget);
-        self.finish_command()
+        self.end().gas_budget(gas_budget)
     }
 
     /// Set the gas price. Optional.
     pub fn gas_price(self, gas_price: u64) -> &'a mut TransactionBuilder<C> {
-        self.ptb.gas_price(gas_price);
-        self.finish_command()
+        self.end().gas_price(gas_price)
     }
 
     /// Set the sponsor. Optional.
     pub fn sponsor(self, sponsor: Address) -> &'a mut TransactionBuilder<C> {
-        self.ptb.sponsor(sponsor);
-        self.finish_command()
+        self.end().sponsor(sponsor)
     }
 
     /// Set the expiration. Optional.
     pub fn expiration(self, expiration: u64) -> &'a mut TransactionBuilder<C> {
-        self.ptb.expiration(expiration);
-        self.finish_command()
+        self.end().expiration(expiration)
     }
 
     /// Get the value for the given string in the named commands map
@@ -79,15 +80,14 @@ impl<'a, C, L: Into<Command>> CommandBuilder<'a, C, L> {
         recipient: Address,
         amount: impl Into<Option<u64>> + Send,
     ) -> &'a mut TransactionBuilder<C> {
-        self.ptb.transfer_iota(recipient, amount)
+        self.end().transfer_iota(recipient, amount)
     }
 }
 
 impl<'a, L: Into<Command>> CommandBuilder<'a, (), L> {
     /// Set the gas coins that will be consumed. Optional.
     pub fn gas(self, obj_ref: ObjectReference) -> &'a mut TransactionBuilder<()> {
-        self.ptb.gas(obj_ref);
-        self.finish_command()
+        self.end().gas(obj_ref)
     }
 
     /// Begin building a move call.
@@ -97,8 +97,7 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, (), L> {
         module: &'static str,
         function: &'static str,
     ) -> CommandBuilder<'a, (), MoveCall> {
-        self.finish_command()
-            .move_call(package_id, module, function)
+        self.end().move_call(package_id, module, function)
     }
 
     /// Merge multiple coins into one.
@@ -107,8 +106,7 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, (), L> {
         primary_coin: ObjectReference,
         consumed_coins: impl IntoIterator<Item = ObjectReference> + Send,
     ) -> &'a mut TransactionBuilder<()> {
-        self.finish_command()
-            .merge_coins(primary_coin, consumed_coins)
+        self.end().merge_coins(primary_coin, consumed_coins)
     }
 
     /// Split a coin into many.
@@ -117,7 +115,7 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, (), L> {
         coin: ObjectReference,
         split_amounts: impl IntoIterator<Item = u64> + Send,
     ) -> CommandBuilder<'a, (), SplitCoins> {
-        self.finish_command().split_coins(coin, split_amounts)
+        self.end().split_coins(coin, split_amounts)
     }
 
     /// Transfer objects to a recipient address.
@@ -126,7 +124,7 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, (), L> {
         recipient: Address,
         objects: impl IntoIterator<Item = ObjectReference>,
     ) -> &'a mut TransactionBuilder<()> {
-        self.finish_command().transfer_objects(recipient, objects)
+        self.end().transfer_objects(recipient, objects)
     }
 
     /// Make a move vector from a list of elements.
@@ -135,19 +133,19 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, (), L> {
         elements: impl IntoIterator<Item = Argument>,
         type_tag: impl Into<Option<TypeTag>>,
     ) -> CommandBuilder<'a, (), MakeMoveVector> {
-        self.finish_command().make_move_vec(elements, type_tag)
+        self.end().make_move_vec(elements, type_tag)
     }
 
     /// Convert this builder into a transaction.
     pub fn finish(self) -> Result<Transaction, Error> {
-        self.finish_command().clone().finish()
+        self.end().clone().finish()
     }
 }
 
 impl<'a, L: Into<Command>> CommandBuilder<'a, Client, L> {
     /// Set the gas coins that will be consumed. Optional.
     pub fn gas(self, object_id: ObjectId) -> &'a mut TransactionBuilder<Client> {
-        self.finish_command().gas(object_id)
+        self.end().gas(object_id)
     }
 
     /// Begin building a move call.
@@ -157,8 +155,7 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, Client, L> {
         module: &'static str,
         function: &'static str,
     ) -> CommandBuilder<'a, Client, MoveCall> {
-        self.finish_command()
-            .move_call(package_id, module, function)
+        self.end().move_call(package_id, module, function)
     }
 
     /// Merge multiple coins into one.
@@ -167,8 +164,7 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, Client, L> {
         primary_coin: ObjectId,
         consumed_coins: impl IntoIterator<Item = ObjectId> + Send,
     ) -> &'a mut TransactionBuilder<Client> {
-        self.finish_command()
-            .merge_coins(primary_coin, consumed_coins)
+        self.end().merge_coins(primary_coin, consumed_coins)
     }
 
     /// Split a coin into many.
@@ -177,7 +173,7 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, Client, L> {
         coin: ObjectId,
         split_amounts: impl IntoIterator<Item = u64> + Send,
     ) -> CommandBuilder<'a, Client, SplitCoins> {
-        self.finish_command().split_coins(coin, split_amounts)
+        self.end().split_coins(coin, split_amounts)
     }
 
     /// Transfer objects to a recipient address.
@@ -186,7 +182,7 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, Client, L> {
         recipient: Address,
         objects: U,
     ) -> &'a mut TransactionBuilder<Client> {
-        self.finish_command().transfer_objects(recipient, objects)
+        self.end().transfer_objects(recipient, objects)
     }
 
     /// Make a move vector from a list of elements.
@@ -194,17 +190,17 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, Client, L> {
         self,
         elements: impl IntoIterator<Item = U>,
     ) -> CommandBuilder<'a, Client, MakeMoveVector> {
-        self.finish_command().make_move_vec(elements)
+        self.end().make_move_vec(elements)
     }
 
     /// Convert this builder into a transaction.
     pub async fn finish(self) -> Result<Transaction, Error> {
-        self.finish_command().clone().finish().await
+        self.end().clone().finish().await
     }
 
     /// Dry run the transaction.
     pub async fn dry_run(self, skip_checks: bool) -> Result<DryRunResult, Error> {
-        self.finish_command().clone().dry_run(skip_checks).await
+        self.end().clone().dry_run(skip_checks).await
     }
 
     /// Execute the transaction and optionally wait for finalization.
@@ -213,7 +209,7 @@ impl<'a, L: Into<Command>> CommandBuilder<'a, Client, L> {
         keypairs: &[iota_crypto::simple::SimpleKeypair],
         wait_for_finalization: bool,
     ) -> Result<Option<TransactionEffects>, Error> {
-        self.finish_command()
+        self.end()
             .clone()
             .execute(keypairs, wait_for_finalization)
             .await
@@ -264,8 +260,8 @@ impl<'a> CommandBuilder<'a, (), Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
     pub fn package_id(self, name: impl NamedCommand) -> &'a mut TransactionBuilder<()> {
-        let cap = self.arg();
-        self.finish_command()
+        let cap = self.get_arg();
+        self.end()
             .move_call(Address::TWO, "package", "upgrade_package")
             .params([cap])
             .name(name)
@@ -275,7 +271,7 @@ impl<'a> CommandBuilder<'a, (), Publish> {
     pub fn upgrade_cap(self, name: impl NamedCommand) -> &'a mut TransactionBuilder<()> {
         name.push_named_commands(self.ptb);
 
-        self.finish_command()
+        self.end()
     }
 }
 
@@ -283,8 +279,8 @@ impl<'a> CommandBuilder<'a, Client, Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
     pub fn package_id(self, name: impl NamedCommand) -> &'a mut TransactionBuilder<Client> {
-        let cap = self.arg();
-        self.finish_command()
+        let cap = self.get_arg();
+        self.end()
             .move_call(Address::TWO, "package", "upgrade_package")
             .params(cap)
             .name(name)
@@ -294,6 +290,6 @@ impl<'a> CommandBuilder<'a, Client, Publish> {
     pub fn upgrade_cap(self, name: impl NamedCommand) -> &'a mut TransactionBuilder<Client> {
         name.push_named_commands(self.ptb);
 
-        self.finish_command()
+        self.end()
     }
 }
