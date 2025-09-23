@@ -8,6 +8,8 @@ pub mod zklogin;
 
 use std::sync::Arc;
 
+use iota_types::SignatureScheme;
+
 use crate::{
     error::Result,
     types::{address::Address, signature::SimpleSignature},
@@ -74,6 +76,7 @@ impl_crypto_object!(
     Ed25519PublicKey
 );
 
+#[uniffi::export]
 impl Ed25519PublicKey {
     /// Derive an `Address` from this Public Key
     ///
@@ -83,6 +86,11 @@ impl Ed25519PublicKey {
     /// `hash(32-byte ed25519 public key)`
     pub fn derive_address(&self) -> Address {
         self.0.derive_address().into()
+    }
+
+    /// Return the flag for this signature scheme
+    pub fn scheme(&self) -> SignatureScheme {
+        self.0.scheme()
     }
 }
 
@@ -99,16 +107,22 @@ impl_crypto_object!(
     Secp256k1PublicKey
 );
 
+#[uniffi::export]
 impl Secp256k1PublicKey {
     /// Derive an `Address` from this Public Key
     ///
-    /// An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
-    /// bytes of the public key prefixed with the Secp256r1
-    /// `SignatureScheme` flag (`0x02`).
+    /// An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
+    /// bytes of the public key prefixed with the Secp256k1
+    /// `SignatureScheme` flag (`0x01`).
     ///
-    /// `hash( 0x02 || 33-byte secp256r1 public key)`
+    /// `hash( 0x01 || 33-byte secp256k1 public key)`
     pub fn derive_address(&self) -> Address {
         self.0.derive_address().into()
+    }
+
+    /// Return the flag for this signature scheme
+    pub fn scheme(&self) -> SignatureScheme {
+        self.0.scheme()
     }
 }
 
@@ -125,6 +139,7 @@ impl_crypto_object!(
     Secp256r1PublicKey
 );
 
+#[uniffi::export]
 impl Secp256r1PublicKey {
     /// Derive an `Address` from this Public Key
     ///
@@ -135,6 +150,11 @@ impl Secp256r1PublicKey {
     /// `hash( 0x02 || 33-byte secp256r1 public key)`
     pub fn derive_address(&self) -> Address {
         self.0.derive_address().into()
+    }
+
+    /// Return the flag for this signature scheme
+    pub fn scheme(&self) -> SignatureScheme {
+        self.0.scheme()
     }
 }
 

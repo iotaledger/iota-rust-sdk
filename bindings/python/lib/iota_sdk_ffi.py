@@ -615,6 +615,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key() != 59162:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() != 37757:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 141:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes() != 16656:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() != 31911:
@@ -979,6 +983,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key() != 51137:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() != 48490:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 798:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes() != 49170:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes() != 49705:
@@ -1014,6 +1022,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user() != 36924:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key() != 55895:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() != 27344:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 12227:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() != 21066:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2717,6 +2729,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4516,6 +4538,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate.argtyp
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4735,6 +4767,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate.argtyp
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6723,6 +6765,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes.restype = ctypes.c_uint16
@@ -7269,6 +7317,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes.restype = ctypes.c_uint16
@@ -7323,6 +7377,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.restype = ctypes.c_uint16
@@ -24151,6 +24211,23 @@ class Ed25519PublicKeyProtocol(typing.Protocol):
     ```
     """
 
+    def derive_address(self, ):
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from an `Ed25519PublicKey` by hashing the
+        bytes of the public key with no prefix flag.
+
+        `hash(32-byte ed25519 public key)`
+        """
+
+        raise NotImplementedError
+    def scheme(self, ):
+        """
+        Return the flag for this signature scheme
+        """
+
+        raise NotImplementedError
     def to_bytes(self, ):
         raise NotImplementedError
 # Ed25519PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -24212,6 +24289,37 @@ class Ed25519PublicKey():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate,)
         return cls._make_instance_(pointer)
+
+
+
+    def derive_address(self, ) -> "Address":
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from an `Ed25519PublicKey` by hashing the
+        bytes of the public key with no prefix flag.
+
+        `hash(32-byte ed25519 public key)`
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def scheme(self, ) -> "SignatureScheme":
+        """
+        Return the flag for this signature scheme
+        """
+
+        return _UniffiConverterTypeSignatureScheme.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 
@@ -32005,6 +32113,24 @@ class Secp256k1PublicKeyProtocol(typing.Protocol):
     ```
     """
 
+    def derive_address(self, ):
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
+        bytes of the public key prefixed with the Secp256k1
+        `SignatureScheme` flag (`0x01`).
+
+        `hash( 0x01 || 33-byte secp256k1 public key)`
+        """
+
+        raise NotImplementedError
+    def scheme(self, ):
+        """
+        Return the flag for this signature scheme
+        """
+
+        raise NotImplementedError
     def to_bytes(self, ):
         raise NotImplementedError
 # Secp256k1PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -32066,6 +32192,38 @@ class Secp256k1PublicKey():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate,)
         return cls._make_instance_(pointer)
+
+
+
+    def derive_address(self, ) -> "Address":
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
+        bytes of the public key prefixed with the Secp256k1
+        `SignatureScheme` flag (`0x01`).
+
+        `hash( 0x01 || 33-byte secp256k1 public key)`
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def scheme(self, ) -> "SignatureScheme":
+        """
+        Return the flag for this signature scheme
+        """
+
+        return _UniffiConverterTypeSignatureScheme.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 
@@ -32738,6 +32896,24 @@ class Secp256r1PublicKeyProtocol(typing.Protocol):
     ```
     """
 
+    def derive_address(self, ):
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
+        bytes of the public key prefixed with the Secp256r1
+        `SignatureScheme` flag (`0x02`).
+
+        `hash( 0x02 || 33-byte secp256r1 public key)`
+        """
+
+        raise NotImplementedError
+    def scheme(self, ):
+        """
+        Return the flag for this signature scheme
+        """
+
+        raise NotImplementedError
     def to_bytes(self, ):
         raise NotImplementedError
 # Secp256r1PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -32799,6 +32975,38 @@ class Secp256r1PublicKey():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate,)
         return cls._make_instance_(pointer)
+
+
+
+    def derive_address(self, ) -> "Address":
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
+        bytes of the public key prefixed with the Secp256r1
+        `SignatureScheme` flag (`0x02`).
+
+        `hash( 0x02 || 33-byte secp256r1 public key)`
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def scheme(self, ) -> "SignatureScheme":
+        """
+        Return the flag for this signature scheme
+        """
+
+        return _UniffiConverterTypeSignatureScheme.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 
