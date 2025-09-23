@@ -3,26 +3,36 @@
 
 //! Builder for Programmable Transactions.
 
-use core::marker::PhantomData;
 use std::collections::{BTreeMap, HashMap};
 
 use iota_crypto::IotaSigner;
 use iota_graphql_client::{Client, DryRunResult};
 use iota_types::{
-    Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
-    Transaction, TransactionEffects, TransactionExpiration, TypeTag,
+    Address, GasPayment, ObjectId, ObjectReference, Owner, ProgrammableTransaction, Transaction,
+    TransactionEffects, TransactionExpiration,
 };
 use serde::Serialize;
 
 use crate::{
+    builder::{
+        move_call::MoveCallCommandBuilder,
+        named_commands::{NamedCommand, NamedCommands},
+        ptb_arguments::PTBArguments,
+        publish::PublishBuilder,
+    },
     error::Error,
     publish_type::PublishType,
-    types::{MoveParam, MoveType, MoveTypes, ParamType},
+    types::MoveType,
     unresolved::{
-        Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
-        Publish, SplitCoins, TransferObjects, Upgrade,
+        Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, SplitCoins,
+        TransferObjects, Upgrade,
     },
 };
+
+mod move_call;
+mod named_commands;
+pub(crate) mod ptb_arguments;
+mod publish;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
@@ -45,23 +55,6 @@ pub struct TransactionBuilder<C> {
     expiration: TransactionExpiration,
     named_commands: HashMap<String, Argument>,
     client: C,
-}
-
-impl TransactionBuilder<()> {
-    /// Instantiate a new PTB.
-    pub fn new(sender: Address) -> TransactionBuilder<()> {
-        TransactionBuilder {
-            inputs: Default::default(),
-            commands: Default::default(),
-            gas_budget: Default::default(),
-            gas_price: Default::default(),
-            sender,
-            sponsor: Default::default(),
-            expiration: Default::default(),
-            named_commands: Default::default(),
-            client: (),
-        }
-    }
 }
 
 impl<C> TransactionBuilder<C> {
@@ -190,6 +183,21 @@ impl<C> TransactionBuilder<C> {
 }
 
 impl TransactionBuilder<()> {
+    /// Instantiate a new PTB.
+    pub fn new(sender: Address) -> TransactionBuilder<()> {
+        TransactionBuilder {
+            inputs: Default::default(),
+            commands: Default::default(),
+            gas_budget: Default::default(),
+            gas_price: Default::default(),
+            sender,
+            sponsor: Default::default(),
+            expiration: Default::default(),
+            named_commands: Default::default(),
+            client: (),
+        }
+    }
+
     /// Set the gas coins that will be consumed. Optional.
     pub fn gas(&mut self, obj_ref: ObjectReference) -> &mut Self {
         self.input(
@@ -625,442 +633,3 @@ impl TransactionBuilder<Client> {
         Ok(res)
     }
 }
-
-/// A builder for a move call command within a programmable transaction.
-#[derive(Debug)]
-pub struct MoveCallCommandBuilder<'a, C, G: MoveTypes = (), A = ()> {
-    package: ObjectId,
-    module: Identifier,
-    function: Identifier,
-    args: Option<A>,
-    generics: Result<PhantomData<G>, Vec<TypeTag>>,
-    ptb: &'a mut TransactionBuilder<C>,
-}
-
-impl<'a, G: MoveTypes, A: PTBArguments> MoveCallCommandBuilder<'a, Client, G, A> {
-    /// Instantiate a move call command builder.
-    pub fn new(
-        ptb: &'a mut TransactionBuilder<Client>,
-        package_id: ObjectId,
-        module: &str,
-        function: &str,
-    ) -> Self {
-        Self {
-            package: package_id,
-            module: Identifier::new(module)
-                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
-            function: Identifier::new(function)
-                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
-            args: None,
-            generics: Ok(PhantomData),
-            ptb,
-        }
-    }
-
-    /// Set the call params. Optional.
-    pub fn params<U: PTBArguments>(self, params: U) -> MoveCallCommandBuilder<'a, Client, G, U> {
-        MoveCallCommandBuilder {
-            package: self.package,
-            module: self.module,
-            function: self.function,
-            args: Some(params),
-            generics: self.generics,
-            ptb: self.ptb,
-        }
-    }
-
-    /// Set the generic type arguments. Optional.
-    pub fn generics<U: MoveTypes>(self) -> MoveCallCommandBuilder<'a, Client, U, A> {
-        MoveCallCommandBuilder {
-            package: self.package,
-            module: self.module,
-            function: self.function,
-            args: self.args,
-            generics: Ok(PhantomData),
-            ptb: self.ptb,
-        }
-    }
-
-    /// Set the type arguments manually. Optional.
-    pub fn type_tags(
-        self,
-        tags: impl IntoIterator<Item = TypeTag>,
-    ) -> MoveCallCommandBuilder<'a, Client, (), A> {
-        MoveCallCommandBuilder {
-            package: self.package,
-            module: self.module,
-            function: self.function,
-            args: self.args,
-            generics: Err(tags.into_iter().collect()),
-            ptb: self.ptb,
-        }
-    }
-
-    /// Finish the move call and return the PTB.
-    pub fn end(self) -> &'a mut TransactionBuilder<Client> {
-        let args = if let Some(a) = self.args {
-            a.args(self.ptb)
-        } else {
-            Vec::new()
-        };
-
-        self.ptb.command(Command::MoveCall(MoveCall {
-            package: self.package,
-            module: self.module,
-            function: self.function,
-            type_arguments: match self.generics {
-                Ok(_) => G::type_tags(),
-                Err(t) => t,
-            },
-            arguments: args,
-        }));
-
-        self.ptb
-    }
-
-    /// Finish the move call by naming the output and return the PTB.
-    pub fn result(self, name: impl NamedCommands) -> &'a mut TransactionBuilder<Client> {
-        let ptb = self.end();
-
-        name.push_named_commands(ptb);
-
-        ptb
-    }
-}
-
-impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Argument>> {
-    /// Instantiate a move call command builder.
-    pub fn new(
-        ptb: &'a mut TransactionBuilder<()>,
-        package_id: ObjectId,
-        module: &str,
-        function: &str,
-    ) -> Self {
-        Self {
-            package: package_id,
-            module: Identifier::new(module)
-                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
-            function: Identifier::new(function)
-                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
-            args: None,
-            generics: Ok(PhantomData),
-            ptb,
-        }
-    }
-
-    /// Set the call params. Optional.
-    pub fn params(
-        self,
-        params: impl IntoIterator<Item = ObjectReference>,
-    ) -> MoveCallCommandBuilder<'a, (), G, Vec<Argument>> {
-        MoveCallCommandBuilder {
-            package: self.package,
-            module: self.module,
-            function: self.function,
-            args: Some(
-                params
-                    .into_iter()
-                    .map(|o| {
-                        self.ptb.input(
-                            InputKind::Input(iota_types::Input::ImmutableOrOwned(o)),
-                            false,
-                        )
-                    })
-                    .collect::<Vec<_>>(),
-            ),
-            generics: self.generics,
-            ptb: self.ptb,
-        }
-    }
-
-    /// Set the generic type arguments. Optional.
-    pub fn generics<U: MoveTypes>(self) -> MoveCallCommandBuilder<'a, (), U, Vec<Argument>> {
-        MoveCallCommandBuilder {
-            package: self.package,
-            module: self.module,
-            function: self.function,
-            args: self.args,
-            generics: Ok(PhantomData),
-            ptb: self.ptb,
-        }
-    }
-
-    /// Set the type arguments manually. Optional.
-    pub fn type_tags(
-        self,
-        tags: impl IntoIterator<Item = TypeTag>,
-    ) -> MoveCallCommandBuilder<'a, (), (), Vec<Argument>> {
-        MoveCallCommandBuilder {
-            package: self.package,
-            module: self.module,
-            function: self.function,
-            args: self.args,
-            generics: Err(tags.into_iter().collect()),
-            ptb: self.ptb,
-        }
-    }
-
-    /// Finish the move call and return the PTB.
-    pub fn end(self) -> &'a mut TransactionBuilder<()> {
-        let args = self.args.unwrap_or_default();
-
-        self.ptb.command(Command::MoveCall(MoveCall {
-            package: self.package,
-            module: self.module,
-            function: self.function,
-            type_arguments: match self.generics {
-                Ok(_) => G::type_tags(),
-                Err(t) => t,
-            },
-            arguments: args,
-        }));
-
-        self.ptb
-    }
-
-    /// Finish the move call by naming the output and return the PTB.
-    pub fn result(self, name: impl NamedCommands) -> &'a mut TransactionBuilder<()> {
-        let ptb = self.end();
-
-        name.push_named_commands(ptb);
-
-        ptb
-    }
-}
-
-/// A builder for a move call command within a programmable transaction.
-#[derive(Debug)]
-pub struct PublishBuilder<'a> {
-    ptb: &'a mut TransactionBuilder<Client>,
-    cap: Argument,
-}
-
-impl<'a> PublishBuilder<'a> {
-    /// Instantiate a publish call builder.
-    pub fn new(ptb: &'a mut TransactionBuilder<Client>, kind: impl Into<PublishType>) -> Self {
-        let module = match kind.into() {
-            PublishType::Path(_path) => todo!("load the package from the path"),
-            PublishType::Compiled(m) => m,
-        };
-        let cap = ptb.command(Command::Publish(Publish {
-            modules: module.modules,
-            dependencies: module.dependencies,
-        }));
-        Self { ptb, cap }
-    }
-
-    /// Get the package ID from the UpgradeCap so that it can be used for future
-    /// commands.
-    ///
-    /// **NOTE:** This is currently not usable for move calls because the IOTA
-    /// PTB does not support using an argument for the package ID.
-    pub fn package_id(self, name: impl NamedCommand) -> &'a mut TransactionBuilder<Client> {
-        self.ptb
-            .move_call(Address::TWO, "package", "upgrade_package")
-            .params(self.cap)
-            .result(name);
-        self.ptb
-    }
-
-    /// Finish the move call and return the UpgradeCap.
-    pub fn upgrade_cap(self, name: impl NamedCommand) -> &'a mut TransactionBuilder<Client> {
-        name.push_named_commands(self.ptb);
-
-        self.ptb
-    }
-}
-
-/// A trait which defines arguments for a [`TransactionBuilder`].
-pub trait PTBArguments {
-    /// Get the arguments.
-    fn args(&self, ptb: &mut TransactionBuilder<Client>) -> Vec<Argument> {
-        let mut args = Vec::new();
-        self.push_args(ptb, &mut args);
-        args
-    }
-
-    /// Push the args onto the list.
-    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>);
-}
-
-macro_rules! impl_ptb_args_tuple {
-    ($($tup:ident.$idx:tt),+$(,)?) => {
-        impl<$($tup),+> PTBArguments for ($($tup),+)
-        where $($tup: PTBArguments),+
-        {
-            fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
-                $(
-                    self.$idx.push_args(ptb, args);
-                )+
-            }
-        }
-    };
-}
-impl_ptb_args_tuple!(T1.0, T2.1);
-impl_ptb_args_tuple!(T1.0, T2.1, T3.2);
-impl_ptb_args_tuple!(T1.0, T2.1, T3.2, T4.3);
-impl_ptb_args_tuple!(T1.0, T2.1, T3.2, T4.3, T5.4);
-
-impl<T: MoveParam> PTBArguments for T {
-    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
-        let arg = match self.param() {
-            ParamType::Object(id) => ptb.input(InputKind::ImmutableOrOwned(id), false),
-            ParamType::Pure(v) => ptb.pure_bytes(v),
-        };
-        args.push(arg);
-    }
-}
-
-impl<T: PTBArguments> PTBArguments for std::sync::Arc<T> {
-    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
-        self.as_ref().push_args(ptb, args);
-    }
-}
-
-impl PTBArguments for Box<dyn PTBArguments> {
-    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
-        self.as_ref().push_args(ptb, args);
-    }
-}
-
-impl PTBArguments for Argument {
-    fn push_args(&self, _: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
-        args.push(*self);
-    }
-}
-
-/// Allows specifying mutable parameters.
-pub struct Mut<T>(pub T);
-
-impl<T: MoveParam> PTBArguments for Mut<T> {
-    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
-        let arg = match self.0.param() {
-            ParamType::Object(id) => ptb.input(
-                InputKind::Shared {
-                    object_id: id,
-                    mutable: true,
-                },
-                false,
-            ),
-            ParamType::Pure(v) => ptb.pure_bytes(v),
-        };
-        args.push(arg);
-    }
-}
-
-/// Allows specifying receiving parameters.
-pub struct Receiving<T>(pub T);
-
-impl<T: MoveParam> PTBArguments for Receiving<T> {
-    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
-        let arg = match self.0.param() {
-            ParamType::Object(id) => ptb.input(InputKind::Receiving(id), false),
-            ParamType::Pure(v) => ptb.pure_bytes(v),
-        };
-        args.push(arg);
-    }
-}
-
-/// The result of a previous command by name.
-pub struct Res(pub &'static str);
-
-impl PTBArguments for Res {
-    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
-        if let Some(arg) = ptb.named_commands.get(self.0) {
-            args.push(*arg);
-        } else {
-            panic!("no command named `{}` exists", self.0)
-        }
-    }
-}
-
-/// A trait that defines a named command, either a string or nothing.
-pub trait NamedCommand {
-    /// Get the named command argument.
-    fn named_command<C>(&self, ptb: &mut TransactionBuilder<C>) -> Argument;
-
-    /// Push the named command to the PTB.
-    fn push_named_command<C>(self, arg: Argument, ptb: &mut TransactionBuilder<C>);
-}
-
-impl NamedCommand for () {
-    fn named_command<C>(&self, ptb: &mut TransactionBuilder<C>) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
-    }
-
-    fn push_named_command<C>(self, _: Argument, _: &mut TransactionBuilder<C>) {}
-}
-
-impl NamedCommand for &str {
-    fn named_command<C>(&self, ptb: &mut TransactionBuilder<C>) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
-    }
-
-    fn push_named_command<C>(self, arg: Argument, ptb: &mut TransactionBuilder<C>) {
-        ptb.named_commands.insert(self.to_owned(), arg);
-    }
-}
-
-impl NamedCommand for String {
-    fn named_command<C>(&self, ptb: &mut TransactionBuilder<C>) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
-    }
-
-    fn push_named_command<C>(self, arg: Argument, ptb: &mut TransactionBuilder<C>) {
-        ptb.named_commands.insert(self.to_owned(), arg);
-    }
-}
-
-impl<T: NamedCommand> NamedCommand for Option<T> {
-    fn named_command<C>(&self, ptb: &mut TransactionBuilder<C>) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
-    }
-
-    fn push_named_command<C>(self, arg: Argument, ptb: &mut TransactionBuilder<C>) {
-        if let Some(s) = self {
-            s.push_named_command(arg, ptb)
-        }
-    }
-}
-
-/// A trait that allows tuples to be used to bind nested named commands.
-pub trait NamedCommands {
-    /// Push the named commands to the PTB.
-    fn push_named_commands<C>(self, ptb: &mut TransactionBuilder<C>);
-}
-
-impl<T: NamedCommand> NamedCommands for T {
-    fn push_named_commands<C>(self, ptb: &mut TransactionBuilder<C>) {
-        let arg = Argument::Result((ptb.commands.len() - 1) as _);
-        self.push_named_command(arg, ptb)
-    }
-}
-
-impl<T: NamedCommand> NamedCommands for Vec<T> {
-    fn push_named_commands<C>(self, ptb: &mut TransactionBuilder<C>) {
-        for (i, v) in self.into_iter().enumerate() {
-            let arg = Argument::NestedResult((ptb.commands.len() - 1) as _, i as _);
-            v.push_named_command(arg, ptb);
-        }
-    }
-}
-
-macro_rules! impl_named_command_tuple {
-    ($($tup:ident.$idx:tt),+$(,)?) => {
-        impl<$($tup),+> NamedCommands for ($($tup),+)
-        where $($tup: NamedCommand),+
-        {
-            fn push_named_commands<C>(self, ptb: &mut TransactionBuilder<C>) {
-                $(
-                    let arg = Argument::NestedResult((ptb.commands.len() - 1) as _, $idx);
-                    self.$idx.push_named_command(arg, ptb);
-                )+
-            }
-        }
-    };
-}
-impl_named_command_tuple!(T1.0, T2.1);
-impl_named_command_tuple!(T1.0, T2.1, T3.2);
-impl_named_command_tuple!(T1.0, T2.1, T3.2, T4.3);
-impl_named_command_tuple!(T1.0, T2.1, T3.2, T4.3, T5.4);
-impl_named_command_tuple!(T1.0, T2.1, T3.2, T4.3, T5.4, T6.5);

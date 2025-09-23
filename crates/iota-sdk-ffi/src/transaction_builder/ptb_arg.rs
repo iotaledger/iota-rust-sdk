@@ -3,14 +3,11 @@
 
 use std::sync::Arc;
 
-use iota_transaction_builder::{
-    builder::{Mut, Receiving},
-    types::ParamType,
-};
+use iota_transaction_builder::{Mut, Receiving, types::ParamType};
 
 use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
-type DynPTBArg = Box<dyn iota_transaction_builder::builder::PTBArguments + Send + Sync>;
+type DynPTBArg = Box<dyn iota_transaction_builder::PTBArguments + Send + Sync>;
 
 #[derive(uniffi::Object)]
 pub struct PTBArgument(DynPTBArg);
@@ -82,7 +79,7 @@ impl PTBArgument {
     }
 }
 
-impl iota_transaction_builder::builder::PTBArguments for PTBArgument {
+impl iota_transaction_builder::PTBArguments for PTBArgument {
     fn push_args(
         &self,
         ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
@@ -92,7 +89,7 @@ impl iota_transaction_builder::builder::PTBArguments for PTBArgument {
     }
 }
 
-impl iota_transaction_builder::builder::PTBArguments for &PTBArgument {
+impl iota_transaction_builder::PTBArguments for &PTBArgument {
     fn push_args(
         &self,
         ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
@@ -104,7 +101,7 @@ impl iota_transaction_builder::builder::PTBArguments for &PTBArgument {
 
 pub struct PTBArgs(pub Vec<Arc<PTBArgument>>);
 
-impl iota_transaction_builder::builder::PTBArguments for PTBArgs {
+impl iota_transaction_builder::PTBArguments for PTBArgs {
     fn push_args(
         &self,
         ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
@@ -118,7 +115,7 @@ impl iota_transaction_builder::builder::PTBArguments for PTBArgs {
 
 pub struct Res(String);
 
-impl iota_transaction_builder::builder::PTBArguments for Res {
+impl iota_transaction_builder::PTBArguments for Res {
     fn push_args(
         &self,
         ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,

@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 use anyhow::{Context, Result};
 use iota_graphql_client::{Client, query_types::ObjectFilter};
-use iota_transaction_builder::builder::{Mut, TransactionBuilder};
+use iota_transaction_builder::{Mut, TransactionBuilder};
 use iota_types::{Address, ObjectId, StructTag};
 
 #[tokio::main]

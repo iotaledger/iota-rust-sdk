@@ -13,7 +13,13 @@ pub mod types;
 #[allow(missing_docs)]
 pub mod unresolved;
 
-pub use self::{builder::TransactionBuilder, publish_type::MovePackageData};
+pub use self::{
+    builder::{
+        TransactionBuilder,
+        ptb_arguments::{Mut, PTBArguments, Receiving, Res},
+    },
+    publish_type::MovePackageData,
+};
 
 #[cfg(test)]
 mod tests {
@@ -30,7 +36,7 @@ mod tests {
     };
 
     use crate::{
-        builder::{Res, TransactionBuilder},
+        builder::{TransactionBuilder, ptb_arguments::Res},
         error::Error,
         publish_type::MovePackageData,
     };
