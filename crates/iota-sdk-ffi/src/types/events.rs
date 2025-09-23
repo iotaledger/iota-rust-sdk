@@ -31,6 +31,12 @@ pub struct Event {
     pub type_: String,
     /// BCS serialized bytes of the event
     pub contents: Vec<u8>,
+    /// UTC timestamp in milliseconds since epoch (1/1/1970)
+    pub timestamp: String,
+    /// Structured contents of a Move value
+    pub data: String,
+    /// Representation of a Move value in JSON
+    pub json: String,
 }
 
 impl From<iota_types::Event> for Event {
@@ -41,6 +47,9 @@ impl From<iota_types::Event> for Event {
             sender: Arc::new(value.sender.into()),
             type_: value.type_.to_string(),
             contents: value.contents,
+            timestamp: value.timestamp.clone(),
+            data: value.data.clone(),
+            json: value.json.to_string(),
         }
     }
 }
@@ -53,6 +62,9 @@ impl From<Event> for iota_types::Event {
             sender: (**value.sender),
             type_: StructTag::from_str(&value.type_).unwrap(),
             contents: value.contents,
+            timestamp: value.timestamp.clone(),
+            data: value.data.clone(),
+            json: value.json.clone(),
         }
     }
 }

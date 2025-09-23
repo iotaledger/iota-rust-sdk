@@ -906,6 +906,9 @@ impl Client {
                         sender: node.sender.map(|s| s.address).unwrap_or(Address::ZERO),
                         type_: node.type_.repr.parse()?,
                         contents: base64ct::Base64::decode_vec(&node.bcs.0)?,
+                        timestamp: node.timestamp.map(|t| t.0).unwrap_or_default(),
+                        data: node.data.0.to_string(),
+                        json: node.json.to_string(),
                     })
                 })
                 .collect::<Result<Vec<_>>>()?;

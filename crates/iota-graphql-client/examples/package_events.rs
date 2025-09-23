@@ -29,6 +29,7 @@ async fn main() -> Result<()> {
         println!("Type: {}", event.type_);
         println!("Sender: {}", event.sender);
         println!("Module: {}", event.module);
+        println!("JSON: {}", event.json);
     }
 
     Ok(())

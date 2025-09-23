@@ -10064,15 +10064,33 @@ class Event:
     BCS serialized bytes of the event
     """
 
-    def __init__(self, *, package_id: "ObjectId", module: "str", sender: "Address", type: "str", contents: "bytes"):
+    timestamp: "str"
+    """
+    UTC timestamp in milliseconds since epoch (1/1/1970)
+    """
+
+    data: "str"
+    """
+    Structured contents of a Move value
+    """
+
+    json: "str"
+    """
+    Representation of a Move value in JSON
+    """
+
+    def __init__(self, *, package_id: "ObjectId", module: "str", sender: "Address", type: "str", contents: "bytes", timestamp: "str", data: "str", json: "str"):
         self.package_id = package_id
         self.module = module
         self.sender = sender
         self.type = type
         self.contents = contents
+        self.timestamp = timestamp
+        self.data = data
+        self.json = json
 
     def __str__(self):
-        return "Event(package_id={}, module={}, sender={}, type={}, contents={})".format(self.package_id, self.module, self.sender, self.type, self.contents)
+        return "Event(package_id={}, module={}, sender={}, type={}, contents={}, timestamp={}, data={}, json={})".format(self.package_id, self.module, self.sender, self.type, self.contents, self.timestamp, self.data, self.json)
 
     def __eq__(self, other):
         if self.package_id != other.package_id:
@@ -10085,6 +10103,12 @@ class Event:
             return False
         if self.contents != other.contents:
             return False
+        if self.timestamp != other.timestamp:
+            return False
+        if self.data != other.data:
+            return False
+        if self.json != other.json:
+            return False
         return True
 
 class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
@@ -10096,6 +10120,9 @@ class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
             sender=_UniffiConverterTypeAddress.read(buf),
             type=_UniffiConverterString.read(buf),
             contents=_UniffiConverterBytes.read(buf),
+            timestamp=_UniffiConverterString.read(buf),
+            data=_UniffiConverterString.read(buf),
+            json=_UniffiConverterString.read(buf),
         )
 
     @staticmethod
@@ -10105,6 +10132,9 @@ class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
         _UniffiConverterTypeAddress.check_lower(value.sender)
         _UniffiConverterString.check_lower(value.type)
         _UniffiConverterBytes.check_lower(value.contents)
+        _UniffiConverterString.check_lower(value.timestamp)
+        _UniffiConverterString.check_lower(value.data)
+        _UniffiConverterString.check_lower(value.json)
 
     @staticmethod
     def write(value, buf):
@@ -10113,6 +10143,9 @@ class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
         _UniffiConverterTypeAddress.write(value.sender, buf)
         _UniffiConverterString.write(value.type, buf)
         _UniffiConverterBytes.write(value.contents, buf)
+        _UniffiConverterString.write(value.timestamp, buf)
+        _UniffiConverterString.write(value.data, buf)
+        _UniffiConverterString.write(value.json, buf)
 
 
 class EventFilter:

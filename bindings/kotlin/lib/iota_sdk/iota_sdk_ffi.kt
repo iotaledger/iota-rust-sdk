@@ -44043,7 +44043,19 @@ data class Event (
     /**
      * BCS serialized bytes of the event
      */
-    var `contents`: kotlin.ByteArray
+    var `contents`: kotlin.ByteArray, 
+    /**
+     * UTC timestamp in milliseconds since epoch (1/1/1970)
+     */
+    var `timestamp`: kotlin.String, 
+    /**
+     * Structured contents of a Move value
+     */
+    var `data`: kotlin.String, 
+    /**
+     * Representation of a Move value in JSON
+     */
+    var `json`: kotlin.String
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
@@ -44054,7 +44066,10 @@ data class Event (
         this.`module`,
         this.`sender`,
         this.`type`,
-        this.`contents`
+        this.`contents`,
+        this.`timestamp`,
+        this.`data`,
+        this.`json`
     )
     }
     
@@ -44072,6 +44087,9 @@ public object FfiConverterTypeEvent: FfiConverterRustBuffer<Event> {
             FfiConverterTypeAddress.read(buf),
             FfiConverterString.read(buf),
             FfiConverterByteArray.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
         )
     }
 
@@ -44080,7 +44098,10 @@ public object FfiConverterTypeEvent: FfiConverterRustBuffer<Event> {
             FfiConverterString.allocationSize(value.`module`) +
             FfiConverterTypeAddress.allocationSize(value.`sender`) +
             FfiConverterString.allocationSize(value.`type`) +
-            FfiConverterByteArray.allocationSize(value.`contents`)
+            FfiConverterByteArray.allocationSize(value.`contents`) +
+            FfiConverterString.allocationSize(value.`timestamp`) +
+            FfiConverterString.allocationSize(value.`data`) +
+            FfiConverterString.allocationSize(value.`json`)
     )
 
     override fun write(value: Event, buf: ByteBuffer) {
@@ -44089,6 +44110,9 @@ public object FfiConverterTypeEvent: FfiConverterRustBuffer<Event> {
             FfiConverterTypeAddress.write(value.`sender`, buf)
             FfiConverterString.write(value.`type`, buf)
             FfiConverterByteArray.write(value.`contents`, buf)
+            FfiConverterString.write(value.`timestamp`, buf)
+            FfiConverterString.write(value.`data`, buf)
+            FfiConverterString.write(value.`json`, buf)
     }
 }
 

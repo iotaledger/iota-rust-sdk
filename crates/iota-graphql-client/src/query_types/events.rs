@@ -3,7 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{
-    Address, Base64, GQLAddress, MoveType, PageInfo, normalized_move::MoveModuleQuery, schema,
+    Address, Base64, DateTime, GQLAddress, JsonValue, MoveData, MoveType, PageInfo,
+    normalized_move::MoveModuleQuery, schema,
 };
 
 // ===========================================================================
@@ -57,4 +58,7 @@ pub struct Event {
     pub sender: Option<GQLAddress>,
     pub type_: MoveType,
     pub bcs: Base64,
+    pub timestamp: Option<DateTime>,
+    pub data: MoveData,
+    pub json: JsonValue,
 }
