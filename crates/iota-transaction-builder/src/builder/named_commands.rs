@@ -60,7 +60,7 @@ pub trait NamedCommands {
 
 impl<T: NamedCommand> NamedCommands for T {
     fn push_named_commands<C>(self, ptb: &mut TransactionBuilder<C>) {
-        let arg = Argument::Result((ptb.commands.len() - 1) as _);
+        let arg = Argument::Result(ptb.commands.len() as _);
         self.push_named_command(arg, ptb)
     }
 }
@@ -68,7 +68,7 @@ impl<T: NamedCommand> NamedCommands for T {
 impl<T: NamedCommand> NamedCommands for Vec<T> {
     fn push_named_commands<C>(self, ptb: &mut TransactionBuilder<C>) {
         for (i, v) in self.into_iter().enumerate() {
-            let arg = Argument::NestedResult((ptb.commands.len()) as _, i as _);
+            let arg = Argument::NestedResult(ptb.commands.len() as _, i as _);
             v.push_named_command(arg, ptb);
         }
     }
