@@ -39,10 +39,10 @@ fun main() = runBlocking {
         val builder = TransactionBuilder.init(sender, client)
 
         builder.splitCoins(
-                gasCoinId,
-                listOf(1_000_000_000uL, 2_000_000_000uL),
-                listOf("coin1", "coin2")
-        )
+                        gasCoinId,
+                        listOf(1_000_000_000uL, 2_000_000_000uL),
+                )
+                .name(listOf("coin1", "coin2"))
         builder.transferObjects(recipient1, listOf(PtbArgument.res("coin1")))
         builder.transferObjects(recipient2, listOf(PtbArgument.res("coin2")))
         builder.gas(gasCoinId).gasBudget(1000000000uL)

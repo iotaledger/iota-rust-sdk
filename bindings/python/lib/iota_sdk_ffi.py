@@ -1145,7 +1145,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 9391:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name() != 54286:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name() != 16206:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -34608,7 +34608,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def name(self, name: "str"):
+    def name(self, name: "typing.List[str]"):
         """
         Set the name for the last command. If no commands have been set, this
         will do nothing.
@@ -34998,17 +34998,17 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def name(self, name: "str") -> "TransactionBuilder":
+    def name(self, name: "typing.List[str]") -> "TransactionBuilder":
         """
         Set the name for the last command. If no commands have been set, this
         will do nothing.
         """
 
-        _UniffiConverterString.check_lower(name)
+        _UniffiConverterSequenceString.check_lower(name)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_name,self._uniffi_clone_pointer(),
-        _UniffiConverterString.lower(name))
+        _UniffiConverterSequenceString.lower(name))
         )
 
 

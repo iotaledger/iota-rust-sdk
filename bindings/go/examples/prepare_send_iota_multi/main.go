@@ -23,7 +23,7 @@ func main() {
 	builder := sdk.TransactionBuilderInit(sender, client)
 
 	// Split the gas coin into multiple coins
-	builder.SplitCoins(gasCoinId, []uint64{1_000_000_000, 2_000_000_000}, []string{"coin1", "coin2"})
+	builder.SplitCoins(gasCoinId, []uint64{1_000_000_000, 2_000_000_000}).Name([]string{"coin1", "coin2"})
 	builder.TransferObjects(recipient1, []*sdk.PtbArgument{sdk.PtbArgumentRes("coin1")})
 	builder.TransferObjects(recipient2, []*sdk.PtbArgument{sdk.PtbArgumentRes("coin2")})
 	builder.Gas(gasCoinId).GasBudget(1000000000)

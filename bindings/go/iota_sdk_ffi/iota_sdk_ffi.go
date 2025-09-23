@@ -3440,7 +3440,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name()
 	})
-	if checksum != 54286 {
+	if checksum != 16206 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name: UniFFI API checksum mismatch")
 	}
@@ -19714,7 +19714,7 @@ type TransactionBuilderInterface interface {
 	MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag) *TransactionBuilder
 	// Set the name for the last command. If no commands have been set, this
 	// will do nothing.
-	Name(name string) *TransactionBuilder
+	Name(name []string) *TransactionBuilder
 	// Publish a list of modules with the given dependencies. The result
 	// assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
 	// Move type. Note that the upgrade capability needs to be handled
@@ -20005,12 +20005,12 @@ func (_self *TransactionBuilder) MoveCall(varPackage *Address, module *Identifie
 
 // Set the name for the last command. If no commands have been set, this
 // will do nothing.
-func (_self *TransactionBuilder) Name(name string) *TransactionBuilder {
+func (_self *TransactionBuilder) Name(name []string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_name(
-		_pointer,FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
+		_pointer,FfiConverterSequenceStringINSTANCE.Lower(name),_uniffiStatus)
 	}))
 }
 

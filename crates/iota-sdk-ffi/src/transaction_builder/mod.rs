@@ -286,7 +286,7 @@ impl TransactionBuilder {
 
     /// Set the name for the last command. If no commands have been set, this
     /// will do nothing.
-    pub fn name(self: Arc<Self>, name: String) -> Arc<Self> {
+    pub fn name(self: Arc<Self>, name: Vec<String>) -> Arc<Self> {
         self.write(|builder| {
             builder.name(name);
         });

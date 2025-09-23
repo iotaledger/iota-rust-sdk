@@ -6366,7 +6366,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 9391.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name() != 54286.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name() != 16206.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833.toShort()) {
@@ -35586,7 +35586,7 @@ public interface TransactionBuilderInterface {
      * Set the name for the last command. If no commands have been set, this
      * will do nothing.
      */
-    fun `name`(`name`: kotlin.String): TransactionBuilder
+    fun `name`(`name`: List<kotlin.String>): TransactionBuilder
     
     /**
      * Publish a list of modules with the given dependencies. The result
@@ -35965,12 +35965,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     /**
      * Set the name for the last command. If no commands have been set, this
      * will do nothing.
-     */override fun `name`(`name`: kotlin.String): TransactionBuilder {
+     */override fun `name`(`name`: List<kotlin.String>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_name(
-        it, FfiConverterString.lower(`name`),_status)
+        it, FfiConverterSequenceString.lower(`name`),_status)
 }
     }
     )

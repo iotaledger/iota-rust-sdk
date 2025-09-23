@@ -34,7 +34,6 @@ func main() {
 		function_name,
 		[]*sdk.PtbArgument{sdk.PtbArgumentRes("addresses"), sdk.PtbArgumentRes("amounts")},
 		[]*sdk.TypeTag{sdk.TypeTagNewAddress(), sdk.TypeTagNewU64()},
-		nil,
 	)
 
 	builder.Gas(gas_coin_id).GasBudget(1000000000)
