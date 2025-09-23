@@ -41,7 +41,8 @@ impl<'a> PublishBuilder<'a> {
         self.ptb
             .move_call(Address::TWO, "package", "upgrade_package")
             .params(self.cap)
-            .result(name);
+            .end()
+            .name(name);
         self.ptb
     }
 

@@ -8,7 +8,7 @@ use iota_types::{Identifier, ObjectId, ObjectReference, TypeTag};
 
 use crate::{
     TransactionBuilder,
-    builder::{named_commands::NamedCommands, ptb_arguments::PTBArguments},
+    builder::ptb_arguments::PTBArguments,
     types::MoveTypes,
     unresolved::{Argument, Command, InputKind, MoveCall},
 };
@@ -104,15 +104,6 @@ impl<'a, G: MoveTypes, A: PTBArguments> MoveCallCommandBuilder<'a, Client, G, A>
 
         self.ptb
     }
-
-    /// Finish the move call by naming the output and return the PTB.
-    pub fn result(self, name: impl NamedCommands) -> &'a mut TransactionBuilder<Client> {
-        let ptb = self.end();
-
-        name.push_named_commands(ptb);
-
-        ptb
-    }
 }
 
 impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Argument>> {
@@ -203,14 +194,5 @@ impl<'a, G: MoveTypes> MoveCallCommandBuilder<'a, (), G, Vec<Argument>> {
         }));
 
         self.ptb
-    }
-
-    /// Finish the move call by naming the output and return the PTB.
-    pub fn result(self, name: impl NamedCommands) -> &'a mut TransactionBuilder<()> {
-        let ptb = self.end();
-
-        name.push_named_commands(ptb);
-
-        ptb
     }
 }

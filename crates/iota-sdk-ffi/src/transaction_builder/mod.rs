@@ -16,7 +16,7 @@ use crate::{
         graphql::DryRunResult,
         object::ObjectId,
         struct_tag::Identifier,
-        transaction::{Transaction, TransactionEffects},
+        transaction::{Argument, Transaction, TransactionEffects},
         type_tag::TypeTag,
     },
 };
@@ -105,7 +105,7 @@ impl TransactionBuilder {
     // Commands
 
     /// Call a Move function with the given arguments.
-    #[uniffi::method(default(type_args = [], arguments = [], names = []))]
+    #[uniffi::method(default(type_args = [], arguments = []))]
     pub fn move_call(
         self: Arc<Self>,
         package: &Address,
@@ -113,14 +113,12 @@ impl TransactionBuilder {
         function: &Identifier,
         arguments: Vec<Arc<PTBArgument>>,
         type_args: Vec<Arc<TypeTag>>,
-        names: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
                 .move_call(**package, &module.as_str(), &function.as_str())
                 .params(PTBArgs(arguments))
-                .type_tags(type_args.into_iter().map(|v| v.0.clone()))
-                .result(names);
+                .type_tags(type_args.into_iter().map(|v| v.0.clone()));
         });
         self
     }
@@ -139,15 +137,9 @@ impl TransactionBuilder {
     }
 
     /// Split a coin by the provided amounts.
-    #[uniffi::method(default(names = []))]
-    pub fn split_coins(
-        self: Arc<Self>,
-        coin: &ObjectId,
-        amounts: Vec<u64>,
-        names: Vec<String>,
-    ) -> Arc<Self> {
+    pub fn split_coins(self: Arc<Self>, coin: &ObjectId, amounts: Vec<u64>) -> Arc<Self> {
         self.write(|builder| {
-            builder.split_coins(**coin, amounts, names);
+            builder.split_coins(**coin, amounts);
         });
         self
     }
@@ -271,14 +263,12 @@ impl TransactionBuilder {
     ///
     ///  let effects = tx.execute(&keys, true).await;
     ///  ```
-    #[uniffi::method(default(name = None))]
     pub fn upgrade(
         self: Arc<Self>,
         modules: Vec<Vec<u8>>,
         dependencies: Vec<Arc<ObjectId>>,
         package: &ObjectId,
         ticket: &PTBArgument,
-        name: Option<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder.upgrade(
@@ -289,10 +279,24 @@ impl TransactionBuilder {
                     dependencies: dependencies.into_iter().map(|o| **o).collect(),
                     digest: None,
                 },
-                name,
             );
         });
         self
+    }
+
+    /// Set the name for the last command. If no commands have been set, this
+    /// will do nothing.
+    pub fn name(self: Arc<Self>, name: String) -> Arc<Self> {
+        self.write(|builder| {
+            builder.name(name);
+        });
+        self
+    }
+
+    /// Get the argument representing the last command. If no commands have been
+    /// set then this will return `Argument::Gas`.
+    pub fn arg(&self) -> Argument {
+        self.read(|builder| builder.arg()).into()
     }
 
     /// Convert this builder into a transaction.

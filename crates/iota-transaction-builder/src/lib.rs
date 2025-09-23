@@ -199,7 +199,7 @@ mod tests {
 
         // transfer 1 IOTA from Gas coin
         let gas = tx.get_gas().next().unwrap();
-        tx.split_coins(gas, [1_000_000_000], "coin");
+        tx.split_coins(gas, [1_000_000_000]).name("coin");
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, res("coin"));
 
@@ -221,7 +221,7 @@ mod tests {
         let coin = coins.first().unwrap().id;
 
         // transfer 1 IOTA
-        tx.split_coins(coin, [1_000_000_000], ());
+        tx.split_coins(coin, [1_000_000_000]);
 
         let effects = tx.execute(&[pk.into()], true).await.unwrap();
 
@@ -260,7 +260,7 @@ mod tests {
     async fn test_make_move_vec() {
         let (mut tx, _, pk, _) = helper_setup().await;
 
-        tx.make_move_vec([1u64], ());
+        tx.make_move_vec([1u64]);
 
         let effects = tx.execute(&[pk.into()], true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -337,18 +337,16 @@ mod tests {
                 0u8,
                 updated_package.digest.as_ref().unwrap(),
             ))
-            .result("ticket");
+            .end()
+            .name("ticket");
         // now we can upgrade the package
-        tx.upgrade(
-            package_id.unwrap(),
-            res("ticket"),
-            updated_package,
-            "receipt",
-        );
+        let receipt = tx
+            .upgrade(package_id.unwrap(), res("ticket"), updated_package)
+            .arg();
 
         // commit the upgrade
         tx.move_call(Address::TWO, "package", "commit_upgrade")
-            .params((upgrade_cap.unwrap(), res("receipt")))
+            .params((upgrade_cap.unwrap(), receipt))
             .end();
 
         tx.gas(coins.last().unwrap().id);

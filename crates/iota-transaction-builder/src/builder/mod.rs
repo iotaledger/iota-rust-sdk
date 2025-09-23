@@ -15,10 +15,8 @@ use serde::Serialize;
 
 use crate::{
     builder::{
-        move_call::MoveCallCommandBuilder,
-        named_commands::{NamedCommand, NamedCommands},
-        ptb_arguments::PTBArguments,
-        publish::PublishBuilder,
+        move_call::MoveCallCommandBuilder, named_commands::NamedCommands,
+        ptb_arguments::PTBArguments, publish::PublishBuilder,
     },
     error::Error,
     publish_type::PublishType,
@@ -180,6 +178,25 @@ impl<C> TransactionBuilder<C> {
     pub fn get_named_command(&self, name: &str) -> Option<Argument> {
         self.named_commands.get(name).copied()
     }
+
+    /// Set the name for the last command. If no commands have been set, this
+    /// will do nothing.
+    pub fn name(&mut self, name: impl NamedCommands) -> &mut Self {
+        if self.commands.len() > 0 {
+            name.push_named_commands(self);
+        }
+        self
+    }
+
+    /// Get the argument representing the last command. If no commands have been
+    /// set then this will return `Argument::Gas`.
+    pub fn arg(&self) -> iota_types::Argument {
+        if self.commands.len() > 0 {
+            iota_types::Argument::Result((self.commands.len() - 1) as _)
+        } else {
+            iota_types::Argument::Gas
+        }
+    }
 }
 
 impl TransactionBuilder<()> {
@@ -246,7 +263,6 @@ impl TransactionBuilder<()> {
         &mut self,
         coin: ObjectReference,
         split_amounts: impl IntoIterator<Item = u64> + Send,
-        name: impl NamedCommands,
     ) -> &mut Self {
         let coin = self.input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
@@ -257,7 +273,6 @@ impl TransactionBuilder<()> {
             coin,
             amounts: split_amounts,
         }));
-        name.push_named_commands(self);
         self
     }
 
@@ -397,7 +412,6 @@ impl TransactionBuilder<Client> {
         &mut self,
         coin: ObjectId,
         split_amounts: impl IntoIterator<Item = u64> + Send,
-        name: impl NamedCommands,
     ) -> &mut Self {
         let coin = self.input(InputKind::ImmutableOrOwned(coin), false);
         let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
@@ -405,7 +419,6 @@ impl TransactionBuilder<Client> {
             coin,
             amounts: split_amounts,
         }));
-        name.push_named_commands(self);
         self
     }
 
@@ -420,7 +433,6 @@ impl TransactionBuilder<Client> {
         package_id: ObjectId,
         upgrade_cap: U,
         kind: impl Into<PublishType> + Send,
-        name: impl NamedCommand,
     ) -> &mut Self {
         let module = match kind.into() {
             PublishType::Path(_path) => todo!("load the package from the path"),
@@ -437,7 +449,6 @@ impl TransactionBuilder<Client> {
             package: package_id,
             ticket: ticket.into_iter().next().unwrap(),
         }));
-        name.push_named_commands(self);
         self
     }
 
@@ -445,7 +456,6 @@ impl TransactionBuilder<Client> {
     pub fn make_move_vec<U: PTBArguments + MoveType>(
         &mut self,
         elements: impl IntoIterator<Item = U>,
-        name: impl NamedCommand,
     ) -> &mut Self {
         let mut args = Vec::new();
         for e in elements {
@@ -456,7 +466,6 @@ impl TransactionBuilder<Client> {
             elements: args,
         });
         self.command(cmd);
-        name.push_named_commands(self);
         self
     }
 

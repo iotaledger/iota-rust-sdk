@@ -68,6 +68,24 @@ impl PTBArguments for Argument {
     }
 }
 
+impl PTBArguments for iota_types::Argument {
+    fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
+        args.push(match self {
+            iota_types::Argument::Gas => Argument::Gas,
+            iota_types::Argument::Input(idx) => Argument::Input(
+                ptb.inputs
+                    .keys()
+                    .skip(*idx as _)
+                    .next()
+                    .copied()
+                    .unwrap_or_default(),
+            ),
+            iota_types::Argument::Result(idx) => Argument::Result(*idx),
+            iota_types::Argument::NestedResult(idx1, idx2) => Argument::NestedResult(*idx1, *idx2),
+        });
+    }
+}
+
 /// Allows specifying mutable parameters.
 pub struct Mut<T>(pub T);
 

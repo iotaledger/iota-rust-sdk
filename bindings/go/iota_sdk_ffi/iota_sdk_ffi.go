@@ -3339,6 +3339,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_arg()
+	})
+	if checksum != 54360 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_arg: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run()
 	})
 	if checksum != 11138 {
@@ -3422,9 +3431,18 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call()
 	})
-	if checksum != 22281 {
+	if checksum != 9391 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name()
+	})
+	if checksum != 54286 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3440,7 +3458,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins()
 	})
-	if checksum != 34656 {
+	if checksum != 35442 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins: UniFFI API checksum mismatch")
 	}
@@ -3467,7 +3485,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade()
 	})
-	if checksum != 15931 {
+	if checksum != 48732 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade: UniFFI API checksum mismatch")
 	}
@@ -19670,6 +19688,9 @@ func (_ FfiDestroyerTransaction) Destroy(value *Transaction) {
 // A builder for creating transactions. Use [`finish`](Self::finish) to
 // finalize the transaction data.
 type TransactionBuilderInterface interface {
+	// Get the argument representing the last command. If no commands have been
+	// set then this will return `Argument::Gas`.
+	Arg() *Argument
 	// Dry run the transaction.
 	DryRun(skipChecks bool) (DryRunResult, error)
 	// Execute the transaction and optionally wait for finalization.
@@ -19690,7 +19711,10 @@ type TransactionBuilderInterface interface {
 	// Merge a list of coins into a single coin, without producing any result.
 	MergeCoins(coin *ObjectId, coinsToMerge []*ObjectId) *TransactionBuilder
 	// Call a Move function with the given arguments.
-	MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, names []string) *TransactionBuilder
+	MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag) *TransactionBuilder
+	// Set the name for the last command. If no commands have been set, this
+	// will do nothing.
+	Name(name string) *TransactionBuilder
 	// Publish a list of modules with the given dependencies. The result
 	// assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
 	// Move type. Note that the upgrade capability needs to be handled
@@ -19706,7 +19730,7 @@ type TransactionBuilderInterface interface {
 	// the package
 	Publish(modules [][]byte, dependencies []*ObjectId, upgradeCapName string) *TransactionBuilder
 	// Split a coin by the provided amounts.
-	SplitCoins(coin *ObjectId, amounts []uint64, names []string) *TransactionBuilder
+	SplitCoins(coin *ObjectId, amounts []uint64) *TransactionBuilder
 	// Set the sponsor of the transaction.
 	Sponsor(sponsor *Address) *TransactionBuilder
 	// Transfer a list of objects to the given address, without producing any
@@ -19765,7 +19789,7 @@ type TransactionBuilderInterface interface {
 	//
 	// let effects = tx.execute(&keys, true).await;
 	// ```
-	Upgrade(modules [][]byte, dependencies []*ObjectId, varPackage *ObjectId, ticket *PtbArgument, name *string) *TransactionBuilder
+	Upgrade(modules [][]byte, dependencies []*ObjectId, varPackage *ObjectId, ticket *PtbArgument) *TransactionBuilder
 }
 // A builder for creating transactions. Use [`finish`](Self::finish) to
 // finalize the transaction data.
@@ -19802,6 +19826,17 @@ func TransactionBuilderInit(sender *Address, client *GraphQlClient) *Transaction
 }
 
 
+
+// Get the argument representing the last command. If no commands have been
+// set then this will return `Argument::Gas`.
+func (_self *TransactionBuilder) Arg() *Argument {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_arg(
+		_pointer,_uniffiStatus)
+	}))
+}
 
 // Dry run the transaction.
 func (_self *TransactionBuilder) DryRun(skipChecks bool) (DryRunResult, error) {
@@ -19959,12 +19994,23 @@ func (_self *TransactionBuilder) MergeCoins(coin *ObjectId, coinsToMerge []*Obje
 }
 
 // Call a Move function with the given arguments.
-func (_self *TransactionBuilder) MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, names []string) *TransactionBuilder {
+func (_self *TransactionBuilder) MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(
-		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterIdentifierINSTANCE.Lower(module), FfiConverterIdentifierINSTANCE.Lower(function), FfiConverterSequencePtbArgumentINSTANCE.Lower(arguments), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterSequenceStringINSTANCE.Lower(names),_uniffiStatus)
+		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterIdentifierINSTANCE.Lower(module), FfiConverterIdentifierINSTANCE.Lower(function), FfiConverterSequencePtbArgumentINSTANCE.Lower(arguments), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs),_uniffiStatus)
+	}))
+}
+
+// Set the name for the last command. If no commands have been set, this
+// will do nothing.
+func (_self *TransactionBuilder) Name(name string) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_name(
+		_pointer,FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
 	}))
 }
 
@@ -19991,12 +20037,12 @@ func (_self *TransactionBuilder) Publish(modules [][]byte, dependencies []*Objec
 }
 
 // Split a coin by the provided amounts.
-func (_self *TransactionBuilder) SplitCoins(coin *ObjectId, amounts []uint64, names []string) *TransactionBuilder {
+func (_self *TransactionBuilder) SplitCoins(coin *ObjectId, amounts []uint64) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(coin), FfiConverterSequenceUint64INSTANCE.Lower(amounts), FfiConverterSequenceStringINSTANCE.Lower(names),_uniffiStatus)
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(coin), FfiConverterSequenceUint64INSTANCE.Lower(amounts),_uniffiStatus)
 	}))
 }
 
@@ -20074,12 +20120,12 @@ func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*
 //
 // let effects = tx.execute(&keys, true).await;
 // ```
-func (_self *TransactionBuilder) Upgrade(modules [][]byte, dependencies []*ObjectId, varPackage *ObjectId, ticket *PtbArgument, name *string) *TransactionBuilder {
+func (_self *TransactionBuilder) Upgrade(modules [][]byte, dependencies []*ObjectId, varPackage *ObjectId, ticket *PtbArgument) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
-		_pointer,FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies), FfiConverterObjectIdINSTANCE.Lower(varPackage), FfiConverterPtbArgumentINSTANCE.Lower(ticket), FfiConverterOptionalStringINSTANCE.Lower(name),_uniffiStatus)
+		_pointer,FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies), FfiConverterObjectIdINSTANCE.Lower(varPackage), FfiConverterPtbArgumentINSTANCE.Lower(ticket),_uniffiStatus)
 	}))
 }
 func (object *TransactionBuilder) Destroy() {

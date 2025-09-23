@@ -3716,6 +3716,11 @@ void uniffi_iota_sdk_ffi_fn_free_transactionbuilder(void* ptr, RustCallStatus *o
 uint64_t uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(void* sender, void* client
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_ARG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_ARG
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_arg(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_DRY_RUN
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_DRY_RUN
 uint64_t uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run(void* ptr, int8_t skip_checks
@@ -3763,7 +3768,12 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(void* ptr, vo
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_MOVE_CALL
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_MOVE_CALL
-void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(void* ptr, void* package, void* module, void* function, RustBuffer arguments, RustBuffer type_args, RustBuffer names, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(void* ptr, void* package, void* module, void* function, RustBuffer arguments, RustBuffer type_args, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_NAME
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_name(void* ptr, RustBuffer name, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_PUBLISH
@@ -3773,7 +3783,7 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(void* ptr, RustBu
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SPLIT_COINS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SPLIT_COINS
-void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(void* ptr, void* coin, RustBuffer amounts, RustBuffer names, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(void* ptr, void* coin, RustBuffer amounts, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SPONSOR
@@ -3788,7 +3798,7 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(void* pt
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UPGRADE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UPGRADE
-void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(void* ptr, RustBuffer modules, RustBuffer dependencies, void* package, void* ticket, RustBuffer name, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(void* ptr, RustBuffer modules, RustBuffer dependencies, void* package, void* ticket, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONEFFECTS
@@ -6894,6 +6904,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_ARG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_ARG
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_arg(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_DRY_RUN
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_DRY_RUN
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run(void
@@ -6951,6 +6967,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_MOVE_CALL
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_MOVE_CALL
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_NAME
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name(void
     
 );
 #endif
