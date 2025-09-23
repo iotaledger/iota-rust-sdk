@@ -43,7 +43,7 @@ impl_ptb_args_tuple!(T1.0, T2.1, T3.2, T4.3, T5.4);
 impl<T: MoveParam> PTBArguments for T {
     fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
         let arg = match self.param() {
-            ParamType::Object(id) => ptb.input(InputKind::ImmutableOrOwned(id), false),
+            ParamType::Object(id) => ptb.set_input(InputKind::ImmutableOrOwned(id), false),
             ParamType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);
@@ -75,8 +75,7 @@ impl PTBArguments for iota_types::Argument {
             iota_types::Argument::Input(idx) => Argument::Input(
                 ptb.inputs
                     .keys()
-                    .skip(*idx as _)
-                    .next()
+                    .nth(*idx as _)
                     .copied()
                     .unwrap_or_default(),
             ),
@@ -92,7 +91,7 @@ pub struct Mut<T>(pub T);
 impl<T: MoveParam> PTBArguments for Mut<T> {
     fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
         let arg = match self.0.param() {
-            ParamType::Object(id) => ptb.input(
+            ParamType::Object(id) => ptb.set_input(
                 InputKind::Shared {
                     object_id: id,
                     mutable: true,
@@ -111,7 +110,7 @@ pub struct Receiving<T>(pub T);
 impl<T: MoveParam> PTBArguments for Receiving<T> {
     fn push_args(&self, ptb: &mut TransactionBuilder<Client>, args: &mut Vec<Argument>) {
         let arg = match self.0.param() {
-            ParamType::Object(id) => ptb.input(InputKind::Receiving(id), false),
+            ParamType::Object(id) => ptb.set_input(InputKind::Receiving(id), false),
             ParamType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);

@@ -185,8 +185,7 @@ mod tests {
         let (mut tx, _, pk, _) = helper_setup().await;
         tx.move_call(Address::ONE, "option", "is_none")
             .generics::<u64>()
-            .params(Some(1u64))
-            .end();
+            .params(Some(1u64));
 
         let effects = tx.execute(&[pk.into()], true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -337,7 +336,6 @@ mod tests {
                 0u8,
                 updated_package.digest.as_ref().unwrap(),
             ))
-            .end()
             .name("ticket");
         // now we can upgrade the package
         let receipt = tx
@@ -346,8 +344,7 @@ mod tests {
 
         // commit the upgrade
         tx.move_call(Address::TWO, "package", "commit_upgrade")
-            .params((upgrade_cap.unwrap(), receipt))
-            .end();
+            .params((upgrade_cap.unwrap(), receipt));
 
         tx.gas(coins.last().unwrap().id);
 

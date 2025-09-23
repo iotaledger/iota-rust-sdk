@@ -56,6 +56,7 @@ func main() {
 			sdk.PtbArgumentAddress(validator.Address),
 		},
 		nil,
+		nil,
 	)
 	builder.Gas(gasCoinObjId).GasBudget(1000000000)
 

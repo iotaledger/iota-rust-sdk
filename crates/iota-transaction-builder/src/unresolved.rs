@@ -42,7 +42,7 @@ pub enum InputKind {
     Input(iota_types::Input),
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, derive_more::From)]
 pub enum Command {
     MoveCall(MoveCall),
     TransferObjects(TransferObjects),

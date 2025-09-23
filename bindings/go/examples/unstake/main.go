@@ -47,6 +47,7 @@ func main() {
 		requestAddStakeFn,
 		[]*sdk.PtbArgument{sdk.PtbArgumentMutable(iotaSystemId), sdk.PtbArgumentObjectId(stakedIota.ObjectId())},
 		nil,
+		nil,
 	)
 
 	builder.Gas(gasCoin.ObjectId()).GasBudget(1000000000)

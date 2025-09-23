@@ -14,7 +14,7 @@ pub trait NamedCommand {
 
 impl NamedCommand for () {
     fn named_command<C>(&self, ptb: &mut TransactionBuilder<C>) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
+        Argument::Result((ptb.commands.len()) as _)
     }
 
     fn push_named_command<C>(self, _: Argument, _: &mut TransactionBuilder<C>) {}
@@ -22,7 +22,7 @@ impl NamedCommand for () {
 
 impl NamedCommand for &str {
     fn named_command<C>(&self, ptb: &mut TransactionBuilder<C>) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
+        Argument::Result((ptb.commands.len()) as _)
     }
 
     fn push_named_command<C>(self, arg: Argument, ptb: &mut TransactionBuilder<C>) {
@@ -32,7 +32,7 @@ impl NamedCommand for &str {
 
 impl NamedCommand for String {
     fn named_command<C>(&self, ptb: &mut TransactionBuilder<C>) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
+        Argument::Result((ptb.commands.len()) as _)
     }
 
     fn push_named_command<C>(self, arg: Argument, ptb: &mut TransactionBuilder<C>) {
@@ -42,7 +42,7 @@ impl NamedCommand for String {
 
 impl<T: NamedCommand> NamedCommand for Option<T> {
     fn named_command<C>(&self, ptb: &mut TransactionBuilder<C>) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
+        Argument::Result((ptb.commands.len()) as _)
     }
 
     fn push_named_command<C>(self, arg: Argument, ptb: &mut TransactionBuilder<C>) {
@@ -68,7 +68,7 @@ impl<T: NamedCommand> NamedCommands for T {
 impl<T: NamedCommand> NamedCommands for Vec<T> {
     fn push_named_commands<C>(self, ptb: &mut TransactionBuilder<C>) {
         for (i, v) in self.into_iter().enumerate() {
-            let arg = Argument::NestedResult((ptb.commands.len() - 1) as _, i as _);
+            let arg = Argument::NestedResult((ptb.commands.len()) as _, i as _);
             v.push_named_command(arg, ptb);
         }
     }
@@ -81,7 +81,7 @@ macro_rules! impl_named_command_tuple {
         {
             fn push_named_commands<C>(self, ptb: &mut TransactionBuilder<C>) {
                 $(
-                    let arg = Argument::NestedResult((ptb.commands.len() - 1) as _, $idx);
+                    let arg = Argument::NestedResult((ptb.commands.len()) as _, $idx);
                     self.$idx.push_named_command(arg, ptb);
                 )+
             }

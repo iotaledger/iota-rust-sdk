@@ -1135,8 +1135,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest() != 36608:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_arg() != 54360:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 4054:
@@ -1155,19 +1153,17 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 10444:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 9391:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name() != 16206:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 35442:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 34656:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 48732:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 15931:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5309,11 +5305,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init.argtypes =
     ctypes.c_void_p,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_arg.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_arg.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run.argtypes = (
     ctypes.c_void_p,
     ctypes.c_int8,
@@ -5375,15 +5366,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call.argtypes =
     ctypes.c_void_p,
     _UniffiRustBuffer,
     _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_name.argtypes = (
-    ctypes.c_void_p,
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_name.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
@@ -5395,6 +5381,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish.restype = ct
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
+    _UniffiRustBuffer,
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -5418,6 +5405,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade.argtypes = (
     _UniffiRustBuffer,
     ctypes.c_void_p,
     ctypes.c_void_p,
+    _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade.restype = ctypes.c_void_p
@@ -7545,9 +7533,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender.restype = ctyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_arg.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_arg.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run.restype = ctypes.c_uint16
@@ -7578,9 +7563,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_name.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish.restype = ctypes.c_uint16
@@ -34748,13 +34730,6 @@ class TransactionBuilderProtocol(typing.Protocol):
     finalize the transaction data.
     """
 
-    def arg(self, ):
-        """
-        Get the argument representing the last command. If no commands have been
-        set then this will return `Argument::Gas`.
-        """
-
-        raise NotImplementedError
     def dry_run(self, skip_checks: "typing.Union[object, bool]" = _DEFAULT):
         """
         Dry run the transaction.
@@ -34810,16 +34785,9 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_call(self, package: "Address",module: "Identifier",function: "Identifier",arguments: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT):
+    def move_call(self, package: "Address",module: "Identifier",function: "Identifier",arguments: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT,names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
         Call a Move function with the given arguments.
-        """
-
-        raise NotImplementedError
-    def name(self, name: "typing.List[str]"):
-        """
-        Set the name for the last command. If no commands have been set, this
-        will do nothing.
         """
 
         raise NotImplementedError
@@ -34841,7 +34809,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def split_coins(self, coin: "ObjectId",amounts: "typing.List[int]"):
+    def split_coins(self, coin: "ObjectId",amounts: "typing.List[int]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
         Split a coin by the provided amounts.
         """
@@ -34860,7 +34828,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def upgrade(self, modules: "typing.List[bytes]",dependencies: "typing.List[ObjectId]",package: "ObjectId",ticket: "PtbArgument"):
+    def upgrade(self, modules: "typing.List[bytes]",dependencies: "typing.List[ObjectId]",package: "ObjectId",ticket: "PtbArgument",name: "typing.Union[object, typing.Optional[str]]" = _DEFAULT):
         """
         Upgrade a Move package.
 
@@ -34972,20 +34940,6 @@ class TransactionBuilder():
     None,
 
         )
-
-
-
-    def arg(self, ) -> "Argument":
-        """
-        Get the argument representing the last command. If no commands have been
-        set then this will return `Argument::Gas`.
-        """
-
-        return _UniffiConverterTypeArgument.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_arg,self._uniffi_clone_pointer(),)
-        )
-
-
 
 
     async def dry_run(self, skip_checks: "typing.Union[object, bool]" = _DEFAULT) -> "DryRunResult":
@@ -35174,7 +35128,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def move_call(self, package: "Address",module: "Identifier",function: "Identifier",arguments: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT) -> "TransactionBuilder":
+    def move_call(self, package: "Address",module: "Identifier",function: "Identifier",arguments: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT,names: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Call a Move function with the given arguments.
         """
@@ -35193,30 +35147,18 @@ _UniffiConverterTypeSdkFfiError,
             type_args = []
         _UniffiConverterSequenceTypeTypeTag.check_lower(type_args)
         
+        if names is _DEFAULT:
+            names = []
+        _UniffiConverterSequenceString.check_lower(names)
+        
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call,self._uniffi_clone_pointer(),
         _UniffiConverterTypeAddress.lower(package),
         _UniffiConverterTypeIdentifier.lower(module),
         _UniffiConverterTypeIdentifier.lower(function),
         _UniffiConverterSequenceTypePtbArgument.lower(arguments),
-        _UniffiConverterSequenceTypeTypeTag.lower(type_args))
-        )
-
-
-
-
-
-    def name(self, name: "typing.List[str]") -> "TransactionBuilder":
-        """
-        Set the name for the last command. If no commands have been set, this
-        will do nothing.
-        """
-
-        _UniffiConverterSequenceString.check_lower(name)
-        
-        return _UniffiConverterTypeTransactionBuilder.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_name,self._uniffi_clone_pointer(),
-        _UniffiConverterSequenceString.lower(name))
+        _UniffiConverterSequenceTypeTypeTag.lower(type_args),
+        _UniffiConverterSequenceString.lower(names))
         )
 
 
@@ -35257,7 +35199,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def split_coins(self, coin: "ObjectId",amounts: "typing.List[int]") -> "TransactionBuilder":
+    def split_coins(self, coin: "ObjectId",amounts: "typing.List[int]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Split a coin by the provided amounts.
         """
@@ -35266,10 +35208,15 @@ _UniffiConverterTypeSdkFfiError,
         
         _UniffiConverterSequenceUInt64.check_lower(amounts)
         
+        if names is _DEFAULT:
+            names = []
+        _UniffiConverterSequenceString.check_lower(names)
+        
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins,self._uniffi_clone_pointer(),
         _UniffiConverterTypeObjectId.lower(coin),
-        _UniffiConverterSequenceUInt64.lower(amounts))
+        _UniffiConverterSequenceUInt64.lower(amounts),
+        _UniffiConverterSequenceString.lower(names))
         )
 
 
@@ -35312,7 +35259,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def upgrade(self, modules: "typing.List[bytes]",dependencies: "typing.List[ObjectId]",package: "ObjectId",ticket: "PtbArgument") -> "TransactionBuilder":
+    def upgrade(self, modules: "typing.List[bytes]",dependencies: "typing.List[ObjectId]",package: "ObjectId",ticket: "PtbArgument",name: "typing.Union[object, typing.Optional[str]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Upgrade a Move package.
 
@@ -35377,12 +35324,17 @@ _UniffiConverterTypeSdkFfiError,
         
         _UniffiConverterTypePtbArgument.check_lower(ticket)
         
+        if name is _DEFAULT:
+            name = None
+        _UniffiConverterOptionalString.check_lower(name)
+        
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade,self._uniffi_clone_pointer(),
         _UniffiConverterSequenceBytes.lower(modules),
         _UniffiConverterSequenceTypeObjectId.lower(dependencies),
         _UniffiConverterTypeObjectId.lower(package),
-        _UniffiConverterTypePtbArgument.lower(ticket))
+        _UniffiConverterTypePtbArgument.lower(ticket),
+        _UniffiConverterOptionalString.lower(name))
         )
 
 

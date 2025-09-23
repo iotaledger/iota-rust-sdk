@@ -47,7 +47,6 @@ async fn main() -> Result<()> {
     builder
         .move_call(Address::THREE, "iota_system", "request_withdraw_stake")
         .params((Mut(ObjectId::from_str("0x5")?), staked_iota.object_id()))
-        .end()
         .gas(gas_coin.object_id())
         .gas_budget(1000000000);
 

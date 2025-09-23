@@ -8,29 +8,27 @@ use std::collections::{BTreeMap, HashMap};
 use iota_crypto::IotaSigner;
 use iota_graphql_client::{Client, DryRunResult};
 use iota_types::{
-    Address, GasPayment, ObjectId, ObjectReference, Owner, ProgrammableTransaction, Transaction,
-    TransactionEffects, TransactionExpiration,
+    Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
+    Transaction, TransactionEffects, TransactionExpiration, TypeTag,
 };
 use serde::Serialize;
 
 use crate::{
     builder::{
-        move_call::MoveCallCommandBuilder, named_commands::NamedCommands,
-        ptb_arguments::PTBArguments, publish::PublishBuilder,
+        command_builder::CommandBuilder, named_commands::NamedCommands, ptb_arguments::PTBArguments,
     },
     error::Error,
     publish_type::PublishType,
     types::MoveType,
     unresolved::{
-        Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, SplitCoins,
-        TransferObjects, Upgrade,
+        Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
+        Publish, SplitCoins, TransferObjects, Upgrade,
     },
 };
 
-mod move_call;
+mod command_builder;
 mod named_commands;
 pub(crate) mod ptb_arguments;
-mod publish;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
@@ -130,7 +128,11 @@ impl<C> TransactionBuilder<C> {
     }
 
     /// Make a value available to the transaction as an input.
-    fn input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
+    pub fn input(&mut self, input: iota_types::Input) -> Argument {
+        self.set_input(InputKind::Input(input), false)
+    }
+
+    fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
         if let Some((i, input)) = self.inputs.iter_mut().find(|(_, input)| input.kind == kind) {
             if is_gas {
                 input.is_gas = true;
@@ -148,7 +150,7 @@ impl<C> TransactionBuilder<C> {
 
     /// Add a pure input using the BCS serialized bytes
     pub fn pure_bytes(&mut self, bytes: Vec<u8>) -> Argument {
-        self.input(
+        self.set_input(
             InputKind::Input(iota_types::Input::Pure { value: bytes }),
             false,
         )
@@ -170,32 +172,13 @@ impl<C> TransactionBuilder<C> {
 
     /// Manually set a command with an optional name
     pub fn named_command(&mut self, cmd: Command, name: impl NamedCommands) {
-        self.command(cmd);
         name.push_named_commands(self);
+        self.command(cmd);
     }
 
     /// Get the value for the given string in the named commands map
     pub fn get_named_command(&self, name: &str) -> Option<Argument> {
         self.named_commands.get(name).copied()
-    }
-
-    /// Set the name for the last command. If no commands have been set, this
-    /// will do nothing.
-    pub fn name(&mut self, name: impl NamedCommands) -> &mut Self {
-        if self.commands.len() > 0 {
-            name.push_named_commands(self);
-        }
-        self
-    }
-
-    /// Get the argument representing the last command. If no commands have been
-    /// set then this will return `Argument::Gas`.
-    pub fn arg(&self) -> iota_types::Argument {
-        if self.commands.len() > 0 {
-            iota_types::Argument::Result((self.commands.len() - 1) as _)
-        } else {
-            iota_types::Argument::Gas
-        }
     }
 }
 
@@ -217,7 +200,7 @@ impl TransactionBuilder<()> {
 
     /// Set the gas coins that will be consumed. Optional.
     pub fn gas(&mut self, obj_ref: ObjectReference) -> &mut Self {
-        self.input(
+        self.set_input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
             true,
         );
@@ -227,11 +210,22 @@ impl TransactionBuilder<()> {
     /// Begin building a move call.
     pub fn move_call(
         &mut self,
-        package_id: ObjectId,
+        package_id: impl Into<ObjectId>,
         module: &'static str,
         function: &'static str,
-    ) -> MoveCallCommandBuilder<'_, (), (), Vec<Argument>> {
-        MoveCallCommandBuilder::<(), (), Vec<Argument>>::new(self, package_id, module, function)
+    ) -> CommandBuilder<'_, (), MoveCall> {
+        CommandBuilder {
+            ptb: self,
+            last_command: MoveCall {
+                package: package_id.into(),
+                module: Identifier::new(module)
+                    .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
+                function: Identifier::new(function)
+                    .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
+                type_arguments: Default::default(),
+                arguments: Default::default(),
+            },
+        }
     }
 
     /// Merge multiple coins into one.
@@ -240,13 +234,13 @@ impl TransactionBuilder<()> {
         primary_coin: ObjectReference,
         consumed_coins: impl IntoIterator<Item = ObjectReference> + Send,
     ) -> &mut Self {
-        let primary_coin = self.input(
+        let primary_coin = self.set_input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(primary_coin)),
             false,
         );
         let mut consumed = Vec::new();
         for coin in consumed_coins {
-            consumed.push(self.input(
+            consumed.push(self.set_input(
                 InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
                 false,
             ));
@@ -263,17 +257,19 @@ impl TransactionBuilder<()> {
         &mut self,
         coin: ObjectReference,
         split_amounts: impl IntoIterator<Item = u64> + Send,
-    ) -> &mut Self {
-        let coin = self.input(
+    ) -> CommandBuilder<'_, (), SplitCoins> {
+        let coin = self.set_input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
             false,
         );
         let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
-        self.command(Command::SplitCoins(SplitCoins {
-            coin,
-            amounts: split_amounts,
-        }));
-        self
+        CommandBuilder {
+            ptb: self,
+            last_command: SplitCoins {
+                coin,
+                amounts: split_amounts,
+            },
+        }
     }
 
     /// Transfer objects to a recipient address.
@@ -285,7 +281,7 @@ impl TransactionBuilder<()> {
         let objects = objects
             .into_iter()
             .map(|o| {
-                self.input(
+                self.set_input(
                     InputKind::Input(iota_types::Input::ImmutableOrOwned(o)),
                     false,
                 )
@@ -297,6 +293,21 @@ impl TransactionBuilder<()> {
         });
         self.command(cmd);
         self
+    }
+
+    /// Make a move vector from a list of elements.
+    pub fn make_move_vec(
+        &mut self,
+        elements: impl IntoIterator<Item = Argument>,
+        type_tag: impl Into<Option<TypeTag>>,
+    ) -> CommandBuilder<'_, (), MakeMoveVector> {
+        CommandBuilder {
+            ptb: self,
+            last_command: MakeMoveVector {
+                type_: type_tag.into(),
+                elements: elements.into_iter().collect(),
+            },
+        }
     }
 
     /// Convert this builder into a transaction.
@@ -360,7 +371,7 @@ impl TransactionBuilder<Client> {
 
     /// Set the gas coins that will be consumed. Optional.
     pub fn gas(&mut self, object_id: ObjectId) -> &mut Self {
-        self.input(InputKind::ImmutableOrOwned(object_id), true);
+        self.set_input(InputKind::ImmutableOrOwned(object_id), true);
         self
     }
 
@@ -370,8 +381,19 @@ impl TransactionBuilder<Client> {
         package_id: impl Into<ObjectId>,
         module: &str,
         function: &str,
-    ) -> MoveCallCommandBuilder<'_, Client> {
-        MoveCallCommandBuilder::<Client>::new(self, package_id.into(), module, function)
+    ) -> CommandBuilder<'_, Client, MoveCall> {
+        CommandBuilder {
+            ptb: self,
+            last_command: MoveCall {
+                package: package_id.into(),
+                module: Identifier::new(module)
+                    .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
+                function: Identifier::new(function)
+                    .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
+                type_arguments: Default::default(),
+                arguments: Default::default(),
+            },
+        }
     }
 
     /// Transfer objects to a recipient address.
@@ -395,10 +417,10 @@ impl TransactionBuilder<Client> {
         primary_coin: ObjectId,
         consumed_coins: impl IntoIterator<Item = ObjectId> + Send,
     ) -> &mut Self {
-        let primary_coin = self.input(InputKind::ImmutableOrOwned(primary_coin), false);
+        let primary_coin = self.set_input(InputKind::ImmutableOrOwned(primary_coin), false);
         let mut consumed = Vec::new();
         for coin in consumed_coins {
-            consumed.push(self.input(InputKind::ImmutableOrOwned(coin), false));
+            consumed.push(self.set_input(InputKind::ImmutableOrOwned(coin), false));
         }
         self.command(Command::MergeCoins(MergeCoins {
             coin: primary_coin,
@@ -412,19 +434,34 @@ impl TransactionBuilder<Client> {
         &mut self,
         coin: ObjectId,
         split_amounts: impl IntoIterator<Item = u64> + Send,
-    ) -> &mut Self {
-        let coin = self.input(InputKind::ImmutableOrOwned(coin), false);
+    ) -> CommandBuilder<'_, Client, SplitCoins> {
+        let coin = self.set_input(InputKind::ImmutableOrOwned(coin), false);
         let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
-        self.command(Command::SplitCoins(SplitCoins {
-            coin,
-            amounts: split_amounts,
-        }));
-        self
+        CommandBuilder {
+            ptb: self,
+            last_command: SplitCoins {
+                coin,
+                amounts: split_amounts,
+            },
+        }
     }
 
-    /// Publish a move package. Returns the upgrade capability, if there is one.
-    pub fn publish(&mut self, kind: impl Into<PublishType> + Send) -> PublishBuilder<'_> {
-        PublishBuilder::new(self, kind)
+    /// Publish a move package.
+    pub fn publish(
+        &mut self,
+        kind: impl Into<PublishType> + Send,
+    ) -> CommandBuilder<'_, Client, Publish> {
+        let module = match kind.into() {
+            PublishType::Path(_path) => todo!("load the package from the path"),
+            PublishType::Compiled(m) => m,
+        };
+        CommandBuilder {
+            ptb: self,
+            last_command: Publish {
+                modules: module.modules,
+                dependencies: module.dependencies,
+            },
+        }
     }
 
     /// Upgrade a move package.
@@ -433,7 +470,7 @@ impl TransactionBuilder<Client> {
         package_id: ObjectId,
         upgrade_cap: U,
         kind: impl Into<PublishType> + Send,
-    ) -> &mut Self {
+    ) -> CommandBuilder<'_, Client, Upgrade> {
         let module = match kind.into() {
             PublishType::Path(_path) => todo!("load the package from the path"),
             PublishType::Compiled(m) => m,
@@ -443,30 +480,33 @@ impl TransactionBuilder<Client> {
             // TODO: Maybe there's a better way
             panic!("invalid upgrade cap");
         }
-        self.command(Command::Upgrade(Upgrade {
-            modules: module.modules,
-            dependencies: module.dependencies,
-            package: package_id,
-            ticket: ticket.into_iter().next().unwrap(),
-        }));
-        self
+        CommandBuilder {
+            ptb: self,
+            last_command: Upgrade {
+                modules: module.modules,
+                dependencies: module.dependencies,
+                package: package_id,
+                ticket: ticket.into_iter().next().unwrap(),
+            },
+        }
     }
 
     /// Make a move vector from a list of elements.
     pub fn make_move_vec<U: PTBArguments + MoveType>(
         &mut self,
         elements: impl IntoIterator<Item = U>,
-    ) -> &mut Self {
+    ) -> CommandBuilder<'_, Client, MakeMoveVector> {
         let mut args = Vec::new();
         for e in elements {
             args.extend(e.args(self));
         }
-        let cmd = Command::MakeMoveVector(MakeMoveVector {
-            type_: Some(U::type_tag()),
-            elements: args,
-        });
-        self.command(cmd);
-        self
+        CommandBuilder {
+            ptb: self,
+            last_command: MakeMoveVector {
+                type_: Some(U::type_tag()),
+                elements: args,
+            },
+        }
     }
 
     async fn resolve_ptb(&mut self) -> Result<Transaction, Error> {
