@@ -1,8 +1,7 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-import base64
-from lib.iota_sdk_ffi import Ed25519PrivateKey
+from lib.iota_sdk_ffi import Ed25519PrivateKey, base64_encode
 
 
 def main():
@@ -12,9 +11,9 @@ def main():
     flagged_public_key = bytes([public_key.scheme().value]) + public_key_bytes
     address = public_key.derive_address()
 
-    print(f"Private Key: {base64.b64encode(private_key.to_der()).decode()}")
-    print(f"Public Key: {base64.b64encode(public_key_bytes).decode()}")
-    print(f"Public Key With Flag: {base64.b64encode(flagged_public_key).decode()}")
+    print(f"Private Key: {base64_encode(private_key.to_der())}")
+    print(f"Public Key: {base64_encode(public_key_bytes)}")
+    print(f"Public Key With Flag: {base64_encode(flagged_public_key)}")
     print(f"Address: {address.to_hex()}")
 
 

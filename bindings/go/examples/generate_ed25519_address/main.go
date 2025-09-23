@@ -4,7 +4,6 @@
 package main
 
 import (
-	"encoding/base64"
 	"fmt"
 
 	sdk "bindings/iota_sdk_ffi"
@@ -22,8 +21,8 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("Private Key:", base64.StdEncoding.EncodeToString(privateKeyDer))
-	fmt.Println("Public Key:", base64.StdEncoding.EncodeToString(publicKeyBytes))
-	fmt.Println("Public Key With Flag:", base64.StdEncoding.EncodeToString(flaggedPublicKey))
+	fmt.Println("Private Key:", sdk.Base64Encode(privateKeyDer))
+	fmt.Println("Public Key:", sdk.Base64Encode(publicKeyBytes))
+	fmt.Println("Public Key With Flag:", sdk.Base64Encode(flaggedPublicKey))
 	fmt.Println("Address:", address.ToHex())
 }
