@@ -662,9 +662,9 @@ impl<L> TransactionBuilder<Client, L> {
 
                     let input = match obj.owner() {
                         Owner::Shared(version) => iota_types::Input::Shared {
-                            object_id: object_id,
+                            object_id,
                             initial_shared_version: *version,
-                            mutable: mutable,
+                            mutable,
                         },
                         _ => {
                             return Err(Error::Input(format!(
