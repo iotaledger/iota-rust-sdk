@@ -1157,9 +1157,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 15827:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 34656:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_iota() != 18967:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5378,6 +5382,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -5392,6 +5404,13 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_iota.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_iota.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -7566,12 +7585,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call.rest
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_iota.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_iota.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects.restype = ctypes.c_uint16
@@ -34809,6 +34834,13 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def send_coins(self, coins: "typing.List[ObjectId]",recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+        """
+        Transfer some coins to a recipient address. If multiple coins are
+        provided then they will be merged.
+        """
+
+        raise NotImplementedError
     def split_coins(self, coin: "ObjectId",amounts: "typing.List[int]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
         Split a coin by the provided amounts.
@@ -34818,6 +34850,12 @@ class TransactionBuilderProtocol(typing.Protocol):
     def sponsor(self, sponsor: "Address"):
         """
         Set the sponsor of the transaction.
+        """
+
+        raise NotImplementedError
+    def transfer_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+        """
+        Transfer IOTA to a recipient address.
         """
 
         raise NotImplementedError
@@ -35199,6 +35237,31 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
+    def send_coins(self, coins: "typing.List[ObjectId]",recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "TransactionBuilder":
+        """
+        Transfer some coins to a recipient address. If multiple coins are
+        provided then they will be merged.
+        """
+
+        _UniffiConverterSequenceTypeObjectId.check_lower(coins)
+        
+        _UniffiConverterTypeAddress.check_lower(recipient)
+        
+        if amount is _DEFAULT:
+            amount = None
+        _UniffiConverterOptionalUInt64.check_lower(amount)
+        
+        return _UniffiConverterTypeTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins,self._uniffi_clone_pointer(),
+        _UniffiConverterSequenceTypeObjectId.lower(coins),
+        _UniffiConverterTypeAddress.lower(recipient),
+        _UniffiConverterOptionalUInt64.lower(amount))
+        )
+
+
+
+
+
     def split_coins(self, coin: "ObjectId",amounts: "typing.List[int]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Split a coin by the provided amounts.
@@ -35233,6 +35296,27 @@ _UniffiConverterTypeSdkFfiError,
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor,self._uniffi_clone_pointer(),
         _UniffiConverterTypeAddress.lower(sponsor))
+        )
+
+
+
+
+
+    def transfer_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "TransactionBuilder":
+        """
+        Transfer IOTA to a recipient address.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(recipient)
+        
+        if amount is _DEFAULT:
+            amount = None
+        _UniffiConverterOptionalUInt64.check_lower(amount)
+        
+        return _UniffiConverterTypeTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_iota,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeAddress.lower(recipient),
+        _UniffiConverterOptionalUInt64.lower(amount))
         )
 
 

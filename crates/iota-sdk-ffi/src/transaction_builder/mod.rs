@@ -125,6 +125,30 @@ impl TransactionBuilder {
         self
     }
 
+    /// Transfer IOTA to a recipient address.
+    #[uniffi::method(default(amount = None))]
+    pub fn transfer_iota(self: Arc<Self>, recipient: &Address, amount: Option<u64>) -> Arc<Self> {
+        self.write(|builder| {
+            builder.transfer_iota(**recipient, amount);
+        });
+        self
+    }
+
+    /// Transfer some coins to a recipient address. If multiple coins are
+    /// provided then they will be merged.
+    #[uniffi::method(default(amount = None))]
+    pub fn send_coins(
+        self: Arc<Self>,
+        coins: Vec<Arc<ObjectId>>,
+        recipient: &Address,
+        amount: Option<u64>,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder.send_coins(coins.into_iter().map(|v| **v), **recipient, amount);
+        });
+        self
+    }
+
     /// Transfer a list of objects to the given address, without producing any
     /// result.
     pub fn transfer_objects(
@@ -254,7 +278,7 @@ impl TransactionBuilder {
     ///  // we need this ticket to authorize the upgrade
     ///  tx.move_call(Address::TWO, "package", "authorize_upgrade")
     ///     .params((upgrade_cap, upgrade_policy, package_digest))
-    ///     .result("ticket");
+    ///     .name("ticket");
     ///
     ///  // now we can upgrade the package
     ///  tx.upgrade(
@@ -266,8 +290,7 @@ impl TransactionBuilder {
     ///
     ///  // commit the upgrade
     ///  tx.move_call(Address::TWO, "package", "commit_upgrade")
-    ///     .params((upgrade_cap, Res("receipt")))
-    ///     .end();
+    ///     .params((upgrade_cap, Res("receipt")));
     ///
     ///  let effects = tx.execute(&keys, true).await;
     ///  ```

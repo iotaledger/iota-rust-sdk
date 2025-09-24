@@ -2204,6 +2204,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2915,9 +2919,13 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_iota(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects(
 ): Short
@@ -4900,9 +4908,13 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(`ptr`: Pointer,`p
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(`ptr`: Pointer,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,`upgradeCapName`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(`ptr`: Pointer,`coins`: RustBuffer.ByValue,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(`ptr`: Pointer,`coin`: Pointer,`amounts`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(`ptr`: Pointer,`recipient`: Pointer,`objects`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6408,10 +6420,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 15827.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 34656.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_iota() != 18967.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313.toShort()) {
@@ -35784,6 +35802,12 @@ public interface TransactionBuilderInterface {
     fun `publish`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `upgradeCapName`: kotlin.String): TransactionBuilder
     
     /**
+     * Transfer some coins to a recipient address. If multiple coins are
+     * provided then they will be merged.
+     */
+    fun `sendCoins`(`coins`: List<ObjectId>, `recipient`: Address, `amount`: kotlin.ULong? = null): TransactionBuilder
+    
+    /**
      * Split a coin by the provided amounts.
      */
     fun `splitCoins`(`coin`: ObjectId, `amounts`: List<kotlin.ULong>, `names`: List<kotlin.String> = listOf()): TransactionBuilder
@@ -35792,6 +35816,11 @@ public interface TransactionBuilderInterface {
      * Set the sponsor of the transaction.
      */
     fun `sponsor`(`sponsor`: Address): TransactionBuilder
+    
+    /**
+     * Transfer IOTA to a recipient address.
+     */
+    fun `transferIota`(`recipient`: Address, `amount`: kotlin.ULong? = null): TransactionBuilder
     
     /**
      * Transfer a list of objects to the given address, without producing any
@@ -36152,6 +36181,22 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
+     * Transfer some coins to a recipient address. If multiple coins are
+     * provided then they will be merged.
+     */override fun `sendCoins`(`coins`: List<ObjectId>, `recipient`: Address, `amount`: kotlin.ULong?): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(
+        it, FfiConverterSequenceTypeObjectId.lower(`coins`),FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalULong.lower(`amount`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Split a coin by the provided amounts.
      */override fun `splitCoins`(`coin`: ObjectId, `amounts`: List<kotlin.ULong>, `names`: List<kotlin.String>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
@@ -36174,6 +36219,21 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(
         it, FfiConverterTypeAddress.lower(`sponsor`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Transfer IOTA to a recipient address.
+     */override fun `transferIota`(`recipient`: Address, `amount`: kotlin.ULong?): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_iota(
+        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalULong.lower(`amount`),_status)
 }
     }
     )

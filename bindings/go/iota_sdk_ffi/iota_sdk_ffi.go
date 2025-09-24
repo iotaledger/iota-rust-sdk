@@ -3492,6 +3492,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins()
+	})
+	if checksum != 15827 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins()
 	})
 	if checksum != 34656 {
@@ -3506,6 +3515,15 @@ func uniffiCheckChecksums() {
 	if checksum != 25655 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_iota()
+	})
+	if checksum != 18967 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_iota: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -19871,10 +19889,15 @@ type TransactionBuilderInterface interface {
 	// - `dependencies`: is the list of IDs of the transitive dependencies of
 	// the package
 	Publish(modules [][]byte, dependencies []*ObjectId, upgradeCapName string) *TransactionBuilder
+	// Transfer some coins to a recipient address. If multiple coins are
+	// provided then they will be merged.
+	SendCoins(coins []*ObjectId, recipient *Address, amount *uint64) *TransactionBuilder
 	// Split a coin by the provided amounts.
 	SplitCoins(coin *ObjectId, amounts []uint64, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
 	Sponsor(sponsor *Address) *TransactionBuilder
+	// Transfer IOTA to a recipient address.
+	TransferIota(recipient *Address, amount *uint64) *TransactionBuilder
 	// Transfer a list of objects to the given address, without producing any
 	// result.
 	TransferObjects(recipient *Address, objects []*PtbArgument) *TransactionBuilder
@@ -20156,6 +20179,17 @@ func (_self *TransactionBuilder) Publish(modules [][]byte, dependencies []*Objec
 	}))
 }
 
+// Transfer some coins to a recipient address. If multiple coins are
+// provided then they will be merged.
+func (_self *TransactionBuilder) SendCoins(coins []*ObjectId, recipient *Address, amount *uint64) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(
+		_pointer,FfiConverterSequenceObjectIdINSTANCE.Lower(coins), FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterOptionalUint64INSTANCE.Lower(amount),_uniffiStatus)
+	}))
+}
+
 // Split a coin by the provided amounts.
 func (_self *TransactionBuilder) SplitCoins(coin *ObjectId, amounts []uint64, names []string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
@@ -20173,6 +20207,16 @@ func (_self *TransactionBuilder) Sponsor(sponsor *Address) *TransactionBuilder {
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(
 		_pointer,FfiConverterAddressINSTANCE.Lower(sponsor),_uniffiStatus)
+	}))
+}
+
+// Transfer IOTA to a recipient address.
+func (_self *TransactionBuilder) TransferIota(recipient *Address, amount *uint64) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_iota(
+		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterOptionalUint64INSTANCE.Lower(amount),_uniffiStatus)
 	}))
 }
 

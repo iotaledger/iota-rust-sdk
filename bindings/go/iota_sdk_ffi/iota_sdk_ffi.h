@@ -3801,6 +3801,11 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(void* ptr, void
 void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(void* ptr, RustBuffer modules, RustBuffer dependencies, RustBuffer upgrade_cap_name, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SEND_COINS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SEND_COINS
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(void* ptr, RustBuffer coins, void* recipient, RustBuffer amount, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SPLIT_COINS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SPLIT_COINS
 void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(void* ptr, void* coin, RustBuffer amounts, RustBuffer names, RustCallStatus *out_status
@@ -3809,6 +3814,11 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(void* ptr, vo
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SPONSOR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SPONSOR
 void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(void* ptr, void* sponsor, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_TRANSFER_IOTA
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_TRANSFER_IOTA
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_iota(void* ptr, void* recipient, RustBuffer amount, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_TRANSFER_OBJECTS
@@ -7026,6 +7036,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_SEND_COINS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_SEND_COINS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_SPLIT_COINS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_SPLIT_COINS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins(void
@@ -7035,6 +7051,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_SPONSOR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_SPONSOR
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_TRANSFER_IOTA
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_TRANSFER_IOTA
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_iota(void
     
 );
 #endif
