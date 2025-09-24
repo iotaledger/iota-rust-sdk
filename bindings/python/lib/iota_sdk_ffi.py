@@ -13966,7 +13966,7 @@ class _UniffiConverterTypeZkLoginClaim(_UniffiConverterRustBuffer):
 
 
 class BatchSendStatusType(enum.Enum):
-    INPROGRESS = 0
+    IN_PROGRESS = 0
     
     SUCCEEDED = 1
     
@@ -13979,7 +13979,7 @@ class _UniffiConverterTypeBatchSendStatusType(_UniffiConverterRustBuffer):
     def read(buf):
         variant = buf.read_i32()
         if variant == 1:
-            return BatchSendStatusType.INPROGRESS
+            return BatchSendStatusType.IN_PROGRESS
         if variant == 2:
             return BatchSendStatusType.SUCCEEDED
         if variant == 3:
@@ -13988,7 +13988,7 @@ class _UniffiConverterTypeBatchSendStatusType(_UniffiConverterRustBuffer):
 
     @staticmethod
     def check_lower(value):
-        if value == BatchSendStatusType.INPROGRESS:
+        if value == BatchSendStatusType.IN_PROGRESS:
             return
         if value == BatchSendStatusType.SUCCEEDED:
             return
@@ -13998,7 +13998,7 @@ class _UniffiConverterTypeBatchSendStatusType(_UniffiConverterRustBuffer):
 
     @staticmethod
     def write(value, buf):
-        if value == BatchSendStatusType.INPROGRESS:
+        if value == BatchSendStatusType.IN_PROGRESS:
             buf.write_i32(1)
         if value == BatchSendStatusType.SUCCEEDED:
             buf.write_i32(2)

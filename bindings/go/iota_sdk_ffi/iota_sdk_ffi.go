@@ -27215,7 +27215,7 @@ func (_ FfiDestroyerZkLoginClaim) Destroy(value ZkLoginClaim) {
 type BatchSendStatusType uint
 
 const (
-	BatchSendStatusTypeInprogress BatchSendStatusType = 1
+	BatchSendStatusTypeInProgress BatchSendStatusType = 1
 	BatchSendStatusTypeSucceeded BatchSendStatusType = 2
 	BatchSendStatusTypeDiscarded BatchSendStatusType = 3
 )

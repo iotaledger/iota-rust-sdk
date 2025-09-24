@@ -81,7 +81,7 @@ impl FaucetClient {
 
 #[derive(uniffi::Enum)]
 pub enum BatchSendStatusType {
-    Inprogress,
+    InProgress,
     Succeeded,
     Discarded,
 }
@@ -89,7 +89,7 @@ pub enum BatchSendStatusType {
 impl From<iota_graphql_client::faucet::BatchSendStatusType> for BatchSendStatusType {
     fn from(value: iota_graphql_client::faucet::BatchSendStatusType) -> Self {
         match value {
-            iota_graphql_client::faucet::BatchSendStatusType::Inprogress => Self::Inprogress,
+            iota_graphql_client::faucet::BatchSendStatusType::InProgress => Self::InProgress,
             iota_graphql_client::faucet::BatchSendStatusType::Succeeded => Self::Succeeded,
             iota_graphql_client::faucet::BatchSendStatusType::Discarded => Self::Discarded,
         }
@@ -99,7 +99,7 @@ impl From<iota_graphql_client::faucet::BatchSendStatusType> for BatchSendStatusT
 impl From<BatchSendStatusType> for iota_graphql_client::faucet::BatchSendStatusType {
     fn from(value: BatchSendStatusType) -> Self {
         match value {
-            BatchSendStatusType::Inprogress => Self::Inprogress,
+            BatchSendStatusType::InProgress => Self::InProgress,
             BatchSendStatusType::Succeeded => Self::Succeeded,
             BatchSendStatusType::Discarded => Self::Discarded,
         }

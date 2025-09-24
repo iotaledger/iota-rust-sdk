@@ -46995,7 +46995,7 @@ public object FfiConverterTypeZkLoginClaim: FfiConverterRustBuffer<ZkLoginClaim>
 
 enum class BatchSendStatusType {
     
-    INPROGRESS,
+    IN_PROGRESS,
     SUCCEEDED,
     DISCARDED;
     companion object
