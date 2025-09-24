@@ -198,12 +198,20 @@ impl TransactionBuilder<()> {
         }
     }
 
-    /// Set the gas coins that will be consumed. Optional.
+    /// Add a gas coin that will be consumed. Optional.
     pub fn gas(&mut self, obj_ref: ObjectReference) -> &mut Self {
         self.set_input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
             true,
         );
+        self
+    }
+
+    /// Add multiple gas coins that will be consumed. Optional.
+    pub fn gas_coins(&mut self, obj_refs: impl IntoIterator<Item = ObjectReference>) -> &mut Self {
+        for obj_ref in obj_refs {
+            self.gas(obj_ref);
+        }
         self
     }
 
@@ -369,9 +377,17 @@ impl TransactionBuilder<Client> {
         &self.client
     }
 
-    /// Set the gas coins that will be consumed. Optional.
+    /// Add a gas coin that will be consumed. Optional.
     pub fn gas(&mut self, object_id: ObjectId) -> &mut Self {
         self.set_input(InputKind::ImmutableOrOwned(object_id), true);
+        self
+    }
+
+    /// Add multiple gas coins that will be consumed. Optional.
+    pub fn gas_coins(&mut self, obj_ids: impl IntoIterator<Item = ObjectId>) -> &mut Self {
+        for id in obj_ids {
+            self.gas(id);
+        }
         self
     }
 
