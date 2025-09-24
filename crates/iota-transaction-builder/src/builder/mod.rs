@@ -339,12 +339,40 @@ impl<L> TransactionBuilder<(), L> {
         self
     }
 
+    /// Transfer some coin value to a recipient address.
+    pub fn transfer_value(
+        &mut self,
+        coin: ObjectReference,
+        recipient: Address,
+        amount: impl Into<Option<u64>> + Send,
+    ) -> &mut TransactionBuilder {
+        let rec_arg = self.pure(recipient);
+        let coin = self.set_input(
+            InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
+            false,
+        );
+        let coin_arg = if let Some(amount) = amount.into() {
+            let amt_arg = self.pure(amount);
+            self.command(Command::SplitCoins(SplitCoins {
+                coin,
+                amounts: vec![amt_arg],
+            }))
+        } else {
+            coin
+        };
+        self.command(Command::TransferObjects(TransferObjects {
+            objects: vec![coin_arg],
+            address: rec_arg,
+        }));
+        self.reset()
+    }
+
     /// Merge multiple coins into one.
     pub fn merge_coins(
         &mut self,
         primary_coin: ObjectReference,
         consumed_coins: impl IntoIterator<Item = ObjectReference> + Send,
-    ) -> &mut TransactionBuilder<()> {
+    ) -> &mut TransactionBuilder {
         let primary_coin = self.set_input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(primary_coin)),
             false,
@@ -385,7 +413,7 @@ impl<L> TransactionBuilder<(), L> {
         &mut self,
         recipient: Address,
         objects: impl IntoIterator<Item = ObjectReference>,
-    ) -> &mut TransactionBuilder<()> {
+    ) -> &mut TransactionBuilder {
         let objects = objects
             .into_iter()
             .map(|o| {
@@ -488,6 +516,31 @@ impl<L> TransactionBuilder<Client, L> {
             self.gas(id);
         }
         self
+    }
+
+    /// Transfer some coin value to a recipient address.
+    pub fn transfer_value(
+        &mut self,
+        coin: ObjectId,
+        recipient: Address,
+        amount: impl Into<Option<u64>> + Send,
+    ) -> &mut TransactionBuilder<Client> {
+        let rec_arg = self.pure(recipient);
+        let coin = self.set_input(InputKind::ImmutableOrOwned(coin), false);
+        let coin_arg = if let Some(amount) = amount.into() {
+            let amt_arg = self.pure(amount);
+            self.command(Command::SplitCoins(SplitCoins {
+                coin,
+                amounts: vec![amt_arg],
+            }))
+        } else {
+            coin
+        };
+        self.command(Command::TransferObjects(TransferObjects {
+            objects: vec![coin_arg],
+            address: rec_arg,
+        }));
+        self.reset()
     }
 
     /// Transfer objects to a recipient address.
@@ -798,7 +851,7 @@ impl<C> TransactionBuilder<C, MoveCall> {
 impl TransactionBuilder<(), Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
-    pub fn package_id(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<()> {
+    pub fn package_id(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder {
         let cap = self.arg();
         self.move_call(Address::TWO, "package", "upgrade_package")
             .params([cap])
