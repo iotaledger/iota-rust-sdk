@@ -339,27 +339,60 @@ impl<L> TransactionBuilder<(), L> {
         self
     }
 
-    /// Transfer some coin value to a recipient address.
-    pub fn transfer_value(
+    /// Transfer some coins to a recipient address. If multiple coins are
+    /// provided then they will be merged.
+    pub fn send_coins(
         &mut self,
-        coin: ObjectReference,
+        coins: impl IntoIterator<Item = ObjectReference>,
         recipient: Address,
         amount: impl Into<Option<u64>> + Send,
     ) -> &mut TransactionBuilder {
-        let rec_arg = self.pure(recipient);
-        let coin = self.set_input(
-            InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
-            false,
-        );
-        let coin_arg = if let Some(amount) = amount.into() {
-            let amt_arg = self.pure(amount);
-            self.command(Command::SplitCoins(SplitCoins {
-                coin,
-                amounts: vec![amt_arg],
-            }))
+        let mut coins = coins.into_iter().collect::<Vec<_>>();
+        let coin_arg = if coins.is_empty() {
+            return self.reset();
+        } else if coins.len() == 1 {
+            let coin = self.set_input(
+                InputKind::Input(iota_types::Input::ImmutableOrOwned(coins.pop().unwrap())),
+                false,
+            );
+            if let Some(amount) = amount.into() {
+                let amt_arg = self.pure(amount);
+                self.command(Command::SplitCoins(SplitCoins {
+                    coin,
+                    amounts: vec![amt_arg],
+                }))
+            } else {
+                coin
+            }
         } else {
-            coin
+            let primary_coin = self.set_input(
+                InputKind::Input(iota_types::Input::ImmutableOrOwned(coins.pop().unwrap())),
+                false,
+            );
+            let coins_to_merge = coins
+                .into_iter()
+                .map(|coin| {
+                    self.set_input(
+                        InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
+                        false,
+                    )
+                })
+                .collect();
+            let coin_arg = self.command(Command::MergeCoins(MergeCoins {
+                coin: primary_coin,
+                coins_to_merge,
+            }));
+            if let Some(amount) = amount.into() {
+                let amt_arg = self.pure(amount);
+                self.command(Command::SplitCoins(SplitCoins {
+                    coin: coin_arg,
+                    amounts: vec![amt_arg],
+                }))
+            } else {
+                coin_arg
+            }
         };
+        let rec_arg = self.pure(recipient);
         self.command(Command::TransferObjects(TransferObjects {
             objects: vec![coin_arg],
             address: rec_arg,
@@ -518,24 +551,50 @@ impl<L> TransactionBuilder<Client, L> {
         self
     }
 
-    /// Transfer some coin value to a recipient address.
-    pub fn transfer_value(
+    /// Transfer some coins to a recipient address. If multiple coins are
+    /// provided then they will be merged.
+    pub fn send_coins(
         &mut self,
-        coin: ObjectId,
+        coins: impl IntoIterator<Item = ObjectId>,
         recipient: Address,
         amount: impl Into<Option<u64>> + Send,
     ) -> &mut TransactionBuilder<Client> {
-        let rec_arg = self.pure(recipient);
-        let coin = self.set_input(InputKind::ImmutableOrOwned(coin), false);
-        let coin_arg = if let Some(amount) = amount.into() {
-            let amt_arg = self.pure(amount);
-            self.command(Command::SplitCoins(SplitCoins {
-                coin,
-                amounts: vec![amt_arg],
-            }))
+        let mut coins = coins.into_iter().collect::<Vec<_>>();
+        let coin_arg = if coins.is_empty() {
+            return self.reset();
+        } else if coins.len() == 1 {
+            let coin = self.set_input(InputKind::ImmutableOrOwned(coins.pop().unwrap()), false);
+            if let Some(amount) = amount.into() {
+                let amt_arg = self.pure(amount);
+                self.command(Command::SplitCoins(SplitCoins {
+                    coin,
+                    amounts: vec![amt_arg],
+                }))
+            } else {
+                coin
+            }
         } else {
-            coin
+            let primary_coin =
+                self.set_input(InputKind::ImmutableOrOwned(coins.pop().unwrap()), false);
+            let coins_to_merge = coins
+                .into_iter()
+                .map(|coin| self.set_input(InputKind::ImmutableOrOwned(coin), false))
+                .collect();
+            let coin_arg = self.command(Command::MergeCoins(MergeCoins {
+                coin: primary_coin,
+                coins_to_merge,
+            }));
+            if let Some(amount) = amount.into() {
+                let amt_arg = self.pure(amount);
+                self.command(Command::SplitCoins(SplitCoins {
+                    coin: coin_arg,
+                    amounts: vec![amt_arg],
+                }))
+            } else {
+                coin_arg
+            }
         };
+        let rec_arg = self.pure(recipient);
         self.command(Command::TransferObjects(TransferObjects {
             objects: vec![coin_arg],
             address: rec_arg,
