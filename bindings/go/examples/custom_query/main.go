@@ -33,8 +33,7 @@ func main() {
 	}
 	fmt.Println(res1)
 
-	variablesJson := `{"id": 1}`
-	variables := string(variablesJson)
+	variables := []sdk.CustomQueryVariable{sdk.CustomQueryVariableEpoch{Id: 1}}
 	queryEpochDataWithVariables := sdk.CustomQuery{
 		Query:     queryEpochDataStr,
 		Variables: &variables,

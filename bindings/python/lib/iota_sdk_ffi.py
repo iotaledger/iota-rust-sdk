@@ -9363,8 +9363,8 @@ class _UniffiConverterTypeCoinPage(_UniffiConverterRustBuffer):
 
 class CustomQuery:
     query: "str"
-    variables: "typing.Optional[Value]"
-    def __init__(self, *, query: "str", variables: "typing.Optional[Value]" = _DEFAULT):
+    variables: "typing.Optional[typing.List[CustomQueryVariable]]"
+    def __init__(self, *, query: "str", variables: "typing.Optional[typing.List[CustomQueryVariable]]" = _DEFAULT):
         self.query = query
         if variables is _DEFAULT:
             self.variables = None
@@ -9386,18 +9386,18 @@ class _UniffiConverterTypeCustomQuery(_UniffiConverterRustBuffer):
     def read(buf):
         return CustomQuery(
             query=_UniffiConverterString.read(buf),
-            variables=_UniffiConverterOptionalTypeValue.read(buf),
+            variables=_UniffiConverterOptionalSequenceTypeCustomQueryVariable.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
         _UniffiConverterString.check_lower(value.query)
-        _UniffiConverterOptionalTypeValue.check_lower(value.variables)
+        _UniffiConverterOptionalSequenceTypeCustomQueryVariable.check_lower(value.variables)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterString.write(value.query, buf)
-        _UniffiConverterOptionalTypeValue.write(value.variables, buf)
+        _UniffiConverterOptionalSequenceTypeCustomQueryVariable.write(value.variables, buf)
 
 
 class DryRunResult:
@@ -14320,6 +14320,694 @@ class _UniffiConverterTypeCommandArgumentError(_UniffiConverterRustBuffer):
 
 
 
+class CustomQueryVariable:
+    def __init__(self):
+        raise RuntimeError("CustomQueryVariable cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class TX_BYTES:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.TX_BYTES{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_TX_BYTES():
+                return False
+            return self._values == other._values
+    class TRANSACTION_METADATA:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.TRANSACTION_METADATA{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_TRANSACTION_METADATA():
+                return False
+            return self._values == other._values
+    class ADDRESS:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.ADDRESS{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_ADDRESS():
+                return False
+            return self._values == other._values
+    class ROOT_VERSION:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.ROOT_VERSION{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_ROOT_VERSION():
+                return False
+            return self._values == other._values
+    class SKIP_CHECKS:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.SKIP_CHECKS{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_SKIP_CHECKS():
+                return False
+            return self._values == other._values
+    class VERSION:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.VERSION{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_VERSION():
+                return False
+            return self._values == other._values
+    class TYPE:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.TYPE{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_TYPE():
+                return False
+            return self._values == other._values
+    class EPOCH:
+        id: "int"
+
+        def __init__(self,id: "int"):
+            self.id = id
+
+        def __str__(self):
+            return "CustomQueryVariable.EPOCH(id={})".format(self.id)
+
+        def __eq__(self, other):
+            if not other.is_EPOCH():
+                return False
+            if self.id != other.id:
+                return False
+            return True
+    
+    class CHECKPOINT:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.CHECKPOINT{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_CHECKPOINT():
+                return False
+            return self._values == other._values
+    class DIGEST:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.DIGEST{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_DIGEST():
+                return False
+            return self._values == other._values
+    class FIRST:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.FIRST{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_FIRST():
+                return False
+            return self._values == other._values
+    class LAST:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.LAST{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_LAST():
+                return False
+            return self._values == other._values
+    class AFTER:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.AFTER{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_AFTER():
+                return False
+            return self._values == other._values
+    class BEFORE:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.BEFORE{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_BEFORE():
+                return False
+            return self._values == other._values
+    class PROTOCOL_VERSION:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.PROTOCOL_VERSION{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_PROTOCOL_VERSION():
+                return False
+            return self._values == other._values
+    class NAME:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.NAME{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_NAME():
+                return False
+            return self._values == other._values
+    class COIN_TYPE:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.COIN_TYPE{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_COIN_TYPE():
+                return False
+            return self._values == other._values
+    class BYTES:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.BYTES{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_BYTES():
+                return False
+            return self._values == other._values
+    class SIGNATURE:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.SIGNATURE{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_SIGNATURE():
+                return False
+            return self._values == other._values
+    class INTENT_SCOPE:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.INTENT_SCOPE{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_INTENT_SCOPE():
+                return False
+            return self._values == other._values
+    class AUTHOR:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"CustomQueryVariable.AUTHOR{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_AUTHOR():
+                return False
+            return self._values == other._values
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_TX_BYTES(self) -> bool:
+        return isinstance(self, CustomQueryVariable.TX_BYTES)
+    def is_tx_bytes(self) -> bool:
+        return isinstance(self, CustomQueryVariable.TX_BYTES)
+    def is_TRANSACTION_METADATA(self) -> bool:
+        return isinstance(self, CustomQueryVariable.TRANSACTION_METADATA)
+    def is_transaction_metadata(self) -> bool:
+        return isinstance(self, CustomQueryVariable.TRANSACTION_METADATA)
+    def is_ADDRESS(self) -> bool:
+        return isinstance(self, CustomQueryVariable.ADDRESS)
+    def is_address(self) -> bool:
+        return isinstance(self, CustomQueryVariable.ADDRESS)
+    def is_ROOT_VERSION(self) -> bool:
+        return isinstance(self, CustomQueryVariable.ROOT_VERSION)
+    def is_root_version(self) -> bool:
+        return isinstance(self, CustomQueryVariable.ROOT_VERSION)
+    def is_SKIP_CHECKS(self) -> bool:
+        return isinstance(self, CustomQueryVariable.SKIP_CHECKS)
+    def is_skip_checks(self) -> bool:
+        return isinstance(self, CustomQueryVariable.SKIP_CHECKS)
+    def is_VERSION(self) -> bool:
+        return isinstance(self, CustomQueryVariable.VERSION)
+    def is_version(self) -> bool:
+        return isinstance(self, CustomQueryVariable.VERSION)
+    def is_TYPE(self) -> bool:
+        return isinstance(self, CustomQueryVariable.TYPE)
+    def is_type(self) -> bool:
+        return isinstance(self, CustomQueryVariable.TYPE)
+    def is_EPOCH(self) -> bool:
+        return isinstance(self, CustomQueryVariable.EPOCH)
+    def is_epoch(self) -> bool:
+        return isinstance(self, CustomQueryVariable.EPOCH)
+    def is_CHECKPOINT(self) -> bool:
+        return isinstance(self, CustomQueryVariable.CHECKPOINT)
+    def is_checkpoint(self) -> bool:
+        return isinstance(self, CustomQueryVariable.CHECKPOINT)
+    def is_DIGEST(self) -> bool:
+        return isinstance(self, CustomQueryVariable.DIGEST)
+    def is_digest(self) -> bool:
+        return isinstance(self, CustomQueryVariable.DIGEST)
+    def is_FIRST(self) -> bool:
+        return isinstance(self, CustomQueryVariable.FIRST)
+    def is_first(self) -> bool:
+        return isinstance(self, CustomQueryVariable.FIRST)
+    def is_LAST(self) -> bool:
+        return isinstance(self, CustomQueryVariable.LAST)
+    def is_last(self) -> bool:
+        return isinstance(self, CustomQueryVariable.LAST)
+    def is_AFTER(self) -> bool:
+        return isinstance(self, CustomQueryVariable.AFTER)
+    def is_after(self) -> bool:
+        return isinstance(self, CustomQueryVariable.AFTER)
+    def is_BEFORE(self) -> bool:
+        return isinstance(self, CustomQueryVariable.BEFORE)
+    def is_before(self) -> bool:
+        return isinstance(self, CustomQueryVariable.BEFORE)
+    def is_PROTOCOL_VERSION(self) -> bool:
+        return isinstance(self, CustomQueryVariable.PROTOCOL_VERSION)
+    def is_protocol_version(self) -> bool:
+        return isinstance(self, CustomQueryVariable.PROTOCOL_VERSION)
+    def is_NAME(self) -> bool:
+        return isinstance(self, CustomQueryVariable.NAME)
+    def is_name(self) -> bool:
+        return isinstance(self, CustomQueryVariable.NAME)
+    def is_COIN_TYPE(self) -> bool:
+        return isinstance(self, CustomQueryVariable.COIN_TYPE)
+    def is_coin_type(self) -> bool:
+        return isinstance(self, CustomQueryVariable.COIN_TYPE)
+    def is_BYTES(self) -> bool:
+        return isinstance(self, CustomQueryVariable.BYTES)
+    def is_bytes(self) -> bool:
+        return isinstance(self, CustomQueryVariable.BYTES)
+    def is_SIGNATURE(self) -> bool:
+        return isinstance(self, CustomQueryVariable.SIGNATURE)
+    def is_signature(self) -> bool:
+        return isinstance(self, CustomQueryVariable.SIGNATURE)
+    def is_INTENT_SCOPE(self) -> bool:
+        return isinstance(self, CustomQueryVariable.INTENT_SCOPE)
+    def is_intent_scope(self) -> bool:
+        return isinstance(self, CustomQueryVariable.INTENT_SCOPE)
+    def is_AUTHOR(self) -> bool:
+        return isinstance(self, CustomQueryVariable.AUTHOR)
+    def is_author(self) -> bool:
+        return isinstance(self, CustomQueryVariable.AUTHOR)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+CustomQueryVariable.TX_BYTES = type("CustomQueryVariable.TX_BYTES", (CustomQueryVariable.TX_BYTES, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.TRANSACTION_METADATA = type("CustomQueryVariable.TRANSACTION_METADATA", (CustomQueryVariable.TRANSACTION_METADATA, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.ADDRESS = type("CustomQueryVariable.ADDRESS", (CustomQueryVariable.ADDRESS, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.ROOT_VERSION = type("CustomQueryVariable.ROOT_VERSION", (CustomQueryVariable.ROOT_VERSION, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.SKIP_CHECKS = type("CustomQueryVariable.SKIP_CHECKS", (CustomQueryVariable.SKIP_CHECKS, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.VERSION = type("CustomQueryVariable.VERSION", (CustomQueryVariable.VERSION, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.TYPE = type("CustomQueryVariable.TYPE", (CustomQueryVariable.TYPE, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.EPOCH = type("CustomQueryVariable.EPOCH", (CustomQueryVariable.EPOCH, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.CHECKPOINT = type("CustomQueryVariable.CHECKPOINT", (CustomQueryVariable.CHECKPOINT, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.DIGEST = type("CustomQueryVariable.DIGEST", (CustomQueryVariable.DIGEST, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.FIRST = type("CustomQueryVariable.FIRST", (CustomQueryVariable.FIRST, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.LAST = type("CustomQueryVariable.LAST", (CustomQueryVariable.LAST, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.AFTER = type("CustomQueryVariable.AFTER", (CustomQueryVariable.AFTER, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.BEFORE = type("CustomQueryVariable.BEFORE", (CustomQueryVariable.BEFORE, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.PROTOCOL_VERSION = type("CustomQueryVariable.PROTOCOL_VERSION", (CustomQueryVariable.PROTOCOL_VERSION, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.NAME = type("CustomQueryVariable.NAME", (CustomQueryVariable.NAME, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.COIN_TYPE = type("CustomQueryVariable.COIN_TYPE", (CustomQueryVariable.COIN_TYPE, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.BYTES = type("CustomQueryVariable.BYTES", (CustomQueryVariable.BYTES, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.SIGNATURE = type("CustomQueryVariable.SIGNATURE", (CustomQueryVariable.SIGNATURE, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.INTENT_SCOPE = type("CustomQueryVariable.INTENT_SCOPE", (CustomQueryVariable.INTENT_SCOPE, CustomQueryVariable,), {})  # type: ignore
+CustomQueryVariable.AUTHOR = type("CustomQueryVariable.AUTHOR", (CustomQueryVariable.AUTHOR, CustomQueryVariable,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeCustomQueryVariable(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return CustomQueryVariable.TX_BYTES(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 2:
+            return CustomQueryVariable.TRANSACTION_METADATA(
+                _UniffiConverterBool.read(buf),
+            )
+        if variant == 3:
+            return CustomQueryVariable.ADDRESS(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 4:
+            return CustomQueryVariable.ROOT_VERSION(
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 5:
+            return CustomQueryVariable.SKIP_CHECKS(
+                _UniffiConverterBool.read(buf),
+            )
+        if variant == 6:
+            return CustomQueryVariable.VERSION(
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 7:
+            return CustomQueryVariable.TYPE(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 8:
+            return CustomQueryVariable.EPOCH(
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 9:
+            return CustomQueryVariable.CHECKPOINT(
+                _UniffiConverterBool.read(buf),
+            )
+        if variant == 10:
+            return CustomQueryVariable.DIGEST(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 11:
+            return CustomQueryVariable.FIRST(
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 12:
+            return CustomQueryVariable.LAST(
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 13:
+            return CustomQueryVariable.AFTER(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 14:
+            return CustomQueryVariable.BEFORE(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 15:
+            return CustomQueryVariable.PROTOCOL_VERSION(
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 16:
+            return CustomQueryVariable.NAME(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 17:
+            return CustomQueryVariable.COIN_TYPE(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 18:
+            return CustomQueryVariable.BYTES(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 19:
+            return CustomQueryVariable.SIGNATURE(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 20:
+            return CustomQueryVariable.INTENT_SCOPE(
+                _UniffiConverterBool.read(buf),
+            )
+        if variant == 21:
+            return CustomQueryVariable.AUTHOR(
+                _UniffiConverterString.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_TX_BYTES():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        if value.is_TRANSACTION_METADATA():
+            _UniffiConverterBool.check_lower(value._values[0])
+            return
+        if value.is_ADDRESS():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        if value.is_ROOT_VERSION():
+            _UniffiConverterUInt64.check_lower(value._values[0])
+            return
+        if value.is_SKIP_CHECKS():
+            _UniffiConverterBool.check_lower(value._values[0])
+            return
+        if value.is_VERSION():
+            _UniffiConverterUInt64.check_lower(value._values[0])
+            return
+        if value.is_TYPE():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        if value.is_EPOCH():
+            _UniffiConverterUInt64.check_lower(value.id)
+            return
+        if value.is_CHECKPOINT():
+            _UniffiConverterBool.check_lower(value._values[0])
+            return
+        if value.is_DIGEST():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        if value.is_FIRST():
+            _UniffiConverterUInt64.check_lower(value._values[0])
+            return
+        if value.is_LAST():
+            _UniffiConverterUInt64.check_lower(value._values[0])
+            return
+        if value.is_AFTER():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        if value.is_BEFORE():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        if value.is_PROTOCOL_VERSION():
+            _UniffiConverterUInt64.check_lower(value._values[0])
+            return
+        if value.is_NAME():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        if value.is_COIN_TYPE():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        if value.is_BYTES():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        if value.is_SIGNATURE():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        if value.is_INTENT_SCOPE():
+            _UniffiConverterBool.check_lower(value._values[0])
+            return
+        if value.is_AUTHOR():
+            _UniffiConverterString.check_lower(value._values[0])
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_TX_BYTES():
+            buf.write_i32(1)
+            _UniffiConverterString.write(value._values[0], buf)
+        if value.is_TRANSACTION_METADATA():
+            buf.write_i32(2)
+            _UniffiConverterBool.write(value._values[0], buf)
+        if value.is_ADDRESS():
+            buf.write_i32(3)
+            _UniffiConverterString.write(value._values[0], buf)
+        if value.is_ROOT_VERSION():
+            buf.write_i32(4)
+            _UniffiConverterUInt64.write(value._values[0], buf)
+        if value.is_SKIP_CHECKS():
+            buf.write_i32(5)
+            _UniffiConverterBool.write(value._values[0], buf)
+        if value.is_VERSION():
+            buf.write_i32(6)
+            _UniffiConverterUInt64.write(value._values[0], buf)
+        if value.is_TYPE():
+            buf.write_i32(7)
+            _UniffiConverterString.write(value._values[0], buf)
+        if value.is_EPOCH():
+            buf.write_i32(8)
+            _UniffiConverterUInt64.write(value.id, buf)
+        if value.is_CHECKPOINT():
+            buf.write_i32(9)
+            _UniffiConverterBool.write(value._values[0], buf)
+        if value.is_DIGEST():
+            buf.write_i32(10)
+            _UniffiConverterString.write(value._values[0], buf)
+        if value.is_FIRST():
+            buf.write_i32(11)
+            _UniffiConverterUInt64.write(value._values[0], buf)
+        if value.is_LAST():
+            buf.write_i32(12)
+            _UniffiConverterUInt64.write(value._values[0], buf)
+        if value.is_AFTER():
+            buf.write_i32(13)
+            _UniffiConverterString.write(value._values[0], buf)
+        if value.is_BEFORE():
+            buf.write_i32(14)
+            _UniffiConverterString.write(value._values[0], buf)
+        if value.is_PROTOCOL_VERSION():
+            buf.write_i32(15)
+            _UniffiConverterUInt64.write(value._values[0], buf)
+        if value.is_NAME():
+            buf.write_i32(16)
+            _UniffiConverterString.write(value._values[0], buf)
+        if value.is_COIN_TYPE():
+            buf.write_i32(17)
+            _UniffiConverterString.write(value._values[0], buf)
+        if value.is_BYTES():
+            buf.write_i32(18)
+            _UniffiConverterString.write(value._values[0], buf)
+        if value.is_SIGNATURE():
+            buf.write_i32(19)
+            _UniffiConverterString.write(value._values[0], buf)
+        if value.is_INTENT_SCOPE():
+            buf.write_i32(20)
+            _UniffiConverterBool.write(value._values[0], buf)
+        if value.is_AUTHOR():
+            buf.write_i32(21)
+            _UniffiConverterString.write(value._values[0], buf)
+
+
+
+
+
+
+
 class Direction(enum.Enum):
     """
     Pagination direction.
@@ -19065,6 +19753,33 @@ class _UniffiConverterOptionalSequenceTypeOpenMoveType(_UniffiConverterRustBuffe
 
 
 
+class _UniffiConverterOptionalSequenceTypeCustomQueryVariable(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeCustomQueryVariable.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeCustomQueryVariable.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeCustomQueryVariable.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -20469,6 +21184,31 @@ class _UniffiConverterSequenceTypeValidatorCommitteeMember(_UniffiConverterRustB
 
         return [
             _UniffiConverterTypeValidatorCommitteeMember.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeCustomQueryVariable(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeCustomQueryVariable.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeCustomQueryVariable.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeCustomQueryVariable.read(buf) for i in range(count)
         ]
 
 
@@ -38647,6 +39387,7 @@ def hex_encode(input: "bytes") -> "str":
 __all__ = [
     "InternalError",
     "CommandArgumentError",
+    "CustomQueryVariable",
     "Direction",
     "ExecutionError",
     "ExecutionStatus",

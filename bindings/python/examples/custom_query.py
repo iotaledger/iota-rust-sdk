@@ -27,10 +27,9 @@ async def main():
     res = await client.run_custom_query(query_epoch_data)
     print(res)
 
-    variables = {"id": 1}
+    variables = [CustomQueryVariable.EPOCH(1)]
     query_epoch_data_with_variables = CustomQuery(
-        query=query_epoch_data_str,
-        variables=json.dumps(variables),
+        query=query_epoch_data_str, variables=variables
     )
     res = await client.run_custom_query(query_epoch_data_with_variables)
     print(res)
@@ -45,6 +44,7 @@ async def main():
     )
     res = await client.run_custom_query(query_chain_id)
     print(res)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

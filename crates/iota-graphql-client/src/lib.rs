@@ -10,6 +10,8 @@ pub mod pagination;
 pub mod query_types;
 pub mod streams;
 
+use std::collections::HashMap;
+
 use base64ct::Encoding;
 use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::Error;
@@ -159,7 +161,33 @@ impl DynamicFieldOutput {
 pub struct UncheckedQuery {
     pub query: String,
     #[serde(default)]
-    pub variables: Option<serde_json::Value>,
+    pub variables: Option<HashMap<String, UncheckedQueryVariable>>,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(untagged)]
+pub enum UncheckedQueryVariable {
+    TxBytes(String),
+    TransactionMetadata(bool), // TODO
+    Address(String),
+    RootVersion(u64),
+    SkipChecks(bool),
+    Version(u64),
+    Type(String),
+    Epoch(u64),
+    Checkpoint(bool), // TODO
+    Digest(String),
+    First(u64),
+    Last(u64),
+    After(String),
+    Before(String),
+    ProtocolVersion(u64),
+    Name(String),
+    CoinType(String),
+    Bytes(String),
+    Signature(String),
+    IntentScope(bool), // TODO
+    Author(String),
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.

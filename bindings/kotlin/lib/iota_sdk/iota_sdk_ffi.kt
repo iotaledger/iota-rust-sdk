@@ -43308,7 +43308,7 @@ public object FfiConverterTypeCoinPage: FfiConverterRustBuffer<CoinPage> {
 
 data class CustomQuery (
     var `query`: kotlin.String, 
-    var `variables`: Value? = null
+    var `variables`: List<CustomQueryVariable>? = null
 ) {
     
     companion object
@@ -43321,18 +43321,18 @@ public object FfiConverterTypeCustomQuery: FfiConverterRustBuffer<CustomQuery> {
     override fun read(buf: ByteBuffer): CustomQuery {
         return CustomQuery(
             FfiConverterString.read(buf),
-            FfiConverterOptionalTypeValue.read(buf),
+            FfiConverterOptionalSequenceTypeCustomQueryVariable.read(buf),
         )
     }
 
     override fun allocationSize(value: CustomQuery) = (
             FfiConverterString.allocationSize(value.`query`) +
-            FfiConverterOptionalTypeValue.allocationSize(value.`variables`)
+            FfiConverterOptionalSequenceTypeCustomQueryVariable.allocationSize(value.`variables`)
     )
 
     override fun write(value: CustomQuery, buf: ByteBuffer) {
             FfiConverterString.write(value.`query`, buf)
-            FfiConverterOptionalTypeValue.write(value.`variables`, buf)
+            FfiConverterOptionalSequenceTypeCustomQueryVariable.write(value.`variables`, buf)
     }
 }
 
@@ -47472,6 +47472,456 @@ public object FfiConverterTypeCommandArgumentError : FfiConverterRustBuffer<Comm
             }
             is CommandArgumentError.SharedObjectOperationNotAllowed -> {
                 buf.putInt(12)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
+sealed class CustomQueryVariable {
+    
+    data class TxBytes(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class TransactionMetadata(
+        val v1: kotlin.Boolean) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Address(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class RootVersion(
+        val v1: kotlin.ULong) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class SkipChecks(
+        val v1: kotlin.Boolean) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Version(
+        val v1: kotlin.ULong) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Type(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Epoch(
+        val `id`: kotlin.ULong) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Checkpoint(
+        val v1: kotlin.Boolean) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Digest(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class First(
+        val v1: kotlin.ULong) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Last(
+        val v1: kotlin.ULong) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class After(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Before(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class ProtocolVersion(
+        val v1: kotlin.ULong) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Name(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class CoinType(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Bytes(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Signature(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class IntentScope(
+        val v1: kotlin.Boolean) : CustomQueryVariable() {
+        companion object
+    }
+    
+    data class Author(
+        val v1: kotlin.String) : CustomQueryVariable() {
+        companion object
+    }
+    
+
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeCustomQueryVariable : FfiConverterRustBuffer<CustomQueryVariable>{
+    override fun read(buf: ByteBuffer): CustomQueryVariable {
+        return when(buf.getInt()) {
+            1 -> CustomQueryVariable.TxBytes(
+                FfiConverterString.read(buf),
+                )
+            2 -> CustomQueryVariable.TransactionMetadata(
+                FfiConverterBoolean.read(buf),
+                )
+            3 -> CustomQueryVariable.Address(
+                FfiConverterString.read(buf),
+                )
+            4 -> CustomQueryVariable.RootVersion(
+                FfiConverterULong.read(buf),
+                )
+            5 -> CustomQueryVariable.SkipChecks(
+                FfiConverterBoolean.read(buf),
+                )
+            6 -> CustomQueryVariable.Version(
+                FfiConverterULong.read(buf),
+                )
+            7 -> CustomQueryVariable.Type(
+                FfiConverterString.read(buf),
+                )
+            8 -> CustomQueryVariable.Epoch(
+                FfiConverterULong.read(buf),
+                )
+            9 -> CustomQueryVariable.Checkpoint(
+                FfiConverterBoolean.read(buf),
+                )
+            10 -> CustomQueryVariable.Digest(
+                FfiConverterString.read(buf),
+                )
+            11 -> CustomQueryVariable.First(
+                FfiConverterULong.read(buf),
+                )
+            12 -> CustomQueryVariable.Last(
+                FfiConverterULong.read(buf),
+                )
+            13 -> CustomQueryVariable.After(
+                FfiConverterString.read(buf),
+                )
+            14 -> CustomQueryVariable.Before(
+                FfiConverterString.read(buf),
+                )
+            15 -> CustomQueryVariable.ProtocolVersion(
+                FfiConverterULong.read(buf),
+                )
+            16 -> CustomQueryVariable.Name(
+                FfiConverterString.read(buf),
+                )
+            17 -> CustomQueryVariable.CoinType(
+                FfiConverterString.read(buf),
+                )
+            18 -> CustomQueryVariable.Bytes(
+                FfiConverterString.read(buf),
+                )
+            19 -> CustomQueryVariable.Signature(
+                FfiConverterString.read(buf),
+                )
+            20 -> CustomQueryVariable.IntentScope(
+                FfiConverterBoolean.read(buf),
+                )
+            21 -> CustomQueryVariable.Author(
+                FfiConverterString.read(buf),
+                )
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: CustomQueryVariable) = when(value) {
+        is CustomQueryVariable.TxBytes -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.TransactionMetadata -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterBoolean.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Address -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.RootVersion -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.SkipChecks -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterBoolean.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Version -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Type -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Epoch -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`id`)
+            )
+        }
+        is CustomQueryVariable.Checkpoint -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterBoolean.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Digest -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.First -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Last -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.After -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Before -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.ProtocolVersion -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Name -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.CoinType -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Bytes -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Signature -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.IntentScope -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterBoolean.allocationSize(value.v1)
+            )
+        }
+        is CustomQueryVariable.Author -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+        }
+    }
+
+    override fun write(value: CustomQueryVariable, buf: ByteBuffer) {
+        when(value) {
+            is CustomQueryVariable.TxBytes -> {
+                buf.putInt(1)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.TransactionMetadata -> {
+                buf.putInt(2)
+                FfiConverterBoolean.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Address -> {
+                buf.putInt(3)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.RootVersion -> {
+                buf.putInt(4)
+                FfiConverterULong.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.SkipChecks -> {
+                buf.putInt(5)
+                FfiConverterBoolean.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Version -> {
+                buf.putInt(6)
+                FfiConverterULong.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Type -> {
+                buf.putInt(7)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Epoch -> {
+                buf.putInt(8)
+                FfiConverterULong.write(value.`id`, buf)
+                Unit
+            }
+            is CustomQueryVariable.Checkpoint -> {
+                buf.putInt(9)
+                FfiConverterBoolean.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Digest -> {
+                buf.putInt(10)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.First -> {
+                buf.putInt(11)
+                FfiConverterULong.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Last -> {
+                buf.putInt(12)
+                FfiConverterULong.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.After -> {
+                buf.putInt(13)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Before -> {
+                buf.putInt(14)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.ProtocolVersion -> {
+                buf.putInt(15)
+                FfiConverterULong.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Name -> {
+                buf.putInt(16)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.CoinType -> {
+                buf.putInt(17)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Bytes -> {
+                buf.putInt(18)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Signature -> {
+                buf.putInt(19)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.IntentScope -> {
+                buf.putInt(20)
+                FfiConverterBoolean.write(value.v1, buf)
+                Unit
+            }
+            is CustomQueryVariable.Author -> {
+                buf.putInt(21)
+                FfiConverterString.write(value.v1, buf)
                 Unit
             }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
@@ -51853,6 +52303,38 @@ public object FfiConverterOptionalSequenceTypeOpenMoveType: FfiConverterRustBuff
 /**
  * @suppress
  */
+public object FfiConverterOptionalSequenceTypeCustomQueryVariable: FfiConverterRustBuffer<List<CustomQueryVariable>?> {
+    override fun read(buf: ByteBuffer): List<CustomQueryVariable>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeCustomQueryVariable.read(buf)
+    }
+
+    override fun allocationSize(value: List<CustomQueryVariable>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeCustomQueryVariable.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<CustomQueryVariable>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeCustomQueryVariable.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalSequenceTypeMoveAbility: FfiConverterRustBuffer<List<MoveAbility>?> {
     override fun read(buf: ByteBuffer): List<MoveAbility>? {
         if (buf.get().toInt() == 0) {
@@ -53427,6 +53909,34 @@ public object FfiConverterSequenceTypeValidatorCommitteeMember: FfiConverterRust
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeValidatorCommitteeMember.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeCustomQueryVariable: FfiConverterRustBuffer<List<CustomQueryVariable>> {
+    override fun read(buf: ByteBuffer): List<CustomQueryVariable> {
+        val len = buf.getInt()
+        return List<CustomQueryVariable>(len) {
+            FfiConverterTypeCustomQueryVariable.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<CustomQueryVariable>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeCustomQueryVariable.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<CustomQueryVariable>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeCustomQueryVariable.write(it, buf)
         }
     }
 }

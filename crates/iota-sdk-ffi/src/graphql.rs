@@ -7,7 +7,7 @@ use iota_graphql_client::{
     pagination::PaginationFilter,
     query_types::{ProtocolConfigs, ServiceConfig},
 };
-use iota_types::CheckpointSequenceNumber;
+use iota_types::{CheckpointSequenceNumber, def_is};
 use tokio::sync::RwLock;
 
 use crate::{
@@ -875,14 +875,109 @@ impl GraphQLClient {
 pub struct CustomQuery {
     pub query: String,
     #[uniffi(default = None)]
-    pub variables: Option<serde_json::Value>,
+    pub variables: Option<Vec<CustomQueryVariable>>,
 }
 
 impl From<CustomQuery> for iota_graphql_client::UncheckedQuery {
     fn from(value: CustomQuery) -> Self {
+        let variables = if let Some(value) = value.variables {
+            let vars: HashMap<String, iota_graphql_client::UncheckedQueryVariable> =
+                value.into_iter().map(|v| v.into()).collect();
+            Some(vars)
+        } else {
+            None
+        };
+
         Self {
             query: value.query,
-            variables: value.variables,
+            variables,
+            // variables: value
+            //     .variables
+            //     .map(|m| m.into_iter().map(|v| v.into()))
+            //     .collect(),
         }
+    }
+}
+
+#[derive(Debug, serde::Serialize, strum::Display, uniffi::Enum)]
+#[serde(untagged)]
+pub enum CustomQueryVariable {
+    #[strum(serialize = "txBytes")]
+    TxBytes(String),
+    #[strum(serialize = "txMeta")]
+    TransactionMetadata(bool), // TODO
+    #[strum(serialize = "address")]
+    Address(String),
+    #[strum(serialize = "rootVersion")]
+    RootVersion(u64),
+    #[strum(serialize = "skipCheckes")]
+    SkipChecks(bool),
+    #[strum(serialize = "version")]
+    Version(u64),
+    #[strum(serialize = "type")]
+    Type(String),
+    #[strum(serialize = "id")]
+    Epoch { id: u64 },
+    #[strum(serialize = "id")]
+    Checkpoint(bool), // TODO
+    #[strum(serialize = "digest")]
+    Digest(String),
+    #[strum(serialize = "first")]
+    First(u64),
+    #[strum(serialize = "last")]
+    Last(u64),
+    #[strum(serialize = "after")]
+    After(String),
+    #[strum(serialize = "before")]
+    Before(String),
+    #[strum(serialize = "protocolVersion")]
+    ProtocolVersion(u64),
+    #[strum(serialize = "name")]
+    Name(String),
+    #[strum(serialize = "coinType")]
+    CoinType(String),
+    #[strum(serialize = "bytes")]
+    Bytes(String),
+    #[strum(serialize = "signature")]
+    Signature(String),
+    #[strum(serialize = "intentScope")]
+    IntentScope(bool), // TODO
+    #[strum(serialize = "author")]
+    Author(String),
+}
+
+impl From<CustomQueryVariable> for (String, iota_graphql_client::UncheckedQueryVariable) {
+    fn from(value: CustomQueryVariable) -> Self {
+        use CustomQueryVariable::*;
+        (
+            value.to_string(),
+            match value {
+                TxBytes(v) => iota_graphql_client::UncheckedQueryVariable::Address(v),
+                TransactionMetadata(v) => {
+                    iota_graphql_client::UncheckedQueryVariable::TransactionMetadata(v)
+                }
+                Address(v) => iota_graphql_client::UncheckedQueryVariable::Address(v),
+                RootVersion(v) => iota_graphql_client::UncheckedQueryVariable::RootVersion(v),
+                SkipChecks(v) => iota_graphql_client::UncheckedQueryVariable::SkipChecks(v),
+                Version(v) => iota_graphql_client::UncheckedQueryVariable::Version(v),
+                Type(v) => iota_graphql_client::UncheckedQueryVariable::Type(v),
+                Epoch { id } => iota_graphql_client::UncheckedQueryVariable::Epoch(id),
+                Checkpoint(v) => iota_graphql_client::UncheckedQueryVariable::Checkpoint(v),
+                Digest(v) => iota_graphql_client::UncheckedQueryVariable::Digest(v),
+                First(v) => iota_graphql_client::UncheckedQueryVariable::First(v),
+                Last(v) => iota_graphql_client::UncheckedQueryVariable::Last(v),
+                After(v) => iota_graphql_client::UncheckedQueryVariable::After(v),
+                Before(v) => iota_graphql_client::UncheckedQueryVariable::Before(v),
+                ProtocolVersion(v) => {
+                    iota_graphql_client::UncheckedQueryVariable::ProtocolVersion(v)
+                }
+                Name(v) => iota_graphql_client::UncheckedQueryVariable::Name(v),
+                CoinType(v) => iota_graphql_client::UncheckedQueryVariable::CoinType(v),
+                Bytes(v) => iota_graphql_client::UncheckedQueryVariable::Bytes(v),
+                Signature(v) => iota_graphql_client::UncheckedQueryVariable::Signature(v),
+                IntentScope(v) => iota_graphql_client::UncheckedQueryVariable::IntentScope(v),
+                Author(v) => iota_graphql_client::UncheckedQueryVariable::Author(v),
+            },
+        )
     }
 }
