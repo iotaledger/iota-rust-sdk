@@ -6,7 +6,7 @@ use std::str::FromStr;
 use anyhow::Result;
 use base64ct::Encoding;
 use iota_graphql_client::Client;
-use iota_transaction_builder::builder::TransactionBuilder;
+use iota_transaction_builder::TransactionBuilder;
 use iota_types::{Address, ObjectId};
 
 #[tokio::main]

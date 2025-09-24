@@ -5,7 +5,7 @@ use core::str::FromStr;
 
 use anyhow::Result;
 use iota_graphql_client::Client;
-use iota_transaction_builder::builder::TransactionBuilder;
+use iota_transaction_builder::TransactionBuilder;
 use iota_types::Address;
 
 #[tokio::main]

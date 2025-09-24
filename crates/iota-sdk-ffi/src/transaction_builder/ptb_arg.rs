@@ -82,7 +82,7 @@ impl PTBArgument {
 impl iota_transaction_builder::PTBArguments for PTBArgument {
     fn push_args(
         &self,
-        ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
+        ptb: &mut iota_transaction_builder::builder::TransactionBuildData,
         args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
     ) {
         self.0.push_args(ptb, args);
@@ -92,7 +92,7 @@ impl iota_transaction_builder::PTBArguments for PTBArgument {
 impl iota_transaction_builder::PTBArguments for &PTBArgument {
     fn push_args(
         &self,
-        ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
+        ptb: &mut iota_transaction_builder::builder::TransactionBuildData,
         args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
     ) {
         self.0.push_args(ptb, args);
@@ -104,7 +104,7 @@ pub struct PTBArgs(pub Vec<Arc<PTBArgument>>);
 impl iota_transaction_builder::PTBArguments for PTBArgs {
     fn push_args(
         &self,
-        ptb: &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
+        ptb: &mut iota_transaction_builder::builder::TransactionBuildData,
         args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
     ) {
         for arg in &self.0 {

@@ -3,7 +3,10 @@
 
 //! Builder for Programmable Transactions.
 
-use std::collections::{BTreeMap, HashMap};
+use std::{
+    collections::{BTreeMap, HashMap},
+    marker::PhantomData,
+};
 
 use iota_crypto::IotaSigner;
 use iota_graphql_client::{Client, DryRunResult};
@@ -15,24 +18,32 @@ use serde::Serialize;
 
 use crate::{
     builder::{
-        command_builder::CommandBuilder, named_commands::NamedCommands, ptb_arguments::PTBArguments,
+        named_commands::{NamedCommand, NamedCommands},
+        ptb_arguments::PTBArguments,
     },
     error::Error,
     publish_type::PublishType,
-    types::MoveType,
+    types::{MoveType, MoveTypes},
     unresolved::{
         Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
         Publish, SplitCoins, TransferObjects, Upgrade,
     },
 };
 
-mod command_builder;
 mod named_commands;
 pub(crate) mod ptb_arguments;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
-pub struct TransactionBuilder<C> {
+pub struct TransactionBuilder<C = (), L = ()> {
+    data: TransactionBuildData,
+    client: C,
+    last_command: PhantomData<L>,
+}
+
+/// Transaction data used to build a [`Transaction`].
+#[derive(Debug, Clone)]
+pub struct TransactionBuildData {
     /// The inputs to the transaction.
     inputs: BTreeMap<InputId, Input>,
     /// The list of commands in the transaction. A command is a single operation
@@ -50,57 +61,37 @@ pub struct TransactionBuilder<C> {
     /// expiration.
     expiration: TransactionExpiration,
     named_commands: HashMap<String, Argument>,
-    client: C,
 }
 
-impl<C> TransactionBuilder<C> {
-    /// Set the client to enable automatic object resolution.
-    pub fn with_client(self, client: Client) -> TransactionBuilder<Client> {
-        TransactionBuilder {
-            inputs: self.inputs,
-            commands: self.commands,
-            gas_budget: self.gas_budget,
-            gas_price: self.gas_price,
-            sender: self.sender,
-            sponsor: self.sponsor,
-            expiration: self.expiration,
-            named_commands: self.named_commands,
-            client,
+impl TransactionBuildData {
+    fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
+        if let Some((i, input)) = self.inputs.iter_mut().find(|(_, input)| input.kind == kind) {
+            if is_gas {
+                input.is_gas = true;
+            }
+            return Argument::Input(*i as _);
         }
-    }
-
-    /// Transfer IOTA to a recipient address.
-    pub fn transfer_iota(
-        &mut self,
-        recipient: Address,
-        amount: impl Into<Option<u64>> + Send,
-    ) -> &mut Self {
-        let rec_arg = self.pure(recipient);
-        let coin_arg = if let Some(amount) = amount.into() {
-            let amt_arg = self.pure(amount);
-            self.command(Command::SplitCoins(SplitCoins {
-                coin: Argument::Gas,
-                amounts: vec![amt_arg],
-            }))
-        } else {
-            Argument::Gas
-        };
-        self.command(Command::TransferObjects(TransferObjects {
-            objects: vec![coin_arg],
-            address: rec_arg,
-        }));
-        self
+        let idx = self
+            .inputs
+            .last_entry()
+            .map(|e| *e.key() + 1)
+            .unwrap_or_default();
+        self.inputs.insert(idx, Input { kind, is_gas });
+        Argument::Input(idx as _)
     }
 
     /// Get the current set gas coins.
-    pub fn get_gas(&self) -> impl Iterator<Item = ObjectId> + '_ {
-        self.inputs.values().filter_map(|i| {
-            if i.is_gas {
-                i.object_id().copied()
-            } else {
-                None
-            }
-        })
+    pub fn get_gas(&self) -> Vec<ObjectId> {
+        self.inputs
+            .values()
+            .filter_map(|i| {
+                if i.is_gas {
+                    i.object_id().copied()
+                } else {
+                    None
+                }
+            })
+            .collect()
     }
 
     /// Set the gas budget. Optional.
@@ -130,22 +121,6 @@ impl<C> TransactionBuilder<C> {
     /// Make a value available to the transaction as an input.
     pub fn input(&mut self, input: iota_types::Input) -> Argument {
         self.set_input(InputKind::Input(input), false)
-    }
-
-    fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
-        if let Some((i, input)) = self.inputs.iter_mut().find(|(_, input)| input.kind == kind) {
-            if is_gas {
-                input.is_gas = true;
-            }
-            return Argument::Input(*i as _);
-        }
-        let idx = self
-            .inputs
-            .last_entry()
-            .map(|e| *e.key() + 1)
-            .unwrap_or_default();
-        self.inputs.insert(idx, Input { kind, is_gas });
-        Argument::Input(idx as _)
     }
 
     /// Add a pure input using the BCS serialized bytes
@@ -182,22 +157,151 @@ impl<C> TransactionBuilder<C> {
     }
 }
 
-impl TransactionBuilder<()> {
+impl TransactionBuilder {
     /// Instantiate a new PTB.
-    pub fn new(sender: Address) -> TransactionBuilder<()> {
+    pub fn new(sender: Address) -> Self {
         TransactionBuilder {
-            inputs: Default::default(),
-            commands: Default::default(),
-            gas_budget: Default::default(),
-            gas_price: Default::default(),
-            sender,
-            sponsor: Default::default(),
-            expiration: Default::default(),
-            named_commands: Default::default(),
+            data: TransactionBuildData {
+                inputs: Default::default(),
+                commands: Default::default(),
+                gas_budget: Default::default(),
+                gas_price: Default::default(),
+                sender,
+                sponsor: Default::default(),
+                expiration: Default::default(),
+                named_commands: Default::default(),
+            },
             client: (),
+            last_command: PhantomData,
         }
     }
 
+    /// Set the client to enable automatic object resolution.
+    pub fn with_client(self, client: Client) -> TransactionBuilder<Client> {
+        TransactionBuilder {
+            data: self.data,
+            client,
+            last_command: self.last_command,
+        }
+    }
+}
+
+impl<C, L> TransactionBuilder<C, L> {
+    /// Apply the given parameters and return the generated arguments
+    pub fn apply_params<P: PTBArguments>(&mut self, param: P) -> Vec<Argument> {
+        param.args(&mut self.data)
+    }
+
+    fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
+        self.data.set_input(kind, is_gas)
+    }
+
+    fn reset(&mut self) -> &mut TransactionBuilder<C> {
+        unsafe { core::mem::transmute(self) }
+    }
+
+    fn state_change<U: Into<Command>>(&mut self, command: U) -> &mut TransactionBuilder<C, U> {
+        self.command(command.into());
+        unsafe { core::mem::transmute(self) }
+    }
+
+    /// Get the current set gas coins.
+    pub fn get_gas(&self) -> Vec<ObjectId> {
+        self.data.get_gas()
+    }
+
+    /// Set the gas budget. Optional.
+    pub fn gas_budget(&mut self, gas_budget: u64) -> &mut Self {
+        self.data.gas_budget(gas_budget);
+        self
+    }
+
+    /// Set the gas price. Optional.
+    pub fn gas_price(&mut self, gas_price: u64) -> &mut Self {
+        self.data.gas_price(gas_price);
+        self
+    }
+
+    /// Set the sponsor. Optional.
+    pub fn sponsor(&mut self, sponsor: Address) -> &mut Self {
+        self.data.sponsor(sponsor);
+        self
+    }
+
+    /// Set the expiration. Optional.
+    pub fn expiration(&mut self, expiration: u64) -> &mut Self {
+        self.data.expiration(expiration);
+        self
+    }
+
+    /// Make a value available to the transaction as an input.
+    pub fn input(&mut self, input: iota_types::Input) -> Argument {
+        self.data.input(input)
+    }
+
+    /// Add a pure input using the BCS serialized bytes
+    pub fn pure_bytes(&mut self, bytes: Vec<u8>) -> Argument {
+        self.data.pure_bytes(bytes)
+    }
+
+    /// Add a pure input
+    pub fn pure<T: Serialize>(&mut self, value: T) -> Argument {
+        self.data.pure(value)
+    }
+
+    /// Add a new command to the PTB
+    pub fn command(&mut self, command: Command) -> Argument {
+        self.data.command(command)
+    }
+
+    /// Manually set a command with an optional name
+    pub fn named_command(&mut self, cmd: Command, name: impl NamedCommands) {
+        self.data.named_command(cmd, name);
+    }
+
+    /// Get the value for the given string in the named commands map
+    pub fn get_named_command(&self, name: &str) -> Option<Argument> {
+        self.data.get_named_command(name)
+    }
+
+    /// Transfer IOTA to a recipient address.
+    pub fn transfer_iota(
+        &mut self,
+        recipient: Address,
+        amount: impl Into<Option<u64>> + Send,
+    ) -> &mut TransactionBuilder<C> {
+        let rec_arg = self.pure(recipient);
+        let coin_arg = if let Some(amount) = amount.into() {
+            let amt_arg = self.pure(amount);
+            self.command(Command::SplitCoins(SplitCoins {
+                coin: Argument::Gas,
+                amounts: vec![amt_arg],
+            }))
+        } else {
+            Argument::Gas
+        };
+        self.command(Command::TransferObjects(TransferObjects {
+            objects: vec![coin_arg],
+            address: rec_arg,
+        }));
+        self.reset()
+    }
+}
+
+impl<C, L: Into<Command>> TransactionBuilder<C, L> {
+    /// Set the name for the last command.
+    pub fn name(&mut self, name: impl NamedCommands) -> &mut Self {
+        name.push_named_commands(&mut self.data);
+        self
+    }
+
+    /// Get the argument representing the last command.
+    pub fn arg(&mut self) -> Argument {
+        Argument::Result((self.data.commands.len() - 1) as _)
+    }
+}
+
+impl<L> TransactionBuilder<(), L> {
     /// Add a gas coin that will be consumed. Optional.
     pub fn gas(&mut self, obj_ref: ObjectReference) -> &mut Self {
         self.set_input(
@@ -221,19 +325,16 @@ impl TransactionBuilder<()> {
         package_id: impl Into<ObjectId>,
         module: &'static str,
         function: &'static str,
-    ) -> CommandBuilder<'_, (), MoveCall> {
-        CommandBuilder {
-            ptb: self,
-            last_command: MoveCall {
-                package: package_id.into(),
-                module: Identifier::new(module)
-                    .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
-                function: Identifier::new(function)
-                    .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
-                type_arguments: Default::default(),
-                arguments: Default::default(),
-            },
-        }
+    ) -> &mut TransactionBuilder<(), MoveCall> {
+        self.state_change(MoveCall {
+            package: package_id.into(),
+            module: Identifier::new(module)
+                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
+            function: Identifier::new(function)
+                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
+            type_arguments: Default::default(),
+            arguments: Default::default(),
+        })
     }
 
     /// Merge multiple coins into one.
@@ -241,7 +342,7 @@ impl TransactionBuilder<()> {
         &mut self,
         primary_coin: ObjectReference,
         consumed_coins: impl IntoIterator<Item = ObjectReference> + Send,
-    ) -> &mut Self {
+    ) -> &mut TransactionBuilder<()> {
         let primary_coin = self.set_input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(primary_coin)),
             false,
@@ -257,7 +358,7 @@ impl TransactionBuilder<()> {
             coin: primary_coin,
             coins_to_merge: consumed,
         }));
-        self
+        self.reset()
     }
 
     /// Split a coin into many.
@@ -265,19 +366,16 @@ impl TransactionBuilder<()> {
         &mut self,
         coin: ObjectReference,
         split_amounts: impl IntoIterator<Item = u64> + Send,
-    ) -> CommandBuilder<'_, (), SplitCoins> {
+    ) -> &mut TransactionBuilder<(), SplitCoins> {
         let coin = self.set_input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
             false,
         );
         let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
-        CommandBuilder {
-            ptb: self,
-            last_command: SplitCoins {
-                coin,
-                amounts: split_amounts,
-            },
-        }
+        self.state_change(SplitCoins {
+            coin,
+            amounts: split_amounts,
+        })
     }
 
     /// Transfer objects to a recipient address.
@@ -285,7 +383,7 @@ impl TransactionBuilder<()> {
         &mut self,
         recipient: Address,
         objects: impl IntoIterator<Item = ObjectReference>,
-    ) -> &mut Self {
+    ) -> &mut TransactionBuilder<()> {
         let objects = objects
             .into_iter()
             .map(|o| {
@@ -300,7 +398,7 @@ impl TransactionBuilder<()> {
             address: self.pure(recipient),
         });
         self.command(cmd);
-        self
+        self.reset()
     }
 
     /// Make a move vector from a list of elements.
@@ -308,25 +406,22 @@ impl TransactionBuilder<()> {
         &mut self,
         elements: impl IntoIterator<Item = Argument>,
         type_tag: impl Into<Option<TypeTag>>,
-    ) -> CommandBuilder<'_, (), MakeMoveVector> {
-        CommandBuilder {
-            ptb: self,
-            last_command: MakeMoveVector {
-                type_: type_tag.into(),
-                elements: elements.into_iter().collect(),
-            },
-        }
+    ) -> &mut TransactionBuilder<(), MakeMoveVector> {
+        self.state_change(MakeMoveVector {
+            type_: type_tag.into(),
+            elements: elements.into_iter().collect(),
+        })
     }
 
     /// Convert this builder into a transaction.
     pub fn finish(mut self) -> Result<Transaction, Error> {
-        let Some(price) = self.gas_price else {
+        let Some(price) = self.data.gas_price else {
             return Err(Error::MissingGasPrice);
         };
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
-        for (id, input) in std::mem::take(&mut self.inputs) {
+        for (id, input) in std::mem::take(&mut self.data.inputs) {
             match input.kind {
                 InputKind::Input(inp) => {
                     if input.is_gas {
@@ -350,8 +445,10 @@ impl TransactionBuilder<()> {
             };
         }
         let commands = self
+            .data
             .commands
-            .drain(..)
+            .clone()
+            .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
         Ok(Transaction {
@@ -359,19 +456,19 @@ impl TransactionBuilder<()> {
                 inputs,
                 commands,
             }),
-            sender: self.sender,
+            sender: self.data.sender,
             gas_payment: GasPayment {
                 objects: gas,
-                owner: self.sponsor.unwrap_or(self.sender),
+                owner: self.data.sponsor.unwrap_or(self.data.sender),
                 price,
-                budget: self.gas_budget.unwrap_or(0),
+                budget: self.data.gas_budget.unwrap_or(0),
             },
-            expiration: self.expiration,
+            expiration: self.data.expiration,
         })
     }
 }
 
-impl TransactionBuilder<Client> {
+impl<L> TransactionBuilder<Client, L> {
     /// Get the client used by the builder.
     pub fn get_client(&self) -> &Client {
         &self.client
@@ -397,19 +494,16 @@ impl TransactionBuilder<Client> {
         package_id: impl Into<ObjectId>,
         module: &str,
         function: &str,
-    ) -> CommandBuilder<'_, Client, MoveCall> {
-        CommandBuilder {
-            ptb: self,
-            last_command: MoveCall {
-                package: package_id.into(),
-                module: Identifier::new(module)
-                    .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
-                function: Identifier::new(function)
-                    .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
-                type_arguments: Default::default(),
-                arguments: Default::default(),
-            },
-        }
+    ) -> &mut TransactionBuilder<Client, MoveCall> {
+        self.state_change(MoveCall {
+            package: package_id.into(),
+            module: Identifier::new(module)
+                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
+            function: Identifier::new(function)
+                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
+            type_arguments: Default::default(),
+            arguments: Default::default(),
+        })
     }
 
     /// Transfer objects to a recipient address.
@@ -417,14 +511,14 @@ impl TransactionBuilder<Client> {
         &mut self,
         recipient: Address,
         objects: U,
-    ) -> &mut Self {
-        let objects = objects.args(self);
+    ) -> &mut TransactionBuilder<Client> {
+        let objects = self.apply_params(objects);
         let cmd = Command::TransferObjects(TransferObjects {
             objects,
             address: self.pure(recipient),
         });
         self.command(cmd);
-        self
+        self.reset()
     }
 
     /// Merge multiple coins into one.
@@ -432,7 +526,7 @@ impl TransactionBuilder<Client> {
         &mut self,
         primary_coin: ObjectId,
         consumed_coins: impl IntoIterator<Item = ObjectId> + Send,
-    ) -> &mut Self {
+    ) -> &mut TransactionBuilder<Client> {
         let primary_coin = self.set_input(InputKind::ImmutableOrOwned(primary_coin), false);
         let mut consumed = Vec::new();
         for coin in consumed_coins {
@@ -442,7 +536,7 @@ impl TransactionBuilder<Client> {
             coin: primary_coin,
             coins_to_merge: consumed,
         }));
-        self
+        self.reset()
     }
 
     /// Split a coin into many.
@@ -450,34 +544,28 @@ impl TransactionBuilder<Client> {
         &mut self,
         coin: ObjectId,
         split_amounts: impl IntoIterator<Item = u64> + Send,
-    ) -> CommandBuilder<'_, Client, SplitCoins> {
+    ) -> &mut TransactionBuilder<Client, SplitCoins> {
         let coin = self.set_input(InputKind::ImmutableOrOwned(coin), false);
         let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
-        CommandBuilder {
-            ptb: self,
-            last_command: SplitCoins {
-                coin,
-                amounts: split_amounts,
-            },
-        }
+        self.state_change(SplitCoins {
+            coin,
+            amounts: split_amounts,
+        })
     }
 
     /// Publish a move package.
     pub fn publish(
         &mut self,
         kind: impl Into<PublishType> + Send,
-    ) -> CommandBuilder<'_, Client, Publish> {
+    ) -> &mut TransactionBuilder<Client, Publish> {
         let module = match kind.into() {
             PublishType::Path(_path) => todo!("load the package from the path"),
             PublishType::Compiled(m) => m,
         };
-        CommandBuilder {
-            ptb: self,
-            last_command: Publish {
-                modules: module.modules,
-                dependencies: module.dependencies,
-            },
-        }
+        self.state_change(Publish {
+            modules: module.modules,
+            dependencies: module.dependencies,
+        })
     }
 
     /// Upgrade a move package.
@@ -486,50 +574,44 @@ impl TransactionBuilder<Client> {
         package_id: ObjectId,
         upgrade_cap: U,
         kind: impl Into<PublishType> + Send,
-    ) -> CommandBuilder<'_, Client, Upgrade> {
+    ) -> &mut TransactionBuilder<Client, Upgrade> {
         let module = match kind.into() {
             PublishType::Path(_path) => todo!("load the package from the path"),
             PublishType::Compiled(m) => m,
         };
-        let ticket = upgrade_cap.args(self);
+        let ticket = self.apply_params(upgrade_cap);
         if ticket.len() != 1 {
             // TODO: Maybe there's a better way
             panic!("invalid upgrade cap");
         }
-        CommandBuilder {
-            ptb: self,
-            last_command: Upgrade {
-                modules: module.modules,
-                dependencies: module.dependencies,
-                package: package_id,
-                ticket: ticket.into_iter().next().unwrap(),
-            },
-        }
+        self.state_change(Upgrade {
+            modules: module.modules,
+            dependencies: module.dependencies,
+            package: package_id,
+            ticket: ticket.into_iter().next().unwrap(),
+        })
     }
 
     /// Make a move vector from a list of elements.
     pub fn make_move_vec<U: PTBArguments + MoveType>(
         &mut self,
         elements: impl IntoIterator<Item = U>,
-    ) -> CommandBuilder<'_, Client, MakeMoveVector> {
+    ) -> &mut TransactionBuilder<Client, MakeMoveVector> {
         let mut args = Vec::new();
         for e in elements {
-            args.extend(e.args(self));
+            args.extend(self.apply_params(e));
         }
-        CommandBuilder {
-            ptb: self,
-            last_command: MakeMoveVector {
-                type_: Some(U::type_tag()),
-                elements: args,
-            },
-        }
+        self.state_change(MakeMoveVector {
+            type_: Some(U::type_tag()),
+            elements: args,
+        })
     }
 
     async fn resolve_ptb(&mut self) -> Result<Transaction, Error> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
-        for (id, input) in std::mem::take(&mut self.inputs) {
+        for (id, input) in std::mem::take(&mut self.data.inputs) {
             match input.kind {
                 InputKind::ImmutableOrOwned(object_id) | InputKind::Receiving(object_id) => {
                     let obj = self
@@ -580,9 +662,9 @@ impl TransactionBuilder<Client> {
 
                     let input = match obj.owner() {
                         Owner::Shared(version) => iota_types::Input::Shared {
-                            object_id,
+                            object_id: object_id,
                             initial_shared_version: *version,
-                            mutable,
+                            mutable: mutable,
                         },
                         _ => {
                             return Err(Error::Input(format!(
@@ -609,11 +691,13 @@ impl TransactionBuilder<Client> {
             };
         }
         let commands = self
+            .data
             .commands
-            .drain(..)
+            .clone()
+            .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
-        let price = match self.gas_price {
+        let price = match self.data.gas_price {
             Some(price) => price,
             None => self
                 .client
@@ -627,21 +711,21 @@ impl TransactionBuilder<Client> {
                 inputs,
                 commands,
             }),
-            sender: self.sender,
+            sender: self.data.sender,
             gas_payment: GasPayment {
                 objects: gas,
-                owner: self.sponsor.unwrap_or(self.sender),
+                owner: self.data.sponsor.unwrap_or(self.data.sender),
                 price,
-                budget: self.gas_budget.unwrap_or(0),
+                budget: self.data.gas_budget.unwrap_or(0),
             },
-            expiration: self.expiration,
+            expiration: self.data.expiration,
         })
     }
 
     /// Convert this builder into a transaction.
     pub async fn finish(mut self) -> Result<Transaction, Error> {
         let mut txn = self.resolve_ptb().await?;
-        if self.gas_budget.is_none() {
+        if self.data.gas_budget.is_none() {
             let res = self
                 .client
                 .dry_run_tx(&txn, true)
@@ -696,5 +780,102 @@ impl TransactionBuilder<Client> {
             }
         }
         Ok(res)
+    }
+}
+
+impl TransactionBuilder<(), MoveCall> {
+    /// Set the call params. Optional.
+    pub fn params(&mut self, params: impl IntoIterator<Item = Argument>) -> &mut Self {
+        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
+            unreachable!();
+        };
+        last_command.arguments = params.into_iter().collect();
+        self
+    }
+
+    /// Set the generic type arguments. Optional.
+    pub fn generics<G: MoveTypes>(&mut self) -> &mut Self {
+        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
+            unreachable!();
+        };
+        last_command.type_arguments = G::type_tags();
+        self
+    }
+
+    /// Set the type arguments manually. Optional.
+    pub fn type_tags(&mut self, tags: impl IntoIterator<Item = TypeTag>) -> &mut Self {
+        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
+            unreachable!();
+        };
+        last_command.type_arguments = tags.into_iter().collect();
+        self
+    }
+}
+
+impl TransactionBuilder<Client, MoveCall> {
+    /// Set the call params. Optional.
+    pub fn params<U: PTBArguments>(&mut self, params: U) -> &mut Self {
+        let args = self.apply_params(params);
+        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
+            unreachable!();
+        };
+        last_command.arguments = args;
+        self
+    }
+
+    /// Set the generic type arguments. Optional.
+    pub fn generics<G: MoveTypes>(&mut self) -> &mut Self {
+        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
+            unreachable!();
+        };
+        last_command.type_arguments = G::type_tags();
+        self
+    }
+
+    /// Set the type arguments manually. Optional.
+    pub fn type_tags(&mut self, tags: impl IntoIterator<Item = TypeTag>) -> &mut Self {
+        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
+            unreachable!();
+        };
+        last_command.type_arguments = tags.into_iter().collect();
+        self
+    }
+}
+
+impl TransactionBuilder<(), Publish> {
+    /// Get the package ID from the UpgradeCap so that it can be used for future
+    /// commands.
+    pub fn package_id(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<()> {
+        let cap = self.arg();
+        self.move_call(Address::TWO, "package", "upgrade_package")
+            .params([cap])
+            .name(name)
+            .reset()
+    }
+
+    /// Finish the publish call and return the UpgradeCap.
+    pub fn upgrade_cap(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<()> {
+        name.push_named_commands(&mut self.data);
+
+        self.reset()
+    }
+}
+
+impl TransactionBuilder<Client, Publish> {
+    /// Get the package ID from the UpgradeCap so that it can be used for future
+    /// commands.
+    pub fn package_id(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<Client> {
+        let cap = self.arg();
+        self.move_call(Address::TWO, "package", "upgrade_package")
+            .params(cap)
+            .name(name)
+            .reset()
+    }
+
+    /// Finish the publish call and return the UpgradeCap.
+    pub fn upgrade_cap(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<Client> {
+        name.push_named_commands(&mut self.data);
+
+        self.reset()
     }
 }
