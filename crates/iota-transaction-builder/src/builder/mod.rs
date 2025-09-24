@@ -321,19 +321,6 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 }
 
-impl<C, L: Into<Command>> TransactionBuilder<C, L> {
-    /// Set the name for the last command.
-    pub fn name(&mut self, name: impl NamedCommands) -> &mut Self {
-        name.push_named_commands(&mut self.data);
-        self
-    }
-
-    /// Get the argument representing the last command.
-    pub fn arg(&mut self) -> Argument {
-        Argument::Result((self.data.commands.len() - 1) as _)
-    }
-}
-
 impl<L> TransactionBuilder<(), L> {
     /// Add a gas coin that will be consumed. Optional.
     pub fn gas(&mut self, obj_ref: ObjectReference) -> &mut Self {
@@ -838,5 +825,18 @@ impl<C> TransactionBuilder<C, Publish> {
         name.push_named_commands(&mut self.data);
 
         self.reset()
+    }
+}
+
+impl<C, L: Into<Command>> TransactionBuilder<C, L> {
+    /// Set the name for the last command.
+    pub fn name(&mut self, name: impl NamedCommands) -> &mut Self {
+        name.push_named_commands(&mut self.data);
+        self
+    }
+
+    /// Get the argument representing the last command.
+    pub fn arg(&mut self) -> Argument {
+        Argument::Result((self.data.commands.len() - 1) as _)
     }
 }
