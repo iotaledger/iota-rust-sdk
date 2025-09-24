@@ -62,15 +62,6 @@ pub struct Event {
     )]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     pub contents: Vec<u8>,
-
-    /// UTC timestamp in milliseconds since epoch (1/1/1970)
-    pub timestamp: String,
-
-    /// Structured contents of a Move value
-    pub data: String,
-
-    /// Representation of a Move value in JSON
-    pub json: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]

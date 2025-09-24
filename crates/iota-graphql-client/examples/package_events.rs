@@ -26,9 +26,9 @@ async fn main() -> Result<()> {
         .await?;
 
     for event in events.data() {
-        println!("Type: {}", event.type_);
-        println!("Sender: {}", event.sender);
-        println!("Module: {}", event.module);
+        println!("Type: {}", event.type_.repr);
+        println!("Sender: {}", event.sender.as_ref().unwrap().address);
+        println!("Module: {}", event.sending_module.as_ref().unwrap().name);
         println!("JSON: {}", event.json);
     }
 

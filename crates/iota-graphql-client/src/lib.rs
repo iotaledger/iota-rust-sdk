@@ -15,16 +15,16 @@ use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::Error;
 use futures::Stream;
 use iota_types::{
-    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, Event, Identifier, MovePackage,
-    Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TransactionKind, TypeTag,
-    UserSignature, framework::Coin,
+    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, MovePackage, Object, ObjectId,
+    SignedTransaction, Transaction, TransactionEffects, TransactionKind, TypeTag, UserSignature,
+    framework::Coin,
 };
 use query_types::{
     ActiveValidatorsArgs, ActiveValidatorsQuery, BalanceArgs, BalanceQuery, ChainIdentifierQuery,
     CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointsArgs, CheckpointsQuery, CoinMetadata,
     CoinMetadataArgs, CoinMetadataQuery, DryRunArgs, DryRunQuery, DynamicFieldArgs,
     DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
-    DynamicObjectFieldQuery, Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, EventFilter,
+    DynamicObjectFieldQuery, Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, Event, EventFilter,
     EventsQuery, EventsQueryArgs, ExecuteTransactionArgs, ExecuteTransactionQuery,
     LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
     NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
@@ -890,28 +890,7 @@ impl Client {
             let ec = events.events;
             let page_info = ec.page_info;
 
-            let events = ec
-                .nodes
-                .into_iter()
-                .map(|node| {
-                    let module = node.sending_module.ok_or_else(|| {
-                        Error::from_error(
-                            Kind::Deserialization,
-                            "Expected a sending module for this event, but it is missing.",
-                        )
-                    })?;
-                    Ok(Event {
-                        package_id: module.package.address.into(),
-                        module: Identifier::new(module.name)?,
-                        sender: node.sender.map(|s| s.address).unwrap_or(Address::ZERO),
-                        type_: node.type_.repr.parse()?,
-                        contents: base64ct::Base64::decode_vec(&node.bcs.0)?,
-                        timestamp: node.timestamp.map(|t| t.0).unwrap_or_default(),
-                        data: node.data.0.to_string(),
-                        json: node.json.to_string(),
-                    })
-                })
-                .collect::<Result<Vec<_>>>()?;
+            let events = ec.nodes;
 
             Ok(Page::new(page_info, events))
         } else {

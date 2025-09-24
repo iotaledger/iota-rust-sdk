@@ -128,7 +128,7 @@ pub struct MoveValue {
     pub json: Option<JsonValue>,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MoveType")]
 pub struct MoveType {
     pub repr: String,
