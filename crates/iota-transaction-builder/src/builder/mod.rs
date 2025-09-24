@@ -286,6 +286,39 @@ impl<C, L> TransactionBuilder<C, L> {
         }));
         self.reset()
     }
+
+    /// Begin building a move call.
+    pub fn move_call(
+        &mut self,
+        package_id: impl Into<ObjectId>,
+        module: &str,
+        function: &str,
+    ) -> &mut TransactionBuilder<C, MoveCall> {
+        self.state_change(MoveCall {
+            package: package_id.into(),
+            module: Identifier::new(module)
+                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
+            function: Identifier::new(function)
+                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
+            type_arguments: Default::default(),
+            arguments: Default::default(),
+        })
+    }
+
+    /// Publish a move package.
+    pub fn publish(
+        &mut self,
+        kind: impl Into<PublishType> + Send,
+    ) -> &mut TransactionBuilder<C, Publish> {
+        let module = match kind.into() {
+            PublishType::Path(_path) => todo!("load the package from the path"),
+            PublishType::Compiled(m) => m,
+        };
+        self.state_change(Publish {
+            modules: module.modules,
+            dependencies: module.dependencies,
+        })
+    }
 }
 
 impl<C, L: Into<Command>> TransactionBuilder<C, L> {
@@ -317,24 +350,6 @@ impl<L> TransactionBuilder<(), L> {
             self.gas(obj_ref);
         }
         self
-    }
-
-    /// Begin building a move call.
-    pub fn move_call(
-        &mut self,
-        package_id: impl Into<ObjectId>,
-        module: &'static str,
-        function: &'static str,
-    ) -> &mut TransactionBuilder<(), MoveCall> {
-        self.state_change(MoveCall {
-            package: package_id.into(),
-            module: Identifier::new(module)
-                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
-            function: Identifier::new(function)
-                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
-            type_arguments: Default::default(),
-            arguments: Default::default(),
-        })
     }
 
     /// Merge multiple coins into one.
@@ -488,24 +503,6 @@ impl<L> TransactionBuilder<Client, L> {
         self
     }
 
-    /// Begin building a move call.
-    pub fn move_call(
-        &mut self,
-        package_id: impl Into<ObjectId>,
-        module: &str,
-        function: &str,
-    ) -> &mut TransactionBuilder<Client, MoveCall> {
-        self.state_change(MoveCall {
-            package: package_id.into(),
-            module: Identifier::new(module)
-                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
-            function: Identifier::new(function)
-                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
-            type_arguments: Default::default(),
-            arguments: Default::default(),
-        })
-    }
-
     /// Transfer objects to a recipient address.
     pub fn transfer_objects<U: PTBArguments>(
         &mut self,
@@ -550,21 +547,6 @@ impl<L> TransactionBuilder<Client, L> {
         self.state_change(SplitCoins {
             coin,
             amounts: split_amounts,
-        })
-    }
-
-    /// Publish a move package.
-    pub fn publish(
-        &mut self,
-        kind: impl Into<PublishType> + Send,
-    ) -> &mut TransactionBuilder<Client, Publish> {
-        let module = match kind.into() {
-            PublishType::Path(_path) => todo!("load the package from the path"),
-            PublishType::Compiled(m) => m,
-        };
-        self.state_change(Publish {
-            modules: module.modules,
-            dependencies: module.dependencies,
         })
     }
 
@@ -792,24 +774,6 @@ impl TransactionBuilder<(), MoveCall> {
         last_command.arguments = params.into_iter().collect();
         self
     }
-
-    /// Set the generic type arguments. Optional.
-    pub fn generics<G: MoveTypes>(&mut self) -> &mut Self {
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.type_arguments = G::type_tags();
-        self
-    }
-
-    /// Set the type arguments manually. Optional.
-    pub fn type_tags(&mut self, tags: impl IntoIterator<Item = TypeTag>) -> &mut Self {
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.type_arguments = tags.into_iter().collect();
-        self
-    }
 }
 
 impl TransactionBuilder<Client, MoveCall> {
@@ -822,7 +786,9 @@ impl TransactionBuilder<Client, MoveCall> {
         last_command.arguments = args;
         self
     }
+}
 
+impl<C> TransactionBuilder<C, MoveCall> {
     /// Set the generic type arguments. Optional.
     pub fn generics<G: MoveTypes>(&mut self) -> &mut Self {
         let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
@@ -852,13 +818,6 @@ impl TransactionBuilder<(), Publish> {
             .name(name)
             .reset()
     }
-
-    /// Finish the publish call and return the UpgradeCap.
-    pub fn upgrade_cap(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<()> {
-        name.push_named_commands(&mut self.data);
-
-        self.reset()
-    }
 }
 
 impl TransactionBuilder<Client, Publish> {
@@ -871,9 +830,11 @@ impl TransactionBuilder<Client, Publish> {
             .name(name)
             .reset()
     }
+}
 
+impl<C> TransactionBuilder<C, Publish> {
     /// Finish the publish call and return the UpgradeCap.
-    pub fn upgrade_cap(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<Client> {
+    pub fn upgrade_cap(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<C> {
         name.push_named_commands(&mut self.data);
 
         self.reset()
