@@ -147,8 +147,8 @@ impl TransactionBuildData {
 
     /// Manually set a command with an optional name
     pub fn named_command(&mut self, cmd: Command, name: impl NamedCommands) {
-        name.push_named_commands(self);
         self.command(cmd);
+        name.push_named_commands(self);
     }
 
     /// Get the value for the given string in the named commands map

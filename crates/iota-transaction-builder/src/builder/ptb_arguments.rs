@@ -7,7 +7,8 @@ use crate::{
     unresolved::{Argument, InputKind},
 };
 
-/// A trait which defines arguments for a [`TransactionBuilder`].
+/// A trait which defines arguments for a
+/// [`TransactionBuilder`](crate::TransactionBuilder).
 pub trait PTBArguments {
     /// Get the arguments.
     fn args(&self, ptb: &mut TransactionBuildData) -> Vec<Argument> {
