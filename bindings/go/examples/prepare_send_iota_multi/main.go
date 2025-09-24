@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	sdk "bindings/iota_sdk_ffi"
@@ -16,16 +17,32 @@ func main() {
 
 	gasCoinId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 
-	recipient1, _ := sdk.AddressFromHex("0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11")
-
-	recipient2, _ := sdk.AddressFromHex("0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522")
+	recipients := []struct {
+		address string
+		amount  uint64
+	}{
+		{"0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11", 1_000_000_000},
+		{"0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522", 2_000_000_000},
+	}
 
 	builder := sdk.TransactionBuilderInit(sender, client)
 
+	// Prepare amounts and labels
+	var amounts []uint64
+	var labels []string
+	for idx, r := range recipients {
+		labels = append(labels, fmt.Sprintf("coin%v", idx))
+		amounts = append(amounts, r.amount)
+	}
+
 	// Split the gas coin into multiple coins
-	builder.SplitCoins(gasCoinId, []uint64{1_000_000_000, 2_000_000_000}, []string{"coin1", "coin2"})
-	builder.TransferObjects(recipient1, []*sdk.PtbArgument{sdk.PtbArgumentRes("coin1")})
-	builder.TransferObjects(recipient2, []*sdk.PtbArgument{sdk.PtbArgumentRes("coin2")})
+	builder.SplitCoins(gasCoinId, amounts, labels)
+
+	for idx, r := range recipients {
+		recipient, _ := sdk.AddressFromHex(r.address)
+		builder.TransferObjects(recipient, []*sdk.PtbArgument{sdk.PtbArgumentRes(labels[idx])})
+	}
+
 	builder.Gas(gasCoinId).GasBudget(1000000000)
 
 	txn, err := builder.Finish()

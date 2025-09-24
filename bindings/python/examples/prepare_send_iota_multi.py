@@ -15,18 +15,25 @@ async def main():
         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
     )
 
-    recipient1 = Address.from_hex(
-        "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11"
-    )
-    recipient2 = Address.from_hex(
-        "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522"
-    )
+    recipients = [
+        (
+            "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11",
+            1_000_000_000,
+        ),
+        (
+            "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522",
+            2_000_000_000,
+        ),
+    ]
+
+    amounts = [r[1] for r in recipients]
+    labels = [f"coin{i}" for i in range(len(recipients))]
 
     builder = await TransactionBuilder.init(sender, client)
 
-    builder.split_coins(gas_coin_id, [1_000_000_000, 2_000_000_000], ["coin1", "coin2"])
-    builder.transfer_objects(recipient1, [PtbArgument.res("coin1")])
-    builder.transfer_objects(recipient2, [PtbArgument.res("coin2")])
+    builder.split_coins(gas_coin_id, amounts, labels)
+    for i, r in enumerate(recipients):
+        builder.transfer_objects(Address.from_hex(r[0]), [PtbArgument.res(labels[i])])
     builder.gas(gas_coin_id).gas_budget(1000000000)
 
     txn = await builder.finish()

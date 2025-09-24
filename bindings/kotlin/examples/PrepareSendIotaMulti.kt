@@ -27,24 +27,32 @@ fun main() = runBlocking {
                         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
                 )
 
-        val recipient1 =
-                Address.fromHex(
-                        "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11"
-                )
-        val recipient2 =
-                Address.fromHex(
-                        "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522"
+        val recipients =
+                listOf(
+                        Pair(
+                                "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11",
+                                1_000_000_000UL
+                        ),
+                        Pair(
+                                "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522",
+                                2_000_000_000UL
+                        )
                 )
 
         val builder = TransactionBuilder.init(sender, client)
 
+        val labels = recipients.indices.map { "coin${it}" }
+        val amounts = recipients.map { it.second }
+
         builder.splitCoins(
                 gasCoinId,
-                listOf(1_000_000_000uL, 2_000_000_000uL),
-                listOf("coin1", "coin2"),
+                amounts,
+                labels,
         )
-        builder.transferObjects(recipient1, listOf(PtbArgument.res("coin1")))
-        builder.transferObjects(recipient2, listOf(PtbArgument.res("coin2")))
+
+        for ((i, r) in recipients.withIndex()) {
+            builder.transferObjects(Address.fromHex(r.first), listOf(PtbArgument.res(labels[i])))
+        }
         builder.gas(gasCoinId).gasBudget(1000000000uL)
 
         val txn = builder.finish()
