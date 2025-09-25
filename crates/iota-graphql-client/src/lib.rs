@@ -385,6 +385,7 @@ impl Client {
     }
 
     /// Run a query on the GraphQL server and return the response.
+    ///
     /// This method returns [`cynic::GraphQlResponse`]  over the query type `T`,
     /// and it is intended to be used with custom queries.
     pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> Result<GraphQlResponse<T>>
@@ -403,10 +404,10 @@ impl Client {
         Ok(res)
     }
 
-    /// Run an unchecked query on the GraphQL server and return the response.
-    /// This method assumes a valid GraphQL query string and valid JSON for the
-    /// GraphQL variables. It returns a [`cynic::GraphQlResponse`] over a
-    /// [`serde_json::Value`]. In general, it is recommended to use
+    /// Run a JSON query on the GraphQL server and return the response.
+    /// This method expects a JSON map holding the GraphQL query string and
+    /// matching GraphQL variables. It returns a [`cynic::GraphQlResponse`]
+    /// wrapping a [`serde_json::Value`]. In general, it is recommended to use
     /// [`Self::run_query`] instead which always guarantees valid GraphQL
     /// query syntax.
     pub async fn run_query_from_json(
