@@ -20,6 +20,7 @@ async def main():
         print(f"Type: {event.type}")
         print(f"Sender: {event.sender.to_hex()}")
         print(f"Module: {event.module}")
+        print(f"JSON: {event.json}")
 
 
 if __name__ == "__main__":
