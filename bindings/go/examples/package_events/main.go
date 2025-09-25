@@ -35,5 +35,6 @@ func main() {
 		fmt.Println("Type: ", event.Type)
 		fmt.Println("Sender: ", event.Sender.ToHex())
 		fmt.Println("Module: ", event.Module)
+		fmt.Println("JSON: ", event.Json)
 	}
 }

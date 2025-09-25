@@ -24021,6 +24021,12 @@ type Event struct {
 	Type string
 	// BCS serialized bytes of the event
 	Contents []byte
+	// UTC timestamp in milliseconds since epoch (1/1/1970)
+	Timestamp string
+	// Structured contents of a Move value
+	Data string
+	// Representation of a Move value in JSON
+	Json string
 }
 
 func (r *Event) Destroy() {
@@ -24029,6 +24035,9 @@ func (r *Event) Destroy() {
 		FfiDestroyerAddress{}.Destroy(r.Sender);
 		FfiDestroyerString{}.Destroy(r.Type);
 		FfiDestroyerBytes{}.Destroy(r.Contents);
+		FfiDestroyerString{}.Destroy(r.Timestamp);
+		FfiDestroyerString{}.Destroy(r.Data);
+		FfiDestroyerString{}.Destroy(r.Json);
 }
 
 type FfiConverterEvent struct {}
@@ -24046,6 +24055,9 @@ func (c FfiConverterEvent) Read(reader io.Reader) Event {
 			FfiConverterAddressINSTANCE.Read(reader),
 			FfiConverterStringINSTANCE.Read(reader),
 			FfiConverterBytesINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
 	}
 }
 
@@ -24059,6 +24071,9 @@ func (c FfiConverterEvent) Write(writer io.Writer, value Event) {
 		FfiConverterAddressINSTANCE.Write(writer, value.Sender);
 		FfiConverterStringINSTANCE.Write(writer, value.Type);
 		FfiConverterBytesINSTANCE.Write(writer, value.Contents);
+		FfiConverterStringINSTANCE.Write(writer, value.Timestamp);
+		FfiConverterStringINSTANCE.Write(writer, value.Data);
+		FfiConverterStringINSTANCE.Write(writer, value.Json);
 }
 
 type FfiDestroyerEvent struct {}

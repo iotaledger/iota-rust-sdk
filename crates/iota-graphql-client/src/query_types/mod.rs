@@ -94,6 +94,10 @@ pub struct BigInt(pub String);
 #[cynic(graphql_type = "DateTime")]
 pub struct DateTime(pub String);
 
+#[derive(cynic::Scalar, Debug, Clone, derive_more::From)]
+#[cynic(graphql_type = "MoveData")]
+pub struct MoveData(pub serde_json::Value);
+
 // ===========================================================================
 // Types used in several queries
 // ===========================================================================
@@ -124,11 +128,12 @@ pub struct MoveValue {
     pub json: Option<JsonValue>,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MoveType")]
 pub struct MoveType {
     pub repr: String,
 }
+
 // ===========================================================================
 // Utility Types
 // ===========================================================================

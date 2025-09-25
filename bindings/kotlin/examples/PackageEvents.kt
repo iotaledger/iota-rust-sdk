@@ -26,6 +26,7 @@ fun main() = runBlocking {
             println("Type: ${event.type}")
             println("Sender: ${event.sender}")
             println("Module: ${event.module}")
+            println("JSON: ${event.json}")
         }
     } catch (e: Exception) {
         e.printStackTrace()
