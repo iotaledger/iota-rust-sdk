@@ -22,22 +22,20 @@ pub trait PTBArguments {
 }
 
 macro_rules! impl_ptb_args_tuple {
-    ($($tup:ident.$idx:tt),+$(,)?) => {
-        impl<$($tup),+> PTBArguments for ($($tup),+)
-        where $($tup: PTBArguments),+
+    ($(($n:tt, $T:ident)),*) => {
+        impl<$($T),+> PTBArguments for ($($T),+)
+        where $($T: PTBArguments),+
         {
             fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
                 $(
-                    self.$idx.push_args(ptb, args);
+                    self.$n.push_args(ptb, args);
                 )+
             }
         }
     };
 }
-impl_ptb_args_tuple!(T1.0, T2.1);
-impl_ptb_args_tuple!(T1.0, T2.1, T3.2);
-impl_ptb_args_tuple!(T1.0, T2.1, T3.2, T4.3);
-impl_ptb_args_tuple!(T1.0, T2.1, T3.2, T4.3, T5.4);
+
+variadics_please::all_tuples_enumerated!(impl_ptb_args_tuple, 2, 15, T);
 
 impl<T: MoveParam> PTBArguments for T {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {

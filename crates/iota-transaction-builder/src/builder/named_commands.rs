@@ -75,21 +75,18 @@ impl<T: NamedCommand> NamedCommands for Vec<T> {
 }
 
 macro_rules! impl_named_command_tuple {
-    ($($tup:ident.$idx:tt),+$(,)?) => {
-        impl<$($tup),+> NamedCommands for ($($tup),+)
-        where $($tup: NamedCommand),+
+    ($(($n:tt, $T:ident)),*) => {
+        impl<$($T),+> NamedCommands for ($($T),+)
+        where $($T: NamedCommand),+
         {
             fn push_named_commands(self, ptb: &mut TransactionBuildData) {
                 $(
-                    let arg = Argument::NestedResult((ptb.commands.len() - 1) as _, $idx);
-                    self.$idx.push_named_command(arg, ptb);
+                    let arg = Argument::NestedResult((ptb.commands.len() - 1) as _, $n);
+                    self.$n.push_named_command(arg, ptb);
                 )+
             }
         }
     };
 }
-impl_named_command_tuple!(T1.0, T2.1);
-impl_named_command_tuple!(T1.0, T2.1, T3.2);
-impl_named_command_tuple!(T1.0, T2.1, T3.2, T4.3);
-impl_named_command_tuple!(T1.0, T2.1, T3.2, T4.3, T5.4);
-impl_named_command_tuple!(T1.0, T2.1, T3.2, T4.3, T5.4, T6.5);
+
+variadics_please::all_tuples_enumerated!(impl_named_command_tuple, 2, 10, T);
