@@ -264,8 +264,8 @@ impl<C, L> TransactionBuilder<C, L> {
         self.data.get_named_command(name)
     }
 
-    /// Transfer IOTA to a recipient address.
-    pub fn transfer_iota(
+    /// Send IOTA to a recipient address.
+    pub fn send_iota(
         &mut self,
         recipient: Address,
         amount: impl Into<Option<u64>> + Send,

@@ -125,11 +125,11 @@ impl TransactionBuilder {
         self
     }
 
-    /// Transfer IOTA to a recipient address.
+    /// Send IOTA to a recipient address.
     #[uniffi::method(default(amount = None))]
-    pub fn transfer_iota(self: Arc<Self>, recipient: &Address, amount: Option<u64>) -> Arc<Self> {
+    pub fn send_iota(self: Arc<Self>, recipient: &Address, amount: Option<u64>) -> Arc<Self> {
         self.write(|builder| {
-            builder.transfer_iota(**recipient, amount);
+            builder.send_iota(**recipient, amount);
         });
         self
     }
