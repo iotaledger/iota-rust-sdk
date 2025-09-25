@@ -35,6 +35,7 @@ pub(crate) mod ptb_arguments;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
+#[repr(C)]
 pub struct TransactionBuilder<C = (), L = ()> {
     data: TransactionBuildData,
     client: C,
