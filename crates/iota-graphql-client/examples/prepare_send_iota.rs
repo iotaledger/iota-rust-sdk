@@ -3,7 +3,7 @@
 
 use std::str::FromStr;
 
-use anyhow::Result;
+use eyre::Result;
 use base64ct::Encoding;
 use iota_graphql_client::Client;
 use iota_transaction_builder::{TransactionBuilder, unresolved::Input};
@@ -63,7 +63,7 @@ async fn main() -> Result<()> {
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to send IOTA: {err}");
+        eyre::bail!("Failed to send IOTA: {err}");
     }
 
     println!("Send IOTA dry run was successful!");

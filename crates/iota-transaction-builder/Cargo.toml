@@ -23,7 +23,7 @@ thiserror = "2.0"
 schemars = { version = "0.8.21", optional = true }
 
 [dev-dependencies]
-anyhow = "1.0"
+eyre = "0.6"
 iota-crypto = { package = "iota-crypto", path = "../iota-crypto", features = ["ed25519"] }
 iota-graphql-client = { package = "iota-graphql-client", path = "../iota-graphql-client" }
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["rand"] }

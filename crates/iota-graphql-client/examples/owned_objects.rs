@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use anyhow::Result;
+use eyre::Result;
 use iota_graphql_client::{Client, pagination::PaginationFilter, query_types::ObjectFilter};
 use iota_types::Address;
 

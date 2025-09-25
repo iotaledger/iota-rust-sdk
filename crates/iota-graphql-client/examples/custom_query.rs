@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use anyhow::Result;
+use eyre::Result;
 use cynic::QueryBuilder;
 use iota_graphql_client::{
     Client,

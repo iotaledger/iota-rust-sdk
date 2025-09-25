@@ -3,7 +3,7 @@
 
 use std::str::FromStr;
 
-use anyhow::{Context, Result};
+use eyre::{OptionExt, Result};
 use iota_graphql_client::Client;
 use iota_types::ObjectId;
 
@@ -17,7 +17,7 @@ async fn main() -> Result<()> {
     let obj = client
         .object(object_id, None)
         .await?
-        .context("missing object")?;
+        .ok_or_eyre("missing object")?;
 
     println!("Object ID: {}", obj.object_id());
     println!("Version: {}", obj.version());
