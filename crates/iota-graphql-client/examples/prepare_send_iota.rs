@@ -3,8 +3,8 @@
 
 use std::str::FromStr;
 
-use eyre::Result;
 use base64ct::Encoding;
+use eyre::Result;
 use iota_graphql_client::Client;
 use iota_transaction_builder::{TransactionBuilder, unresolved::Input};
 use iota_types::{Address, ObjectId};
