@@ -10,8 +10,6 @@ pub mod pagination;
 pub mod query_types;
 pub mod streams;
 
-use std::collections::HashMap;
-
 use base64ct::Encoding;
 use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::Error;
@@ -154,151 +152,6 @@ impl DynamicFieldOutput {
             Err(Error::from_error(Kind::Deserialization, "Value is missing"))
         }
     }
-}
-
-/// A type to allow GraphQl queries across the FFI boundary.
-#[derive(Debug, serde::Serialize)]
-pub struct UncheckedQuery {
-    pub query: String,
-    #[serde(default)]
-    pub variables: Option<HashMap<String, UncheckedQueryVariable>>,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(untagged)]
-pub enum UncheckedQueryVariable {
-    Base64(String),
-    Boolean(bool),
-    CheckpointId(CheckpointIdVariable),
-    EventFilter(EventFilterVariable),
-    Int(u64),
-    IotaAddress(String),
-    MovePackageCheckpointFilter(MovePackageCheckpointFilterVariable),
-    MovePackageVersionFilter(MovePackageVersionFilterVariable),
-    ObjectFilter(ObjectFilterVariable),
-    String(String),
-    TransactionBlockFilter(TransactionBlockFilterVariable),
-    TransactionMetadata(TransactionMetadataVariable),
-    Type(String),
-    UInt53(u64),
-    ZkLoginIntentScope(ZkLoginIntentScopeVariable),
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct TransactionMetadataVariable {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub sender: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub gas_price: Option<u64>,
-    pub gas_objects: Vec<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub gas_budget: Option<u64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub gas_sponsor: Option<String>,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct CheckpointIdVariable {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub digest: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub sequence_number: Option<u64>,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct EventFilterVariable {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub sender: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub transaction_digest: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub emitting_module: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub event_type: Option<String>,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct MovePackageCheckpointFilterVariable {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub after_checkpoint: Option<u64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub before_checkpoint: Option<u64>,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct MovePackageVersionFilterVariable {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub after_version: Option<u64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub before_version: Option<u64>,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct ObjectFilterVariable {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub r#type: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub owner: Option<String>,
-    pub object_ids: Vec<String>,
-    pub object_keys: Vec<ObjectKeyVariable>,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct ObjectKeyVariable {
-    pub object_id: String,
-    pub version: u64,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct TransactionBlockFilterVariable {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub function: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub kind: Option<TransactionBlockKindInputVariable>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub after_checkpoint: Option<u64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub at_checkpoint: Option<u64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub before_checkpoint: Option<u64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub sign_address: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub recv_address: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub input_object: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub changed_object: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub wrapped_or_deleted_object: Option<String>,
-    pub transaction_ids: Vec<String>,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-pub enum TransactionBlockKindInputVariable {
-    SystemTx,
-    ProgrammableTx,
-    Genesis,
-    ConsensusCommitPrologueV1,
-    AuthenticatorStateUpdateV1,
-    RandomnessStateUpdate,
-    EndOfEpochTx,
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-pub enum ZkLoginIntentScopeVariable {
-    TransactionData,
-    PersonalMessage,
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.
@@ -556,14 +409,14 @@ impl Client {
     /// [`serde_json::Value`]. In general, it is recommended to use
     /// [`Self::run_query`] instead which always guarantees valid GraphQL
     /// query syntax.
-    pub async fn run_unchecked_query(
+    pub async fn run_query_from_json(
         &self,
-        query: &UncheckedQuery,
+        json: serde_json::Map<String, serde_json::Value>,
     ) -> Result<GraphQlResponse<serde_json::Value>> {
         let res = self
             .inner
             .post(self.rpc_server().clone())
-            .json(query)
+            .json(&json)
             .send()
             .await?
             .json::<GraphQlResponse<serde_json::Value>>()

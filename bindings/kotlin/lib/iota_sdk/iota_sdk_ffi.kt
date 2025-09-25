@@ -43106,38 +43106,6 @@ public object FfiConverterTypeChangedObject: FfiConverterRustBuffer<ChangedObjec
 
 
 
-data class CheckpointIdVariable (
-    var `digest`: kotlin.String?, 
-    var `sequenceNumber`: kotlin.ULong?
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeCheckpointIdVariable: FfiConverterRustBuffer<CheckpointIdVariable> {
-    override fun read(buf: ByteBuffer): CheckpointIdVariable {
-        return CheckpointIdVariable(
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalULong.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: CheckpointIdVariable) = (
-            FfiConverterOptionalString.allocationSize(value.`digest`) +
-            FfiConverterOptionalULong.allocationSize(value.`sequenceNumber`)
-    )
-
-    override fun write(value: CheckpointIdVariable, buf: ByteBuffer) {
-            FfiConverterOptionalString.write(value.`digest`, buf)
-            FfiConverterOptionalULong.write(value.`sequenceNumber`, buf)
-    }
-}
-
-
-
 /**
  * A page of items returned by the GraphQL server.
  */
@@ -44002,46 +43970,6 @@ public object FfiConverterTypeEventFilter: FfiConverterRustBuffer<EventFilter> {
             FfiConverterOptionalString.write(value.`eventType`, buf)
             FfiConverterOptionalTypeAddress.write(value.`sender`, buf)
             FfiConverterOptionalString.write(value.`transactionDigest`, buf)
-    }
-}
-
-
-
-data class EventFilterVariable (
-    var `sender`: kotlin.String?, 
-    var `transactionDigest`: kotlin.String?, 
-    var `emittingModule`: kotlin.String?, 
-    var `eventType`: kotlin.String?
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeEventFilterVariable: FfiConverterRustBuffer<EventFilterVariable> {
-    override fun read(buf: ByteBuffer): EventFilterVariable {
-        return EventFilterVariable(
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: EventFilterVariable) = (
-            FfiConverterOptionalString.allocationSize(value.`sender`) +
-            FfiConverterOptionalString.allocationSize(value.`transactionDigest`) +
-            FfiConverterOptionalString.allocationSize(value.`emittingModule`) +
-            FfiConverterOptionalString.allocationSize(value.`eventType`)
-    )
-
-    override fun write(value: EventFilterVariable, buf: ByteBuffer) {
-            FfiConverterOptionalString.write(value.`sender`, buf)
-            FfiConverterOptionalString.write(value.`transactionDigest`, buf)
-            FfiConverterOptionalString.write(value.`emittingModule`, buf)
-            FfiConverterOptionalString.write(value.`eventType`, buf)
     }
 }
 
@@ -44948,38 +44876,6 @@ public object FfiConverterTypeMoveObject: FfiConverterRustBuffer<MoveObject> {
 
 
 
-data class MovePackageCheckpointFilterVariable (
-    var `afterCheckpoint`: kotlin.ULong?, 
-    var `beforeCheckpoint`: kotlin.ULong?
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeMovePackageCheckpointFilterVariable: FfiConverterRustBuffer<MovePackageCheckpointFilterVariable> {
-    override fun read(buf: ByteBuffer): MovePackageCheckpointFilterVariable {
-        return MovePackageCheckpointFilterVariable(
-            FfiConverterOptionalULong.read(buf),
-            FfiConverterOptionalULong.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: MovePackageCheckpointFilterVariable) = (
-            FfiConverterOptionalULong.allocationSize(value.`afterCheckpoint`) +
-            FfiConverterOptionalULong.allocationSize(value.`beforeCheckpoint`)
-    )
-
-    override fun write(value: MovePackageCheckpointFilterVariable, buf: ByteBuffer) {
-            FfiConverterOptionalULong.write(value.`afterCheckpoint`, buf)
-            FfiConverterOptionalULong.write(value.`beforeCheckpoint`, buf)
-    }
-}
-
-
-
 /**
  * A page of items returned by the GraphQL server.
  */
@@ -45067,38 +44963,6 @@ public object FfiConverterTypeMovePackageQuery: FfiConverterRustBuffer<MovePacka
     override fun write(value: MovePackageQuery, buf: ByteBuffer) {
             FfiConverterTypeAddress.write(value.`address`, buf)
             FfiConverterOptionalTypeBase64.write(value.`bcs`, buf)
-    }
-}
-
-
-
-data class MovePackageVersionFilterVariable (
-    var `afterVersion`: kotlin.ULong?, 
-    var `beforeVersion`: kotlin.ULong?
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeMovePackageVersionFilterVariable: FfiConverterRustBuffer<MovePackageVersionFilterVariable> {
-    override fun read(buf: ByteBuffer): MovePackageVersionFilterVariable {
-        return MovePackageVersionFilterVariable(
-            FfiConverterOptionalULong.read(buf),
-            FfiConverterOptionalULong.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: MovePackageVersionFilterVariable) = (
-            FfiConverterOptionalULong.allocationSize(value.`afterVersion`) +
-            FfiConverterOptionalULong.allocationSize(value.`beforeVersion`)
-    )
-
-    override fun write(value: MovePackageVersionFilterVariable, buf: ByteBuffer) {
-            FfiConverterOptionalULong.write(value.`afterVersion`, buf)
-            FfiConverterOptionalULong.write(value.`beforeVersion`, buf)
     }
 }
 
@@ -45326,78 +45190,6 @@ public object FfiConverterTypeObjectFilter: FfiConverterRustBuffer<ObjectFilter>
             FfiConverterOptionalString.write(value.`typeTag`, buf)
             FfiConverterOptionalTypeAddress.write(value.`owner`, buf)
             FfiConverterOptionalSequenceTypeObjectId.write(value.`objectIds`, buf)
-    }
-}
-
-
-
-data class ObjectFilterVariable (
-    var `type`: kotlin.String?, 
-    var `owner`: kotlin.String?, 
-    var `objectIds`: List<kotlin.String>, 
-    var `objectKeys`: List<ObjectKeyVariable>
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeObjectFilterVariable: FfiConverterRustBuffer<ObjectFilterVariable> {
-    override fun read(buf: ByteBuffer): ObjectFilterVariable {
-        return ObjectFilterVariable(
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterSequenceString.read(buf),
-            FfiConverterSequenceTypeObjectKeyVariable.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: ObjectFilterVariable) = (
-            FfiConverterOptionalString.allocationSize(value.`type`) +
-            FfiConverterOptionalString.allocationSize(value.`owner`) +
-            FfiConverterSequenceString.allocationSize(value.`objectIds`) +
-            FfiConverterSequenceTypeObjectKeyVariable.allocationSize(value.`objectKeys`)
-    )
-
-    override fun write(value: ObjectFilterVariable, buf: ByteBuffer) {
-            FfiConverterOptionalString.write(value.`type`, buf)
-            FfiConverterOptionalString.write(value.`owner`, buf)
-            FfiConverterSequenceString.write(value.`objectIds`, buf)
-            FfiConverterSequenceTypeObjectKeyVariable.write(value.`objectKeys`, buf)
-    }
-}
-
-
-
-data class ObjectKeyVariable (
-    var `objectId`: kotlin.String, 
-    var `version`: kotlin.ULong
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeObjectKeyVariable: FfiConverterRustBuffer<ObjectKeyVariable> {
-    override fun read(buf: ByteBuffer): ObjectKeyVariable {
-        return ObjectKeyVariable(
-            FfiConverterString.read(buf),
-            FfiConverterULong.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: ObjectKeyVariable) = (
-            FfiConverterString.allocationSize(value.`objectId`) +
-            FfiConverterULong.allocationSize(value.`version`)
-    )
-
-    override fun write(value: ObjectKeyVariable, buf: ByteBuffer) {
-            FfiConverterString.write(value.`objectId`, buf)
-            FfiConverterULong.write(value.`version`, buf)
     }
 }
 
@@ -45824,7 +45616,7 @@ public object FfiConverterTypeProtocolConfigs: FfiConverterRustBuffer<ProtocolCo
 
 data class Query (
     var `query`: kotlin.String, 
-    var `variables`: Map<kotlin.String, QueryVariable>? = null
+    var `variables`: Value? = null
 ) {
     
     companion object
@@ -45837,18 +45629,18 @@ public object FfiConverterTypeQuery: FfiConverterRustBuffer<Query> {
     override fun read(buf: ByteBuffer): Query {
         return Query(
             FfiConverterString.read(buf),
-            FfiConverterOptionalMapStringTypeQueryVariable.read(buf),
+            FfiConverterOptionalTypeValue.read(buf),
         )
     }
 
     override fun allocationSize(value: Query) = (
             FfiConverterString.allocationSize(value.`query`) +
-            FfiConverterOptionalMapStringTypeQueryVariable.allocationSize(value.`variables`)
+            FfiConverterOptionalTypeValue.allocationSize(value.`variables`)
     )
 
     override fun write(value: Query, buf: ByteBuffer) {
             FfiConverterString.write(value.`query`, buf)
-            FfiConverterOptionalMapStringTypeQueryVariable.write(value.`variables`, buf)
+            FfiConverterOptionalTypeValue.write(value.`variables`, buf)
     }
 }
 
@@ -46141,74 +45933,6 @@ public object FfiConverterTypeSignedTransactionPage: FfiConverterRustBuffer<Sign
     override fun write(value: SignedTransactionPage, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
             FfiConverterSequenceTypeSignedTransaction.write(value.`data`, buf)
-    }
-}
-
-
-
-data class TransactionBlockFilterVariable (
-    var `function`: kotlin.String?, 
-    var `kind`: TransactionBlockKindInputVariable?, 
-    var `afterCheckpoint`: kotlin.ULong?, 
-    var `atCheckpoint`: kotlin.ULong?, 
-    var `beforeCheckpoint`: kotlin.ULong?, 
-    var `signAddress`: kotlin.String?, 
-    var `recvAddress`: kotlin.String?, 
-    var `inputObject`: kotlin.String?, 
-    var `changedObject`: kotlin.String?, 
-    var `wrappedOrDeletedObject`: kotlin.String?, 
-    var `transactionIds`: List<kotlin.String>
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeTransactionBlockFilterVariable: FfiConverterRustBuffer<TransactionBlockFilterVariable> {
-    override fun read(buf: ByteBuffer): TransactionBlockFilterVariable {
-        return TransactionBlockFilterVariable(
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalTypeTransactionBlockKindInputVariable.read(buf),
-            FfiConverterOptionalULong.read(buf),
-            FfiConverterOptionalULong.read(buf),
-            FfiConverterOptionalULong.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterSequenceString.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: TransactionBlockFilterVariable) = (
-            FfiConverterOptionalString.allocationSize(value.`function`) +
-            FfiConverterOptionalTypeTransactionBlockKindInputVariable.allocationSize(value.`kind`) +
-            FfiConverterOptionalULong.allocationSize(value.`afterCheckpoint`) +
-            FfiConverterOptionalULong.allocationSize(value.`atCheckpoint`) +
-            FfiConverterOptionalULong.allocationSize(value.`beforeCheckpoint`) +
-            FfiConverterOptionalString.allocationSize(value.`signAddress`) +
-            FfiConverterOptionalString.allocationSize(value.`recvAddress`) +
-            FfiConverterOptionalString.allocationSize(value.`inputObject`) +
-            FfiConverterOptionalString.allocationSize(value.`changedObject`) +
-            FfiConverterOptionalString.allocationSize(value.`wrappedOrDeletedObject`) +
-            FfiConverterSequenceString.allocationSize(value.`transactionIds`)
-    )
-
-    override fun write(value: TransactionBlockFilterVariable, buf: ByteBuffer) {
-            FfiConverterOptionalString.write(value.`function`, buf)
-            FfiConverterOptionalTypeTransactionBlockKindInputVariable.write(value.`kind`, buf)
-            FfiConverterOptionalULong.write(value.`afterCheckpoint`, buf)
-            FfiConverterOptionalULong.write(value.`atCheckpoint`, buf)
-            FfiConverterOptionalULong.write(value.`beforeCheckpoint`, buf)
-            FfiConverterOptionalString.write(value.`signAddress`, buf)
-            FfiConverterOptionalString.write(value.`recvAddress`, buf)
-            FfiConverterOptionalString.write(value.`inputObject`, buf)
-            FfiConverterOptionalString.write(value.`changedObject`, buf)
-            FfiConverterOptionalString.write(value.`wrappedOrDeletedObject`, buf)
-            FfiConverterSequenceString.write(value.`transactionIds`, buf)
     }
 }
 
@@ -46558,50 +46282,6 @@ public object FfiConverterTypeTransactionMetadata: FfiConverterRustBuffer<Transa
             FfiConverterOptionalULong.write(value.`gasPrice`, buf)
             FfiConverterOptionalTypeAddress.write(value.`gasSponsor`, buf)
             FfiConverterOptionalTypeAddress.write(value.`sender`, buf)
-    }
-}
-
-
-
-data class TransactionMetadataVariable (
-    var `sender`: kotlin.String?, 
-    var `gasPrice`: kotlin.ULong?, 
-    var `gasObjects`: List<kotlin.String>, 
-    var `gasBudget`: kotlin.ULong?, 
-    var `gasSponsor`: kotlin.String?
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeTransactionMetadataVariable: FfiConverterRustBuffer<TransactionMetadataVariable> {
-    override fun read(buf: ByteBuffer): TransactionMetadataVariable {
-        return TransactionMetadataVariable(
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalULong.read(buf),
-            FfiConverterSequenceString.read(buf),
-            FfiConverterOptionalULong.read(buf),
-            FfiConverterOptionalString.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: TransactionMetadataVariable) = (
-            FfiConverterOptionalString.allocationSize(value.`sender`) +
-            FfiConverterOptionalULong.allocationSize(value.`gasPrice`) +
-            FfiConverterSequenceString.allocationSize(value.`gasObjects`) +
-            FfiConverterOptionalULong.allocationSize(value.`gasBudget`) +
-            FfiConverterOptionalString.allocationSize(value.`gasSponsor`)
-    )
-
-    override fun write(value: TransactionMetadataVariable, buf: ByteBuffer) {
-            FfiConverterOptionalString.write(value.`sender`, buf)
-            FfiConverterOptionalULong.write(value.`gasPrice`, buf)
-            FfiConverterSequenceString.write(value.`gasObjects`, buf)
-            FfiConverterOptionalULong.write(value.`gasBudget`, buf)
-            FfiConverterOptionalString.write(value.`gasSponsor`, buf)
     }
 }
 
@@ -49685,336 +49365,6 @@ public object FfiConverterTypePackageUpgradeError : FfiConverterRustBuffer<Packa
 
 
 
-sealed class QueryVariable {
-    
-    data class Base64(
-        val `base64`: kotlin.String) : QueryVariable() {
-        companion object
-    }
-    
-    data class Boolean(
-        val `boolean`: kotlin.Boolean) : QueryVariable() {
-        companion object
-    }
-    
-    data class CheckpointId(
-        val `checkpointId`: CheckpointIdVariable) : QueryVariable() {
-        companion object
-    }
-    
-    data class EventFilter(
-        val `filter`: EventFilterVariable) : QueryVariable() {
-        companion object
-    }
-    
-    data class Int(
-        val `int`: kotlin.ULong) : QueryVariable() {
-        companion object
-    }
-    
-    data class IotaAddress(
-        val `address`: kotlin.String) : QueryVariable() {
-        companion object
-    }
-    
-    data class MovePackageCheckpointFilter(
-        val `filter`: MovePackageCheckpointFilterVariable) : QueryVariable() {
-        companion object
-    }
-    
-    data class MovePackageVersionFilter(
-        val `filter`: MovePackageVersionFilterVariable) : QueryVariable() {
-        companion object
-    }
-    
-    data class ObjectFilter(
-        val `filter`: ObjectFilterVariable) : QueryVariable() {
-        companion object
-    }
-    
-    data class String(
-        val `string`: kotlin.String) : QueryVariable() {
-        companion object
-    }
-    
-    data class TransactionBlockFilter(
-        val `filter`: TransactionBlockFilterVariable) : QueryVariable() {
-        companion object
-    }
-    
-    data class TransactionMetadata(
-        val `txMeta`: TransactionMetadataVariable) : QueryVariable() {
-        companion object
-    }
-    
-    data class Type(
-        val `type`: kotlin.String) : QueryVariable() {
-        companion object
-    }
-    
-    data class UInt53(
-        val `uint53`: kotlin.ULong) : QueryVariable() {
-        companion object
-    }
-    
-    data class ZkLoginIntentScope(
-        val `zkLoginIntentScope`: ZkLoginIntentScopeVariable) : QueryVariable() {
-        companion object
-    }
-    
-
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeQueryVariable : FfiConverterRustBuffer<QueryVariable>{
-    override fun read(buf: ByteBuffer): QueryVariable {
-        return when(buf.getInt()) {
-            1 -> QueryVariable.Base64(
-                FfiConverterString.read(buf),
-                )
-            2 -> QueryVariable.Boolean(
-                FfiConverterBoolean.read(buf),
-                )
-            3 -> QueryVariable.CheckpointId(
-                FfiConverterTypeCheckpointIdVariable.read(buf),
-                )
-            4 -> QueryVariable.EventFilter(
-                FfiConverterTypeEventFilterVariable.read(buf),
-                )
-            5 -> QueryVariable.Int(
-                FfiConverterULong.read(buf),
-                )
-            6 -> QueryVariable.IotaAddress(
-                FfiConverterString.read(buf),
-                )
-            7 -> QueryVariable.MovePackageCheckpointFilter(
-                FfiConverterTypeMovePackageCheckpointFilterVariable.read(buf),
-                )
-            8 -> QueryVariable.MovePackageVersionFilter(
-                FfiConverterTypeMovePackageVersionFilterVariable.read(buf),
-                )
-            9 -> QueryVariable.ObjectFilter(
-                FfiConverterTypeObjectFilterVariable.read(buf),
-                )
-            10 -> QueryVariable.String(
-                FfiConverterString.read(buf),
-                )
-            11 -> QueryVariable.TransactionBlockFilter(
-                FfiConverterTypeTransactionBlockFilterVariable.read(buf),
-                )
-            12 -> QueryVariable.TransactionMetadata(
-                FfiConverterTypeTransactionMetadataVariable.read(buf),
-                )
-            13 -> QueryVariable.Type(
-                FfiConverterString.read(buf),
-                )
-            14 -> QueryVariable.UInt53(
-                FfiConverterULong.read(buf),
-                )
-            15 -> QueryVariable.ZkLoginIntentScope(
-                FfiConverterTypeZkLoginIntentScopeVariable.read(buf),
-                )
-            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
-        }
-    }
-
-    override fun allocationSize(value: QueryVariable) = when(value) {
-        is QueryVariable.Base64 -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterString.allocationSize(value.`base64`)
-            )
-        }
-        is QueryVariable.Boolean -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterBoolean.allocationSize(value.`boolean`)
-            )
-        }
-        is QueryVariable.CheckpointId -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterTypeCheckpointIdVariable.allocationSize(value.`checkpointId`)
-            )
-        }
-        is QueryVariable.EventFilter -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterTypeEventFilterVariable.allocationSize(value.`filter`)
-            )
-        }
-        is QueryVariable.Int -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterULong.allocationSize(value.`int`)
-            )
-        }
-        is QueryVariable.IotaAddress -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterString.allocationSize(value.`address`)
-            )
-        }
-        is QueryVariable.MovePackageCheckpointFilter -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterTypeMovePackageCheckpointFilterVariable.allocationSize(value.`filter`)
-            )
-        }
-        is QueryVariable.MovePackageVersionFilter -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterTypeMovePackageVersionFilterVariable.allocationSize(value.`filter`)
-            )
-        }
-        is QueryVariable.ObjectFilter -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterTypeObjectFilterVariable.allocationSize(value.`filter`)
-            )
-        }
-        is QueryVariable.String -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterString.allocationSize(value.`string`)
-            )
-        }
-        is QueryVariable.TransactionBlockFilter -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterTypeTransactionBlockFilterVariable.allocationSize(value.`filter`)
-            )
-        }
-        is QueryVariable.TransactionMetadata -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterTypeTransactionMetadataVariable.allocationSize(value.`txMeta`)
-            )
-        }
-        is QueryVariable.Type -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterString.allocationSize(value.`type`)
-            )
-        }
-        is QueryVariable.UInt53 -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterULong.allocationSize(value.`uint53`)
-            )
-        }
-        is QueryVariable.ZkLoginIntentScope -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterTypeZkLoginIntentScopeVariable.allocationSize(value.`zkLoginIntentScope`)
-            )
-        }
-    }
-
-    override fun write(value: QueryVariable, buf: ByteBuffer) {
-        when(value) {
-            is QueryVariable.Base64 -> {
-                buf.putInt(1)
-                FfiConverterString.write(value.`base64`, buf)
-                Unit
-            }
-            is QueryVariable.Boolean -> {
-                buf.putInt(2)
-                FfiConverterBoolean.write(value.`boolean`, buf)
-                Unit
-            }
-            is QueryVariable.CheckpointId -> {
-                buf.putInt(3)
-                FfiConverterTypeCheckpointIdVariable.write(value.`checkpointId`, buf)
-                Unit
-            }
-            is QueryVariable.EventFilter -> {
-                buf.putInt(4)
-                FfiConverterTypeEventFilterVariable.write(value.`filter`, buf)
-                Unit
-            }
-            is QueryVariable.Int -> {
-                buf.putInt(5)
-                FfiConverterULong.write(value.`int`, buf)
-                Unit
-            }
-            is QueryVariable.IotaAddress -> {
-                buf.putInt(6)
-                FfiConverterString.write(value.`address`, buf)
-                Unit
-            }
-            is QueryVariable.MovePackageCheckpointFilter -> {
-                buf.putInt(7)
-                FfiConverterTypeMovePackageCheckpointFilterVariable.write(value.`filter`, buf)
-                Unit
-            }
-            is QueryVariable.MovePackageVersionFilter -> {
-                buf.putInt(8)
-                FfiConverterTypeMovePackageVersionFilterVariable.write(value.`filter`, buf)
-                Unit
-            }
-            is QueryVariable.ObjectFilter -> {
-                buf.putInt(9)
-                FfiConverterTypeObjectFilterVariable.write(value.`filter`, buf)
-                Unit
-            }
-            is QueryVariable.String -> {
-                buf.putInt(10)
-                FfiConverterString.write(value.`string`, buf)
-                Unit
-            }
-            is QueryVariable.TransactionBlockFilter -> {
-                buf.putInt(11)
-                FfiConverterTypeTransactionBlockFilterVariable.write(value.`filter`, buf)
-                Unit
-            }
-            is QueryVariable.TransactionMetadata -> {
-                buf.putInt(12)
-                FfiConverterTypeTransactionMetadataVariable.write(value.`txMeta`, buf)
-                Unit
-            }
-            is QueryVariable.Type -> {
-                buf.putInt(13)
-                FfiConverterString.write(value.`type`, buf)
-                Unit
-            }
-            is QueryVariable.UInt53 -> {
-                buf.putInt(14)
-                FfiConverterULong.write(value.`uint53`, buf)
-                Unit
-            }
-            is QueryVariable.ZkLoginIntentScope -> {
-                buf.putInt(15)
-                FfiConverterTypeZkLoginIntentScopeVariable.write(value.`zkLoginIntentScope`, buf)
-                Unit
-            }
-        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
-    }
-}
-
-
-
-
-
 
 
 sealed class SdkFfiException(message: String): kotlin.Exception(message) {
@@ -50138,41 +49488,6 @@ public object FfiConverterTypeTransactionBlockKindInput: FfiConverterRustBuffer<
     override fun allocationSize(value: TransactionBlockKindInput) = 4UL
 
     override fun write(value: TransactionBlockKindInput, buf: ByteBuffer) {
-        buf.putInt(value.ordinal + 1)
-    }
-}
-
-
-
-
-
-
-enum class TransactionBlockKindInputVariable {
-    
-    SYSTEM_TX,
-    PROGRAMMABLE_TX,
-    GENESIS,
-    CONSENSUS_COMMIT_PROLOGUE_V1,
-    AUTHENTICATOR_STATE_UPDATE_V1,
-    RANDOMNESS_STATE_UPDATE,
-    END_OF_EPOCH_TX;
-    companion object
-}
-
-
-/**
- * @suppress
- */
-public object FfiConverterTypeTransactionBlockKindInputVariable: FfiConverterRustBuffer<TransactionBlockKindInputVariable> {
-    override fun read(buf: ByteBuffer) = try {
-        TransactionBlockKindInputVariable.values()[buf.getInt() - 1]
-    } catch (e: IndexOutOfBoundsException) {
-        throw RuntimeException("invalid enum value, something is very wrong!!", e)
-    }
-
-    override fun allocationSize(value: TransactionBlockKindInputVariable) = 4UL
-
-    override fun write(value: TransactionBlockKindInputVariable, buf: ByteBuffer) {
         buf.putInt(value.ordinal + 1)
     }
 }
@@ -50511,36 +49826,6 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
                 Unit
             }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
-    }
-}
-
-
-
-
-
-
-enum class ZkLoginIntentScopeVariable {
-    
-    TRANSACTION_DATA,
-    PERSONAL_MESSAGE;
-    companion object
-}
-
-
-/**
- * @suppress
- */
-public object FfiConverterTypeZkLoginIntentScopeVariable: FfiConverterRustBuffer<ZkLoginIntentScopeVariable> {
-    override fun read(buf: ByteBuffer) = try {
-        ZkLoginIntentScopeVariable.values()[buf.getInt() - 1]
-    } catch (e: IndexOutOfBoundsException) {
-        throw RuntimeException("invalid enum value, something is very wrong!!", e)
-    }
-
-    override fun allocationSize(value: ZkLoginIntentScopeVariable) = 4UL
-
-    override fun write(value: ZkLoginIntentScopeVariable, buf: ByteBuffer) {
-        buf.putInt(value.ordinal + 1)
     }
 }
 
@@ -52280,38 +51565,6 @@ public object FfiConverterOptionalTypeTransactionBlockKindInput: FfiConverterRus
 /**
  * @suppress
  */
-public object FfiConverterOptionalTypeTransactionBlockKindInputVariable: FfiConverterRustBuffer<TransactionBlockKindInputVariable?> {
-    override fun read(buf: ByteBuffer): TransactionBlockKindInputVariable? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeTransactionBlockKindInputVariable.read(buf)
-    }
-
-    override fun allocationSize(value: TransactionBlockKindInputVariable?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeTransactionBlockKindInputVariable.allocationSize(value)
-        }
-    }
-
-    override fun write(value: TransactionBlockKindInputVariable?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeTransactionBlockKindInputVariable.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
 public object FfiConverterOptionalSequenceInt: FfiConverterRustBuffer<List<kotlin.Int>?> {
     override fun read(buf: ByteBuffer): List<kotlin.Int>? {
         if (buf.get().toInt() == 0) {
@@ -52622,38 +51875,6 @@ public object FfiConverterOptionalSequenceTypeMoveAbility: FfiConverterRustBuffe
         } else {
             buf.put(1)
             FfiConverterSequenceTypeMoveAbility.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalMapStringTypeQueryVariable: FfiConverterRustBuffer<Map<kotlin.String, QueryVariable>?> {
-    override fun read(buf: ByteBuffer): Map<kotlin.String, QueryVariable>? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterMapStringTypeQueryVariable.read(buf)
-    }
-
-    override fun allocationSize(value: Map<kotlin.String, QueryVariable>?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterMapStringTypeQueryVariable.allocationSize(value)
-        }
-    }
-
-    override fun write(value: Map<kotlin.String, QueryVariable>?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterMapStringTypeQueryVariable.write(value, buf)
         }
     }
 }
@@ -53908,34 +53129,6 @@ public object FfiConverterSequenceTypeMoveStructTypeParameter: FfiConverterRustB
 /**
  * @suppress
  */
-public object FfiConverterSequenceTypeObjectKeyVariable: FfiConverterRustBuffer<List<ObjectKeyVariable>> {
-    override fun read(buf: ByteBuffer): List<ObjectKeyVariable> {
-        val len = buf.getInt()
-        return List<ObjectKeyVariable>(len) {
-            FfiConverterTypeObjectKeyVariable.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<ObjectKeyVariable>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeObjectKeyVariable.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<ObjectKeyVariable>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterTypeObjectKeyVariable.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
 public object FfiConverterSequenceTypeObjectRef: FfiConverterRustBuffer<List<ObjectRef>> {
     override fun read(buf: ByteBuffer): List<ObjectRef> {
         val len = buf.getInt()
@@ -54290,45 +53483,6 @@ public object FfiConverterSequenceTypeMoveAbility: FfiConverterRustBuffer<List<M
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeMoveAbility.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterMapStringTypeQueryVariable: FfiConverterRustBuffer<Map<kotlin.String, QueryVariable>> {
-    override fun read(buf: ByteBuffer): Map<kotlin.String, QueryVariable> {
-        val len = buf.getInt()
-        return buildMap<kotlin.String, QueryVariable>(len) {
-            repeat(len) {
-                val k = FfiConverterString.read(buf)
-                val v = FfiConverterTypeQueryVariable.read(buf)
-                this[k] = v
-            }
-        }
-    }
-
-    override fun allocationSize(value: Map<kotlin.String, QueryVariable>): ULong {
-        val spaceForMapSize = 4UL
-        val spaceForChildren = value.map { (k, v) ->
-            FfiConverterString.allocationSize(k) +
-            FfiConverterTypeQueryVariable.allocationSize(v)
-        }.sum()
-        return spaceForMapSize + spaceForChildren
-    }
-
-    override fun write(value: Map<kotlin.String, QueryVariable>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        // The parens on `(k, v)` here ensure we're calling the right method,
-        // which is important for compatibility with older android devices.
-        // Ref https://blog.danlew.net/2017/03/16/kotlin-puzzler-whose-line-is-it-anyways/
-        value.forEach { (k, v) ->
-            FfiConverterString.write(k, buf)
-            FfiConverterTypeQueryVariable.write(v, buf)
         }
     }
 }

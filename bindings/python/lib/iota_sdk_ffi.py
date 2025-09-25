@@ -9131,42 +9131,6 @@ class _UniffiConverterTypeChangedObject(_UniffiConverterRustBuffer):
         _UniffiConverterTypeIdOperation.write(value.id_operation, buf)
 
 
-class CheckpointIdVariable:
-    digest: "typing.Optional[str]"
-    sequence_number: "typing.Optional[int]"
-    def __init__(self, *, digest: "typing.Optional[str]", sequence_number: "typing.Optional[int]"):
-        self.digest = digest
-        self.sequence_number = sequence_number
-
-    def __str__(self):
-        return "CheckpointIdVariable(digest={}, sequence_number={})".format(self.digest, self.sequence_number)
-
-    def __eq__(self, other):
-        if self.digest != other.digest:
-            return False
-        if self.sequence_number != other.sequence_number:
-            return False
-        return True
-
-class _UniffiConverterTypeCheckpointIdVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return CheckpointIdVariable(
-            digest=_UniffiConverterOptionalString.read(buf),
-            sequence_number=_UniffiConverterOptionalUInt64.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterOptionalString.check_lower(value.digest)
-        _UniffiConverterOptionalUInt64.check_lower(value.sequence_number)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterOptionalString.write(value.digest, buf)
-        _UniffiConverterOptionalUInt64.write(value.sequence_number, buf)
-
-
 class CheckpointSummaryPage:
     """
     A page of items returned by the GraphQL server.
@@ -10163,56 +10127,6 @@ class _UniffiConverterTypeEventFilter(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalString.write(value.transaction_digest, buf)
 
 
-class EventFilterVariable:
-    sender: "typing.Optional[str]"
-    transaction_digest: "typing.Optional[str]"
-    emitting_module: "typing.Optional[str]"
-    event_type: "typing.Optional[str]"
-    def __init__(self, *, sender: "typing.Optional[str]", transaction_digest: "typing.Optional[str]", emitting_module: "typing.Optional[str]", event_type: "typing.Optional[str]"):
-        self.sender = sender
-        self.transaction_digest = transaction_digest
-        self.emitting_module = emitting_module
-        self.event_type = event_type
-
-    def __str__(self):
-        return "EventFilterVariable(sender={}, transaction_digest={}, emitting_module={}, event_type={})".format(self.sender, self.transaction_digest, self.emitting_module, self.event_type)
-
-    def __eq__(self, other):
-        if self.sender != other.sender:
-            return False
-        if self.transaction_digest != other.transaction_digest:
-            return False
-        if self.emitting_module != other.emitting_module:
-            return False
-        if self.event_type != other.event_type:
-            return False
-        return True
-
-class _UniffiConverterTypeEventFilterVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return EventFilterVariable(
-            sender=_UniffiConverterOptionalString.read(buf),
-            transaction_digest=_UniffiConverterOptionalString.read(buf),
-            emitting_module=_UniffiConverterOptionalString.read(buf),
-            event_type=_UniffiConverterOptionalString.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterOptionalString.check_lower(value.sender)
-        _UniffiConverterOptionalString.check_lower(value.transaction_digest)
-        _UniffiConverterOptionalString.check_lower(value.emitting_module)
-        _UniffiConverterOptionalString.check_lower(value.event_type)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterOptionalString.write(value.sender, buf)
-        _UniffiConverterOptionalString.write(value.transaction_digest, buf)
-        _UniffiConverterOptionalString.write(value.emitting_module, buf)
-        _UniffiConverterOptionalString.write(value.event_type, buf)
-
-
 class EventPage:
     """
     A page of items returned by the GraphQL server.
@@ -11203,42 +11117,6 @@ class _UniffiConverterTypeMoveObject(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalTypeBase64.write(value.bcs, buf)
 
 
-class MovePackageCheckpointFilterVariable:
-    after_checkpoint: "typing.Optional[int]"
-    before_checkpoint: "typing.Optional[int]"
-    def __init__(self, *, after_checkpoint: "typing.Optional[int]", before_checkpoint: "typing.Optional[int]"):
-        self.after_checkpoint = after_checkpoint
-        self.before_checkpoint = before_checkpoint
-
-    def __str__(self):
-        return "MovePackageCheckpointFilterVariable(after_checkpoint={}, before_checkpoint={})".format(self.after_checkpoint, self.before_checkpoint)
-
-    def __eq__(self, other):
-        if self.after_checkpoint != other.after_checkpoint:
-            return False
-        if self.before_checkpoint != other.before_checkpoint:
-            return False
-        return True
-
-class _UniffiConverterTypeMovePackageCheckpointFilterVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return MovePackageCheckpointFilterVariable(
-            after_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
-            before_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterOptionalUInt64.check_lower(value.after_checkpoint)
-        _UniffiConverterOptionalUInt64.check_lower(value.before_checkpoint)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterOptionalUInt64.write(value.after_checkpoint, buf)
-        _UniffiConverterOptionalUInt64.write(value.before_checkpoint, buf)
-
-
 class MovePackagePage:
     """
     A page of items returned by the GraphQL server.
@@ -11325,42 +11203,6 @@ class _UniffiConverterTypeMovePackageQuery(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypeAddress.write(value.address, buf)
         _UniffiConverterOptionalTypeBase64.write(value.bcs, buf)
-
-
-class MovePackageVersionFilterVariable:
-    after_version: "typing.Optional[int]"
-    before_version: "typing.Optional[int]"
-    def __init__(self, *, after_version: "typing.Optional[int]", before_version: "typing.Optional[int]"):
-        self.after_version = after_version
-        self.before_version = before_version
-
-    def __str__(self):
-        return "MovePackageVersionFilterVariable(after_version={}, before_version={})".format(self.after_version, self.before_version)
-
-    def __eq__(self, other):
-        if self.after_version != other.after_version:
-            return False
-        if self.before_version != other.before_version:
-            return False
-        return True
-
-class _UniffiConverterTypeMovePackageVersionFilterVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return MovePackageVersionFilterVariable(
-            after_version=_UniffiConverterOptionalUInt64.read(buf),
-            before_version=_UniffiConverterOptionalUInt64.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterOptionalUInt64.check_lower(value.after_version)
-        _UniffiConverterOptionalUInt64.check_lower(value.before_version)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterOptionalUInt64.write(value.after_version, buf)
-        _UniffiConverterOptionalUInt64.write(value.before_version, buf)
 
 
 class MoveStruct:
@@ -11622,92 +11464,6 @@ class _UniffiConverterTypeObjectFilter(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalString.write(value.type_tag, buf)
         _UniffiConverterOptionalTypeAddress.write(value.owner, buf)
         _UniffiConverterOptionalSequenceTypeObjectId.write(value.object_ids, buf)
-
-
-class ObjectFilterVariable:
-    type: "typing.Optional[str]"
-    owner: "typing.Optional[str]"
-    object_ids: "typing.List[str]"
-    object_keys: "typing.List[ObjectKeyVariable]"
-    def __init__(self, *, type: "typing.Optional[str]", owner: "typing.Optional[str]", object_ids: "typing.List[str]", object_keys: "typing.List[ObjectKeyVariable]"):
-        self.type = type
-        self.owner = owner
-        self.object_ids = object_ids
-        self.object_keys = object_keys
-
-    def __str__(self):
-        return "ObjectFilterVariable(type={}, owner={}, object_ids={}, object_keys={})".format(self.type, self.owner, self.object_ids, self.object_keys)
-
-    def __eq__(self, other):
-        if self.type != other.type:
-            return False
-        if self.owner != other.owner:
-            return False
-        if self.object_ids != other.object_ids:
-            return False
-        if self.object_keys != other.object_keys:
-            return False
-        return True
-
-class _UniffiConverterTypeObjectFilterVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return ObjectFilterVariable(
-            type=_UniffiConverterOptionalString.read(buf),
-            owner=_UniffiConverterOptionalString.read(buf),
-            object_ids=_UniffiConverterSequenceString.read(buf),
-            object_keys=_UniffiConverterSequenceTypeObjectKeyVariable.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterOptionalString.check_lower(value.type)
-        _UniffiConverterOptionalString.check_lower(value.owner)
-        _UniffiConverterSequenceString.check_lower(value.object_ids)
-        _UniffiConverterSequenceTypeObjectKeyVariable.check_lower(value.object_keys)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterOptionalString.write(value.type, buf)
-        _UniffiConverterOptionalString.write(value.owner, buf)
-        _UniffiConverterSequenceString.write(value.object_ids, buf)
-        _UniffiConverterSequenceTypeObjectKeyVariable.write(value.object_keys, buf)
-
-
-class ObjectKeyVariable:
-    object_id: "str"
-    version: "int"
-    def __init__(self, *, object_id: "str", version: "int"):
-        self.object_id = object_id
-        self.version = version
-
-    def __str__(self):
-        return "ObjectKeyVariable(object_id={}, version={})".format(self.object_id, self.version)
-
-    def __eq__(self, other):
-        if self.object_id != other.object_id:
-            return False
-        if self.version != other.version:
-            return False
-        return True
-
-class _UniffiConverterTypeObjectKeyVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return ObjectKeyVariable(
-            object_id=_UniffiConverterString.read(buf),
-            version=_UniffiConverterUInt64.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterString.check_lower(value.object_id)
-        _UniffiConverterUInt64.check_lower(value.version)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterString.write(value.object_id, buf)
-        _UniffiConverterUInt64.write(value.version, buf)
 
 
 class ObjectPage:
@@ -12184,8 +11940,8 @@ class _UniffiConverterTypeProtocolConfigs(_UniffiConverterRustBuffer):
 
 class Query:
     query: "str"
-    variables: "typing.Optional[dict[str, QueryVariable]]"
-    def __init__(self, *, query: "str", variables: "typing.Optional[dict[str, QueryVariable]]" = _DEFAULT):
+    variables: "typing.Optional[Value]"
+    def __init__(self, *, query: "str", variables: "typing.Optional[Value]" = _DEFAULT):
         self.query = query
         if variables is _DEFAULT:
             self.variables = None
@@ -12207,18 +11963,18 @@ class _UniffiConverterTypeQuery(_UniffiConverterRustBuffer):
     def read(buf):
         return Query(
             query=_UniffiConverterString.read(buf),
-            variables=_UniffiConverterOptionalMapStringTypeQueryVariable.read(buf),
+            variables=_UniffiConverterOptionalTypeValue.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
         _UniffiConverterString.check_lower(value.query)
-        _UniffiConverterOptionalMapStringTypeQueryVariable.check_lower(value.variables)
+        _UniffiConverterOptionalTypeValue.check_lower(value.variables)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterString.write(value.query, buf)
-        _UniffiConverterOptionalMapStringTypeQueryVariable.write(value.variables, buf)
+        _UniffiConverterOptionalTypeValue.write(value.variables, buf)
 
 
 class RandomnessStateUpdate:
@@ -12569,105 +12325,6 @@ class _UniffiConverterTypeSignedTransactionPage(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypePageInfo.write(value.page_info, buf)
         _UniffiConverterSequenceTypeSignedTransaction.write(value.data, buf)
-
-
-class TransactionBlockFilterVariable:
-    function: "typing.Optional[str]"
-    kind: "typing.Optional[TransactionBlockKindInputVariable]"
-    after_checkpoint: "typing.Optional[int]"
-    at_checkpoint: "typing.Optional[int]"
-    before_checkpoint: "typing.Optional[int]"
-    sign_address: "typing.Optional[str]"
-    recv_address: "typing.Optional[str]"
-    input_object: "typing.Optional[str]"
-    changed_object: "typing.Optional[str]"
-    wrapped_or_deleted_object: "typing.Optional[str]"
-    transaction_ids: "typing.List[str]"
-    def __init__(self, *, function: "typing.Optional[str]", kind: "typing.Optional[TransactionBlockKindInputVariable]", after_checkpoint: "typing.Optional[int]", at_checkpoint: "typing.Optional[int]", before_checkpoint: "typing.Optional[int]", sign_address: "typing.Optional[str]", recv_address: "typing.Optional[str]", input_object: "typing.Optional[str]", changed_object: "typing.Optional[str]", wrapped_or_deleted_object: "typing.Optional[str]", transaction_ids: "typing.List[str]"):
-        self.function = function
-        self.kind = kind
-        self.after_checkpoint = after_checkpoint
-        self.at_checkpoint = at_checkpoint
-        self.before_checkpoint = before_checkpoint
-        self.sign_address = sign_address
-        self.recv_address = recv_address
-        self.input_object = input_object
-        self.changed_object = changed_object
-        self.wrapped_or_deleted_object = wrapped_or_deleted_object
-        self.transaction_ids = transaction_ids
-
-    def __str__(self):
-        return "TransactionBlockFilterVariable(function={}, kind={}, after_checkpoint={}, at_checkpoint={}, before_checkpoint={}, sign_address={}, recv_address={}, input_object={}, changed_object={}, wrapped_or_deleted_object={}, transaction_ids={})".format(self.function, self.kind, self.after_checkpoint, self.at_checkpoint, self.before_checkpoint, self.sign_address, self.recv_address, self.input_object, self.changed_object, self.wrapped_or_deleted_object, self.transaction_ids)
-
-    def __eq__(self, other):
-        if self.function != other.function:
-            return False
-        if self.kind != other.kind:
-            return False
-        if self.after_checkpoint != other.after_checkpoint:
-            return False
-        if self.at_checkpoint != other.at_checkpoint:
-            return False
-        if self.before_checkpoint != other.before_checkpoint:
-            return False
-        if self.sign_address != other.sign_address:
-            return False
-        if self.recv_address != other.recv_address:
-            return False
-        if self.input_object != other.input_object:
-            return False
-        if self.changed_object != other.changed_object:
-            return False
-        if self.wrapped_or_deleted_object != other.wrapped_or_deleted_object:
-            return False
-        if self.transaction_ids != other.transaction_ids:
-            return False
-        return True
-
-class _UniffiConverterTypeTransactionBlockFilterVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return TransactionBlockFilterVariable(
-            function=_UniffiConverterOptionalString.read(buf),
-            kind=_UniffiConverterOptionalTypeTransactionBlockKindInputVariable.read(buf),
-            after_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
-            at_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
-            before_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
-            sign_address=_UniffiConverterOptionalString.read(buf),
-            recv_address=_UniffiConverterOptionalString.read(buf),
-            input_object=_UniffiConverterOptionalString.read(buf),
-            changed_object=_UniffiConverterOptionalString.read(buf),
-            wrapped_or_deleted_object=_UniffiConverterOptionalString.read(buf),
-            transaction_ids=_UniffiConverterSequenceString.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterOptionalString.check_lower(value.function)
-        _UniffiConverterOptionalTypeTransactionBlockKindInputVariable.check_lower(value.kind)
-        _UniffiConverterOptionalUInt64.check_lower(value.after_checkpoint)
-        _UniffiConverterOptionalUInt64.check_lower(value.at_checkpoint)
-        _UniffiConverterOptionalUInt64.check_lower(value.before_checkpoint)
-        _UniffiConverterOptionalString.check_lower(value.sign_address)
-        _UniffiConverterOptionalString.check_lower(value.recv_address)
-        _UniffiConverterOptionalString.check_lower(value.input_object)
-        _UniffiConverterOptionalString.check_lower(value.changed_object)
-        _UniffiConverterOptionalString.check_lower(value.wrapped_or_deleted_object)
-        _UniffiConverterSequenceString.check_lower(value.transaction_ids)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterOptionalString.write(value.function, buf)
-        _UniffiConverterOptionalTypeTransactionBlockKindInputVariable.write(value.kind, buf)
-        _UniffiConverterOptionalUInt64.write(value.after_checkpoint, buf)
-        _UniffiConverterOptionalUInt64.write(value.at_checkpoint, buf)
-        _UniffiConverterOptionalUInt64.write(value.before_checkpoint, buf)
-        _UniffiConverterOptionalString.write(value.sign_address, buf)
-        _UniffiConverterOptionalString.write(value.recv_address, buf)
-        _UniffiConverterOptionalString.write(value.input_object, buf)
-        _UniffiConverterOptionalString.write(value.changed_object, buf)
-        _UniffiConverterOptionalString.write(value.wrapped_or_deleted_object, buf)
-        _UniffiConverterSequenceString.write(value.transaction_ids, buf)
 
 
 class TransactionDataEffects:
@@ -13058,63 +12715,6 @@ class _UniffiConverterTypeTransactionMetadata(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalUInt64.write(value.gas_price, buf)
         _UniffiConverterOptionalTypeAddress.write(value.gas_sponsor, buf)
         _UniffiConverterOptionalTypeAddress.write(value.sender, buf)
-
-
-class TransactionMetadataVariable:
-    sender: "typing.Optional[str]"
-    gas_price: "typing.Optional[int]"
-    gas_objects: "typing.List[str]"
-    gas_budget: "typing.Optional[int]"
-    gas_sponsor: "typing.Optional[str]"
-    def __init__(self, *, sender: "typing.Optional[str]", gas_price: "typing.Optional[int]", gas_objects: "typing.List[str]", gas_budget: "typing.Optional[int]", gas_sponsor: "typing.Optional[str]"):
-        self.sender = sender
-        self.gas_price = gas_price
-        self.gas_objects = gas_objects
-        self.gas_budget = gas_budget
-        self.gas_sponsor = gas_sponsor
-
-    def __str__(self):
-        return "TransactionMetadataVariable(sender={}, gas_price={}, gas_objects={}, gas_budget={}, gas_sponsor={})".format(self.sender, self.gas_price, self.gas_objects, self.gas_budget, self.gas_sponsor)
-
-    def __eq__(self, other):
-        if self.sender != other.sender:
-            return False
-        if self.gas_price != other.gas_price:
-            return False
-        if self.gas_objects != other.gas_objects:
-            return False
-        if self.gas_budget != other.gas_budget:
-            return False
-        if self.gas_sponsor != other.gas_sponsor:
-            return False
-        return True
-
-class _UniffiConverterTypeTransactionMetadataVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return TransactionMetadataVariable(
-            sender=_UniffiConverterOptionalString.read(buf),
-            gas_price=_UniffiConverterOptionalUInt64.read(buf),
-            gas_objects=_UniffiConverterSequenceString.read(buf),
-            gas_budget=_UniffiConverterOptionalUInt64.read(buf),
-            gas_sponsor=_UniffiConverterOptionalString.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterOptionalString.check_lower(value.sender)
-        _UniffiConverterOptionalUInt64.check_lower(value.gas_price)
-        _UniffiConverterSequenceString.check_lower(value.gas_objects)
-        _UniffiConverterOptionalUInt64.check_lower(value.gas_budget)
-        _UniffiConverterOptionalString.check_lower(value.gas_sponsor)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterOptionalString.write(value.sender, buf)
-        _UniffiConverterOptionalUInt64.write(value.gas_price, buf)
-        _UniffiConverterSequenceString.write(value.gas_objects, buf)
-        _UniffiConverterOptionalUInt64.write(value.gas_budget, buf)
-        _UniffiConverterOptionalString.write(value.gas_sponsor, buf)
 
 
 class TransactionsFilter:
@@ -17130,508 +16730,6 @@ class _UniffiConverterTypePackageUpgradeError(_UniffiConverterRustBuffer):
 
 
 
-
-
-
-class QueryVariable:
-    def __init__(self):
-        raise RuntimeError("QueryVariable cannot be instantiated directly")
-
-    # Each enum variant is a nested class of the enum itself.
-    class BASE64:
-        base64: "str"
-
-        def __init__(self,base64: "str"):
-            self.base64 = base64
-
-        def __str__(self):
-            return "QueryVariable.BASE64(base64={})".format(self.base64)
-
-        def __eq__(self, other):
-            if not other.is_BASE64():
-                return False
-            if self.base64 != other.base64:
-                return False
-            return True
-    
-    class BOOLEAN:
-        boolean: "bool"
-
-        def __init__(self,boolean: "bool"):
-            self.boolean = boolean
-
-        def __str__(self):
-            return "QueryVariable.BOOLEAN(boolean={})".format(self.boolean)
-
-        def __eq__(self, other):
-            if not other.is_BOOLEAN():
-                return False
-            if self.boolean != other.boolean:
-                return False
-            return True
-    
-    class CHECKPOINT_ID:
-        checkpoint_id: "CheckpointIdVariable"
-
-        def __init__(self,checkpoint_id: "CheckpointIdVariable"):
-            self.checkpoint_id = checkpoint_id
-
-        def __str__(self):
-            return "QueryVariable.CHECKPOINT_ID(checkpoint_id={})".format(self.checkpoint_id)
-
-        def __eq__(self, other):
-            if not other.is_CHECKPOINT_ID():
-                return False
-            if self.checkpoint_id != other.checkpoint_id:
-                return False
-            return True
-    
-    class EVENT_FILTER:
-        filter: "EventFilterVariable"
-
-        def __init__(self,filter: "EventFilterVariable"):
-            self.filter = filter
-
-        def __str__(self):
-            return "QueryVariable.EVENT_FILTER(filter={})".format(self.filter)
-
-        def __eq__(self, other):
-            if not other.is_EVENT_FILTER():
-                return False
-            if self.filter != other.filter:
-                return False
-            return True
-    
-    class INT:
-        int: "int"
-
-        def __init__(self,int: "int"):
-            self.int = int
-
-        def __str__(self):
-            return "QueryVariable.INT(int={})".format(self.int)
-
-        def __eq__(self, other):
-            if not other.is_INT():
-                return False
-            if self.int != other.int:
-                return False
-            return True
-    
-    class IOTA_ADDRESS:
-        address: "str"
-
-        def __init__(self,address: "str"):
-            self.address = address
-
-        def __str__(self):
-            return "QueryVariable.IOTA_ADDRESS(address={})".format(self.address)
-
-        def __eq__(self, other):
-            if not other.is_IOTA_ADDRESS():
-                return False
-            if self.address != other.address:
-                return False
-            return True
-    
-    class MOVE_PACKAGE_CHECKPOINT_FILTER:
-        filter: "MovePackageCheckpointFilterVariable"
-
-        def __init__(self,filter: "MovePackageCheckpointFilterVariable"):
-            self.filter = filter
-
-        def __str__(self):
-            return "QueryVariable.MOVE_PACKAGE_CHECKPOINT_FILTER(filter={})".format(self.filter)
-
-        def __eq__(self, other):
-            if not other.is_MOVE_PACKAGE_CHECKPOINT_FILTER():
-                return False
-            if self.filter != other.filter:
-                return False
-            return True
-    
-    class MOVE_PACKAGE_VERSION_FILTER:
-        filter: "MovePackageVersionFilterVariable"
-
-        def __init__(self,filter: "MovePackageVersionFilterVariable"):
-            self.filter = filter
-
-        def __str__(self):
-            return "QueryVariable.MOVE_PACKAGE_VERSION_FILTER(filter={})".format(self.filter)
-
-        def __eq__(self, other):
-            if not other.is_MOVE_PACKAGE_VERSION_FILTER():
-                return False
-            if self.filter != other.filter:
-                return False
-            return True
-    
-    class OBJECT_FILTER:
-        filter: "ObjectFilterVariable"
-
-        def __init__(self,filter: "ObjectFilterVariable"):
-            self.filter = filter
-
-        def __str__(self):
-            return "QueryVariable.OBJECT_FILTER(filter={})".format(self.filter)
-
-        def __eq__(self, other):
-            if not other.is_OBJECT_FILTER():
-                return False
-            if self.filter != other.filter:
-                return False
-            return True
-    
-    class STRING:
-        string: "str"
-
-        def __init__(self,string: "str"):
-            self.string = string
-
-        def __str__(self):
-            return "QueryVariable.STRING(string={})".format(self.string)
-
-        def __eq__(self, other):
-            if not other.is_STRING():
-                return False
-            if self.string != other.string:
-                return False
-            return True
-    
-    class TRANSACTION_BLOCK_FILTER:
-        filter: "TransactionBlockFilterVariable"
-
-        def __init__(self,filter: "TransactionBlockFilterVariable"):
-            self.filter = filter
-
-        def __str__(self):
-            return "QueryVariable.TRANSACTION_BLOCK_FILTER(filter={})".format(self.filter)
-
-        def __eq__(self, other):
-            if not other.is_TRANSACTION_BLOCK_FILTER():
-                return False
-            if self.filter != other.filter:
-                return False
-            return True
-    
-    class TRANSACTION_METADATA:
-        tx_meta: "TransactionMetadataVariable"
-
-        def __init__(self,tx_meta: "TransactionMetadataVariable"):
-            self.tx_meta = tx_meta
-
-        def __str__(self):
-            return "QueryVariable.TRANSACTION_METADATA(tx_meta={})".format(self.tx_meta)
-
-        def __eq__(self, other):
-            if not other.is_TRANSACTION_METADATA():
-                return False
-            if self.tx_meta != other.tx_meta:
-                return False
-            return True
-    
-    class TYPE:
-        type: "str"
-
-        def __init__(self,type: "str"):
-            self.type = type
-
-        def __str__(self):
-            return "QueryVariable.TYPE(type={})".format(self.type)
-
-        def __eq__(self, other):
-            if not other.is_TYPE():
-                return False
-            if self.type != other.type:
-                return False
-            return True
-    
-    class U_INT53:
-        uint53: "int"
-
-        def __init__(self,uint53: "int"):
-            self.uint53 = uint53
-
-        def __str__(self):
-            return "QueryVariable.U_INT53(uint53={})".format(self.uint53)
-
-        def __eq__(self, other):
-            if not other.is_U_INT53():
-                return False
-            if self.uint53 != other.uint53:
-                return False
-            return True
-    
-    class ZK_LOGIN_INTENT_SCOPE:
-        zk_login_intent_scope: "ZkLoginIntentScopeVariable"
-
-        def __init__(self,zk_login_intent_scope: "ZkLoginIntentScopeVariable"):
-            self.zk_login_intent_scope = zk_login_intent_scope
-
-        def __str__(self):
-            return "QueryVariable.ZK_LOGIN_INTENT_SCOPE(zk_login_intent_scope={})".format(self.zk_login_intent_scope)
-
-        def __eq__(self, other):
-            if not other.is_ZK_LOGIN_INTENT_SCOPE():
-                return False
-            if self.zk_login_intent_scope != other.zk_login_intent_scope:
-                return False
-            return True
-    
-    
-
-    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
-    # whether an instance is that variant.
-    def is_BASE64(self) -> bool:
-        return isinstance(self, QueryVariable.BASE64)
-    def is_base64(self) -> bool:
-        return isinstance(self, QueryVariable.BASE64)
-    def is_BOOLEAN(self) -> bool:
-        return isinstance(self, QueryVariable.BOOLEAN)
-    def is_boolean(self) -> bool:
-        return isinstance(self, QueryVariable.BOOLEAN)
-    def is_CHECKPOINT_ID(self) -> bool:
-        return isinstance(self, QueryVariable.CHECKPOINT_ID)
-    def is_checkpoint_id(self) -> bool:
-        return isinstance(self, QueryVariable.CHECKPOINT_ID)
-    def is_EVENT_FILTER(self) -> bool:
-        return isinstance(self, QueryVariable.EVENT_FILTER)
-    def is_event_filter(self) -> bool:
-        return isinstance(self, QueryVariable.EVENT_FILTER)
-    def is_INT(self) -> bool:
-        return isinstance(self, QueryVariable.INT)
-    def is_int(self) -> bool:
-        return isinstance(self, QueryVariable.INT)
-    def is_IOTA_ADDRESS(self) -> bool:
-        return isinstance(self, QueryVariable.IOTA_ADDRESS)
-    def is_iota_address(self) -> bool:
-        return isinstance(self, QueryVariable.IOTA_ADDRESS)
-    def is_MOVE_PACKAGE_CHECKPOINT_FILTER(self) -> bool:
-        return isinstance(self, QueryVariable.MOVE_PACKAGE_CHECKPOINT_FILTER)
-    def is_move_package_checkpoint_filter(self) -> bool:
-        return isinstance(self, QueryVariable.MOVE_PACKAGE_CHECKPOINT_FILTER)
-    def is_MOVE_PACKAGE_VERSION_FILTER(self) -> bool:
-        return isinstance(self, QueryVariable.MOVE_PACKAGE_VERSION_FILTER)
-    def is_move_package_version_filter(self) -> bool:
-        return isinstance(self, QueryVariable.MOVE_PACKAGE_VERSION_FILTER)
-    def is_OBJECT_FILTER(self) -> bool:
-        return isinstance(self, QueryVariable.OBJECT_FILTER)
-    def is_object_filter(self) -> bool:
-        return isinstance(self, QueryVariable.OBJECT_FILTER)
-    def is_STRING(self) -> bool:
-        return isinstance(self, QueryVariable.STRING)
-    def is_string(self) -> bool:
-        return isinstance(self, QueryVariable.STRING)
-    def is_TRANSACTION_BLOCK_FILTER(self) -> bool:
-        return isinstance(self, QueryVariable.TRANSACTION_BLOCK_FILTER)
-    def is_transaction_block_filter(self) -> bool:
-        return isinstance(self, QueryVariable.TRANSACTION_BLOCK_FILTER)
-    def is_TRANSACTION_METADATA(self) -> bool:
-        return isinstance(self, QueryVariable.TRANSACTION_METADATA)
-    def is_transaction_metadata(self) -> bool:
-        return isinstance(self, QueryVariable.TRANSACTION_METADATA)
-    def is_TYPE(self) -> bool:
-        return isinstance(self, QueryVariable.TYPE)
-    def is_type(self) -> bool:
-        return isinstance(self, QueryVariable.TYPE)
-    def is_U_INT53(self) -> bool:
-        return isinstance(self, QueryVariable.U_INT53)
-    def is_u_int53(self) -> bool:
-        return isinstance(self, QueryVariable.U_INT53)
-    def is_ZK_LOGIN_INTENT_SCOPE(self) -> bool:
-        return isinstance(self, QueryVariable.ZK_LOGIN_INTENT_SCOPE)
-    def is_zk_login_intent_scope(self) -> bool:
-        return isinstance(self, QueryVariable.ZK_LOGIN_INTENT_SCOPE)
-    
-
-# Now, a little trick - we make each nested variant class be a subclass of the main
-# enum class, so that method calls and instance checks etc will work intuitively.
-# We might be able to do this a little more neatly with a metaclass, but this'll do.
-QueryVariable.BASE64 = type("QueryVariable.BASE64", (QueryVariable.BASE64, QueryVariable,), {})  # type: ignore
-QueryVariable.BOOLEAN = type("QueryVariable.BOOLEAN", (QueryVariable.BOOLEAN, QueryVariable,), {})  # type: ignore
-QueryVariable.CHECKPOINT_ID = type("QueryVariable.CHECKPOINT_ID", (QueryVariable.CHECKPOINT_ID, QueryVariable,), {})  # type: ignore
-QueryVariable.EVENT_FILTER = type("QueryVariable.EVENT_FILTER", (QueryVariable.EVENT_FILTER, QueryVariable,), {})  # type: ignore
-QueryVariable.INT = type("QueryVariable.INT", (QueryVariable.INT, QueryVariable,), {})  # type: ignore
-QueryVariable.IOTA_ADDRESS = type("QueryVariable.IOTA_ADDRESS", (QueryVariable.IOTA_ADDRESS, QueryVariable,), {})  # type: ignore
-QueryVariable.MOVE_PACKAGE_CHECKPOINT_FILTER = type("QueryVariable.MOVE_PACKAGE_CHECKPOINT_FILTER", (QueryVariable.MOVE_PACKAGE_CHECKPOINT_FILTER, QueryVariable,), {})  # type: ignore
-QueryVariable.MOVE_PACKAGE_VERSION_FILTER = type("QueryVariable.MOVE_PACKAGE_VERSION_FILTER", (QueryVariable.MOVE_PACKAGE_VERSION_FILTER, QueryVariable,), {})  # type: ignore
-QueryVariable.OBJECT_FILTER = type("QueryVariable.OBJECT_FILTER", (QueryVariable.OBJECT_FILTER, QueryVariable,), {})  # type: ignore
-QueryVariable.STRING = type("QueryVariable.STRING", (QueryVariable.STRING, QueryVariable,), {})  # type: ignore
-QueryVariable.TRANSACTION_BLOCK_FILTER = type("QueryVariable.TRANSACTION_BLOCK_FILTER", (QueryVariable.TRANSACTION_BLOCK_FILTER, QueryVariable,), {})  # type: ignore
-QueryVariable.TRANSACTION_METADATA = type("QueryVariable.TRANSACTION_METADATA", (QueryVariable.TRANSACTION_METADATA, QueryVariable,), {})  # type: ignore
-QueryVariable.TYPE = type("QueryVariable.TYPE", (QueryVariable.TYPE, QueryVariable,), {})  # type: ignore
-QueryVariable.U_INT53 = type("QueryVariable.U_INT53", (QueryVariable.U_INT53, QueryVariable,), {})  # type: ignore
-QueryVariable.ZK_LOGIN_INTENT_SCOPE = type("QueryVariable.ZK_LOGIN_INTENT_SCOPE", (QueryVariable.ZK_LOGIN_INTENT_SCOPE, QueryVariable,), {})  # type: ignore
-
-
-
-
-class _UniffiConverterTypeQueryVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        variant = buf.read_i32()
-        if variant == 1:
-            return QueryVariable.BASE64(
-                _UniffiConverterString.read(buf),
-            )
-        if variant == 2:
-            return QueryVariable.BOOLEAN(
-                _UniffiConverterBool.read(buf),
-            )
-        if variant == 3:
-            return QueryVariable.CHECKPOINT_ID(
-                _UniffiConverterTypeCheckpointIdVariable.read(buf),
-            )
-        if variant == 4:
-            return QueryVariable.EVENT_FILTER(
-                _UniffiConverterTypeEventFilterVariable.read(buf),
-            )
-        if variant == 5:
-            return QueryVariable.INT(
-                _UniffiConverterUInt64.read(buf),
-            )
-        if variant == 6:
-            return QueryVariable.IOTA_ADDRESS(
-                _UniffiConverterString.read(buf),
-            )
-        if variant == 7:
-            return QueryVariable.MOVE_PACKAGE_CHECKPOINT_FILTER(
-                _UniffiConverterTypeMovePackageCheckpointFilterVariable.read(buf),
-            )
-        if variant == 8:
-            return QueryVariable.MOVE_PACKAGE_VERSION_FILTER(
-                _UniffiConverterTypeMovePackageVersionFilterVariable.read(buf),
-            )
-        if variant == 9:
-            return QueryVariable.OBJECT_FILTER(
-                _UniffiConverterTypeObjectFilterVariable.read(buf),
-            )
-        if variant == 10:
-            return QueryVariable.STRING(
-                _UniffiConverterString.read(buf),
-            )
-        if variant == 11:
-            return QueryVariable.TRANSACTION_BLOCK_FILTER(
-                _UniffiConverterTypeTransactionBlockFilterVariable.read(buf),
-            )
-        if variant == 12:
-            return QueryVariable.TRANSACTION_METADATA(
-                _UniffiConverterTypeTransactionMetadataVariable.read(buf),
-            )
-        if variant == 13:
-            return QueryVariable.TYPE(
-                _UniffiConverterString.read(buf),
-            )
-        if variant == 14:
-            return QueryVariable.U_INT53(
-                _UniffiConverterUInt64.read(buf),
-            )
-        if variant == 15:
-            return QueryVariable.ZK_LOGIN_INTENT_SCOPE(
-                _UniffiConverterTypeZkLoginIntentScopeVariable.read(buf),
-            )
-        raise InternalError("Raw enum value doesn't match any cases")
-
-    @staticmethod
-    def check_lower(value):
-        if value.is_BASE64():
-            _UniffiConverterString.check_lower(value.base64)
-            return
-        if value.is_BOOLEAN():
-            _UniffiConverterBool.check_lower(value.boolean)
-            return
-        if value.is_CHECKPOINT_ID():
-            _UniffiConverterTypeCheckpointIdVariable.check_lower(value.checkpoint_id)
-            return
-        if value.is_EVENT_FILTER():
-            _UniffiConverterTypeEventFilterVariable.check_lower(value.filter)
-            return
-        if value.is_INT():
-            _UniffiConverterUInt64.check_lower(value.int)
-            return
-        if value.is_IOTA_ADDRESS():
-            _UniffiConverterString.check_lower(value.address)
-            return
-        if value.is_MOVE_PACKAGE_CHECKPOINT_FILTER():
-            _UniffiConverterTypeMovePackageCheckpointFilterVariable.check_lower(value.filter)
-            return
-        if value.is_MOVE_PACKAGE_VERSION_FILTER():
-            _UniffiConverterTypeMovePackageVersionFilterVariable.check_lower(value.filter)
-            return
-        if value.is_OBJECT_FILTER():
-            _UniffiConverterTypeObjectFilterVariable.check_lower(value.filter)
-            return
-        if value.is_STRING():
-            _UniffiConverterString.check_lower(value.string)
-            return
-        if value.is_TRANSACTION_BLOCK_FILTER():
-            _UniffiConverterTypeTransactionBlockFilterVariable.check_lower(value.filter)
-            return
-        if value.is_TRANSACTION_METADATA():
-            _UniffiConverterTypeTransactionMetadataVariable.check_lower(value.tx_meta)
-            return
-        if value.is_TYPE():
-            _UniffiConverterString.check_lower(value.type)
-            return
-        if value.is_U_INT53():
-            _UniffiConverterUInt64.check_lower(value.uint53)
-            return
-        if value.is_ZK_LOGIN_INTENT_SCOPE():
-            _UniffiConverterTypeZkLoginIntentScopeVariable.check_lower(value.zk_login_intent_scope)
-            return
-        raise ValueError(value)
-
-    @staticmethod
-    def write(value, buf):
-        if value.is_BASE64():
-            buf.write_i32(1)
-            _UniffiConverterString.write(value.base64, buf)
-        if value.is_BOOLEAN():
-            buf.write_i32(2)
-            _UniffiConverterBool.write(value.boolean, buf)
-        if value.is_CHECKPOINT_ID():
-            buf.write_i32(3)
-            _UniffiConverterTypeCheckpointIdVariable.write(value.checkpoint_id, buf)
-        if value.is_EVENT_FILTER():
-            buf.write_i32(4)
-            _UniffiConverterTypeEventFilterVariable.write(value.filter, buf)
-        if value.is_INT():
-            buf.write_i32(5)
-            _UniffiConverterUInt64.write(value.int, buf)
-        if value.is_IOTA_ADDRESS():
-            buf.write_i32(6)
-            _UniffiConverterString.write(value.address, buf)
-        if value.is_MOVE_PACKAGE_CHECKPOINT_FILTER():
-            buf.write_i32(7)
-            _UniffiConverterTypeMovePackageCheckpointFilterVariable.write(value.filter, buf)
-        if value.is_MOVE_PACKAGE_VERSION_FILTER():
-            buf.write_i32(8)
-            _UniffiConverterTypeMovePackageVersionFilterVariable.write(value.filter, buf)
-        if value.is_OBJECT_FILTER():
-            buf.write_i32(9)
-            _UniffiConverterTypeObjectFilterVariable.write(value.filter, buf)
-        if value.is_STRING():
-            buf.write_i32(10)
-            _UniffiConverterString.write(value.string, buf)
-        if value.is_TRANSACTION_BLOCK_FILTER():
-            buf.write_i32(11)
-            _UniffiConverterTypeTransactionBlockFilterVariable.write(value.filter, buf)
-        if value.is_TRANSACTION_METADATA():
-            buf.write_i32(12)
-            _UniffiConverterTypeTransactionMetadataVariable.write(value.tx_meta, buf)
-        if value.is_TYPE():
-            buf.write_i32(13)
-            _UniffiConverterString.write(value.type, buf)
-        if value.is_U_INT53():
-            buf.write_i32(14)
-            _UniffiConverterUInt64.write(value.uint53, buf)
-        if value.is_ZK_LOGIN_INTENT_SCOPE():
-            buf.write_i32(15)
-            _UniffiConverterTypeZkLoginIntentScopeVariable.write(value.zk_login_intent_scope, buf)
-
-
-
-
 # SdkFfiError
 # We want to define each variant as a nested class that's also a subclass,
 # which is tricky in Python.  To accomplish this we're going to create each
@@ -17846,84 +16944,6 @@ class _UniffiConverterTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
         if value == TransactionBlockKindInput.RANDOMNESS_STATE_UPDATE:
             buf.write_i32(6)
         if value == TransactionBlockKindInput.END_OF_EPOCH_TX:
-            buf.write_i32(7)
-
-
-
-
-
-
-
-class TransactionBlockKindInputVariable(enum.Enum):
-    SYSTEM_TX = 0
-    
-    PROGRAMMABLE_TX = 1
-    
-    GENESIS = 2
-    
-    CONSENSUS_COMMIT_PROLOGUE_V1 = 3
-    
-    AUTHENTICATOR_STATE_UPDATE_V1 = 4
-    
-    RANDOMNESS_STATE_UPDATE = 5
-    
-    END_OF_EPOCH_TX = 6
-    
-
-
-class _UniffiConverterTypeTransactionBlockKindInputVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        variant = buf.read_i32()
-        if variant == 1:
-            return TransactionBlockKindInputVariable.SYSTEM_TX
-        if variant == 2:
-            return TransactionBlockKindInputVariable.PROGRAMMABLE_TX
-        if variant == 3:
-            return TransactionBlockKindInputVariable.GENESIS
-        if variant == 4:
-            return TransactionBlockKindInputVariable.CONSENSUS_COMMIT_PROLOGUE_V1
-        if variant == 5:
-            return TransactionBlockKindInputVariable.AUTHENTICATOR_STATE_UPDATE_V1
-        if variant == 6:
-            return TransactionBlockKindInputVariable.RANDOMNESS_STATE_UPDATE
-        if variant == 7:
-            return TransactionBlockKindInputVariable.END_OF_EPOCH_TX
-        raise InternalError("Raw enum value doesn't match any cases")
-
-    @staticmethod
-    def check_lower(value):
-        if value == TransactionBlockKindInputVariable.SYSTEM_TX:
-            return
-        if value == TransactionBlockKindInputVariable.PROGRAMMABLE_TX:
-            return
-        if value == TransactionBlockKindInputVariable.GENESIS:
-            return
-        if value == TransactionBlockKindInputVariable.CONSENSUS_COMMIT_PROLOGUE_V1:
-            return
-        if value == TransactionBlockKindInputVariable.AUTHENTICATOR_STATE_UPDATE_V1:
-            return
-        if value == TransactionBlockKindInputVariable.RANDOMNESS_STATE_UPDATE:
-            return
-        if value == TransactionBlockKindInputVariable.END_OF_EPOCH_TX:
-            return
-        raise ValueError(value)
-
-    @staticmethod
-    def write(value, buf):
-        if value == TransactionBlockKindInputVariable.SYSTEM_TX:
-            buf.write_i32(1)
-        if value == TransactionBlockKindInputVariable.PROGRAMMABLE_TX:
-            buf.write_i32(2)
-        if value == TransactionBlockKindInputVariable.GENESIS:
-            buf.write_i32(3)
-        if value == TransactionBlockKindInputVariable.CONSENSUS_COMMIT_PROLOGUE_V1:
-            buf.write_i32(4)
-        if value == TransactionBlockKindInputVariable.AUTHENTICATOR_STATE_UPDATE_V1:
-            buf.write_i32(5)
-        if value == TransactionBlockKindInputVariable.RANDOMNESS_STATE_UPDATE:
-            buf.write_i32(6)
-        if value == TransactionBlockKindInputVariable.END_OF_EPOCH_TX:
             buf.write_i32(7)
 
 
@@ -18339,44 +17359,6 @@ class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
             _UniffiConverterUInt64.write(value.version, buf)
         if value.is_PER_EPOCH_CONFIG():
             buf.write_i32(5)
-
-
-
-
-
-
-
-class ZkLoginIntentScopeVariable(enum.Enum):
-    TRANSACTION_DATA = 0
-    
-    PERSONAL_MESSAGE = 1
-    
-
-
-class _UniffiConverterTypeZkLoginIntentScopeVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        variant = buf.read_i32()
-        if variant == 1:
-            return ZkLoginIntentScopeVariable.TRANSACTION_DATA
-        if variant == 2:
-            return ZkLoginIntentScopeVariable.PERSONAL_MESSAGE
-        raise InternalError("Raw enum value doesn't match any cases")
-
-    @staticmethod
-    def check_lower(value):
-        if value == ZkLoginIntentScopeVariable.TRANSACTION_DATA:
-            return
-        if value == ZkLoginIntentScopeVariable.PERSONAL_MESSAGE:
-            return
-        raise ValueError(value)
-
-    @staticmethod
-    def write(value, buf):
-        if value == ZkLoginIntentScopeVariable.TRANSACTION_DATA:
-            buf.write_i32(1)
-        if value == ZkLoginIntentScopeVariable.PERSONAL_MESSAGE:
-            buf.write_i32(2)
 
 
 
@@ -19840,33 +18822,6 @@ class _UniffiConverterOptionalTypeTransactionBlockKindInput(_UniffiConverterRust
 
 
 
-class _UniffiConverterOptionalTypeTransactionBlockKindInputVariable(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeTransactionBlockKindInputVariable.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeTransactionBlockKindInputVariable.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeTransactionBlockKindInputVariable.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalSequenceInt32(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -20132,33 +19087,6 @@ class _UniffiConverterOptionalSequenceTypeMoveAbility(_UniffiConverterRustBuffer
             return None
         elif flag == 1:
             return _UniffiConverterSequenceTypeMoveAbility.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
-class _UniffiConverterOptionalMapStringTypeQueryVariable(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterMapStringTypeQueryVariable.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterMapStringTypeQueryVariable.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterMapStringTypeQueryVariable.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -21270,31 +20198,6 @@ class _UniffiConverterSequenceTypeMoveStructTypeParameter(_UniffiConverterRustBu
 
 
 
-class _UniffiConverterSequenceTypeObjectKeyVariable(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeObjectKeyVariable.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeObjectKeyVariable.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeObjectKeyVariable.read(buf) for i in range(count)
-        ]
-
-
-
 class _UniffiConverterSequenceTypeObjectRef(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -21617,39 +20520,6 @@ class _UniffiConverterSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
         return [
             _UniffiConverterTypeMoveAbility.read(buf) for i in range(count)
         ]
-
-
-
-class _UniffiConverterMapStringTypeQueryVariable(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, items):
-        for (key, value) in items.items():
-            _UniffiConverterString.check_lower(key)
-            _UniffiConverterTypeQueryVariable.check_lower(value)
-
-    @classmethod
-    def write(cls, items, buf):
-        buf.write_i32(len(items))
-        for (key, value) in items.items():
-            _UniffiConverterString.write(key, buf)
-            _UniffiConverterTypeQueryVariable.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative map size")
-
-        # It would be nice to use a dict comprehension,
-        # but in Python 3.7 and before the evaluation order is not according to spec,
-        # so we we're reading the value before the key.
-        # This loop makes the order explicit: first reading the key, then the value.
-        d = {}
-        for i in range(count):
-            key = _UniffiConverterString.read(buf)
-            val = _UniffiConverterTypeQueryVariable.read(buf)
-            d[key] = val
-        return d
 
 
 
@@ -39787,20 +38657,16 @@ __all__ = [
     "ObjectIn",
     "ObjectOut",
     "PackageUpgradeError",
-    "QueryVariable",
     "SdkFfiError",
     "SignatureScheme",
     "TransactionBlockKindInput",
-    "TransactionBlockKindInputVariable",
     "TransactionExpiration",
     "TypeArgumentError",
     "UnchangedSharedKind",
-    "ZkLoginIntentScopeVariable",
     "ActiveJwk",
     "AuthenticatorStateExpire",
     "AuthenticatorStateUpdateV1",
     "ChangedObject",
-    "CheckpointIdVariable",
     "CheckpointSummaryPage",
     "CoinMetadata",
     "CoinPage",
@@ -39814,7 +38680,6 @@ __all__ = [
     "EpochPage",
     "Event",
     "EventFilter",
-    "EventFilterVariable",
     "EventPage",
     "Function",
     "GasCostSummary",
@@ -39833,17 +38698,13 @@ __all__ = [
     "MoveModuleConnection",
     "MoveModuleQuery",
     "MoveObject",
-    "MovePackageCheckpointFilterVariable",
     "MovePackagePage",
     "MovePackageQuery",
-    "MovePackageVersionFilterVariable",
     "MoveStruct",
     "MoveStructConnection",
     "MoveStructQuery",
     "MoveStructTypeParameter",
     "ObjectFilter",
-    "ObjectFilterVariable",
-    "ObjectKeyVariable",
     "ObjectPage",
     "ObjectRef",
     "ObjectReference",
@@ -39858,13 +38719,11 @@ __all__ = [
     "ServiceConfig",
     "SignedTransaction",
     "SignedTransactionPage",
-    "TransactionBlockFilterVariable",
     "TransactionDataEffects",
     "TransactionDataEffectsPage",
     "TransactionEffectsPage",
     "TransactionEffectsV1",
     "TransactionMetadata",
-    "TransactionMetadataVariable",
     "TransactionsFilter",
     "TypeOrigin",
     "UnchangedSharedObject",

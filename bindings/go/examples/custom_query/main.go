@@ -33,9 +33,9 @@ func main() {
 	}
 	fmt.Println(res1)
 
-	variables := map[string]sdk.QueryVariable{
-		"id": sdk.QueryVariableUInt53{Uint53: 1},
-	}
+	variablesJson := `{"id": 1}`
+	variables := string(variablesJson)
+
 	queryEpochDataWithVariables := sdk.Query{
 		Query:     queryEpochDataStr,
 		Variables: &variables,

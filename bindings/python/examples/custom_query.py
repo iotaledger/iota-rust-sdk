@@ -27,9 +27,9 @@ async def main():
     res = await client.run_query(query_epoch_data)
     print(res)
 
-    variables = {"id": QueryVariable.U_INT53(1)}
+    variables = {"id": 1}
     query_epoch_data_with_variables = Query(
-        query=query_epoch_data_str, variables=variables
+        query=query_epoch_data_str, variables=json.dumps(variables)
     )
     res = await client.run_query(query_epoch_data_with_variables)
     print(res)

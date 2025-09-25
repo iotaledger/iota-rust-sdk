@@ -3,8 +3,9 @@
 
 import iota_sdk.GraphQlClient
 import iota_sdk.Query
-import iota_sdk.QueryVariable
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 fun main() = runBlocking {
     val client = GraphQlClient.newDevnet()
@@ -26,8 +27,9 @@ fun main() = runBlocking {
     val res1 = client.runQuery(queryEpochData)
     println(res1)
 
-    val variables = mapOf("id" to QueryVariable.UInt53(1uL))
-    val queryEpochDataWithVariables = Query(queryEpochDataStr, variables)
+    val variables = mapOf("id" to 1)
+    val queryEpochDataWithVariables = Query(queryEpochDataStr, Json.encodeToString(variables))
+
     val res2 = client.runQuery(queryEpochDataWithVariables)
     println(res2)
 

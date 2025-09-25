@@ -23467,45 +23467,6 @@ type FfiDestroyerChangedObject struct {}
 func (_ FfiDestroyerChangedObject) Destroy(value ChangedObject) {
 	value.Destroy()
 }
-type CheckpointIdVariable struct {
-	Digest *string
-	SequenceNumber *uint64
-}
-
-func (r *CheckpointIdVariable) Destroy() {
-		FfiDestroyerOptionalString{}.Destroy(r.Digest);
-		FfiDestroyerOptionalUint64{}.Destroy(r.SequenceNumber);
-}
-
-type FfiConverterCheckpointIdVariable struct {}
-
-var FfiConverterCheckpointIdVariableINSTANCE = FfiConverterCheckpointIdVariable{}
-
-func (c FfiConverterCheckpointIdVariable) Lift(rb RustBufferI) CheckpointIdVariable {
-	return LiftFromRustBuffer[CheckpointIdVariable](c, rb)
-}
-
-func (c FfiConverterCheckpointIdVariable) Read(reader io.Reader) CheckpointIdVariable {
-	return CheckpointIdVariable {
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterCheckpointIdVariable) Lower(value CheckpointIdVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[CheckpointIdVariable](c, value)
-}
-
-func (c FfiConverterCheckpointIdVariable) Write(writer io.Writer, value CheckpointIdVariable) {
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.Digest);
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.SequenceNumber);
-}
-
-type FfiDestroyerCheckpointIdVariable struct {}
-
-func (_ FfiDestroyerCheckpointIdVariable) Destroy(value CheckpointIdVariable) {
-	value.Destroy()
-}
 // A page of items returned by the GraphQL server.
 type CheckpointSummaryPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -24212,53 +24173,6 @@ func (c FfiConverterEventFilter) Write(writer io.Writer, value EventFilter) {
 type FfiDestroyerEventFilter struct {}
 
 func (_ FfiDestroyerEventFilter) Destroy(value EventFilter) {
-	value.Destroy()
-}
-type EventFilterVariable struct {
-	Sender *string
-	TransactionDigest *string
-	EmittingModule *string
-	EventType *string
-}
-
-func (r *EventFilterVariable) Destroy() {
-		FfiDestroyerOptionalString{}.Destroy(r.Sender);
-		FfiDestroyerOptionalString{}.Destroy(r.TransactionDigest);
-		FfiDestroyerOptionalString{}.Destroy(r.EmittingModule);
-		FfiDestroyerOptionalString{}.Destroy(r.EventType);
-}
-
-type FfiConverterEventFilterVariable struct {}
-
-var FfiConverterEventFilterVariableINSTANCE = FfiConverterEventFilterVariable{}
-
-func (c FfiConverterEventFilterVariable) Lift(rb RustBufferI) EventFilterVariable {
-	return LiftFromRustBuffer[EventFilterVariable](c, rb)
-}
-
-func (c FfiConverterEventFilterVariable) Read(reader io.Reader) EventFilterVariable {
-	return EventFilterVariable {
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterEventFilterVariable) Lower(value EventFilterVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[EventFilterVariable](c, value)
-}
-
-func (c FfiConverterEventFilterVariable) Write(writer io.Writer, value EventFilterVariable) {
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.Sender);
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.TransactionDigest);
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.EmittingModule);
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.EventType);
-}
-
-type FfiDestroyerEventFilterVariable struct {}
-
-func (_ FfiDestroyerEventFilterVariable) Destroy(value EventFilterVariable) {
 	value.Destroy()
 }
 // A page of items returned by the GraphQL server.
@@ -25134,45 +25048,6 @@ type FfiDestroyerMoveObject struct {}
 func (_ FfiDestroyerMoveObject) Destroy(value MoveObject) {
 	value.Destroy()
 }
-type MovePackageCheckpointFilterVariable struct {
-	AfterCheckpoint *uint64
-	BeforeCheckpoint *uint64
-}
-
-func (r *MovePackageCheckpointFilterVariable) Destroy() {
-		FfiDestroyerOptionalUint64{}.Destroy(r.AfterCheckpoint);
-		FfiDestroyerOptionalUint64{}.Destroy(r.BeforeCheckpoint);
-}
-
-type FfiConverterMovePackageCheckpointFilterVariable struct {}
-
-var FfiConverterMovePackageCheckpointFilterVariableINSTANCE = FfiConverterMovePackageCheckpointFilterVariable{}
-
-func (c FfiConverterMovePackageCheckpointFilterVariable) Lift(rb RustBufferI) MovePackageCheckpointFilterVariable {
-	return LiftFromRustBuffer[MovePackageCheckpointFilterVariable](c, rb)
-}
-
-func (c FfiConverterMovePackageCheckpointFilterVariable) Read(reader io.Reader) MovePackageCheckpointFilterVariable {
-	return MovePackageCheckpointFilterVariable {
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterMovePackageCheckpointFilterVariable) Lower(value MovePackageCheckpointFilterVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[MovePackageCheckpointFilterVariable](c, value)
-}
-
-func (c FfiConverterMovePackageCheckpointFilterVariable) Write(writer io.Writer, value MovePackageCheckpointFilterVariable) {
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.AfterCheckpoint);
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.BeforeCheckpoint);
-}
-
-type FfiDestroyerMovePackageCheckpointFilterVariable struct {}
-
-func (_ FfiDestroyerMovePackageCheckpointFilterVariable) Destroy(value MovePackageCheckpointFilterVariable) {
-	value.Destroy()
-}
 // A page of items returned by the GraphQL server.
 type MovePackagePage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -25253,45 +25128,6 @@ func (c FfiConverterMovePackageQuery) Write(writer io.Writer, value MovePackageQ
 type FfiDestroyerMovePackageQuery struct {}
 
 func (_ FfiDestroyerMovePackageQuery) Destroy(value MovePackageQuery) {
-	value.Destroy()
-}
-type MovePackageVersionFilterVariable struct {
-	AfterVersion *uint64
-	BeforeVersion *uint64
-}
-
-func (r *MovePackageVersionFilterVariable) Destroy() {
-		FfiDestroyerOptionalUint64{}.Destroy(r.AfterVersion);
-		FfiDestroyerOptionalUint64{}.Destroy(r.BeforeVersion);
-}
-
-type FfiConverterMovePackageVersionFilterVariable struct {}
-
-var FfiConverterMovePackageVersionFilterVariableINSTANCE = FfiConverterMovePackageVersionFilterVariable{}
-
-func (c FfiConverterMovePackageVersionFilterVariable) Lift(rb RustBufferI) MovePackageVersionFilterVariable {
-	return LiftFromRustBuffer[MovePackageVersionFilterVariable](c, rb)
-}
-
-func (c FfiConverterMovePackageVersionFilterVariable) Read(reader io.Reader) MovePackageVersionFilterVariable {
-	return MovePackageVersionFilterVariable {
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterMovePackageVersionFilterVariable) Lower(value MovePackageVersionFilterVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[MovePackageVersionFilterVariable](c, value)
-}
-
-func (c FfiConverterMovePackageVersionFilterVariable) Write(writer io.Writer, value MovePackageVersionFilterVariable) {
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.AfterVersion);
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.BeforeVersion);
-}
-
-type FfiDestroyerMovePackageVersionFilterVariable struct {}
-
-func (_ FfiDestroyerMovePackageVersionFilterVariable) Destroy(value MovePackageVersionFilterVariable) {
 	value.Destroy()
 }
 // A move struct
@@ -25526,92 +25362,6 @@ func (c FfiConverterObjectFilter) Write(writer io.Writer, value ObjectFilter) {
 type FfiDestroyerObjectFilter struct {}
 
 func (_ FfiDestroyerObjectFilter) Destroy(value ObjectFilter) {
-	value.Destroy()
-}
-type ObjectFilterVariable struct {
-	Type *string
-	Owner *string
-	ObjectIds []string
-	ObjectKeys []ObjectKeyVariable
-}
-
-func (r *ObjectFilterVariable) Destroy() {
-		FfiDestroyerOptionalString{}.Destroy(r.Type);
-		FfiDestroyerOptionalString{}.Destroy(r.Owner);
-		FfiDestroyerSequenceString{}.Destroy(r.ObjectIds);
-		FfiDestroyerSequenceObjectKeyVariable{}.Destroy(r.ObjectKeys);
-}
-
-type FfiConverterObjectFilterVariable struct {}
-
-var FfiConverterObjectFilterVariableINSTANCE = FfiConverterObjectFilterVariable{}
-
-func (c FfiConverterObjectFilterVariable) Lift(rb RustBufferI) ObjectFilterVariable {
-	return LiftFromRustBuffer[ObjectFilterVariable](c, rb)
-}
-
-func (c FfiConverterObjectFilterVariable) Read(reader io.Reader) ObjectFilterVariable {
-	return ObjectFilterVariable {
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterSequenceStringINSTANCE.Read(reader),
-			FfiConverterSequenceObjectKeyVariableINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterObjectFilterVariable) Lower(value ObjectFilterVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[ObjectFilterVariable](c, value)
-}
-
-func (c FfiConverterObjectFilterVariable) Write(writer io.Writer, value ObjectFilterVariable) {
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.Type);
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.Owner);
-		FfiConverterSequenceStringINSTANCE.Write(writer, value.ObjectIds);
-		FfiConverterSequenceObjectKeyVariableINSTANCE.Write(writer, value.ObjectKeys);
-}
-
-type FfiDestroyerObjectFilterVariable struct {}
-
-func (_ FfiDestroyerObjectFilterVariable) Destroy(value ObjectFilterVariable) {
-	value.Destroy()
-}
-type ObjectKeyVariable struct {
-	ObjectId string
-	Version uint64
-}
-
-func (r *ObjectKeyVariable) Destroy() {
-		FfiDestroyerString{}.Destroy(r.ObjectId);
-		FfiDestroyerUint64{}.Destroy(r.Version);
-}
-
-type FfiConverterObjectKeyVariable struct {}
-
-var FfiConverterObjectKeyVariableINSTANCE = FfiConverterObjectKeyVariable{}
-
-func (c FfiConverterObjectKeyVariable) Lift(rb RustBufferI) ObjectKeyVariable {
-	return LiftFromRustBuffer[ObjectKeyVariable](c, rb)
-}
-
-func (c FfiConverterObjectKeyVariable) Read(reader io.Reader) ObjectKeyVariable {
-	return ObjectKeyVariable {
-			FfiConverterStringINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterObjectKeyVariable) Lower(value ObjectKeyVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[ObjectKeyVariable](c, value)
-}
-
-func (c FfiConverterObjectKeyVariable) Write(writer io.Writer, value ObjectKeyVariable) {
-		FfiConverterStringINSTANCE.Write(writer, value.ObjectId);
-		FfiConverterUint64INSTANCE.Write(writer, value.Version);
-}
-
-type FfiDestroyerObjectKeyVariable struct {}
-
-func (_ FfiDestroyerObjectKeyVariable) Destroy(value ObjectKeyVariable) {
 	value.Destroy()
 }
 // A page of items returned by the GraphQL server.
@@ -26031,12 +25781,12 @@ func (_ FfiDestroyerProtocolConfigs) Destroy(value ProtocolConfigs) {
 }
 type Query struct {
 	Query string
-	Variables *map[string]QueryVariable
+	Variables *Value
 }
 
 func (r *Query) Destroy() {
 		FfiDestroyerString{}.Destroy(r.Query);
-		FfiDestroyerOptionalMapStringQueryVariable{}.Destroy(r.Variables);
+		FfiDestroyerOptionalTypeValue{}.Destroy(r.Variables);
 }
 
 type FfiConverterQuery struct {}
@@ -26050,7 +25800,7 @@ func (c FfiConverterQuery) Lift(rb RustBufferI) Query {
 func (c FfiConverterQuery) Read(reader io.Reader) Query {
 	return Query {
 			FfiConverterStringINSTANCE.Read(reader),
-			FfiConverterOptionalMapStringQueryVariableINSTANCE.Read(reader),
+			FfiConverterOptionalTypeValueINSTANCE.Read(reader),
 	}
 }
 
@@ -26060,7 +25810,7 @@ func (c FfiConverterQuery) Lower(value Query) C.RustBuffer {
 
 func (c FfiConverterQuery) Write(writer io.Writer, value Query) {
 		FfiConverterStringINSTANCE.Write(writer, value.Query);
-		FfiConverterOptionalMapStringQueryVariableINSTANCE.Write(writer, value.Variables);
+		FfiConverterOptionalTypeValueINSTANCE.Write(writer, value.Variables);
 }
 
 type FfiDestroyerQuery struct {}
@@ -26326,81 +26076,6 @@ func (c FfiConverterSignedTransactionPage) Write(writer io.Writer, value SignedT
 type FfiDestroyerSignedTransactionPage struct {}
 
 func (_ FfiDestroyerSignedTransactionPage) Destroy(value SignedTransactionPage) {
-	value.Destroy()
-}
-type TransactionBlockFilterVariable struct {
-	Function *string
-	Kind *TransactionBlockKindInputVariable
-	AfterCheckpoint *uint64
-	AtCheckpoint *uint64
-	BeforeCheckpoint *uint64
-	SignAddress *string
-	RecvAddress *string
-	InputObject *string
-	ChangedObject *string
-	WrappedOrDeletedObject *string
-	TransactionIds []string
-}
-
-func (r *TransactionBlockFilterVariable) Destroy() {
-		FfiDestroyerOptionalString{}.Destroy(r.Function);
-		FfiDestroyerOptionalTransactionBlockKindInputVariable{}.Destroy(r.Kind);
-		FfiDestroyerOptionalUint64{}.Destroy(r.AfterCheckpoint);
-		FfiDestroyerOptionalUint64{}.Destroy(r.AtCheckpoint);
-		FfiDestroyerOptionalUint64{}.Destroy(r.BeforeCheckpoint);
-		FfiDestroyerOptionalString{}.Destroy(r.SignAddress);
-		FfiDestroyerOptionalString{}.Destroy(r.RecvAddress);
-		FfiDestroyerOptionalString{}.Destroy(r.InputObject);
-		FfiDestroyerOptionalString{}.Destroy(r.ChangedObject);
-		FfiDestroyerOptionalString{}.Destroy(r.WrappedOrDeletedObject);
-		FfiDestroyerSequenceString{}.Destroy(r.TransactionIds);
-}
-
-type FfiConverterTransactionBlockFilterVariable struct {}
-
-var FfiConverterTransactionBlockFilterVariableINSTANCE = FfiConverterTransactionBlockFilterVariable{}
-
-func (c FfiConverterTransactionBlockFilterVariable) Lift(rb RustBufferI) TransactionBlockFilterVariable {
-	return LiftFromRustBuffer[TransactionBlockFilterVariable](c, rb)
-}
-
-func (c FfiConverterTransactionBlockFilterVariable) Read(reader io.Reader) TransactionBlockFilterVariable {
-	return TransactionBlockFilterVariable {
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalTransactionBlockKindInputVariableINSTANCE.Read(reader),
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterSequenceStringINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterTransactionBlockFilterVariable) Lower(value TransactionBlockFilterVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[TransactionBlockFilterVariable](c, value)
-}
-
-func (c FfiConverterTransactionBlockFilterVariable) Write(writer io.Writer, value TransactionBlockFilterVariable) {
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.Function);
-		FfiConverterOptionalTransactionBlockKindInputVariableINSTANCE.Write(writer, value.Kind);
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.AfterCheckpoint);
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.AtCheckpoint);
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.BeforeCheckpoint);
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.SignAddress);
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.RecvAddress);
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.InputObject);
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.ChangedObject);
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.WrappedOrDeletedObject);
-		FfiConverterSequenceStringINSTANCE.Write(writer, value.TransactionIds);
-}
-
-type FfiDestroyerTransactionBlockFilterVariable struct {}
-
-func (_ FfiDestroyerTransactionBlockFilterVariable) Destroy(value TransactionBlockFilterVariable) {
 	value.Destroy()
 }
 type TransactionDataEffects struct {
@@ -26692,57 +26367,6 @@ func (c FfiConverterTransactionMetadata) Write(writer io.Writer, value Transacti
 type FfiDestroyerTransactionMetadata struct {}
 
 func (_ FfiDestroyerTransactionMetadata) Destroy(value TransactionMetadata) {
-	value.Destroy()
-}
-type TransactionMetadataVariable struct {
-	Sender *string
-	GasPrice *uint64
-	GasObjects []string
-	GasBudget *uint64
-	GasSponsor *string
-}
-
-func (r *TransactionMetadataVariable) Destroy() {
-		FfiDestroyerOptionalString{}.Destroy(r.Sender);
-		FfiDestroyerOptionalUint64{}.Destroy(r.GasPrice);
-		FfiDestroyerSequenceString{}.Destroy(r.GasObjects);
-		FfiDestroyerOptionalUint64{}.Destroy(r.GasBudget);
-		FfiDestroyerOptionalString{}.Destroy(r.GasSponsor);
-}
-
-type FfiConverterTransactionMetadataVariable struct {}
-
-var FfiConverterTransactionMetadataVariableINSTANCE = FfiConverterTransactionMetadataVariable{}
-
-func (c FfiConverterTransactionMetadataVariable) Lift(rb RustBufferI) TransactionMetadataVariable {
-	return LiftFromRustBuffer[TransactionMetadataVariable](c, rb)
-}
-
-func (c FfiConverterTransactionMetadataVariable) Read(reader io.Reader) TransactionMetadataVariable {
-	return TransactionMetadataVariable {
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
-			FfiConverterSequenceStringINSTANCE.Read(reader),
-			FfiConverterOptionalUint64INSTANCE.Read(reader),
-			FfiConverterOptionalStringINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterTransactionMetadataVariable) Lower(value TransactionMetadataVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[TransactionMetadataVariable](c, value)
-}
-
-func (c FfiConverterTransactionMetadataVariable) Write(writer io.Writer, value TransactionMetadataVariable) {
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.Sender);
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.GasPrice);
-		FfiConverterSequenceStringINSTANCE.Write(writer, value.GasObjects);
-		FfiConverterOptionalUint64INSTANCE.Write(writer, value.GasBudget);
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.GasSponsor);
-}
-
-type FfiDestroyerTransactionMetadataVariable struct {}
-
-func (_ FfiDestroyerTransactionMetadataVariable) Destroy(value TransactionMetadataVariable) {
 	value.Destroy()
 }
 type TransactionsFilter struct {
@@ -29008,254 +28632,6 @@ type FfiDestroyerPackageUpgradeError struct {}
 func (_ FfiDestroyerPackageUpgradeError) Destroy(value PackageUpgradeError) {
 	value.Destroy()
 }
-
-
-type QueryVariable interface {
-	Destroy()
-}
-type QueryVariableBase64 struct {
-	Base64 string
-}
-
-func (e QueryVariableBase64) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Base64);
-}
-type QueryVariableBoolean struct {
-	Boolean bool
-}
-
-func (e QueryVariableBoolean) Destroy() {
-		FfiDestroyerBool{}.Destroy(e.Boolean);
-}
-type QueryVariableCheckpointId struct {
-	CheckpointId CheckpointIdVariable
-}
-
-func (e QueryVariableCheckpointId) Destroy() {
-		FfiDestroyerCheckpointIdVariable{}.Destroy(e.CheckpointId);
-}
-type QueryVariableEventFilter struct {
-	Filter EventFilterVariable
-}
-
-func (e QueryVariableEventFilter) Destroy() {
-		FfiDestroyerEventFilterVariable{}.Destroy(e.Filter);
-}
-type QueryVariableInt struct {
-	Int uint64
-}
-
-func (e QueryVariableInt) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Int);
-}
-type QueryVariableIotaAddress struct {
-	Address string
-}
-
-func (e QueryVariableIotaAddress) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Address);
-}
-type QueryVariableMovePackageCheckpointFilter struct {
-	Filter MovePackageCheckpointFilterVariable
-}
-
-func (e QueryVariableMovePackageCheckpointFilter) Destroy() {
-		FfiDestroyerMovePackageCheckpointFilterVariable{}.Destroy(e.Filter);
-}
-type QueryVariableMovePackageVersionFilter struct {
-	Filter MovePackageVersionFilterVariable
-}
-
-func (e QueryVariableMovePackageVersionFilter) Destroy() {
-		FfiDestroyerMovePackageVersionFilterVariable{}.Destroy(e.Filter);
-}
-type QueryVariableObjectFilter struct {
-	Filter ObjectFilterVariable
-}
-
-func (e QueryVariableObjectFilter) Destroy() {
-		FfiDestroyerObjectFilterVariable{}.Destroy(e.Filter);
-}
-type QueryVariableString struct {
-	String string
-}
-
-func (e QueryVariableString) Destroy() {
-		FfiDestroyerString{}.Destroy(e.String);
-}
-type QueryVariableTransactionBlockFilter struct {
-	Filter TransactionBlockFilterVariable
-}
-
-func (e QueryVariableTransactionBlockFilter) Destroy() {
-		FfiDestroyerTransactionBlockFilterVariable{}.Destroy(e.Filter);
-}
-type QueryVariableTransactionMetadata struct {
-	TxMeta TransactionMetadataVariable
-}
-
-func (e QueryVariableTransactionMetadata) Destroy() {
-		FfiDestroyerTransactionMetadataVariable{}.Destroy(e.TxMeta);
-}
-type QueryVariableType struct {
-	Type string
-}
-
-func (e QueryVariableType) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Type);
-}
-type QueryVariableUInt53 struct {
-	Uint53 uint64
-}
-
-func (e QueryVariableUInt53) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Uint53);
-}
-type QueryVariableZkLoginIntentScope struct {
-	ZkLoginIntentScope ZkLoginIntentScopeVariable
-}
-
-func (e QueryVariableZkLoginIntentScope) Destroy() {
-		FfiDestroyerZkLoginIntentScopeVariable{}.Destroy(e.ZkLoginIntentScope);
-}
-
-type FfiConverterQueryVariable struct {}
-
-var FfiConverterQueryVariableINSTANCE = FfiConverterQueryVariable{}
-
-func (c FfiConverterQueryVariable) Lift(rb RustBufferI) QueryVariable {
-	return LiftFromRustBuffer[QueryVariable](c, rb)
-}
-
-func (c FfiConverterQueryVariable) Lower(value QueryVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[QueryVariable](c, value)
-}
-func (FfiConverterQueryVariable) Read(reader io.Reader) QueryVariable {
-	id := readInt32(reader)
-	switch (id) {
-		case 1:
-			return QueryVariableBase64{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 2:
-			return QueryVariableBoolean{
-				FfiConverterBoolINSTANCE.Read(reader),
-			};
-		case 3:
-			return QueryVariableCheckpointId{
-				FfiConverterCheckpointIdVariableINSTANCE.Read(reader),
-			};
-		case 4:
-			return QueryVariableEventFilter{
-				FfiConverterEventFilterVariableINSTANCE.Read(reader),
-			};
-		case 5:
-			return QueryVariableInt{
-				FfiConverterUint64INSTANCE.Read(reader),
-			};
-		case 6:
-			return QueryVariableIotaAddress{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 7:
-			return QueryVariableMovePackageCheckpointFilter{
-				FfiConverterMovePackageCheckpointFilterVariableINSTANCE.Read(reader),
-			};
-		case 8:
-			return QueryVariableMovePackageVersionFilter{
-				FfiConverterMovePackageVersionFilterVariableINSTANCE.Read(reader),
-			};
-		case 9:
-			return QueryVariableObjectFilter{
-				FfiConverterObjectFilterVariableINSTANCE.Read(reader),
-			};
-		case 10:
-			return QueryVariableString{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 11:
-			return QueryVariableTransactionBlockFilter{
-				FfiConverterTransactionBlockFilterVariableINSTANCE.Read(reader),
-			};
-		case 12:
-			return QueryVariableTransactionMetadata{
-				FfiConverterTransactionMetadataVariableINSTANCE.Read(reader),
-			};
-		case 13:
-			return QueryVariableType{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 14:
-			return QueryVariableUInt53{
-				FfiConverterUint64INSTANCE.Read(reader),
-			};
-		case 15:
-			return QueryVariableZkLoginIntentScope{
-				FfiConverterZkLoginIntentScopeVariableINSTANCE.Read(reader),
-			};
-		default:
-			panic(fmt.Sprintf("invalid enum value %v in FfiConverterQueryVariable.Read()", id));
-	}
-}
-
-func (FfiConverterQueryVariable) Write(writer io.Writer, value QueryVariable) {
-	switch variant_value := value.(type) {
-		case QueryVariableBase64:
-			writeInt32(writer, 1)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Base64)
-		case QueryVariableBoolean:
-			writeInt32(writer, 2)
-			FfiConverterBoolINSTANCE.Write(writer, variant_value.Boolean)
-		case QueryVariableCheckpointId:
-			writeInt32(writer, 3)
-			FfiConverterCheckpointIdVariableINSTANCE.Write(writer, variant_value.CheckpointId)
-		case QueryVariableEventFilter:
-			writeInt32(writer, 4)
-			FfiConverterEventFilterVariableINSTANCE.Write(writer, variant_value.Filter)
-		case QueryVariableInt:
-			writeInt32(writer, 5)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Int)
-		case QueryVariableIotaAddress:
-			writeInt32(writer, 6)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Address)
-		case QueryVariableMovePackageCheckpointFilter:
-			writeInt32(writer, 7)
-			FfiConverterMovePackageCheckpointFilterVariableINSTANCE.Write(writer, variant_value.Filter)
-		case QueryVariableMovePackageVersionFilter:
-			writeInt32(writer, 8)
-			FfiConverterMovePackageVersionFilterVariableINSTANCE.Write(writer, variant_value.Filter)
-		case QueryVariableObjectFilter:
-			writeInt32(writer, 9)
-			FfiConverterObjectFilterVariableINSTANCE.Write(writer, variant_value.Filter)
-		case QueryVariableString:
-			writeInt32(writer, 10)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.String)
-		case QueryVariableTransactionBlockFilter:
-			writeInt32(writer, 11)
-			FfiConverterTransactionBlockFilterVariableINSTANCE.Write(writer, variant_value.Filter)
-		case QueryVariableTransactionMetadata:
-			writeInt32(writer, 12)
-			FfiConverterTransactionMetadataVariableINSTANCE.Write(writer, variant_value.TxMeta)
-		case QueryVariableType:
-			writeInt32(writer, 13)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Type)
-		case QueryVariableUInt53:
-			writeInt32(writer, 14)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Uint53)
-		case QueryVariableZkLoginIntentScope:
-			writeInt32(writer, 15)
-			FfiConverterZkLoginIntentScopeVariableINSTANCE.Write(writer, variant_value.ZkLoginIntentScope)
-		default:
-			_ = variant_value
-			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterQueryVariable.Write", value))
-	}
-}
-
-type FfiDestroyerQueryVariable struct {}
-
-func (_ FfiDestroyerQueryVariable) Destroy(value QueryVariable) {
-	value.Destroy()
-}
 type SdkFfiError struct {
 	err error
 }
@@ -29442,44 +28818,6 @@ func (FfiConverterTransactionBlockKindInput) Write(writer io.Writer, value Trans
 type FfiDestroyerTransactionBlockKindInput struct {}
 
 func (_ FfiDestroyerTransactionBlockKindInput) Destroy(value TransactionBlockKindInput) {
-}
-
-
-type TransactionBlockKindInputVariable uint
-
-const (
-	TransactionBlockKindInputVariableSystemTx TransactionBlockKindInputVariable = 1
-	TransactionBlockKindInputVariableProgrammableTx TransactionBlockKindInputVariable = 2
-	TransactionBlockKindInputVariableGenesis TransactionBlockKindInputVariable = 3
-	TransactionBlockKindInputVariableConsensusCommitPrologueV1 TransactionBlockKindInputVariable = 4
-	TransactionBlockKindInputVariableAuthenticatorStateUpdateV1 TransactionBlockKindInputVariable = 5
-	TransactionBlockKindInputVariableRandomnessStateUpdate TransactionBlockKindInputVariable = 6
-	TransactionBlockKindInputVariableEndOfEpochTx TransactionBlockKindInputVariable = 7
-)
-
-type FfiConverterTransactionBlockKindInputVariable struct {}
-
-var FfiConverterTransactionBlockKindInputVariableINSTANCE = FfiConverterTransactionBlockKindInputVariable{}
-
-func (c FfiConverterTransactionBlockKindInputVariable) Lift(rb RustBufferI) TransactionBlockKindInputVariable {
-	return LiftFromRustBuffer[TransactionBlockKindInputVariable](c, rb)
-}
-
-func (c FfiConverterTransactionBlockKindInputVariable) Lower(value TransactionBlockKindInputVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[TransactionBlockKindInputVariable](c, value)
-}
-func (FfiConverterTransactionBlockKindInputVariable) Read(reader io.Reader) TransactionBlockKindInputVariable {
-	id := readInt32(reader)
-	return TransactionBlockKindInputVariable(id)
-}
-
-func (FfiConverterTransactionBlockKindInputVariable) Write(writer io.Writer, value TransactionBlockKindInputVariable) {
-	writeInt32(writer, int32(value))
-}
-
-type FfiDestroyerTransactionBlockKindInputVariable struct {}
-
-func (_ FfiDestroyerTransactionBlockKindInputVariable) Destroy(value TransactionBlockKindInputVariable) {
 }
 
 
@@ -29737,39 +29075,6 @@ type FfiDestroyerUnchangedSharedKind struct {}
 
 func (_ FfiDestroyerUnchangedSharedKind) Destroy(value UnchangedSharedKind) {
 	value.Destroy()
-}
-
-
-type ZkLoginIntentScopeVariable uint
-
-const (
-	ZkLoginIntentScopeVariableTransactionData ZkLoginIntentScopeVariable = 1
-	ZkLoginIntentScopeVariablePersonalMessage ZkLoginIntentScopeVariable = 2
-)
-
-type FfiConverterZkLoginIntentScopeVariable struct {}
-
-var FfiConverterZkLoginIntentScopeVariableINSTANCE = FfiConverterZkLoginIntentScopeVariable{}
-
-func (c FfiConverterZkLoginIntentScopeVariable) Lift(rb RustBufferI) ZkLoginIntentScopeVariable {
-	return LiftFromRustBuffer[ZkLoginIntentScopeVariable](c, rb)
-}
-
-func (c FfiConverterZkLoginIntentScopeVariable) Lower(value ZkLoginIntentScopeVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[ZkLoginIntentScopeVariable](c, value)
-}
-func (FfiConverterZkLoginIntentScopeVariable) Read(reader io.Reader) ZkLoginIntentScopeVariable {
-	id := readInt32(reader)
-	return ZkLoginIntentScopeVariable(id)
-}
-
-func (FfiConverterZkLoginIntentScopeVariable) Write(writer io.Writer, value ZkLoginIntentScopeVariable) {
-	writeInt32(writer, int32(value))
-}
-
-type FfiDestroyerZkLoginIntentScopeVariable struct {}
-
-func (_ FfiDestroyerZkLoginIntentScopeVariable) Destroy(value ZkLoginIntentScopeVariable) {
 }
 
 type FfiConverterOptionalUint32 struct{}
@@ -31770,43 +31075,6 @@ func (_ FfiDestroyerOptionalTransactionBlockKindInput) Destroy(value *Transactio
 	}
 }
 
-type FfiConverterOptionalTransactionBlockKindInputVariable struct{}
-
-var FfiConverterOptionalTransactionBlockKindInputVariableINSTANCE = FfiConverterOptionalTransactionBlockKindInputVariable{}
-
-func (c FfiConverterOptionalTransactionBlockKindInputVariable) Lift(rb RustBufferI) *TransactionBlockKindInputVariable {
-	return LiftFromRustBuffer[*TransactionBlockKindInputVariable](c, rb)
-}
-
-func (_ FfiConverterOptionalTransactionBlockKindInputVariable) Read(reader io.Reader) *TransactionBlockKindInputVariable {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterTransactionBlockKindInputVariableINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalTransactionBlockKindInputVariable) Lower(value *TransactionBlockKindInputVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[*TransactionBlockKindInputVariable](c, value)
-}
-
-func (_ FfiConverterOptionalTransactionBlockKindInputVariable) Write(writer io.Writer, value *TransactionBlockKindInputVariable) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterTransactionBlockKindInputVariableINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalTransactionBlockKindInputVariable struct {}
-
-func (_ FfiDestroyerOptionalTransactionBlockKindInputVariable) Destroy(value *TransactionBlockKindInputVariable) {
-	if value != nil {
-		FfiDestroyerTransactionBlockKindInputVariable{}.Destroy(*value)
-	}
-}
-
 type FfiConverterOptionalSequenceInt32 struct{}
 
 var FfiConverterOptionalSequenceInt32INSTANCE = FfiConverterOptionalSequenceInt32{}
@@ -32174,43 +31442,6 @@ type FfiDestroyerOptionalSequenceMoveAbility struct {}
 func (_ FfiDestroyerOptionalSequenceMoveAbility) Destroy(value *[]MoveAbility) {
 	if value != nil {
 		FfiDestroyerSequenceMoveAbility{}.Destroy(*value)
-	}
-}
-
-type FfiConverterOptionalMapStringQueryVariable struct{}
-
-var FfiConverterOptionalMapStringQueryVariableINSTANCE = FfiConverterOptionalMapStringQueryVariable{}
-
-func (c FfiConverterOptionalMapStringQueryVariable) Lift(rb RustBufferI) *map[string]QueryVariable {
-	return LiftFromRustBuffer[*map[string]QueryVariable](c, rb)
-}
-
-func (_ FfiConverterOptionalMapStringQueryVariable) Read(reader io.Reader) *map[string]QueryVariable {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterMapStringQueryVariableINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalMapStringQueryVariable) Lower(value *map[string]QueryVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[*map[string]QueryVariable](c, value)
-}
-
-func (_ FfiConverterOptionalMapStringQueryVariable) Write(writer io.Writer, value *map[string]QueryVariable) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterMapStringQueryVariableINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalMapStringQueryVariable struct {}
-
-func (_ FfiDestroyerOptionalMapStringQueryVariable) Destroy(value *map[string]QueryVariable) {
-	if value != nil {
-		FfiDestroyerMapStringQueryVariable{}.Destroy(*value)
 	}
 }
 
@@ -34088,49 +33319,6 @@ func (FfiDestroyerSequenceMoveStructTypeParameter) Destroy(sequence []MoveStruct
 	}
 }
 
-type FfiConverterSequenceObjectKeyVariable struct{}
-
-var FfiConverterSequenceObjectKeyVariableINSTANCE = FfiConverterSequenceObjectKeyVariable{}
-
-func (c FfiConverterSequenceObjectKeyVariable) Lift(rb RustBufferI) []ObjectKeyVariable {
-	return LiftFromRustBuffer[[]ObjectKeyVariable](c, rb)
-}
-
-func (c FfiConverterSequenceObjectKeyVariable) Read(reader io.Reader) []ObjectKeyVariable {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]ObjectKeyVariable, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterObjectKeyVariableINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceObjectKeyVariable) Lower(value []ObjectKeyVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[[]ObjectKeyVariable](c, value)
-}
-
-func (c FfiConverterSequenceObjectKeyVariable) Write(writer io.Writer, value []ObjectKeyVariable) {
-	if len(value) > math.MaxInt32 {
-		panic("[]ObjectKeyVariable is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterObjectKeyVariableINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceObjectKeyVariable struct {}
-
-func (FfiDestroyerSequenceObjectKeyVariable) Destroy(sequence []ObjectKeyVariable) {
-	for _, value := range sequence {
-		FfiDestroyerObjectKeyVariable{}.Destroy(value)
-	}
-}
-
 type FfiConverterSequenceObjectRef struct{}
 
 var FfiConverterSequenceObjectRefINSTANCE = FfiConverterSequenceObjectRef{}
@@ -34687,50 +33875,6 @@ type FfiDestroyerSequenceMoveAbility struct {}
 func (FfiDestroyerSequenceMoveAbility) Destroy(sequence []MoveAbility) {
 	for _, value := range sequence {
 		FfiDestroyerMoveAbility{}.Destroy(value)
-	}
-}
-
-type FfiConverterMapStringQueryVariable struct {}
-
-var FfiConverterMapStringQueryVariableINSTANCE = FfiConverterMapStringQueryVariable{}
-
-func (c FfiConverterMapStringQueryVariable) Lift(rb RustBufferI) map[string]QueryVariable {
-	return LiftFromRustBuffer[map[string]QueryVariable](c, rb)
-}
-
-func (_ FfiConverterMapStringQueryVariable) Read(reader io.Reader) map[string]QueryVariable {
-	result := make(map[string]QueryVariable)
-	length := readInt32(reader)
-	for i := int32(0); i < length; i++ {
-		key := FfiConverterStringINSTANCE.Read(reader)
-		value := FfiConverterQueryVariableINSTANCE.Read(reader)
-		result[key] = value
-	}
-	return result
-}
-
-func (c FfiConverterMapStringQueryVariable) Lower(value map[string]QueryVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[map[string]QueryVariable](c, value)
-}
-
-func (_ FfiConverterMapStringQueryVariable) Write(writer io.Writer, mapValue map[string]QueryVariable) {
-	if len(mapValue) > math.MaxInt32 {
-		panic("map[string]QueryVariable is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(mapValue)))
-	for key, value := range mapValue {
-		FfiConverterStringINSTANCE.Write(writer, key)
-		FfiConverterQueryVariableINSTANCE.Write(writer, value)
-	}
-}
-
-type FfiDestroyerMapStringQueryVariable struct {}
-
-func (_ FfiDestroyerMapStringQueryVariable) Destroy(mapValue map[string]QueryVariable) {
-	for key, value := range mapValue {
-		FfiDestroyerString{}.Destroy(key)
-		FfiDestroyerQueryVariable{}.Destroy(value)
 	}
 }
 
