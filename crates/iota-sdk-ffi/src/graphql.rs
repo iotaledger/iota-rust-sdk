@@ -5,7 +5,7 @@ use std::{collections::HashMap, sync::Arc};
 
 use iota_graphql_client::{
     pagination::PaginationFilter,
-    query_types::{ProtocolConfigs, ServiceConfig},
+    query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
 };
 use iota_types::{CheckpointSequenceNumber, def_is};
 use tokio::sync::RwLock;
@@ -891,7 +891,7 @@ impl From<Query> for iota_graphql_client::UncheckedQuery {
     }
 }
 
-#[derive(Debug, serde::Serialize, uniffi::Enum)]
+#[derive(Debug, uniffi::Enum)]
 pub enum QueryVariable {
     Base64 {
         base64: String,
@@ -940,98 +940,210 @@ pub enum QueryVariable {
     },
 }
 
-#[derive(Debug, serde::Serialize, uniffi::Enum)]
-pub enum CheckpointIdVariable {
-    Digest { digest: String },
-    SequenceNumber { seq_num: u64 },
+#[derive(Debug, uniffi::Record)]
+pub struct CheckpointIdVariable {
+    digest: Option<String>,
+    sequence_number: Option<u64>,
 }
 
 impl From<CheckpointIdVariable> for iota_graphql_client::CheckpointIdVariable {
     fn from(value: CheckpointIdVariable) -> Self {
-        todo!()
+        Self {
+            digest: value.digest,
+            sequence_number: value.sequence_number,
+        }
     }
 }
 
-#[derive(Debug, serde::Serialize, uniffi::Record)]
+#[derive(Debug, uniffi::Record)]
 pub struct EventFilterVariable {
-    test: bool,
+    pub sender: Option<String>,
+    pub transaction_digest: Option<String>,
+    pub emitting_module: Option<String>,
+    pub event_type: Option<String>,
 }
 
 impl From<EventFilterVariable> for iota_graphql_client::EventFilterVariable {
     fn from(value: EventFilterVariable) -> Self {
-        todo!()
+        Self {
+            sender: value.sender,
+            transaction_digest: value.transaction_digest,
+            emitting_module: value.emitting_module,
+            event_type: value.event_type,
+        }
     }
 }
 
-#[derive(Debug, serde::Serialize, uniffi::Record)]
+#[derive(Debug, uniffi::Record)]
 pub struct MovePackageCheckpointFilterVariable {
-    test: bool,
+    pub after_checkpoint: Option<u64>,
+    pub before_checkpoint: Option<u64>,
 }
 
 impl From<MovePackageCheckpointFilterVariable>
     for iota_graphql_client::MovePackageCheckpointFilterVariable
 {
     fn from(value: MovePackageCheckpointFilterVariable) -> Self {
-        todo!()
+        Self {
+            after_checkpoint: value.after_checkpoint,
+            before_checkpoint: value.before_checkpoint,
+        }
     }
 }
 
-#[derive(Debug, serde::Serialize, uniffi::Record)]
+#[derive(Debug, uniffi::Record)]
 pub struct MovePackageVersionFilterVariable {
-    test: bool,
+    pub after_version: Option<u64>,
+    pub before_version: Option<u64>,
 }
 
 impl From<MovePackageVersionFilterVariable>
     for iota_graphql_client::MovePackageVersionFilterVariable
 {
     fn from(value: MovePackageVersionFilterVariable) -> Self {
-        todo!()
+        Self {
+            after_version: value.after_version,
+            before_version: value.before_version,
+        }
     }
 }
 
-#[derive(Debug, serde::Serialize, uniffi::Record)]
+#[derive(Debug, uniffi::Record)]
+pub struct ObjectKeyVariable {
+    pub object_id: String,
+    pub version: u64,
+}
+
+impl From<ObjectKeyVariable> for iota_graphql_client::ObjectKeyVariable {
+    fn from(value: ObjectKeyVariable) -> Self {
+        Self {
+            object_id: value.object_id,
+            version: value.version,
+        }
+    }
+}
+#[derive(Debug, uniffi::Record)]
 pub struct ObjectFilterVariable {
-    test: bool,
+    pub r#type: Option<String>,
+    pub owner: Option<String>,
+    pub object_ids: Vec<String>,
+    pub object_keys: Vec<ObjectKeyVariable>,
 }
 
 impl From<ObjectFilterVariable> for iota_graphql_client::ObjectFilterVariable {
     fn from(value: ObjectFilterVariable) -> Self {
-        todo!()
+        Self {
+            r#type: value.r#type,
+            owner: value.owner,
+            object_ids: value.object_ids,
+            object_keys: value.object_keys.into_iter().map(Into::into).collect(),
+        }
     }
 }
 
-#[derive(Debug, serde::Serialize, uniffi::Record)]
+#[derive(Debug, uniffi::Record)]
 pub struct TransactionBlockFilterVariable {
-    test: bool,
+    pub function: Option<String>,
+    pub kind: Option<TransactionBlockKindInputVariable>,
+    pub after_checkpoint: Option<u64>,
+    pub at_checkpoint: Option<u64>,
+    pub before_checkpoint: Option<u64>,
+    pub sign_address: Option<String>,
+    pub recv_address: Option<String>,
+    pub input_object: Option<String>,
+    pub changed_object: Option<String>,
+    pub wrapped_or_deleted_object: Option<String>,
+    pub transaction_ids: Vec<String>,
 }
 
 impl From<TransactionBlockFilterVariable> for iota_graphql_client::TransactionBlockFilterVariable {
     fn from(value: TransactionBlockFilterVariable) -> Self {
-        todo!()
+        Self {
+            function: value.function,
+            kind: value.kind.map(Into::into),
+            after_checkpoint: value.after_checkpoint,
+            at_checkpoint: value.at_checkpoint,
+            before_checkpoint: value.before_checkpoint,
+            sign_address: value.sign_address,
+            recv_address: value.recv_address,
+            input_object: value.input_object,
+            changed_object: value.changed_object,
+            wrapped_or_deleted_object: value.wrapped_or_deleted_object,
+            transaction_ids: value.transaction_ids,
+        }
     }
 }
 
-#[derive(Debug, serde::Serialize, uniffi::Record)]
+#[derive(Debug, uniffi::Enum)]
+pub enum TransactionBlockKindInputVariable {
+    SystemTx,
+    ProgrammableTx,
+    Genesis,
+    ConsensusCommitPrologueV1,
+    AuthenticatorStateUpdateV1,
+    RandomnessStateUpdate,
+    EndOfEpochTx,
+}
+
+impl From<TransactionBlockKindInputVariable>
+    for iota_graphql_client::TransactionBlockKindInputVariable
+{
+    fn from(value: TransactionBlockKindInputVariable) -> Self {
+        use TransactionBlockKindInputVariable::*;
+        match value {
+            SystemTx => iota_graphql_client::TransactionBlockKindInputVariable::SystemTx,
+            ProgrammableTx => {
+                iota_graphql_client::TransactionBlockKindInputVariable::ProgrammableTx
+            }
+            Genesis => iota_graphql_client::TransactionBlockKindInputVariable::Genesis,
+            ConsensusCommitPrologueV1 => {
+                iota_graphql_client::TransactionBlockKindInputVariable::ConsensusCommitPrologueV1
+            }
+            AuthenticatorStateUpdateV1 => {
+                iota_graphql_client::TransactionBlockKindInputVariable::AuthenticatorStateUpdateV1
+            }
+            RandomnessStateUpdate => {
+                iota_graphql_client::TransactionBlockKindInputVariable::RandomnessStateUpdate
+            }
+            EndOfEpochTx => iota_graphql_client::TransactionBlockKindInputVariable::EndOfEpochTx,
+        }
+    }
+}
+
+#[derive(Debug, uniffi::Record)]
 pub struct TransactionMetadataVariable {
-    sender: Option<String>,
-    gas_price: Option<u64>,
-    gas_objects: Vec<String>,
+    pub sender: Option<String>,
+    pub gas_price: Option<u64>,
+    pub gas_objects: Vec<String>,
+    pub gas_budget: Option<u64>,
+    pub gas_sponsor: Option<String>,
 }
 
 impl From<TransactionMetadataVariable> for iota_graphql_client::TransactionMetadataVariable {
     fn from(value: TransactionMetadataVariable) -> Self {
-        todo!()
+        Self {
+            sender: value.sender,
+            gas_price: value.gas_price,
+            gas_objects: value.gas_objects,
+            gas_budget: value.gas_budget,
+            gas_sponsor: value.gas_sponsor,
+        }
     }
 }
 
-#[derive(Debug, serde::Serialize, uniffi::Record)]
-pub struct ZkLoginIntentScopeVariable {
-    test: bool,
+#[derive(Debug, uniffi::Enum)]
+pub enum ZkLoginIntentScopeVariable {
+    TransactionData,
+    PersonalMessage,
 }
 
 impl From<ZkLoginIntentScopeVariable> for iota_graphql_client::ZkLoginIntentScopeVariable {
     fn from(value: ZkLoginIntentScopeVariable) -> Self {
-        todo!()
+        use ZkLoginIntentScopeVariable::*;
+        match value {
+            TransactionData => iota_graphql_client::ZkLoginIntentScopeVariable::TransactionData,
+            PersonalMessage => iota_graphql_client::ZkLoginIntentScopeVariable::PersonalMessage,
+        }
     }
 }
 

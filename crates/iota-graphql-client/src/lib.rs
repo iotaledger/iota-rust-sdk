@@ -185,43 +185,120 @@ pub enum UncheckedQueryVariable {
 }
 
 #[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct TransactionMetadataVariable {
-    test: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sender: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gas_price: Option<u64>,
+    pub gas_objects: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gas_budget: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gas_sponsor: Option<String>,
 }
 
 #[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct CheckpointIdVariable {
-    test: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub digest: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sequence_number: Option<u64>,
 }
 
 #[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct EventFilterVariable {
-    test: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sender: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub transaction_digest: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub emitting_module: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub event_type: Option<String>,
 }
 
 #[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct MovePackageCheckpointFilterVariable {
-    test: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub after_checkpoint: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub before_checkpoint: Option<u64>,
 }
 
 #[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct MovePackageVersionFilterVariable {
-    test: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub after_version: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub before_version: Option<u64>,
 }
 
 #[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct ObjectFilterVariable {
-    test: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub r#type: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub owner: Option<String>,
+    pub object_ids: Vec<String>,
+    pub object_keys: Vec<ObjectKeyVariable>,
 }
 
 #[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct ObjectKeyVariable {
+    pub object_id: String,
+    pub version: u64,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct TransactionBlockFilterVariable {
-    test: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub function: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kind: Option<TransactionBlockKindInputVariable>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub after_checkpoint: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub at_checkpoint: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub before_checkpoint: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sign_address: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub recv_address: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub input_object: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub changed_object: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub wrapped_or_deleted_object: Option<String>,
+    pub transaction_ids: Vec<String>,
 }
 
 #[derive(Serialize, Debug)]
-pub struct ZkLoginIntentScopeVariable {
-    test: bool,
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum TransactionBlockKindInputVariable {
+    SystemTx,
+    ProgrammableTx,
+    Genesis,
+    ConsensusCommitPrologueV1,
+    AuthenticatorStateUpdateV1,
+    RandomnessStateUpdate,
+    EndOfEpochTx,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum ZkLoginIntentScopeVariable {
+    TransactionData,
+    PersonalMessage,
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.

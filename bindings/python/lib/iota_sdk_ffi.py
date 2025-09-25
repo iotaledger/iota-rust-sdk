@@ -9131,6 +9131,42 @@ class _UniffiConverterTypeChangedObject(_UniffiConverterRustBuffer):
         _UniffiConverterTypeIdOperation.write(value.id_operation, buf)
 
 
+class CheckpointIdVariable:
+    digest: "typing.Optional[str]"
+    sequence_number: "typing.Optional[int]"
+    def __init__(self, *, digest: "typing.Optional[str]", sequence_number: "typing.Optional[int]"):
+        self.digest = digest
+        self.sequence_number = sequence_number
+
+    def __str__(self):
+        return "CheckpointIdVariable(digest={}, sequence_number={})".format(self.digest, self.sequence_number)
+
+    def __eq__(self, other):
+        if self.digest != other.digest:
+            return False
+        if self.sequence_number != other.sequence_number:
+            return False
+        return True
+
+class _UniffiConverterTypeCheckpointIdVariable(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return CheckpointIdVariable(
+            digest=_UniffiConverterOptionalString.read(buf),
+            sequence_number=_UniffiConverterOptionalUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.digest)
+        _UniffiConverterOptionalUInt64.check_lower(value.sequence_number)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.digest, buf)
+        _UniffiConverterOptionalUInt64.write(value.sequence_number, buf)
+
+
 class CheckpointSummaryPage:
     """
     A page of items returned by the GraphQL server.
@@ -10128,15 +10164,27 @@ class _UniffiConverterTypeEventFilter(_UniffiConverterRustBuffer):
 
 
 class EventFilterVariable:
-    test: "bool"
-    def __init__(self, *, test: "bool"):
-        self.test = test
+    sender: "typing.Optional[str]"
+    transaction_digest: "typing.Optional[str]"
+    emitting_module: "typing.Optional[str]"
+    event_type: "typing.Optional[str]"
+    def __init__(self, *, sender: "typing.Optional[str]", transaction_digest: "typing.Optional[str]", emitting_module: "typing.Optional[str]", event_type: "typing.Optional[str]"):
+        self.sender = sender
+        self.transaction_digest = transaction_digest
+        self.emitting_module = emitting_module
+        self.event_type = event_type
 
     def __str__(self):
-        return "EventFilterVariable(test={})".format(self.test)
+        return "EventFilterVariable(sender={}, transaction_digest={}, emitting_module={}, event_type={})".format(self.sender, self.transaction_digest, self.emitting_module, self.event_type)
 
     def __eq__(self, other):
-        if self.test != other.test:
+        if self.sender != other.sender:
+            return False
+        if self.transaction_digest != other.transaction_digest:
+            return False
+        if self.emitting_module != other.emitting_module:
+            return False
+        if self.event_type != other.event_type:
             return False
         return True
 
@@ -10144,16 +10192,25 @@ class _UniffiConverterTypeEventFilterVariable(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return EventFilterVariable(
-            test=_UniffiConverterBool.read(buf),
+            sender=_UniffiConverterOptionalString.read(buf),
+            transaction_digest=_UniffiConverterOptionalString.read(buf),
+            emitting_module=_UniffiConverterOptionalString.read(buf),
+            event_type=_UniffiConverterOptionalString.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterBool.check_lower(value.test)
+        _UniffiConverterOptionalString.check_lower(value.sender)
+        _UniffiConverterOptionalString.check_lower(value.transaction_digest)
+        _UniffiConverterOptionalString.check_lower(value.emitting_module)
+        _UniffiConverterOptionalString.check_lower(value.event_type)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterBool.write(value.test, buf)
+        _UniffiConverterOptionalString.write(value.sender, buf)
+        _UniffiConverterOptionalString.write(value.transaction_digest, buf)
+        _UniffiConverterOptionalString.write(value.emitting_module, buf)
+        _UniffiConverterOptionalString.write(value.event_type, buf)
 
 
 class EventPage:
@@ -11147,15 +11204,19 @@ class _UniffiConverterTypeMoveObject(_UniffiConverterRustBuffer):
 
 
 class MovePackageCheckpointFilterVariable:
-    test: "bool"
-    def __init__(self, *, test: "bool"):
-        self.test = test
+    after_checkpoint: "typing.Optional[int]"
+    before_checkpoint: "typing.Optional[int]"
+    def __init__(self, *, after_checkpoint: "typing.Optional[int]", before_checkpoint: "typing.Optional[int]"):
+        self.after_checkpoint = after_checkpoint
+        self.before_checkpoint = before_checkpoint
 
     def __str__(self):
-        return "MovePackageCheckpointFilterVariable(test={})".format(self.test)
+        return "MovePackageCheckpointFilterVariable(after_checkpoint={}, before_checkpoint={})".format(self.after_checkpoint, self.before_checkpoint)
 
     def __eq__(self, other):
-        if self.test != other.test:
+        if self.after_checkpoint != other.after_checkpoint:
+            return False
+        if self.before_checkpoint != other.before_checkpoint:
             return False
         return True
 
@@ -11163,16 +11224,19 @@ class _UniffiConverterTypeMovePackageCheckpointFilterVariable(_UniffiConverterRu
     @staticmethod
     def read(buf):
         return MovePackageCheckpointFilterVariable(
-            test=_UniffiConverterBool.read(buf),
+            after_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
+            before_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterBool.check_lower(value.test)
+        _UniffiConverterOptionalUInt64.check_lower(value.after_checkpoint)
+        _UniffiConverterOptionalUInt64.check_lower(value.before_checkpoint)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterBool.write(value.test, buf)
+        _UniffiConverterOptionalUInt64.write(value.after_checkpoint, buf)
+        _UniffiConverterOptionalUInt64.write(value.before_checkpoint, buf)
 
 
 class MovePackagePage:
@@ -11264,15 +11328,19 @@ class _UniffiConverterTypeMovePackageQuery(_UniffiConverterRustBuffer):
 
 
 class MovePackageVersionFilterVariable:
-    test: "bool"
-    def __init__(self, *, test: "bool"):
-        self.test = test
+    after_version: "typing.Optional[int]"
+    before_version: "typing.Optional[int]"
+    def __init__(self, *, after_version: "typing.Optional[int]", before_version: "typing.Optional[int]"):
+        self.after_version = after_version
+        self.before_version = before_version
 
     def __str__(self):
-        return "MovePackageVersionFilterVariable(test={})".format(self.test)
+        return "MovePackageVersionFilterVariable(after_version={}, before_version={})".format(self.after_version, self.before_version)
 
     def __eq__(self, other):
-        if self.test != other.test:
+        if self.after_version != other.after_version:
+            return False
+        if self.before_version != other.before_version:
             return False
         return True
 
@@ -11280,16 +11348,19 @@ class _UniffiConverterTypeMovePackageVersionFilterVariable(_UniffiConverterRustB
     @staticmethod
     def read(buf):
         return MovePackageVersionFilterVariable(
-            test=_UniffiConverterBool.read(buf),
+            after_version=_UniffiConverterOptionalUInt64.read(buf),
+            before_version=_UniffiConverterOptionalUInt64.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterBool.check_lower(value.test)
+        _UniffiConverterOptionalUInt64.check_lower(value.after_version)
+        _UniffiConverterOptionalUInt64.check_lower(value.before_version)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterBool.write(value.test, buf)
+        _UniffiConverterOptionalUInt64.write(value.after_version, buf)
+        _UniffiConverterOptionalUInt64.write(value.before_version, buf)
 
 
 class MoveStruct:
@@ -11554,15 +11625,27 @@ class _UniffiConverterTypeObjectFilter(_UniffiConverterRustBuffer):
 
 
 class ObjectFilterVariable:
-    test: "bool"
-    def __init__(self, *, test: "bool"):
-        self.test = test
+    type: "typing.Optional[str]"
+    owner: "typing.Optional[str]"
+    object_ids: "typing.List[str]"
+    object_keys: "typing.List[ObjectKeyVariable]"
+    def __init__(self, *, type: "typing.Optional[str]", owner: "typing.Optional[str]", object_ids: "typing.List[str]", object_keys: "typing.List[ObjectKeyVariable]"):
+        self.type = type
+        self.owner = owner
+        self.object_ids = object_ids
+        self.object_keys = object_keys
 
     def __str__(self):
-        return "ObjectFilterVariable(test={})".format(self.test)
+        return "ObjectFilterVariable(type={}, owner={}, object_ids={}, object_keys={})".format(self.type, self.owner, self.object_ids, self.object_keys)
 
     def __eq__(self, other):
-        if self.test != other.test:
+        if self.type != other.type:
+            return False
+        if self.owner != other.owner:
+            return False
+        if self.object_ids != other.object_ids:
+            return False
+        if self.object_keys != other.object_keys:
             return False
         return True
 
@@ -11570,16 +11653,61 @@ class _UniffiConverterTypeObjectFilterVariable(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return ObjectFilterVariable(
-            test=_UniffiConverterBool.read(buf),
+            type=_UniffiConverterOptionalString.read(buf),
+            owner=_UniffiConverterOptionalString.read(buf),
+            object_ids=_UniffiConverterSequenceString.read(buf),
+            object_keys=_UniffiConverterSequenceTypeObjectKeyVariable.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterBool.check_lower(value.test)
+        _UniffiConverterOptionalString.check_lower(value.type)
+        _UniffiConverterOptionalString.check_lower(value.owner)
+        _UniffiConverterSequenceString.check_lower(value.object_ids)
+        _UniffiConverterSequenceTypeObjectKeyVariable.check_lower(value.object_keys)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterBool.write(value.test, buf)
+        _UniffiConverterOptionalString.write(value.type, buf)
+        _UniffiConverterOptionalString.write(value.owner, buf)
+        _UniffiConverterSequenceString.write(value.object_ids, buf)
+        _UniffiConverterSequenceTypeObjectKeyVariable.write(value.object_keys, buf)
+
+
+class ObjectKeyVariable:
+    object_id: "str"
+    version: "int"
+    def __init__(self, *, object_id: "str", version: "int"):
+        self.object_id = object_id
+        self.version = version
+
+    def __str__(self):
+        return "ObjectKeyVariable(object_id={}, version={})".format(self.object_id, self.version)
+
+    def __eq__(self, other):
+        if self.object_id != other.object_id:
+            return False
+        if self.version != other.version:
+            return False
+        return True
+
+class _UniffiConverterTypeObjectKeyVariable(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return ObjectKeyVariable(
+            object_id=_UniffiConverterString.read(buf),
+            version=_UniffiConverterUInt64.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.object_id)
+        _UniffiConverterUInt64.check_lower(value.version)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.object_id, buf)
+        _UniffiConverterUInt64.write(value.version, buf)
 
 
 class ObjectPage:
@@ -12444,15 +12572,55 @@ class _UniffiConverterTypeSignedTransactionPage(_UniffiConverterRustBuffer):
 
 
 class TransactionBlockFilterVariable:
-    test: "bool"
-    def __init__(self, *, test: "bool"):
-        self.test = test
+    function: "typing.Optional[str]"
+    kind: "typing.Optional[TransactionBlockKindInputVariable]"
+    after_checkpoint: "typing.Optional[int]"
+    at_checkpoint: "typing.Optional[int]"
+    before_checkpoint: "typing.Optional[int]"
+    sign_address: "typing.Optional[str]"
+    recv_address: "typing.Optional[str]"
+    input_object: "typing.Optional[str]"
+    changed_object: "typing.Optional[str]"
+    wrapped_or_deleted_object: "typing.Optional[str]"
+    transaction_ids: "typing.List[str]"
+    def __init__(self, *, function: "typing.Optional[str]", kind: "typing.Optional[TransactionBlockKindInputVariable]", after_checkpoint: "typing.Optional[int]", at_checkpoint: "typing.Optional[int]", before_checkpoint: "typing.Optional[int]", sign_address: "typing.Optional[str]", recv_address: "typing.Optional[str]", input_object: "typing.Optional[str]", changed_object: "typing.Optional[str]", wrapped_or_deleted_object: "typing.Optional[str]", transaction_ids: "typing.List[str]"):
+        self.function = function
+        self.kind = kind
+        self.after_checkpoint = after_checkpoint
+        self.at_checkpoint = at_checkpoint
+        self.before_checkpoint = before_checkpoint
+        self.sign_address = sign_address
+        self.recv_address = recv_address
+        self.input_object = input_object
+        self.changed_object = changed_object
+        self.wrapped_or_deleted_object = wrapped_or_deleted_object
+        self.transaction_ids = transaction_ids
 
     def __str__(self):
-        return "TransactionBlockFilterVariable(test={})".format(self.test)
+        return "TransactionBlockFilterVariable(function={}, kind={}, after_checkpoint={}, at_checkpoint={}, before_checkpoint={}, sign_address={}, recv_address={}, input_object={}, changed_object={}, wrapped_or_deleted_object={}, transaction_ids={})".format(self.function, self.kind, self.after_checkpoint, self.at_checkpoint, self.before_checkpoint, self.sign_address, self.recv_address, self.input_object, self.changed_object, self.wrapped_or_deleted_object, self.transaction_ids)
 
     def __eq__(self, other):
-        if self.test != other.test:
+        if self.function != other.function:
+            return False
+        if self.kind != other.kind:
+            return False
+        if self.after_checkpoint != other.after_checkpoint:
+            return False
+        if self.at_checkpoint != other.at_checkpoint:
+            return False
+        if self.before_checkpoint != other.before_checkpoint:
+            return False
+        if self.sign_address != other.sign_address:
+            return False
+        if self.recv_address != other.recv_address:
+            return False
+        if self.input_object != other.input_object:
+            return False
+        if self.changed_object != other.changed_object:
+            return False
+        if self.wrapped_or_deleted_object != other.wrapped_or_deleted_object:
+            return False
+        if self.transaction_ids != other.transaction_ids:
             return False
         return True
 
@@ -12460,16 +12628,46 @@ class _UniffiConverterTypeTransactionBlockFilterVariable(_UniffiConverterRustBuf
     @staticmethod
     def read(buf):
         return TransactionBlockFilterVariable(
-            test=_UniffiConverterBool.read(buf),
+            function=_UniffiConverterOptionalString.read(buf),
+            kind=_UniffiConverterOptionalTypeTransactionBlockKindInputVariable.read(buf),
+            after_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
+            at_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
+            before_checkpoint=_UniffiConverterOptionalUInt64.read(buf),
+            sign_address=_UniffiConverterOptionalString.read(buf),
+            recv_address=_UniffiConverterOptionalString.read(buf),
+            input_object=_UniffiConverterOptionalString.read(buf),
+            changed_object=_UniffiConverterOptionalString.read(buf),
+            wrapped_or_deleted_object=_UniffiConverterOptionalString.read(buf),
+            transaction_ids=_UniffiConverterSequenceString.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterBool.check_lower(value.test)
+        _UniffiConverterOptionalString.check_lower(value.function)
+        _UniffiConverterOptionalTypeTransactionBlockKindInputVariable.check_lower(value.kind)
+        _UniffiConverterOptionalUInt64.check_lower(value.after_checkpoint)
+        _UniffiConverterOptionalUInt64.check_lower(value.at_checkpoint)
+        _UniffiConverterOptionalUInt64.check_lower(value.before_checkpoint)
+        _UniffiConverterOptionalString.check_lower(value.sign_address)
+        _UniffiConverterOptionalString.check_lower(value.recv_address)
+        _UniffiConverterOptionalString.check_lower(value.input_object)
+        _UniffiConverterOptionalString.check_lower(value.changed_object)
+        _UniffiConverterOptionalString.check_lower(value.wrapped_or_deleted_object)
+        _UniffiConverterSequenceString.check_lower(value.transaction_ids)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterBool.write(value.test, buf)
+        _UniffiConverterOptionalString.write(value.function, buf)
+        _UniffiConverterOptionalTypeTransactionBlockKindInputVariable.write(value.kind, buf)
+        _UniffiConverterOptionalUInt64.write(value.after_checkpoint, buf)
+        _UniffiConverterOptionalUInt64.write(value.at_checkpoint, buf)
+        _UniffiConverterOptionalUInt64.write(value.before_checkpoint, buf)
+        _UniffiConverterOptionalString.write(value.sign_address, buf)
+        _UniffiConverterOptionalString.write(value.recv_address, buf)
+        _UniffiConverterOptionalString.write(value.input_object, buf)
+        _UniffiConverterOptionalString.write(value.changed_object, buf)
+        _UniffiConverterOptionalString.write(value.wrapped_or_deleted_object, buf)
+        _UniffiConverterSequenceString.write(value.transaction_ids, buf)
 
 
 class TransactionDataEffects:
@@ -12866,13 +13064,17 @@ class TransactionMetadataVariable:
     sender: "typing.Optional[str]"
     gas_price: "typing.Optional[int]"
     gas_objects: "typing.List[str]"
-    def __init__(self, *, sender: "typing.Optional[str]", gas_price: "typing.Optional[int]", gas_objects: "typing.List[str]"):
+    gas_budget: "typing.Optional[int]"
+    gas_sponsor: "typing.Optional[str]"
+    def __init__(self, *, sender: "typing.Optional[str]", gas_price: "typing.Optional[int]", gas_objects: "typing.List[str]", gas_budget: "typing.Optional[int]", gas_sponsor: "typing.Optional[str]"):
         self.sender = sender
         self.gas_price = gas_price
         self.gas_objects = gas_objects
+        self.gas_budget = gas_budget
+        self.gas_sponsor = gas_sponsor
 
     def __str__(self):
-        return "TransactionMetadataVariable(sender={}, gas_price={}, gas_objects={})".format(self.sender, self.gas_price, self.gas_objects)
+        return "TransactionMetadataVariable(sender={}, gas_price={}, gas_objects={}, gas_budget={}, gas_sponsor={})".format(self.sender, self.gas_price, self.gas_objects, self.gas_budget, self.gas_sponsor)
 
     def __eq__(self, other):
         if self.sender != other.sender:
@@ -12880,6 +13082,10 @@ class TransactionMetadataVariable:
         if self.gas_price != other.gas_price:
             return False
         if self.gas_objects != other.gas_objects:
+            return False
+        if self.gas_budget != other.gas_budget:
+            return False
+        if self.gas_sponsor != other.gas_sponsor:
             return False
         return True
 
@@ -12890,6 +13096,8 @@ class _UniffiConverterTypeTransactionMetadataVariable(_UniffiConverterRustBuffer
             sender=_UniffiConverterOptionalString.read(buf),
             gas_price=_UniffiConverterOptionalUInt64.read(buf),
             gas_objects=_UniffiConverterSequenceString.read(buf),
+            gas_budget=_UniffiConverterOptionalUInt64.read(buf),
+            gas_sponsor=_UniffiConverterOptionalString.read(buf),
         )
 
     @staticmethod
@@ -12897,12 +13105,16 @@ class _UniffiConverterTypeTransactionMetadataVariable(_UniffiConverterRustBuffer
         _UniffiConverterOptionalString.check_lower(value.sender)
         _UniffiConverterOptionalUInt64.check_lower(value.gas_price)
         _UniffiConverterSequenceString.check_lower(value.gas_objects)
+        _UniffiConverterOptionalUInt64.check_lower(value.gas_budget)
+        _UniffiConverterOptionalString.check_lower(value.gas_sponsor)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterOptionalString.write(value.sender, buf)
         _UniffiConverterOptionalUInt64.write(value.gas_price, buf)
         _UniffiConverterSequenceString.write(value.gas_objects, buf)
+        _UniffiConverterOptionalUInt64.write(value.gas_budget, buf)
+        _UniffiConverterOptionalString.write(value.gas_sponsor, buf)
 
 
 class TransactionsFilter:
@@ -14053,134 +14265,6 @@ class _UniffiConverterTypeZkLoginClaim(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterString.write(value.value, buf)
         _UniffiConverterUInt8.write(value.index_mod_4, buf)
-
-
-class ZkLoginIntentScopeVariable:
-    test: "bool"
-    def __init__(self, *, test: "bool"):
-        self.test = test
-
-    def __str__(self):
-        return "ZkLoginIntentScopeVariable(test={})".format(self.test)
-
-    def __eq__(self, other):
-        if self.test != other.test:
-            return False
-        return True
-
-class _UniffiConverterTypeZkLoginIntentScopeVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return ZkLoginIntentScopeVariable(
-            test=_UniffiConverterBool.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterBool.check_lower(value.test)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterBool.write(value.test, buf)
-
-
-
-
-
-class CheckpointIdVariable:
-    def __init__(self):
-        raise RuntimeError("CheckpointIdVariable cannot be instantiated directly")
-
-    # Each enum variant is a nested class of the enum itself.
-    class DIGEST:
-        digest: "str"
-
-        def __init__(self,digest: "str"):
-            self.digest = digest
-
-        def __str__(self):
-            return "CheckpointIdVariable.DIGEST(digest={})".format(self.digest)
-
-        def __eq__(self, other):
-            if not other.is_DIGEST():
-                return False
-            if self.digest != other.digest:
-                return False
-            return True
-    
-    class SEQUENCE_NUMBER:
-        seq_num: "int"
-
-        def __init__(self,seq_num: "int"):
-            self.seq_num = seq_num
-
-        def __str__(self):
-            return "CheckpointIdVariable.SEQUENCE_NUMBER(seq_num={})".format(self.seq_num)
-
-        def __eq__(self, other):
-            if not other.is_SEQUENCE_NUMBER():
-                return False
-            if self.seq_num != other.seq_num:
-                return False
-            return True
-    
-    
-
-    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
-    # whether an instance is that variant.
-    def is_DIGEST(self) -> bool:
-        return isinstance(self, CheckpointIdVariable.DIGEST)
-    def is_digest(self) -> bool:
-        return isinstance(self, CheckpointIdVariable.DIGEST)
-    def is_SEQUENCE_NUMBER(self) -> bool:
-        return isinstance(self, CheckpointIdVariable.SEQUENCE_NUMBER)
-    def is_sequence_number(self) -> bool:
-        return isinstance(self, CheckpointIdVariable.SEQUENCE_NUMBER)
-    
-
-# Now, a little trick - we make each nested variant class be a subclass of the main
-# enum class, so that method calls and instance checks etc will work intuitively.
-# We might be able to do this a little more neatly with a metaclass, but this'll do.
-CheckpointIdVariable.DIGEST = type("CheckpointIdVariable.DIGEST", (CheckpointIdVariable.DIGEST, CheckpointIdVariable,), {})  # type: ignore
-CheckpointIdVariable.SEQUENCE_NUMBER = type("CheckpointIdVariable.SEQUENCE_NUMBER", (CheckpointIdVariable.SEQUENCE_NUMBER, CheckpointIdVariable,), {})  # type: ignore
-
-
-
-
-class _UniffiConverterTypeCheckpointIdVariable(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        variant = buf.read_i32()
-        if variant == 1:
-            return CheckpointIdVariable.DIGEST(
-                _UniffiConverterString.read(buf),
-            )
-        if variant == 2:
-            return CheckpointIdVariable.SEQUENCE_NUMBER(
-                _UniffiConverterUInt64.read(buf),
-            )
-        raise InternalError("Raw enum value doesn't match any cases")
-
-    @staticmethod
-    def check_lower(value):
-        if value.is_DIGEST():
-            _UniffiConverterString.check_lower(value.digest)
-            return
-        if value.is_SEQUENCE_NUMBER():
-            _UniffiConverterUInt64.check_lower(value.seq_num)
-            return
-        raise ValueError(value)
-
-    @staticmethod
-    def write(value, buf):
-        if value.is_DIGEST():
-            buf.write_i32(1)
-            _UniffiConverterString.write(value.digest, buf)
-        if value.is_SEQUENCE_NUMBER():
-            buf.write_i32(2)
-            _UniffiConverterUInt64.write(value.seq_num, buf)
-
-
 
 
 
@@ -17770,6 +17854,84 @@ class _UniffiConverterTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
 
 
 
+class TransactionBlockKindInputVariable(enum.Enum):
+    SYSTEM_TX = 0
+    
+    PROGRAMMABLE_TX = 1
+    
+    GENESIS = 2
+    
+    CONSENSUS_COMMIT_PROLOGUE_V1 = 3
+    
+    AUTHENTICATOR_STATE_UPDATE_V1 = 4
+    
+    RANDOMNESS_STATE_UPDATE = 5
+    
+    END_OF_EPOCH_TX = 6
+    
+
+
+class _UniffiConverterTypeTransactionBlockKindInputVariable(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return TransactionBlockKindInputVariable.SYSTEM_TX
+        if variant == 2:
+            return TransactionBlockKindInputVariable.PROGRAMMABLE_TX
+        if variant == 3:
+            return TransactionBlockKindInputVariable.GENESIS
+        if variant == 4:
+            return TransactionBlockKindInputVariable.CONSENSUS_COMMIT_PROLOGUE_V1
+        if variant == 5:
+            return TransactionBlockKindInputVariable.AUTHENTICATOR_STATE_UPDATE_V1
+        if variant == 6:
+            return TransactionBlockKindInputVariable.RANDOMNESS_STATE_UPDATE
+        if variant == 7:
+            return TransactionBlockKindInputVariable.END_OF_EPOCH_TX
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == TransactionBlockKindInputVariable.SYSTEM_TX:
+            return
+        if value == TransactionBlockKindInputVariable.PROGRAMMABLE_TX:
+            return
+        if value == TransactionBlockKindInputVariable.GENESIS:
+            return
+        if value == TransactionBlockKindInputVariable.CONSENSUS_COMMIT_PROLOGUE_V1:
+            return
+        if value == TransactionBlockKindInputVariable.AUTHENTICATOR_STATE_UPDATE_V1:
+            return
+        if value == TransactionBlockKindInputVariable.RANDOMNESS_STATE_UPDATE:
+            return
+        if value == TransactionBlockKindInputVariable.END_OF_EPOCH_TX:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == TransactionBlockKindInputVariable.SYSTEM_TX:
+            buf.write_i32(1)
+        if value == TransactionBlockKindInputVariable.PROGRAMMABLE_TX:
+            buf.write_i32(2)
+        if value == TransactionBlockKindInputVariable.GENESIS:
+            buf.write_i32(3)
+        if value == TransactionBlockKindInputVariable.CONSENSUS_COMMIT_PROLOGUE_V1:
+            buf.write_i32(4)
+        if value == TransactionBlockKindInputVariable.AUTHENTICATOR_STATE_UPDATE_V1:
+            buf.write_i32(5)
+        if value == TransactionBlockKindInputVariable.RANDOMNESS_STATE_UPDATE:
+            buf.write_i32(6)
+        if value == TransactionBlockKindInputVariable.END_OF_EPOCH_TX:
+            buf.write_i32(7)
+
+
+
+
+
+
+
 class TransactionExpiration:
     """
     A TTL for a transaction
@@ -18177,6 +18339,44 @@ class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
             _UniffiConverterUInt64.write(value.version, buf)
         if value.is_PER_EPOCH_CONFIG():
             buf.write_i32(5)
+
+
+
+
+
+
+
+class ZkLoginIntentScopeVariable(enum.Enum):
+    TRANSACTION_DATA = 0
+    
+    PERSONAL_MESSAGE = 1
+    
+
+
+class _UniffiConverterTypeZkLoginIntentScopeVariable(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return ZkLoginIntentScopeVariable.TRANSACTION_DATA
+        if variant == 2:
+            return ZkLoginIntentScopeVariable.PERSONAL_MESSAGE
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == ZkLoginIntentScopeVariable.TRANSACTION_DATA:
+            return
+        if value == ZkLoginIntentScopeVariable.PERSONAL_MESSAGE:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == ZkLoginIntentScopeVariable.TRANSACTION_DATA:
+            buf.write_i32(1)
+        if value == ZkLoginIntentScopeVariable.PERSONAL_MESSAGE:
+            buf.write_i32(2)
 
 
 
@@ -19640,6 +19840,33 @@ class _UniffiConverterOptionalTypeTransactionBlockKindInput(_UniffiConverterRust
 
 
 
+class _UniffiConverterOptionalTypeTransactionBlockKindInputVariable(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeTransactionBlockKindInputVariable.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeTransactionBlockKindInputVariable.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeTransactionBlockKindInputVariable.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalSequenceInt32(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -21039,6 +21266,31 @@ class _UniffiConverterSequenceTypeMoveStructTypeParameter(_UniffiConverterRustBu
 
         return [
             _UniffiConverterTypeMoveStructTypeParameter.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeObjectKeyVariable(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeObjectKeyVariable.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeObjectKeyVariable.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeObjectKeyVariable.read(buf) for i in range(count)
         ]
 
 
@@ -39524,7 +39776,6 @@ def hex_encode(input: "bytes") -> "str":
 
 __all__ = [
     "InternalError",
-    "CheckpointIdVariable",
     "CommandArgumentError",
     "Direction",
     "ExecutionError",
@@ -39540,13 +39791,16 @@ __all__ = [
     "SdkFfiError",
     "SignatureScheme",
     "TransactionBlockKindInput",
+    "TransactionBlockKindInputVariable",
     "TransactionExpiration",
     "TypeArgumentError",
     "UnchangedSharedKind",
+    "ZkLoginIntentScopeVariable",
     "ActiveJwk",
     "AuthenticatorStateExpire",
     "AuthenticatorStateUpdateV1",
     "ChangedObject",
+    "CheckpointIdVariable",
     "CheckpointSummaryPage",
     "CoinMetadata",
     "CoinPage",
@@ -39589,6 +39843,7 @@ __all__ = [
     "MoveStructTypeParameter",
     "ObjectFilter",
     "ObjectFilterVariable",
+    "ObjectKeyVariable",
     "ObjectPage",
     "ObjectRef",
     "ObjectReference",
@@ -39622,7 +39877,6 @@ __all__ = [
     "ValidatorPage",
     "ValidatorSet",
     "ZkLoginClaim",
-    "ZkLoginIntentScopeVariable",
     "base64_decode",
     "base64_encode",
     "hex_decode",
