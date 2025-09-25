@@ -167,27 +167,61 @@ pub struct UncheckedQuery {
 #[derive(Serialize, Debug)]
 #[serde(untagged)]
 pub enum UncheckedQueryVariable {
-    TxBytes(String),
-    TransactionMetadata(bool), // TODO
-    Address(String),
-    RootVersion(u64),
-    SkipChecks(bool),
-    Version(u64),
+    Base64(String),
+    Boolean(bool),
+    CheckpointId(CheckpointIdVariable),
+    EventFilter(EventFilterVariable),
+    Int(u64),
+    IotaAddress(String),
+    MovePackageCheckpointFilter(MovePackageCheckpointFilterVariable),
+    MovePackageVersionFilter(MovePackageVersionFilterVariable),
+    ObjectFilter(ObjectFilterVariable),
+    String(String),
+    TransactionBlockFilter(TransactionBlockFilterVariable),
+    TransactionMetadata(TransactionMetadataVariable),
     Type(String),
-    Epoch(u64),
-    Checkpoint(bool), // TODO
-    Digest(String),
-    First(u64),
-    Last(u64),
-    After(String),
-    Before(String),
-    ProtocolVersion(u64),
-    Name(String),
-    CoinType(String),
-    Bytes(String),
-    Signature(String),
-    IntentScope(bool), // TODO
-    Author(String),
+    UInt53(u64),
+    ZkLoginIntentScope(ZkLoginIntentScopeVariable),
+}
+
+#[derive(Serialize, Debug)]
+pub struct TransactionMetadataVariable {
+    test: bool,
+}
+
+#[derive(Serialize, Debug)]
+pub struct CheckpointIdVariable {
+    test: bool,
+}
+
+#[derive(Serialize, Debug)]
+pub struct EventFilterVariable {
+    test: bool,
+}
+
+#[derive(Serialize, Debug)]
+pub struct MovePackageCheckpointFilterVariable {
+    test: bool,
+}
+
+#[derive(Serialize, Debug)]
+pub struct MovePackageVersionFilterVariable {
+    test: bool,
+}
+
+#[derive(Serialize, Debug)]
+pub struct ObjectFilterVariable {
+    test: bool,
+}
+
+#[derive(Serialize, Debug)]
+pub struct TransactionBlockFilterVariable {
+    test: bool,
+}
+
+#[derive(Serialize, Debug)]
+pub struct ZkLoginIntentScopeVariable {
+    test: bool,
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.

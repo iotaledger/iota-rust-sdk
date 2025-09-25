@@ -11,7 +11,7 @@ async def main():
     client = GraphQlClient.new_devnet()
 
     query_epoch_data_str = """
-    query CustomQuery($id: UInt53) {
+    query MyQuery($id: UInt53) {
         epoch(id: $id) {
             epochId
             referenceGasPrice
@@ -21,28 +21,28 @@ async def main():
         }
     }
     """
-    query_epoch_data = CustomQuery(
+    query_epoch_data = Query(
         query=query_epoch_data_str,
     )
-    res = await client.run_custom_query(query_epoch_data)
+    res = await client.run_query(query_epoch_data)
     print(res)
 
-    variables = [CustomQueryVariable.EPOCH(1)]
-    query_epoch_data_with_variables = CustomQuery(
+    variables = {"id": QueryVariable.U_INT53(1)}
+    query_epoch_data_with_variables = Query(
         query=query_epoch_data_str, variables=variables
     )
-    res = await client.run_custom_query(query_epoch_data_with_variables)
+    res = await client.run_query(query_epoch_data_with_variables)
     print(res)
 
     query_chain_id_str = """
-    query CustomQuery {
+    query MyQuery {
         chainIdentifier
     }
     """
-    query_chain_id = CustomQuery(
+    query_chain_id = Query(
         query=query_chain_id_str,
     )
-    res = await client.run_custom_query(query_chain_id)
+    res = await client.run_query(query_chain_id)
     print(res)
 
 

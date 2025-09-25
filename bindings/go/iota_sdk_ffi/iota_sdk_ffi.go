@@ -1521,11 +1521,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query()
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query()
 	})
-	if checksum != 28040 {
+	if checksum != 54586 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_custom_query: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -11406,8 +11406,8 @@ type GraphQlClientInterface interface {
 	// This will return `Ok(None)` if the epoch requested is not available in
 	// the GraphQL service (e.g., due to pruning).
 	ReferenceGasPrice(epoch *uint64) (*uint64, error)
-	// Run a custom query.
-	RunCustomQuery(query CustomQuery) (Value, error)
+	// Run a query.
+	RunQuery(query Query) (Value, error)
 	// Get the GraphQL service configuration, including complexity limits, read
 	// and mutation limits, supported versions, and others.
 	ServiceConfig() (ServiceConfig, error)
@@ -12626,8 +12626,8 @@ func (_self *GraphQlClient) ReferenceGasPrice(epoch *uint64) (*uint64, error) {
 	return res, err 
 }
 
-// Run a custom query.
-func (_self *GraphQlClient) RunCustomQuery(query CustomQuery) (Value, error) {
+// Run a query.
+func (_self *GraphQlClient) RunQuery(query Query) (Value, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12643,8 +12643,8 @@ func (_self *GraphQlClient) RunCustomQuery(query CustomQuery) (Value, error) {
 		func(ffi RustBufferI) Value {
 			return FfiConverterTypeValueINSTANCE.Lift(ffi)
 		},
-		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_custom_query(
-		_pointer,FfiConverterCustomQueryINSTANCE.Lower(query)),
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(
+		_pointer,FfiConverterQueryINSTANCE.Lower(query)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -23625,45 +23625,6 @@ type FfiDestroyerCoinPage struct {}
 func (_ FfiDestroyerCoinPage) Destroy(value CoinPage) {
 	value.Destroy()
 }
-type CustomQuery struct {
-	Query string
-	Variables *[]CustomQueryVariable
-}
-
-func (r *CustomQuery) Destroy() {
-		FfiDestroyerString{}.Destroy(r.Query);
-		FfiDestroyerOptionalSequenceCustomQueryVariable{}.Destroy(r.Variables);
-}
-
-type FfiConverterCustomQuery struct {}
-
-var FfiConverterCustomQueryINSTANCE = FfiConverterCustomQuery{}
-
-func (c FfiConverterCustomQuery) Lift(rb RustBufferI) CustomQuery {
-	return LiftFromRustBuffer[CustomQuery](c, rb)
-}
-
-func (c FfiConverterCustomQuery) Read(reader io.Reader) CustomQuery {
-	return CustomQuery {
-			FfiConverterStringINSTANCE.Read(reader),
-			FfiConverterOptionalSequenceCustomQueryVariableINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterCustomQuery) Lower(value CustomQuery) C.RustBuffer {
-	return LowerIntoRustBuffer[CustomQuery](c, value)
-}
-
-func (c FfiConverterCustomQuery) Write(writer io.Writer, value CustomQuery) {
-		FfiConverterStringINSTANCE.Write(writer, value.Query);
-		FfiConverterOptionalSequenceCustomQueryVariableINSTANCE.Write(writer, value.Variables);
-}
-
-type FfiDestroyerCustomQuery struct {}
-
-func (_ FfiDestroyerCustomQuery) Destroy(value CustomQuery) {
-	value.Destroy()
-}
 // The result of a dry run, which includes the effects of the transaction and
 // any errors that may have occurred.
 type DryRunResult struct {
@@ -24212,6 +24173,41 @@ func (c FfiConverterEventFilter) Write(writer io.Writer, value EventFilter) {
 type FfiDestroyerEventFilter struct {}
 
 func (_ FfiDestroyerEventFilter) Destroy(value EventFilter) {
+	value.Destroy()
+}
+type EventFilterVariable struct {
+	Test bool
+}
+
+func (r *EventFilterVariable) Destroy() {
+		FfiDestroyerBool{}.Destroy(r.Test);
+}
+
+type FfiConverterEventFilterVariable struct {}
+
+var FfiConverterEventFilterVariableINSTANCE = FfiConverterEventFilterVariable{}
+
+func (c FfiConverterEventFilterVariable) Lift(rb RustBufferI) EventFilterVariable {
+	return LiftFromRustBuffer[EventFilterVariable](c, rb)
+}
+
+func (c FfiConverterEventFilterVariable) Read(reader io.Reader) EventFilterVariable {
+	return EventFilterVariable {
+			FfiConverterBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterEventFilterVariable) Lower(value EventFilterVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[EventFilterVariable](c, value)
+}
+
+func (c FfiConverterEventFilterVariable) Write(writer io.Writer, value EventFilterVariable) {
+		FfiConverterBoolINSTANCE.Write(writer, value.Test);
+}
+
+type FfiDestroyerEventFilterVariable struct {}
+
+func (_ FfiDestroyerEventFilterVariable) Destroy(value EventFilterVariable) {
 	value.Destroy()
 }
 // A page of items returned by the GraphQL server.
@@ -25087,6 +25083,41 @@ type FfiDestroyerMoveObject struct {}
 func (_ FfiDestroyerMoveObject) Destroy(value MoveObject) {
 	value.Destroy()
 }
+type MovePackageCheckpointFilterVariable struct {
+	Test bool
+}
+
+func (r *MovePackageCheckpointFilterVariable) Destroy() {
+		FfiDestroyerBool{}.Destroy(r.Test);
+}
+
+type FfiConverterMovePackageCheckpointFilterVariable struct {}
+
+var FfiConverterMovePackageCheckpointFilterVariableINSTANCE = FfiConverterMovePackageCheckpointFilterVariable{}
+
+func (c FfiConverterMovePackageCheckpointFilterVariable) Lift(rb RustBufferI) MovePackageCheckpointFilterVariable {
+	return LiftFromRustBuffer[MovePackageCheckpointFilterVariable](c, rb)
+}
+
+func (c FfiConverterMovePackageCheckpointFilterVariable) Read(reader io.Reader) MovePackageCheckpointFilterVariable {
+	return MovePackageCheckpointFilterVariable {
+			FfiConverterBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMovePackageCheckpointFilterVariable) Lower(value MovePackageCheckpointFilterVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[MovePackageCheckpointFilterVariable](c, value)
+}
+
+func (c FfiConverterMovePackageCheckpointFilterVariable) Write(writer io.Writer, value MovePackageCheckpointFilterVariable) {
+		FfiConverterBoolINSTANCE.Write(writer, value.Test);
+}
+
+type FfiDestroyerMovePackageCheckpointFilterVariable struct {}
+
+func (_ FfiDestroyerMovePackageCheckpointFilterVariable) Destroy(value MovePackageCheckpointFilterVariable) {
+	value.Destroy()
+}
 // A page of items returned by the GraphQL server.
 type MovePackagePage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -25167,6 +25198,41 @@ func (c FfiConverterMovePackageQuery) Write(writer io.Writer, value MovePackageQ
 type FfiDestroyerMovePackageQuery struct {}
 
 func (_ FfiDestroyerMovePackageQuery) Destroy(value MovePackageQuery) {
+	value.Destroy()
+}
+type MovePackageVersionFilterVariable struct {
+	Test bool
+}
+
+func (r *MovePackageVersionFilterVariable) Destroy() {
+		FfiDestroyerBool{}.Destroy(r.Test);
+}
+
+type FfiConverterMovePackageVersionFilterVariable struct {}
+
+var FfiConverterMovePackageVersionFilterVariableINSTANCE = FfiConverterMovePackageVersionFilterVariable{}
+
+func (c FfiConverterMovePackageVersionFilterVariable) Lift(rb RustBufferI) MovePackageVersionFilterVariable {
+	return LiftFromRustBuffer[MovePackageVersionFilterVariable](c, rb)
+}
+
+func (c FfiConverterMovePackageVersionFilterVariable) Read(reader io.Reader) MovePackageVersionFilterVariable {
+	return MovePackageVersionFilterVariable {
+			FfiConverterBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMovePackageVersionFilterVariable) Lower(value MovePackageVersionFilterVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[MovePackageVersionFilterVariable](c, value)
+}
+
+func (c FfiConverterMovePackageVersionFilterVariable) Write(writer io.Writer, value MovePackageVersionFilterVariable) {
+		FfiConverterBoolINSTANCE.Write(writer, value.Test);
+}
+
+type FfiDestroyerMovePackageVersionFilterVariable struct {}
+
+func (_ FfiDestroyerMovePackageVersionFilterVariable) Destroy(value MovePackageVersionFilterVariable) {
 	value.Destroy()
 }
 // A move struct
@@ -25401,6 +25467,41 @@ func (c FfiConverterObjectFilter) Write(writer io.Writer, value ObjectFilter) {
 type FfiDestroyerObjectFilter struct {}
 
 func (_ FfiDestroyerObjectFilter) Destroy(value ObjectFilter) {
+	value.Destroy()
+}
+type ObjectFilterVariable struct {
+	Test bool
+}
+
+func (r *ObjectFilterVariable) Destroy() {
+		FfiDestroyerBool{}.Destroy(r.Test);
+}
+
+type FfiConverterObjectFilterVariable struct {}
+
+var FfiConverterObjectFilterVariableINSTANCE = FfiConverterObjectFilterVariable{}
+
+func (c FfiConverterObjectFilterVariable) Lift(rb RustBufferI) ObjectFilterVariable {
+	return LiftFromRustBuffer[ObjectFilterVariable](c, rb)
+}
+
+func (c FfiConverterObjectFilterVariable) Read(reader io.Reader) ObjectFilterVariable {
+	return ObjectFilterVariable {
+			FfiConverterBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterObjectFilterVariable) Lower(value ObjectFilterVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[ObjectFilterVariable](c, value)
+}
+
+func (c FfiConverterObjectFilterVariable) Write(writer io.Writer, value ObjectFilterVariable) {
+		FfiConverterBoolINSTANCE.Write(writer, value.Test);
+}
+
+type FfiDestroyerObjectFilterVariable struct {}
+
+func (_ FfiDestroyerObjectFilterVariable) Destroy(value ObjectFilterVariable) {
 	value.Destroy()
 }
 // A page of items returned by the GraphQL server.
@@ -25818,6 +25919,45 @@ type FfiDestroyerProtocolConfigs struct {}
 func (_ FfiDestroyerProtocolConfigs) Destroy(value ProtocolConfigs) {
 	value.Destroy()
 }
+type Query struct {
+	Query string
+	Variables *map[string]QueryVariable
+}
+
+func (r *Query) Destroy() {
+		FfiDestroyerString{}.Destroy(r.Query);
+		FfiDestroyerOptionalMapStringQueryVariable{}.Destroy(r.Variables);
+}
+
+type FfiConverterQuery struct {}
+
+var FfiConverterQueryINSTANCE = FfiConverterQuery{}
+
+func (c FfiConverterQuery) Lift(rb RustBufferI) Query {
+	return LiftFromRustBuffer[Query](c, rb)
+}
+
+func (c FfiConverterQuery) Read(reader io.Reader) Query {
+	return Query {
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalMapStringQueryVariableINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterQuery) Lower(value Query) C.RustBuffer {
+	return LowerIntoRustBuffer[Query](c, value)
+}
+
+func (c FfiConverterQuery) Write(writer io.Writer, value Query) {
+		FfiConverterStringINSTANCE.Write(writer, value.Query);
+		FfiConverterOptionalMapStringQueryVariableINSTANCE.Write(writer, value.Variables);
+}
+
+type FfiDestroyerQuery struct {}
+
+func (_ FfiDestroyerQuery) Destroy(value Query) {
+	value.Destroy()
+}
 // Randomness update
 //
 // # BCS
@@ -26076,6 +26216,41 @@ func (c FfiConverterSignedTransactionPage) Write(writer io.Writer, value SignedT
 type FfiDestroyerSignedTransactionPage struct {}
 
 func (_ FfiDestroyerSignedTransactionPage) Destroy(value SignedTransactionPage) {
+	value.Destroy()
+}
+type TransactionBlockFilterVariable struct {
+	Test bool
+}
+
+func (r *TransactionBlockFilterVariable) Destroy() {
+		FfiDestroyerBool{}.Destroy(r.Test);
+}
+
+type FfiConverterTransactionBlockFilterVariable struct {}
+
+var FfiConverterTransactionBlockFilterVariableINSTANCE = FfiConverterTransactionBlockFilterVariable{}
+
+func (c FfiConverterTransactionBlockFilterVariable) Lift(rb RustBufferI) TransactionBlockFilterVariable {
+	return LiftFromRustBuffer[TransactionBlockFilterVariable](c, rb)
+}
+
+func (c FfiConverterTransactionBlockFilterVariable) Read(reader io.Reader) TransactionBlockFilterVariable {
+	return TransactionBlockFilterVariable {
+			FfiConverterBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterTransactionBlockFilterVariable) Lower(value TransactionBlockFilterVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[TransactionBlockFilterVariable](c, value)
+}
+
+func (c FfiConverterTransactionBlockFilterVariable) Write(writer io.Writer, value TransactionBlockFilterVariable) {
+		FfiConverterBoolINSTANCE.Write(writer, value.Test);
+}
+
+type FfiDestroyerTransactionBlockFilterVariable struct {}
+
+func (_ FfiDestroyerTransactionBlockFilterVariable) Destroy(value TransactionBlockFilterVariable) {
 	value.Destroy()
 }
 type TransactionDataEffects struct {
@@ -26367,6 +26542,49 @@ func (c FfiConverterTransactionMetadata) Write(writer io.Writer, value Transacti
 type FfiDestroyerTransactionMetadata struct {}
 
 func (_ FfiDestroyerTransactionMetadata) Destroy(value TransactionMetadata) {
+	value.Destroy()
+}
+type TransactionMetadataVariable struct {
+	Sender *string
+	GasPrice *uint64
+	GasObjects []string
+}
+
+func (r *TransactionMetadataVariable) Destroy() {
+		FfiDestroyerOptionalString{}.Destroy(r.Sender);
+		FfiDestroyerOptionalUint64{}.Destroy(r.GasPrice);
+		FfiDestroyerSequenceString{}.Destroy(r.GasObjects);
+}
+
+type FfiConverterTransactionMetadataVariable struct {}
+
+var FfiConverterTransactionMetadataVariableINSTANCE = FfiConverterTransactionMetadataVariable{}
+
+func (c FfiConverterTransactionMetadataVariable) Lift(rb RustBufferI) TransactionMetadataVariable {
+	return LiftFromRustBuffer[TransactionMetadataVariable](c, rb)
+}
+
+func (c FfiConverterTransactionMetadataVariable) Read(reader io.Reader) TransactionMetadataVariable {
+	return TransactionMetadataVariable {
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterSequenceStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterTransactionMetadataVariable) Lower(value TransactionMetadataVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[TransactionMetadataVariable](c, value)
+}
+
+func (c FfiConverterTransactionMetadataVariable) Write(writer io.Writer, value TransactionMetadataVariable) {
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.Sender);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.GasPrice);
+		FfiConverterSequenceStringINSTANCE.Write(writer, value.GasObjects);
+}
+
+type FfiDestroyerTransactionMetadataVariable struct {}
+
+func (_ FfiDestroyerTransactionMetadataVariable) Destroy(value TransactionMetadataVariable) {
 	value.Destroy()
 }
 type TransactionsFilter struct {
@@ -27129,6 +27347,107 @@ type FfiDestroyerZkLoginClaim struct {}
 func (_ FfiDestroyerZkLoginClaim) Destroy(value ZkLoginClaim) {
 	value.Destroy()
 }
+type ZkLoginIntentScopeVariable struct {
+	Test bool
+}
+
+func (r *ZkLoginIntentScopeVariable) Destroy() {
+		FfiDestroyerBool{}.Destroy(r.Test);
+}
+
+type FfiConverterZkLoginIntentScopeVariable struct {}
+
+var FfiConverterZkLoginIntentScopeVariableINSTANCE = FfiConverterZkLoginIntentScopeVariable{}
+
+func (c FfiConverterZkLoginIntentScopeVariable) Lift(rb RustBufferI) ZkLoginIntentScopeVariable {
+	return LiftFromRustBuffer[ZkLoginIntentScopeVariable](c, rb)
+}
+
+func (c FfiConverterZkLoginIntentScopeVariable) Read(reader io.Reader) ZkLoginIntentScopeVariable {
+	return ZkLoginIntentScopeVariable {
+			FfiConverterBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterZkLoginIntentScopeVariable) Lower(value ZkLoginIntentScopeVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[ZkLoginIntentScopeVariable](c, value)
+}
+
+func (c FfiConverterZkLoginIntentScopeVariable) Write(writer io.Writer, value ZkLoginIntentScopeVariable) {
+		FfiConverterBoolINSTANCE.Write(writer, value.Test);
+}
+
+type FfiDestroyerZkLoginIntentScopeVariable struct {}
+
+func (_ FfiDestroyerZkLoginIntentScopeVariable) Destroy(value ZkLoginIntentScopeVariable) {
+	value.Destroy()
+}
+
+
+type CheckpointIdVariable interface {
+	Destroy()
+}
+type CheckpointIdVariableDigest struct {
+	Digest string
+}
+
+func (e CheckpointIdVariableDigest) Destroy() {
+		FfiDestroyerString{}.Destroy(e.Digest);
+}
+type CheckpointIdVariableSequenceNumber struct {
+	SeqNum uint64
+}
+
+func (e CheckpointIdVariableSequenceNumber) Destroy() {
+		FfiDestroyerUint64{}.Destroy(e.SeqNum);
+}
+
+type FfiConverterCheckpointIdVariable struct {}
+
+var FfiConverterCheckpointIdVariableINSTANCE = FfiConverterCheckpointIdVariable{}
+
+func (c FfiConverterCheckpointIdVariable) Lift(rb RustBufferI) CheckpointIdVariable {
+	return LiftFromRustBuffer[CheckpointIdVariable](c, rb)
+}
+
+func (c FfiConverterCheckpointIdVariable) Lower(value CheckpointIdVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[CheckpointIdVariable](c, value)
+}
+func (FfiConverterCheckpointIdVariable) Read(reader io.Reader) CheckpointIdVariable {
+	id := readInt32(reader)
+	switch (id) {
+		case 1:
+			return CheckpointIdVariableDigest{
+				FfiConverterStringINSTANCE.Read(reader),
+			};
+		case 2:
+			return CheckpointIdVariableSequenceNumber{
+				FfiConverterUint64INSTANCE.Read(reader),
+			};
+		default:
+			panic(fmt.Sprintf("invalid enum value %v in FfiConverterCheckpointIdVariable.Read()", id));
+	}
+}
+
+func (FfiConverterCheckpointIdVariable) Write(writer io.Writer, value CheckpointIdVariable) {
+	switch variant_value := value.(type) {
+		case CheckpointIdVariableDigest:
+			writeInt32(writer, 1)
+			FfiConverterStringINSTANCE.Write(writer, variant_value.Digest)
+		case CheckpointIdVariableSequenceNumber:
+			writeInt32(writer, 2)
+			FfiConverterUint64INSTANCE.Write(writer, variant_value.SeqNum)
+		default:
+			_ = variant_value
+			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterCheckpointIdVariable.Write", value))
+	}
+}
+
+type FfiDestroyerCheckpointIdVariable struct {}
+
+func (_ FfiDestroyerCheckpointIdVariable) Destroy(value CheckpointIdVariable) {
+	value.Destroy()
+}
 
 
 // An error with an argument to a command
@@ -27350,338 +27669,6 @@ func (FfiConverterCommandArgumentError) Write(writer io.Writer, value CommandArg
 type FfiDestroyerCommandArgumentError struct {}
 
 func (_ FfiDestroyerCommandArgumentError) Destroy(value CommandArgumentError) {
-	value.Destroy()
-}
-
-
-type CustomQueryVariable interface {
-	Destroy()
-}
-type CustomQueryVariableTxBytes struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableTxBytes) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-type CustomQueryVariableTransactionMetadata struct {
-	Field0 bool
-}
-
-func (e CustomQueryVariableTransactionMetadata) Destroy() {
-		FfiDestroyerBool{}.Destroy(e.Field0);
-}
-type CustomQueryVariableAddress struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableAddress) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-type CustomQueryVariableRootVersion struct {
-	Field0 uint64
-}
-
-func (e CustomQueryVariableRootVersion) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Field0);
-}
-type CustomQueryVariableSkipChecks struct {
-	Field0 bool
-}
-
-func (e CustomQueryVariableSkipChecks) Destroy() {
-		FfiDestroyerBool{}.Destroy(e.Field0);
-}
-type CustomQueryVariableVersion struct {
-	Field0 uint64
-}
-
-func (e CustomQueryVariableVersion) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Field0);
-}
-type CustomQueryVariableType struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableType) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-type CustomQueryVariableEpoch struct {
-	Id uint64
-}
-
-func (e CustomQueryVariableEpoch) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Id);
-}
-type CustomQueryVariableCheckpoint struct {
-	Field0 bool
-}
-
-func (e CustomQueryVariableCheckpoint) Destroy() {
-		FfiDestroyerBool{}.Destroy(e.Field0);
-}
-type CustomQueryVariableDigest struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableDigest) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-type CustomQueryVariableFirst struct {
-	Field0 uint64
-}
-
-func (e CustomQueryVariableFirst) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Field0);
-}
-type CustomQueryVariableLast struct {
-	Field0 uint64
-}
-
-func (e CustomQueryVariableLast) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Field0);
-}
-type CustomQueryVariableAfter struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableAfter) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-type CustomQueryVariableBefore struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableBefore) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-type CustomQueryVariableProtocolVersion struct {
-	Field0 uint64
-}
-
-func (e CustomQueryVariableProtocolVersion) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Field0);
-}
-type CustomQueryVariableName struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableName) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-type CustomQueryVariableCoinType struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableCoinType) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-type CustomQueryVariableBytes struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableBytes) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-type CustomQueryVariableSignature struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableSignature) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-type CustomQueryVariableIntentScope struct {
-	Field0 bool
-}
-
-func (e CustomQueryVariableIntentScope) Destroy() {
-		FfiDestroyerBool{}.Destroy(e.Field0);
-}
-type CustomQueryVariableAuthor struct {
-	Field0 string
-}
-
-func (e CustomQueryVariableAuthor) Destroy() {
-		FfiDestroyerString{}.Destroy(e.Field0);
-}
-
-type FfiConverterCustomQueryVariable struct {}
-
-var FfiConverterCustomQueryVariableINSTANCE = FfiConverterCustomQueryVariable{}
-
-func (c FfiConverterCustomQueryVariable) Lift(rb RustBufferI) CustomQueryVariable {
-	return LiftFromRustBuffer[CustomQueryVariable](c, rb)
-}
-
-func (c FfiConverterCustomQueryVariable) Lower(value CustomQueryVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[CustomQueryVariable](c, value)
-}
-func (FfiConverterCustomQueryVariable) Read(reader io.Reader) CustomQueryVariable {
-	id := readInt32(reader)
-	switch (id) {
-		case 1:
-			return CustomQueryVariableTxBytes{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 2:
-			return CustomQueryVariableTransactionMetadata{
-				FfiConverterBoolINSTANCE.Read(reader),
-			};
-		case 3:
-			return CustomQueryVariableAddress{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 4:
-			return CustomQueryVariableRootVersion{
-				FfiConverterUint64INSTANCE.Read(reader),
-			};
-		case 5:
-			return CustomQueryVariableSkipChecks{
-				FfiConverterBoolINSTANCE.Read(reader),
-			};
-		case 6:
-			return CustomQueryVariableVersion{
-				FfiConverterUint64INSTANCE.Read(reader),
-			};
-		case 7:
-			return CustomQueryVariableType{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 8:
-			return CustomQueryVariableEpoch{
-				FfiConverterUint64INSTANCE.Read(reader),
-			};
-		case 9:
-			return CustomQueryVariableCheckpoint{
-				FfiConverterBoolINSTANCE.Read(reader),
-			};
-		case 10:
-			return CustomQueryVariableDigest{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 11:
-			return CustomQueryVariableFirst{
-				FfiConverterUint64INSTANCE.Read(reader),
-			};
-		case 12:
-			return CustomQueryVariableLast{
-				FfiConverterUint64INSTANCE.Read(reader),
-			};
-		case 13:
-			return CustomQueryVariableAfter{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 14:
-			return CustomQueryVariableBefore{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 15:
-			return CustomQueryVariableProtocolVersion{
-				FfiConverterUint64INSTANCE.Read(reader),
-			};
-		case 16:
-			return CustomQueryVariableName{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 17:
-			return CustomQueryVariableCoinType{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 18:
-			return CustomQueryVariableBytes{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 19:
-			return CustomQueryVariableSignature{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		case 20:
-			return CustomQueryVariableIntentScope{
-				FfiConverterBoolINSTANCE.Read(reader),
-			};
-		case 21:
-			return CustomQueryVariableAuthor{
-				FfiConverterStringINSTANCE.Read(reader),
-			};
-		default:
-			panic(fmt.Sprintf("invalid enum value %v in FfiConverterCustomQueryVariable.Read()", id));
-	}
-}
-
-func (FfiConverterCustomQueryVariable) Write(writer io.Writer, value CustomQueryVariable) {
-	switch variant_value := value.(type) {
-		case CustomQueryVariableTxBytes:
-			writeInt32(writer, 1)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableTransactionMetadata:
-			writeInt32(writer, 2)
-			FfiConverterBoolINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableAddress:
-			writeInt32(writer, 3)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableRootVersion:
-			writeInt32(writer, 4)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableSkipChecks:
-			writeInt32(writer, 5)
-			FfiConverterBoolINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableVersion:
-			writeInt32(writer, 6)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableType:
-			writeInt32(writer, 7)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableEpoch:
-			writeInt32(writer, 8)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Id)
-		case CustomQueryVariableCheckpoint:
-			writeInt32(writer, 9)
-			FfiConverterBoolINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableDigest:
-			writeInt32(writer, 10)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableFirst:
-			writeInt32(writer, 11)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableLast:
-			writeInt32(writer, 12)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableAfter:
-			writeInt32(writer, 13)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableBefore:
-			writeInt32(writer, 14)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableProtocolVersion:
-			writeInt32(writer, 15)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableName:
-			writeInt32(writer, 16)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableCoinType:
-			writeInt32(writer, 17)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableBytes:
-			writeInt32(writer, 18)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableSignature:
-			writeInt32(writer, 19)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableIntentScope:
-			writeInt32(writer, 20)
-			FfiConverterBoolINSTANCE.Write(writer, variant_value.Field0)
-		case CustomQueryVariableAuthor:
-			writeInt32(writer, 21)
-			FfiConverterStringINSTANCE.Write(writer, variant_value.Field0)
-		default:
-			_ = variant_value
-			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterCustomQueryVariable.Write", value))
-	}
-}
-
-type FfiDestroyerCustomQueryVariable struct {}
-
-func (_ FfiDestroyerCustomQueryVariable) Destroy(value CustomQueryVariable) {
 	value.Destroy()
 }
 
@@ -28962,6 +28949,254 @@ func (FfiConverterPackageUpgradeError) Write(writer io.Writer, value PackageUpgr
 type FfiDestroyerPackageUpgradeError struct {}
 
 func (_ FfiDestroyerPackageUpgradeError) Destroy(value PackageUpgradeError) {
+	value.Destroy()
+}
+
+
+type QueryVariable interface {
+	Destroy()
+}
+type QueryVariableBase64 struct {
+	Base64 string
+}
+
+func (e QueryVariableBase64) Destroy() {
+		FfiDestroyerString{}.Destroy(e.Base64);
+}
+type QueryVariableBoolean struct {
+	Boolean bool
+}
+
+func (e QueryVariableBoolean) Destroy() {
+		FfiDestroyerBool{}.Destroy(e.Boolean);
+}
+type QueryVariableCheckpointId struct {
+	CheckpointId CheckpointIdVariable
+}
+
+func (e QueryVariableCheckpointId) Destroy() {
+		FfiDestroyerCheckpointIdVariable{}.Destroy(e.CheckpointId);
+}
+type QueryVariableEventFilter struct {
+	Filter EventFilterVariable
+}
+
+func (e QueryVariableEventFilter) Destroy() {
+		FfiDestroyerEventFilterVariable{}.Destroy(e.Filter);
+}
+type QueryVariableInt struct {
+	Int uint64
+}
+
+func (e QueryVariableInt) Destroy() {
+		FfiDestroyerUint64{}.Destroy(e.Int);
+}
+type QueryVariableIotaAddress struct {
+	Address string
+}
+
+func (e QueryVariableIotaAddress) Destroy() {
+		FfiDestroyerString{}.Destroy(e.Address);
+}
+type QueryVariableMovePackageCheckpointFilter struct {
+	Filter MovePackageCheckpointFilterVariable
+}
+
+func (e QueryVariableMovePackageCheckpointFilter) Destroy() {
+		FfiDestroyerMovePackageCheckpointFilterVariable{}.Destroy(e.Filter);
+}
+type QueryVariableMovePackageVersionFilter struct {
+	Filter MovePackageVersionFilterVariable
+}
+
+func (e QueryVariableMovePackageVersionFilter) Destroy() {
+		FfiDestroyerMovePackageVersionFilterVariable{}.Destroy(e.Filter);
+}
+type QueryVariableObjectFilter struct {
+	Filter ObjectFilterVariable
+}
+
+func (e QueryVariableObjectFilter) Destroy() {
+		FfiDestroyerObjectFilterVariable{}.Destroy(e.Filter);
+}
+type QueryVariableString struct {
+	String string
+}
+
+func (e QueryVariableString) Destroy() {
+		FfiDestroyerString{}.Destroy(e.String);
+}
+type QueryVariableTransactionBlockFilter struct {
+	Filter TransactionBlockFilterVariable
+}
+
+func (e QueryVariableTransactionBlockFilter) Destroy() {
+		FfiDestroyerTransactionBlockFilterVariable{}.Destroy(e.Filter);
+}
+type QueryVariableTransactionMetadata struct {
+	TxMeta TransactionMetadataVariable
+}
+
+func (e QueryVariableTransactionMetadata) Destroy() {
+		FfiDestroyerTransactionMetadataVariable{}.Destroy(e.TxMeta);
+}
+type QueryVariableType struct {
+	Type string
+}
+
+func (e QueryVariableType) Destroy() {
+		FfiDestroyerString{}.Destroy(e.Type);
+}
+type QueryVariableUInt53 struct {
+	Uint53 uint64
+}
+
+func (e QueryVariableUInt53) Destroy() {
+		FfiDestroyerUint64{}.Destroy(e.Uint53);
+}
+type QueryVariableZkLoginIntentScope struct {
+	ZkLoginIntentScope ZkLoginIntentScopeVariable
+}
+
+func (e QueryVariableZkLoginIntentScope) Destroy() {
+		FfiDestroyerZkLoginIntentScopeVariable{}.Destroy(e.ZkLoginIntentScope);
+}
+
+type FfiConverterQueryVariable struct {}
+
+var FfiConverterQueryVariableINSTANCE = FfiConverterQueryVariable{}
+
+func (c FfiConverterQueryVariable) Lift(rb RustBufferI) QueryVariable {
+	return LiftFromRustBuffer[QueryVariable](c, rb)
+}
+
+func (c FfiConverterQueryVariable) Lower(value QueryVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[QueryVariable](c, value)
+}
+func (FfiConverterQueryVariable) Read(reader io.Reader) QueryVariable {
+	id := readInt32(reader)
+	switch (id) {
+		case 1:
+			return QueryVariableBase64{
+				FfiConverterStringINSTANCE.Read(reader),
+			};
+		case 2:
+			return QueryVariableBoolean{
+				FfiConverterBoolINSTANCE.Read(reader),
+			};
+		case 3:
+			return QueryVariableCheckpointId{
+				FfiConverterCheckpointIdVariableINSTANCE.Read(reader),
+			};
+		case 4:
+			return QueryVariableEventFilter{
+				FfiConverterEventFilterVariableINSTANCE.Read(reader),
+			};
+		case 5:
+			return QueryVariableInt{
+				FfiConverterUint64INSTANCE.Read(reader),
+			};
+		case 6:
+			return QueryVariableIotaAddress{
+				FfiConverterStringINSTANCE.Read(reader),
+			};
+		case 7:
+			return QueryVariableMovePackageCheckpointFilter{
+				FfiConverterMovePackageCheckpointFilterVariableINSTANCE.Read(reader),
+			};
+		case 8:
+			return QueryVariableMovePackageVersionFilter{
+				FfiConverterMovePackageVersionFilterVariableINSTANCE.Read(reader),
+			};
+		case 9:
+			return QueryVariableObjectFilter{
+				FfiConverterObjectFilterVariableINSTANCE.Read(reader),
+			};
+		case 10:
+			return QueryVariableString{
+				FfiConverterStringINSTANCE.Read(reader),
+			};
+		case 11:
+			return QueryVariableTransactionBlockFilter{
+				FfiConverterTransactionBlockFilterVariableINSTANCE.Read(reader),
+			};
+		case 12:
+			return QueryVariableTransactionMetadata{
+				FfiConverterTransactionMetadataVariableINSTANCE.Read(reader),
+			};
+		case 13:
+			return QueryVariableType{
+				FfiConverterStringINSTANCE.Read(reader),
+			};
+		case 14:
+			return QueryVariableUInt53{
+				FfiConverterUint64INSTANCE.Read(reader),
+			};
+		case 15:
+			return QueryVariableZkLoginIntentScope{
+				FfiConverterZkLoginIntentScopeVariableINSTANCE.Read(reader),
+			};
+		default:
+			panic(fmt.Sprintf("invalid enum value %v in FfiConverterQueryVariable.Read()", id));
+	}
+}
+
+func (FfiConverterQueryVariable) Write(writer io.Writer, value QueryVariable) {
+	switch variant_value := value.(type) {
+		case QueryVariableBase64:
+			writeInt32(writer, 1)
+			FfiConverterStringINSTANCE.Write(writer, variant_value.Base64)
+		case QueryVariableBoolean:
+			writeInt32(writer, 2)
+			FfiConverterBoolINSTANCE.Write(writer, variant_value.Boolean)
+		case QueryVariableCheckpointId:
+			writeInt32(writer, 3)
+			FfiConverterCheckpointIdVariableINSTANCE.Write(writer, variant_value.CheckpointId)
+		case QueryVariableEventFilter:
+			writeInt32(writer, 4)
+			FfiConverterEventFilterVariableINSTANCE.Write(writer, variant_value.Filter)
+		case QueryVariableInt:
+			writeInt32(writer, 5)
+			FfiConverterUint64INSTANCE.Write(writer, variant_value.Int)
+		case QueryVariableIotaAddress:
+			writeInt32(writer, 6)
+			FfiConverterStringINSTANCE.Write(writer, variant_value.Address)
+		case QueryVariableMovePackageCheckpointFilter:
+			writeInt32(writer, 7)
+			FfiConverterMovePackageCheckpointFilterVariableINSTANCE.Write(writer, variant_value.Filter)
+		case QueryVariableMovePackageVersionFilter:
+			writeInt32(writer, 8)
+			FfiConverterMovePackageVersionFilterVariableINSTANCE.Write(writer, variant_value.Filter)
+		case QueryVariableObjectFilter:
+			writeInt32(writer, 9)
+			FfiConverterObjectFilterVariableINSTANCE.Write(writer, variant_value.Filter)
+		case QueryVariableString:
+			writeInt32(writer, 10)
+			FfiConverterStringINSTANCE.Write(writer, variant_value.String)
+		case QueryVariableTransactionBlockFilter:
+			writeInt32(writer, 11)
+			FfiConverterTransactionBlockFilterVariableINSTANCE.Write(writer, variant_value.Filter)
+		case QueryVariableTransactionMetadata:
+			writeInt32(writer, 12)
+			FfiConverterTransactionMetadataVariableINSTANCE.Write(writer, variant_value.TxMeta)
+		case QueryVariableType:
+			writeInt32(writer, 13)
+			FfiConverterStringINSTANCE.Write(writer, variant_value.Type)
+		case QueryVariableUInt53:
+			writeInt32(writer, 14)
+			FfiConverterUint64INSTANCE.Write(writer, variant_value.Uint53)
+		case QueryVariableZkLoginIntentScope:
+			writeInt32(writer, 15)
+			FfiConverterZkLoginIntentScopeVariableINSTANCE.Write(writer, variant_value.ZkLoginIntentScope)
+		default:
+			_ = variant_value
+			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterQueryVariable.Write", value))
+	}
+}
+
+type FfiDestroyerQueryVariable struct {}
+
+func (_ FfiDestroyerQueryVariable) Destroy(value QueryVariable) {
 	value.Destroy()
 }
 type SdkFfiError struct {
@@ -31740,43 +31975,6 @@ func (_ FfiDestroyerOptionalSequenceOpenMoveType) Destroy(value *[]OpenMoveType)
 	}
 }
 
-type FfiConverterOptionalSequenceCustomQueryVariable struct{}
-
-var FfiConverterOptionalSequenceCustomQueryVariableINSTANCE = FfiConverterOptionalSequenceCustomQueryVariable{}
-
-func (c FfiConverterOptionalSequenceCustomQueryVariable) Lift(rb RustBufferI) *[]CustomQueryVariable {
-	return LiftFromRustBuffer[*[]CustomQueryVariable](c, rb)
-}
-
-func (_ FfiConverterOptionalSequenceCustomQueryVariable) Read(reader io.Reader) *[]CustomQueryVariable {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterSequenceCustomQueryVariableINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalSequenceCustomQueryVariable) Lower(value *[]CustomQueryVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[*[]CustomQueryVariable](c, value)
-}
-
-func (_ FfiConverterOptionalSequenceCustomQueryVariable) Write(writer io.Writer, value *[]CustomQueryVariable) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterSequenceCustomQueryVariableINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalSequenceCustomQueryVariable struct {}
-
-func (_ FfiDestroyerOptionalSequenceCustomQueryVariable) Destroy(value *[]CustomQueryVariable) {
-	if value != nil {
-		FfiDestroyerSequenceCustomQueryVariable{}.Destroy(*value)
-	}
-}
-
 type FfiConverterOptionalSequenceMoveAbility struct{}
 
 var FfiConverterOptionalSequenceMoveAbilityINSTANCE = FfiConverterOptionalSequenceMoveAbility{}
@@ -31811,6 +32009,43 @@ type FfiDestroyerOptionalSequenceMoveAbility struct {}
 func (_ FfiDestroyerOptionalSequenceMoveAbility) Destroy(value *[]MoveAbility) {
 	if value != nil {
 		FfiDestroyerSequenceMoveAbility{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalMapStringQueryVariable struct{}
+
+var FfiConverterOptionalMapStringQueryVariableINSTANCE = FfiConverterOptionalMapStringQueryVariable{}
+
+func (c FfiConverterOptionalMapStringQueryVariable) Lift(rb RustBufferI) *map[string]QueryVariable {
+	return LiftFromRustBuffer[*map[string]QueryVariable](c, rb)
+}
+
+func (_ FfiConverterOptionalMapStringQueryVariable) Read(reader io.Reader) *map[string]QueryVariable {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMapStringQueryVariableINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMapStringQueryVariable) Lower(value *map[string]QueryVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[*map[string]QueryVariable](c, value)
+}
+
+func (_ FfiConverterOptionalMapStringQueryVariable) Write(writer io.Writer, value *map[string]QueryVariable) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMapStringQueryVariableINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMapStringQueryVariable struct {}
+
+func (_ FfiDestroyerOptionalMapStringQueryVariable) Destroy(value *map[string]QueryVariable) {
+	if value != nil {
+		FfiDestroyerMapStringQueryVariable{}.Destroy(*value)
 	}
 }
 
@@ -34161,49 +34396,6 @@ func (FfiDestroyerSequenceValidatorCommitteeMember) Destroy(sequence []Validator
 	}
 }
 
-type FfiConverterSequenceCustomQueryVariable struct{}
-
-var FfiConverterSequenceCustomQueryVariableINSTANCE = FfiConverterSequenceCustomQueryVariable{}
-
-func (c FfiConverterSequenceCustomQueryVariable) Lift(rb RustBufferI) []CustomQueryVariable {
-	return LiftFromRustBuffer[[]CustomQueryVariable](c, rb)
-}
-
-func (c FfiConverterSequenceCustomQueryVariable) Read(reader io.Reader) []CustomQueryVariable {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]CustomQueryVariable, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterCustomQueryVariableINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceCustomQueryVariable) Lower(value []CustomQueryVariable) C.RustBuffer {
-	return LowerIntoRustBuffer[[]CustomQueryVariable](c, value)
-}
-
-func (c FfiConverterSequenceCustomQueryVariable) Write(writer io.Writer, value []CustomQueryVariable) {
-	if len(value) > math.MaxInt32 {
-		panic("[]CustomQueryVariable is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterCustomQueryVariableINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceCustomQueryVariable struct {}
-
-func (FfiDestroyerSequenceCustomQueryVariable) Destroy(sequence []CustomQueryVariable) {
-	for _, value := range sequence {
-		FfiDestroyerCustomQueryVariable{}.Destroy(value)
-	}
-}
-
 type FfiConverterSequenceFeature struct{}
 
 var FfiConverterSequenceFeatureINSTANCE = FfiConverterSequenceFeature{}
@@ -34287,6 +34479,50 @@ type FfiDestroyerSequenceMoveAbility struct {}
 func (FfiDestroyerSequenceMoveAbility) Destroy(sequence []MoveAbility) {
 	for _, value := range sequence {
 		FfiDestroyerMoveAbility{}.Destroy(value)
+	}
+}
+
+type FfiConverterMapStringQueryVariable struct {}
+
+var FfiConverterMapStringQueryVariableINSTANCE = FfiConverterMapStringQueryVariable{}
+
+func (c FfiConverterMapStringQueryVariable) Lift(rb RustBufferI) map[string]QueryVariable {
+	return LiftFromRustBuffer[map[string]QueryVariable](c, rb)
+}
+
+func (_ FfiConverterMapStringQueryVariable) Read(reader io.Reader) map[string]QueryVariable {
+	result := make(map[string]QueryVariable)
+	length := readInt32(reader)
+	for i := int32(0); i < length; i++ {
+		key := FfiConverterStringINSTANCE.Read(reader)
+		value := FfiConverterQueryVariableINSTANCE.Read(reader)
+		result[key] = value
+	}
+	return result
+}
+
+func (c FfiConverterMapStringQueryVariable) Lower(value map[string]QueryVariable) C.RustBuffer {
+	return LowerIntoRustBuffer[map[string]QueryVariable](c, value)
+}
+
+func (_ FfiConverterMapStringQueryVariable) Write(writer io.Writer, mapValue map[string]QueryVariable) {
+	if len(mapValue) > math.MaxInt32 {
+		panic("map[string]QueryVariable is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(mapValue)))
+	for key, value := range mapValue {
+		FfiConverterStringINSTANCE.Write(writer, key)
+		FfiConverterQueryVariableINSTANCE.Write(writer, value)
+	}
+}
+
+type FfiDestroyerMapStringQueryVariable struct {}
+
+func (_ FfiDestroyerMapStringQueryVariable) Destroy(mapValue map[string]QueryVariable) {
+	for key, value := range mapValue {
+		FfiDestroyerString{}.Destroy(key)
+		FfiDestroyerQueryVariable{}.Destroy(value)
 	}
 }
 

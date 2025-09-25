@@ -14,7 +14,7 @@ func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
 	queryEpochDataStr := `
-	query CustomQuery($id: UInt53) {
+	query MyQuery($id: UInt53) {
 		epoch(id: $id) {
 			epochId
 			referenceGasPrice
@@ -24,36 +24,38 @@ func main() {
 		}
 	}`
 
-	queryEpochData := sdk.CustomQuery{
+	queryEpochData := sdk.Query{
 		Query: queryEpochDataStr,
 	}
-	res1, err := client.RunCustomQuery(queryEpochData)
+	res1, err := client.RunQuery(queryEpochData)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to run a custom query: %v", err)
+		log.Fatalf("Failed to run a query: %v", err)
 	}
 	fmt.Println(res1)
 
-	variables := []sdk.CustomQueryVariable{sdk.CustomQueryVariableEpoch{Id: 1}}
-	queryEpochDataWithVariables := sdk.CustomQuery{
+	variables := map[string]sdk.QueryVariable{
+		"id": sdk.QueryVariableUInt53{Uint53: 1},
+	}
+	queryEpochDataWithVariables := sdk.Query{
 		Query:     queryEpochDataStr,
 		Variables: &variables,
 	}
-	res2, err := client.RunCustomQuery(queryEpochDataWithVariables)
+	res2, err := client.RunQuery(queryEpochDataWithVariables)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to run a custom query with variables: %v", err)
+		log.Fatalf("Failed to run a query with variables: %v", err)
 	}
 	fmt.Println(res2)
 
 	queryChainIdStr := `
-	query CustomQuery {
+	query MyQuery {
 		chainIdentifier
 	}`
-	queryChainId := sdk.CustomQuery{
+	queryChainId := sdk.Query{
 		Query: queryChainIdStr,
 	}
-	res3, err := client.RunCustomQuery(queryChainId)
+	res3, err := client.RunQuery(queryChainId)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to run a custom query: %v", err)
+		log.Fatalf("Failed to run a query: %v", err)
 	}
 	fmt.Println(res3)
 
