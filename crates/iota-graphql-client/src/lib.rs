@@ -408,7 +408,7 @@ impl Client {
     /// matching GraphQL variables. It returns a [`cynic::GraphQlResponse`]
     /// wrapping a [`serde_json::Value`]. In general, it is recommended to use
     /// [`run_query`](`Self::run_query`) which guarantees valid GraphQL
-    /// query syntax returns a proper response type.
+    /// query syntax and returns a proper response type.
     pub async fn run_query_from_json(
         &self,
         json: serde_json::Map<String, serde_json::Value>,
