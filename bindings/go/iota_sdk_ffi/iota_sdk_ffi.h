@@ -450,16 +450,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_argument_new_result(uint16_t result, Ru
 RustBuffer uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result(void* ptr, uint16_t ix, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_BATCHSENDSTATUS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_BATCHSENDSTATUS
-void* uniffi_iota_sdk_ffi_fn_clone_batchsendstatus(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_BATCHSENDSTATUS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_BATCHSENDSTATUS
-void uniffi_iota_sdk_ffi_fn_free_batchsendstatus(void* ptr, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_BLS12381PRIVATEKEY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_BLS12381PRIVATEKEY
 void* uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey(void* ptr, RustCallStatus *out_status
@@ -1505,16 +1495,6 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(void* ptr, 
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_FAUCETCLIENT_REQUEST_STATUS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_FAUCETCLIENT_REQUEST_STATUS
 uint64_t uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status(void* ptr, RustBuffer id
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_FAUCETRECEIPT
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_FAUCETRECEIPT
-void* uniffi_iota_sdk_ffi_fn_clone_faucetreceipt(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_FAUCETRECEIPT
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_FAUCETRECEIPT
-void uniffi_iota_sdk_ffi_fn_free_faucetreceipt(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_GENESISOBJECT
