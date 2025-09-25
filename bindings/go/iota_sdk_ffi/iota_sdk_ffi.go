@@ -1053,6 +1053,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address()
+	})
+	if checksum != 37757 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme()
+	})
+	if checksum != 141 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes()
 	})
 	if checksum != 16656 {
@@ -1154,7 +1172,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait()
 	})
-	if checksum != 48304 {
+	if checksum != 22484 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait: UniFFI API checksum mismatch")
 	}
@@ -1163,7 +1181,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status()
 	})
-	if checksum != 42353 {
+	if checksum != 31173 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status: UniFFI API checksum mismatch")
 	}
@@ -2700,6 +2718,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address()
+	})
+	if checksum != 48490 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme()
+	})
+	if checksum != 798 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes()
 	})
 	if checksum != 49170 {
@@ -2858,6 +2894,24 @@ func uniffiCheckChecksums() {
 	if checksum != 55895 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address()
+	})
+	if checksum != 27344 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme()
+	})
+	if checksum != 12227 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6863,66 +6917,6 @@ func (_ FfiDestroyerArgument) Destroy(value *Argument) {
 
 
 
-type BatchSendStatusInterface interface {
-}
-type BatchSendStatus struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *BatchSendStatus) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterBatchSendStatus struct {}
-
-var FfiConverterBatchSendStatusINSTANCE = FfiConverterBatchSendStatus{}
-
-
-func (c FfiConverterBatchSendStatus) Lift(pointer unsafe.Pointer) *BatchSendStatus {
-	result := &BatchSendStatus {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_batchsendstatus(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_batchsendstatus(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*BatchSendStatus).Destroy)
-	return result
-}
-
-func (c FfiConverterBatchSendStatus) Read(reader io.Reader) *BatchSendStatus {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterBatchSendStatus) Lower(value *BatchSendStatus) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*BatchSendStatus")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterBatchSendStatus) Write(writer io.Writer, value *BatchSendStatus) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerBatchSendStatus struct {}
-
-func (_ FfiDestroyerBatchSendStatus) Destroy(value *BatchSendStatus) {
-		value.Destroy()
-}
-
-
-
 type Bls12381PrivateKeyInterface interface {
 	PublicKey() *Bls12381PublicKey
 	Scheme() SignatureScheme
@@ -9782,6 +9776,15 @@ func (_ FfiDestroyerEd25519PrivateKey) Destroy(value *Ed25519PrivateKey) {
 // ed25519-public-key = 32OCTECT
 // ```
 type Ed25519PublicKeyInterface interface {
+	// Derive an `Address` from this Public Key
+	//
+	// An `Address` can be derived from an `Ed25519PublicKey` by hashing the
+	// bytes of the public key with no prefix flag.
+	//
+	// `hash(32-byte ed25519 public key)`
+	DeriveAddress() *Address
+	// Return the flag for this signature scheme
+	Scheme() SignatureScheme
 	ToBytes() []byte
 }
 // An ed25519 public key.
@@ -9829,6 +9832,33 @@ func Ed25519PublicKeyGenerate() *Ed25519PublicKey {
 }
 
 
+
+// Derive an `Address` from this Public Key
+//
+// An `Address` can be derived from an `Ed25519PublicKey` by hashing the
+// bytes of the public key with no prefix flag.
+//
+// `hash(32-byte ed25519 public key)`
+func (_self *Ed25519PublicKey) DeriveAddress() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Return the flag for this signature scheme
+func (_self *Ed25519PublicKey) Scheme() SignatureScheme {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 
 func (_self *Ed25519PublicKey) ToBytes() []byte {
 	_pointer := _self.ffiObject.incrementPointer("*Ed25519PublicKey")
@@ -10718,11 +10748,11 @@ type FaucetClientInterface interface {
 	//
 	// Note that the faucet is heavily rate-limited, so calling repeatedly the
 	// faucet would likely result in a 429 code or 502 code.
-	RequestAndWait(address *Address) (**FaucetReceipt, error)
+	RequestAndWait(address *Address) (*FaucetReceipt, error)
 	// Check the faucet request status.
 	//
 	// Possible statuses are defined in: [`BatchSendStatusType`]
-	RequestStatus(id string) (**BatchSendStatus, error)
+	RequestStatus(id string) (*BatchSendStatus, error)
 }
 type FaucetClient struct {
 	ffiObject FfiObject
@@ -10805,7 +10835,7 @@ func (_self *FaucetClient) Request(address *Address) (*string, error) {
 //
 // Note that the faucet is heavily rate-limited, so calling repeatedly the
 // faucet would likely result in a 429 code or 502 code.
-func (_self *FaucetClient) RequestAndWait(address *Address) (**FaucetReceipt, error) {
+func (_self *FaucetClient) RequestAndWait(address *Address) (*FaucetReceipt, error) {
 	_pointer := _self.ffiObject.incrementPointer("*FaucetClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -10818,7 +10848,7 @@ func (_self *FaucetClient) RequestAndWait(address *Address) (**FaucetReceipt, er
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) **FaucetReceipt {
+		func(ffi RustBufferI) *FaucetReceipt {
 			return FfiConverterOptionalFaucetReceiptINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(
@@ -10839,7 +10869,7 @@ func (_self *FaucetClient) RequestAndWait(address *Address) (**FaucetReceipt, er
 // Check the faucet request status.
 //
 // Possible statuses are defined in: [`BatchSendStatusType`]
-func (_self *FaucetClient) RequestStatus(id string) (**BatchSendStatus, error) {
+func (_self *FaucetClient) RequestStatus(id string) (*BatchSendStatus, error) {
 	_pointer := _self.ffiObject.incrementPointer("*FaucetClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -10852,7 +10882,7 @@ func (_self *FaucetClient) RequestStatus(id string) (**BatchSendStatus, error) {
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) **BatchSendStatus {
+		func(ffi RustBufferI) *BatchSendStatus {
 			return FfiConverterOptionalBatchSendStatusINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status(
@@ -10916,66 +10946,6 @@ func (c FfiConverterFaucetClient) Write(writer io.Writer, value *FaucetClient) {
 type FfiDestroyerFaucetClient struct {}
 
 func (_ FfiDestroyerFaucetClient) Destroy(value *FaucetClient) {
-		value.Destroy()
-}
-
-
-
-type FaucetReceiptInterface interface {
-}
-type FaucetReceipt struct {
-	ffiObject FfiObject
-}
-
-
-
-func (object *FaucetReceipt) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterFaucetReceipt struct {}
-
-var FfiConverterFaucetReceiptINSTANCE = FfiConverterFaucetReceipt{}
-
-
-func (c FfiConverterFaucetReceipt) Lift(pointer unsafe.Pointer) *FaucetReceipt {
-	result := &FaucetReceipt {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_faucetreceipt(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_faucetreceipt(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*FaucetReceipt).Destroy)
-	return result
-}
-
-func (c FfiConverterFaucetReceipt) Read(reader io.Reader) *FaucetReceipt {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterFaucetReceipt) Lower(value *FaucetReceipt) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*FaucetReceipt")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterFaucetReceipt) Write(writer io.Writer, value *FaucetReceipt) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerFaucetReceipt struct {}
-
-func (_ FfiDestroyerFaucetReceipt) Destroy(value *FaucetReceipt) {
 		value.Destroy()
 }
 
@@ -17116,6 +17086,16 @@ func (_ FfiDestroyerSecp256k1PrivateKey) Destroy(value *Secp256k1PrivateKey) {
 // secp256k1-signature = 64OCTECT
 // ```
 type Secp256k1PublicKeyInterface interface {
+	// Derive an `Address` from this Public Key
+	//
+	// An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
+	// bytes of the public key prefixed with the Secp256k1
+	// `SignatureScheme` flag (`0x01`).
+	//
+	// `hash( 0x01 || 33-byte secp256k1 public key)`
+	DeriveAddress() *Address
+	// Return the flag for this signature scheme
+	Scheme() SignatureScheme
 	ToBytes() []byte
 }
 // A secp256k1 signature.
@@ -17163,6 +17143,34 @@ func Secp256k1PublicKeyGenerate() *Secp256k1PublicKey {
 }
 
 
+
+// Derive an `Address` from this Public Key
+//
+// An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
+// bytes of the public key prefixed with the Secp256k1
+// `SignatureScheme` flag (`0x01`).
+//
+// `hash( 0x01 || 33-byte secp256k1 public key)`
+func (_self *Secp256k1PublicKey) DeriveAddress() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Return the flag for this signature scheme
+func (_self *Secp256k1PublicKey) Scheme() SignatureScheme {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 
 func (_self *Secp256k1PublicKey) ToBytes() []byte {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PublicKey")
@@ -17861,6 +17869,16 @@ func (_ FfiDestroyerSecp256r1PrivateKey) Destroy(value *Secp256r1PrivateKey) {
 // secp256r1-signature = 64OCTECT
 // ```
 type Secp256r1PublicKeyInterface interface {
+	// Derive an `Address` from this Public Key
+	//
+	// An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
+	// bytes of the public key prefixed with the Secp256r1
+	// `SignatureScheme` flag (`0x02`).
+	//
+	// `hash( 0x02 || 33-byte secp256r1 public key)`
+	DeriveAddress() *Address
+	// Return the flag for this signature scheme
+	Scheme() SignatureScheme
 	ToBytes() []byte
 }
 // A secp256r1 signature.
@@ -17908,6 +17926,34 @@ func Secp256r1PublicKeyGenerate() *Secp256r1PublicKey {
 }
 
 
+
+// Derive an `Address` from this Public Key
+//
+// An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
+// bytes of the public key prefixed with the Secp256r1
+// `SignatureScheme` flag (`0x02`).
+//
+// `hash( 0x02 || 33-byte secp256r1 public key)`
+func (_self *Secp256r1PublicKey) DeriveAddress() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Return the flag for this signature scheme
+func (_self *Secp256r1PublicKey) Scheme() SignatureScheme {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 
 func (_self *Secp256r1PublicKey) ToBytes() []byte {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PublicKey")
@@ -23405,6 +23451,45 @@ type FfiDestroyerAuthenticatorStateUpdateV1 struct {}
 func (_ FfiDestroyerAuthenticatorStateUpdateV1) Destroy(value AuthenticatorStateUpdateV1) {
 	value.Destroy()
 }
+type BatchSendStatus struct {
+	Status BatchSendStatusType
+	TransferredGasObjects *FaucetReceipt
+}
+
+func (r *BatchSendStatus) Destroy() {
+		FfiDestroyerBatchSendStatusType{}.Destroy(r.Status);
+		FfiDestroyerOptionalFaucetReceipt{}.Destroy(r.TransferredGasObjects);
+}
+
+type FfiConverterBatchSendStatus struct {}
+
+var FfiConverterBatchSendStatusINSTANCE = FfiConverterBatchSendStatus{}
+
+func (c FfiConverterBatchSendStatus) Lift(rb RustBufferI) BatchSendStatus {
+	return LiftFromRustBuffer[BatchSendStatus](c, rb)
+}
+
+func (c FfiConverterBatchSendStatus) Read(reader io.Reader) BatchSendStatus {
+	return BatchSendStatus {
+			FfiConverterBatchSendStatusTypeINSTANCE.Read(reader),
+			FfiConverterOptionalFaucetReceiptINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterBatchSendStatus) Lower(value BatchSendStatus) C.RustBuffer {
+	return LowerIntoRustBuffer[BatchSendStatus](c, value)
+}
+
+func (c FfiConverterBatchSendStatus) Write(writer io.Writer, value BatchSendStatus) {
+		FfiConverterBatchSendStatusTypeINSTANCE.Write(writer, value.Status);
+		FfiConverterOptionalFaucetReceiptINSTANCE.Write(writer, value.TransferredGasObjects);
+}
+
+type FfiDestroyerBatchSendStatus struct {}
+
+func (_ FfiDestroyerBatchSendStatus) Destroy(value BatchSendStatus) {
+	value.Destroy()
+}
 // Input/output state of an object that was changed during execution
 //
 // # BCS
@@ -23508,6 +23593,49 @@ func (c FfiConverterCheckpointSummaryPage) Write(writer io.Writer, value Checkpo
 type FfiDestroyerCheckpointSummaryPage struct {}
 
 func (_ FfiDestroyerCheckpointSummaryPage) Destroy(value CheckpointSummaryPage) {
+	value.Destroy()
+}
+type CoinInfo struct {
+	Amount uint64
+	Id *ObjectId
+	TransferTxDigest *Digest
+}
+
+func (r *CoinInfo) Destroy() {
+		FfiDestroyerUint64{}.Destroy(r.Amount);
+		FfiDestroyerObjectId{}.Destroy(r.Id);
+		FfiDestroyerDigest{}.Destroy(r.TransferTxDigest);
+}
+
+type FfiConverterCoinInfo struct {}
+
+var FfiConverterCoinInfoINSTANCE = FfiConverterCoinInfo{}
+
+func (c FfiConverterCoinInfo) Lift(rb RustBufferI) CoinInfo {
+	return LiftFromRustBuffer[CoinInfo](c, rb)
+}
+
+func (c FfiConverterCoinInfo) Read(reader io.Reader) CoinInfo {
+	return CoinInfo {
+			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterObjectIdINSTANCE.Read(reader),
+			FfiConverterDigestINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterCoinInfo) Lower(value CoinInfo) C.RustBuffer {
+	return LowerIntoRustBuffer[CoinInfo](c, value)
+}
+
+func (c FfiConverterCoinInfo) Write(writer io.Writer, value CoinInfo) {
+		FfiConverterUint64INSTANCE.Write(writer, value.Amount);
+		FfiConverterObjectIdINSTANCE.Write(writer, value.Id);
+		FfiConverterDigestINSTANCE.Write(writer, value.TransferTxDigest);
+}
+
+type FfiDestroyerCoinInfo struct {}
+
+func (_ FfiDestroyerCoinInfo) Destroy(value CoinInfo) {
 	value.Destroy()
 }
 // The coin metadata associated with the given coin type.
@@ -24083,6 +24211,12 @@ type Event struct {
 	Type string
 	// BCS serialized bytes of the event
 	Contents []byte
+	// UTC timestamp in milliseconds since epoch (1/1/1970)
+	Timestamp string
+	// Structured contents of a Move value
+	Data string
+	// Representation of a Move value in JSON
+	Json string
 }
 
 func (r *Event) Destroy() {
@@ -24091,6 +24225,9 @@ func (r *Event) Destroy() {
 		FfiDestroyerAddress{}.Destroy(r.Sender);
 		FfiDestroyerString{}.Destroy(r.Type);
 		FfiDestroyerBytes{}.Destroy(r.Contents);
+		FfiDestroyerString{}.Destroy(r.Timestamp);
+		FfiDestroyerString{}.Destroy(r.Data);
+		FfiDestroyerString{}.Destroy(r.Json);
 }
 
 type FfiConverterEvent struct {}
@@ -24108,6 +24245,9 @@ func (c FfiConverterEvent) Read(reader io.Reader) Event {
 			FfiConverterAddressINSTANCE.Read(reader),
 			FfiConverterStringINSTANCE.Read(reader),
 			FfiConverterBytesINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterStringINSTANCE.Read(reader),
 	}
 }
 
@@ -24121,6 +24261,9 @@ func (c FfiConverterEvent) Write(writer io.Writer, value Event) {
 		FfiConverterAddressINSTANCE.Write(writer, value.Sender);
 		FfiConverterStringINSTANCE.Write(writer, value.Type);
 		FfiConverterBytesINSTANCE.Write(writer, value.Contents);
+		FfiConverterStringINSTANCE.Write(writer, value.Timestamp);
+		FfiConverterStringINSTANCE.Write(writer, value.Data);
+		FfiConverterStringINSTANCE.Write(writer, value.Json);
 }
 
 type FfiDestroyerEvent struct {}
@@ -24216,6 +24359,41 @@ func (c FfiConverterEventPage) Write(writer io.Writer, value EventPage) {
 type FfiDestroyerEventPage struct {}
 
 func (_ FfiDestroyerEventPage) Destroy(value EventPage) {
+	value.Destroy()
+}
+type FaucetReceipt struct {
+	Sent []CoinInfo
+}
+
+func (r *FaucetReceipt) Destroy() {
+		FfiDestroyerSequenceCoinInfo{}.Destroy(r.Sent);
+}
+
+type FfiConverterFaucetReceipt struct {}
+
+var FfiConverterFaucetReceiptINSTANCE = FfiConverterFaucetReceipt{}
+
+func (c FfiConverterFaucetReceipt) Lift(rb RustBufferI) FaucetReceipt {
+	return LiftFromRustBuffer[FaucetReceipt](c, rb)
+}
+
+func (c FfiConverterFaucetReceipt) Read(reader io.Reader) FaucetReceipt {
+	return FaucetReceipt {
+			FfiConverterSequenceCoinInfoINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterFaucetReceipt) Lower(value FaucetReceipt) C.RustBuffer {
+	return LowerIntoRustBuffer[FaucetReceipt](c, value)
+}
+
+func (c FfiConverterFaucetReceipt) Write(writer io.Writer, value FaucetReceipt) {
+		FfiConverterSequenceCoinInfoINSTANCE.Write(writer, value.Sent);
+}
+
+type FfiDestroyerFaucetReceipt struct {}
+
+func (_ FfiDestroyerFaucetReceipt) Destroy(value FaucetReceipt) {
 	value.Destroy()
 }
 // A separate type to support denoting a function by a more structured
@@ -27131,6 +27309,40 @@ func (_ FfiDestroyerZkLoginClaim) Destroy(value ZkLoginClaim) {
 }
 
 
+type BatchSendStatusType uint
+
+const (
+	BatchSendStatusTypeInProgress BatchSendStatusType = 1
+	BatchSendStatusTypeSucceeded BatchSendStatusType = 2
+	BatchSendStatusTypeDiscarded BatchSendStatusType = 3
+)
+
+type FfiConverterBatchSendStatusType struct {}
+
+var FfiConverterBatchSendStatusTypeINSTANCE = FfiConverterBatchSendStatusType{}
+
+func (c FfiConverterBatchSendStatusType) Lift(rb RustBufferI) BatchSendStatusType {
+	return LiftFromRustBuffer[BatchSendStatusType](c, rb)
+}
+
+func (c FfiConverterBatchSendStatusType) Lower(value BatchSendStatusType) C.RustBuffer {
+	return LowerIntoRustBuffer[BatchSendStatusType](c, value)
+}
+func (FfiConverterBatchSendStatusType) Read(reader io.Reader) BatchSendStatusType {
+	id := readInt32(reader)
+	return BatchSendStatusType(id)
+}
+
+func (FfiConverterBatchSendStatusType) Write(writer io.Writer, value BatchSendStatusType) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerBatchSendStatusType struct {}
+
+func (_ FfiDestroyerBatchSendStatusType) Destroy(value BatchSendStatusType) {
+}
+
+
 // An error with an argument to a command
 //
 // # BCS
@@ -29373,43 +29585,6 @@ func (_ FfiDestroyerOptionalArgument) Destroy(value **Argument) {
 	}
 }
 
-type FfiConverterOptionalBatchSendStatus struct{}
-
-var FfiConverterOptionalBatchSendStatusINSTANCE = FfiConverterOptionalBatchSendStatus{}
-
-func (c FfiConverterOptionalBatchSendStatus) Lift(rb RustBufferI) **BatchSendStatus {
-	return LiftFromRustBuffer[**BatchSendStatus](c, rb)
-}
-
-func (_ FfiConverterOptionalBatchSendStatus) Read(reader io.Reader) **BatchSendStatus {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterBatchSendStatusINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalBatchSendStatus) Lower(value **BatchSendStatus) C.RustBuffer {
-	return LowerIntoRustBuffer[**BatchSendStatus](c, value)
-}
-
-func (_ FfiConverterOptionalBatchSendStatus) Write(writer io.Writer, value **BatchSendStatus) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterBatchSendStatusINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalBatchSendStatus struct {}
-
-func (_ FfiDestroyerOptionalBatchSendStatus) Destroy(value **BatchSendStatus) {
-	if value != nil {
-		FfiDestroyerBatchSendStatus{}.Destroy(*value)
-	}
-}
-
 type FfiConverterOptionalCheckpointSummary struct{}
 
 var FfiConverterOptionalCheckpointSummaryINSTANCE = FfiConverterOptionalCheckpointSummary{}
@@ -29555,43 +29730,6 @@ type FfiDestroyerOptionalEd25519Signature struct {}
 func (_ FfiDestroyerOptionalEd25519Signature) Destroy(value **Ed25519Signature) {
 	if value != nil {
 		FfiDestroyerEd25519Signature{}.Destroy(*value)
-	}
-}
-
-type FfiConverterOptionalFaucetReceipt struct{}
-
-var FfiConverterOptionalFaucetReceiptINSTANCE = FfiConverterOptionalFaucetReceipt{}
-
-func (c FfiConverterOptionalFaucetReceipt) Lift(rb RustBufferI) **FaucetReceipt {
-	return LiftFromRustBuffer[**FaucetReceipt](c, rb)
-}
-
-func (_ FfiConverterOptionalFaucetReceipt) Read(reader io.Reader) **FaucetReceipt {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterFaucetReceiptINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalFaucetReceipt) Lower(value **FaucetReceipt) C.RustBuffer {
-	return LowerIntoRustBuffer[**FaucetReceipt](c, value)
-}
-
-func (_ FfiConverterOptionalFaucetReceipt) Write(writer io.Writer, value **FaucetReceipt) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterFaucetReceiptINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalFaucetReceipt struct {}
-
-func (_ FfiDestroyerOptionalFaucetReceipt) Destroy(value **FaucetReceipt) {
-	if value != nil {
-		FfiDestroyerFaucetReceipt{}.Destroy(*value)
 	}
 }
 
@@ -30224,6 +30362,43 @@ func (_ FfiDestroyerOptionalZkloginVerifier) Destroy(value **ZkloginVerifier) {
 	}
 }
 
+type FfiConverterOptionalBatchSendStatus struct{}
+
+var FfiConverterOptionalBatchSendStatusINSTANCE = FfiConverterOptionalBatchSendStatus{}
+
+func (c FfiConverterOptionalBatchSendStatus) Lift(rb RustBufferI) *BatchSendStatus {
+	return LiftFromRustBuffer[*BatchSendStatus](c, rb)
+}
+
+func (_ FfiConverterOptionalBatchSendStatus) Read(reader io.Reader) *BatchSendStatus {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterBatchSendStatusINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalBatchSendStatus) Lower(value *BatchSendStatus) C.RustBuffer {
+	return LowerIntoRustBuffer[*BatchSendStatus](c, value)
+}
+
+func (_ FfiConverterOptionalBatchSendStatus) Write(writer io.Writer, value *BatchSendStatus) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterBatchSendStatusINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalBatchSendStatus struct {}
+
+func (_ FfiDestroyerOptionalBatchSendStatus) Destroy(value *BatchSendStatus) {
+	if value != nil {
+		FfiDestroyerBatchSendStatus{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalCoinMetadata struct{}
 
 var FfiConverterOptionalCoinMetadataINSTANCE = FfiConverterOptionalCoinMetadata{}
@@ -30443,6 +30618,43 @@ type FfiDestroyerOptionalEventFilter struct {}
 func (_ FfiDestroyerOptionalEventFilter) Destroy(value *EventFilter) {
 	if value != nil {
 		FfiDestroyerEventFilter{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalFaucetReceipt struct{}
+
+var FfiConverterOptionalFaucetReceiptINSTANCE = FfiConverterOptionalFaucetReceipt{}
+
+func (c FfiConverterOptionalFaucetReceipt) Lift(rb RustBufferI) *FaucetReceipt {
+	return LiftFromRustBuffer[*FaucetReceipt](c, rb)
+}
+
+func (_ FfiConverterOptionalFaucetReceipt) Read(reader io.Reader) *FaucetReceipt {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterFaucetReceiptINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalFaucetReceipt) Lower(value *FaucetReceipt) C.RustBuffer {
+	return LowerIntoRustBuffer[*FaucetReceipt](c, value)
+}
+
+func (_ FfiConverterOptionalFaucetReceipt) Write(writer io.Writer, value *FaucetReceipt) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterFaucetReceiptINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalFaucetReceipt struct {}
+
+func (_ FfiDestroyerOptionalFaucetReceipt) Destroy(value *FaucetReceipt) {
+	if value != nil {
+		FfiDestroyerFaucetReceipt{}.Destroy(*value)
 	}
 }
 
@@ -32886,6 +33098,49 @@ type FfiDestroyerSequenceChangedObject struct {}
 func (FfiDestroyerSequenceChangedObject) Destroy(sequence []ChangedObject) {
 	for _, value := range sequence {
 		FfiDestroyerChangedObject{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceCoinInfo struct{}
+
+var FfiConverterSequenceCoinInfoINSTANCE = FfiConverterSequenceCoinInfo{}
+
+func (c FfiConverterSequenceCoinInfo) Lift(rb RustBufferI) []CoinInfo {
+	return LiftFromRustBuffer[[]CoinInfo](c, rb)
+}
+
+func (c FfiConverterSequenceCoinInfo) Read(reader io.Reader) []CoinInfo {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]CoinInfo, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterCoinInfoINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceCoinInfo) Lower(value []CoinInfo) C.RustBuffer {
+	return LowerIntoRustBuffer[[]CoinInfo](c, value)
+}
+
+func (c FfiConverterSequenceCoinInfo) Write(writer io.Writer, value []CoinInfo) {
+	if len(value) > math.MaxInt32 {
+		panic("[]CoinInfo is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterCoinInfoINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceCoinInfo struct {}
+
+func (FfiDestroyerSequenceCoinInfo) Destroy(sequence []CoinInfo) {
+	for _, value := range sequence {
+		FfiDestroyerCoinInfo{}.Destroy(value)
 	}
 }
 

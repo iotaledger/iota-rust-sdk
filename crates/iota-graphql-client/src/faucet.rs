@@ -39,7 +39,7 @@ struct BatchStatusFaucetResponse {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum BatchSendStatusType {
-    Inprogress,
+    InProgress,
     Succeeded,
     Discarded,
 }
@@ -183,7 +183,7 @@ impl FaucetClient {
                                     transferred_gas_objects: None,
                                 });
                             }
-                            BatchSendStatusType::Inprogress => {
+                            BatchSendStatusType::InProgress => {
                                 continue;
                             }
                         }

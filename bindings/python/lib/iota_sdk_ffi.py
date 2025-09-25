@@ -615,6 +615,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key() != 59162:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() != 37757:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 141:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes() != 16656:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() != 31911:
@@ -637,9 +641,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() != 13326:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 48304:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 22484:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 42353:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 31173:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_data() != 26598:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -981,6 +985,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key() != 51137:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() != 48490:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 798:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes() != 49170:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes() != 49705:
@@ -1016,6 +1024,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user() != 36924:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key() != 55895:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() != 27344:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 12227:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() != 21066:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1919,16 +1931,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_batchsendstatus.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_batchsendstatus.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_batchsendstatus.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_batchsendstatus.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2729,6 +2731,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2988,16 +3000,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status.argtypes = 
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_faucetreceipt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_faucetreceipt.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_faucetreceipt.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_faucetreceipt.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_genesisobject.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4463,6 +4465,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate.argtyp
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4682,6 +4694,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate.argtyp
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6771,6 +6793,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes.restype = ctypes.c_uint16
@@ -7320,6 +7348,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes.restype = ctypes.c_uint16
@@ -7374,6 +7408,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.restype = ctypes.c_uint16
@@ -8847,10 +8887,6 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
 
 
 
-
-
-
-
 class ActiveJwk:
     """
     A new Jwk
@@ -9051,6 +9087,42 @@ class _UniffiConverterTypeAuthenticatorStateUpdateV1(_UniffiConverterRustBuffer)
         _UniffiConverterUInt64.write(value.authenticator_obj_initial_shared_version, buf)
 
 
+class BatchSendStatus:
+    status: "BatchSendStatusType"
+    transferred_gas_objects: "typing.Optional[FaucetReceipt]"
+    def __init__(self, *, status: "BatchSendStatusType", transferred_gas_objects: "typing.Optional[FaucetReceipt]"):
+        self.status = status
+        self.transferred_gas_objects = transferred_gas_objects
+
+    def __str__(self):
+        return "BatchSendStatus(status={}, transferred_gas_objects={})".format(self.status, self.transferred_gas_objects)
+
+    def __eq__(self, other):
+        if self.status != other.status:
+            return False
+        if self.transferred_gas_objects != other.transferred_gas_objects:
+            return False
+        return True
+
+class _UniffiConverterTypeBatchSendStatus(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return BatchSendStatus(
+            status=_UniffiConverterTypeBatchSendStatusType.read(buf),
+            transferred_gas_objects=_UniffiConverterOptionalTypeFaucetReceipt.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeBatchSendStatusType.check_lower(value.status)
+        _UniffiConverterOptionalTypeFaucetReceipt.check_lower(value.transferred_gas_objects)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeBatchSendStatusType.write(value.status, buf)
+        _UniffiConverterOptionalTypeFaucetReceipt.write(value.transferred_gas_objects, buf)
+
+
 class ChangedObject:
     """
     Input/output state of an object that was changed during execution
@@ -9178,6 +9250,49 @@ class _UniffiConverterTypeCheckpointSummaryPage(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypePageInfo.write(value.page_info, buf)
         _UniffiConverterSequenceTypeCheckpointSummary.write(value.data, buf)
+
+
+class CoinInfo:
+    amount: "int"
+    id: "ObjectId"
+    transfer_tx_digest: "Digest"
+    def __init__(self, *, amount: "int", id: "ObjectId", transfer_tx_digest: "Digest"):
+        self.amount = amount
+        self.id = id
+        self.transfer_tx_digest = transfer_tx_digest
+
+    def __str__(self):
+        return "CoinInfo(amount={}, id={}, transfer_tx_digest={})".format(self.amount, self.id, self.transfer_tx_digest)
+
+    def __eq__(self, other):
+        if self.amount != other.amount:
+            return False
+        if self.id != other.id:
+            return False
+        if self.transfer_tx_digest != other.transfer_tx_digest:
+            return False
+        return True
+
+class _UniffiConverterTypeCoinInfo(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return CoinInfo(
+            amount=_UniffiConverterUInt64.read(buf),
+            id=_UniffiConverterTypeObjectId.read(buf),
+            transfer_tx_digest=_UniffiConverterTypeDigest.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterUInt64.check_lower(value.amount)
+        _UniffiConverterTypeObjectId.check_lower(value.id)
+        _UniffiConverterTypeDigest.check_lower(value.transfer_tx_digest)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterUInt64.write(value.amount, buf)
+        _UniffiConverterTypeObjectId.write(value.id, buf)
+        _UniffiConverterTypeDigest.write(value.transfer_tx_digest, buf)
 
 
 class CoinMetadata:
@@ -10014,15 +10129,33 @@ class Event:
     BCS serialized bytes of the event
     """
 
-    def __init__(self, *, package_id: "ObjectId", module: "str", sender: "Address", type: "str", contents: "bytes"):
+    timestamp: "str"
+    """
+    UTC timestamp in milliseconds since epoch (1/1/1970)
+    """
+
+    data: "str"
+    """
+    Structured contents of a Move value
+    """
+
+    json: "str"
+    """
+    Representation of a Move value in JSON
+    """
+
+    def __init__(self, *, package_id: "ObjectId", module: "str", sender: "Address", type: "str", contents: "bytes", timestamp: "str", data: "str", json: "str"):
         self.package_id = package_id
         self.module = module
         self.sender = sender
         self.type = type
         self.contents = contents
+        self.timestamp = timestamp
+        self.data = data
+        self.json = json
 
     def __str__(self):
-        return "Event(package_id={}, module={}, sender={}, type={}, contents={})".format(self.package_id, self.module, self.sender, self.type, self.contents)
+        return "Event(package_id={}, module={}, sender={}, type={}, contents={}, timestamp={}, data={}, json={})".format(self.package_id, self.module, self.sender, self.type, self.contents, self.timestamp, self.data, self.json)
 
     def __eq__(self, other):
         if self.package_id != other.package_id:
@@ -10035,6 +10168,12 @@ class Event:
             return False
         if self.contents != other.contents:
             return False
+        if self.timestamp != other.timestamp:
+            return False
+        if self.data != other.data:
+            return False
+        if self.json != other.json:
+            return False
         return True
 
 class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
@@ -10046,6 +10185,9 @@ class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
             sender=_UniffiConverterTypeAddress.read(buf),
             type=_UniffiConverterString.read(buf),
             contents=_UniffiConverterBytes.read(buf),
+            timestamp=_UniffiConverterString.read(buf),
+            data=_UniffiConverterString.read(buf),
+            json=_UniffiConverterString.read(buf),
         )
 
     @staticmethod
@@ -10055,6 +10197,9 @@ class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
         _UniffiConverterTypeAddress.check_lower(value.sender)
         _UniffiConverterString.check_lower(value.type)
         _UniffiConverterBytes.check_lower(value.contents)
+        _UniffiConverterString.check_lower(value.timestamp)
+        _UniffiConverterString.check_lower(value.data)
+        _UniffiConverterString.check_lower(value.json)
 
     @staticmethod
     def write(value, buf):
@@ -10063,6 +10208,9 @@ class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
         _UniffiConverterTypeAddress.write(value.sender, buf)
         _UniffiConverterString.write(value.type, buf)
         _UniffiConverterBytes.write(value.contents, buf)
+        _UniffiConverterString.write(value.timestamp, buf)
+        _UniffiConverterString.write(value.data, buf)
+        _UniffiConverterString.write(value.json, buf)
 
 
 class EventFilter:
@@ -10174,6 +10322,35 @@ class _UniffiConverterTypeEventPage(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypePageInfo.write(value.page_info, buf)
         _UniffiConverterSequenceTypeEvent.write(value.data, buf)
+
+
+class FaucetReceipt:
+    sent: "typing.List[CoinInfo]"
+    def __init__(self, *, sent: "typing.List[CoinInfo]"):
+        self.sent = sent
+
+    def __str__(self):
+        return "FaucetReceipt(sent={})".format(self.sent)
+
+    def __eq__(self, other):
+        if self.sent != other.sent:
+            return False
+        return True
+
+class _UniffiConverterTypeFaucetReceipt(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return FaucetReceipt(
+            sent=_UniffiConverterSequenceTypeCoinInfo.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeCoinInfo.check_lower(value.sent)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeCoinInfo.write(value.sent, buf)
 
 
 class Function:
@@ -13865,6 +14042,52 @@ class _UniffiConverterTypeZkLoginClaim(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterString.write(value.value, buf)
         _UniffiConverterUInt8.write(value.index_mod_4, buf)
+
+
+
+
+
+class BatchSendStatusType(enum.Enum):
+    IN_PROGRESS = 0
+    
+    SUCCEEDED = 1
+    
+    DISCARDED = 2
+    
+
+
+class _UniffiConverterTypeBatchSendStatusType(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return BatchSendStatusType.IN_PROGRESS
+        if variant == 2:
+            return BatchSendStatusType.SUCCEEDED
+        if variant == 3:
+            return BatchSendStatusType.DISCARDED
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == BatchSendStatusType.IN_PROGRESS:
+            return
+        if value == BatchSendStatusType.SUCCEEDED:
+            return
+        if value == BatchSendStatusType.DISCARDED:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == BatchSendStatusType.IN_PROGRESS:
+            buf.write_i32(1)
+        if value == BatchSendStatusType.SUCCEEDED:
+            buf.write_i32(2)
+        if value == BatchSendStatusType.DISCARDED:
+            buf.write_i32(3)
+
+
 
 
 
@@ -17580,33 +17803,6 @@ class _UniffiConverterOptionalTypeArgument(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterOptionalTypeBatchSendStatus(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeBatchSendStatus.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeBatchSendStatus.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeBatchSendStatus.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalTypeCheckpointSummary(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -17710,33 +17906,6 @@ class _UniffiConverterOptionalTypeEd25519Signature(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeEd25519Signature.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
-class _UniffiConverterOptionalTypeFaucetReceipt(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterTypeFaucetReceipt.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterTypeFaucetReceipt.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterTypeFaucetReceipt.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -18201,6 +18370,33 @@ class _UniffiConverterOptionalTypeZkloginVerifier(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeBatchSendStatus(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeBatchSendStatus.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeBatchSendStatus.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeBatchSendStatus.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeCoinMetadata(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -18358,6 +18554,33 @@ class _UniffiConverterOptionalTypeEventFilter(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeEventFilter.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeFaucetReceipt(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeFaucetReceipt.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeFaucetReceipt.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeFaucetReceipt.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -19948,6 +20171,31 @@ class _UniffiConverterSequenceTypeChangedObject(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceTypeCoinInfo(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeCoinInfo.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeCoinInfo.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeCoinInfo.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceTypeDynamicFieldOutput(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -21074,62 +21322,6 @@ class _UniffiConverterTypeArgument:
 
     @classmethod
     def write(cls, value: ArgumentProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class BatchSendStatusProtocol(typing.Protocol):
-    pass
-# BatchSendStatus is a Rust-only trait - it's a wrapper around a Rust implementation.
-class BatchSendStatus():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_batchsendstatus, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_batchsendstatus, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeBatchSendStatus:
-
-    @staticmethod
-    def lift(value: int):
-        return BatchSendStatus._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: BatchSendStatus):
-        if not isinstance(value, BatchSendStatus):
-            raise TypeError("Expected BatchSendStatus instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: BatchSendStatusProtocol):
-        if not isinstance(value, BatchSendStatus):
-            raise TypeError("Expected BatchSendStatus instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: BatchSendStatusProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class Bls12381PrivateKeyProtocol(typing.Protocol):
     def public_key(self, ):
@@ -24280,6 +24472,23 @@ class Ed25519PublicKeyProtocol(typing.Protocol):
     ```
     """
 
+    def derive_address(self, ):
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from an `Ed25519PublicKey` by hashing the
+        bytes of the public key with no prefix flag.
+
+        `hash(32-byte ed25519 public key)`
+        """
+
+        raise NotImplementedError
+    def scheme(self, ):
+        """
+        Return the flag for this signature scheme
+        """
+
+        raise NotImplementedError
     def to_bytes(self, ):
         raise NotImplementedError
 # Ed25519PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -24341,6 +24550,37 @@ class Ed25519PublicKey():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate,)
         return cls._make_instance_(pointer)
+
+
+
+    def derive_address(self, ) -> "Address":
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from an `Ed25519PublicKey` by hashing the
+        bytes of the public key with no prefix flag.
+
+        `hash(32-byte ed25519 public key)`
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def scheme(self, ) -> "SignatureScheme":
+        """
+        Return the flag for this signature scheme
+        """
+
+        return _UniffiConverterTypeSignatureScheme.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 
@@ -25416,62 +25656,6 @@ class _UniffiConverterTypeFaucetClient:
 
     @classmethod
     def write(cls, value: FaucetClientProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class FaucetReceiptProtocol(typing.Protocol):
-    pass
-# FaucetReceipt is a Rust-only trait - it's a wrapper around a Rust implementation.
-class FaucetReceipt():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_faucetreceipt, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_faucetreceipt, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-
-class _UniffiConverterTypeFaucetReceipt:
-
-    @staticmethod
-    def lift(value: int):
-        return FaucetReceipt._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: FaucetReceipt):
-        if not isinstance(value, FaucetReceipt):
-            raise TypeError("Expected FaucetReceipt instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: FaucetReceiptProtocol):
-        if not isinstance(value, FaucetReceipt):
-            raise TypeError("Expected FaucetReceipt instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: FaucetReceiptProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class GenesisObjectProtocol(typing.Protocol):
     """
@@ -32001,6 +32185,24 @@ class Secp256k1PublicKeyProtocol(typing.Protocol):
     ```
     """
 
+    def derive_address(self, ):
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
+        bytes of the public key prefixed with the Secp256k1
+        `SignatureScheme` flag (`0x01`).
+
+        `hash( 0x01 || 33-byte secp256k1 public key)`
+        """
+
+        raise NotImplementedError
+    def scheme(self, ):
+        """
+        Return the flag for this signature scheme
+        """
+
+        raise NotImplementedError
     def to_bytes(self, ):
         raise NotImplementedError
 # Secp256k1PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -32062,6 +32264,38 @@ class Secp256k1PublicKey():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate,)
         return cls._make_instance_(pointer)
+
+
+
+    def derive_address(self, ) -> "Address":
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
+        bytes of the public key prefixed with the Secp256k1
+        `SignatureScheme` flag (`0x01`).
+
+        `hash( 0x01 || 33-byte secp256k1 public key)`
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def scheme(self, ) -> "SignatureScheme":
+        """
+        Return the flag for this signature scheme
+        """
+
+        return _UniffiConverterTypeSignatureScheme.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 
@@ -32734,6 +32968,24 @@ class Secp256r1PublicKeyProtocol(typing.Protocol):
     ```
     """
 
+    def derive_address(self, ):
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
+        bytes of the public key prefixed with the Secp256r1
+        `SignatureScheme` flag (`0x02`).
+
+        `hash( 0x02 || 33-byte secp256r1 public key)`
+        """
+
+        raise NotImplementedError
+    def scheme(self, ):
+        """
+        Return the flag for this signature scheme
+        """
+
+        raise NotImplementedError
     def to_bytes(self, ):
         raise NotImplementedError
 # Secp256r1PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
@@ -32795,6 +33047,38 @@ class Secp256r1PublicKey():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate,)
         return cls._make_instance_(pointer)
+
+
+
+    def derive_address(self, ) -> "Address":
+        """
+        Derive an `Address` from this Public Key
+
+        An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
+        bytes of the public key prefixed with the Secp256r1
+        `SignatureScheme` flag (`0x02`).
+
+        `hash( 0x02 || 33-byte secp256r1 public key)`
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def scheme(self, ) -> "SignatureScheme":
+        """
+        Return the flag for this signature scheme
+        """
+
+        return _UniffiConverterTypeSignatureScheme.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 
@@ -38646,6 +38930,7 @@ def hex_encode(input: "bytes") -> "str":
 
 __all__ = [
     "InternalError",
+    "BatchSendStatusType",
     "CommandArgumentError",
     "Direction",
     "ExecutionError",
@@ -38666,8 +38951,10 @@ __all__ = [
     "ActiveJwk",
     "AuthenticatorStateExpire",
     "AuthenticatorStateUpdateV1",
+    "BatchSendStatus",
     "ChangedObject",
     "CheckpointSummaryPage",
+    "CoinInfo",
     "CoinMetadata",
     "CoinPage",
     "DryRunResult",
@@ -38681,6 +38968,7 @@ __all__ = [
     "Event",
     "EventFilter",
     "EventPage",
+    "FaucetReceipt",
     "Function",
     "GasCostSummary",
     "GasPayment",
@@ -38742,7 +39030,6 @@ __all__ = [
     "hex_encode",
     "Address",
     "Argument",
-    "BatchSendStatus",
     "Bls12381PrivateKey",
     "Bls12381PublicKey",
     "Bls12381Signature",
@@ -38772,7 +39059,6 @@ __all__ = [
     "ExecutionTimeObservationKey",
     "ExecutionTimeObservations",
     "FaucetClient",
-    "FaucetReceipt",
     "GenesisObject",
     "GenesisTransaction",
     "GraphQlClient",
