@@ -6435,7 +6435,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 15931.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 38081.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710.toShort()) {
@@ -35865,7 +35865,7 @@ public interface TransactionBuilderInterface {
      * // we need this ticket to authorize the upgrade
      * tx.move_call(Address::TWO, "package", "authorize_upgrade")
      * .params((upgrade_cap, upgrade_policy, package_digest))
-     * .result("ticket");
+     * .name("ticket");
      *
      * // now we can upgrade the package
      * tx.upgrade(
@@ -35877,8 +35877,7 @@ public interface TransactionBuilderInterface {
      *
      * // commit the upgrade
      * tx.move_call(Address::TWO, "package", "commit_upgrade")
-     * .params((upgrade_cap, Res("receipt")))
-     * .end();
+     * .params((upgrade_cap, Res("receipt")));
      *
      * let effects = tx.execute(&keys, true).await;
      * ```
@@ -36294,7 +36293,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      * // we need this ticket to authorize the upgrade
      * tx.move_call(Address::TWO, "package", "authorize_upgrade")
      * .params((upgrade_cap, upgrade_policy, package_digest))
-     * .result("ticket");
+     * .name("ticket");
      *
      * // now we can upgrade the package
      * tx.upgrade(
@@ -36306,8 +36305,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      *
      * // commit the upgrade
      * tx.move_call(Address::TWO, "package", "commit_upgrade")
-     * .params((upgrade_cap, Res("receipt")))
-     * .end();
+     * .params((upgrade_cap, Res("receipt")));
      *
      * let effects = tx.execute(&keys, true).await;
      * ```

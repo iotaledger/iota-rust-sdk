@@ -3539,7 +3539,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade()
 	})
-	if checksum != 15931 {
+	if checksum != 38081 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade: UniFFI API checksum mismatch")
 	}
@@ -19937,7 +19937,7 @@ type TransactionBuilderInterface interface {
 	// // we need this ticket to authorize the upgrade
 	// tx.move_call(Address::TWO, "package", "authorize_upgrade")
 	// .params((upgrade_cap, upgrade_policy, package_digest))
-	// .result("ticket");
+	// .name("ticket");
 	//
 	// // now we can upgrade the package
 	// tx.upgrade(
@@ -19949,8 +19949,7 @@ type TransactionBuilderInterface interface {
 	//
 	// // commit the upgrade
 	// tx.move_call(Address::TWO, "package", "commit_upgrade")
-	// .params((upgrade_cap, Res("receipt")))
-	// .end();
+	// .params((upgrade_cap, Res("receipt")));
 	//
 	// let effects = tx.execute(&keys, true).await;
 	// ```
@@ -20267,7 +20266,7 @@ func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*
 // // we need this ticket to authorize the upgrade
 // tx.move_call(Address::TWO, "package", "authorize_upgrade")
 // .params((upgrade_cap, upgrade_policy, package_digest))
-// .result("ticket");
+// .name("ticket");
 //
 // // now we can upgrade the package
 // tx.upgrade(
@@ -20279,8 +20278,7 @@ func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*
 //
 // // commit the upgrade
 // tx.move_call(Address::TWO, "package", "commit_upgrade")
-// .params((upgrade_cap, Res("receipt")))
-// .end();
+// .params((upgrade_cap, Res("receipt")));
 //
 // let effects = tx.execute(&keys, true).await;
 // ```
