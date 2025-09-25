@@ -65,6 +65,21 @@ impl PTBArguments for Argument {
     }
 }
 
+impl PTBArguments for iota_types::Input {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        let arg = ptb.input(self.clone());
+        args.push(arg);
+    }
+}
+
+impl PTBArguments for Vec<iota_types::Input> {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
 /// Allows specifying mutable parameters.
 pub struct Mut<T>(pub T);
 
