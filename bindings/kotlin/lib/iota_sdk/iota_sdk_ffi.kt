@@ -2214,6 +2214,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2490,6 +2492,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages(
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config(
 ): Short
@@ -4113,6 +4117,8 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(`ptr`: Pointer,`afterCh
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(`ptr`: Pointer,`version`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price(`ptr`: Pointer,`epoch`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(`ptr`: Pointer,`query`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(`ptr`: Pointer,
 ): Long
@@ -5785,6 +5791,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query() != 54586.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931.toShort()) {
@@ -18838,6 +18847,11 @@ public interface GraphQlClientInterface {
     suspend fun `referenceGasPrice`(`epoch`: kotlin.ULong? = null): kotlin.ULong?
     
     /**
+     * Run a query.
+     */
+    suspend fun `runQuery`(`query`: Query): Value
+    
+    /**
      * Get the GraphQL service configuration, including complexity limits, read
      * and mutation limits, supported versions, and others.
      */
@@ -19877,6 +19891,30 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Run a query.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `runQuery`(`query`: Query) : Value {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(
+                thisPtr,
+                FfiConverterTypeQuery.lower(`query`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeValue.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -45470,6 +45508,38 @@ public object FfiConverterTypeProtocolConfigs: FfiConverterRustBuffer<ProtocolCo
             FfiConverterULong.write(value.`protocolVersion`, buf)
             FfiConverterSequenceTypeProtocolConfigFeatureFlag.write(value.`featureFlags`, buf)
             FfiConverterSequenceTypeProtocolConfigAttr.write(value.`configs`, buf)
+    }
+}
+
+
+
+data class Query (
+    var `query`: kotlin.String, 
+    var `variables`: Value? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeQuery: FfiConverterRustBuffer<Query> {
+    override fun read(buf: ByteBuffer): Query {
+        return Query(
+            FfiConverterString.read(buf),
+            FfiConverterOptionalTypeValue.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: Query) = (
+            FfiConverterString.allocationSize(value.`query`) +
+            FfiConverterOptionalTypeValue.allocationSize(value.`variables`)
+    )
+
+    override fun write(value: Query, buf: ByteBuffer) {
+            FfiConverterString.write(value.`query`, buf)
+            FfiConverterOptionalTypeValue.write(value.`variables`, buf)
     }
 }
 
