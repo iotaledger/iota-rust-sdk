@@ -36,6 +36,15 @@ pub enum ExecutionStatus {
     },
 }
 
+impl std::fmt::Display for ExecutionStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Success => write!(f, "SUCCESS"),
+            Self::Failure { .. } => write!(f, "FAILURE"),
+        }
+    }
+}
+
 impl From<iota_types::ExecutionStatus> for ExecutionStatus {
     fn from(value: iota_types::ExecutionStatus) -> Self {
         match value {

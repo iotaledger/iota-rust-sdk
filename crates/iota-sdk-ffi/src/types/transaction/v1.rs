@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
+use std::{fmt, sync::Arc};
 
 use iota_types::{GasCostSummary, IdOperation};
 
@@ -31,6 +31,7 @@ use crate::types::{
 ///              (option digest)                    ; auxiliary data digest
 /// ```
 #[derive(uniffi::Record)]
+#[uniffi::export(Display)]
 pub struct TransactionEffectsV1 {
     /// The status of the execution
     pub status: ExecutionStatus,
@@ -67,6 +68,68 @@ pub struct TransactionEffectsV1 {
     /// It also provides more flexibility on the format and type of the data.
     #[uniffi(default = None)]
     pub auxiliary_data_digest: Option<Arc<Digest>>,
+}
+
+impl fmt::Display for TransactionEffectsV1 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // Helper to format optional digest
+        let fmt_opt_digest = |d: &Option<Arc<Digest>>| -> String {
+            d.as_ref()
+                .map(|v| v.to_string())
+                .unwrap_or_else(|| "-".to_string())
+        };
+        let dependencies = if self.dependencies.is_empty() {
+            String::from("[]")
+        } else {
+            format!(
+                "[{}]",
+                self.dependencies
+                    .iter()
+                    .map(|d| d.to_string())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        };
+        let changed = if self.changed_objects.is_empty() {
+            String::from("[]")
+        } else {
+            format!(
+                "[{}]",
+                self.changed_objects
+                    .iter()
+                    .map(|c| c.to_string())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        };
+        let unchanged = if self.unchanged_shared_objects.is_empty() {
+            String::from("[]")
+        } else {
+            format!(
+                "[{}]",
+                self.unchanged_shared_objects
+                    .iter()
+                    .map(|c| c.to_string())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        };
+        write!(
+            f,
+            "TransactionEffectsV1(status={}, epoch={}, gas_used={}, tx_digest={}, gas_object_index={:?}, events_digest={}, dependencies={}, lamport_version={}, changed_objects={}, unchanged_shared_objects={}, auxiliary_data_digest={})",
+            self.status,
+            self.epoch,
+            self.gas_used,
+            self.transaction_digest,
+            self.gas_object_index,
+            fmt_opt_digest(&self.events_digest),
+            dependencies,
+            self.lamport_version,
+            changed,
+            unchanged,
+            fmt_opt_digest(&self.auxiliary_data_digest)
+        )
+    }
 }
 
 impl From<iota_types::TransactionEffectsV1> for TransactionEffectsV1 {
@@ -127,7 +190,8 @@ impl From<TransactionEffectsV1> for iota_types::TransactionEffectsV1 {
 /// ```text
 /// changed-object = object-id object-in object-out id-operation
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Debug, uniffi::Record)]
+#[uniffi::export(Display)]
 pub struct ChangedObject {
     /// Id of the object
     pub object_id: Arc<ObjectId>,
@@ -139,6 +203,12 @@ pub struct ChangedObject {
     /// This information isn't required by the protocol but is useful for
     /// providing more detailed semantics on object changes.
     pub id_operation: IdOperation,
+}
+
+impl fmt::Display for ChangedObject {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "ChangedObject(object_id={})", self.object_id)
+    }
 }
 
 impl From<iota_types::ChangedObject> for ChangedObject {
@@ -172,10 +242,21 @@ impl From<ChangedObject> for iota_types::ChangedObject {
 /// ```text
 /// unchanged-shared-object = object-id unchanged-shared-object-kind
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Debug, uniffi::Record)]
+#[uniffi::export(Display)]
 pub struct UnchangedSharedObject {
     pub object_id: Arc<ObjectId>,
     pub kind: UnchangedSharedKind,
+}
+
+impl fmt::Display for UnchangedSharedObject {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "UnchangedSharedObject(object_id={}, kind={})",
+            self.object_id, self.kind
+        )
+    }
 }
 
 impl From<iota_types::UnchangedSharedObject> for UnchangedSharedObject {
@@ -215,7 +296,7 @@ impl From<UnchangedSharedObject> for iota_types::UnchangedSharedObject {
 /// cancelled           = %x03 u64
 /// per-epoch-config    = %x04
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Debug, uniffi::Enum)]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
@@ -285,7 +366,7 @@ impl From<UnchangedSharedKind> for iota_types::UnchangedSharedKind {
 /// object-in-missing = %x00
 /// object-in-data    = %x01 u64 digest owner
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Debug, uniffi::Enum)]
 pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
@@ -346,7 +427,7 @@ impl From<ObjectIn> for iota_types::ObjectIn {
 /// object-out-object-write   = %x01 digest owner
 /// object-out-package-write  = %x02 version digest
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Debug, uniffi::Enum)]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
     Missing,
@@ -376,6 +457,27 @@ impl From<iota_types::ObjectOut> for ObjectOut {
     }
 }
 
+// Display impls for enums (placed after their definitions)
+impl fmt::Display for UnchangedSharedKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                write!(f, "ReadOnlyRoot(version={}, digest={})", version, digest)
+            }
+            UnchangedSharedKind::MutateDeleted { version } => {
+                write!(f, "MutateDeleted(version={})", version)
+            }
+            UnchangedSharedKind::ReadDeleted { version } => {
+                write!(f, "ReadDeleted(version={})", version)
+            }
+            UnchangedSharedKind::Cancelled { version } => {
+                write!(f, "Cancelled(version={})", version)
+            }
+            UnchangedSharedKind::PerEpochConfig => write!(f, "PerEpochConfig"),
+        }
+    }
+}
+
 impl From<ObjectOut> for iota_types::ObjectOut {
     fn from(value: ObjectOut) -> Self {
         match value {
@@ -388,6 +490,35 @@ impl From<ObjectOut> for iota_types::ObjectOut {
                 version,
                 digest: **digest,
             },
+        }
+    }
+}
+
+impl fmt::Display for ObjectIn {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ObjectIn::Missing => write!(f, "Missing"),
+            ObjectIn::Data {
+                version,
+                digest,
+                owner: _,
+            } => {
+                write!(f, "Data(version={}, digest={})", version, digest)
+            }
+        }
+    }
+}
+
+impl fmt::Display for ObjectOut {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ObjectOut::Missing => write!(f, "Missing"),
+            ObjectOut::ObjectWrite { digest, owner: _ } => {
+                write!(f, "ObjectWrite(digest={})", digest)
+            }
+            ObjectOut::PackageWrite { version, digest } => {
+                write!(f, "PackageWrite(version={}, digest={})", version, digest)
+            }
         }
     }
 }
