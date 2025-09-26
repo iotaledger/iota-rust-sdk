@@ -857,7 +857,7 @@ impl GraphQLClient {
             )
             .await?
             .data
-            .ok_or_else(|| SdkFfiError::custom("custom query yielded no data"))
+            .ok_or_else(|| SdkFfiError::custom("query yielded no data"))
     }
 
     // ===========================================================================
