@@ -189,7 +189,7 @@ impl TransactionBuilder {
 
 impl<C, L> TransactionBuilder<C, L> {
     /// Apply the given parameters and return the generated arguments
-    pub fn apply_params<P: PTBArguments>(&mut self, param: P) -> Vec<Argument> {
+    pub fn apply_arguments<P: PTBArguments>(&mut self, param: P) -> Vec<Argument> {
         param.args(&mut self.data)
     }
 
@@ -609,7 +609,7 @@ impl<L> TransactionBuilder<Client, L> {
         recipient: Address,
         objects: U,
     ) -> &mut TransactionBuilder<Client> {
-        let objects = self.apply_params(objects);
+        let objects = self.apply_arguments(objects);
         let cmd = Command::TransferObjects(TransferObjects {
             objects,
             address: self.pure(recipient),
@@ -661,7 +661,7 @@ impl<L> TransactionBuilder<Client, L> {
             PublishType::Path(_path) => todo!("load the package from the path"),
             PublishType::Compiled(m) => m,
         };
-        let ticket = self.apply_params(upgrade_cap);
+        let ticket = self.apply_arguments(upgrade_cap);
         if ticket.len() != 1 {
             // TODO: Maybe there's a better way
             panic!("invalid upgrade cap");
@@ -681,7 +681,7 @@ impl<L> TransactionBuilder<Client, L> {
     ) -> &mut TransactionBuilder<Client, MakeMoveVector> {
         let mut args = Vec::new();
         for e in elements {
-            args.extend(self.apply_params(e));
+            args.extend(self.apply_arguments(e));
         }
         self.state_change(MakeMoveVector {
             type_: Some(U::type_tag()),
@@ -879,7 +879,7 @@ impl TransactionBuilder<(), MoveCall> {
 impl TransactionBuilder<Client, MoveCall> {
     /// Set the call params. Optional.
     pub fn arguments<U: PTBArguments>(&mut self, params: U) -> &mut Self {
-        let args = self.apply_params(params);
+        let args = self.apply_arguments(params);
         let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
             unreachable!();
         };

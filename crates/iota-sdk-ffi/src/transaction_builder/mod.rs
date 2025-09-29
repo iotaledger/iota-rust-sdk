@@ -200,7 +200,7 @@ impl TransactionBuilder {
         self.write(|builder| {
             let mut args = Vec::new();
             for e in elements {
-                args.extend(builder.apply_params(e));
+                args.extend(builder.apply_arguments(e));
             }
             let cmd = Command::MakeMoveVector(MakeMoveVector {
                 type_: Some(type_tag.0.clone()),
