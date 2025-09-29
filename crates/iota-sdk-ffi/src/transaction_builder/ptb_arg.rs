@@ -72,6 +72,11 @@ impl PTBArgument {
     }
 
     #[uniffi::constructor]
+    pub fn string(string: String) -> Self {
+        Self(Box::new(string))
+    }
+
+    #[uniffi::constructor]
     pub fn vector(vec: Vec<Vec<u8>>) -> Self {
         Self(Box::new(
             vec.into_iter().map(ParamType::Pure).collect::<Vec<_>>(),

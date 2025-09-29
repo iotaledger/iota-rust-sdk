@@ -35,6 +35,24 @@ impl MoveParam for () {
     }
 }
 
+impl MoveParam for str {
+    fn param(&self) -> ParamType {
+        ParamType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
+    }
+}
+
+impl MoveParam for &str {
+    fn param(&self) -> ParamType {
+        (*self).param()
+    }
+}
+
+impl MoveParam for String {
+    fn param(&self) -> ParamType {
+        self.as_str().param()
+    }
+}
+
 impl<T: MoveParam> MoveParam for Vec<T> {
     fn param(&self) -> ParamType {
         let mut res = u32_as_uleb128(self.len() as u32);

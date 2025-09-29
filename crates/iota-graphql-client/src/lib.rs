@@ -6,19 +6,20 @@
 
 pub mod error;
 pub mod faucet;
+pub mod output_types;
 pub mod pagination;
 pub mod query_types;
 pub mod streams;
-
 use base64ct::Encoding;
 use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
-use error::Error;
+use error::{Error, Kind};
 use futures::Stream;
 use iota_types::{
     Address, CheckpointSequenceNumber, CheckpointSummary, Digest, MovePackage, Object, ObjectId,
     SignedTransaction, Transaction, TransactionEffects, TransactionKind, TypeTag, UserSignature,
     framework::Coin,
 };
+pub use output_types::*;
 use query_types::{
     ActiveValidatorsArgs, ActiveValidatorsQuery, BalanceArgs, BalanceQuery, ChainIdentifierQuery,
     CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointsArgs, CheckpointsQuery, CoinMetadata,
@@ -37,11 +38,10 @@ use query_types::{
     Validator,
 };
 use reqwest::Url;
-use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use streams::stream_paginated_query;
 
 use crate::{
-    error::{Kind, Result},
+    error::Result,
     pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         CheckpointTotalTxQuery, TransactionBlockWithEffectsQuery, TransactionBlocksWithEffectsQuery,
@@ -54,105 +54,6 @@ const TESTNET_HOST: &str = "https://graphql.testnet.iota.cafe";
 const DEVNET_HOST: &str = "https://graphql.devnet.iota.cafe";
 const LOCAL_HOST: &str = "http://localhost:9125/graphql";
 static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
-
-// ===========================================================================
-// Output Types
-// ===========================================================================
-
-/// The result of a dry run, which includes the effects of the transaction and
-/// any errors that may have occurred.
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
-pub struct DryRunResult {
-    pub effects: Option<TransactionEffects>,
-    pub error: Option<String>,
-}
-
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
-pub struct TransactionDataEffects {
-    pub tx: SignedTransaction,
-    pub effects: TransactionEffects,
-}
-
-/// The name part of a dynamic field, including its type, bcs, and json
-/// representation.
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
-pub struct DynamicFieldName {
-    /// The type name of this dynamic field name
-    pub type_: TypeTag,
-    /// The bcs bytes of this dynamic field name
-    pub bcs: Vec<u8>,
-    /// The json representation of the dynamic field name
-    pub json: Option<serde_json::Value>,
-}
-
-/// The value part of a dynamic field.
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
-pub struct DynamicFieldValue {
-    pub type_: TypeTag,
-    pub bcs: Vec<u8>,
-}
-
-/// The output of a dynamic field query, that includes the name, value, and
-/// value's json representation.
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
-pub struct DynamicFieldOutput {
-    /// The name of the dynamic field
-    pub name: DynamicFieldName,
-    /// The dynamic field value typename and bcs
-    pub value: Option<DynamicFieldValue>,
-    /// The json representation of the dynamic field value object
-    pub value_as_json: Option<serde_json::Value>,
-}
-
-/// Helper struct for passing a value that has a type that implements Serialize,
-/// for the dynamic fields API.
-pub struct NameValue(Vec<u8>);
-
-/// Helper struct for passing a raw bcs value.
-#[derive(derive_more::From)]
-pub struct BcsName(pub Vec<u8>);
-
-impl<T: Serialize> From<T> for NameValue {
-    fn from(value: T) -> Self {
-        NameValue(bcs::to_bytes(&value).unwrap())
-    }
-}
-
-impl From<BcsName> for NameValue {
-    fn from(value: BcsName) -> Self {
-        NameValue(value.0)
-    }
-}
-
-impl DynamicFieldOutput {
-    /// Deserialize the name of the dynamic field into the specified type.
-    pub fn deserialize_name<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
-        assert_eq!(
-            expected_type, &self.name.type_,
-            "Expected type {expected_type}, but got {}",
-            &self.name.type_
-        );
-
-        let bcs = &self.name.bcs;
-        bcs::from_bytes::<T>(bcs).map_err(Into::into)
-    }
-
-    /// Deserialize the value of the dynamic field into the specified type.
-    pub fn deserialize_value<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
-        let typetag = self.value.as_ref().map(|dfv| &dfv.type_);
-        assert_eq!(
-            Some(&expected_type),
-            typetag.as_ref(),
-            "Expected type {expected_type}, but got {typetag:?}"
-        );
-
-        if let Some(dfv) = &self.value {
-            bcs::from_bytes::<T>(&dfv.bcs).map_err(Into::into)
-        } else {
-            Err(Error::from_error(Kind::Deserialization, "Value is missing"))
-        }
-    }
-}
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
@@ -344,18 +245,32 @@ impl Client {
             .as_ref()
             .and_then(|tx| tx.dry_run_transaction_block.error.clone());
 
-        let effects = response
+        // Convert DryRunEffect to DryRunEffect
+        let results = response
+            .data
+            .as_ref()
+            .and_then(|tx| tx.dry_run_transaction_block.results.as_ref())
+            .unwrap_or(&Vec::new())
+            .iter()
+            .map(DryRunEffect::try_from)
+            .collect::<Result<Vec<_>>>()?;
+
+        // Extract transaction
+        let transaction = response
             .data
             .map(|tx| tx.dry_run_transaction_block)
             .and_then(|tx| tx.transaction)
-            .and_then(|tx| tx.effects)
-            .and_then(|bcs| bcs.bcs)
+            .and_then(|tx| tx.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
+            .map(|bcs| bcs::from_bytes::<SignedTransaction>(&bcs))
             .transpose()?;
 
-        Ok(DryRunResult { effects, error })
+        Ok(DryRunResult {
+            error,
+            results,
+            transaction,
+        })
     }
 
     /// Get a stream of transactions based on the (optional) transaction filter.
@@ -400,6 +315,27 @@ impl Client {
             .send()
             .await?
             .json::<GraphQlResponse<T>>()
+            .await?;
+        Ok(res)
+    }
+
+    /// Run a JSON query on the GraphQL server and return the response.
+    /// This method expects a JSON map holding the GraphQL query string and
+    /// matching GraphQL variables. It returns a [`cynic::GraphQlResponse`]
+    /// wrapping a [`serde_json::Value`]. In general, it is recommended to use
+    /// [`run_query`](`Self::run_query`) which guarantees valid GraphQL
+    /// query syntax and returns a proper response type.
+    pub async fn run_query_from_json(
+        &self,
+        json: serde_json::Map<String, serde_json::Value>,
+    ) -> Result<GraphQlResponse<serde_json::Value>> {
+        let res = self
+            .inner
+            .post(self.rpc_server().clone())
+            .json(&json)
+            .send()
+            .await?
+            .json::<GraphQlResponse<serde_json::Value>>()
             .await?;
         Ok(res)
     }

@@ -3,7 +3,7 @@
 
 use std::str::FromStr;
 
-use anyhow::{Context, Result};
+use eyre::{OptionExt, Result};
 use iota_graphql_client::Client;
 use iota_transaction_builder::{Mut, TransactionBuilder};
 use iota_types::{Address, ObjectId};
@@ -21,7 +21,7 @@ async fn main() -> Result<()> {
         .data
         .into_iter()
         .next()
-        .context("no validators found")?;
+        .ok_or_eyre("no validators found")?;
 
     println!(
         "Staking to validator {}",
@@ -47,7 +47,7 @@ async fn main() -> Result<()> {
     let res = builder.dry_run(false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to stake: {err}");
+        eyre::bail!("Failed to stake: {err}");
     }
 
     println!("Stake dry run was successful!");

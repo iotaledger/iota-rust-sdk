@@ -1761,6 +1761,11 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(void* ptr, 
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price(void* ptr, RustBuffer epoch
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_RUN_QUERY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_RUN_QUERY
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(void* ptr, RustBuffer query
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_SERVICE_CONFIG
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_SERVICE_CONFIG
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(void* ptr
@@ -2692,6 +2697,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(void* id, RustCal
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RES
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(RustBuffer name, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_STRING
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(RustBuffer string, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U128
@@ -5714,6 +5724,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price(v
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_RUN_QUERY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_RUN_QUERY
+uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_SERVICE_CONFIG
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_SERVICE_CONFIG
 uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config(void
@@ -8201,6 +8217,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RES
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string(void
     
 );
 #endif

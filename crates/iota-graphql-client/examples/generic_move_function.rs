@@ -3,7 +3,7 @@
 
 use core::str::FromStr;
 
-use anyhow::Result;
+use eyre::Result;
 use iota_graphql_client::Client;
 use iota_transaction_builder::TransactionBuilder;
 use iota_types::Address;
@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
     let res = builder.dry_run(false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to call generic Move function: {err}");
+        eyre::bail!("Failed to call generic Move function: {err}");
     }
 
     println!("Successfully called generic Move function!");

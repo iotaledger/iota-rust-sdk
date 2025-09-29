@@ -2204,6 +2204,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2480,6 +2484,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages(
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config(
 ): Short
@@ -3311,6 +3317,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16(
@@ -4094,6 +4102,8 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(`ptr`: Pointer,`
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price(`ptr`: Pointer,`epoch`: RustBuffer.ByValue,
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(`ptr`: Pointer,`query`: RustBuffer.ByValue,
+): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(`ptr`: Pointer,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_rpc_server(`ptr`: Pointer,`server`: RustBuffer.ByValue,
@@ -4465,6 +4475,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(`id`: Pointer,uniff
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(`string`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5757,6 +5769,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query() != 54586.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7002,6 +7017,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string() != 60971.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 39528.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7152,7 +7170,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin() != 37848.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() != 20682.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() != 61625.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota() != 30839.toShort()) {
@@ -18793,6 +18811,11 @@ public interface GraphQlClientInterface {
     suspend fun `referenceGasPrice`(`epoch`: kotlin.ULong? = null): kotlin.ULong?
     
     /**
+     * Run a query.
+     */
+    suspend fun `runQuery`(`query`: Query): Value
+    
+    /**
      * Get the GraphQL service configuration, including complexity limits, read
      * and mutation limits, supported versions, and others.
      */
@@ -19832,6 +19855,30 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Run a query.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `runQuery`(`query`: Query) : Value {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(
+                thisPtr,
+                FfiConverterTypeQuery.lower(`query`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeValue.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -27207,6 +27254,16 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
+         fun `string`(`string`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(
+        FfiConverterString.lower(`string`),_status)
+}
+    )
+    }
+    
+
          fun `u128`(`bytes`: kotlin.ByteArray): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
@@ -34330,7 +34387,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`address`: Address, `module`: Identifier, `name`: Identifier, `typeParams`: List<TypeTag>) :
+    constructor(`address`: Address, `module`: Identifier, `name`: Identifier, `typeParams`: List<TypeTag> = listOf()) :
         this(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new(
@@ -42863,20 +42920,142 @@ public object FfiConverterTypeCoinPage: FfiConverterRustBuffer<CoinPage> {
 
 
 /**
- * The result of a dry run, which includes the effects of the transaction and
- * any errors that may have occurred.
+ * Effects of a single command in the dry run, including mutated references
+ * and return values.
  */
-data class DryRunResult (
-    var `effects`: TransactionEffects?, 
-    var `error`: kotlin.String?
+data class DryRunEffect (
+    /**
+     * Changes made to arguments that were mutably borrowed by this command.
+     */
+    var `mutatedReferences`: List<DryRunMutation>, 
+    /**
+     * Return results of this command.
+     */
+    var `returnValues`: List<DryRunReturn>
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
     override fun destroy() {
         
     Disposable.destroy(
-        this.`effects`,
-        this.`error`
+        this.`mutatedReferences`,
+        this.`returnValues`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDryRunEffect: FfiConverterRustBuffer<DryRunEffect> {
+    override fun read(buf: ByteBuffer): DryRunEffect {
+        return DryRunEffect(
+            FfiConverterSequenceTypeDryRunMutation.read(buf),
+            FfiConverterSequenceTypeDryRunReturn.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DryRunEffect) = (
+            FfiConverterSequenceTypeDryRunMutation.allocationSize(value.`mutatedReferences`) +
+            FfiConverterSequenceTypeDryRunReturn.allocationSize(value.`returnValues`)
+    )
+
+    override fun write(value: DryRunEffect, buf: ByteBuffer) {
+            FfiConverterSequenceTypeDryRunMutation.write(value.`mutatedReferences`, buf)
+            FfiConverterSequenceTypeDryRunReturn.write(value.`returnValues`, buf)
+    }
+}
+
+
+
+/**
+ * A mutation to an argument that was mutably borrowed by a command.
+ */
+data class DryRunMutation (
+    /**
+     * The transaction argument that was mutated.
+     */
+    var `input`: TransactionArgument, 
+    /**
+     * The Move type of the mutated value.
+     */
+    var `typeTag`: TypeTag, 
+    /**
+     * The BCS representation of the mutated value.
+     */
+    var `bcs`: kotlin.ByteArray
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`input`,
+        this.`typeTag`,
+        this.`bcs`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDryRunMutation: FfiConverterRustBuffer<DryRunMutation> {
+    override fun read(buf: ByteBuffer): DryRunMutation {
+        return DryRunMutation(
+            FfiConverterTypeTransactionArgument.read(buf),
+            FfiConverterTypeTypeTag.read(buf),
+            FfiConverterByteArray.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DryRunMutation) = (
+            FfiConverterTypeTransactionArgument.allocationSize(value.`input`) +
+            FfiConverterTypeTypeTag.allocationSize(value.`typeTag`) +
+            FfiConverterByteArray.allocationSize(value.`bcs`)
+    )
+
+    override fun write(value: DryRunMutation, buf: ByteBuffer) {
+            FfiConverterTypeTransactionArgument.write(value.`input`, buf)
+            FfiConverterTypeTypeTag.write(value.`typeTag`, buf)
+            FfiConverterByteArray.write(value.`bcs`, buf)
+    }
+}
+
+
+
+/**
+ * The result of a simulation (dry run), which includes the effects of the
+ * transaction, any errors that may have occurred, and intermediate results for
+ * each command.
+ */
+data class DryRunResult (
+    /**
+     * The error that occurred during dry run execution, if any.
+     */
+    var `error`: kotlin.String?, 
+    /**
+     * The intermediate results for each command of the dry run execution,
+     * including contents of mutated references and return values.
+     */
+    var `results`: List<DryRunEffect>, 
+    /**
+     * The transaction block representing the dry run execution.
+     */
+    var `transaction`: SignedTransaction?
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`error`,
+        this.`results`,
+        this.`transaction`
     )
     }
     
@@ -42889,19 +43068,72 @@ data class DryRunResult (
 public object FfiConverterTypeDryRunResult: FfiConverterRustBuffer<DryRunResult> {
     override fun read(buf: ByteBuffer): DryRunResult {
         return DryRunResult(
-            FfiConverterOptionalTypeTransactionEffects.read(buf),
             FfiConverterOptionalString.read(buf),
+            FfiConverterSequenceTypeDryRunEffect.read(buf),
+            FfiConverterOptionalTypeSignedTransaction.read(buf),
         )
     }
 
     override fun allocationSize(value: DryRunResult) = (
-            FfiConverterOptionalTypeTransactionEffects.allocationSize(value.`effects`) +
-            FfiConverterOptionalString.allocationSize(value.`error`)
+            FfiConverterOptionalString.allocationSize(value.`error`) +
+            FfiConverterSequenceTypeDryRunEffect.allocationSize(value.`results`) +
+            FfiConverterOptionalTypeSignedTransaction.allocationSize(value.`transaction`)
     )
 
     override fun write(value: DryRunResult, buf: ByteBuffer) {
-            FfiConverterOptionalTypeTransactionEffects.write(value.`effects`, buf)
             FfiConverterOptionalString.write(value.`error`, buf)
+            FfiConverterSequenceTypeDryRunEffect.write(value.`results`, buf)
+            FfiConverterOptionalTypeSignedTransaction.write(value.`transaction`, buf)
+    }
+}
+
+
+
+/**
+ * A return value from a command in the dry run.
+ */
+data class DryRunReturn (
+    /**
+     * The Move type of the return value.
+     */
+    var `typeTag`: TypeTag, 
+    /**
+     * The BCS representation of the return value.
+     */
+    var `bcs`: kotlin.ByteArray
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`typeTag`,
+        this.`bcs`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDryRunReturn: FfiConverterRustBuffer<DryRunReturn> {
+    override fun read(buf: ByteBuffer): DryRunReturn {
+        return DryRunReturn(
+            FfiConverterTypeTypeTag.read(buf),
+            FfiConverterByteArray.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DryRunReturn) = (
+            FfiConverterTypeTypeTag.allocationSize(value.`typeTag`) +
+            FfiConverterByteArray.allocationSize(value.`bcs`)
+    )
+
+    override fun write(value: DryRunReturn, buf: ByteBuffer) {
+            FfiConverterTypeTypeTag.write(value.`typeTag`, buf)
+            FfiConverterByteArray.write(value.`bcs`, buf)
     }
 }
 
@@ -45158,6 +45390,38 @@ public object FfiConverterTypeProtocolConfigs: FfiConverterRustBuffer<ProtocolCo
             FfiConverterULong.write(value.`protocolVersion`, buf)
             FfiConverterSequenceTypeProtocolConfigFeatureFlag.write(value.`featureFlags`, buf)
             FfiConverterSequenceTypeProtocolConfigAttr.write(value.`configs`, buf)
+    }
+}
+
+
+
+data class Query (
+    var `query`: kotlin.String, 
+    var `variables`: Value? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeQuery: FfiConverterRustBuffer<Query> {
+    override fun read(buf: ByteBuffer): Query {
+        return Query(
+            FfiConverterString.read(buf),
+            FfiConverterOptionalTypeValue.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: Query) = (
+            FfiConverterString.allocationSize(value.`query`) +
+            FfiConverterOptionalTypeValue.allocationSize(value.`variables`)
+    )
+
+    override fun write(value: Query, buf: ByteBuffer) {
+            FfiConverterString.write(value.`query`, buf)
+            FfiConverterOptionalTypeValue.write(value.`variables`, buf)
     }
 }
 
@@ -49009,6 +49273,118 @@ public object FfiConverterTypeSignatureScheme: FfiConverterRustBuffer<SignatureS
 
 
 
+/**
+ * A transaction argument used in programmable transactions.
+ */
+sealed class TransactionArgument {
+    
+    /**
+     * Reference to the gas coin.
+     */
+    object GasCoin : TransactionArgument()
+    
+    
+    /**
+     * An input to the programmable transaction block.
+     */
+    data class Input(
+        /**
+         * Index of the programmable transaction block input (0-indexed).
+         */
+        val `ix`: kotlin.UInt) : TransactionArgument() {
+        companion object
+    }
+    
+    /**
+     * The result of another transaction command.
+     */
+    data class Result(
+        /**
+         * The index of the previous command (0-indexed) that returned this
+         * result.
+         */
+        val `cmd`: kotlin.UInt, 
+        /**
+         * If the previous command returns multiple values, this is the index
+         * of the individual result among the multiple results from
+         * that command (also 0-indexed).
+         */
+        val `ix`: kotlin.UInt?) : TransactionArgument() {
+        companion object
+    }
+    
+
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTransactionArgument : FfiConverterRustBuffer<TransactionArgument>{
+    override fun read(buf: ByteBuffer): TransactionArgument {
+        return when(buf.getInt()) {
+            1 -> TransactionArgument.GasCoin
+            2 -> TransactionArgument.Input(
+                FfiConverterUInt.read(buf),
+                )
+            3 -> TransactionArgument.Result(
+                FfiConverterUInt.read(buf),
+                FfiConverterOptionalUInt.read(buf),
+                )
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: TransactionArgument) = when(value) {
+        is TransactionArgument.GasCoin -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is TransactionArgument.Input -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUInt.allocationSize(value.`ix`)
+            )
+        }
+        is TransactionArgument.Result -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUInt.allocationSize(value.`cmd`)
+                + FfiConverterOptionalUInt.allocationSize(value.`ix`)
+            )
+        }
+    }
+
+    override fun write(value: TransactionArgument, buf: ByteBuffer) {
+        when(value) {
+            is TransactionArgument.GasCoin -> {
+                buf.putInt(1)
+                Unit
+            }
+            is TransactionArgument.Input -> {
+                buf.putInt(2)
+                FfiConverterUInt.write(value.`ix`, buf)
+                Unit
+            }
+            is TransactionArgument.Result -> {
+                buf.putInt(3)
+                FfiConverterUInt.write(value.`cmd`, buf)
+                FfiConverterOptionalUInt.write(value.`ix`, buf)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
 
 enum class TransactionBlockKindInput {
     
@@ -52471,6 +52847,90 @@ public object FfiConverterSequenceTypeCoinInfo: FfiConverterRustBuffer<List<Coin
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeCoinInfo.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeDryRunEffect: FfiConverterRustBuffer<List<DryRunEffect>> {
+    override fun read(buf: ByteBuffer): List<DryRunEffect> {
+        val len = buf.getInt()
+        return List<DryRunEffect>(len) {
+            FfiConverterTypeDryRunEffect.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<DryRunEffect>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeDryRunEffect.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<DryRunEffect>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeDryRunEffect.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeDryRunMutation: FfiConverterRustBuffer<List<DryRunMutation>> {
+    override fun read(buf: ByteBuffer): List<DryRunMutation> {
+        val len = buf.getInt()
+        return List<DryRunMutation>(len) {
+            FfiConverterTypeDryRunMutation.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<DryRunMutation>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeDryRunMutation.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<DryRunMutation>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeDryRunMutation.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeDryRunReturn: FfiConverterRustBuffer<List<DryRunReturn>> {
+    override fun read(buf: ByteBuffer): List<DryRunReturn> {
+        val len = buf.getInt()
+        return List<DryRunReturn>(len) {
+            FfiConverterTypeDryRunReturn.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<DryRunReturn>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeDryRunReturn.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<DryRunReturn>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeDryRunReturn.write(it, buf)
         }
     }
 }

@@ -1539,6 +1539,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query()
+	})
+	if checksum != 54586 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config()
 	})
 	if checksum != 11931 {
@@ -5274,6 +5283,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string()
+	})
+	if checksum != 60971 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128()
 	})
 	if checksum != 39528 {
@@ -5726,7 +5744,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new()
 	})
-	if checksum != 20682 {
+	if checksum != 61625 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new: UniFFI API checksum mismatch")
 	}
@@ -11322,6 +11340,8 @@ type GraphQlClientInterface interface {
 	// This will return `Ok(None)` if the epoch requested is not available in
 	// the GraphQL service (e.g., due to pruning).
 	ReferenceGasPrice(epoch *uint64) (*uint64, error)
+	// Run a query.
+	RunQuery(query Query) (Value, error)
 	// Get the GraphQL service configuration, including complexity limits, read
 	// and mutation limits, supported versions, and others.
 	ServiceConfig() (ServiceConfig, error)
@@ -12527,6 +12547,38 @@ func (_self *GraphQlClient) ReferenceGasPrice(epoch *uint64) (*uint64, error) {
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price(
 		_pointer,FfiConverterOptionalUint64INSTANCE.Lower(epoch)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Run a query.
+func (_self *GraphQlClient) RunQuery(query Query) (Value, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) Value {
+			return FfiConverterTypeValueINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(
+		_pointer,FfiConverterQueryINSTANCE.Lower(query)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -16087,6 +16139,12 @@ func PtbArgumentReceiving(id *ObjectId) *PtbArgument {
 func PtbArgumentRes(name string) *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
+	}))
+}
+
+func PtbArgumentString(string string) *PtbArgument {
+	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(FfiConverterStringINSTANCE.Lower(string),_uniffiStatus)
 	}))
 }
 
@@ -23563,16 +23621,113 @@ type FfiDestroyerCoinPage struct {}
 func (_ FfiDestroyerCoinPage) Destroy(value CoinPage) {
 	value.Destroy()
 }
-// The result of a dry run, which includes the effects of the transaction and
-// any errors that may have occurred.
+// Effects of a single command in the dry run, including mutated references
+// and return values.
+type DryRunEffect struct {
+	// Changes made to arguments that were mutably borrowed by this command.
+	MutatedReferences []DryRunMutation
+	// Return results of this command.
+	ReturnValues []DryRunReturn
+}
+
+func (r *DryRunEffect) Destroy() {
+		FfiDestroyerSequenceDryRunMutation{}.Destroy(r.MutatedReferences);
+		FfiDestroyerSequenceDryRunReturn{}.Destroy(r.ReturnValues);
+}
+
+type FfiConverterDryRunEffect struct {}
+
+var FfiConverterDryRunEffectINSTANCE = FfiConverterDryRunEffect{}
+
+func (c FfiConverterDryRunEffect) Lift(rb RustBufferI) DryRunEffect {
+	return LiftFromRustBuffer[DryRunEffect](c, rb)
+}
+
+func (c FfiConverterDryRunEffect) Read(reader io.Reader) DryRunEffect {
+	return DryRunEffect {
+			FfiConverterSequenceDryRunMutationINSTANCE.Read(reader),
+			FfiConverterSequenceDryRunReturnINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterDryRunEffect) Lower(value DryRunEffect) C.RustBuffer {
+	return LowerIntoRustBuffer[DryRunEffect](c, value)
+}
+
+func (c FfiConverterDryRunEffect) Write(writer io.Writer, value DryRunEffect) {
+		FfiConverterSequenceDryRunMutationINSTANCE.Write(writer, value.MutatedReferences);
+		FfiConverterSequenceDryRunReturnINSTANCE.Write(writer, value.ReturnValues);
+}
+
+type FfiDestroyerDryRunEffect struct {}
+
+func (_ FfiDestroyerDryRunEffect) Destroy(value DryRunEffect) {
+	value.Destroy()
+}
+// A mutation to an argument that was mutably borrowed by a command.
+type DryRunMutation struct {
+	// The transaction argument that was mutated.
+	Input TransactionArgument
+	// The Move type of the mutated value.
+	TypeTag *TypeTag
+	// The BCS representation of the mutated value.
+	Bcs []byte
+}
+
+func (r *DryRunMutation) Destroy() {
+		FfiDestroyerTransactionArgument{}.Destroy(r.Input);
+		FfiDestroyerTypeTag{}.Destroy(r.TypeTag);
+		FfiDestroyerBytes{}.Destroy(r.Bcs);
+}
+
+type FfiConverterDryRunMutation struct {}
+
+var FfiConverterDryRunMutationINSTANCE = FfiConverterDryRunMutation{}
+
+func (c FfiConverterDryRunMutation) Lift(rb RustBufferI) DryRunMutation {
+	return LiftFromRustBuffer[DryRunMutation](c, rb)
+}
+
+func (c FfiConverterDryRunMutation) Read(reader io.Reader) DryRunMutation {
+	return DryRunMutation {
+			FfiConverterTransactionArgumentINSTANCE.Read(reader),
+			FfiConverterTypeTagINSTANCE.Read(reader),
+			FfiConverterBytesINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterDryRunMutation) Lower(value DryRunMutation) C.RustBuffer {
+	return LowerIntoRustBuffer[DryRunMutation](c, value)
+}
+
+func (c FfiConverterDryRunMutation) Write(writer io.Writer, value DryRunMutation) {
+		FfiConverterTransactionArgumentINSTANCE.Write(writer, value.Input);
+		FfiConverterTypeTagINSTANCE.Write(writer, value.TypeTag);
+		FfiConverterBytesINSTANCE.Write(writer, value.Bcs);
+}
+
+type FfiDestroyerDryRunMutation struct {}
+
+func (_ FfiDestroyerDryRunMutation) Destroy(value DryRunMutation) {
+	value.Destroy()
+}
+// The result of a simulation (dry run), which includes the effects of the
+// transaction, any errors that may have occurred, and intermediate results for
+// each command.
 type DryRunResult struct {
-	Effects **TransactionEffects
+	// The error that occurred during dry run execution, if any.
 	Error *string
+	// The intermediate results for each command of the dry run execution,
+	// including contents of mutated references and return values.
+	Results []DryRunEffect
+	// The transaction block representing the dry run execution.
+	Transaction *SignedTransaction
 }
 
 func (r *DryRunResult) Destroy() {
-		FfiDestroyerOptionalTransactionEffects{}.Destroy(r.Effects);
 		FfiDestroyerOptionalString{}.Destroy(r.Error);
+		FfiDestroyerSequenceDryRunEffect{}.Destroy(r.Results);
+		FfiDestroyerOptionalSignedTransaction{}.Destroy(r.Transaction);
 }
 
 type FfiConverterDryRunResult struct {}
@@ -23585,8 +23740,9 @@ func (c FfiConverterDryRunResult) Lift(rb RustBufferI) DryRunResult {
 
 func (c FfiConverterDryRunResult) Read(reader io.Reader) DryRunResult {
 	return DryRunResult {
-			FfiConverterOptionalTransactionEffectsINSTANCE.Read(reader),
 			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterSequenceDryRunEffectINSTANCE.Read(reader),
+			FfiConverterOptionalSignedTransactionINSTANCE.Read(reader),
 	}
 }
 
@@ -23595,13 +23751,56 @@ func (c FfiConverterDryRunResult) Lower(value DryRunResult) C.RustBuffer {
 }
 
 func (c FfiConverterDryRunResult) Write(writer io.Writer, value DryRunResult) {
-		FfiConverterOptionalTransactionEffectsINSTANCE.Write(writer, value.Effects);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.Error);
+		FfiConverterSequenceDryRunEffectINSTANCE.Write(writer, value.Results);
+		FfiConverterOptionalSignedTransactionINSTANCE.Write(writer, value.Transaction);
 }
 
 type FfiDestroyerDryRunResult struct {}
 
 func (_ FfiDestroyerDryRunResult) Destroy(value DryRunResult) {
+	value.Destroy()
+}
+// A return value from a command in the dry run.
+type DryRunReturn struct {
+	// The Move type of the return value.
+	TypeTag *TypeTag
+	// The BCS representation of the return value.
+	Bcs []byte
+}
+
+func (r *DryRunReturn) Destroy() {
+		FfiDestroyerTypeTag{}.Destroy(r.TypeTag);
+		FfiDestroyerBytes{}.Destroy(r.Bcs);
+}
+
+type FfiConverterDryRunReturn struct {}
+
+var FfiConverterDryRunReturnINSTANCE = FfiConverterDryRunReturn{}
+
+func (c FfiConverterDryRunReturn) Lift(rb RustBufferI) DryRunReturn {
+	return LiftFromRustBuffer[DryRunReturn](c, rb)
+}
+
+func (c FfiConverterDryRunReturn) Read(reader io.Reader) DryRunReturn {
+	return DryRunReturn {
+			FfiConverterTypeTagINSTANCE.Read(reader),
+			FfiConverterBytesINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterDryRunReturn) Lower(value DryRunReturn) C.RustBuffer {
+	return LowerIntoRustBuffer[DryRunReturn](c, value)
+}
+
+func (c FfiConverterDryRunReturn) Write(writer io.Writer, value DryRunReturn) {
+		FfiConverterTypeTagINSTANCE.Write(writer, value.TypeTag);
+		FfiConverterBytesINSTANCE.Write(writer, value.Bcs);
+}
+
+type FfiDestroyerDryRunReturn struct {}
+
+func (_ FfiDestroyerDryRunReturn) Destroy(value DryRunReturn) {
 	value.Destroy()
 }
 // The name part of a dynamic field, including its type, bcs, and json
@@ -25712,6 +25911,45 @@ func (c FfiConverterProtocolConfigs) Write(writer io.Writer, value ProtocolConfi
 type FfiDestroyerProtocolConfigs struct {}
 
 func (_ FfiDestroyerProtocolConfigs) Destroy(value ProtocolConfigs) {
+	value.Destroy()
+}
+type Query struct {
+	Query string
+	Variables *Value
+}
+
+func (r *Query) Destroy() {
+		FfiDestroyerString{}.Destroy(r.Query);
+		FfiDestroyerOptionalTypeValue{}.Destroy(r.Variables);
+}
+
+type FfiConverterQuery struct {}
+
+var FfiConverterQueryINSTANCE = FfiConverterQuery{}
+
+func (c FfiConverterQuery) Lift(rb RustBufferI) Query {
+	return LiftFromRustBuffer[Query](c, rb)
+}
+
+func (c FfiConverterQuery) Read(reader io.Reader) Query {
+	return Query {
+			FfiConverterStringINSTANCE.Read(reader),
+			FfiConverterOptionalTypeValueINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterQuery) Lower(value Query) C.RustBuffer {
+	return LowerIntoRustBuffer[Query](c, value)
+}
+
+func (c FfiConverterQuery) Write(writer io.Writer, value Query) {
+		FfiConverterStringINSTANCE.Write(writer, value.Query);
+		FfiConverterOptionalTypeValueINSTANCE.Write(writer, value.Variables);
+}
+
+type FfiDestroyerQuery struct {}
+
+func (_ FfiDestroyerQuery) Destroy(value Query) {
 	value.Destroy()
 }
 // Randomness update
@@ -28710,6 +28948,90 @@ func (FfiConverterSignatureScheme) Write(writer io.Writer, value SignatureScheme
 type FfiDestroyerSignatureScheme struct {}
 
 func (_ FfiDestroyerSignatureScheme) Destroy(value SignatureScheme) {
+}
+
+
+// A transaction argument used in programmable transactions.
+type TransactionArgument interface {
+	Destroy()
+}
+// Reference to the gas coin.
+type TransactionArgumentGasCoin struct {
+}
+
+func (e TransactionArgumentGasCoin) Destroy() {
+}
+// An input to the programmable transaction block.
+type TransactionArgumentInput struct {
+	Ix uint32
+}
+
+func (e TransactionArgumentInput) Destroy() {
+		FfiDestroyerUint32{}.Destroy(e.Ix);
+}
+// The result of another transaction command.
+type TransactionArgumentResult struct {
+	Cmd uint32
+	Ix *uint32
+}
+
+func (e TransactionArgumentResult) Destroy() {
+		FfiDestroyerUint32{}.Destroy(e.Cmd);
+		FfiDestroyerOptionalUint32{}.Destroy(e.Ix);
+}
+
+type FfiConverterTransactionArgument struct {}
+
+var FfiConverterTransactionArgumentINSTANCE = FfiConverterTransactionArgument{}
+
+func (c FfiConverterTransactionArgument) Lift(rb RustBufferI) TransactionArgument {
+	return LiftFromRustBuffer[TransactionArgument](c, rb)
+}
+
+func (c FfiConverterTransactionArgument) Lower(value TransactionArgument) C.RustBuffer {
+	return LowerIntoRustBuffer[TransactionArgument](c, value)
+}
+func (FfiConverterTransactionArgument) Read(reader io.Reader) TransactionArgument {
+	id := readInt32(reader)
+	switch (id) {
+		case 1:
+			return TransactionArgumentGasCoin{
+			};
+		case 2:
+			return TransactionArgumentInput{
+				FfiConverterUint32INSTANCE.Read(reader),
+			};
+		case 3:
+			return TransactionArgumentResult{
+				FfiConverterUint32INSTANCE.Read(reader),
+				FfiConverterOptionalUint32INSTANCE.Read(reader),
+			};
+		default:
+			panic(fmt.Sprintf("invalid enum value %v in FfiConverterTransactionArgument.Read()", id));
+	}
+}
+
+func (FfiConverterTransactionArgument) Write(writer io.Writer, value TransactionArgument) {
+	switch variant_value := value.(type) {
+		case TransactionArgumentGasCoin:
+			writeInt32(writer, 1)
+		case TransactionArgumentInput:
+			writeInt32(writer, 2)
+			FfiConverterUint32INSTANCE.Write(writer, variant_value.Ix)
+		case TransactionArgumentResult:
+			writeInt32(writer, 3)
+			FfiConverterUint32INSTANCE.Write(writer, variant_value.Cmd)
+			FfiConverterOptionalUint32INSTANCE.Write(writer, variant_value.Ix)
+		default:
+			_ = variant_value
+			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterTransactionArgument.Write", value))
+	}
+}
+
+type FfiDestroyerTransactionArgument struct {}
+
+func (_ FfiDestroyerTransactionArgument) Destroy(value TransactionArgument) {
+	value.Destroy()
 }
 
 
@@ -32945,6 +33267,135 @@ type FfiDestroyerSequenceCoinInfo struct {}
 func (FfiDestroyerSequenceCoinInfo) Destroy(sequence []CoinInfo) {
 	for _, value := range sequence {
 		FfiDestroyerCoinInfo{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceDryRunEffect struct{}
+
+var FfiConverterSequenceDryRunEffectINSTANCE = FfiConverterSequenceDryRunEffect{}
+
+func (c FfiConverterSequenceDryRunEffect) Lift(rb RustBufferI) []DryRunEffect {
+	return LiftFromRustBuffer[[]DryRunEffect](c, rb)
+}
+
+func (c FfiConverterSequenceDryRunEffect) Read(reader io.Reader) []DryRunEffect {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]DryRunEffect, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterDryRunEffectINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceDryRunEffect) Lower(value []DryRunEffect) C.RustBuffer {
+	return LowerIntoRustBuffer[[]DryRunEffect](c, value)
+}
+
+func (c FfiConverterSequenceDryRunEffect) Write(writer io.Writer, value []DryRunEffect) {
+	if len(value) > math.MaxInt32 {
+		panic("[]DryRunEffect is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterDryRunEffectINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceDryRunEffect struct {}
+
+func (FfiDestroyerSequenceDryRunEffect) Destroy(sequence []DryRunEffect) {
+	for _, value := range sequence {
+		FfiDestroyerDryRunEffect{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceDryRunMutation struct{}
+
+var FfiConverterSequenceDryRunMutationINSTANCE = FfiConverterSequenceDryRunMutation{}
+
+func (c FfiConverterSequenceDryRunMutation) Lift(rb RustBufferI) []DryRunMutation {
+	return LiftFromRustBuffer[[]DryRunMutation](c, rb)
+}
+
+func (c FfiConverterSequenceDryRunMutation) Read(reader io.Reader) []DryRunMutation {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]DryRunMutation, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterDryRunMutationINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceDryRunMutation) Lower(value []DryRunMutation) C.RustBuffer {
+	return LowerIntoRustBuffer[[]DryRunMutation](c, value)
+}
+
+func (c FfiConverterSequenceDryRunMutation) Write(writer io.Writer, value []DryRunMutation) {
+	if len(value) > math.MaxInt32 {
+		panic("[]DryRunMutation is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterDryRunMutationINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceDryRunMutation struct {}
+
+func (FfiDestroyerSequenceDryRunMutation) Destroy(sequence []DryRunMutation) {
+	for _, value := range sequence {
+		FfiDestroyerDryRunMutation{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceDryRunReturn struct{}
+
+var FfiConverterSequenceDryRunReturnINSTANCE = FfiConverterSequenceDryRunReturn{}
+
+func (c FfiConverterSequenceDryRunReturn) Lift(rb RustBufferI) []DryRunReturn {
+	return LiftFromRustBuffer[[]DryRunReturn](c, rb)
+}
+
+func (c FfiConverterSequenceDryRunReturn) Read(reader io.Reader) []DryRunReturn {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]DryRunReturn, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterDryRunReturnINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceDryRunReturn) Lower(value []DryRunReturn) C.RustBuffer {
+	return LowerIntoRustBuffer[[]DryRunReturn](c, value)
+}
+
+func (c FfiConverterSequenceDryRunReturn) Write(writer io.Writer, value []DryRunReturn) {
+	if len(value) > math.MaxInt32 {
+		panic("[]DryRunReturn is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterDryRunReturnINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceDryRunReturn struct {}
+
+func (FfiDestroyerSequenceDryRunReturn) Destroy(sequence []DryRunReturn) {
+	for _, value := range sequence {
+		FfiDestroyerDryRunReturn{}.Destroy(value)
 	}
 }
 

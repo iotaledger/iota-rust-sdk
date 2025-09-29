@@ -9,6 +9,12 @@ pub trait MoveType {
     fn type_tag() -> TypeTag;
 }
 
+impl MoveType for String {
+    fn type_tag() -> TypeTag {
+        TypeTag::Vector(Box::new(TypeTag::U8))
+    }
+}
+
 /// A trait which defines multiple types for use with tuples.
 pub trait MoveTypes {
     /// Get the type tags.

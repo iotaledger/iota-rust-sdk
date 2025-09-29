@@ -21,6 +21,7 @@ tokio = { version = "1.0", features = ["full"] }
 variadics_please = "1.1"
 
 [dev-dependencies]
+eyre = "0.6"
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["rand"] }
 rand = "0.8"
 serde_json = "1.0"

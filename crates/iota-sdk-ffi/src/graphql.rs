@@ -1,17 +1,18 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 
 use iota_graphql_client::{
     pagination::PaginationFilter,
-    query_types::{ProtocolConfigs, ServiceConfig},
+    query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
 };
-use iota_types::CheckpointSequenceNumber;
+use iota_types::{CheckpointSequenceNumber, def_is};
 use tokio::sync::RwLock;
+use uniffi::deps::anyhow::anyhow;
 
 use crate::{
-    error::Result,
+    error::{Result, SdkFfiError},
     types::{
         address::Address,
         checkpoint::CheckpointSummary,
@@ -849,6 +850,22 @@ impl GraphQLClient {
             .into())
     }
 
+    /// Run a query.
+    pub async fn run_query(&self, query: Query) -> Result<serde_json::Value> {
+        self.0
+            .read()
+            .await
+            .run_query_from_json(
+                serde_json::to_value(query)?
+                    .as_object()
+                    .ok_or_else(|| SdkFfiError::custom("invalid json; must be a map"))?
+                    .clone(),
+            )
+            .await?
+            .data
+            .ok_or_else(|| SdkFfiError::custom("query yielded no data"))
+    }
+
     // ===========================================================================
     // Balance API
     // ===========================================================================
@@ -864,4 +881,12 @@ impl GraphQLClient {
     ) -> Result<Option<u64>> {
         Ok(self.0.read().await.balance(**address, coin_type).await?)
     }
+}
+
+#[derive(Debug, uniffi::Record, serde::Serialize)]
+pub struct Query {
+    pub query: String,
+    #[uniffi(default = None)]
+    #[serde(default)]
+    pub variables: Option<serde_json::Value>,
 }

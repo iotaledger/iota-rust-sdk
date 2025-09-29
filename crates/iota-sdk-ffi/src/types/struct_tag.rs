@@ -55,7 +55,7 @@ pub struct StructTag(pub iota_types::StructTag);
 
 #[uniffi::export]
 impl StructTag {
-    #[uniffi::constructor]
+    #[uniffi::constructor(default(type_params = []))]
     pub fn new(
         address: &Address,
         module: &Identifier,

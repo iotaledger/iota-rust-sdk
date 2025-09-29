@@ -3,8 +3,8 @@
 
 use std::str::FromStr;
 
-use anyhow::Result;
 use base64ct::Encoding;
+use eyre::Result;
 use iota_graphql_client::Client;
 use iota_transaction_builder::{TransactionBuilder, res};
 use iota_types::{Address, ObjectId};
@@ -19,6 +19,7 @@ async fn main() -> Result<()> {
     let sender =
         Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
 
+    // Recipients and amounts
     let recipients = [
         (
             "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11",
@@ -57,7 +58,7 @@ async fn main() -> Result<()> {
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to send IOTA: {err}");
+        eyre::bail!("Failed to send IOTA: {err}");
     }
 
     println!("Send IOTA dry run was successful!");

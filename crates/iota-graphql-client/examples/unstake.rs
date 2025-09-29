@@ -3,7 +3,7 @@
 
 use std::str::FromStr;
 
-use anyhow::{Context, Result};
+use eyre::{OptionExt, Result};
 use iota_graphql_client::{Client, query_types::ObjectFilter};
 use iota_transaction_builder::{Mut, TransactionBuilder};
 use iota_types::{Address, ObjectId, StructTag};
@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
         .data
         .into_iter()
         .next()
-        .context("no staked iota found")?;
+        .ok_or_eyre("no staked iota found")?;
 
     // Get a valid gas coin
     let gas_coin = client
@@ -40,7 +40,7 @@ async fn main() -> Result<()> {
         .data
         .into_iter()
         .next()
-        .context("no gas coin found")?;
+        .ok_or_eyre("no gas coin found")?;
 
     let mut builder = TransactionBuilder::new(*gas_coin.owner().as_address()).with_client(client);
 
@@ -53,7 +53,7 @@ async fn main() -> Result<()> {
     let res = builder.dry_run(false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to unstake: {err}");
+        eyre::bail!("Failed to unstake: {err}");
     }
 
     println!("Unstake dry run was successful!");

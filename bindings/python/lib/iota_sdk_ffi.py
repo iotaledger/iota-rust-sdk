@@ -723,6 +723,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query() != 54586:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 31958:
@@ -1553,6 +1555,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string() != 60971:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 39528:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16() != 58656:
@@ -1653,7 +1657,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin() != 37848:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() != 20682:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() != 61625:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota() != 30839:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3277,6 +3281,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price.argty
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config.argtypes = (
     ctypes.c_void_p,
 )
@@ -4234,6 +4243,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6914,6 +6928,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config.restype = ctypes.c_uint16
@@ -8159,6 +8176,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128.restype = ctypes.c_uint16
@@ -9417,25 +9437,151 @@ class _UniffiConverterTypeCoinPage(_UniffiConverterRustBuffer):
         _UniffiConverterSequenceTypeCoin.write(value.data, buf)
 
 
-class DryRunResult:
+class DryRunEffect:
     """
-    The result of a dry run, which includes the effects of the transaction and
-    any errors that may have occurred.
+    Effects of a single command in the dry run, including mutated references
+    and return values.
     """
 
-    effects: "typing.Optional[TransactionEffects]"
-    error: "typing.Optional[str]"
-    def __init__(self, *, effects: "typing.Optional[TransactionEffects]", error: "typing.Optional[str]"):
-        self.effects = effects
-        self.error = error
+    mutated_references: "typing.List[DryRunMutation]"
+    """
+    Changes made to arguments that were mutably borrowed by this command.
+    """
+
+    return_values: "typing.List[DryRunReturn]"
+    """
+    Return results of this command.
+    """
+
+    def __init__(self, *, mutated_references: "typing.List[DryRunMutation]", return_values: "typing.List[DryRunReturn]"):
+        self.mutated_references = mutated_references
+        self.return_values = return_values
 
     def __str__(self):
-        return "DryRunResult(effects={}, error={})".format(self.effects, self.error)
+        return "DryRunEffect(mutated_references={}, return_values={})".format(self.mutated_references, self.return_values)
 
     def __eq__(self, other):
-        if self.effects != other.effects:
+        if self.mutated_references != other.mutated_references:
             return False
+        if self.return_values != other.return_values:
+            return False
+        return True
+
+class _UniffiConverterTypeDryRunEffect(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return DryRunEffect(
+            mutated_references=_UniffiConverterSequenceTypeDryRunMutation.read(buf),
+            return_values=_UniffiConverterSequenceTypeDryRunReturn.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterSequenceTypeDryRunMutation.check_lower(value.mutated_references)
+        _UniffiConverterSequenceTypeDryRunReturn.check_lower(value.return_values)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterSequenceTypeDryRunMutation.write(value.mutated_references, buf)
+        _UniffiConverterSequenceTypeDryRunReturn.write(value.return_values, buf)
+
+
+class DryRunMutation:
+    """
+    A mutation to an argument that was mutably borrowed by a command.
+    """
+
+    input: "TransactionArgument"
+    """
+    The transaction argument that was mutated.
+    """
+
+    type_tag: "TypeTag"
+    """
+    The Move type of the mutated value.
+    """
+
+    bcs: "bytes"
+    """
+    The BCS representation of the mutated value.
+    """
+
+    def __init__(self, *, input: "TransactionArgument", type_tag: "TypeTag", bcs: "bytes"):
+        self.input = input
+        self.type_tag = type_tag
+        self.bcs = bcs
+
+    def __str__(self):
+        return "DryRunMutation(input={}, type_tag={}, bcs={})".format(self.input, self.type_tag, self.bcs)
+
+    def __eq__(self, other):
+        if self.input != other.input:
+            return False
+        if self.type_tag != other.type_tag:
+            return False
+        if self.bcs != other.bcs:
+            return False
+        return True
+
+class _UniffiConverterTypeDryRunMutation(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return DryRunMutation(
+            input=_UniffiConverterTypeTransactionArgument.read(buf),
+            type_tag=_UniffiConverterTypeTypeTag.read(buf),
+            bcs=_UniffiConverterBytes.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeTransactionArgument.check_lower(value.input)
+        _UniffiConverterTypeTypeTag.check_lower(value.type_tag)
+        _UniffiConverterBytes.check_lower(value.bcs)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeTransactionArgument.write(value.input, buf)
+        _UniffiConverterTypeTypeTag.write(value.type_tag, buf)
+        _UniffiConverterBytes.write(value.bcs, buf)
+
+
+class DryRunResult:
+    """
+    The result of a simulation (dry run), which includes the effects of the
+    transaction, any errors that may have occurred, and intermediate results for
+    each command.
+    """
+
+    error: "typing.Optional[str]"
+    """
+    The error that occurred during dry run execution, if any.
+    """
+
+    results: "typing.List[DryRunEffect]"
+    """
+    The intermediate results for each command of the dry run execution,
+    including contents of mutated references and return values.
+    """
+
+    transaction: "typing.Optional[SignedTransaction]"
+    """
+    The transaction block representing the dry run execution.
+    """
+
+    def __init__(self, *, error: "typing.Optional[str]", results: "typing.List[DryRunEffect]", transaction: "typing.Optional[SignedTransaction]"):
+        self.error = error
+        self.results = results
+        self.transaction = transaction
+
+    def __str__(self):
+        return "DryRunResult(error={}, results={}, transaction={})".format(self.error, self.results, self.transaction)
+
+    def __eq__(self, other):
         if self.error != other.error:
+            return False
+        if self.results != other.results:
+            return False
+        if self.transaction != other.transaction:
             return False
         return True
 
@@ -9443,19 +9589,70 @@ class _UniffiConverterTypeDryRunResult(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return DryRunResult(
-            effects=_UniffiConverterOptionalTypeTransactionEffects.read(buf),
             error=_UniffiConverterOptionalString.read(buf),
+            results=_UniffiConverterSequenceTypeDryRunEffect.read(buf),
+            transaction=_UniffiConverterOptionalTypeSignedTransaction.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterOptionalTypeTransactionEffects.check_lower(value.effects)
         _UniffiConverterOptionalString.check_lower(value.error)
+        _UniffiConverterSequenceTypeDryRunEffect.check_lower(value.results)
+        _UniffiConverterOptionalTypeSignedTransaction.check_lower(value.transaction)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterOptionalTypeTransactionEffects.write(value.effects, buf)
         _UniffiConverterOptionalString.write(value.error, buf)
+        _UniffiConverterSequenceTypeDryRunEffect.write(value.results, buf)
+        _UniffiConverterOptionalTypeSignedTransaction.write(value.transaction, buf)
+
+
+class DryRunReturn:
+    """
+    A return value from a command in the dry run.
+    """
+
+    type_tag: "TypeTag"
+    """
+    The Move type of the return value.
+    """
+
+    bcs: "bytes"
+    """
+    The BCS representation of the return value.
+    """
+
+    def __init__(self, *, type_tag: "TypeTag", bcs: "bytes"):
+        self.type_tag = type_tag
+        self.bcs = bcs
+
+    def __str__(self):
+        return "DryRunReturn(type_tag={}, bcs={})".format(self.type_tag, self.bcs)
+
+    def __eq__(self, other):
+        if self.type_tag != other.type_tag:
+            return False
+        if self.bcs != other.bcs:
+            return False
+        return True
+
+class _UniffiConverterTypeDryRunReturn(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return DryRunReturn(
+            type_tag=_UniffiConverterTypeTypeTag.read(buf),
+            bcs=_UniffiConverterBytes.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeTypeTag.check_lower(value.type_tag)
+        _UniffiConverterBytes.check_lower(value.bcs)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeTypeTag.write(value.type_tag, buf)
+        _UniffiConverterBytes.write(value.bcs, buf)
 
 
 class DynamicFieldName:
@@ -11980,6 +12177,45 @@ class _UniffiConverterTypeProtocolConfigs(_UniffiConverterRustBuffer):
         _UniffiConverterUInt64.write(value.protocol_version, buf)
         _UniffiConverterSequenceTypeProtocolConfigFeatureFlag.write(value.feature_flags, buf)
         _UniffiConverterSequenceTypeProtocolConfigAttr.write(value.configs, buf)
+
+
+class Query:
+    query: "str"
+    variables: "typing.Optional[Value]"
+    def __init__(self, *, query: "str", variables: "typing.Optional[Value]" = _DEFAULT):
+        self.query = query
+        if variables is _DEFAULT:
+            self.variables = None
+        else:
+            self.variables = variables
+
+    def __str__(self):
+        return "Query(query={}, variables={})".format(self.query, self.variables)
+
+    def __eq__(self, other):
+        if self.query != other.query:
+            return False
+        if self.variables != other.variables:
+            return False
+        return True
+
+class _UniffiConverterTypeQuery(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return Query(
+            query=_UniffiConverterString.read(buf),
+            variables=_UniffiConverterOptionalTypeValue.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterString.check_lower(value.query)
+        _UniffiConverterOptionalTypeValue.check_lower(value.variables)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterString.write(value.query, buf)
+        _UniffiConverterOptionalTypeValue.write(value.variables, buf)
 
 
 class RandomnessStateUpdate:
@@ -16925,6 +17161,168 @@ class _UniffiConverterTypeSignatureScheme(_UniffiConverterRustBuffer):
 
 
 
+class TransactionArgument:
+    """
+    A transaction argument used in programmable transactions.
+    """
+
+    def __init__(self):
+        raise RuntimeError("TransactionArgument cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class GAS_COIN:
+        """
+        Reference to the gas coin.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "TransactionArgument.GAS_COIN()".format()
+
+        def __eq__(self, other):
+            if not other.is_GAS_COIN():
+                return False
+            return True
+    
+    class INPUT:
+        """
+        An input to the programmable transaction block.
+        """
+
+        ix: "int"
+        """
+        Index of the programmable transaction block input (0-indexed).
+        """
+
+
+        def __init__(self,ix: "int"):
+            self.ix = ix
+
+        def __str__(self):
+            return "TransactionArgument.INPUT(ix={})".format(self.ix)
+
+        def __eq__(self, other):
+            if not other.is_INPUT():
+                return False
+            if self.ix != other.ix:
+                return False
+            return True
+    
+    class RESULT:
+        """
+        The result of another transaction command.
+        """
+
+        cmd: "int"
+        """
+        The index of the previous command (0-indexed) that returned this
+        result.
+        """
+
+        ix: "typing.Optional[int]"
+        """
+        If the previous command returns multiple values, this is the index
+        of the individual result among the multiple results from
+        that command (also 0-indexed).
+        """
+
+
+        def __init__(self,cmd: "int", ix: "typing.Optional[int]"):
+            self.cmd = cmd
+            self.ix = ix
+
+        def __str__(self):
+            return "TransactionArgument.RESULT(cmd={}, ix={})".format(self.cmd, self.ix)
+
+        def __eq__(self, other):
+            if not other.is_RESULT():
+                return False
+            if self.cmd != other.cmd:
+                return False
+            if self.ix != other.ix:
+                return False
+            return True
+    
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_GAS_COIN(self) -> bool:
+        return isinstance(self, TransactionArgument.GAS_COIN)
+    def is_gas_coin(self) -> bool:
+        return isinstance(self, TransactionArgument.GAS_COIN)
+    def is_INPUT(self) -> bool:
+        return isinstance(self, TransactionArgument.INPUT)
+    def is_input(self) -> bool:
+        return isinstance(self, TransactionArgument.INPUT)
+    def is_RESULT(self) -> bool:
+        return isinstance(self, TransactionArgument.RESULT)
+    def is_result(self) -> bool:
+        return isinstance(self, TransactionArgument.RESULT)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+TransactionArgument.GAS_COIN = type("TransactionArgument.GAS_COIN", (TransactionArgument.GAS_COIN, TransactionArgument,), {})  # type: ignore
+TransactionArgument.INPUT = type("TransactionArgument.INPUT", (TransactionArgument.INPUT, TransactionArgument,), {})  # type: ignore
+TransactionArgument.RESULT = type("TransactionArgument.RESULT", (TransactionArgument.RESULT, TransactionArgument,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeTransactionArgument(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return TransactionArgument.GAS_COIN(
+            )
+        if variant == 2:
+            return TransactionArgument.INPUT(
+                _UniffiConverterUInt32.read(buf),
+            )
+        if variant == 3:
+            return TransactionArgument.RESULT(
+                _UniffiConverterUInt32.read(buf),
+                _UniffiConverterOptionalUInt32.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_GAS_COIN():
+            return
+        if value.is_INPUT():
+            _UniffiConverterUInt32.check_lower(value.ix)
+            return
+        if value.is_RESULT():
+            _UniffiConverterUInt32.check_lower(value.cmd)
+            _UniffiConverterOptionalUInt32.check_lower(value.ix)
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_GAS_COIN():
+            buf.write_i32(1)
+        if value.is_INPUT():
+            buf.write_i32(2)
+            _UniffiConverterUInt32.write(value.ix, buf)
+        if value.is_RESULT():
+            buf.write_i32(3)
+            _UniffiConverterUInt32.write(value.cmd, buf)
+            _UniffiConverterOptionalUInt32.write(value.ix, buf)
+
+
+
+
+
+
+
 class TransactionBlockKindInput(enum.Enum):
     SYSTEM_TX = 0
     
@@ -20070,6 +20468,81 @@ class _UniffiConverterSequenceTypeCoinInfo(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeCoinInfo.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeDryRunEffect(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeDryRunEffect.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeDryRunEffect.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeDryRunEffect.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeDryRunMutation(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeDryRunMutation.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeDryRunMutation.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeDryRunMutation.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeDryRunReturn(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeDryRunReturn.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeDryRunReturn.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeDryRunReturn.read(buf) for i in range(count)
         ]
 
 
@@ -26096,6 +26569,12 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def run_query(self, query: "Query"):
+        """
+        Run a query.
+        """
+
+        raise NotImplementedError
     def service_config(self, ):
         """
         Get the GraphQL service configuration, including complexity limits, read
@@ -27323,6 +27802,31 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
             _UniffiConverterOptionalUInt64.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def run_query(self, query: "Query") -> "Value":
+        """
+        Run a query.
+        """
+
+        _UniffiConverterTypeQuery.check_lower(query)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeQuery.lower(query)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeValue.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -31773,6 +32277,15 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def string(cls, string: "str"):
+        _UniffiConverterString.check_lower(string)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string,
+        _UniffiConverterString.lower(string))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def u128(cls, bytes: "bytes"):
         _UniffiConverterBytes.check_lower(bytes)
         
@@ -34403,13 +34916,15 @@ class StructTag():
     """
 
     _pointer: ctypes.c_void_p
-    def __init__(self, address: "Address",module: "Identifier",name: "Identifier",type_params: "typing.List[TypeTag]"):
+    def __init__(self, address: "Address",module: "Identifier",name: "Identifier",type_params: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT):
         _UniffiConverterTypeAddress.check_lower(address)
         
         _UniffiConverterTypeIdentifier.check_lower(module)
         
         _UniffiConverterTypeIdentifier.check_lower(name)
         
+        if type_params is _DEFAULT:
+            type_params = []
         _UniffiConverterSequenceTypeTypeTag.check_lower(type_params)
         
         self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new,
@@ -38632,6 +39147,7 @@ __all__ = [
     "PackageUpgradeError",
     "SdkFfiError",
     "SignatureScheme",
+    "TransactionArgument",
     "TransactionBlockKindInput",
     "TransactionExpiration",
     "TypeArgumentError",
@@ -38645,7 +39161,10 @@ __all__ = [
     "CoinInfo",
     "CoinMetadata",
     "CoinPage",
+    "DryRunEffect",
+    "DryRunMutation",
     "DryRunResult",
+    "DryRunReturn",
     "DynamicFieldName",
     "DynamicFieldOutput",
     "DynamicFieldOutputPage",
@@ -38689,6 +39208,7 @@ __all__ = [
     "ProtocolConfigAttr",
     "ProtocolConfigFeatureFlag",
     "ProtocolConfigs",
+    "Query",
     "RandomnessStateUpdate",
     "ServiceConfig",
     "SignedTransaction",
