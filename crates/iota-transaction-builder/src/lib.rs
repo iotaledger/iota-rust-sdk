@@ -23,7 +23,7 @@ pub use self::{
 
 #[cfg(test)]
 mod tests {
-    use anyhow::Context;
+    use eyre::Context;
     use iota_crypto::ed25519::Ed25519PrivateKey;
     use iota_graphql_client::{
         Client,

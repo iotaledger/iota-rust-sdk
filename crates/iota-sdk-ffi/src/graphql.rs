@@ -9,7 +9,6 @@ use iota_graphql_client::{
 };
 use iota_types::{CheckpointSequenceNumber, def_is};
 use tokio::sync::RwLock;
-use uniffi::deps::anyhow::anyhow;
 
 use crate::{
     error::{Result, SdkFfiError},
