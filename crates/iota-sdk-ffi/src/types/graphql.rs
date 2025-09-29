@@ -331,7 +331,7 @@ impl From<DryRunResult> for iota_graphql_client::DryRunResult {
             error: value.error,
             results: value.results.into_iter().map(Into::into).collect(),
             transaction: value.transaction.map(Into::into),
-            effects: value.effects.map(|v| v.0.clone()).map(Into::into),
+            effects: value.effects.map(|v| v.0.clone()),
         }
     }
 }
