@@ -6438,7 +6438,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 38081.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 34068.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710.toShort()) {
@@ -35441,47 +35441,6 @@ public interface TransactionBuilderInterface {
      * To get the ticket, you have to call the
      * `0x2::package::authorize_upgrade` function, and pass the package
      * ID, the upgrade policy, and package digest.
-     *
-     * Examples:
-     * ### Upgrade a package with some pre-known data.
-     *
-     * ```rust,ignore
-     * use iota_graphql_client::Client;
-     * use iota_transaction_builder::TransactionBuilder;
-     *
-     * # let sender = iota_types::Address::generate(rand::thread_rng());
-     * let mut tx =
-     * TransactionBuilder::new(sender).with_client(Client::new_mainnet());
-     * let package_id: ObjectId = "0x...".parse().unwrap();
-     * let upgrade_cap: ObjectId = "0x...".parse().unwrap();
-     * let upgrade_policy = 0u8;
-     *
-     * // the digest of the new package that was compiled
-     * let package_digest: &[u8] = &[
-     * 68, 89, 156, 51, 190, 35, 155, 216, 248, 49, 135, 170, 106, 42,
-     * 190, 4, 208, 59, 155, 89, 74, 63, 70, 95, 207, 78, 227, 22,
-     * 136, 146, 57, 79
-     * ];
-     *
-     * // we need this ticket to authorize the upgrade
-     * tx.move_call(Address::TWO, "package", "authorize_upgrade")
-     * .params((upgrade_cap, upgrade_policy, package_digest))
-     * .name("ticket");
-     *
-     * // now we can upgrade the package
-     * tx.upgrade(
-     * package_id,
-     * Res("ticket"),
-     * updated_package,
-     * "receipt",
-     * );
-     *
-     * // commit the upgrade
-     * tx.move_call(Address::TWO, "package", "commit_upgrade")
-     * .params((upgrade_cap, Res("receipt")));
-     *
-     * let effects = tx.execute(&keys, true).await;
-     * ```
      */
     fun `upgrade`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: PtbArgument, `name`: kotlin.String? = null): TransactionBuilder
     
@@ -35869,47 +35828,6 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      * To get the ticket, you have to call the
      * `0x2::package::authorize_upgrade` function, and pass the package
      * ID, the upgrade policy, and package digest.
-     *
-     * Examples:
-     * ### Upgrade a package with some pre-known data.
-     *
-     * ```rust,ignore
-     * use iota_graphql_client::Client;
-     * use iota_transaction_builder::TransactionBuilder;
-     *
-     * # let sender = iota_types::Address::generate(rand::thread_rng());
-     * let mut tx =
-     * TransactionBuilder::new(sender).with_client(Client::new_mainnet());
-     * let package_id: ObjectId = "0x...".parse().unwrap();
-     * let upgrade_cap: ObjectId = "0x...".parse().unwrap();
-     * let upgrade_policy = 0u8;
-     *
-     * // the digest of the new package that was compiled
-     * let package_digest: &[u8] = &[
-     * 68, 89, 156, 51, 190, 35, 155, 216, 248, 49, 135, 170, 106, 42,
-     * 190, 4, 208, 59, 155, 89, 74, 63, 70, 95, 207, 78, 227, 22,
-     * 136, 146, 57, 79
-     * ];
-     *
-     * // we need this ticket to authorize the upgrade
-     * tx.move_call(Address::TWO, "package", "authorize_upgrade")
-     * .params((upgrade_cap, upgrade_policy, package_digest))
-     * .name("ticket");
-     *
-     * // now we can upgrade the package
-     * tx.upgrade(
-     * package_id,
-     * Res("ticket"),
-     * updated_package,
-     * "receipt",
-     * );
-     *
-     * // commit the upgrade
-     * tx.move_call(Address::TWO, "package", "commit_upgrade")
-     * .params((upgrade_cap, Res("receipt")));
-     *
-     * let effects = tx.execute(&keys, true).await;
-     * ```
      */override fun `upgrade`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: PtbArgument, `name`: kotlin.String?): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
