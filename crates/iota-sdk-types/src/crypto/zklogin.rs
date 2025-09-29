@@ -522,7 +522,7 @@ impl ZkLoginPublicIdentifier {
 
 /// A JSON Web Key
 ///
-/// Struct that contains info for a JWK. A list of them for different kids can
+/// Struct that contains info for a JWK. A list of them for different keys can
 /// be retrieved from the JWK endpoint (e.g. <https://www.googleapis.com/oauth2/v3/certs>).
 /// The JWK is used to verify the JWT token.
 ///
