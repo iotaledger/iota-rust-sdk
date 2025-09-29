@@ -23,7 +23,7 @@ Instantiate a client with [`Client::new(server: &str)`] or use one of the predef
 
 ```rust, no_run
 use iota_graphql_client::Client;
-use anyhow::Result;
+use eyre::Result;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -47,7 +47,7 @@ The client provides an API to request gas from the faucet. The `request_and_wait
 use iota_graphql_client::faucet::FaucetClient;
 use iota_types::Address;
 
-use anyhow::Result;
+use eyre::Result;
 use std::str::FromStr;
 
 #[tokio::main]
@@ -77,7 +77,7 @@ Note that this `FaucetClient` is explicitly designed to work with two endpoints:
 use iota_graphql_client::faucet::FaucetClient;
 use iota_types::Address;
 
-use anyhow::Result;
+use eyre::Result;
 use std::str::FromStr;
 
 #[tokio::main]
@@ -157,7 +157,7 @@ pub struct BigInt(pub String);
 The complete example is shown below:
 
 ```rust, ignore
-use anyhow::Result;
+use eyre::Result;
 use cynic::QueryBuilder;
 
 use iota_graphql_client::{

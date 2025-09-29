@@ -318,6 +318,27 @@ impl Client {
         Ok(res)
     }
 
+    /// Run a JSON query on the GraphQL server and return the response.
+    /// This method expects a JSON map holding the GraphQL query string and
+    /// matching GraphQL variables. It returns a [`cynic::GraphQlResponse`]
+    /// wrapping a [`serde_json::Value`]. In general, it is recommended to use
+    /// [`run_query`](`Self::run_query`) which guarantees valid GraphQL
+    /// query syntax and returns a proper response type.
+    pub async fn run_query_from_json(
+        &self,
+        json: serde_json::Map<String, serde_json::Value>,
+    ) -> Result<GraphQlResponse<serde_json::Value>> {
+        let res = self
+            .inner
+            .post(self.rpc_server().clone())
+            .json(&json)
+            .send()
+            .await?
+            .json::<GraphQlResponse<serde_json::Value>>()
+            .await?;
+        Ok(res)
+    }
+
     // ===========================================================================
     // Balance API
     // ===========================================================================

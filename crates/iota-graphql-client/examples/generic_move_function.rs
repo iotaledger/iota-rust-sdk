@@ -3,7 +3,7 @@
 
 use core::str::FromStr;
 
-use anyhow::{Context, Result};
+use eyre::{OptionExt, Result};
 use iota_graphql_client::Client;
 use iota_transaction_builder::{Function, TransactionBuilder, unresolved::Input};
 use iota_types::{Address, Identifier, TypeTag};
@@ -20,7 +20,7 @@ async fn main() -> Result<()> {
             None,
         )
         .await?
-        .context("missing gas coin")?;
+        .ok_or_eyre("missing gas coin")?;
 
     let mut builder = TransactionBuilder::new();
 
@@ -55,7 +55,7 @@ async fn main() -> Result<()> {
         client
             .reference_gas_price(None)
             .await?
-            .context("missing gas price")?,
+            .ok_or_eyre("missing gas price")?,
     );
     builder.add_gas_objects([Input::from(&gas_coin).with_owned_kind()]);
 
@@ -63,7 +63,7 @@ async fn main() -> Result<()> {
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to call generic Move function: {err}");
+        eyre::bail!("Failed to call generic Move function: {err}");
     }
 
     println!("Successfully called generic Move function!");

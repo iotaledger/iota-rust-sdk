@@ -4,7 +4,7 @@
 
 use std::time::Duration;
 
-use anyhow::{anyhow, bail};
+use eyre::{bail, eyre};
 use iota_types::{Address, Digest, ObjectId};
 use reqwest::{StatusCode, Url};
 use serde::{Deserialize, Serialize};
@@ -95,13 +95,13 @@ impl FaucetClient {
     /// Request gas from the faucet. Note that this will return the UUID of the
     /// request and not wait until the token is received. Use
     /// `request_and_wait` to wait for the token.
-    pub async fn request(&self, address: Address) -> anyhow::Result<Option<String>> {
+    pub async fn request(&self, address: Address) -> eyre::Result<Option<String>> {
         self.request_impl(address).await
     }
 
     /// Internal implementation of a faucet request. It returns the task Uuid as
     /// a String.
-    async fn request_impl(&self, address: Address) -> anyhow::Result<Option<String>> {
+    async fn request_impl(&self, address: Address) -> eyre::Result<Option<String>> {
         let address = address.to_string();
         let json_body = json![{
             "FixedAmountRequest": {
@@ -158,10 +158,7 @@ impl FaucetClient {
     ///
     /// Note that the faucet is heavily rate-limited, so calling repeatedly the
     /// faucet would likely result in a 429 code or 502 code.
-    pub async fn request_and_wait(
-        &self,
-        address: Address,
-    ) -> anyhow::Result<Option<FaucetReceipt>> {
+    pub async fn request_and_wait(&self, address: Address) -> eyre::Result<Option<FaucetReceipt>> {
         let request_id = self.request(address).await?;
         if let Some(request_id) = request_id {
             let poll_response = tokio::time::timeout(FAUCET_REQUEST_TIMEOUT, async {
@@ -189,7 +186,7 @@ impl FaucetClient {
                         }
                     } else if let Some(err) = req.err() {
                         error!("Faucet request {request_id} failed. Error: {:?}", err);
-                        break Err(anyhow!(
+                        break Err(eyre!(
                             "Faucet request {request_id} failed. Error: {:?}",
                             err
                         ));
@@ -202,7 +199,7 @@ impl FaucetClient {
                     "Faucet request {request_id} timed out. Timeout set to {} seconds",
                     FAUCET_REQUEST_TIMEOUT.as_secs()
                 );
-                anyhow!("Faucet request timed out")
+                eyre!("Faucet request timed out")
             })??;
             Ok(poll_response.transferred_gas_objects)
         } else {
@@ -213,7 +210,7 @@ impl FaucetClient {
     /// Check the faucet request status.
     ///
     /// Possible statuses are defined in: [`BatchSendStatusType`]
-    pub async fn request_status(&self, id: String) -> anyhow::Result<Option<BatchSendStatus>> {
+    pub async fn request_status(&self, id: String) -> eyre::Result<Option<BatchSendStatus>> {
         let status_url = format!("{}v1/status/{}", self.faucet_url, id);
         info!("Checking status of faucet request: {status_url}");
         let response = self.inner.get(&status_url).send().await?;
@@ -227,7 +224,7 @@ impl FaucetClient {
             .await
             .map_err(|e| {
                 error!("Failed to parse faucet response: {:?}", e);
-                anyhow!("Failed to parse faucet response: {:?}", e)
+                eyre!("Failed to parse faucet response: {:?}", e)
             })?;
         Ok(json.status)
     }

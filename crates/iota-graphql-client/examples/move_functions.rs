@@ -3,7 +3,7 @@
 
 use std::str::FromStr;
 
-use anyhow::Result;
+use eyre::Result;
 use iota_graphql_client::Client;
 use iota_types::Address;
 
@@ -14,7 +14,7 @@ async fn main() -> Result<()> {
     let package_address =
         Address::from_str("0x3ec4826f1d6e0d9f00680b2e9a7a41f03788ee610b3d11c24f41ab0ae71da39f")?;
     let Some(package) = client.package(package_address, None).await? else {
-        anyhow::bail!("no package found")
+        eyre::bail!("no package found")
     };
 
     for (module_id, _) in package.modules {
@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
             )
             .await?
         else {
-            anyhow::bail!("module `{module_id}` not found")
+            eyre::bail!("module `{module_id}` not found")
         };
         if let Some(funs) = module.functions {
             println!("Module: {module_id}");

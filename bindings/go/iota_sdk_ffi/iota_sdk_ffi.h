@@ -1761,6 +1761,11 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(void* ptr, 
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price(void* ptr, RustBuffer epoch
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_RUN_QUERY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_RUN_QUERY
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(void* ptr, RustBuffer query
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_SERVICE_CONFIG
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_SERVICE_CONFIG
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(void* ptr
@@ -5737,6 +5742,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_REFERENCE_GAS_PRICE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_REFERENCE_GAS_PRICE
 uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_RUN_QUERY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_RUN_QUERY
+uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query(void
     
 );
 #endif

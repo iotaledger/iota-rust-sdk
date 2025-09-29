@@ -3,7 +3,7 @@
 
 use std::str::FromStr;
 
-use anyhow::{Context, Result};
+use eyre::{OptionExt, Result};
 use iota_graphql_client::Client;
 use iota_transaction_builder::{Function, TransactionBuilder, unresolved::Input};
 use iota_types::{Address, Identifier, ObjectId};
@@ -21,7 +21,7 @@ async fn main() -> Result<()> {
         .data
         .into_iter()
         .next()
-        .context("no validators found")?;
+        .ok_or_eyre("no validators found")?;
 
     println!(
         "Staking to validator {}",
@@ -36,7 +36,7 @@ async fn main() -> Result<()> {
             None,
         )
         .await?
-        .context("missing object")?;
+        .ok_or_eyre("missing object")?;
     let gas_coin = client
         .object(
             ObjectId::from_str(
@@ -45,7 +45,7 @@ async fn main() -> Result<()> {
             None,
         )
         .await?
-        .context("missing gas coin")?;
+        .ok_or_eyre("missing gas coin")?;
 
     let mut builder = TransactionBuilder::new();
     let inputs = vec![
@@ -68,14 +68,14 @@ async fn main() -> Result<()> {
         client
             .reference_gas_price(None)
             .await?
-            .context("missing ref gas price")?,
+            .ok_or_eyre("missing ref gas price")?,
     );
     builder.add_gas_objects([Input::from(&gas_coin).with_owned_kind()]);
     let txn = builder.finish()?;
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to stake: {err}");
+        eyre::bail!("Failed to stake: {err}");
     }
 
     println!("Stake dry run was successful!");
