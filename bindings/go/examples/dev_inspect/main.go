@@ -103,7 +103,7 @@ func main() {
 		[]string{"target_address"},
 	)
 
-	res, err := builder.DryRun(false)
+	res, err := builder.DryRun(true)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run transaction: %v", err)
 	}
