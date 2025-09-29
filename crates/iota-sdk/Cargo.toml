@@ -4,7 +4,7 @@ version = "3.0.0"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
-description = "The official SDK for IOTA Rebased"
+description = "The official SDK for IOTA"
 
 [features]
 default = ["types"]
