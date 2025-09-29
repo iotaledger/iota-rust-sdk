@@ -154,19 +154,170 @@ impl From<TransactionsFilter> for iota_graphql_client::query_types::Transactions
     }
 }
 
-/// The result of a dry run, which includes the effects of the transaction and
-/// any errors that may have occurred.
+/// A transaction argument used in programmable transactions.
+#[derive(uniffi::Enum)]
+pub enum TransactionArgument {
+    /// Reference to the gas coin.
+    GasCoin,
+    /// An input to the programmable transaction block.
+    Input {
+        /// Index of the programmable transaction block input (0-indexed).
+        ix: u32,
+    },
+    /// The result of another transaction command.
+    Result {
+        /// The index of the previous command (0-indexed) that returned this
+        /// result.
+        cmd: u32,
+        /// If the previous command returns multiple values, this is the index
+        /// of the individual result among the multiple results from
+        /// that command (also 0-indexed).
+        ix: Option<u32>,
+    },
+}
+
+impl From<iota_graphql_client::TransactionArgument> for TransactionArgument {
+    fn from(value: iota_graphql_client::TransactionArgument) -> Self {
+        match value {
+            iota_graphql_client::TransactionArgument::GasCoin => TransactionArgument::GasCoin,
+            iota_graphql_client::TransactionArgument::Input { ix } => {
+                TransactionArgument::Input { ix }
+            }
+            iota_graphql_client::TransactionArgument::Result { cmd, ix } => {
+                TransactionArgument::Result { cmd, ix }
+            }
+        }
+    }
+}
+
+impl From<TransactionArgument> for iota_graphql_client::TransactionArgument {
+    fn from(value: TransactionArgument) -> Self {
+        match value {
+            TransactionArgument::GasCoin => iota_graphql_client::TransactionArgument::GasCoin,
+            TransactionArgument::Input { ix } => {
+                iota_graphql_client::TransactionArgument::Input { ix }
+            }
+            TransactionArgument::Result { cmd, ix } => {
+                iota_graphql_client::TransactionArgument::Result { cmd, ix }
+            }
+        }
+    }
+}
+
+/// A return value from a command in the dry run.
+#[derive(uniffi::Record)]
+pub struct DryRunReturn {
+    /// The Move type of the return value.
+    pub type_tag: Arc<TypeTag>,
+    /// The BCS representation of the return value.
+    pub bcs: Vec<u8>,
+}
+
+impl From<iota_graphql_client::DryRunReturn> for DryRunReturn {
+    fn from(value: iota_graphql_client::DryRunReturn) -> Self {
+        DryRunReturn {
+            type_tag: Arc::new(value.type_.into()),
+            bcs: value.bcs,
+        }
+    }
+}
+
+impl From<DryRunReturn> for iota_graphql_client::DryRunReturn {
+    fn from(value: DryRunReturn) -> Self {
+        iota_graphql_client::DryRunReturn {
+            type_: value.type_tag.0.clone(),
+            bcs: value.bcs,
+        }
+    }
+}
+
+/// A mutation to an argument that was mutably borrowed by a command.
+#[derive(uniffi::Record)]
+pub struct DryRunMutation {
+    /// The transaction argument that was mutated.
+    pub input: TransactionArgument,
+    /// The Move type of the mutated value.
+    pub type_tag: Arc<TypeTag>,
+    /// The BCS representation of the mutated value.
+    pub bcs: Vec<u8>,
+}
+
+impl From<iota_graphql_client::DryRunMutation> for DryRunMutation {
+    fn from(value: iota_graphql_client::DryRunMutation) -> Self {
+        DryRunMutation {
+            input: value.input.into(),
+            type_tag: Arc::new(value.type_.into()),
+            bcs: value.bcs,
+        }
+    }
+}
+
+impl From<DryRunMutation> for iota_graphql_client::DryRunMutation {
+    fn from(value: DryRunMutation) -> Self {
+        iota_graphql_client::DryRunMutation {
+            input: value.input.into(),
+            type_: value.type_tag.0.clone(),
+            bcs: value.bcs,
+        }
+    }
+}
+
+/// Effects of a single command in the dry run, including mutated references
+/// and return values.
+#[derive(uniffi::Record)]
+pub struct DryRunEffect {
+    /// Changes made to arguments that were mutably borrowed by this command.
+    pub mutated_references: Vec<DryRunMutation>,
+    /// Return results of this command.
+    pub return_values: Vec<DryRunReturn>,
+}
+
+impl From<iota_graphql_client::DryRunEffect> for DryRunEffect {
+    fn from(value: iota_graphql_client::DryRunEffect) -> Self {
+        DryRunEffect {
+            mutated_references: value
+                .mutated_references
+                .into_iter()
+                .map(Into::into)
+                .collect(),
+            return_values: value.return_values.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl From<DryRunEffect> for iota_graphql_client::DryRunEffect {
+    fn from(value: DryRunEffect) -> Self {
+        iota_graphql_client::DryRunEffect {
+            mutated_references: value
+                .mutated_references
+                .into_iter()
+                .map(Into::into)
+                .collect(),
+            return_values: value.return_values.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+/// The result of a simulation (dry run), which includes the effects of the
+/// transaction, any errors that may have occurred, and intermediate results for
+/// each command.
 #[derive(uniffi::Record)]
 pub struct DryRunResult {
-    pub effects: Option<Arc<TransactionEffects>>,
+    /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
+    /// The intermediate results for each command of the dry run execution,
+    /// including contents of mutated references and return values.
+    pub results: Vec<DryRunEffect>,
+    /// The transaction block representing the dry run execution.
+    pub transaction: Option<SignedTransaction>,
 }
 
 impl From<iota_graphql_client::DryRunResult> for DryRunResult {
     fn from(value: iota_graphql_client::DryRunResult) -> Self {
         DryRunResult {
-            effects: value.effects.map(|e| Arc::new(e.into())),
             error: value.error,
+            results: value.results.into_iter().map(Into::into).collect(),
+            transaction: value.transaction.map(Into::into),
         }
     }
 }
@@ -174,8 +325,9 @@ impl From<iota_graphql_client::DryRunResult> for DryRunResult {
 impl From<DryRunResult> for iota_graphql_client::DryRunResult {
     fn from(value: DryRunResult) -> Self {
         iota_graphql_client::DryRunResult {
-            effects: value.effects.map(|e| e.0.clone()),
             error: value.error,
+            results: value.results.into_iter().map(Into::into).collect(),
+            transaction: value.transaction.map(Into::into),
         }
     }
 }
