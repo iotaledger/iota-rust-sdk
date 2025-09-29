@@ -3,7 +3,7 @@
 
 use std::str::FromStr;
 
-use anyhow::{Context, Result};
+use eyre::{OptionExt, Result};
 use iota_graphql_client::Client;
 use iota_transaction_builder::{Function, TransactionBuilder, unresolved::Input};
 use iota_types::{Address, Identifier, ObjectId, StructTag, TypeTag};
@@ -109,14 +109,14 @@ async fn main() -> Result<()> {
         client
             .reference_gas_price(None)
             .await?
-            .context("missing ref gas price")?,
+            .ok_or_eyre("missing ref gas price")?,
     );
     let txn = builder.finish()?;
 
     let res = client.dry_run_tx(&txn, true).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to lookup name: {err}");
+        eyre::bail!("Failed to lookup name: {err}");
     }
 
     // Extract the resolved address from the last result
