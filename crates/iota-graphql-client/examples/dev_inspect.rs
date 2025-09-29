@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     // Step 1: Get the shared registry object
     builder
         .move_call(iota_names_package_address, "iota_names", "registry")
-        .params(Mut(iota_names_object_id))
+        .arguments(Mut(iota_names_object_id))
         .type_tags([TypeTag::Struct(Box::new(StructTag {
             address: iota_names_package_address,
             module: Identifier::new("registry")?,
@@ -39,19 +39,19 @@ async fn main() -> Result<()> {
     // Step 2: Create the name object from the string
     builder
         .move_call(iota_names_package_address, "name", "new")
-        .params(name)
+        .arguments(name)
         .name("name");
 
     // Step 3: Look up the name record in the registry
     builder
         .move_call(iota_names_package_address, "registry", "lookup")
-        .params((res("iota_names"), res("name")))
+        .arguments((res("iota_names"), res("name")))
         .name("name_record_opt");
 
     // Step 4: Borrow the name record from the option
     builder
         .move_call(Address::ONE, "option", "borrow")
-        .params(res("name_record_opt"))
+        .arguments(res("name_record_opt"))
         .type_tags([TypeTag::Struct(Box::new(StructTag {
             address: iota_names_package_address,
             module: Identifier::new("name_record")?,
@@ -63,14 +63,14 @@ async fn main() -> Result<()> {
     // Step 5: Get the target address from the name record
     builder
         .move_call(iota_names_package_address, "name_record", "target_address")
-        .params(res("name_record"))
+        .arguments(res("name_record"))
         .name("target_address_opt");
 
     // Step 6: Borrow the address from the option (this returns the resolved
     // address)
     builder
         .move_call(Address::ONE, "option", "borrow")
-        .params(res("target_address_opt"))
+        .arguments(res("target_address_opt"))
         .generics::<Address>()
         .name("target_address");
 

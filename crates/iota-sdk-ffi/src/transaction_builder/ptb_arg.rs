@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_transaction_builder::{Mut, Receiving, res, types::ParamType};
+use iota_transaction_builder::{Mut, Receiving, res, types::ArgType};
 
 use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
@@ -79,7 +79,7 @@ impl PTBArgument {
     #[uniffi::constructor]
     pub fn vector(vec: Vec<Vec<u8>>) -> Self {
         Self(Box::new(
-            vec.into_iter().map(ParamType::Pure).collect::<Vec<_>>(),
+            vec.into_iter().map(ArgType::Pure).collect::<Vec<_>>(),
         ))
     }
 }

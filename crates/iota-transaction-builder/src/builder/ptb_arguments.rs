@@ -3,7 +3,7 @@
 
 use crate::{
     builder::TransactionBuildData,
-    types::{MoveParam, ParamType},
+    types::{MoveArg, ArgType},
     unresolved::{Argument, InputKind},
 };
 
@@ -37,11 +37,11 @@ macro_rules! impl_ptb_args_tuple {
 
 variadics_please::all_tuples_enumerated!(impl_ptb_args_tuple, 2, 15, T);
 
-impl<T: MoveParam> PTBArguments for T {
+impl<T: MoveArg> PTBArguments for T {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         let arg = match self.param() {
-            ParamType::Object(id) => ptb.set_input(InputKind::ImmutableOrOwned(id), false),
-            ParamType::Pure(v) => ptb.pure_bytes(v),
+            ArgType::Object(id) => ptb.set_input(InputKind::ImmutableOrOwned(id), false),
+            ArgType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);
     }
@@ -83,17 +83,17 @@ impl PTBArguments for Vec<iota_types::Input> {
 /// Allows specifying mutable parameters.
 pub struct Mut<T>(pub T);
 
-impl<T: MoveParam> PTBArguments for Mut<T> {
+impl<T: MoveArg> PTBArguments for Mut<T> {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         let arg = match self.0.param() {
-            ParamType::Object(id) => ptb.set_input(
+            ArgType::Object(id) => ptb.set_input(
                 InputKind::Shared {
                     object_id: id,
                     mutable: true,
                 },
                 false,
             ),
-            ParamType::Pure(v) => ptb.pure_bytes(v),
+            ArgType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);
     }
@@ -102,11 +102,11 @@ impl<T: MoveParam> PTBArguments for Mut<T> {
 /// Allows specifying receiving parameters.
 pub struct Receiving<T>(pub T);
 
-impl<T: MoveParam> PTBArguments for Receiving<T> {
+impl<T: MoveArg> PTBArguments for Receiving<T> {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         let arg = match self.0.param() {
-            ParamType::Object(id) => ptb.set_input(InputKind::Receiving(id), false),
-            ParamType::Pure(v) => ptb.pure_bytes(v),
+            ArgType::Object(id) => ptb.set_input(InputKind::Receiving(id), false),
+            ArgType::Pure(v) => ptb.pure_bytes(v),
         };
         args.push(arg);
     }

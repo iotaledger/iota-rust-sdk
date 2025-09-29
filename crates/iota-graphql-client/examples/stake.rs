@@ -32,7 +32,7 @@ async fn main() -> Result<()> {
 
     builder
         .move_call(Address::THREE, "iota_system", "request_add_stake")
-        .params((
+        .arguments((
             Mut(ObjectId::from_str("0x5")?),
             ObjectId::from_str(
                 "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",

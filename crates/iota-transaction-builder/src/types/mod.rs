@@ -5,16 +5,16 @@
 
 use iota_types::{Address, ObjectId, TypeTag};
 
-mod move_param;
+mod move_arg;
 mod move_type;
 
-pub use move_param::MoveParam;
+pub use move_arg::MoveArg;
 pub use move_type::{MoveType, MoveTypes};
 use primitive_types::U256;
 
 /// A parameter type.
 #[derive(Clone, Debug)]
-pub enum ParamType {
+pub enum ArgType {
     /// An object, referenced by ID.
     Object(ObjectId),
     /// A bcs serialized value.
@@ -29,9 +29,9 @@ macro_rules! impl_simple_move_type {
             }
         }
 
-        impl MoveParam for $rust_ty {
-            fn param(&self) -> ParamType {
-                ParamType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
+        impl MoveArg for $rust_ty {
+            fn param(&self) -> ArgType {
+                ArgType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
             }
         }
     };

@@ -867,7 +867,7 @@ impl<L> TransactionBuilder<Client, L> {
 
 impl TransactionBuilder<(), MoveCall> {
     /// Set the call params. Optional.
-    pub fn params(&mut self, params: impl IntoIterator<Item = Argument>) -> &mut Self {
+    pub fn arguments(&mut self, params: impl IntoIterator<Item = Argument>) -> &mut Self {
         let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
             unreachable!();
         };
@@ -878,7 +878,7 @@ impl TransactionBuilder<(), MoveCall> {
 
 impl TransactionBuilder<Client, MoveCall> {
     /// Set the call params. Optional.
-    pub fn params<U: PTBArguments>(&mut self, params: U) -> &mut Self {
+    pub fn arguments<U: PTBArguments>(&mut self, params: U) -> &mut Self {
         let args = self.apply_params(params);
         let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
             unreachable!();
@@ -914,7 +914,7 @@ impl TransactionBuilder<(), Publish> {
     pub fn package_id(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder {
         let cap = self.arg();
         self.move_call(Address::TWO, "package", "upgrade_package")
-            .params([cap])
+            .arguments([cap])
             .name(name)
             .reset()
     }
@@ -926,7 +926,7 @@ impl TransactionBuilder<Client, Publish> {
     pub fn package_id(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<Client> {
         let cap = self.arg();
         self.move_call(Address::TWO, "package", "upgrade_package")
-            .params(cap)
+            .arguments(cap)
             .name(name)
             .reset()
     }
