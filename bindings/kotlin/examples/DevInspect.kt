@@ -38,7 +38,7 @@ fun main() = runBlocking {
                 iotaNamesPackageAddress,
                 Identifier("iota_names"),
                 Identifier("registry"),
-                listOf(PtbArgument.objectId(iotaNamesObjectId)),
+                listOf(PtbArgument.mutable(iotaNamesObjectId)),
                 listOf(
                         TypeTag.newStruct(
                                 StructTag(

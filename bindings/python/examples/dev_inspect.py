@@ -29,7 +29,7 @@ async def main():
             iota_names_package_address,
             Identifier("iota_names"),
             Identifier("registry"),
-            [PtbArgument.object_id(iota_names_object_id)],
+            [PtbArgument.mutable(iota_names_object_id)],
             [
                 TypeTag.new_struct(
                     StructTag(

@@ -48,7 +48,7 @@ func main() {
 		iotaNamesPackageAddress,
 		iotaNamesModule,
 		registryModule,
-		[]*sdk.PtbArgument{sdk.PtbArgumentObjectId(iotaNamesObjectId)},
+		[]*sdk.PtbArgument{sdk.PtbArgumentMutable(iotaNamesObjectId)},
 		[]*sdk.TypeTag{sdk.TypeTagNewStruct(registryType)},
 		[]string{"iota_names"},
 	)
