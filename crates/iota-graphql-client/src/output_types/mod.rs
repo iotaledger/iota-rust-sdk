@@ -29,6 +29,8 @@ pub struct DryRunResult {
     pub results: Vec<DryRunEffect>,
     /// The transaction block representing the dry run execution.
     pub transaction: Option<SignedTransaction>,
+    /// The effects of the transaction execution.
+    pub effects: Option<TransactionEffects>,
 }
 
 /// Effects of a single command in the dry run, including mutated references

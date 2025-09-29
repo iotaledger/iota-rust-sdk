@@ -43046,7 +43046,11 @@ data class DryRunResult (
     /**
      * The transaction block representing the dry run execution.
      */
-    var `transaction`: SignedTransaction?
+    var `transaction`: SignedTransaction?, 
+    /**
+     * The effects of the transaction execution.
+     */
+    var `effects`: TransactionEffects?
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
@@ -43055,7 +43059,8 @@ data class DryRunResult (
     Disposable.destroy(
         this.`error`,
         this.`results`,
-        this.`transaction`
+        this.`transaction`,
+        this.`effects`
     )
     }
     
@@ -43071,19 +43076,22 @@ public object FfiConverterTypeDryRunResult: FfiConverterRustBuffer<DryRunResult>
             FfiConverterOptionalString.read(buf),
             FfiConverterSequenceTypeDryRunEffect.read(buf),
             FfiConverterOptionalTypeSignedTransaction.read(buf),
+            FfiConverterOptionalTypeTransactionEffects.read(buf),
         )
     }
 
     override fun allocationSize(value: DryRunResult) = (
             FfiConverterOptionalString.allocationSize(value.`error`) +
             FfiConverterSequenceTypeDryRunEffect.allocationSize(value.`results`) +
-            FfiConverterOptionalTypeSignedTransaction.allocationSize(value.`transaction`)
+            FfiConverterOptionalTypeSignedTransaction.allocationSize(value.`transaction`) +
+            FfiConverterOptionalTypeTransactionEffects.allocationSize(value.`effects`)
     )
 
     override fun write(value: DryRunResult, buf: ByteBuffer) {
             FfiConverterOptionalString.write(value.`error`, buf)
             FfiConverterSequenceTypeDryRunEffect.write(value.`results`, buf)
             FfiConverterOptionalTypeSignedTransaction.write(value.`transaction`, buf)
+            FfiConverterOptionalTypeTransactionEffects.write(value.`effects`, buf)
     }
 }
 

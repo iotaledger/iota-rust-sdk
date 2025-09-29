@@ -23722,12 +23722,15 @@ type DryRunResult struct {
 	Results []DryRunEffect
 	// The transaction block representing the dry run execution.
 	Transaction *SignedTransaction
+	// The effects of the transaction execution.
+	Effects **TransactionEffects
 }
 
 func (r *DryRunResult) Destroy() {
 		FfiDestroyerOptionalString{}.Destroy(r.Error);
 		FfiDestroyerSequenceDryRunEffect{}.Destroy(r.Results);
 		FfiDestroyerOptionalSignedTransaction{}.Destroy(r.Transaction);
+		FfiDestroyerOptionalTransactionEffects{}.Destroy(r.Effects);
 }
 
 type FfiConverterDryRunResult struct {}
@@ -23743,6 +23746,7 @@ func (c FfiConverterDryRunResult) Read(reader io.Reader) DryRunResult {
 			FfiConverterOptionalStringINSTANCE.Read(reader),
 			FfiConverterSequenceDryRunEffectINSTANCE.Read(reader),
 			FfiConverterOptionalSignedTransactionINSTANCE.Read(reader),
+			FfiConverterOptionalTransactionEffectsINSTANCE.Read(reader),
 	}
 }
 
@@ -23754,6 +23758,7 @@ func (c FfiConverterDryRunResult) Write(writer io.Writer, value DryRunResult) {
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.Error);
 		FfiConverterSequenceDryRunEffectINSTANCE.Write(writer, value.Results);
 		FfiConverterOptionalSignedTransactionINSTANCE.Write(writer, value.Transaction);
+		FfiConverterOptionalTransactionEffectsINSTANCE.Write(writer, value.Effects);
 }
 
 type FfiDestroyerDryRunResult struct {}

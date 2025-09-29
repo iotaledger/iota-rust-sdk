@@ -255,11 +255,21 @@ impl Client {
             .map(DryRunEffect::try_from)
             .collect::<Result<Vec<_>>>()?;
 
-        // Extract transaction
-        let transaction = response
+        let txn_block = response
             .data
-            .map(|tx| tx.dry_run_transaction_block)
-            .and_then(|tx| tx.transaction)
+            .and_then(|tx| tx.dry_run_transaction_block.transaction);
+
+        let effects = txn_block
+            .as_ref()
+            .and_then(|tx| tx.effects.as_ref())
+            .and_then(|tx| tx.bcs.as_ref())
+            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .transpose()?
+            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
+            .transpose()?;
+
+        // Extract transaction
+        let transaction = txn_block
             .and_then(|tx| tx.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
@@ -270,6 +280,7 @@ impl Client {
             error,
             results,
             transaction,
+            effects,
         })
     }
 

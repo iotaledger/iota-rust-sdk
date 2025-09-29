@@ -9568,13 +9568,19 @@ class DryRunResult:
     The transaction block representing the dry run execution.
     """
 
-    def __init__(self, *, error: "typing.Optional[str]", results: "typing.List[DryRunEffect]", transaction: "typing.Optional[SignedTransaction]"):
+    effects: "typing.Optional[TransactionEffects]"
+    """
+    The effects of the transaction execution.
+    """
+
+    def __init__(self, *, error: "typing.Optional[str]", results: "typing.List[DryRunEffect]", transaction: "typing.Optional[SignedTransaction]", effects: "typing.Optional[TransactionEffects]"):
         self.error = error
         self.results = results
         self.transaction = transaction
+        self.effects = effects
 
     def __str__(self):
-        return "DryRunResult(error={}, results={}, transaction={})".format(self.error, self.results, self.transaction)
+        return "DryRunResult(error={}, results={}, transaction={}, effects={})".format(self.error, self.results, self.transaction, self.effects)
 
     def __eq__(self, other):
         if self.error != other.error:
@@ -9582,6 +9588,8 @@ class DryRunResult:
         if self.results != other.results:
             return False
         if self.transaction != other.transaction:
+            return False
+        if self.effects != other.effects:
             return False
         return True
 
@@ -9592,6 +9600,7 @@ class _UniffiConverterTypeDryRunResult(_UniffiConverterRustBuffer):
             error=_UniffiConverterOptionalString.read(buf),
             results=_UniffiConverterSequenceTypeDryRunEffect.read(buf),
             transaction=_UniffiConverterOptionalTypeSignedTransaction.read(buf),
+            effects=_UniffiConverterOptionalTypeTransactionEffects.read(buf),
         )
 
     @staticmethod
@@ -9599,12 +9608,14 @@ class _UniffiConverterTypeDryRunResult(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalString.check_lower(value.error)
         _UniffiConverterSequenceTypeDryRunEffect.check_lower(value.results)
         _UniffiConverterOptionalTypeSignedTransaction.check_lower(value.transaction)
+        _UniffiConverterOptionalTypeTransactionEffects.check_lower(value.effects)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterOptionalString.write(value.error, buf)
         _UniffiConverterSequenceTypeDryRunEffect.write(value.results, buf)
         _UniffiConverterOptionalTypeSignedTransaction.write(value.transaction, buf)
+        _UniffiConverterOptionalTypeTransactionEffects.write(value.effects, buf)
 
 
 class DryRunReturn:
