@@ -3,7 +3,7 @@
 
 use crate::{
     builder::TransactionBuildData,
-    types::{MoveArg, ArgType},
+    types::{ArgType, MoveArg},
     unresolved::{Argument, InputKind},
 };
 
@@ -39,7 +39,7 @@ variadics_please::all_tuples_enumerated!(impl_ptb_args_tuple, 2, 15, T);
 
 impl<T: MoveArg> PTBArguments for T {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        let arg = match self.param() {
+        let arg = match self.arg_type() {
             ArgType::Object(id) => ptb.set_input(InputKind::ImmutableOrOwned(id), false),
             ArgType::Pure(v) => ptb.pure_bytes(v),
         };
@@ -85,7 +85,7 @@ pub struct Mut<T>(pub T);
 
 impl<T: MoveArg> PTBArguments for Mut<T> {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        let arg = match self.0.param() {
+        let arg = match self.0.arg_type() {
             ArgType::Object(id) => ptb.set_input(
                 InputKind::Shared {
                     object_id: id,
@@ -104,7 +104,7 @@ pub struct Receiving<T>(pub T);
 
 impl<T: MoveArg> PTBArguments for Receiving<T> {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        let arg = match self.0.param() {
+        let arg = match self.0.arg_type() {
             ArgType::Object(id) => ptb.set_input(InputKind::Receiving(id), false),
             ArgType::Pure(v) => ptb.pure_bytes(v),
         };

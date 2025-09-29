@@ -8,56 +8,56 @@ use crate::types::ArgType;
 /// A trait which defines how types are serialized for move calls.
 pub trait MoveArg {
     /// Get the param type.
-    fn param(&self) -> ArgType;
+    fn arg_type(&self) -> ArgType;
 }
 
 impl MoveArg for ObjectId {
-    fn param(&self) -> ArgType {
+    fn arg_type(&self) -> ArgType {
         ArgType::Object(*self)
     }
 }
 
 impl MoveArg for Digest {
-    fn param(&self) -> ArgType {
+    fn arg_type(&self) -> ArgType {
         ArgType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
     }
 }
 
 impl MoveArg for ArgType {
-    fn param(&self) -> ArgType {
+    fn arg_type(&self) -> ArgType {
         self.clone()
     }
 }
 
 impl MoveArg for () {
-    fn param(&self) -> ArgType {
+    fn arg_type(&self) -> ArgType {
         ArgType::Pure(Vec::new())
     }
 }
 
 impl MoveArg for str {
-    fn param(&self) -> ArgType {
+    fn arg_type(&self) -> ArgType {
         ArgType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
     }
 }
 
 impl MoveArg for &str {
-    fn param(&self) -> ArgType {
-        (*self).param()
+    fn arg_type(&self) -> ArgType {
+        (*self).arg_type()
     }
 }
 
 impl MoveArg for String {
-    fn param(&self) -> ArgType {
-        self.as_str().param()
+    fn arg_type(&self) -> ArgType {
+        self.as_str().arg_type()
     }
 }
 
 impl<T: MoveArg> MoveArg for Vec<T> {
-    fn param(&self) -> ArgType {
+    fn arg_type(&self) -> ArgType {
         let mut res = u32_as_uleb128(self.len() as u32);
         for val in self {
-            match val.param() {
+            match val.arg_type() {
                 ArgType::Object(object_id) => res.extend(object_id.as_bytes()),
                 ArgType::Pure(items) => res.extend(items),
             }
@@ -80,15 +80,15 @@ fn u32_as_uleb128(mut value: u32) -> Vec<u8> {
 }
 
 impl<T: MoveArg> MoveArg for Box<T> {
-    fn param(&self) -> ArgType {
-        self.as_ref().param()
+    fn arg_type(&self) -> ArgType {
+        self.as_ref().arg_type()
     }
 }
 
 impl<T: MoveArg> MoveArg for Option<T> {
-    fn param(&self) -> ArgType {
+    fn arg_type(&self) -> ArgType {
         match self {
-            Some(value) => match value.param() {
+            Some(value) => match value.arg_type() {
                 ArgType::Object(object_id) => ArgType::Pure([&[1], object_id.as_bytes()].concat()),
                 ArgType::Pure(items) => ArgType::Pure([&[1], &items[..]].concat()),
             },
@@ -98,7 +98,7 @@ impl<T: MoveArg> MoveArg for Option<T> {
 }
 
 impl<T: MoveArg> MoveArg for &T {
-    fn param(&self) -> ArgType {
-        (*self).param()
+    fn arg_type(&self) -> ArgType {
+        (*self).arg_type()
     }
 }

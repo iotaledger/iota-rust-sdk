@@ -30,7 +30,7 @@ macro_rules! impl_simple_move_type {
         }
 
         impl MoveArg for $rust_ty {
-            fn param(&self) -> ArgType {
+            fn arg_type(&self) -> ArgType {
                 ArgType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
             }
         }
