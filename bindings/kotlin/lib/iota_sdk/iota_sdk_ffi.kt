@@ -2242,6 +2242,16 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2411,6 +2421,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes(
@@ -2520,6 +2534,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages(
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config(
 ): Short
@@ -2803,6 +2819,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes(
@@ -2838,6 +2858,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple(
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes(
 ): Short
@@ -3646,10 +3670,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_argument_new_result(`result`: Short,uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result(`ptr`: Pointer,`ix`: Short,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_clone_batchsendstatus(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_batchsendstatus(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_bls12381privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -3954,6 +3974,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_from_str(`s`: RustBuffer
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4058,10 +4082,6 @@ fun uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(`ptr`: Pointer,`
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status(`ptr`: Pointer,`id`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_clone_faucetreceipt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_faucetreceipt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_genesisobject(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_genesisobject(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4171,6 +4191,8 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_packages(`ptr`: Pointer,`afterCh
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(`ptr`: Pointer,`version`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price(`ptr`: Pointer,`epoch`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(`ptr`: Pointer,`query`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(`ptr`: Pointer,
 ): Long
@@ -4662,6 +4684,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_from_str(`s`: RustBuff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_secp256k1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4746,6 +4772,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_str(`s`: RustBuff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5709,6 +5739,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key() != 59162.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() != 37757.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 141.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes() != 16656.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -5742,10 +5778,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() != 13326.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 48304.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 22484.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 42353.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 31173.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_data() != 26598.toShort()) {
@@ -5872,6 +5908,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query() != 54586.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931.toShort()) {
@@ -6297,6 +6336,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key() != 51137.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() != 48490.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 798.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes() != 49170.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6349,6 +6394,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key() != 55895.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() != 27344.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 12227.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() != 21066.toShort()) {
@@ -8633,228 +8684,6 @@ public object FfiConverterTypeArgument: FfiConverter<Argument, Pointer> {
     override fun allocationSize(value: Argument) = 8UL
 
     override fun write(value: Argument, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-public interface BatchSendStatusInterface {
-    
-    companion object
-}
-
-open class BatchSendStatus: Disposable, AutoCloseable, BatchSendStatusInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_batchsendstatus(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_batchsendstatus(pointer!!, status)
-        }
-    }
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeBatchSendStatus: FfiConverter<BatchSendStatus, Pointer> {
-
-    override fun lower(value: BatchSendStatus): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): BatchSendStatus {
-        return BatchSendStatus(value)
-    }
-
-    override fun read(buf: ByteBuffer): BatchSendStatus {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: BatchSendStatus) = 8UL
-
-    override fun write(value: BatchSendStatus, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -15537,6 +15366,21 @@ public object FfiConverterTypeEd25519PrivateKey: FfiConverter<Ed25519PrivateKey,
  */
 public interface Ed25519PublicKeyInterface {
     
+    /**
+     * Derive an `Address` from this Public Key
+     *
+     * An `Address` can be derived from an `Ed25519PublicKey` by hashing the
+     * bytes of the public key with no prefix flag.
+     *
+     * `hash(32-byte ed25519 public key)`
+     */
+    fun `deriveAddress`(): Address
+    
+    /**
+     * Return the flag for this signature scheme
+     */
+    fun `scheme`(): SignatureScheme
+    
     fun `toBytes`(): kotlin.ByteArray
     
     companion object
@@ -15634,6 +15478,41 @@ open class Ed25519PublicKey: Disposable, AutoCloseable, Ed25519PublicKeyInterfac
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_ed25519publickey(pointer!!, status)
         }
     }
+
+    
+    /**
+     * Derive an `Address` from this Public Key
+     *
+     * An `Address` can be derived from an `Ed25519PublicKey` by hashing the
+     * bytes of the public key with no prefix flag.
+     *
+     * `hash(32-byte ed25519 public key)`
+     */override fun `deriveAddress`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Return the flag for this signature scheme
+     */override fun `scheme`(): SignatureScheme {
+            return FfiConverterTypeSignatureScheme.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     override fun `toBytes`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
@@ -18239,228 +18118,6 @@ public object FfiConverterTypeFaucetClient: FfiConverter<FaucetClient, Pointer> 
 //
 
 
-public interface FaucetReceiptInterface {
-    
-    companion object
-}
-
-open class FaucetReceipt: Disposable, AutoCloseable, FaucetReceiptInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_faucetreceipt(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_faucetreceipt(pointer!!, status)
-        }
-    }
-
-    
-
-    
-    
-    companion object
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeFaucetReceipt: FfiConverter<FaucetReceipt, Pointer> {
-
-    override fun lower(value: FaucetReceipt): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): FaucetReceipt {
-        return FaucetReceipt(value)
-    }
-
-    override fun read(buf: ByteBuffer): FaucetReceipt {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: FaucetReceipt) = 8UL
-
-    override fun write(value: FaucetReceipt, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
 /**
  * An object part of the initial chain state
  *
@@ -19359,6 +19016,11 @@ public interface GraphQlClientInterface {
      * the GraphQL service (e.g., due to pruning).
      */
     suspend fun `referenceGasPrice`(`epoch`: kotlin.ULong? = null): kotlin.ULong?
+    
+    /**
+     * Run a query.
+     */
+    suspend fun `runQuery`(`query`: Query): Value
     
     /**
      * Get the GraphQL service configuration, including complexity limits, read
@@ -20472,6 +20134,30 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Run a query.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `runQuery`(`query`: Query) : Value {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(
+                thisPtr,
+                FfiConverterTypeQuery.lower(`query`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeValue.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -30567,6 +30253,22 @@ public object FfiConverterTypeSecp256k1PrivateKey: FfiConverter<Secp256k1Private
  */
 public interface Secp256k1PublicKeyInterface {
     
+    /**
+     * Derive an `Address` from this Public Key
+     *
+     * An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
+     * bytes of the public key prefixed with the Secp256k1
+     * `SignatureScheme` flag (`0x01`).
+     *
+     * `hash( 0x01 || 33-byte secp256k1 public key)`
+     */
+    fun `deriveAddress`(): Address
+    
+    /**
+     * Return the flag for this signature scheme
+     */
+    fun `scheme`(): SignatureScheme
+    
     fun `toBytes`(): kotlin.ByteArray
     
     companion object
@@ -30664,6 +30366,42 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256k1publickey(pointer!!, status)
         }
     }
+
+    
+    /**
+     * Derive an `Address` from this Public Key
+     *
+     * An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
+     * bytes of the public key prefixed with the Secp256k1
+     * `SignatureScheme` flag (`0x01`).
+     *
+     * `hash( 0x01 || 33-byte secp256k1 public key)`
+     */override fun `deriveAddress`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Return the flag for this signature scheme
+     */override fun `scheme`(): SignatureScheme {
+            return FfiConverterTypeSignatureScheme.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     override fun `toBytes`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
@@ -32187,6 +31925,22 @@ public object FfiConverterTypeSecp256r1PrivateKey: FfiConverter<Secp256r1Private
  */
 public interface Secp256r1PublicKeyInterface {
     
+    /**
+     * Derive an `Address` from this Public Key
+     *
+     * An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
+     * bytes of the public key prefixed with the Secp256r1
+     * `SignatureScheme` flag (`0x02`).
+     *
+     * `hash( 0x02 || 33-byte secp256r1 public key)`
+     */
+    fun `deriveAddress`(): Address
+    
+    /**
+     * Return the flag for this signature scheme
+     */
+    fun `scheme`(): SignatureScheme
+    
     fun `toBytes`(): kotlin.ByteArray
     
     companion object
@@ -32284,6 +32038,42 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(pointer!!, status)
         }
     }
+
+    
+    /**
+     * Derive an `Address` from this Public Key
+     *
+     * An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
+     * bytes of the public key prefixed with the Secp256r1
+     * `SignatureScheme` flag (`0x02`).
+     *
+     * `hash( 0x02 || 33-byte secp256r1 public key)`
+     */override fun `deriveAddress`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Return the flag for this signature scheme
+     */override fun `scheme`(): SignatureScheme {
+            return FfiConverterTypeSignatureScheme.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     override fun `toBytes`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
@@ -43904,6 +43694,47 @@ public object FfiConverterTypeAuthenticatorStateUpdateV1: FfiConverterRustBuffer
 
 
 
+data class BatchSendStatus (
+    var `status`: BatchSendStatusType, 
+    var `transferredGasObjects`: FaucetReceipt?
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`status`,
+        this.`transferredGasObjects`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeBatchSendStatus: FfiConverterRustBuffer<BatchSendStatus> {
+    override fun read(buf: ByteBuffer): BatchSendStatus {
+        return BatchSendStatus(
+            FfiConverterTypeBatchSendStatusType.read(buf),
+            FfiConverterOptionalTypeFaucetReceipt.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: BatchSendStatus) = (
+            FfiConverterTypeBatchSendStatusType.allocationSize(value.`status`) +
+            FfiConverterOptionalTypeFaucetReceipt.allocationSize(value.`transferredGasObjects`)
+    )
+
+    override fun write(value: BatchSendStatus, buf: ByteBuffer) {
+            FfiConverterTypeBatchSendStatusType.write(value.`status`, buf)
+            FfiConverterOptionalTypeFaucetReceipt.write(value.`transferredGasObjects`, buf)
+    }
+}
+
+
+
 /**
  * Input/output state of an object that was changed during execution
  *
@@ -44026,6 +43857,52 @@ public object FfiConverterTypeCheckpointSummaryPage: FfiConverterRustBuffer<Chec
     override fun write(value: CheckpointSummaryPage, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
             FfiConverterSequenceTypeCheckpointSummary.write(value.`data`, buf)
+    }
+}
+
+
+
+data class CoinInfo (
+    var `amount`: kotlin.ULong, 
+    var `id`: ObjectId, 
+    var `transferTxDigest`: Digest
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`amount`,
+        this.`id`,
+        this.`transferTxDigest`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeCoinInfo: FfiConverterRustBuffer<CoinInfo> {
+    override fun read(buf: ByteBuffer): CoinInfo {
+        return CoinInfo(
+            FfiConverterULong.read(buf),
+            FfiConverterTypeObjectId.read(buf),
+            FfiConverterTypeDigest.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: CoinInfo) = (
+            FfiConverterULong.allocationSize(value.`amount`) +
+            FfiConverterTypeObjectId.allocationSize(value.`id`) +
+            FfiConverterTypeDigest.allocationSize(value.`transferTxDigest`)
+    )
+
+    override fun write(value: CoinInfo, buf: ByteBuffer) {
+            FfiConverterULong.write(value.`amount`, buf)
+            FfiConverterTypeObjectId.write(value.`id`, buf)
+            FfiConverterTypeDigest.write(value.`transferTxDigest`, buf)
     }
 }
 
@@ -44181,20 +44058,142 @@ public object FfiConverterTypeCoinPage: FfiConverterRustBuffer<CoinPage> {
 
 
 /**
- * The result of a dry run, which includes the effects of the transaction and
- * any errors that may have occurred.
+ * Effects of a single command in the dry run, including mutated references
+ * and return values.
  */
-data class DryRunResult (
-    var `effects`: TransactionEffects?, 
-    var `error`: kotlin.String?
+data class DryRunEffect (
+    /**
+     * Changes made to arguments that were mutably borrowed by this command.
+     */
+    var `mutatedReferences`: List<DryRunMutation>, 
+    /**
+     * Return results of this command.
+     */
+    var `returnValues`: List<DryRunReturn>
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
     override fun destroy() {
         
     Disposable.destroy(
-        this.`effects`,
-        this.`error`
+        this.`mutatedReferences`,
+        this.`returnValues`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDryRunEffect: FfiConverterRustBuffer<DryRunEffect> {
+    override fun read(buf: ByteBuffer): DryRunEffect {
+        return DryRunEffect(
+            FfiConverterSequenceTypeDryRunMutation.read(buf),
+            FfiConverterSequenceTypeDryRunReturn.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DryRunEffect) = (
+            FfiConverterSequenceTypeDryRunMutation.allocationSize(value.`mutatedReferences`) +
+            FfiConverterSequenceTypeDryRunReturn.allocationSize(value.`returnValues`)
+    )
+
+    override fun write(value: DryRunEffect, buf: ByteBuffer) {
+            FfiConverterSequenceTypeDryRunMutation.write(value.`mutatedReferences`, buf)
+            FfiConverterSequenceTypeDryRunReturn.write(value.`returnValues`, buf)
+    }
+}
+
+
+
+/**
+ * A mutation to an argument that was mutably borrowed by a command.
+ */
+data class DryRunMutation (
+    /**
+     * The transaction argument that was mutated.
+     */
+    var `input`: TransactionArgument, 
+    /**
+     * The Move type of the mutated value.
+     */
+    var `typeTag`: TypeTag, 
+    /**
+     * The BCS representation of the mutated value.
+     */
+    var `bcs`: kotlin.ByteArray
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`input`,
+        this.`typeTag`,
+        this.`bcs`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDryRunMutation: FfiConverterRustBuffer<DryRunMutation> {
+    override fun read(buf: ByteBuffer): DryRunMutation {
+        return DryRunMutation(
+            FfiConverterTypeTransactionArgument.read(buf),
+            FfiConverterTypeTypeTag.read(buf),
+            FfiConverterByteArray.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DryRunMutation) = (
+            FfiConverterTypeTransactionArgument.allocationSize(value.`input`) +
+            FfiConverterTypeTypeTag.allocationSize(value.`typeTag`) +
+            FfiConverterByteArray.allocationSize(value.`bcs`)
+    )
+
+    override fun write(value: DryRunMutation, buf: ByteBuffer) {
+            FfiConverterTypeTransactionArgument.write(value.`input`, buf)
+            FfiConverterTypeTypeTag.write(value.`typeTag`, buf)
+            FfiConverterByteArray.write(value.`bcs`, buf)
+    }
+}
+
+
+
+/**
+ * The result of a simulation (dry run), which includes the effects of the
+ * transaction, any errors that may have occurred, and intermediate results for
+ * each command.
+ */
+data class DryRunResult (
+    /**
+     * The error that occurred during dry run execution, if any.
+     */
+    var `error`: kotlin.String?, 
+    /**
+     * The intermediate results for each command of the dry run execution,
+     * including contents of mutated references and return values.
+     */
+    var `results`: List<DryRunEffect>, 
+    /**
+     * The transaction block representing the dry run execution.
+     */
+    var `transaction`: SignedTransaction?
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`error`,
+        this.`results`,
+        this.`transaction`
     )
     }
     
@@ -44207,19 +44206,72 @@ data class DryRunResult (
 public object FfiConverterTypeDryRunResult: FfiConverterRustBuffer<DryRunResult> {
     override fun read(buf: ByteBuffer): DryRunResult {
         return DryRunResult(
-            FfiConverterOptionalTypeTransactionEffects.read(buf),
             FfiConverterOptionalString.read(buf),
+            FfiConverterSequenceTypeDryRunEffect.read(buf),
+            FfiConverterOptionalTypeSignedTransaction.read(buf),
         )
     }
 
     override fun allocationSize(value: DryRunResult) = (
-            FfiConverterOptionalTypeTransactionEffects.allocationSize(value.`effects`) +
-            FfiConverterOptionalString.allocationSize(value.`error`)
+            FfiConverterOptionalString.allocationSize(value.`error`) +
+            FfiConverterSequenceTypeDryRunEffect.allocationSize(value.`results`) +
+            FfiConverterOptionalTypeSignedTransaction.allocationSize(value.`transaction`)
     )
 
     override fun write(value: DryRunResult, buf: ByteBuffer) {
-            FfiConverterOptionalTypeTransactionEffects.write(value.`effects`, buf)
             FfiConverterOptionalString.write(value.`error`, buf)
+            FfiConverterSequenceTypeDryRunEffect.write(value.`results`, buf)
+            FfiConverterOptionalTypeSignedTransaction.write(value.`transaction`, buf)
+    }
+}
+
+
+
+/**
+ * A return value from a command in the dry run.
+ */
+data class DryRunReturn (
+    /**
+     * The Move type of the return value.
+     */
+    var `typeTag`: TypeTag, 
+    /**
+     * The BCS representation of the return value.
+     */
+    var `bcs`: kotlin.ByteArray
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`typeTag`,
+        this.`bcs`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDryRunReturn: FfiConverterRustBuffer<DryRunReturn> {
+    override fun read(buf: ByteBuffer): DryRunReturn {
+        return DryRunReturn(
+            FfiConverterTypeTypeTag.read(buf),
+            FfiConverterByteArray.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DryRunReturn) = (
+            FfiConverterTypeTypeTag.allocationSize(value.`typeTag`) +
+            FfiConverterByteArray.allocationSize(value.`bcs`)
+    )
+
+    override fun write(value: DryRunReturn, buf: ByteBuffer) {
+            FfiConverterTypeTypeTag.write(value.`typeTag`, buf)
+            FfiConverterByteArray.write(value.`bcs`, buf)
     }
 }
 
@@ -44747,7 +44799,19 @@ data class Event (
     /**
      * BCS serialized bytes of the event
      */
-    var `contents`: kotlin.ByteArray
+    var `contents`: kotlin.ByteArray, 
+    /**
+     * UTC timestamp in milliseconds since epoch (1/1/1970)
+     */
+    var `timestamp`: kotlin.String, 
+    /**
+     * Structured contents of a Move value
+     */
+    var `data`: kotlin.String, 
+    /**
+     * Representation of a Move value in JSON
+     */
+    var `json`: kotlin.String
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
@@ -44758,7 +44822,10 @@ data class Event (
         this.`module`,
         this.`sender`,
         this.`type`,
-        this.`contents`
+        this.`contents`,
+        this.`timestamp`,
+        this.`data`,
+        this.`json`
     )
     }
     
@@ -44776,6 +44843,9 @@ public object FfiConverterTypeEvent: FfiConverterRustBuffer<Event> {
             FfiConverterTypeAddress.read(buf),
             FfiConverterString.read(buf),
             FfiConverterByteArray.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
         )
     }
 
@@ -44784,7 +44854,10 @@ public object FfiConverterTypeEvent: FfiConverterRustBuffer<Event> {
             FfiConverterString.allocationSize(value.`module`) +
             FfiConverterTypeAddress.allocationSize(value.`sender`) +
             FfiConverterString.allocationSize(value.`type`) +
-            FfiConverterByteArray.allocationSize(value.`contents`)
+            FfiConverterByteArray.allocationSize(value.`contents`) +
+            FfiConverterString.allocationSize(value.`timestamp`) +
+            FfiConverterString.allocationSize(value.`data`) +
+            FfiConverterString.allocationSize(value.`json`)
     )
 
     override fun write(value: Event, buf: ByteBuffer) {
@@ -44793,6 +44866,9 @@ public object FfiConverterTypeEvent: FfiConverterRustBuffer<Event> {
             FfiConverterTypeAddress.write(value.`sender`, buf)
             FfiConverterString.write(value.`type`, buf)
             FfiConverterByteArray.write(value.`contents`, buf)
+            FfiConverterString.write(value.`timestamp`, buf)
+            FfiConverterString.write(value.`data`, buf)
+            FfiConverterString.write(value.`json`, buf)
     }
 }
 
@@ -44895,6 +44971,42 @@ public object FfiConverterTypeEventPage: FfiConverterRustBuffer<EventPage> {
     override fun write(value: EventPage, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
             FfiConverterSequenceTypeEvent.write(value.`data`, buf)
+    }
+}
+
+
+
+data class FaucetReceipt (
+    var `sent`: List<CoinInfo>
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`sent`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeFaucetReceipt: FfiConverterRustBuffer<FaucetReceipt> {
+    override fun read(buf: ByteBuffer): FaucetReceipt {
+        return FaucetReceipt(
+            FfiConverterSequenceTypeCoinInfo.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: FaucetReceipt) = (
+            FfiConverterSequenceTypeCoinInfo.allocationSize(value.`sent`)
+    )
+
+    override fun write(value: FaucetReceipt, buf: ByteBuffer) {
+            FfiConverterSequenceTypeCoinInfo.write(value.`sent`, buf)
     }
 }
 
@@ -46539,6 +46651,38 @@ public object FfiConverterTypeProtocolConfigs: FfiConverterRustBuffer<ProtocolCo
 
 
 
+data class Query (
+    var `query`: kotlin.String, 
+    var `variables`: Value? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeQuery: FfiConverterRustBuffer<Query> {
+    override fun read(buf: ByteBuffer): Query {
+        return Query(
+            FfiConverterString.read(buf),
+            FfiConverterOptionalTypeValue.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: Query) = (
+            FfiConverterString.allocationSize(value.`query`) +
+            FfiConverterOptionalTypeValue.allocationSize(value.`variables`)
+    )
+
+    override fun write(value: Query, buf: ByteBuffer) {
+            FfiConverterString.write(value.`query`, buf)
+            FfiConverterOptionalTypeValue.write(value.`variables`, buf)
+    }
+}
+
+
+
 /**
  * Randomness update
  *
@@ -48077,6 +48221,37 @@ public object FfiConverterTypeZkLoginClaim: FfiConverterRustBuffer<ZkLoginClaim>
             FfiConverterUByte.write(value.`indexMod4`, buf)
     }
 }
+
+
+
+
+enum class BatchSendStatusType {
+    
+    IN_PROGRESS,
+    SUCCEEDED,
+    DISCARDED;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeBatchSendStatusType: FfiConverterRustBuffer<BatchSendStatusType> {
+    override fun read(buf: ByteBuffer) = try {
+        BatchSendStatusType.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: BatchSendStatusType) = 4UL
+
+    override fun write(value: BatchSendStatusType, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
 
 
 
@@ -50388,6 +50563,118 @@ public object FfiConverterTypeSignatureScheme: FfiConverterRustBuffer<SignatureS
 
 
 
+/**
+ * A transaction argument used in programmable transactions.
+ */
+sealed class TransactionArgument {
+    
+    /**
+     * Reference to the gas coin.
+     */
+    object GasCoin : TransactionArgument()
+    
+    
+    /**
+     * An input to the programmable transaction block.
+     */
+    data class Input(
+        /**
+         * Index of the programmable transaction block input (0-indexed).
+         */
+        val `ix`: kotlin.UInt) : TransactionArgument() {
+        companion object
+    }
+    
+    /**
+     * The result of another transaction command.
+     */
+    data class Result(
+        /**
+         * The index of the previous command (0-indexed) that returned this
+         * result.
+         */
+        val `cmd`: kotlin.UInt, 
+        /**
+         * If the previous command returns multiple values, this is the index
+         * of the individual result among the multiple results from
+         * that command (also 0-indexed).
+         */
+        val `ix`: kotlin.UInt?) : TransactionArgument() {
+        companion object
+    }
+    
+
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTransactionArgument : FfiConverterRustBuffer<TransactionArgument>{
+    override fun read(buf: ByteBuffer): TransactionArgument {
+        return when(buf.getInt()) {
+            1 -> TransactionArgument.GasCoin
+            2 -> TransactionArgument.Input(
+                FfiConverterUInt.read(buf),
+                )
+            3 -> TransactionArgument.Result(
+                FfiConverterUInt.read(buf),
+                FfiConverterOptionalUInt.read(buf),
+                )
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: TransactionArgument) = when(value) {
+        is TransactionArgument.GasCoin -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is TransactionArgument.Input -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUInt.allocationSize(value.`ix`)
+            )
+        }
+        is TransactionArgument.Result -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUInt.allocationSize(value.`cmd`)
+                + FfiConverterOptionalUInt.allocationSize(value.`ix`)
+            )
+        }
+    }
+
+    override fun write(value: TransactionArgument, buf: ByteBuffer) {
+        when(value) {
+            is TransactionArgument.GasCoin -> {
+                buf.putInt(1)
+                Unit
+            }
+            is TransactionArgument.Input -> {
+                buf.putInt(2)
+                FfiConverterUInt.write(value.`ix`, buf)
+                Unit
+            }
+            is TransactionArgument.Result -> {
+                buf.putInt(3)
+                FfiConverterUInt.write(value.`cmd`, buf)
+                FfiConverterOptionalUInt.write(value.`ix`, buf)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
 
 enum class TransactionBlockKindInput {
     
@@ -51020,38 +51307,6 @@ public object FfiConverterOptionalTypeArgument: FfiConverterRustBuffer<Argument?
 /**
  * @suppress
  */
-public object FfiConverterOptionalTypeBatchSendStatus: FfiConverterRustBuffer<BatchSendStatus?> {
-    override fun read(buf: ByteBuffer): BatchSendStatus? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeBatchSendStatus.read(buf)
-    }
-
-    override fun allocationSize(value: BatchSendStatus?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeBatchSendStatus.allocationSize(value)
-        }
-    }
-
-    override fun write(value: BatchSendStatus?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeBatchSendStatus.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
 public object FfiConverterOptionalTypeCheckpointSummary: FfiConverterRustBuffer<CheckpointSummary?> {
     override fun read(buf: ByteBuffer): CheckpointSummary? {
         if (buf.get().toInt() == 0) {
@@ -51170,38 +51425,6 @@ public object FfiConverterOptionalTypeEd25519Signature: FfiConverterRustBuffer<E
         } else {
             buf.put(1)
             FfiConverterTypeEd25519Signature.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalTypeFaucetReceipt: FfiConverterRustBuffer<FaucetReceipt?> {
-    override fun read(buf: ByteBuffer): FaucetReceipt? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterTypeFaucetReceipt.read(buf)
-    }
-
-    override fun allocationSize(value: FaucetReceipt?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterTypeFaucetReceipt.allocationSize(value)
-        }
-    }
-
-    override fun write(value: FaucetReceipt?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterTypeFaucetReceipt.write(value, buf)
         }
     }
 }
@@ -51788,6 +52011,38 @@ public object FfiConverterOptionalTypeZkloginVerifier: FfiConverterRustBuffer<Zk
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeBatchSendStatus: FfiConverterRustBuffer<BatchSendStatus?> {
+    override fun read(buf: ByteBuffer): BatchSendStatus? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeBatchSendStatus.read(buf)
+    }
+
+    override fun allocationSize(value: BatchSendStatus?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeBatchSendStatus.allocationSize(value)
+        }
+    }
+
+    override fun write(value: BatchSendStatus?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeBatchSendStatus.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeCoinMetadata: FfiConverterRustBuffer<CoinMetadata?> {
     override fun read(buf: ByteBuffer): CoinMetadata? {
         if (buf.get().toInt() == 0) {
@@ -51970,6 +52225,38 @@ public object FfiConverterOptionalTypeEventFilter: FfiConverterRustBuffer<EventF
         } else {
             buf.put(1)
             FfiConverterTypeEventFilter.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeFaucetReceipt: FfiConverterRustBuffer<FaucetReceipt?> {
+    override fun read(buf: ByteBuffer): FaucetReceipt? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeFaucetReceipt.read(buf)
+    }
+
+    override fun allocationSize(value: FaucetReceipt?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeFaucetReceipt.allocationSize(value)
+        }
+    }
+
+    override fun write(value: FaucetReceipt?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeFaucetReceipt.write(value, buf)
         }
     }
 }
@@ -53858,6 +54145,118 @@ public object FfiConverterSequenceTypeChangedObject: FfiConverterRustBuffer<List
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeChangedObject.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeCoinInfo: FfiConverterRustBuffer<List<CoinInfo>> {
+    override fun read(buf: ByteBuffer): List<CoinInfo> {
+        val len = buf.getInt()
+        return List<CoinInfo>(len) {
+            FfiConverterTypeCoinInfo.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<CoinInfo>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeCoinInfo.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<CoinInfo>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeCoinInfo.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeDryRunEffect: FfiConverterRustBuffer<List<DryRunEffect>> {
+    override fun read(buf: ByteBuffer): List<DryRunEffect> {
+        val len = buf.getInt()
+        return List<DryRunEffect>(len) {
+            FfiConverterTypeDryRunEffect.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<DryRunEffect>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeDryRunEffect.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<DryRunEffect>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeDryRunEffect.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeDryRunMutation: FfiConverterRustBuffer<List<DryRunMutation>> {
+    override fun read(buf: ByteBuffer): List<DryRunMutation> {
+        val len = buf.getInt()
+        return List<DryRunMutation>(len) {
+            FfiConverterTypeDryRunMutation.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<DryRunMutation>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeDryRunMutation.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<DryRunMutation>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeDryRunMutation.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeDryRunReturn: FfiConverterRustBuffer<List<DryRunReturn>> {
+    override fun read(buf: ByteBuffer): List<DryRunReturn> {
+        val len = buf.getInt()
+        return List<DryRunReturn>(len) {
+            FfiConverterTypeDryRunReturn.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<DryRunReturn>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeDryRunReturn.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<DryRunReturn>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeDryRunReturn.write(it, buf)
         }
     }
 }

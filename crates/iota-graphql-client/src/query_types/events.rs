@@ -3,7 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{
-    Address, Base64, GQLAddress, MoveType, PageInfo, normalized_move::MoveModuleQuery, schema,
+    Address, Base64, DateTime, GQLAddress, JsonValue, MoveData, MoveType, PageInfo,
+    normalized_move::MoveModuleQuery, schema,
 };
 
 // ===========================================================================
@@ -41,7 +42,7 @@ pub struct EventConnection {
     pub nodes: Vec<Event>,
 }
 
-#[derive(Clone, cynic::InputObject, Debug)]
+#[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "EventFilter")]
 pub struct EventFilter {
     pub emitting_module: Option<String>,
@@ -50,11 +51,14 @@ pub struct EventFilter {
     pub transaction_digest: Option<String>,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "Event")]
 pub struct Event {
     pub sending_module: Option<MoveModuleQuery>,
     pub sender: Option<GQLAddress>,
     pub type_: MoveType,
     pub bcs: Base64,
+    pub timestamp: Option<DateTime>,
+    pub data: MoveData,
+    pub json: JsonValue,
 }

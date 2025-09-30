@@ -22,7 +22,7 @@ use test_cluster::TestClusterBuilder;
 const BASE_PATH: &str = "../";
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn main() -> eyre::Result<()> {
     let test_cluster = TestClusterBuilder::new().build().await;
     let client = test_cluster.wallet.get_client().await?;
 
@@ -130,7 +130,7 @@ async fn main() -> anyhow::Result<()> {
 
 // Write the tx data bytes base64 encoded to a file with the BASE_PATH before
 // the provided name
-fn write_bs64_tx_to_file(tx_data_bytes: &[u8], name: &str) -> anyhow::Result<()> {
+fn write_bs64_tx_to_file(tx_data_bytes: &[u8], name: &str) -> eyre::Result<()> {
     let mut f = OpenOptions::new()
         .create(true)
         .write(true)
@@ -141,7 +141,7 @@ fn write_bs64_tx_to_file(tx_data_bytes: &[u8], name: &str) -> anyhow::Result<()>
     Ok(())
 }
 
-fn raw_tx_bytes_to_transaction_data_bytes(raw_tx_bytes: &[u8]) -> anyhow::Result<Vec<u8>> {
+fn raw_tx_bytes_to_transaction_data_bytes(raw_tx_bytes: &[u8]) -> eyre::Result<Vec<u8>> {
     let sender_signed_data: SenderSignedData = bcs::from_bytes(raw_tx_bytes)?;
     let tx_data = sender_signed_data.transaction_data();
     let tx_data_bytes = bcs::to_bytes(tx_data)?;

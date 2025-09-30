@@ -9,12 +9,12 @@ repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "GraphQL RPC Client for the IOTA Blockchain"
 
 [dependencies]
-anyhow = "1.0.71"
 base64ct = { version = "1.6.0", features = ["alloc", "std"] }
 bcs = "0.1.4"
 chrono = "0.4.26"
 cynic = "3.7.3"
 derive_more = { version = "2.0", features = ["from"] }
+eyre = "0.6"
 futures = "0.3.29"
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde"] }
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
@@ -27,6 +27,7 @@ url = "2.5.3"
 
 [dev-dependencies]
 hex = "0.4.3"
+iota-crypto = { path = "../iota-crypto", features = ["ed25519", "pem"] }
 iota-transaction-builder = { path = "../iota-transaction-builder" }
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde", "rand", "hash"] }
 rand = "0.8.5"

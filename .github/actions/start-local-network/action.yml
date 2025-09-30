@@ -1,0 +1,23 @@
+name: "Start Local IOTA Network"
+description: "Downloads and starts a local IOTA network for testing"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get the IOTA testnet binary and start a local network
+      shell: bash
+      env:
+        IOTA_BINARY_VERSION: "v0.12.0-rc"
+        EPOCH_DURATION_MS: "10000"
+      run: |
+        ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
+        download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
+
+        echo "Downloading testnet binary from $download_url"
+        wget -q $download_url -O iota.tgz
+        tar -zxvf iota.tgz ./iota
+        chmod +x ./iota
+        echo "Starting local network with a faucet, an indexer (port 5432) and GraphQL. Epoch duration is set to $EPOCH_DURATION_MS ms"
+        echo "$(pwd)" >> $GITHUB_PATH
+        ./iota start --force-regenesis --with-faucet --with-indexer --with-graphql --pg-port 5432 --pg-db-name iota_indexer_v2 --epoch-duration-ms $EPOCH_DURATION_MS &
+        sleep $((EPOCH_DURATION_MS / 1000)) # wait for the first epoch to end

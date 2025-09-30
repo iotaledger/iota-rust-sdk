@@ -4,8 +4,8 @@
 
 use iota_types::ObjectReference;
 
-use super::transaction::TxBlockEffects;
-use crate::query_types::{Address, ObjectId, schema};
+use super::transaction::TransactionBlock;
+use crate::query_types::{Address, Base64, MoveType, ObjectId, schema};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "DryRunArgs")]
@@ -18,7 +18,62 @@ pub struct DryRunQuery {
 #[cynic(schema = "rpc", graphql_type = "DryRunResult")]
 pub struct DryRunResult {
     pub error: Option<String>,
-    pub transaction: Option<TxBlockEffects>,
+    pub results: Option<Vec<DryRunEffect>>,
+    pub transaction: Option<TransactionBlock>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "DryRunEffect")]
+pub struct DryRunEffect {
+    pub mutated_references: Option<Vec<DryRunMutation>>,
+    pub return_values: Option<Vec<DryRunReturn>>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "DryRunMutation")]
+pub struct DryRunMutation {
+    pub input: TransactionArgument,
+    #[cynic(rename = "type")]
+    pub type_: MoveType,
+    pub bcs: Base64,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "DryRunReturn")]
+pub struct DryRunReturn {
+    #[cynic(rename = "type")]
+    pub type_: MoveType,
+    pub bcs: Base64,
+}
+
+#[derive(cynic::InlineFragments, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionArgument")]
+pub enum TransactionArgument {
+    GasCoin(GasCoin),
+    Input(Input),
+    Result(ResultArg),
+    #[cynic(fallback)]
+    Unknown,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "GasCoin")]
+pub struct GasCoin {
+    #[cynic(rename = "_")]
+    pub placeholder: Option<bool>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "Input")]
+pub struct Input {
+    pub ix: i32,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "Result")]
+pub struct ResultArg {
+    pub cmd: i32,
+    pub ix: Option<i32>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]

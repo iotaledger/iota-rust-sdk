@@ -244,7 +244,7 @@ impl std::fmt::Display for AddressParseError {
         write!(
             f,
             "Unable to parse Address (must be hex string of length {})",
-            Address::LENGTH
+            2 * Address::LENGTH
         )
     }
 }

@@ -3,8 +3,8 @@
 
 use std::str::FromStr;
 
-use anyhow::{Context, Result};
 use base64ct::Encoding;
+use eyre::{OptionExt, Result};
 use iota_graphql_client::Client;
 use iota_transaction_builder::{TransactionBuilder, unresolved::Input};
 use iota_types::{Address, Argument, ObjectId};
@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
             None,
         )
         .await?
-        .context("missing gas coin")?;
+        .ok_or_eyre("missing gas coin")?;
 
     // Recipients and amounts
     let recipients = [
@@ -61,7 +61,7 @@ async fn main() -> Result<()> {
     // Transfer each split coin to its corresponding recipient
     for (i, recipient_input) in recipient_inputs.into_iter().enumerate() {
         let coin_arg = Argument::get_nested_result(&split_coins_result, i as u16)
-            .ok_or_else(|| anyhow::anyhow!("Failed to get split coin result at index {i}"))?;
+            .ok_or_else(|| eyre::eyre!("Failed to get split coin result at index {i}"))?;
         builder.transfer_objects(vec![coin_arg], recipient_input);
     }
 
@@ -71,7 +71,7 @@ async fn main() -> Result<()> {
         client
             .reference_gas_price(None)
             .await?
-            .context("missing ref gas price")?,
+            .ok_or_eyre("missing ref gas price")?,
     );
     builder.add_gas_objects([Input::from(&gas_coin).with_owned_kind()]);
     let txn = builder.finish()?;
@@ -85,7 +85,7 @@ async fn main() -> Result<()> {
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        anyhow::bail!("Failed to send IOTA: {err}");
+        eyre::bail!("Failed to send IOTA: {err}");
     }
 
     println!("Send IOTA dry run was successful!");

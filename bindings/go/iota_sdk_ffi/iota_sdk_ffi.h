@@ -450,16 +450,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_argument_new_result(uint16_t result, Ru
 RustBuffer uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result(void* ptr, uint16_t ix, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_BATCHSENDSTATUS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_BATCHSENDSTATUS
-void* uniffi_iota_sdk_ffi_fn_clone_batchsendstatus(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_BATCHSENDSTATUS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_BATCHSENDSTATUS
-void uniffi_iota_sdk_ffi_fn_free_batchsendstatus(void* ptr, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_BLS12381PRIVATEKEY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_BLS12381PRIVATEKEY
 void* uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey(void* ptr, RustCallStatus *out_status
@@ -1226,6 +1216,16 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ed25519publickey_generate(RustCallStatu
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PUBLICKEY_DERIVE_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PUBLICKEY_DERIVE_ADDRESS
+void* uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PUBLICKEY_SCHEME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PUBLICKEY_SCHEME
+RustBuffer uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PUBLICKEY_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PUBLICKEY_TO_BYTES
 RustBuffer uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(void* ptr, RustCallStatus *out_status
@@ -1495,16 +1495,6 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(void* ptr, 
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_FAUCETCLIENT_REQUEST_STATUS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_FAUCETCLIENT_REQUEST_STATUS
 uint64_t uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status(void* ptr, RustBuffer id
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_FAUCETRECEIPT
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_FAUCETRECEIPT
-void* uniffi_iota_sdk_ffi_fn_clone_faucetreceipt(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_FAUCETRECEIPT
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_FAUCETRECEIPT
-void uniffi_iota_sdk_ffi_fn_free_faucetreceipt(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_GENESISOBJECT
@@ -1784,6 +1774,11 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(void* ptr, 
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_REFERENCE_GAS_PRICE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_REFERENCE_GAS_PRICE
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_reference_gas_price(void* ptr, RustBuffer epoch
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_RUN_QUERY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_RUN_QUERY
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_run_query(void* ptr, RustBuffer query
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_SERVICE_CONFIG
@@ -3017,6 +3012,16 @@ void* uniffi_iota_sdk_ffi_fn_constructor_secp256k1publickey_generate(RustCallSta
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256K1PUBLICKEY_DERIVE_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256K1PUBLICKEY_DERIVE_ADDRESS
+void* uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256K1PUBLICKEY_SCHEME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256K1PUBLICKEY_SCHEME
+RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256K1PUBLICKEY_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256K1PUBLICKEY_TO_BYTES
 RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(void* ptr, RustCallStatus *out_status
@@ -3229,6 +3234,16 @@ void* uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_str(RustBuffer 
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SECP256R1PUBLICKEY_GENERATE
 void* uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(RustCallStatus *out_status
     
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1PUBLICKEY_DERIVE_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1PUBLICKEY_DERIVE_ADDRESS
+void* uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1PUBLICKEY_SCHEME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1PUBLICKEY_SCHEME
+RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1PUBLICKEY_TO_BYTES
@@ -5506,6 +5521,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key(voi
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519PUBLICKEY_DERIVE_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519PUBLICKEY_DERIVE_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519PUBLICKEY_SCHEME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519PUBLICKEY_SCHEME
+uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519PUBLICKEY_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519PUBLICKEY_TO_BYTES
 uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes(void
@@ -5833,6 +5860,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_REFERENCE_GAS_PRICE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_REFERENCE_GAS_PRICE
 uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_RUN_QUERY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_RUN_QUERY
+uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query(void
     
 );
 #endif
@@ -6682,6 +6715,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key(v
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256K1PUBLICKEY_DERIVE_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256K1PUBLICKEY_DERIVE_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256K1PUBLICKEY_SCHEME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256K1PUBLICKEY_SCHEME
+uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256K1PUBLICKEY_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256K1PUBLICKEY_TO_BYTES
 uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes(void
@@ -6787,6 +6832,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user(v
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1PRIVATEKEY_VERIFYING_KEY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1PRIVATEKEY_VERIFYING_KEY
 uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1PUBLICKEY_DERIVE_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1PUBLICKEY_DERIVE_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1PUBLICKEY_SCHEME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1PUBLICKEY_SCHEME
+uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme(void
     
 );
 #endif

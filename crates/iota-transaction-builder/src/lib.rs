@@ -279,9 +279,6 @@ impl TransactionBuilder {
         let Some(sender) = self.sender else {
             return Err(Error::MissingSender);
         };
-        if self.gas.is_empty() {
-            return Err(Error::MissingGasObjects);
-        }
         let Some(budget) = self.gas_budget else {
             return Err(Error::MissingGasBudget);
         };
@@ -478,8 +475,8 @@ fn try_from_unresolved_input_arg(value: unresolved::Input) -> Result<Input, Erro
 mod tests {
     use std::str::FromStr;
 
-    use anyhow::Context;
     use base64ct::Encoding;
+    use eyre::WrapErr;
     use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
     use iota_graphql_client::{
         Client,
