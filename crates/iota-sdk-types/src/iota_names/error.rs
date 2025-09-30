@@ -21,7 +21,7 @@ pub enum IotaNamesError {
     InvalidLabelChar(char, usize),
     #[error("Name must contain at least two labels, TLN and SLN")]
     NotEnoughLabels,
-    #[error("Name must include only one separator")]
+    #[error("Name must include only one @ separator")]
     InvalidSeparator,
     #[error("Name has expired")]
     NameExpired,
