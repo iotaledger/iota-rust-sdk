@@ -8,123 +8,6 @@ use serde_with::{DeserializeAs, SerializeAs};
 use super::Argument;
 use crate::{ObjectId, ObjectReference};
 
-mod transaction {
-    use super::*;
-    use crate::{
-        Address,
-        transaction::{GasPayment, Transaction, TransactionExpiration, TransactionKind},
-    };
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(tag = "version")]
-    #[serde(rename = "Transaction")]
-    enum TransactionDataRef<'a> {
-        #[serde(rename = "1")]
-        V1(TransactionV1Ref<'a>),
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(tag = "version")]
-    #[serde(rename = "Transaction")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-    enum TransactionData {
-        #[serde(rename = "1")]
-        V1(TransactionV1),
-    }
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(rename = "Transaction")]
-    enum BinaryTransactionDataRef<'a> {
-        #[serde(rename = "1")]
-        V1(TransactionV1Ref<'a>),
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(rename = "Transaction")]
-    enum BinaryTransactionData {
-        #[serde(rename = "1")]
-        V1(TransactionV1),
-    }
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(rename = "TransactionV1")]
-    struct TransactionV1Ref<'a> {
-        kind: &'a TransactionKind,
-        sender: &'a Address,
-        gas_payment: &'a GasPayment,
-        expiration: &'a TransactionExpiration,
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(rename = "TransactionV1")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-    struct TransactionV1 {
-        kind: TransactionKind,
-        sender: Address,
-        gas_payment: GasPayment,
-        expiration: TransactionExpiration,
-    }
-
-    impl Serialize for Transaction {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            let transaction = TransactionV1Ref {
-                kind: &self.kind,
-                sender: &self.sender,
-                gas_payment: &self.gas_payment,
-                expiration: &self.expiration,
-            };
-
-            if serializer.is_human_readable() {
-                TransactionDataRef::V1(transaction).serialize(serializer)
-            } else {
-                BinaryTransactionDataRef::V1(transaction).serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for Transaction {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            let TransactionV1 {
-                kind,
-                sender,
-                gas_payment,
-                expiration,
-            } = if deserializer.is_human_readable() {
-                let TransactionData::V1(transaction) = Deserialize::deserialize(deserializer)?;
-                transaction
-            } else {
-                let BinaryTransactionData::V1(transaction) =
-                    Deserialize::deserialize(deserializer)?;
-                transaction
-            };
-
-            Ok(Transaction {
-                kind,
-                sender,
-                gas_payment,
-                expiration,
-            })
-        }
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for Transaction {
-        fn schema_name() -> String {
-            TransactionData::schema_name()
-        }
-
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            TransactionData::json_schema(gen)
-        }
-    }
-}
-
 mod transaction_kind {
     use super::*;
     use crate::transaction::{
@@ -856,7 +739,7 @@ mod signed_transaction {
     use super::*;
     use crate::{
         UserSignature,
-        transaction::{SignedTransaction, Transaction},
+        transaction::{SignedTransaction, TransactionData},
     };
 
     /// Intents are defined as:
@@ -891,8 +774,8 @@ mod signed_transaction {
     /// ```
     struct IntentMessageWrappedTransaction;
 
-    impl SerializeAs<Transaction> for IntentMessageWrappedTransaction {
-        fn serialize_as<S>(transaction: &Transaction, serializer: S) -> Result<S::Ok, S::Error>
+    impl SerializeAs<TransactionData> for IntentMessageWrappedTransaction {
+        fn serialize_as<S>(transaction: &TransactionData, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
         {
@@ -907,12 +790,12 @@ mod signed_transaction {
         }
     }
 
-    impl<'de> DeserializeAs<'de, Transaction> for IntentMessageWrappedTransaction {
-        fn deserialize_as<D>(deserializer: D) -> Result<Transaction, D::Error>
+    impl<'de> DeserializeAs<'de, TransactionData> for IntentMessageWrappedTransaction {
+        fn deserialize_as<D>(deserializer: D) -> Result<TransactionData, D::Error>
         where
             D: Deserializer<'de>,
         {
-            let (scope, version, app, transaction): (u8, u8, u8, Transaction) =
+            let (scope, version, app, transaction): (u8, u8, u8, TransactionData) =
                 Deserialize::deserialize(deserializer)?;
             match (scope, version, app) {
                 (0, 0, 0) => {}
@@ -932,14 +815,14 @@ mod signed_transaction {
     #[derive(serde_derive::Serialize)]
     struct BinarySignedTransactionWithIntentMessageRef<'a> {
         #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
-        transaction: &'a Transaction,
+        transaction: &'a TransactionData,
         signatures: &'a Vec<UserSignature>,
     }
 
     #[derive(serde_derive::Deserialize)]
     struct BinarySignedTransactionWithIntentMessage {
         #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
-        transaction: Transaction,
+        transaction: TransactionData,
         signatures: Vec<UserSignature>,
     }
 
@@ -1149,7 +1032,7 @@ mod test {
 
     use crate::{
         Digest, ObjectId, ObjectReference,
-        transaction::{Argument, Input, Transaction},
+        transaction::{Argument, Input, TransactionData},
     };
 
     #[test]
@@ -1239,7 +1122,7 @@ mod test {
 
         for fixture in [GENESIS_TRANSACTION, CONSENSUS_PROLOGUE, EPOCH_CHANGE, PTB] {
             let fixture = Base64::decode_vec(fixture.trim()).unwrap();
-            let tx: Transaction = bcs::from_bytes(&fixture).unwrap();
+            let tx: TransactionData = bcs::from_bytes(&fixture).unwrap();
             assert_eq!(bcs::to_bytes(&tx).unwrap(), fixture);
 
             let json = serde_json::to_string_pretty(&tx).unwrap();

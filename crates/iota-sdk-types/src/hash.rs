@@ -307,7 +307,15 @@ mod type_digest {
         }
     }
 
-    impl crate::Transaction {
+    impl crate::TransactionData {
+        pub fn digest(&self) -> Digest {
+            match self {
+                crate::TransactionData::V1(tx) => tx.digest(),
+            }
+        }
+    }
+
+    impl crate::TransactionDataV1 {
         pub fn digest(&self) -> Digest {
             const SALT: &str = "TransactionData::";
             type_digest(SALT, self)
@@ -341,17 +349,29 @@ mod type_digest {
 mod signing_message {
     use crate::{
         Digest, Intent, IntentAppId, IntentScope, IntentVersion, PersonalMessage, SigningDigest,
-        Transaction, hash::Hasher,
+        TransactionData, TransactionDataV1, hash::Hasher,
     };
 
-    impl Transaction {
+    impl TransactionData {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent {
+            let intent = Intent {
                 scope: IntentScope::TransactionData,
                 version: IntentVersion::V0,
                 app_id: IntentAppId::Iota,
             };
-            let digest = signing_digest(INTENT, self);
+            let digest = signing_digest(intent, self);
+            digest.into_inner()
+        }
+    }
+
+    impl TransactionDataV1 {
+        pub fn signing_digest(&self) -> SigningDigest {
+            let intent = Intent {
+                scope: IntentScope::TransactionData,
+                version: IntentVersion::V0,
+                app_id: IntentAppId::Iota,
+            };
+            let digest = signing_digest(intent, self);
             digest.into_inner()
         }
     }
@@ -365,25 +385,25 @@ mod signing_message {
 
     impl PersonalMessage<'_> {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent {
+            let intent = Intent {
                 scope: IntentScope::PersonalMessage,
                 version: IntentVersion::V0,
                 app_id: IntentAppId::Iota,
             };
-            let digest = signing_digest(INTENT, &self.0);
+            let digest = signing_digest(intent, &self.0);
             digest.into_inner()
         }
     }
 
     impl crate::CheckpointSummary {
         pub fn signing_message(&self) -> Vec<u8> {
-            const INTENT: Intent = Intent {
+            let intent = Intent {
                 scope: IntentScope::CheckpointSummary,
                 version: IntentVersion::V0,
                 app_id: IntentAppId::Iota,
             };
             let mut message = Vec::new();
-            message.extend(INTENT.to_bytes());
+            message.extend(intent.to_bytes());
             bcs::serialize_into(&mut message, self).unwrap();
             bcs::serialize_into(&mut message, &self.epoch).unwrap();
             message

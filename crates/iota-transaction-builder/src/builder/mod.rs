@@ -15,7 +15,7 @@ use iota_graphql_client::{
 };
 use iota_types::{
     Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
-    Transaction, TransactionEffects, TransactionExpiration, TypeTag,
+    TransactionData, TransactionDataV1, TransactionEffects, TransactionExpiration, TypeTag,
 };
 use serde::Serialize;
 
@@ -484,7 +484,7 @@ impl<L> TransactionBuilder<(), L> {
     }
 
     /// Convert this builder into a transaction.
-    pub fn finish(mut self) -> Result<Transaction, Error> {
+    pub fn finish(mut self) -> Result<TransactionData, Error> {
         let Some(price) = self.data.gas_price else {
             return Err(Error::MissingGasPrice);
         };
@@ -521,7 +521,7 @@ impl<L> TransactionBuilder<(), L> {
             .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
-        Ok(Transaction {
+        Ok(TransactionDataV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
@@ -534,7 +534,8 @@ impl<L> TransactionBuilder<(), L> {
                 budget: self.data.gas_budget.unwrap_or(0),
             },
             expiration: self.data.expiration,
-        })
+        }
+        .into())
     }
 }
 
@@ -695,7 +696,7 @@ impl<L> TransactionBuilder<Client, L> {
         })
     }
 
-    async fn resolve_ptb(&mut self) -> Result<Transaction, Error> {
+    async fn resolve_ptb(&mut self) -> Result<TransactionData, Error> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
@@ -794,7 +795,7 @@ impl<L> TransactionBuilder<Client, L> {
                 .map_err(Error::Client)?
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
-        Ok(Transaction {
+        Ok(TransactionDataV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
@@ -807,26 +808,32 @@ impl<L> TransactionBuilder<Client, L> {
                 budget: self.data.gas_budget.unwrap_or(0),
             },
             expiration: self.data.expiration,
-        })
+        }
+        .into())
     }
 
     /// Convert this builder into a transaction.
-    pub async fn finish(mut self) -> Result<Transaction, Error> {
+    pub async fn finish(mut self) -> Result<TransactionData, Error> {
         let mut txn = self.resolve_ptb().await?;
         if self.data.gas_budget.is_none() {
             let res = self
                 .client
-                .dry_run_tx_kind(&txn.kind, true, Default::default())
+                .dry_run_tx_kind(&txn.clone().as_v1().kind, true, Default::default())
                 .await
                 .map_err(Error::Client)?;
             if let Some(err) = res.error {
                 return Err(Error::DryRun(err));
             }
-            txn.gas_payment.budget = res
-                .effects
-                .ok_or_else(|| Error::MissingGasBudget)?
-                .gas_summary()
-                .gas_used();
+
+            match &mut txn {
+                TransactionData::V1(t) => {
+                    t.gas_payment.budget = res
+                        .effects
+                        .ok_or_else(|| Error::MissingGasBudget)?
+                        .gas_summary()
+                        .gas_used();
+                }
+            }
         }
 
         Ok(txn)
@@ -834,7 +841,7 @@ impl<L> TransactionBuilder<Client, L> {
 
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
-        let txn = self.resolve_ptb().await?;
+        let txn = self.resolve_ptb().await?.as_v1();
         if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
             return Err(Error::DryRun(
                 "gas coins were provided without a gas budget".to_owned(),

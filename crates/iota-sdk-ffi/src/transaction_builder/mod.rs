@@ -16,7 +16,7 @@ use crate::{
         graphql::DryRunResult,
         object::ObjectId,
         struct_tag::Identifier,
-        transaction::{Transaction, TransactionEffects},
+        transaction::{Argument, TransactionData, TransactionEffects},
         type_tag::TypeTag,
     },
 };
@@ -279,7 +279,7 @@ impl TransactionBuilder {
     }
 
     /// Convert this builder into a transaction.
-    pub async fn finish(&self) -> Result<Transaction> {
+    pub async fn finish(&self) -> Result<TransactionData> {
         Ok(self.read(|builder| builder.clone().finish()).await?.into())
     }
 

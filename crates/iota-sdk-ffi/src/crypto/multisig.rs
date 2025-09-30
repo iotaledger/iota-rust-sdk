@@ -14,7 +14,7 @@ use crate::{
     types::{
         crypto::multisig::{MultisigAggregatedSignature, MultisigCommittee},
         signature::UserSignature,
-        transaction::Transaction,
+        transaction::TransactionData,
     },
 };
 
@@ -83,11 +83,14 @@ pub struct MultisigAggregator(pub iota_crypto::multisig::MultisigAggregator);
 #[uniffi::export]
 impl MultisigAggregator {
     #[uniffi::constructor]
-    pub fn new_with_transaction(committee: &MultisigCommittee, transaction: &Transaction) -> Self {
+    pub fn new_with_transaction(
+        committee: &MultisigCommittee,
+        transaction: &TransactionData,
+    ) -> Self {
         Self(
             iota_crypto::multisig::MultisigAggregator::new_with_transaction(
                 committee.0.clone(),
-                &transaction.0,
+                &transaction.clone().into(),
             ),
         )
     }

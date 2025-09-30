@@ -14,7 +14,7 @@ mod serialization;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use serialization::SignedTransactionWithIntentMessage;
 
-/// A transaction
+/// Transaction data
 ///
 /// # BCS
 ///
@@ -27,7 +27,40 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct Transaction {
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_derive::Serialize, serde_derive::Deserialize)
+)]
+pub enum TransactionData {
+    #[serde(rename = "1")]
+    V1(TransactionDataV1),
+    // When new variants are introduced, it is important that we check version support
+    // in the validity_check function based on the protocol config.
+}
+
+impl TransactionData {
+    pub fn as_v1(self) -> TransactionDataV1 {
+        match self {
+            TransactionData::V1(tx) => tx,
+        }
+    }
+}
+
+impl From<TransactionDataV1> for TransactionData {
+    fn from(v1: TransactionDataV1) -> Self {
+        TransactionData::V1(v1)
+    }
+}
+
+#[derive(Debug, PartialEq, Eq, Clone)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_derive::Serialize, serde_derive::Deserialize)
+)]
+pub struct TransactionDataV1 {
     pub kind: TransactionKind,
     pub sender: Address,
     pub gas_payment: GasPayment,
@@ -51,7 +84,7 @@ pub struct SenderSignedTransaction(
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SignedTransaction {
-    pub transaction: Transaction,
+    pub transaction: TransactionData,
     pub signatures: Vec<UserSignature>,
 }
 

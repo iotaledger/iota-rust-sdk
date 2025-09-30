@@ -23,7 +23,7 @@ use crate::{
         },
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
-        transaction::{SignedTransaction, Transaction, TransactionEffects, TransactionKind},
+        transaction::{SignedTransaction, TransactionData, TransactionEffects, TransactionKind},
         type_tag::TypeTag,
     },
     uniffi_helpers::{
@@ -606,7 +606,7 @@ impl GraphQLClient {
     pub async fn execute_tx(
         &self,
         signatures: Vec<Arc<UserSignature>>,
-        tx: &Transaction,
+        tx: &TransactionData,
     ) -> Result<Option<Arc<TransactionEffects>>> {
         Ok(self
             .0
@@ -617,7 +617,7 @@ impl GraphQLClient {
                     .into_iter()
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
-                &tx.0,
+                &tx.clone().into(),
             )
             .await?
             .map(Into::into)
@@ -812,14 +812,14 @@ impl GraphQLClient {
     #[uniffi::method(default(skip_checks = None))]
     pub async fn dry_run_tx(
         &self,
-        tx: &Transaction,
+        tx: &TransactionData,
         skip_checks: Option<bool>,
     ) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx(&tx.0, skip_checks.unwrap_or(false))
+            .dry_run_tx(&tx.clone().into(), skip_checks.unwrap_or(false))
             .await?
             .into())
     }

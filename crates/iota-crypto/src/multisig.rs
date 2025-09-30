@@ -263,7 +263,7 @@ pub struct MultisigAggregator {
 impl MultisigAggregator {
     pub fn new_with_transaction(
         committee: MultisigCommittee,
-        transaction: &iota_sdk_types::Transaction,
+        transaction: &iota_sdk_types::TransactionData,
     ) -> Self {
         Self {
             committee,

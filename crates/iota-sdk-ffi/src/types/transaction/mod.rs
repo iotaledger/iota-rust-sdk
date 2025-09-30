@@ -27,6 +27,29 @@ use crate::{
 
 pub mod v1;
 
+#[derive(Clone, uniffi::Enum)]
+pub enum TransactionData {
+    V1 { v1: Arc<TransactionDataV1> },
+}
+
+impl From<iota_types::TransactionData> for TransactionData {
+    fn from(value: iota_types::TransactionData) -> Self {
+        match value {
+            iota_types::TransactionData::V1(v1) => TransactionData::V1 {
+                v1: Arc::new(v1.into()),
+            },
+        }
+    }
+}
+
+impl From<TransactionData> for iota_types::TransactionData {
+    fn from(value: TransactionData) -> Self {
+        match value {
+            TransactionData::V1 { v1 } => iota_types::TransactionData::V1(v1.0.clone()),
+        }
+    }
+}
+
 /// A transaction
 ///
 /// # BCS
@@ -39,10 +62,10 @@ pub mod v1;
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Transaction(pub iota_types::Transaction);
+pub struct TransactionDataV1(pub iota_types::TransactionDataV1);
 
 #[uniffi::export]
-impl Transaction {
+impl TransactionDataV1 {
     #[uniffi::constructor]
     pub fn new(
         kind: &TransactionKind,
@@ -50,7 +73,7 @@ impl Transaction {
         gas_payment: GasPayment,
         expiration: TransactionExpiration,
     ) -> Self {
-        Self(iota_types::Transaction {
+        Self(iota_types::TransactionDataV1 {
             kind: kind.0.clone(),
             sender: **sender,
             gas_payment: gas_payment.into(),
@@ -89,14 +112,14 @@ impl Transaction {
 
 #[derive(uniffi::Record)]
 pub struct SignedTransaction {
-    pub transaction: Arc<Transaction>,
+    pub transaction: TransactionData,
     pub signatures: Vec<Arc<UserSignature>>,
 }
 
 impl From<iota_types::SignedTransaction> for SignedTransaction {
     fn from(value: iota_types::SignedTransaction) -> Self {
         Self {
-            transaction: Arc::new(value.transaction.into()),
+            transaction: value.transaction.into(),
             signatures: value
                 .signatures
                 .into_iter()
@@ -110,7 +133,7 @@ impl From<iota_types::SignedTransaction> for SignedTransaction {
 impl From<SignedTransaction> for iota_types::SignedTransaction {
     fn from(value: SignedTransaction) -> Self {
         Self {
-            transaction: value.transaction.0.clone(),
+            transaction: value.transaction.into(),
             signatures: value.signatures.into_iter().map(|v| v.0.clone()).collect(),
         }
     }

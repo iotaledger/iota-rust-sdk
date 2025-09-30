@@ -4,7 +4,7 @@
 
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
-use iota_sdk_types::{PersonalMessage, Transaction, UserSignature};
+use iota_sdk_types::{PersonalMessage, TransactionData, UserSignature};
 pub use signature::{Error as SignatureError, Signer, Verifier};
 
 #[cfg(feature = "bls12381")]
@@ -92,7 +92,10 @@ pub use multisig::UserSignatureVerifier;
 /// signer to implement `Signer<UserSignature>` and rely on the blanket
 /// implementation which handles the proper construction of the signing message.
 pub trait IotaSigner {
-    fn sign_transaction(&self, transaction: &Transaction) -> Result<UserSignature, SignatureError>;
+    fn sign_transaction(
+        &self,
+        transaction: &TransactionData,
+    ) -> Result<UserSignature, SignatureError>;
     fn sign_personal_message(
         &self,
         message: &PersonalMessage<'_>,
@@ -100,7 +103,10 @@ pub trait IotaSigner {
 }
 
 impl<T: Signer<UserSignature>> IotaSigner for T {
-    fn sign_transaction(&self, transaction: &Transaction) -> Result<UserSignature, SignatureError> {
+    fn sign_transaction(
+        &self,
+        transaction: &TransactionData,
+    ) -> Result<UserSignature, SignatureError> {
         let msg = transaction.signing_digest();
         self.try_sign(&msg)
     }
@@ -125,7 +131,7 @@ impl<T: Signer<UserSignature>> IotaSigner for T {
 pub trait IotaVerifier {
     fn verify_transaction(
         &self,
-        transaction: &Transaction,
+        transaction: &TransactionData,
         signature: &UserSignature,
     ) -> Result<(), SignatureError>;
     fn verify_personal_message(
@@ -138,7 +144,7 @@ pub trait IotaVerifier {
 impl<T: Verifier<UserSignature>> IotaVerifier for T {
     fn verify_transaction(
         &self,
-        transaction: &Transaction,
+        transaction: &TransactionData,
         signature: &UserSignature,
     ) -> Result<(), SignatureError> {
         let message = transaction.signing_digest();
