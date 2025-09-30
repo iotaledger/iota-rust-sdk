@@ -1,7 +1,7 @@
 // Copyright 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Client errors.
+//! Transaction Builder errors.
 
 use base64ct::Error as Base64Error;
 use iota_types::ObjectId;

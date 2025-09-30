@@ -1,7 +1,7 @@
 // Copyright 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Types for use with these tools.
+//! Types for use with the trasaction builder.
 
 use iota_types::{Address, ObjectId, TypeTag};
 
