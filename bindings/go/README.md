@@ -16,13 +16,13 @@ cargo install uniffi-bindgen-go --git https://github.com/filament-dm/uniffi-bind
 
 Verify by running `make --version`, `go version`, and `uniffi-bindgen-go --version`.
 
-## Generate the Kotlin bindings
+## Generate Go bindings
 
 ```bash
 make go
 ```
 
-## Run an example
+## Run Go example
 
 ```sh
 make go-example chain_id
