@@ -35,20 +35,16 @@ use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 pub struct PasskeyAuthenticator {
     /// The secp256r1 public key for this passkey.
     public_key: Secp256r1PublicKey,
-
     /// The secp256r1 signature from the passkey.
     signature: Secp256r1Signature,
-
     /// Parsed base64url decoded challenge bytes from
     /// `client_data_json.challenge`.
     challenge: Vec<u8>,
-
     /// Opaque authenticator data for this passkey signature.
     ///
     /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
     /// more information on this field.
     authenticator_data: Vec<u8>,
-
     /// Structured, unparsed, JSON for this passkey signature.
     ///
     /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
@@ -321,7 +317,6 @@ mod serialization {
         /// signature for another).
         #[serde(rename = "type")]
         pub ty: ClientDataType,
-
         /// This member contains the base64url encoding of the challenge
         /// provided by the Relying Party. See the [Cryptographic
         /// Challenges] security consideration.
@@ -336,7 +331,6 @@ mod serialization {
         /// (as permitted by Section 3.2) and without the inclusion of any line
         /// breaks, whitespace, or other additional characters.
         pub challenge: String,
-
         /// This member contains the fully qualified origin of the requester, as
         /// provided to the authenticator by the client, in the syntax
         /// defined by [RFC6454].

@@ -25,7 +25,6 @@ impl Verifier<SimpleSignature> for SimpleVerifier {
             SimpleSignature::Ed25519 { .. } => Err(SignatureError::from_source(
                 "support for ed25519 is not enabled",
             )),
-
             #[cfg(feature = "secp256k1")]
             SimpleSignature::Secp256k1 {
                 signature,
@@ -38,7 +37,6 @@ impl Verifier<SimpleSignature> for SimpleVerifier {
             SimpleSignature::Secp256k1 { .. } => Err(SignatureError::from_source(
                 "support for secp256k1 is not enabled",
             )),
-
             #[cfg(feature = "secp256r1")]
             SimpleSignature::Secp256r1 {
                 signature,
@@ -157,7 +155,6 @@ mod keypair {
                     .map(crate::ed25519::Ed25519PrivateKey::from_dalek)
                     .map(InnerKeypair::Ed25519)
                     .map_err(SignatureError::from_source),
-
                 #[cfg(feature = "secp256r1")]
                 (
                     p256::elliptic_curve::ALGORITHM_OID,
@@ -167,7 +164,6 @@ mod keypair {
                     .map(crate::secp256r1::Secp256r1PrivateKey::from_p256)
                     .map(InnerKeypair::Secp256r1)
                     .map_err(SignatureError::from_source),
-
                 #[cfg(feature = "secp256k1")]
                 (
                     k256::elliptic_curve::ALGORITHM_OID,
@@ -177,7 +173,6 @@ mod keypair {
                     .map(crate::secp256k1::Secp256k1PrivateKey::from_k256)
                     .map(InnerKeypair::Secp256k1)
                     .map_err(SignatureError::from_source),
-
                 _ => Err(SignatureError::from_source(
                     "unsupported or invalid private key type",
                 )),
@@ -338,7 +333,6 @@ mod keypair {
                     .map(crate::ed25519::Ed25519VerifyingKey::from_dalek)
                     .map(InnerVerifyingKey::Ed25519)
                     .map_err(SignatureError::from_source),
-
                 #[cfg(feature = "secp256r1")]
                 (
                     p256::elliptic_curve::ALGORITHM_OID,
@@ -348,7 +342,6 @@ mod keypair {
                     .map(crate::secp256r1::Secp256r1VerifyingKey::from_p256)
                     .map(InnerVerifyingKey::Secp256r1)
                     .map_err(SignatureError::from_source),
-
                 #[cfg(feature = "secp256k1")]
                 (
                     k256::elliptic_curve::ALGORITHM_OID,
@@ -358,7 +351,6 @@ mod keypair {
                     .map(crate::secp256k1::Secp256k1VerifyingKey::from_k256)
                     .map(InnerVerifyingKey::Secp256k1)
                     .map_err(SignatureError::from_source),
-
                 _ => Err(SignatureError::from_source(
                     "unsupported or invalid public key type",
                 )),

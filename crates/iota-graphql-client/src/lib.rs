@@ -62,7 +62,6 @@ pub struct Client {
     rpc: Url,
     /// The reqwest client.
     inner: reqwest::Client,
-
     service_config: std::sync::OnceLock<ServiceConfig>,
 }
 

@@ -70,15 +70,12 @@ pub struct EndOfEpochData {
     /// The set of Validators that will be in the ValidatorCommittee for the
     /// next epoch.
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
-
     /// The protocol version that is in effect during the next epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub next_epoch_protocol_version: ProtocolVersion,
-
     /// Commitments to epoch specific state (e.g. live object set)
     pub epoch_commitments: Vec<CheckpointCommitment>,
-
     /// The number of tokens that were minted (if positive) or burnt (if
     /// negative) in this epoch.
     pub epoch_supply_change: i64,
@@ -130,45 +127,36 @@ pub struct CheckpointSummary {
     /// Epoch that this checkpoint belongs to.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: EpochId,
-
     /// The height of this checkpoint.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub sequence_number: CheckpointSequenceNumber,
-
     /// Total number of transactions committed since genesis, including those in
     /// this checkpoint.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub network_total_transactions: u64,
-
     /// The hash of the [`CheckpointContents`] for this checkpoint.
     pub content_digest: Digest,
-
     /// The hash of the previous `CheckpointSummary`.
     ///
     /// This will be only be `None` for the first, or genesis checkpoint.
     pub previous_digest: Option<Digest>,
-
     /// The running total gas costs of all transactions included in the current
     /// epoch so far until this checkpoint.
     pub epoch_rolling_gas_cost_summary: GasCostSummary,
-
     /// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
     /// Checkpoint timestamps are monotonic, but not strongly monotonic -
     /// subsequent checkpoints can have same timestamp if they originate
     /// from the same underlining consensus commit
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub timestamp_ms: CheckpointTimestamp,
-
     /// Commitments to checkpoint-specific state.
     #[cfg_attr(
         feature = "schemars",
         schemars(with = "Option<Vec<CheckpointCommitment>>")
     )]
     pub checkpoint_commitments: Vec<CheckpointCommitment>,
-
     /// Extra data only present in the final checkpoint of an epoch.
     pub end_of_epoch_data: Option<EndOfEpochData>,
-
     /// CheckpointSummary is not an evolvable structure - it must be readable by
     /// any version of the code. Therefore, in order to allow extensions to
     /// be added to CheckpointSummary, we allow opaque data to be added to

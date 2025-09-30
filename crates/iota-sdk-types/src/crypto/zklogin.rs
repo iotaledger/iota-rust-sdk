@@ -30,11 +30,9 @@ use crate::{checkpoint::EpochId, u256::U256};
 pub struct ZkLoginAuthenticator {
     /// Zklogin proof and inputs required to perform proof verification.
     pub inputs: ZkLoginInputs,
-
     /// Maximum epoch for which the proof is valid.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub max_epoch: EpochId,
-
     /// User signature with the pubkey attested to by the provided proof.
     pub signature: SimpleSignature,
 }
@@ -57,7 +55,6 @@ pub struct ZkLoginInputs {
     proof_points: ZkLoginProof,
     iss_base64_details: ZkLoginClaim,
     header_base64: String,
-
     // Validated types
     jwt_header: JwtHeader,
     jwk_id: JwkId,
@@ -543,13 +540,10 @@ impl ZkLoginPublicIdentifier {
 pub struct Jwk {
     /// Key type parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.1>
     pub kty: String,
-
     /// RSA public exponent, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
     pub e: String,
-
     /// RSA modulus, <https://datatracker.ietf.org/doc/html/rfc7517#section-9.3>
     pub n: String,
-
     /// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
     pub alg: String,
 }
@@ -573,7 +567,6 @@ pub struct Jwk {
 pub struct JwkId {
     /// The issuer or identity of the OIDC provider.
     pub iss: String,
-
     /// A key id use to uniquely identify a key from an OIDC provider.
     pub kid: String,
 }

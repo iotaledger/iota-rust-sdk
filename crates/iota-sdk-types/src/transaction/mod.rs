@@ -71,7 +71,6 @@ pub enum TransactionExpiration {
     /// The transaction has no expiration
     #[default]
     None,
-
     /// Validators wont sign a transaction unless the expiration Epoch
     /// is greater than or equal to the current epoch
     Epoch(EpochId),
@@ -104,10 +103,8 @@ impl TransactionExpiration {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GasPayment {
     pub objects: Vec<ObjectReference>,
-
     /// Owner of the gas objects, either the transaction sender or a sponsor
     pub owner: Address,
-
     /// Gas unit price to use when charging for computation
     ///
     /// Must be greater-than-or-equal-to the network's current RGP (reference
@@ -115,7 +112,6 @@ pub struct GasPayment {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub price: u64,
-
     /// Total budget willing to spend for the execution of a transaction
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -143,12 +139,10 @@ pub struct RandomnessStateUpdate {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
-
     /// Randomness round of the update
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub randomness_round: u64,
-
     /// Updated random bytes
     #[cfg_attr(
         feature = "serde",
@@ -156,7 +150,6 @@ pub struct RandomnessStateUpdate {
     )]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     pub random_bytes: Vec<u8>,
-
     /// The initial version of the randomness object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -406,7 +399,6 @@ pub struct AuthenticatorStateExpire {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub min_epoch: u64,
-
     /// The initial version of the authenticator object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -437,15 +429,12 @@ pub struct AuthenticatorStateUpdateV1 {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
-
     /// Consensus round of the authenticator state update
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub round: u64,
-
     /// newly active jwks
     pub new_active_jwks: Vec<ActiveJwk>,
-
     /// The initial version of the authenticator object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -471,10 +460,8 @@ pub struct AuthenticatorStateUpdateV1 {
 pub struct ActiveJwk {
     /// Identifier used to uniquely identify a Jwk
     pub jwk_id: JwkId,
-
     /// The Jwk
     pub jwk: Jwk,
-
     /// Most recent epoch in which the jwk was validated
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -574,12 +561,10 @@ pub struct ConsensusCommitPrologueV1 {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
-
     /// Consensus round of the commit
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub round: u64,
-
     /// The sub DAG index of the consensus commit. This field will be populated
     /// if there are multiple consensus commits per round.
     #[cfg_attr(
@@ -588,15 +573,12 @@ pub struct ConsensusCommitPrologueV1 {
     )]
     #[cfg_attr(feature = "schemars", schemars(with = "Option<crate::_schemars::U64>"))]
     pub sub_dag_index: Option<u64>,
-
     /// Unix timestamp from consensus
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub commit_timestamp_ms: CheckpointTimestamp,
-
     /// Digest of consensus output
     pub consensus_commit_digest: Digest,
-
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
 }
@@ -629,37 +611,30 @@ pub struct ChangeEpoch {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: EpochId,
-
     /// The protocol version in effect in the new epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub protocol_version: ProtocolVersion,
-
     /// The total amount of gas charged for storage during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_charge: u64,
-
     /// The total amount of gas charged for computation during the epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub computation_charge: u64,
-
     /// The amount of storage rebate refunded to the txn senders.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub storage_rebate: u64,
-
     /// The non-refundable storage fee.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub non_refundable_storage_fee: u64,
-
     /// Unix timestamp when epoch started
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch_start_timestamp_ms: u64,
-
     /// System packages (specifically framework and move stdlib) that are
     /// written before the new epoch starts. This tracks framework upgrades
     /// on chain. When executing the ChangeEpoch txn, the validator must
@@ -806,7 +781,6 @@ pub struct ProgrammableTransaction {
     /// Input objects or primitive values
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     pub inputs: Vec<Input>,
-
     /// The commands to be executed sequentially. A failure in any command will
     /// result in the failure of the entire transaction.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
@@ -962,7 +936,6 @@ pub struct TransferObjects {
     /// Set of objects to transfer
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub objects: Vec<Argument>,
-
     /// The address to transfer ownership to
     pub address: Argument,
 }
@@ -986,7 +959,6 @@ pub struct TransferObjects {
 pub struct SplitCoins {
     /// The coin to split
     pub coin: Argument,
-
     /// The amounts to split off
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub amounts: Vec<Argument>,
@@ -1011,7 +983,6 @@ pub struct SplitCoins {
 pub struct MergeCoins {
     /// Coin to merge coins into
     pub coin: Argument,
-
     /// Set of coins to merge into `coin`
     ///
     /// All listed coins must be of the same type and be the same type as `coin`
@@ -1046,7 +1017,6 @@ pub struct Publish {
     )]
     #[cfg_attr(feature = "schemars", schemars(with = "Vec<crate::_schemars::Base64>"))]
     pub modules: Vec<Vec<u8>>,
-
     /// Set of packages that the to-be published package depends on
     pub dependencies: Vec<ObjectId>,
 }
@@ -1074,7 +1044,6 @@ pub struct MakeMoveVector {
     /// when the set of provided arguments are all pure input values.
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
     pub type_: Option<TypeTag>,
-
     /// The set individual elements to build the vector with
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub elements: Vec<Argument>,
@@ -1109,13 +1078,10 @@ pub struct Upgrade {
     )]
     #[cfg_attr(feature = "schemars", schemars(with = "Vec<crate::_schemars::Base64>"))]
     pub modules: Vec<Vec<u8>>,
-
     /// Set of packages that the to-be published package depends on
     pub dependencies: Vec<ObjectId>,
-
     /// Package id of the package to upgrade
     pub package: ObjectId,
-
     /// Ticket authorizing the upgrade
     pub ticket: Argument,
 }
@@ -1231,17 +1197,13 @@ impl Argument {
 pub struct MoveCall {
     /// The package containing the module and function.
     pub package: ObjectId,
-
     /// The specific module in the package containing the function.
     pub module: Identifier,
-
     /// The function to be called.
     pub function: Identifier,
-
     /// The type arguments to the function.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub type_arguments: Vec<TypeTag>,
-
     /// The arguments to the function.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub arguments: Vec<Argument>,

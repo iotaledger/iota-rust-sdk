@@ -34,33 +34,26 @@ pub struct TransactionEffectsV1 {
     /// The status of the execution
     #[cfg_attr(feature = "schemars", schemars(flatten))]
     pub status: ExecutionStatus,
-
     /// The epoch when this transaction was executed.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: EpochId,
-
     /// The gas used by this transaction
     pub gas_used: GasCostSummary,
-
     /// The transaction digest
     pub transaction_digest: Digest,
     /// The updated gas object reference, as an index into the `changed_objects`
     /// vector. Having a dedicated field for convenient access.
     /// System transaction that don't require gas will leave this as None.
     pub gas_object_index: Option<u32>,
-
     /// The digest of the events emitted during execution,
     /// can be None if the transaction does not emit any event.
     pub events_digest: Option<Digest>,
-
     /// The set of transaction digests this transaction depends on.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=5).lift()))]
     pub dependencies: Vec<Digest>,
-
     /// The version number of all the written Move objects by this transaction.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub lamport_version: Version,
-
     /// Objects whose state are changed in the object store.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub changed_objects: Vec<ChangedObject>,
@@ -114,13 +107,10 @@ impl TransactionEffectsV1 {
 pub struct ChangedObject {
     /// Id of the object
     pub object_id: ObjectId,
-
     /// State of the object in the store prior to this transaction.
     pub input_state: ObjectIn,
-
     /// State of the object in the store after this transaction.
     pub output_state: ObjectOut,
-
     /// Whether this object ID is created or deleted in this transaction.
     /// This information isn't required by the protocol but is useful for
     /// providing more detailed semantics on object changes.
