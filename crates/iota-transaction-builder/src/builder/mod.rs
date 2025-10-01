@@ -18,7 +18,7 @@ use serde::Serialize;
 
 use crate::{
     builder::{
-        named_commands::{NamedCommand, NamedCommands},
+        named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArguments,
     },
     error::Error,
@@ -30,7 +30,7 @@ use crate::{
     },
 };
 
-mod named_commands;
+mod named_results;
 pub(crate) mod ptb_arguments;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
@@ -61,7 +61,8 @@ pub struct TransactionBuildData {
     /// The expiration of the transaction. The default value of this type is no
     /// expiration.
     expiration: TransactionExpiration,
-    named_commands: HashMap<String, Argument>,
+    /// The map of user-defined names that map to a particular command's result.
+    named_results: HashMap<String, Argument>,
 }
 
 impl TransactionBuildData {
@@ -147,14 +148,14 @@ impl TransactionBuildData {
     }
 
     /// Manually set a command with an optional name
-    pub fn named_command(&mut self, cmd: Command, name: impl NamedCommands) {
+    pub fn named_command(&mut self, cmd: Command, name: impl NamedResults) {
         self.command(cmd);
-        name.push_named_commands(self);
+        name.push_named_results(self);
     }
 
-    /// Get the value for the given string in the named commands map
-    pub fn get_named_command(&self, name: &str) -> Option<Argument> {
-        self.named_commands.get(name).copied()
+    /// Get the value for the given string in the named results map
+    pub fn get_named_result(&self, name: &str) -> Option<Argument> {
+        self.named_results.get(name).copied()
     }
 }
 
@@ -170,7 +171,7 @@ impl TransactionBuilder {
                 sender,
                 sponsor: Default::default(),
                 expiration: Default::default(),
-                named_commands: Default::default(),
+                named_results: Default::default(),
             },
             client: (),
             last_command: PhantomData,
@@ -256,13 +257,13 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Manually set a command with an optional name
-    pub fn named_command(&mut self, cmd: Command, name: impl NamedCommands) {
+    pub fn named_command(&mut self, cmd: Command, name: impl NamedResults) {
         self.data.named_command(cmd, name);
     }
 
-    /// Get the value for the given string in the named commands map
-    pub fn get_named_command(&self, name: &str) -> Option<Argument> {
-        self.data.get_named_command(name)
+    /// Get the value for the given string in the named results map
+    pub fn get_named_result(&self, name: &str) -> Option<Argument> {
+        self.data.get_named_result(name)
     }
 
     /// Send IOTA to a recipient address.
@@ -911,7 +912,7 @@ impl<C> TransactionBuilder<C, MoveCall> {
 impl TransactionBuilder<(), Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
-    pub fn package_id(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder {
+    pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder {
         let cap = self.arg();
         self.move_call(Address::TWO, "package", "upgrade_package")
             .arguments([cap])
@@ -923,7 +924,7 @@ impl TransactionBuilder<(), Publish> {
 impl TransactionBuilder<Client, Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
-    pub fn package_id(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<Client> {
+    pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder<Client> {
         let cap = self.arg();
         self.move_call(Address::TWO, "package", "upgrade_package")
             .arguments(cap)
@@ -934,8 +935,8 @@ impl TransactionBuilder<Client, Publish> {
 
 impl<C> TransactionBuilder<C, Publish> {
     /// Finish the publish call and return the UpgradeCap.
-    pub fn upgrade_cap(&mut self, name: impl NamedCommand) -> &mut TransactionBuilder<C> {
-        name.push_named_commands(&mut self.data);
+    pub fn upgrade_cap(&mut self, name: impl NamedResult) -> &mut TransactionBuilder<C> {
+        name.push_named_results(&mut self.data);
 
         self.reset()
     }
@@ -943,8 +944,8 @@ impl<C> TransactionBuilder<C, Publish> {
 
 impl<C, L: Into<Command>> TransactionBuilder<C, L> {
     /// Set the name for the last command.
-    pub fn name(&mut self, name: impl NamedCommands) -> &mut Self {
-        name.push_named_commands(&mut self.data);
+    pub fn name(&mut self, name: impl NamedResults) -> &mut Self {
+        name.push_named_results(&mut self.data);
         self
     }
 

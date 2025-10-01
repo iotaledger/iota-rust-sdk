@@ -141,7 +141,7 @@ pub fn res(name: impl Into<String>) -> Res {
 
 impl PTBArguments for Res {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        if let Some(arg) = ptb.named_commands.get(&self.0) {
+        if let Some(arg) = ptb.named_results.get(&self.0) {
             args.push(*arg);
         } else {
             panic!("no command named `{}` exists", self.0)
