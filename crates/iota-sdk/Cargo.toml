@@ -19,7 +19,7 @@ default = [
   "graphql",
   "txn-builder",
   "types",
-  "serder",
+  "serde",
   "rand",
   "hash",
   "proptest",
@@ -28,13 +28,13 @@ default = [
 
 # Crypto
 crypto = ["dep:iota-crypto"]
-ed25519 = ["iota-crypto?/ed25519"]
-secp256r1 = ["iota-crypto?/secp256r1"]
-passkey = ["iota-crypto?/passkey"]
-secp256k1 = ["iota-crypto?/secp256k1"]
-zklogin = ["iota-crypto?/zklogin"]
-pem = ["iota-crypto?/pem"]
-bls12381 = ["iota-crypto?/bls12381"]
+ed25519 = ["crypto", "iota-crypto/ed25519"]
+secp256r1 = ["crypto", "iota-crypto/secp256r1"]
+passkey = ["crypto", "iota-crypto/passkey"]
+secp256k1 = ["crypto", "iota-crypto/secp256k1"]
+zklogin = ["crypto", "iota-crypto/zklogin"]
+pem = ["crypto", "iota-crypto/pem"]
+bls12381 = ["crypto", "iota-crypto/bls12381"]
 
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
@@ -44,10 +44,10 @@ txn-builder = ["dep:iota-transaction-builder"]
 
 # Types
 types = ["dep:iota-sdk-types"]
-serde = ["iota-sdk-types?/serde"]
-rand = ["iota-sdk-types?/rand"]
-hash = ["iota-sdk-types?/hash"]
-proptest = ["iota-sdk-types?/proptest"]
+serde = ["types", "iota-sdk-types/serde"]
+rand = ["types", "iota-sdk-types/rand"]
+hash = ["types", "iota-sdk-types/hash"]
+proptest = ["types", "iota-sdk-types/proptest"]
 
 schemars = ["iota-sdk-types?/schemars", "iota-transaction-builder?/schemars"]
 
