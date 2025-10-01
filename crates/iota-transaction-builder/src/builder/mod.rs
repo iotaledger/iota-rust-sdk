@@ -199,11 +199,15 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     fn reset(&mut self) -> &mut TransactionBuilder<C> {
+        // Safe to transmute because the generic type is contained in PhantomData and
+        // the struct is repr(C)
         unsafe { core::mem::transmute(self) }
     }
 
     fn state_change<U: Into<Command>>(&mut self, command: U) -> &mut TransactionBuilder<C, U> {
         self.command(command.into());
+        // Safe to transmute because the generic type is contained in PhantomData and
+        // the struct is repr(C)
         unsafe { core::mem::transmute(self) }
     }
 
