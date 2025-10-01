@@ -1547,13 +1547,15 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest() != 54344:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_mutable() != 59995:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id() != 41681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving() != 50553:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared() != 59619:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut() != 43242:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string() != 60971:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4223,11 +4225,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_mutable.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_mutable.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4243,6 +4240,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8164,9 +8171,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_mutable.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_mutable.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id.restype = ctypes.c_uint16
@@ -8176,6 +8180,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string.restype = ctypes.c_uint16
@@ -32255,15 +32265,6 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def mutable(cls, id: "ObjectId"):
-        _UniffiConverterTypeObjectId.check_lower(id)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_mutable,
-        _UniffiConverterTypeObjectId.lower(id))
-        return cls._make_instance_(pointer)
-
-    @classmethod
     def object_id(cls, id: "ObjectId"):
         _UniffiConverterTypeObjectId.check_lower(id)
         
@@ -32288,6 +32289,24 @@ class PtbArgument():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res,
         _UniffiConverterString.lower(name))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def shared(cls, id: "ObjectId"):
+        _UniffiConverterTypeObjectId.check_lower(id)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared,
+        _UniffiConverterTypeObjectId.lower(id))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def shared_mut(cls, id: "ObjectId"):
+        _UniffiConverterTypeObjectId.check_lower(id)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut,
+        _UniffiConverterTypeObjectId.lower(id))
         return cls._make_instance_(pointer)
 
     @classmethod

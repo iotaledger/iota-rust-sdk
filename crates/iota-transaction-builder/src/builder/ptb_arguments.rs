@@ -80,10 +80,29 @@ impl PTBArguments for Vec<iota_types::Input> {
     }
 }
 
-/// Allows specifying mutable parameters.
-pub struct Mut<T>(pub T);
+/// Allows specifying shared parameters.
+pub struct Shared<T>(pub T);
 
-impl<T: MoveArg> PTBArguments for Mut<T> {
+impl<T: MoveArg> PTBArguments for Shared<T> {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        let arg = match self.0.arg_type() {
+            ArgType::Object(id) => ptb.set_input(
+                InputKind::Shared {
+                    object_id: id,
+                    mutable: false,
+                },
+                false,
+            ),
+            ArgType::Pure(v) => ptb.pure_bytes(v),
+        };
+        args.push(arg);
+    }
+}
+
+/// Allows specifying shared mutable parameters.
+pub struct SharedMut<T>(pub T);
+
+impl<T: MoveArg> PTBArguments for SharedMut<T> {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         let arg = match self.0.arg_type() {
             ArgType::Object(id) => ptb.set_input(

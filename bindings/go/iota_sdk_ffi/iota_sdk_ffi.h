@@ -2679,11 +2679,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address(void* address, Rust
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(void* digest, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_MUTABLE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_MUTABLE
-void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_mutable(void* id, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(void* id, RustCallStatus *out_status
@@ -2697,6 +2692,16 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(void* id, RustCal
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RES
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(RustBuffer name, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_SHARED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_SHARED
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared(void* id, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_SHARED_MUT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_SHARED_MUT
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(void* id, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_STRING
@@ -8196,12 +8201,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_MUTABLE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_MUTABLE
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_mutable(void
-    
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(void
@@ -8217,6 +8216,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RES
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_SHARED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_SHARED
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_SHARED_MUT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_SHARED_MUT
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut(void
     
 );
 #endif

@@ -43,7 +43,7 @@ fun main() = runBlocking {
                 Identifier("iota_system"),
                 Identifier("request_add_stake"),
                 listOf(
-                        PtbArgument.mutable(ObjectId.fromHex("0x5")),
+                        PtbArgument.sharedMut(ObjectId.fromHex("0x5")),
                         PtbArgument.objectId(coinId),
                         PtbArgument.address(validator.address)
                 ),

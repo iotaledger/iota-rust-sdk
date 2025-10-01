@@ -16,7 +16,7 @@ pub mod unresolved;
 pub use self::{
     builder::{
         TransactionBuilder,
-        ptb_arguments::{Mut, PTBArguments, Receiving, res},
+        ptb_arguments::{PTBArguments, Receiving, Shared, SharedMut, res},
     },
     publish_type::MovePackageData,
 };

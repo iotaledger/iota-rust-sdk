@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 use eyre::Result;
 use iota_graphql_client::Client;
-use iota_transaction_builder::{Mut, TransactionBuilder, res};
+use iota_transaction_builder::{SharedMut, TransactionBuilder, res};
 use iota_types::{Address, Identifier, ObjectId, StructTag, TypeTag};
 
 #[tokio::main]
@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     // Step 1: Get the shared registry object
     builder
         .move_call(iota_names_package_address, "iota_names", "registry")
-        .arguments(Mut(iota_names_object_id))
+        .arguments(SharedMut(iota_names_object_id))
         .type_tags([TypeTag::Struct(Box::new(StructTag {
             address: iota_names_package_address,
             module: Identifier::new("registry")?,

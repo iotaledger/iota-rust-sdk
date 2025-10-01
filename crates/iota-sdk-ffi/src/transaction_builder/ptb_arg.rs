@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_transaction_builder::{Mut, Receiving, res, types::ArgType};
+use iota_transaction_builder::{Receiving, Shared, SharedMut, res, types::ArgType};
 
 use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
@@ -30,8 +30,13 @@ impl PTBArgument {
     }
 
     #[uniffi::constructor]
-    pub fn mutable(id: &ObjectId) -> Self {
-        Self(Box::new(Mut(**id)))
+    pub fn shared(id: &ObjectId) -> Self {
+        Self(Box::new(Shared(**id)))
+    }
+
+    #[uniffi::constructor]
+    pub fn shared_mut(id: &ObjectId) -> Self {
+        Self(Box::new(SharedMut(**id)))
     }
 
     #[uniffi::constructor]

@@ -40,7 +40,7 @@ fun main() = runBlocking {
                 Identifier("iota_system"),
                 Identifier("request_withdraw_stake"),
                 listOf(
-                        PtbArgument.mutable(ObjectId.fromHex("0x5")),
+                        PtbArgument.sharedMut(ObjectId.fromHex("0x5")),
                         PtbArgument.objectId(stakedIota.objectId())
                 ),
         )

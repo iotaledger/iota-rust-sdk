@@ -51,7 +51,7 @@ func main() {
 		iotaSystemModule,
 		requestAddStakeFn,
 		[]*sdk.PtbArgument{
-			sdk.PtbArgumentMutable(iotaSystemId),
+			sdk.PtbArgumentSharedMut(iotaSystemId),
 			sdk.PtbArgumentObjectId(coinObjId),
 			sdk.PtbArgumentAddress(validator.Address),
 		},

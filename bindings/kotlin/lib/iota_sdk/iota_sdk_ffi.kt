@@ -2208,6 +2208,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3309,13 +3311,15 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_mutable(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string(
 ): Short
@@ -4468,13 +4472,15 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address(`address`: Pointer,un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_mutable(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(`string`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7005,9 +7011,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest() != 54344.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_mutable() != 59995.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id() != 41681.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7015,6 +7018,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared() != 59619.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut() != 43242.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string() != 60971.toShort()) {
@@ -27214,16 +27223,6 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
-         fun `mutable`(`id`: ObjectId): PtbArgument {
-            return FfiConverterTypePTBArgument.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_mutable(
-        FfiConverterTypeObjectId.lower(`id`),_status)
-}
-    )
-    }
-    
-
          fun `objectId`(`id`: ObjectId): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
@@ -27249,6 +27248,26 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(
         FfiConverterString.lower(`name`),_status)
+}
+    )
+    }
+    
+
+         fun `shared`(`id`: ObjectId): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared(
+        FfiConverterTypeObjectId.lower(`id`),_status)
+}
+    )
+    }
+    
+
+         fun `sharedMut`(`id`: ObjectId): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(
+        FfiConverterTypeObjectId.lower(`id`),_status)
 }
     )
     }

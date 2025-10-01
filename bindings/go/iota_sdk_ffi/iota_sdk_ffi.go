@@ -5247,15 +5247,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_mutable()
-	})
-	if checksum != 59995 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_mutable: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id()
 	})
 	if checksum != 41681 {
@@ -5279,6 +5270,24 @@ func uniffiCheckChecksums() {
 	if checksum != 47661 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared()
+	})
+	if checksum != 59619 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut()
+	})
+	if checksum != 43242 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -16118,12 +16127,6 @@ func PtbArgumentDigest(digest *Digest) *PtbArgument {
 	}))
 }
 
-func PtbArgumentMutable(id *ObjectId) *PtbArgument {
-	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_mutable(FfiConverterObjectIdINSTANCE.Lower(id),_uniffiStatus)
-	}))
-}
-
 func PtbArgumentObjectId(id *ObjectId) *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(FfiConverterObjectIdINSTANCE.Lower(id),_uniffiStatus)
@@ -16139,6 +16142,18 @@ func PtbArgumentReceiving(id *ObjectId) *PtbArgument {
 func PtbArgumentRes(name string) *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
+	}))
+}
+
+func PtbArgumentShared(id *ObjectId) *PtbArgument {
+	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared(FfiConverterObjectIdINSTANCE.Lower(id),_uniffiStatus)
+	}))
+}
+
+func PtbArgumentSharedMut(id *ObjectId) *PtbArgument {
+	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(FfiConverterObjectIdINSTANCE.Lower(id),_uniffiStatus)
 	}))
 }
 

@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 use eyre::{OptionExt, Result};
 use iota_graphql_client::{Client, query_types::ObjectFilter};
-use iota_transaction_builder::{Mut, TransactionBuilder};
+use iota_transaction_builder::{SharedMut, TransactionBuilder};
 use iota_types::{Address, ObjectId, StructTag};
 
 #[tokio::main]
@@ -46,7 +46,10 @@ async fn main() -> Result<()> {
 
     builder
         .move_call(Address::THREE, "iota_system", "request_withdraw_stake")
-        .arguments((Mut(ObjectId::from_str("0x5")?), staked_iota.object_id()))
+        .arguments((
+            SharedMut(ObjectId::from_str("0x5")?),
+            staked_iota.object_id(),
+        ))
         .gas(gas_coin.object_id())
         .gas_budget(1000000000);
 

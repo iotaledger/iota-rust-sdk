@@ -45,7 +45,7 @@ func main() {
 		iotaSystemAddress,
 		iotaSystemModule,
 		requestAddStakeFn,
-		[]*sdk.PtbArgument{sdk.PtbArgumentMutable(iotaSystemId), sdk.PtbArgumentObjectId(stakedIota.ObjectId())},
+		[]*sdk.PtbArgument{sdk.PtbArgumentSharedMut(iotaSystemId), sdk.PtbArgumentObjectId(stakedIota.ObjectId())},
 		nil,
 		nil,
 	)

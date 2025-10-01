@@ -34,7 +34,7 @@ async def main():
             Identifier("iota_system"),
             Identifier("request_withdraw_stake"),
             [
-                PtbArgument.mutable(ObjectId.from_hex("0x5")),
+                PtbArgument.shared_mut(ObjectId.from_hex("0x5")),
                 PtbArgument.object_id(staked_iota.object_id()),
             ],
         )
