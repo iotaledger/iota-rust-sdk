@@ -275,7 +275,7 @@ impl<C, L> TransactionBuilder<C, L> {
     pub fn send_iota(
         &mut self,
         recipient: Address,
-        amount: impl Into<Option<u64>> + Send,
+        amount: impl Into<Option<u64>>,
     ) -> &mut TransactionBuilder<C> {
         let rec_arg = self.pure(recipient);
         let coin_arg = if let Some(amount) = amount.into() {
@@ -313,10 +313,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Publish a move package.
-    pub fn publish(
-        &mut self,
-        kind: impl Into<PublishType> + Send,
-    ) -> &mut TransactionBuilder<C, Publish> {
+    pub fn publish(&mut self, kind: impl Into<PublishType>) -> &mut TransactionBuilder<C, Publish> {
         let module = match kind.into() {
             PublishType::Path(_path) => todo!("load the package from the path"),
             PublishType::Compiled(m) => m,
@@ -352,7 +349,7 @@ impl<L> TransactionBuilder<(), L> {
         &mut self,
         coins: impl IntoIterator<Item = ObjectReference>,
         recipient: Address,
-        amount: impl Into<Option<u64>> + Send,
+        amount: impl Into<Option<u64>>,
     ) -> &mut TransactionBuilder {
         let mut coins = coins.into_iter().collect::<Vec<_>>();
         let coin_arg = if coins.is_empty() {
@@ -411,7 +408,7 @@ impl<L> TransactionBuilder<(), L> {
     pub fn merge_coins(
         &mut self,
         primary_coin: ObjectReference,
-        consumed_coins: impl IntoIterator<Item = ObjectReference> + Send,
+        consumed_coins: impl IntoIterator<Item = ObjectReference>,
     ) -> &mut TransactionBuilder {
         let primary_coin = self.set_input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(primary_coin)),
@@ -435,7 +432,7 @@ impl<L> TransactionBuilder<(), L> {
     pub fn split_coins(
         &mut self,
         coin: ObjectReference,
-        split_amounts: impl IntoIterator<Item = u64> + Send,
+        split_amounts: impl IntoIterator<Item = u64>,
     ) -> &mut TransactionBuilder<(), SplitCoins> {
         let coin = self.set_input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
@@ -564,7 +561,7 @@ impl<L> TransactionBuilder<Client, L> {
         &mut self,
         coins: impl IntoIterator<Item = ObjectId>,
         recipient: Address,
-        amount: impl Into<Option<u64>> + Send,
+        amount: impl Into<Option<u64>>,
     ) -> &mut TransactionBuilder<Client> {
         let mut coins = coins.into_iter().collect::<Vec<_>>();
         let coin_arg = if coins.is_empty() {
@@ -628,7 +625,7 @@ impl<L> TransactionBuilder<Client, L> {
     pub fn merge_coins(
         &mut self,
         primary_coin: ObjectId,
-        consumed_coins: impl IntoIterator<Item = ObjectId> + Send,
+        consumed_coins: impl IntoIterator<Item = ObjectId>,
     ) -> &mut TransactionBuilder<Client> {
         let primary_coin = self.set_input(InputKind::ImmutableOrOwned(primary_coin), false);
         let mut consumed = Vec::new();
@@ -646,7 +643,7 @@ impl<L> TransactionBuilder<Client, L> {
     pub fn split_coins(
         &mut self,
         coin: ObjectId,
-        split_amounts: impl IntoIterator<Item = u64> + Send,
+        split_amounts: impl IntoIterator<Item = u64>,
     ) -> &mut TransactionBuilder<Client, SplitCoins> {
         let coin = self.set_input(InputKind::ImmutableOrOwned(coin), false);
         let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
@@ -661,7 +658,7 @@ impl<L> TransactionBuilder<Client, L> {
         &mut self,
         package_id: ObjectId,
         upgrade_cap: U,
-        kind: impl Into<PublishType> + Send,
+        kind: impl Into<PublishType>,
     ) -> &mut TransactionBuilder<Client, Upgrade> {
         let module = match kind.into() {
             PublishType::Path(_path) => todo!("load the package from the path"),
