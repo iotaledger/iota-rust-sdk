@@ -7,7 +7,24 @@ license = "Apache-2.0"
 description = "The official SDK for IOTA"
 
 [features]
-default = ["types"]
+default = [
+  "crypto",
+  "ed25519",
+  "secp256r1",
+  "passkey",
+  "secp256k1",
+  "zklogin",
+  "pem",
+  "bls12381",
+  "graphql",
+  "txn-builder",
+  "types",
+  "serder",
+  "rand",
+  "hash",
+  "proptest",
+  "schemars",
+]
 
 # Crypto
 crypto = ["dep:iota-crypto"]
