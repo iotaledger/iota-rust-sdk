@@ -24207,6 +24207,8 @@ type Epoch struct {
 	TotalTransactions *uint64
 	// Validator related properties. For active validators, see
 	// `active_validators` API.
+	// For epochs other than the current the data provided refer to the start
+	// of the epoch.
 	ValidatorSet *ValidatorSet
 }
 
@@ -26949,12 +26951,13 @@ type Validator struct {
 	// behalf of the validator.
 	OperationCap *[]byte
 	// Pending pool token withdrawn during the current epoch, emptied at epoch
-	// boundaries.
+	// boundaries. Zero for past epochs.
 	PendingPoolTokenWithdraw *uint64
-	// Pending stake amount for this epoch.
+	// Pending stake amount for the current epoch, emptied at epoch boundaries.
+	// Zero for past epochs.
 	PendingStake *uint64
 	// Pending stake withdrawn during the current epoch, emptied at epoch
-	// boundaries.
+	// boundaries. Zero for past epochs.
 	PendingTotalIotaWithdraw *uint64
 	// Total number of pool tokens issued by the pool.
 	PoolTokenBalance *uint64

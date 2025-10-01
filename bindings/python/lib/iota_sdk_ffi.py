@@ -10055,6 +10055,8 @@ class Epoch:
     """
     Validator related properties. For active validators, see
     `active_validators` API.
+    For epochs other than the current the data provided refer to the start
+    of the epoch.
     """
 
     def __init__(self, *, epoch_id: "int", fund_inflow: "typing.Optional[str]" = _DEFAULT, fund_outflow: "typing.Optional[str]" = _DEFAULT, fund_size: "typing.Optional[str]" = _DEFAULT, live_object_set_digest: "typing.Optional[str]" = _DEFAULT, net_inflow: "typing.Optional[str]" = _DEFAULT, protocol_configs: "typing.Optional[ProtocolConfigs]" = _DEFAULT, reference_gas_price: "typing.Optional[str]" = _DEFAULT, start_timestamp: "int", end_timestamp: "typing.Optional[int]" = _DEFAULT, system_state_version: "typing.Optional[int]" = _DEFAULT, total_checkpoints: "typing.Optional[int]" = _DEFAULT, total_gas_fees: "typing.Optional[str]" = _DEFAULT, total_stake_rewards: "typing.Optional[str]" = _DEFAULT, total_transactions: "typing.Optional[int]" = _DEFAULT, validator_set: "typing.Optional[ValidatorSet]" = _DEFAULT):
@@ -13445,18 +13447,19 @@ class Validator:
     pending_pool_token_withdraw: "typing.Optional[int]"
     """
     Pending pool token withdrawn during the current epoch, emptied at epoch
-    boundaries.
+    boundaries. Zero for past epochs.
     """
 
     pending_stake: "typing.Optional[int]"
     """
-    Pending stake amount for this epoch.
+    Pending stake amount for the current epoch, emptied at epoch boundaries.
+    Zero for past epochs.
     """
 
     pending_total_iota_withdraw: "typing.Optional[int]"
     """
     Pending stake withdrawn during the current epoch, emptied at epoch
-    boundaries.
+    boundaries. Zero for past epochs.
     """
 
     pool_token_balance: "typing.Optional[int]"
