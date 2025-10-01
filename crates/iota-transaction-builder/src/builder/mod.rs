@@ -723,11 +723,11 @@ impl<L> TransactionBuilder<Client, L> {
                                     obj.digest(),
                                 ))
                             }
-                            _ => {
-                                return Err(Error::Input(format!(
-                                    "object {object_id} was passed as owned or immutable, but is not"
-                                )));
-                            }
+                            Owner::Shared(v) => iota_types::Input::Shared {
+                                object_id,
+                                initial_shared_version: *v,
+                                mutable: false,
+                            },
                         };
                         let idx = inputs.len();
                         inputs.push(input);
