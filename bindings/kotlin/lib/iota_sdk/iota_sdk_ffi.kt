@@ -43406,6 +43406,8 @@ data class Epoch (
     /**
      * Validator related properties. For active validators, see
      * `active_validators` API.
+     * For epochs other than the current the data provided refer to the start
+     * of the epoch.
      */
     var `validatorSet`: ValidatorSet? = null
 ) : Disposable {
@@ -46314,16 +46316,17 @@ data class Validator (
     var `operationCap`: kotlin.ByteArray? = null, 
     /**
      * Pending pool token withdrawn during the current epoch, emptied at epoch
-     * boundaries.
+     * boundaries. Zero for past epochs.
      */
     var `pendingPoolTokenWithdraw`: kotlin.ULong? = null, 
     /**
-     * Pending stake amount for this epoch.
+     * Pending stake amount for the current epoch, emptied at epoch boundaries.
+     * Zero for past epochs.
      */
     var `pendingStake`: kotlin.ULong? = null, 
     /**
      * Pending stake withdrawn during the current epoch, emptied at epoch
-     * boundaries.
+     * boundaries. Zero for past epochs.
      */
     var `pendingTotalIotaWithdraw`: kotlin.ULong? = null, 
     /**

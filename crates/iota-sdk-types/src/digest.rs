@@ -204,7 +204,7 @@ impl std::fmt::Display for DigestParseError {
         write!(
             f,
             "Unable to parse Digest (must be Base58 string of length {})",
-            Digest::LENGTH
+            44,
         )
     }
 }

@@ -423,6 +423,8 @@ pub struct Epoch {
     pub total_transactions: Option<u64>,
     /// Validator related properties. For active validators, see
     /// `active_validators` API.
+    /// For epochs other than the current the data provided refer to the start
+    /// of the epoch.
     #[uniffi(default = None)]
     pub validator_set: Option<ValidatorSet>,
 }
@@ -778,14 +780,15 @@ pub struct Validator {
     #[uniffi(default = None)]
     pub operation_cap: Option<Vec<u8>>,
     /// Pending pool token withdrawn during the current epoch, emptied at epoch
-    /// boundaries.
+    /// boundaries. Zero for past epochs.
     #[uniffi(default = None)]
     pub pending_pool_token_withdraw: Option<u64>,
-    /// Pending stake amount for this epoch.
+    /// Pending stake amount for the current epoch, emptied at epoch boundaries.
+    /// Zero for past epochs.
     #[uniffi(default = None)]
     pub pending_stake: Option<u64>,
     /// Pending stake withdrawn during the current epoch, emptied at epoch
-    /// boundaries.
+    /// boundaries. Zero for past epochs.
     #[uniffi(default = None)]
     pub pending_total_iota_withdraw: Option<u64>,
     /// Total number of pool tokens issued by the pool.
