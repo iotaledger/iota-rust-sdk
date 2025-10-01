@@ -20,7 +20,6 @@ use super::{Address, Digest, Identifier, ObjectId};
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
     Success,
-
     /// The Transaction didn't execute successfully.
     ///
     /// Failed transactions are still committed to the blockchain but any
@@ -341,17 +340,13 @@ impl ExecutionError {
 pub struct MoveLocation {
     /// The package id
     pub package: ObjectId,
-
     /// The module name
     pub module: Identifier,
-
     /// The function index
     pub function: u16,
-
     /// Index into the code stream for a jump. The offset is relative to the
     /// beginning of the instruction stream.
     pub instruction: u16,
-
     /// The name of the function if available
     pub function_name: Option<Identifier>,
 }
@@ -726,23 +721,18 @@ mod serialization {
         ExecutionCancelledDueToSharedObjectCongestion {
             congested_objects: Vec<ObjectId>,
         },
-
         AddressDeniedForCoin {
             address: Address,
             coin_type: String,
         },
-
         CoinTypeGlobalPause {
             coin_type: String,
         },
-
         ExecutionCancelledDueToRandomnessUnavailable,
-
         ExecutionCancelledDueToSharedObjectCongestionV2 {
             congested_objects: Vec<ObjectId>,
             suggested_gas_price: u64,
         },
-
         InvalidLinkage,
     }
 
@@ -816,23 +806,18 @@ mod serialization {
         ExecutionCancelledDueToSharedObjectCongestion {
             congested_objects: Vec<ObjectId>,
         },
-
         AddressDeniedForCoin {
             address: Address,
             coin_type: String,
         },
-
         CoinTypeGlobalPause {
             coin_type: String,
         },
-
         ExecutionCancelledDueToRandomnessUnavailable,
-
         ExecutionCancelledDueToSharedObjectCongestionV2 {
             congested_objects: Vec<ObjectId>,
             suggested_gas_price: u64,
         },
-
         InvalidLinkage,
     }
 

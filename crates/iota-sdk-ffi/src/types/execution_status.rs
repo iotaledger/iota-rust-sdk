@@ -534,17 +534,13 @@ impl From<ExecutionError> for iota_types::ExecutionError {
 pub struct MoveLocation {
     /// The package id
     pub package: Arc<ObjectId>,
-
     /// The module name
     pub module: String,
-
     /// The function index
     pub function: u16,
-
     /// Index into the code stream for a jump. The offset is relative to the
     /// beginning of the instruction stream.
     pub instruction: u16,
-
     /// The name of the function if available
     #[uniffi(default = None)]
     pub function_name: Option<String>,
