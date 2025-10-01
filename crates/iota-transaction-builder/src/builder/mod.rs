@@ -44,6 +44,7 @@ pub struct TransactionBuilder<C = (), L = ()> {
 
 /// Transaction data used to build a [`Transaction`].
 #[derive(Debug, Clone)]
+#[repr(C)]
 pub struct TransactionBuildData {
     /// The inputs to the transaction.
     inputs: BTreeMap<InputId, Input>,
