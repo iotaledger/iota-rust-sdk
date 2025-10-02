@@ -129,12 +129,15 @@ impl iota_transaction_builder::PTBArgument for &PTBArgument {
 
 pub struct PTBArgs(pub Vec<Arc<PTBArgument>>);
 
-impl iota_transaction_builder::PTBArgument for PTBArgs {
-    fn arg(
+impl iota_transaction_builder::PTBArguments for PTBArgs {
+    fn push_args(
         self,
         ptb: &mut iota_transaction_builder::builder::TransactionBuildData,
-    ) -> iota_transaction_builder::unresolved::Argument {
-        todo!()
+        args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
+    ) {
+        for arg in &self.0 {
+            args.push(iota_transaction_builder::PTBArgument::arg(&arg.0, ptb))
+        }
     }
 }
 
