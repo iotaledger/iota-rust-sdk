@@ -836,9 +836,9 @@ impl<L> TransactionBuilder<Client, L> {
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
         let txn = self.resolve_ptb().await?;
         if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
-            return Err(Error::DryRun(format!(
-                "gas coins were provided without a gas budget"
-            )));
+            return Err(Error::DryRun(
+                "gas coins were provided without a gas budget".to_owned(),
+            ));
         }
         let gas_objects = txn
             .gas_payment
@@ -861,7 +861,6 @@ impl<L> TransactionBuilder<Client, L> {
                     gas_price: Some(txn.gas_payment.price),
                     gas_sponsor: Some(txn.gas_payment.owner),
                     sender: Some(txn.sender),
-                    ..Default::default()
                 },
             )
             .await
