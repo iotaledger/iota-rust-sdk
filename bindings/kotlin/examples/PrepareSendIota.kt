@@ -23,11 +23,6 @@ fun main() = runBlocking {
                         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
                 )
 
-        val gasCoinId =
-                ObjectId.fromHex(
-                        "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
-                )
-
         val builder = TransactionBuilder.init(fromAddress, client)
 
         builder.transferObjects(
@@ -35,14 +30,12 @@ fun main() = runBlocking {
                 listOf(PtbArgument.objectId(coinId)),
         )
 
-        builder.gas(gasCoinId)
-
         val txn = builder.finish()
 
         println("Signing Digest: ${hexEncode(txn.signingDigest())}")
         println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")
 
-        val res = builder.dryRun()
+        val res = builder.dryRun(true)
 
         if (res.error != null) {
             throw Exception("Failed to send IOTA: ${res.error}")

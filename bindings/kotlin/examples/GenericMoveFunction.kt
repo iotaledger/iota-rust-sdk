@@ -4,7 +4,6 @@
 import iota_sdk.Address
 import iota_sdk.GraphQlClient
 import iota_sdk.Identifier
-import iota_sdk.ObjectId
 import iota_sdk.PtbArgument
 import iota_sdk.TransactionBuilder
 import iota_sdk.TypeTag
@@ -19,11 +18,6 @@ fun main() = runBlocking {
         val sender =
                 Address.fromHex(
                         "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e"
-                )
-
-        val gasCoinId =
-                ObjectId.fromHex(
-                        "0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a"
                 )
 
         val builder = TransactionBuilder.init(sender, client)
@@ -62,9 +56,7 @@ fun main() = runBlocking {
                 )
         )
 
-        builder.gas(gasCoinId).gasBudget(1000000000uL)
-
-        val res = builder.dryRun()
+        val res = builder.dryRun(true)
 
         if (res.error != null) {
             println("Failed to call generic Move function: $res.error")

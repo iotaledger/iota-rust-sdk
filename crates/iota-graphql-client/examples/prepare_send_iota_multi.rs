@@ -13,7 +13,7 @@ use iota_types::{Address, ObjectId};
 async fn main() -> Result<()> {
     let client = Client::new_devnet();
 
-    let gas_coin =
+    let coin =
         ObjectId::from_str("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
 
     let sender =
@@ -38,14 +38,12 @@ async fn main() -> Result<()> {
 
     let labels: Vec<String> = (0..recipients.len()).map(|i| format!("coin{i}")).collect();
 
-    builder.split_coins(gas_coin, amounts).name(labels.clone());
+    builder.split_coins(coin, amounts).name(labels.clone());
 
     // Transfer each split coin to the corresponding recipient
     for (i, (address, _)) in recipients.iter().enumerate() {
         builder.transfer_objects(Address::from_str(address)?, res(&labels[i]));
     }
-
-    builder.gas(gas_coin);
 
     let txn = builder.finish().await?;
 

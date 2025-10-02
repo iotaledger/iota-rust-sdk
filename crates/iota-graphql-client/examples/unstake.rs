@@ -6,7 +6,7 @@ use std::str::FromStr;
 use eyre::{OptionExt, Result};
 use iota_graphql_client::{Client, query_types::ObjectFilter};
 use iota_transaction_builder::{SharedMut, TransactionBuilder};
-use iota_types::{Address, ObjectId, StructTag};
+use iota_types::{Address, ObjectId};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -26,33 +26,17 @@ async fn main() -> Result<()> {
         .next()
         .ok_or_eyre("no staked iota found")?;
 
-    // Get a valid gas coin
-    let gas_coin = client
-        .objects(
-            ObjectFilter {
-                type_: Some(StructTag::gas_coin().to_string()),
-                owner: Some(*staked_iota.owner().as_address()),
-                ..Default::default()
-            },
-            Default::default(),
-        )
-        .await?
-        .data
-        .into_iter()
-        .next()
-        .ok_or_eyre("no gas coin found")?;
-
-    let mut builder = TransactionBuilder::new(*gas_coin.owner().as_address()).with_client(client);
+    let mut builder =
+        TransactionBuilder::new(*staked_iota.owner().as_address()).with_client(client);
 
     builder
         .move_call(Address::THREE, "iota_system", "request_withdraw_stake")
         .arguments((
             SharedMut(ObjectId::from_str("0x5")?),
             staked_iota.object_id(),
-        ))
-        .gas(gas_coin.object_id());
+        ));
 
-    let res = builder.dry_run(false).await?;
+    let res = builder.dry_run(true).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to unstake: {err}");

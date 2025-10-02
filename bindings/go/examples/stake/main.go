@@ -58,9 +58,9 @@ func main() {
 		nil,
 		nil,
 	)
-	builder.Gas(gasCoinObjId)
+	builder.Gas(gasCoinObjId).GasBudget(1000000000)
 
-	res, err := builder.DryRun(false)
+	res, err := builder.DryRun(true)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}

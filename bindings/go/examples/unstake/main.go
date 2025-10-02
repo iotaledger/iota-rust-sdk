@@ -22,16 +22,6 @@ func main() {
 	}
 	stakedIota := stakedIotas.Data[0]
 
-	gasCoinType := sdk.StructTagGasCoin().String()
-	gasCoins, err := client.Objects(&sdk.ObjectFilter{TypeTag: &gasCoinType, Owner: stakedIota.Owner().AsAddressOpt()}, nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas coin: %v", err)
-	}
-	if len(gasCoins.Data) == 0 {
-		log.Fatal("No gas coins found")
-	}
-	gasCoin := gasCoins.Data[0]
-
 	iotaSystemAddress, _ := sdk.AddressFromHex("0x3")
 
 	iotaSystemId, _ := sdk.ObjectIdFromHex("0x5")
@@ -40,7 +30,7 @@ func main() {
 
 	requestAddStakeFn, _ := sdk.NewIdentifier("request_withdraw_stake")
 
-	builder := sdk.TransactionBuilderInit(gasCoin.Owner().AsAddress(), client)
+	builder := sdk.TransactionBuilderInit(stakedIota.Owner().AsAddress(), client)
 	builder.MoveCall(
 		iotaSystemAddress,
 		iotaSystemModule,
@@ -50,9 +40,7 @@ func main() {
 		nil,
 	)
 
-	builder.Gas(gasCoin.ObjectId())
-
-	res, err := builder.DryRun(false)
+	res, err := builder.DryRun(true)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to unstake: %v", err)
 	}

@@ -38,12 +38,9 @@ async fn main() -> Result<()> {
                 "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
             )?,
             &validator.address.address,
-        ))
-        .gas(ObjectId::from_str(
-            "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
-        )?);
+        ));
 
-    let res = builder.dry_run(false).await?;
+    let res = builder.dry_run(true).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to stake: {err}");
