@@ -2210,6 +2210,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3310,6 +3312,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared(
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(
 ): Short
@@ -4471,6 +4475,8 @@ fun uniffi_iota_sdk_ffi_fn_free_ptbargument(`ptr`: Pointer,uniffi_out_err: Uniff
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address(`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7009,6 +7015,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest() != 54344.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas() != 10767.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id() != 41681.toShort()) {
@@ -27218,6 +27227,16 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(
         FfiConverterTypeDigest.lower(`digest`),_status)
+}
+    )
+    }
+    
+
+         fun `gas`(): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(
+        _status)
 }
     )
     }

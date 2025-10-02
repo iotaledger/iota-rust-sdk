@@ -2679,6 +2679,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address(void* address, Rust
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(void* digest, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_GAS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_GAS
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(void* id, RustCallStatus *out_status
@@ -8198,6 +8204,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_DIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_DIGEST
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_GAS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_GAS
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas(void
     
 );
 #endif
