@@ -1,68 +1,59 @@
 // Copyright 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::{Digest, ObjectId};
+use iota_types::Digest;
 
-use crate::types::ArgType;
+/// Pure BCS bytes
+pub struct PureBytes(pub Vec<u8>);
 
 /// A trait which defines how types are serialized for move calls.
 pub trait MoveArg {
-    /// Get the param type.
-    fn arg_type(&self) -> ArgType;
+    /// Get the pure BCS bytes.
+    fn pure_bytes(&self) -> Vec<u8>;
 }
 
-impl MoveArg for ObjectId {
-    fn arg_type(&self) -> ArgType {
-        ArgType::Object(*self)
+impl MoveArg for PureBytes {
+    fn pure_bytes(&self) -> Vec<u8> {
+        self.0.clone()
     }
 }
 
 impl MoveArg for Digest {
-    fn arg_type(&self) -> ArgType {
-        ArgType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
-    }
-}
-
-impl MoveArg for ArgType {
-    fn arg_type(&self) -> ArgType {
-        self.clone()
+    fn pure_bytes(&self) -> Vec<u8> {
+        bcs::to_bytes(self).expect("bcs serialization failed")
     }
 }
 
 impl MoveArg for () {
-    fn arg_type(&self) -> ArgType {
-        ArgType::Pure(Vec::new())
+    fn pure_bytes(&self) -> Vec<u8> {
+        Vec::new()
     }
 }
 
 impl MoveArg for str {
-    fn arg_type(&self) -> ArgType {
-        ArgType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
+    fn pure_bytes(&self) -> Vec<u8> {
+        bcs::to_bytes(self).expect("bcs serialization failed")
     }
 }
 
 impl MoveArg for &str {
-    fn arg_type(&self) -> ArgType {
-        (*self).arg_type()
+    fn pure_bytes(&self) -> Vec<u8> {
+        (*self).pure_bytes()
     }
 }
 
 impl MoveArg for String {
-    fn arg_type(&self) -> ArgType {
-        self.as_str().arg_type()
+    fn pure_bytes(&self) -> Vec<u8> {
+        self.as_str().pure_bytes()
     }
 }
 
 impl<T: MoveArg> MoveArg for Vec<T> {
-    fn arg_type(&self) -> ArgType {
-        let mut res = u32_as_uleb128(self.len() as u32);
-        for val in self {
-            match val.arg_type() {
-                ArgType::Object(object_id) => res.extend(object_id.as_bytes()),
-                ArgType::Pure(items) => res.extend(items),
-            }
-        }
-        ArgType::Pure(res)
+    fn pure_bytes(&self) -> Vec<u8> {
+        u32_as_uleb128(self.len() as u32)
+            .into_iter()
+            .chain(self.iter().map(|val| val.pure_bytes()).flatten())
+            .collect()
     }
 }
 
@@ -79,26 +70,17 @@ fn u32_as_uleb128(mut value: u32) -> Vec<u8> {
     res
 }
 
-impl<T: MoveArg> MoveArg for Box<T> {
-    fn arg_type(&self) -> ArgType {
-        self.as_ref().arg_type()
-    }
-}
-
 impl<T: MoveArg> MoveArg for Option<T> {
-    fn arg_type(&self) -> ArgType {
+    fn pure_bytes(&self) -> Vec<u8> {
         match self {
-            Some(value) => match value.arg_type() {
-                ArgType::Object(object_id) => ArgType::Pure([&[1], object_id.as_bytes()].concat()),
-                ArgType::Pure(items) => ArgType::Pure([&[1], &items[..]].concat()),
-            },
-            None => ArgType::Pure(vec![0; 1]),
+            Some(value) => [&[1], &value.pure_bytes()[..]].concat(),
+            None => vec![0; 1],
         }
     }
 }
 
 impl<T: MoveArg> MoveArg for &T {
-    fn arg_type(&self) -> ArgType {
-        (*self).arg_type()
+    fn pure_bytes(&self) -> Vec<u8> {
+        (*self).pure_bytes()
     }
 }

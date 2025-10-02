@@ -1,9 +1,11 @@
 // Copyright 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_types::ObjectId;
+
 use crate::{
     builder::TransactionBuildData,
-    types::{ArgType, MoveArg},
+    types::MoveArg,
     unresolved::{Argument, InputKind},
 };
 
@@ -39,21 +41,11 @@ variadics_please::all_tuples_enumerated!(impl_ptb_args_tuple, 2, 15, T);
 
 impl<T: MoveArg> PTBArguments for T {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        let arg = match self.arg_type() {
-            ArgType::Object(id) => ptb.set_input(InputKind::ImmutableOrOwned(id), false),
-            ArgType::Pure(v) => ptb.pure_bytes(v),
-        };
-        args.push(arg);
+        args.push(ptb.pure_bytes(self.pure_bytes()));
     }
 }
 
 impl<T: PTBArguments> PTBArguments for std::sync::Arc<T> {
-    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        self.as_ref().push_args(ptb, args);
-    }
-}
-
-impl PTBArguments for Box<dyn PTBArguments> {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         self.as_ref().push_args(ptb, args);
     }
@@ -65,6 +57,30 @@ impl PTBArguments for Argument {
     }
 }
 
+impl<const N: usize> PTBArguments for [Argument; N] {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
+impl PTBArguments for [Argument] {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
+impl PTBArguments for Vec<Argument> {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
 impl PTBArguments for iota_types::Input {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         let arg = ptb.input(self.clone());
@@ -72,7 +88,53 @@ impl PTBArguments for iota_types::Input {
     }
 }
 
+impl<const N: usize> PTBArguments for [iota_types::Input; N] {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
+impl PTBArguments for [iota_types::Input] {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
 impl PTBArguments for Vec<iota_types::Input> {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
+impl PTBArguments for ObjectId {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        args.push(ptb.set_input(InputKind::ImmutableOrOwned(*self), false))
+    }
+}
+
+impl<const N: usize> PTBArguments for [ObjectId; N] {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
+impl PTBArguments for [ObjectId] {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
+impl PTBArguments for Vec<ObjectId> {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         for input in self {
             input.push_args(ptb, args);
@@ -85,17 +147,19 @@ pub struct Shared<T>(pub T);
 
 impl<T: MoveArg> PTBArguments for Shared<T> {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        let arg = match self.0.arg_type() {
-            ArgType::Object(id) => ptb.set_input(
-                InputKind::Shared {
-                    object_id: id,
-                    mutable: false,
-                },
-                false,
-            ),
-            ArgType::Pure(v) => ptb.pure_bytes(v),
-        };
-        args.push(arg);
+        args.push(ptb.pure_bytes(self.0.pure_bytes()));
+    }
+}
+
+impl PTBArguments for Shared<ObjectId> {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        args.push(ptb.set_input(
+            InputKind::Shared {
+                object_id: self.0,
+                mutable: false,
+            },
+            false,
+        ))
     }
 }
 
@@ -104,17 +168,19 @@ pub struct SharedMut<T>(pub T);
 
 impl<T: MoveArg> PTBArguments for SharedMut<T> {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        let arg = match self.0.arg_type() {
-            ArgType::Object(id) => ptb.set_input(
-                InputKind::Shared {
-                    object_id: id,
-                    mutable: true,
-                },
-                false,
-            ),
-            ArgType::Pure(v) => ptb.pure_bytes(v),
-        };
-        args.push(arg);
+        args.push(ptb.pure_bytes(self.0.pure_bytes()));
+    }
+}
+
+impl PTBArguments for SharedMut<ObjectId> {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        args.push(ptb.set_input(
+            InputKind::Shared {
+                object_id: self.0,
+                mutable: true,
+            },
+            false,
+        ))
     }
 }
 
@@ -123,11 +189,13 @@ pub struct Receiving<T>(pub T);
 
 impl<T: MoveArg> PTBArguments for Receiving<T> {
     fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        let arg = match self.0.arg_type() {
-            ArgType::Object(id) => ptb.set_input(InputKind::Receiving(id), false),
-            ArgType::Pure(v) => ptb.pure_bytes(v),
-        };
-        args.push(arg);
+        args.push(ptb.pure_bytes(self.0.pure_bytes()));
+    }
+}
+
+impl PTBArguments for Receiving<ObjectId> {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        args.push(ptb.set_input(InputKind::Receiving(self.0), false))
     }
 }
 

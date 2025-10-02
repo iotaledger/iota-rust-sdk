@@ -3,23 +3,14 @@
 
 //! Types for use with the transaction builder.
 
-use iota_types::{Address, ObjectId, TypeTag};
+use iota_types::{Address, TypeTag};
 
 mod move_arg;
 mod move_type;
 
-pub use move_arg::MoveArg;
+pub use move_arg::{MoveArg, PureBytes};
 pub use move_type::{MoveType, MoveTypes};
 use primitive_types::U256;
-
-/// A parameter type.
-#[derive(Clone, Debug)]
-pub enum ArgType {
-    /// An object, referenced by ID.
-    Object(ObjectId),
-    /// A bcs serialized value.
-    Pure(Vec<u8>),
-}
 
 macro_rules! impl_simple_move_type {
     ($rust_ty:ident, $move_ty:ident) => {
@@ -30,8 +21,8 @@ macro_rules! impl_simple_move_type {
         }
 
         impl MoveArg for $rust_ty {
-            fn arg_type(&self) -> ArgType {
-                ArgType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
+            fn pure_bytes(&self) -> Vec<u8> {
+                bcs::to_bytes(self).expect("bcs serialization failed")
             }
         }
     };
