@@ -17,6 +17,7 @@ use iota_types::{
 use serde::Serialize;
 
 use crate::{
+    PTBArgument,
     builder::{
         named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArguments,
@@ -191,6 +192,11 @@ impl TransactionBuilder {
 }
 
 impl<C, L> TransactionBuilder<C, L> {
+    /// Apply the given parameter and return the generated argument
+    pub fn apply_argument<P: PTBArgument>(&mut self, param: P) -> Argument {
+        param.arg(&mut self.data)
+    }
+
     /// Apply the given parameters and return the generated arguments
     pub fn apply_arguments<P: PTBArguments>(&mut self, param: P) -> Vec<Argument> {
         param.args(&mut self.data)
@@ -655,7 +661,7 @@ impl<L> TransactionBuilder<Client, L> {
     }
 
     /// Upgrade a move package.
-    pub fn upgrade<U: PTBArguments>(
+    pub fn upgrade<U: PTBArgument>(
         &mut self,
         package_id: ObjectId,
         upgrade_cap: U,
@@ -665,16 +671,12 @@ impl<L> TransactionBuilder<Client, L> {
             PublishType::Path(_path) => todo!("load the package from the path"),
             PublishType::Compiled(m) => m,
         };
-        let ticket = self.apply_arguments(upgrade_cap);
-        if ticket.len() != 1 {
-            // TODO: Maybe there's a better way
-            panic!("invalid upgrade cap");
-        }
+        let ticket = self.apply_argument(upgrade_cap);
         self.state_change(Upgrade {
             modules: module.modules,
             dependencies: module.dependencies,
             package: package_id,
-            ticket: ticket.into_iter().next().unwrap(),
+            ticket,
         })
     }
 
