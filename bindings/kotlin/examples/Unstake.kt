@@ -2,14 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import iota_sdk.Address
-import iota_sdk.Function
 import iota_sdk.GraphQlClient
 import iota_sdk.Identifier
 import iota_sdk.ObjectFilter
 import iota_sdk.ObjectId
+import iota_sdk.PtbArgument
 import iota_sdk.StructTag
 import iota_sdk.TransactionBuilder
-import iota_sdk.UnresolvedInput
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -34,32 +33,20 @@ fun main() = runBlocking {
         }
         val gasCoin = gasCoins.data[0]
 
-        val builder = TransactionBuilder()
-        val inputs =
-                listOf(
-                        builder.input(UnresolvedInput.newShared(ObjectId.fromHex("0x5"), 1u, true)),
-                        builder.input(UnresolvedInput.fromObject(stakedIota).withOwnedKind()),
-                )
-        builder.moveCall(
-                Function(
-                        Address.fromHex("0x3"),
-                        Identifier("iota_system"),
-                        Identifier("request_withdraw_stake"),
-                        emptyList()
-                ),
-                inputs
-        )
-        builder.setSender(gasCoin.owner().asAddress())
-        builder.setGasBudget(50000000u)
-        val refGasPrice = client.referenceGasPrice(null)
-        if (refGasPrice == null) {
-            throw Exception("missing ref gas price")
-        }
-        builder.setGasPrice(refGasPrice)
-        builder.addGasObjects(listOf(UnresolvedInput.fromObject(gasCoin).withOwnedKind()))
+        val builder = TransactionBuilder.init(gasCoin.owner().asAddress(), client)
 
-        val txn = builder.finish()
-        val res = client.dryRunTx(txn, false)
+        builder.moveCall(
+                Address.fromHex("0x3"),
+                Identifier("iota_system"),
+                Identifier("request_withdraw_stake"),
+                listOf(
+                        PtbArgument.sharedMut(ObjectId.fromHex("0x5")),
+                        PtbArgument.objectId(stakedIota.objectId())
+                ),
+        )
+        builder.gas(gasCoin.objectId()).gasBudget(1000000000uL)
+
+        val res = builder.dryRun()
 
         if (res.error != null) {
             throw Exception(res.error)

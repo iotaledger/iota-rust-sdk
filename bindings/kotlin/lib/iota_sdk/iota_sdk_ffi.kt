@@ -2210,12 +2210,6 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
-
-
-
-
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2907,13 +2901,19 @@ fun uniffi_iota_sdk_ffi_checksum_method_transaction_sender(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_add_gas_objects(
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_input(
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec(
 ): Short
@@ -2923,17 +2923,13 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_expiration(
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_gas_budget(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_gas_price(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sponsor(
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects(
 ): Short
@@ -2982,26 +2978,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64(
 fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_mut(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_ref(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_val(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_digest(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_immutable_kind(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_initial_shared_version(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_owned_kind(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_receiving_kind(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_shared_kind(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_version(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_upgrade_dependencies(
 ): Short
@@ -3331,6 +3307,34 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_vector(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new(
@@ -3427,7 +3431,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new(
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1(
 ): Short
@@ -3468,22 +3472,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u64(
 fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u8(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_vector(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_by_id(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object_id(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new(
 ): Short
@@ -4476,6 +4464,38 @@ fun uniffi_iota_sdk_ffi_fn_method_owner_is_shared(`ptr`: Pointer,uniffi_out_err:
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_clone_ptbargument(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_ptbargument(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address(`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(`string`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(`value`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32(`value`: Int,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64(`value`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8(`value`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_vector(`vec`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_passkeyauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_passkeyauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4870,39 +4890,41 @@ fun uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(`ptr`: Pointer,uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(`sender`: Pointer,`client`: Pointer,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run(`ptr`: Pointer,`skipChecks`: Byte,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(`ptr`: Pointer,`keypairs`: RustBuffer.ByValue,`waitForFinalization`: Byte,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(`ptr`: Pointer,`epoch`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_add_gas_objects(`ptr`: Pointer,`gas`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(`ptr`: Pointer,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(`ptr`: Pointer,`objectId`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(`ptr`: Pointer,`budget`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_input(`ptr`: Pointer,`i`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(`ptr`: Pointer,`price`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(`ptr`: Pointer,`typeTag`: RustBuffer.ByValue,`elements`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(`ptr`: Pointer,`elements`: RustBuffer.ByValue,`typeTag`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(`ptr`: Pointer,`coin`: Pointer,`coinsToMerge`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(`ptr`: Pointer,`function`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(`ptr`: Pointer,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(`ptr`: Pointer,`package`: Pointer,`module`: Pointer,`function`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_expiration(`ptr`: Pointer,`epoch`: Long,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_gas_budget(`ptr`: Pointer,`budget`: Long,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_gas_price(`ptr`: Pointer,`price`: Long,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(`ptr`: Pointer,`sender`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(`ptr`: Pointer,`coin`: Pointer,`amounts`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(`ptr`: Pointer,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,`upgradeCapName`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(`ptr`: Pointer,`objects`: RustBuffer.ByValue,`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(`ptr`: Pointer,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,`package`: Pointer,`ticket`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(`ptr`: Pointer,`coins`: RustBuffer.ByValue,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(`ptr`: Pointer,`coin`: Pointer,`amounts`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(`ptr`: Pointer,`recipient`: Pointer,`objects`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(`ptr`: Pointer,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,`package`: Pointer,`ticket`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_transactioneffects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5010,46 +5032,6 @@ fun uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(`ptr`: Pointer,uniffi_out_er
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_clone_unresolvedinput(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_unresolvedinput(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_by_id(`objectId`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object(`object`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object_id(`objectId`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving(`objectId`: Pointer,`version`: Long,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_shared(`objectId`: Pointer,`initialSharedVersion`: Long,`mutable`: Byte,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_mut(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_ref(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_val(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_digest(`ptr`: Pointer,`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_immutable_kind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_initial_shared_version(`ptr`: Pointer,`initialVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_owned_kind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_receiving_kind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_shared_kind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_version(`ptr`: Pointer,`version`: Long,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_upgrade(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_upgrade(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6414,52 +6396,55 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest() != 36608.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_add_gas_objects() != 33983.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish() != 1260.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 4054.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 30573.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_input() != 38700.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish() != 32200.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 18259.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 43178.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 13343.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() != 48686.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 319.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() != 7437.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 33084.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 49808.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_expiration() != 48982.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 10444.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_gas_budget() != 32690.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_gas_price() != 43939.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender() != 18611.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 15827.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sponsor() != 36483.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 29895.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 12632.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 34656.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 58966.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 981.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 34068.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710.toShort()) {
@@ -6526,36 +6511,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 49992.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_mut() != 46185.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_ref() != 34531.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_by_val() != 56747.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_digest() != 6876.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_immutable_kind() != 63275.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_initial_shared_version() != 46827.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_owned_kind() != 26094.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_receiving_kind() != 34579.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_shared_kind() != 4261.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_unresolvedinput_with_version() != 27702.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_upgrade_dependencies() != 7113.toShort()) {
@@ -7050,6 +7005,48 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address() != 14619.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest() != 54344.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id() != 41681.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving() != 50553.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared() != 59619.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut() != 43242.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string() != 60971.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 39528.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16() != 58656.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32() != 13754.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64() != 6870.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8() != 22414.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_vector() != 47179.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new() != 30856.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7182,7 +7179,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin() != 37848.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() != 20682.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() != 61625.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota() != 30839.toShort()) {
@@ -7194,7 +7191,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new() != 4081.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new() != 55528.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init() != 29935.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() != 63561.toShort()) {
@@ -7255,30 +7252,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_vector() != 2453.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_by_id() != 61291.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object() != 12551.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_from_object_id() != 24424.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_immutable() != 12892.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_owned() != 26285.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_pure() != 7951.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_receiving() != 50820.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_unresolvedinput_new_shared() != 41623.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new() != 61663.toShort()) {
@@ -27139,6 +27112,369 @@ public object FfiConverterTypeOwner: FfiConverter<Owner, Pointer> {
 //
 
 
+public interface PtbArgumentInterface {
+    
+    companion object
+}
+
+open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_ptbargument(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_ptbargument(pointer!!, status)
+        }
+    }
+
+    
+
+    
+    companion object {
+         fun `address`(`address`: Address): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address(
+        FfiConverterTypeAddress.lower(`address`),_status)
+}
+    )
+    }
+    
+
+         fun `digest`(`digest`: Digest): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(
+        FfiConverterTypeDigest.lower(`digest`),_status)
+}
+    )
+    }
+    
+
+         fun `objectId`(`id`: ObjectId): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(
+        FfiConverterTypeObjectId.lower(`id`),_status)
+}
+    )
+    }
+    
+
+         fun `receiving`(`id`: ObjectId): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(
+        FfiConverterTypeObjectId.lower(`id`),_status)
+}
+    )
+    }
+    
+
+         fun `res`(`name`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(
+        FfiConverterString.lower(`name`),_status)
+}
+    )
+    }
+    
+
+         fun `shared`(`id`: ObjectId): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared(
+        FfiConverterTypeObjectId.lower(`id`),_status)
+}
+    )
+    }
+    
+
+         fun `sharedMut`(`id`: ObjectId): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(
+        FfiConverterTypeObjectId.lower(`id`),_status)
+}
+    )
+    }
+    
+
+         fun `string`(`string`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(
+        FfiConverterString.lower(`string`),_status)
+}
+    )
+    }
+    
+
+         fun `u128`(`bytes`: kotlin.ByteArray): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(
+        FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
+         fun `u16`(`value`: kotlin.UShort): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(
+        FfiConverterUShort.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u32`(`value`: kotlin.UInt): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32(
+        FfiConverterUInt.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u64`(`value`: kotlin.ULong): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64(
+        FfiConverterULong.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u8`(`value`: kotlin.UByte): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8(
+        FfiConverterUByte.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `vector`(`vec`: List<kotlin.ByteArray>): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_vector(
+        FfiConverterSequenceByteArray.lower(`vec`),_status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypePTBArgument: FfiConverter<PtbArgument, Pointer> {
+
+    override fun lower(value: PtbArgument): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): PtbArgument {
+        return PtbArgument(value)
+    }
+
+    override fun read(buf: ByteBuffer): PtbArgument {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: PtbArgument) = 8UL
+
+    override fun write(value: PtbArgument, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
 /**
  * A passkey authenticator.
  *
@@ -34070,7 +34406,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`address`: Address, `module`: Identifier, `name`: Identifier, `typeParams`: List<TypeTag>) :
+    constructor(`address`: Address, `module`: Identifier, `name`: Identifier, `typeParams`: List<TypeTag> = listOf()) :
         this(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new(
@@ -35018,61 +35354,61 @@ public object FfiConverterTypeTransaction: FfiConverter<Transaction, Pointer> {
 public interface TransactionBuilderInterface {
     
     /**
-     * Add one or more gas objects to use to pay for the transaction.
-     *
-     * Most commonly the gas can be passed as a reference to an owned/immutable
-     * [`Object`](iota_types::Object), or can created using one of the of
-     * the constructors of the [`unresolved::Input`] enum, e.g.,
-     * [`unresolved::Input::owned`].
+     * Dry run the transaction.
      */
-    fun `addGasObjects`(`gas`: List<UnresolvedInput>)
+    suspend fun `dryRun`(`skipChecks`: kotlin.Boolean = false): DryRunResult
     
     /**
-     * Assuming everything is resolved, convert this transaction into the
-     * resolved form. Returns a [`Transaction`] if successful, or an `Error` if
-     * not.
+     * Execute the transaction and optionally wait for finalization.
      */
-    fun `finish`(): Transaction
+    suspend fun `execute`(`keypairs`: List<SimpleKeypair>, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects?
     
     /**
-     * Return the argument to be the gas object.
+     * Set the expiration of the transaction to be a specific epoch.
      */
-    fun `gas`(): Argument
+    fun `expiration`(`epoch`: kotlin.ULong): TransactionBuilder
     
     /**
-     * Make a value available to the transaction as an input.
+     * Convert this builder into a transaction.
      */
-    fun `input`(`i`: UnresolvedInput): Argument
+    suspend fun `finish`(): Transaction
     
     /**
-     * Make a move vector from a list of elements. If the elements are not
-     * objects, or the vector is empty, a type must be supplied.
-     * It returns the Move vector as an argument, that can be used in
-     * subsequent commands.
+     * Add a gas object to use to pay for the transaction.
      */
-    fun `makeMoveVec`(`typeTag`: TypeTag?, `elements`: List<Argument>): Argument
+    fun `gas`(`objectId`: ObjectId): TransactionBuilder
+    
+    /**
+     * Set the gas budget for the transaction.
+     */
+    fun `gasBudget`(`budget`: kotlin.ULong): TransactionBuilder
+    
+    /**
+     * Set the gas price for the transaction.
+     */
+    fun `gasPrice`(`price`: kotlin.ULong): TransactionBuilder
+    
+    /**
+     * Make a move vector from a list of elements. The elements must all be of
+     * the type indicated by `type_tag`.
+     */
+    fun `makeMoveVec`(`elements`: List<PtbArgument>, `typeTag`: TypeTag, `name`: kotlin.String): TransactionBuilder
     
     /**
      * Merge a list of coins into a single coin, without producing any result.
      */
-    fun `mergeCoins`(`coin`: Argument, `coinsToMerge`: List<Argument>)
+    fun `mergeCoins`(`coin`: ObjectId, `coinsToMerge`: List<ObjectId>): TransactionBuilder
     
     /**
      * Call a Move function with the given arguments.
-     *
-     * - `function` is a structured representation of a
-     * package::module::function argument, optionally with type arguments.
-     *
-     * The return value is a result argument that can be used in subsequent
-     * commands. If the move call returns multiple results, you can access
-     * them using the [`Argument::nested`] method.
      */
-    fun `moveCall`(`function`: Function, `arguments`: List<Argument>): Argument
+    fun `moveCall`(`package`: Address, `module`: Identifier, `function`: Identifier, `arguments`: List<PtbArgument> = listOf(), `typeArgs`: List<TypeTag> = listOf(), `names`: List<kotlin.String> = listOf()): TransactionBuilder
     
     /**
-     * Publish a list of modules with the given dependencies. The result is the
-     * `0x2::package::UpgradeCap` Move type. Note that the upgrade capability
-     * needs to be handled after this call:
+     * Publish a list of modules with the given dependencies. The result
+     * assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
+     * Move type. Note that the upgrade capability needs to be handled
+     * after this call:
      * - transfer it to the transaction sender or another address
      * - burn it
      * - wrap it for access control
@@ -35083,45 +35419,34 @@ public interface TransactionBuilderInterface {
      * - `dependencies`: is the list of IDs of the transitive dependencies of
      * the package
      */
-    fun `publish`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>): Argument
+    fun `publish`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `upgradeCapName`: kotlin.String): TransactionBuilder
     
     /**
-     * Set the expiration of the transaction to be a specific epoch.
+     * Transfer some coins to a recipient address. If multiple coins are
+     * provided then they will be merged.
      */
-    fun `setExpiration`(`epoch`: kotlin.ULong)
+    fun `sendCoins`(`coins`: List<ObjectId>, `recipient`: Address, `amount`: kotlin.ULong? = null): TransactionBuilder
     
     /**
-     * Set the gas budget for the transaction.
+     * Send IOTA to a recipient address.
      */
-    fun `setGasBudget`(`budget`: kotlin.ULong)
+    fun `sendIota`(`recipient`: Address, `amount`: kotlin.ULong? = null): TransactionBuilder
     
     /**
-     * Set the gas price for the transaction.
+     * Split a coin by the provided amounts.
      */
-    fun `setGasPrice`(`price`: kotlin.ULong)
-    
-    /**
-     * Set the sender of the transaction.
-     */
-    fun `setSender`(`sender`: Address)
+    fun `splitCoins`(`coin`: ObjectId, `amounts`: List<kotlin.ULong>, `names`: List<kotlin.String> = listOf()): TransactionBuilder
     
     /**
      * Set the sponsor of the transaction.
      */
-    fun `setSponsor`(`sponsor`: Address)
-    
-    /**
-     * Split a coin by the provided amounts, returning multiple results (as
-     * many as there are amounts). To access the results, use the
-     * [`Argument::nested`] method to access the desired coin by its index.
-     */
-    fun `splitCoins`(`coin`: Argument, `amounts`: List<Argument>): Argument
+    fun `sponsor`(`sponsor`: Address): TransactionBuilder
     
     /**
      * Transfer a list of objects to the given address, without producing any
      * result.
      */
-    fun `transferObjects`(`objects`: List<Argument>, `address`: Argument)
+    fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): TransactionBuilder
     
     /**
      * Upgrade a Move package.
@@ -35133,65 +35458,10 @@ public interface TransactionBuilderInterface {
      * - `ticket`: is the upgrade ticket
      *
      * To get the ticket, you have to call the
-     * `0x2::package::authorize_upgrade` function,  and pass the package
+     * `0x2::package::authorize_upgrade` function, and pass the package
      * ID, the upgrade policy, and package digest.
-     *
-     * Examples:
-     * ### Upgrade a package with some pre-known data.
-     *
-     * ```rust,ignore
-     * use iota_graphql_client::Client;
-     * use iota_sdk_types::unresolved;
-     * use iota_transaction_builder::TransactionBuilder;
-     * use iota_transaction_builder::Function;
-     *
-     * let mut tx = TransactionBuilder::new();
-     * let package_id = "0x...".parse().unwrap();
-     * let upgrade_cap =
-     * tx.input(unresolved::Input::by_id("0x...".parse().unwrap()));
-     * let upgrade_policy = tx.input(Serialized(&0u8));
-     * // the digest of the new package that was compiled
-     * let package_digest: &[u8] = &[
-     * 68, 89, 156, 51, 190, 35, 155, 216, 248, 49, 135, 170, 106, 42,
-     * 190, 4, 208, 59, 155, 89, 74, 63, 70, 95, 207, 78, 227, 22,
-     * 136, 146, 57, 79
-     * ];
-     * let digest_arg = tx.input(Serialized(&package_digest));
-     *
-     * // we need this ticket to authorize the upgrade
-     * let upgrade_ticket = tx.move_call(
-     * Function::new(
-     * "0x2".parse().unwrap(),
-     * "package".parse().unwrap(),
-     * "authorize_upgrade".parse().unwrap(),
-     * vec![],
-     * ),
-     * vec![upgrade_cap, upgrade_policy, digest_arg],
-     * );
-     * // now we can upgrade the package
-     * let upgrade_receipt = tx.upgrade(
-     * updated_modules,
-     * deps,
-     * package_id,
-     * upgrade_ticket,
-     * );
-     *
-     * // commit the upgrade
-     * tx.move_call(
-     * Function::new(
-     * "0x2".parse().unwrap(),
-     * "package".parse().unwrap(),
-     * "commit_upgrade".parse().unwrap(),
-     * vec![],
-     * ),
-     * vec![upgrade_cap, upgrade_receipt],
-     * );
-     *
-     * let client = Client::new_mainnet();
-     * let tx = tx.resolve(&client)?;
-     * ```
      */
-    fun `upgrade`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: Argument): Argument
+    fun `upgrade`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: PtbArgument, `name`: kotlin.String? = null): TransactionBuilder
     
     companion object
 }
@@ -35218,16 +35488,6 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    /**
-     * Create a new transaction builder and initialize its elements to default.
-     */
-    constructor() :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(
-        _status)
-}
-    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -35294,35 +35554,61 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Add one or more gas objects to use to pay for the transaction.
-     *
-     * Most commonly the gas can be passed as a reference to an owned/immutable
-     * [`Object`](iota_types::Object), or can created using one of the of
-     * the constructors of the [`unresolved::Input`] enum, e.g.,
-     * [`unresolved::Input::owned`].
-     */override fun `addGasObjects`(`gas`: List<UnresolvedInput>)
-        = 
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_add_gas_objects(
-        it, FfiConverterSequenceTypeUnresolvedInput.lower(`gas`),_status)
-}
+     * Dry run the transaction.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `dryRun`(`skipChecks`: kotlin.Boolean) : DryRunResult {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run(
+                thisPtr,
+                FfiConverterBoolean.lower(`skipChecks`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeDryRunResult.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
     }
-    
-    
 
     
     /**
-     * Assuming everything is resolved, convert this transaction into the
-     * resolved form. Returns a [`Transaction`] if successful, or an `Error` if
-     * not.
+     * Execute the transaction and optionally wait for finalization.
      */
-    @Throws(SdkFfiException::class)override fun `finish`(): Transaction {
-            return FfiConverterTypeTransaction.lift(
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `execute`(`keypairs`: List<SimpleKeypair>, `waitForFinalization`: kotlin.Boolean) : TransactionEffects? {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
+                thisPtr,
+                FfiConverterSequenceTypeSimpleKeypair.lower(`keypairs`),FfiConverterBoolean.lower(`waitForFinalization`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterOptionalTypeTransactionEffects.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Set the expiration of the transaction to be a specific epoch.
+     */override fun `expiration`(`epoch`: kotlin.ULong): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
-        it, _status)
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(
+        it, FfiConverterULong.lower(`epoch`),_status)
 }
     }
     )
@@ -35331,13 +35617,37 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Return the argument to be the gas object.
-     */override fun `gas`(): Argument {
-            return FfiConverterTypeArgument.lift(
+     * Convert this builder into a transaction.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `finish`() : Transaction {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
+                thisPtr,
+                
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        // lift function
+        { FfiConverterTypeTransaction.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Add a gas object to use to pay for the transaction.
+     */override fun `gas`(`objectId`: ObjectId): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(
-        it, _status)
+        it, FfiConverterTypeObjectId.lower(`objectId`),_status)
 }
     }
     )
@@ -35346,13 +35656,13 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Make a value available to the transaction as an input.
-     */override fun `input`(`i`: UnresolvedInput): Argument {
-            return FfiConverterTypeArgument.lift(
+     * Set the gas budget for the transaction.
+     */override fun `gasBudget`(`budget`: kotlin.ULong): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_input(
-        it, FfiConverterTypeUnresolvedInput.lower(`i`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
+        it, FfiConverterULong.lower(`budget`),_status)
 }
     }
     )
@@ -35361,16 +35671,29 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Make a move vector from a list of elements. If the elements are not
-     * objects, or the vector is empty, a type must be supplied.
-     * It returns the Move vector as an argument, that can be used in
-     * subsequent commands.
-     */override fun `makeMoveVec`(`typeTag`: TypeTag?, `elements`: List<Argument>): Argument {
-            return FfiConverterTypeArgument.lift(
+     * Set the gas price for the transaction.
+     */override fun `gasPrice`(`price`: kotlin.ULong): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(
+        it, FfiConverterULong.lower(`price`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Make a move vector from a list of elements. The elements must all be of
+     * the type indicated by `type_tag`.
+     */override fun `makeMoveVec`(`elements`: List<PtbArgument>, `typeTag`: TypeTag, `name`: kotlin.String): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(
-        it, FfiConverterOptionalTypeTypeTag.lower(`typeTag`),FfiConverterSequenceTypeArgument.lower(`elements`),_status)
+        it, FfiConverterSequenceTypePTBArgument.lower(`elements`),FfiConverterTypeTypeTag.lower(`typeTag`),FfiConverterString.lower(`name`),_status)
 }
     }
     )
@@ -35380,33 +35703,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     /**
      * Merge a list of coins into a single coin, without producing any result.
-     */override fun `mergeCoins`(`coin`: Argument, `coinsToMerge`: List<Argument>)
-        = 
+     */override fun `mergeCoins`(`coin`: ObjectId, `coinsToMerge`: List<ObjectId>): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
-        it, FfiConverterTypeArgument.lower(`coin`),FfiConverterSequenceTypeArgument.lower(`coinsToMerge`),_status)
-}
-    }
-    
-    
-
-    
-    /**
-     * Call a Move function with the given arguments.
-     *
-     * - `function` is a structured representation of a
-     * package::module::function argument, optionally with type arguments.
-     *
-     * The return value is a result argument that can be used in subsequent
-     * commands. If the move call returns multiple results, you can access
-     * them using the [`Argument::nested`] method.
-     */override fun `moveCall`(`function`: Function, `arguments`: List<Argument>): Argument {
-            return FfiConverterTypeArgument.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(
-        it, FfiConverterTypeFunction.lower(`function`),FfiConverterSequenceTypeArgument.lower(`arguments`),_status)
+        it, FfiConverterTypeObjectId.lower(`coin`),FfiConverterSequenceTypeObjectId.lower(`coinsToMerge`),_status)
 }
     }
     )
@@ -35415,9 +35717,25 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Publish a list of modules with the given dependencies. The result is the
-     * `0x2::package::UpgradeCap` Move type. Note that the upgrade capability
-     * needs to be handled after this call:
+     * Call a Move function with the given arguments.
+     */override fun `moveCall`(`package`: Address, `module`: Identifier, `function`: Identifier, `arguments`: List<PtbArgument>, `typeArgs`: List<TypeTag>, `names`: List<kotlin.String>): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(
+        it, FfiConverterTypeAddress.lower(`package`),FfiConverterTypeIdentifier.lower(`module`),FfiConverterTypeIdentifier.lower(`function`),FfiConverterSequenceTypePTBArgument.lower(`arguments`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterSequenceString.lower(`names`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Publish a list of modules with the given dependencies. The result
+     * assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
+     * Move type. Note that the upgrade capability needs to be handled
+     * after this call:
      * - transfer it to the transaction sender or another address
      * - burn it
      * - wrap it for access control
@@ -35427,12 +35745,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      * - `modules`: is the modules' bytecode to be published
      * - `dependencies`: is the list of IDs of the transitive dependencies of
      * the package
-     */override fun `publish`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>): Argument {
-            return FfiConverterTypeArgument.lift(
+     */override fun `publish`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `upgradeCapName`: kotlin.String): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(
-        it, FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),_status)
+        it, FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),FfiConverterString.lower(`upgradeCapName`),_status)
 }
     }
     )
@@ -35441,85 +35759,59 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Set the expiration of the transaction to be a specific epoch.
-     */override fun `setExpiration`(`epoch`: kotlin.ULong)
-        = 
+     * Transfer some coins to a recipient address. If multiple coins are
+     * provided then they will be merged.
+     */override fun `sendCoins`(`coins`: List<ObjectId>, `recipient`: Address, `amount`: kotlin.ULong?): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_expiration(
-        it, FfiConverterULong.lower(`epoch`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(
+        it, FfiConverterSequenceTypeObjectId.lower(`coins`),FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalULong.lower(`amount`),_status)
 }
     }
-    
+    )
+    }
     
 
     
     /**
-     * Set the gas budget for the transaction.
-     */override fun `setGasBudget`(`budget`: kotlin.ULong)
-        = 
+     * Send IOTA to a recipient address.
+     */override fun `sendIota`(`recipient`: Address, `amount`: kotlin.ULong?): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_gas_budget(
-        it, FfiConverterULong.lower(`budget`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
+        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalULong.lower(`amount`),_status)
 }
     }
-    
+    )
+    }
     
 
     
     /**
-     * Set the gas price for the transaction.
-     */override fun `setGasPrice`(`price`: kotlin.ULong)
-        = 
+     * Split a coin by the provided amounts.
+     */override fun `splitCoins`(`coin`: ObjectId, `amounts`: List<kotlin.ULong>, `names`: List<kotlin.String>): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_gas_price(
-        it, FfiConverterULong.lower(`price`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
+        it, FfiConverterTypeObjectId.lower(`coin`),FfiConverterSequenceULong.lower(`amounts`),FfiConverterSequenceString.lower(`names`),_status)
 }
     }
-    
-    
-
-    
-    /**
-     * Set the sender of the transaction.
-     */override fun `setSender`(`sender`: Address)
-        = 
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(
-        it, FfiConverterTypeAddress.lower(`sender`),_status)
-}
+    )
     }
-    
     
 
     
     /**
      * Set the sponsor of the transaction.
-     */override fun `setSponsor`(`sponsor`: Address)
-        = 
+     */override fun `sponsor`(`sponsor`: Address): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sponsor(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(
         it, FfiConverterTypeAddress.lower(`sponsor`),_status)
-}
-    }
-    
-    
-
-    
-    /**
-     * Split a coin by the provided amounts, returning multiple results (as
-     * many as there are amounts). To access the results, use the
-     * [`Argument::nested`] method to access the desired coin by its index.
-     */override fun `splitCoins`(`coin`: Argument, `amounts`: List<Argument>): Argument {
-            return FfiConverterTypeArgument.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
-        it, FfiConverterTypeArgument.lower(`coin`),FfiConverterSequenceTypeArgument.lower(`amounts`),_status)
 }
     }
     )
@@ -35530,15 +35822,16 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     /**
      * Transfer a list of objects to the given address, without producing any
      * result.
-     */override fun `transferObjects`(`objects`: List<Argument>, `address`: Argument)
-        = 
+     */override fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
-        it, FfiConverterSequenceTypeArgument.lower(`objects`),FfiConverterTypeArgument.lower(`address`),_status)
+        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterSequenceTypePTBArgument.lower(`objects`),_status)
 }
     }
-    
+    )
+    }
     
 
     
@@ -35552,69 +35845,14 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      * - `ticket`: is the upgrade ticket
      *
      * To get the ticket, you have to call the
-     * `0x2::package::authorize_upgrade` function,  and pass the package
+     * `0x2::package::authorize_upgrade` function, and pass the package
      * ID, the upgrade policy, and package digest.
-     *
-     * Examples:
-     * ### Upgrade a package with some pre-known data.
-     *
-     * ```rust,ignore
-     * use iota_graphql_client::Client;
-     * use iota_sdk_types::unresolved;
-     * use iota_transaction_builder::TransactionBuilder;
-     * use iota_transaction_builder::Function;
-     *
-     * let mut tx = TransactionBuilder::new();
-     * let package_id = "0x...".parse().unwrap();
-     * let upgrade_cap =
-     * tx.input(unresolved::Input::by_id("0x...".parse().unwrap()));
-     * let upgrade_policy = tx.input(Serialized(&0u8));
-     * // the digest of the new package that was compiled
-     * let package_digest: &[u8] = &[
-     * 68, 89, 156, 51, 190, 35, 155, 216, 248, 49, 135, 170, 106, 42,
-     * 190, 4, 208, 59, 155, 89, 74, 63, 70, 95, 207, 78, 227, 22,
-     * 136, 146, 57, 79
-     * ];
-     * let digest_arg = tx.input(Serialized(&package_digest));
-     *
-     * // we need this ticket to authorize the upgrade
-     * let upgrade_ticket = tx.move_call(
-     * Function::new(
-     * "0x2".parse().unwrap(),
-     * "package".parse().unwrap(),
-     * "authorize_upgrade".parse().unwrap(),
-     * vec![],
-     * ),
-     * vec![upgrade_cap, upgrade_policy, digest_arg],
-     * );
-     * // now we can upgrade the package
-     * let upgrade_receipt = tx.upgrade(
-     * updated_modules,
-     * deps,
-     * package_id,
-     * upgrade_ticket,
-     * );
-     *
-     * // commit the upgrade
-     * tx.move_call(
-     * Function::new(
-     * "0x2".parse().unwrap(),
-     * "package".parse().unwrap(),
-     * "commit_upgrade".parse().unwrap(),
-     * vec![],
-     * ),
-     * vec![upgrade_cap, upgrade_receipt],
-     * );
-     *
-     * let client = Client::new_mainnet();
-     * let tx = tx.resolve(&client)?;
-     * ```
-     */override fun `upgrade`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: Argument): Argument {
-            return FfiConverterTypeArgument.lift(
+     */override fun `upgrade`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: PtbArgument, `name`: kotlin.String?): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
-        it, FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),FfiConverterTypeObjectId.lower(`package`),FfiConverterTypeArgument.lower(`ticket`),_status)
+        it, FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),FfiConverterTypeObjectId.lower(`package`),FfiConverterTypePTBArgument.lower(`ticket`),FfiConverterOptionalString.lower(`name`),_status)
 }
     }
     )
@@ -35624,8 +35862,27 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
 
     
-    
-    companion object
+    companion object {
+        
+    /**
+     * Create a new transaction builder and initialize its elements to default.
+     */
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+     suspend fun `init`(`sender`: Address, `client`: GraphQlClient) : TransactionBuilder {
+        return uniffiRustCallAsync(
+        UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGraphQLClient.lower(`client`),),
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        // lift function
+        { FfiConverterTypeTransactionBuilder.lift(it) },
+        // Error FFI converter
+        UniffiNullRustCallStatusErrorHandler,
+    )
+    }
+
+        
+    }
     
 }
 
@@ -37461,552 +37718,6 @@ public object FfiConverterTypeTypeTag: FfiConverter<TypeTag, Pointer> {
     override fun allocationSize(value: TypeTag) = 8UL
 
     override fun write(value: TypeTag, buf: ByteBuffer) {
-        // The Rust code always expects pointers written as 8 bytes,
-        // and will fail to compile if they don't fit.
-        buf.putLong(Pointer.nativeValue(lower(value)))
-    }
-}
-
-
-// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
-// to the live Rust struct on the other side of the FFI.
-//
-// Each instance implements core operations for working with the Rust `Arc<T>` and the
-// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque pointer to the underlying Rust struct.
-//     Method calls need to read this pointer from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its pointer should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the pointer, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
-//      before it can pass the pointer over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-
-/**
- * A potentially unresolved transaction input. Note that one can construct a
- * fully resolved input using the provided constructors, but this struct is
- * also useful when the input data is not complete.
- *
- * If used in the context of transaction builder, make sure to call
- * `tx.resolve` function on the transaction builder to resolve all unresolved
- * inputs.
- */
-public interface UnresolvedInputInterface {
-    
-    /**
-     * Make the object shared and set `mutable` to true when the input is used
-     * by mutable reference.
-     */
-    fun `byMut`(): UnresolvedInput
-    
-    /**
-     * Make the object shared and set `mutable` to false when the input is used
-     * by reference.
-     */
-    fun `byRef`(): UnresolvedInput
-    
-    /**
-     * Make the object shared and set `mutable` to true when the input is used
-     * by value.
-     */
-    fun `byVal`(): UnresolvedInput
-    
-    /**
-     * Set the specified digest.
-     */
-    fun `withDigest`(`digest`: Digest): UnresolvedInput
-    
-    /**
-     * Set the object kind to immutable.
-     */
-    fun `withImmutableKind`(): UnresolvedInput
-    
-    /**
-     * Set the initial shared version.
-     */
-    fun `withInitialSharedVersion`(`initialVersion`: kotlin.ULong): UnresolvedInput
-    
-    /**
-     * Set the object kind to owned.
-     */
-    fun `withOwnedKind`(): UnresolvedInput
-    
-    /**
-     * Set the object kind to receiving.
-     */
-    fun `withReceivingKind`(): UnresolvedInput
-    
-    /**
-     * Set the object kind to shared.
-     */
-    fun `withSharedKind`(): UnresolvedInput
-    
-    /**
-     * Set the specified version.
-     */
-    fun `withVersion`(`version`: kotlin.ULong): UnresolvedInput
-    
-    companion object
-}
-
-/**
- * A potentially unresolved transaction input. Note that one can construct a
- * fully resolved input using the provided constructors, but this struct is
- * also useful when the input data is not complete.
- *
- * If used in the context of transaction builder, make sure to call
- * `tx.resolve` function on the transaction builder to resolve all unresolved
- * inputs.
- */
-open class UnresolvedInput: Disposable, AutoCloseable, UnresolvedInputInterface
-{
-
-    constructor(pointer: Pointer) {
-        this.pointer = pointer
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    /**
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noPointer: NoPointer) {
-        this.pointer = null
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
-    }
-
-    protected val pointer: Pointer?
-    protected val cleanable: UniffiCleaner.Cleanable
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (! this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the pointer being freed concurrently.
-        try {
-            return block(this.uniffiClonePointer())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
-        override fun run() {
-            pointer?.let { ptr ->
-                uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_unresolvedinput(ptr, status)
-                }
-            }
-        }
-    }
-
-    fun uniffiClonePointer(): Pointer {
-        return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_unresolvedinput(pointer!!, status)
-        }
-    }
-
-    
-    /**
-     * Make the object shared and set `mutable` to true when the input is used
-     * by mutable reference.
-     */override fun `byMut`(): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_mut(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Make the object shared and set `mutable` to false when the input is used
-     * by reference.
-     */override fun `byRef`(): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_ref(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Make the object shared and set `mutable` to true when the input is used
-     * by value.
-     */override fun `byVal`(): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_by_val(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Set the specified digest.
-     */override fun `withDigest`(`digest`: Digest): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_digest(
-        it, FfiConverterTypeDigest.lower(`digest`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Set the object kind to immutable.
-     */override fun `withImmutableKind`(): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_immutable_kind(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Set the initial shared version.
-     */override fun `withInitialSharedVersion`(`initialVersion`: kotlin.ULong): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_initial_shared_version(
-        it, FfiConverterULong.lower(`initialVersion`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Set the object kind to owned.
-     */override fun `withOwnedKind`(): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_owned_kind(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Set the object kind to receiving.
-     */override fun `withReceivingKind`(): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_receiving_kind(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Set the object kind to shared.
-     */override fun `withSharedKind`(): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_shared_kind(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Set the specified version.
-     */override fun `withVersion`(`version`: kotlin.ULong): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_unresolvedinput_with_version(
-        it, FfiConverterULong.lower(`version`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-
-    
-    companion object {
-        
-    /**
-     * Return an object with only its unique identifier.
-     */ fun `byId`(`objectId`: ObjectId): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_by_id(
-        FfiConverterTypeObjectId.lower(`objectId`),_status)
-}
-    )
-    }
-    
-
-         fun `fromObject`(`object`: Object): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object(
-        FfiConverterTypeObject.lower(`object`),_status)
-}
-    )
-    }
-    
-
-         fun `fromObjectId`(`objectId`: ObjectId): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_from_object_id(
-        FfiConverterTypeObjectId.lower(`objectId`),_status)
-}
-    )
-    }
-    
-
-        
-    /**
-     * Return an immutable kind of object with all required fields.
-     */ fun `newImmutable`(`objectId`: ObjectId, `version`: kotlin.ULong, `digest`: Digest): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_immutable(
-        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),FfiConverterTypeDigest.lower(`digest`),_status)
-}
-    )
-    }
-    
-
-        
-    /**
-     * Return an owned kind of object with all required fields.
-     */ fun `newOwned`(`objectId`: ObjectId, `version`: kotlin.ULong, `digest`: Digest): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_owned(
-        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),FfiConverterTypeDigest.lower(`digest`),_status)
-}
-    )
-    }
-    
-
-         fun `newPure`(`bytes`: kotlin.ByteArray): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_pure(
-        FfiConverterByteArray.lower(`bytes`),_status)
-}
-    )
-    }
-    
-
-        
-    /**
-     * Return a receiving kind of object with all required fields.
-     */ fun `newReceiving`(`objectId`: ObjectId, `version`: kotlin.ULong, `digest`: Digest): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_receiving(
-        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),FfiConverterTypeDigest.lower(`digest`),_status)
-}
-    )
-    }
-    
-
-        
-    /**
-     * Return a shared object.
-     * - `mutable` controls whether a command can accept the object by value or
-     * mutable reference.
-     * - `initial_shared_version` is the first version the object was shared
-     * at.
-     */ fun `newShared`(`objectId`: ObjectId, `initialSharedVersion`: kotlin.ULong, `mutable`: kotlin.Boolean): UnresolvedInput {
-            return FfiConverterTypeUnresolvedInput.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_unresolvedinput_new_shared(
-        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`initialSharedVersion`),FfiConverterBoolean.lower(`mutable`),_status)
-}
-    )
-    }
-    
-
-        
-    }
-    
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeUnresolvedInput: FfiConverter<UnresolvedInput, Pointer> {
-
-    override fun lower(value: UnresolvedInput): Pointer {
-        return value.uniffiClonePointer()
-    }
-
-    override fun lift(value: Pointer): UnresolvedInput {
-        return UnresolvedInput(value)
-    }
-
-    override fun read(buf: ByteBuffer): UnresolvedInput {
-        // The Rust code always writes pointers as 8 bytes, and will
-        // fail to compile if they don't fit.
-        return lift(Pointer(buf.getLong()))
-    }
-
-    override fun allocationSize(value: UnresolvedInput) = 8UL
-
-    override fun write(value: UnresolvedInput, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -43272,7 +42983,11 @@ data class DryRunResult (
     /**
      * The transaction block representing the dry run execution.
      */
-    var `transaction`: SignedTransaction?
+    var `transaction`: SignedTransaction?, 
+    /**
+     * The effects of the transaction execution.
+     */
+    var `effects`: TransactionEffects?
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
@@ -43281,7 +42996,8 @@ data class DryRunResult (
     Disposable.destroy(
         this.`error`,
         this.`results`,
-        this.`transaction`
+        this.`transaction`,
+        this.`effects`
     )
     }
     
@@ -43297,19 +43013,22 @@ public object FfiConverterTypeDryRunResult: FfiConverterRustBuffer<DryRunResult>
             FfiConverterOptionalString.read(buf),
             FfiConverterSequenceTypeDryRunEffect.read(buf),
             FfiConverterOptionalTypeSignedTransaction.read(buf),
+            FfiConverterOptionalTypeTransactionEffects.read(buf),
         )
     }
 
     override fun allocationSize(value: DryRunResult) = (
             FfiConverterOptionalString.allocationSize(value.`error`) +
             FfiConverterSequenceTypeDryRunEffect.allocationSize(value.`results`) +
-            FfiConverterOptionalTypeSignedTransaction.allocationSize(value.`transaction`)
+            FfiConverterOptionalTypeSignedTransaction.allocationSize(value.`transaction`) +
+            FfiConverterOptionalTypeTransactionEffects.allocationSize(value.`effects`)
     )
 
     override fun write(value: DryRunResult, buf: ByteBuffer) {
             FfiConverterOptionalString.write(value.`error`, buf)
             FfiConverterSequenceTypeDryRunEffect.write(value.`results`, buf)
             FfiConverterOptionalTypeSignedTransaction.write(value.`transaction`, buf)
+            FfiConverterOptionalTypeTransactionEffects.write(value.`effects`, buf)
     }
 }
 
@@ -44097,73 +43816,6 @@ public object FfiConverterTypeFaucetReceipt: FfiConverterRustBuffer<FaucetReceip
 
     override fun write(value: FaucetReceipt, buf: ByteBuffer) {
             FfiConverterSequenceTypeCoinInfo.write(value.`sent`, buf)
-    }
-}
-
-
-
-/**
- * A separate type to support denoting a function by a more structured
- * representation.
- */
-data class Function (
-    /**
-     * The package that contains the module with the function.
-     */
-    var `package`: Address, 
-    /**
-     * The module that contains the function.
-     */
-    var `module`: Identifier, 
-    /**
-     * The function name.
-     */
-    var `function`: Identifier, 
-    /**
-     * The type arguments for the function.
-     */
-    var `typeArgs`: List<TypeTag> = listOf()
-) : Disposable {
-    
-    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
-    override fun destroy() {
-        
-    Disposable.destroy(
-        this.`package`,
-        this.`module`,
-        this.`function`,
-        this.`typeArgs`
-    )
-    }
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeFunction: FfiConverterRustBuffer<Function> {
-    override fun read(buf: ByteBuffer): Function {
-        return Function(
-            FfiConverterTypeAddress.read(buf),
-            FfiConverterTypeIdentifier.read(buf),
-            FfiConverterTypeIdentifier.read(buf),
-            FfiConverterSequenceTypeTypeTag.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: Function) = (
-            FfiConverterTypeAddress.allocationSize(value.`package`) +
-            FfiConverterTypeIdentifier.allocationSize(value.`module`) +
-            FfiConverterTypeIdentifier.allocationSize(value.`function`) +
-            FfiConverterSequenceTypeTypeTag.allocationSize(value.`typeArgs`)
-    )
-
-    override fun write(value: Function, buf: ByteBuffer) {
-            FfiConverterTypeAddress.write(value.`package`, buf)
-            FfiConverterTypeIdentifier.write(value.`module`, buf)
-            FfiConverterTypeIdentifier.write(value.`function`, buf)
-            FfiConverterSequenceTypeTypeTag.write(value.`typeArgs`, buf)
     }
 }
 
@@ -52229,6 +51881,34 @@ public object FfiConverterSequenceInt: FfiConverterRustBuffer<List<kotlin.Int>> 
 /**
  * @suppress
  */
+public object FfiConverterSequenceULong: FfiConverterRustBuffer<List<kotlin.ULong>> {
+    override fun read(buf: ByteBuffer): List<kotlin.ULong> {
+        val len = buf.getInt()
+        return List<kotlin.ULong>(len) {
+            FfiConverterULong.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<kotlin.ULong>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterULong.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<kotlin.ULong>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterULong.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceString: FfiConverterRustBuffer<List<kotlin.String>> {
     override fun read(buf: ByteBuffer): List<kotlin.String> {
         val len = buf.getInt()
@@ -52817,6 +52497,62 @@ public object FfiConverterSequenceTypeObjectId: FfiConverterRustBuffer<List<Obje
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypePTBArgument: FfiConverterRustBuffer<List<PtbArgument>> {
+    override fun read(buf: ByteBuffer): List<PtbArgument> {
+        val len = buf.getInt()
+        return List<PtbArgument>(len) {
+            FfiConverterTypePTBArgument.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<PtbArgument>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypePTBArgument.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<PtbArgument>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypePTBArgument.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeSimpleKeypair: FfiConverterRustBuffer<List<SimpleKeypair>> {
+    override fun read(buf: ByteBuffer): List<SimpleKeypair> {
+        val len = buf.getInt()
+        return List<SimpleKeypair>(len) {
+            FfiConverterTypeSimpleKeypair.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<SimpleKeypair>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeSimpleKeypair.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<SimpleKeypair>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeSimpleKeypair.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceTypeSystemPackage: FfiConverterRustBuffer<List<SystemPackage>> {
     override fun read(buf: ByteBuffer): List<SystemPackage> {
         val len = buf.getInt()
@@ -52891,34 +52627,6 @@ public object FfiConverterSequenceTypeTypeTag: FfiConverterRustBuffer<List<TypeT
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeTypeTag.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterSequenceTypeUnresolvedInput: FfiConverterRustBuffer<List<UnresolvedInput>> {
-    override fun read(buf: ByteBuffer): List<UnresolvedInput> {
-        val len = buf.getInt()
-        return List<UnresolvedInput>(len) {
-            FfiConverterTypeUnresolvedInput.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<UnresolvedInput>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeUnresolvedInput.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<UnresolvedInput>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterTypeUnresolvedInput.write(it, buf)
         }
     }
 }

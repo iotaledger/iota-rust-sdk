@@ -21,47 +21,29 @@ async def main():
 
         print("Staking to validator", validator.name or "with no name")
 
-        coin = await client.object(
-            ObjectId.from_hex(
-                "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
-            )
+        coin_id = ObjectId.from_hex(
+            "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
         )
-        if coin is None:
-            raise Exception("missing coin")
 
-        gas_coin = await client.object(
-            ObjectId.from_hex(
-                "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
-            )
+        gas_coin_id = ObjectId.from_hex(
+            "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
         )
-        if gas_coin is None:
-            raise Exception("missing gas coin")
 
-        builder = TransactionBuilder()
-        inputs = [
-            builder.input(
-                UnresolvedInput.new_shared(ObjectId.from_hex("0x5"), 1, True)
-            ),
-            builder.input(UnresolvedInput.from_object(coin).with_owned_kind()),
-            builder.input(UnresolvedInput.new_pure(validator.address.to_bytes())),
-        ]
+        builder = await TransactionBuilder.init(my_address, client)
+
         builder.move_call(
-            Function(
-                package=Address.from_hex("0x3"),
-                module=Identifier("iota_system"),
-                function=Identifier("request_add_stake"),
-            ),
-            inputs,
+            Address.from_hex("0x3"),
+            Identifier("iota_system"),
+            Identifier("request_add_stake"),
+            [
+                PtbArgument.shared_mut(ObjectId.from_hex("0x5")),
+                PtbArgument.object_id(coin_id),
+                PtbArgument.address(validator.address),
+            ],
         )
-        builder.set_sender(my_address)
-        builder.set_gas_budget(50000000)
-        builder.set_gas_price(await client.reference_gas_price() or 100)
-        builder.add_gas_objects(
-            [UnresolvedInput.from_object(gas_coin).with_owned_kind()]
-        )
+        builder.gas(gas_coin_id).gas_budget(1000000000)
 
-        txn = builder.finish()
-        res = await client.dry_run_tx(txn)
+        res = await builder.dry_run()
         if res.error is not None:
             raise Exception("Failed to stake:", res.error)
 

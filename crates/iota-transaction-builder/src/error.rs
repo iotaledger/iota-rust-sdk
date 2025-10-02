@@ -2,11 +2,14 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Transaction Builder errors.
+
 use base64ct::Error as Base64Error;
 use iota_types::ObjectId;
 
-#[derive(thiserror::Error, Debug, Clone)]
+#[derive(thiserror::Error, Debug)]
 #[non_exhaustive]
+#[allow(missing_docs)]
 pub enum Error {
     #[error("Conversion error due to input issue: {0}")]
     Input(String),
@@ -22,8 +25,6 @@ pub enum Error {
     MissingVersion(ObjectId),
     #[error("Missing digest for object {0}")]
     MissingDigest(ObjectId),
-    #[error("Missing sender")]
-    MissingSender,
     #[error("Missing gas objects")]
     MissingGasObjects,
     #[error("Missing gas budget")]
@@ -40,4 +41,8 @@ pub enum Error {
     SharedObjectMutability(ObjectId),
     #[error("Unsupported literal")]
     UnsupportedLiteral,
+    #[error(transparent)]
+    Signature(iota_crypto::SignatureError),
+    #[error(transparent)]
+    Client(iota_graphql_client::error::Error),
 }

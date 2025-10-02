@@ -48,8 +48,7 @@ serde = ["types", "iota-sdk-types/serde"]
 rand = ["types", "iota-sdk-types/rand"]
 hash = ["types", "iota-sdk-types/hash"]
 proptest = ["types", "iota-sdk-types/proptest"]
-
-schemars = ["iota-sdk-types?/schemars", "iota-transaction-builder?/schemars"]
+schemars = ["types", "iota-sdk-types/schemars"]
 
 [dependencies]
 iota-crypto = { path = "../iota-crypto", features = ["ed25519"], optional = true }

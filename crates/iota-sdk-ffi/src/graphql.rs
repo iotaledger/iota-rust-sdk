@@ -9,7 +9,6 @@ use iota_graphql_client::{
 };
 use iota_types::{CheckpointSequenceNumber, def_is};
 use tokio::sync::RwLock;
-use uniffi::deps::anyhow::anyhow;
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -37,6 +36,12 @@ use crate::{
 /// The GraphQL client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
 pub struct GraphQLClient(RwLock<iota_graphql_client::Client>);
+
+impl GraphQLClient {
+    pub fn inner(&self) -> &RwLock<iota_graphql_client::Client> {
+        &self.0
+    }
+}
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {

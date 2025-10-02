@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	sdk "bindings/iota_sdk_ffi"
@@ -12,14 +13,9 @@ import (
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	senderAddress, err := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
-	if err != nil {
-		log.Fatalf("Failed to parse sender address: %v", err)
-	}
-	gasCoinId, err := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
-	if err != nil {
-		log.Fatalf("Failed to parse gas coin id: %v", err)
-	}
+	sender, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+
+	gasCoinId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 
 	recipients := []struct {
 		address string
@@ -29,54 +25,28 @@ func main() {
 		{"0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522", 2_000_000_000},
 	}
 
-	gasCoin, err := client.Object(gasCoinId, nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas coin: %v", err)
-	}
+	builder := sdk.TransactionBuilderInit(sender, client)
 
-	builder := sdk.NewTransactionBuilder()
-
-	// Prepare split amounts and recipient arguments
-	var splitAmountArgs []*sdk.Argument
-	var recipientArgs []*sdk.Argument
-	for _, r := range recipients {
-		// Convert uint64 to []byte (little endian)
-		amountBytes := make([]byte, 8)
-		for i := uint(0); i < 8; i++ {
-			amountBytes[i] = byte(r.amount >> (8 * i))
-		}
-		splitAmountArgs = append(splitAmountArgs, builder.Input(sdk.UnresolvedInputNewPure(amountBytes)))
-		recipientAddr, err := sdk.AddressFromHex(r.address)
-		if err != nil {
-			log.Fatalf("Failed to parse recipient address: %v", err)
-		}
-		recipientArgs = append(recipientArgs, builder.Input(sdk.UnresolvedInputNewPure(recipientAddr.ToBytes())))
+	// Prepare amounts and labels
+	var amounts []uint64
+	var labels []string
+	for idx, r := range recipients {
+		labels = append(labels, fmt.Sprintf("coin%v", idx))
+		amounts = append(amounts, r.amount)
 	}
 
 	// Split the gas coin into multiple coins
-	splitCoinsResult := builder.SplitCoins(builder.Gas(), splitAmountArgs)
+	builder.SplitCoins(gasCoinId, amounts, labels)
 
-	// Transfer each split coin to its corresponding recipient
-	for i, recipientArg := range recipientArgs {
-		coinPtr := splitCoinsResult.GetNestedResult(uint16(i))
-		if coinPtr == nil {
-			log.Fatalf("Failed to get split coin result at index %d", i)
-		}
-		coinArg := *coinPtr
-		builder.TransferObjects([]*sdk.Argument{coinArg}, recipientArg)
+	for idx, r := range recipients {
+		recipient, _ := sdk.AddressFromHex(r.address)
+		builder.TransferObjects(recipient, []*sdk.PtbArgument{sdk.PtbArgumentRes(labels[idx])})
 	}
 
-	builder.SetSender(senderAddress)
-	builder.SetGasBudget(50_000_000)
-	gasPrice, err := client.ReferenceGasPrice(nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas price: %v", err)
-	}
-	builder.SetGasPrice(*gasPrice)
-	builder.AddGasObjects([]*sdk.UnresolvedInput{sdk.UnresolvedInputFromObject(*gasCoin).WithOwnedKind()})
+	builder.Gas(gasCoinId).GasBudget(1000000000)
 
 	txn, err := builder.Finish()
-	if err != nil {
+	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
@@ -87,7 +57,7 @@ func main() {
 	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
 	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
 
-	res, err := client.DryRunTx(txn, nil)
+	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run send IOTA: %v", err)
 	}
