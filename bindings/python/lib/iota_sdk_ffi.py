@@ -17430,36 +17430,36 @@ class TransactionData:
         raise RuntimeError("TransactionData cannot be instantiated directly")
 
     # Each enum variant is a nested class of the enum itself.
-    class V1:
-        v1: "TransactionDataV1"
+    class VERSION1:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
 
-        def __init__(self,v1: "TransactionDataV1"):
-            self.v1 = v1
+        def __getitem__(self, index):
+            return self._values[index]
 
         def __str__(self):
-            return "TransactionData.V1(v1={})".format(self.v1)
+            return f"TransactionData.VERSION1{self._values!r}"
 
         def __eq__(self, other):
-            if not other.is_V1():
+            if not other.is_VERSION1():
                 return False
-            if self.v1 != other.v1:
-                return False
-            return True
-    
+            return self._values == other._values
     
 
     # For each variant, we have `is_NAME` and `is_name` methods for easily checking
     # whether an instance is that variant.
-    def is_V1(self) -> bool:
-        return isinstance(self, TransactionData.V1)
-    def is_v1(self) -> bool:
-        return isinstance(self, TransactionData.V1)
+    def is_VERSION1(self) -> bool:
+        return isinstance(self, TransactionData.VERSION1)
+    def is_version1(self) -> bool:
+        return isinstance(self, TransactionData.VERSION1)
     
 
 # Now, a little trick - we make each nested variant class be a subclass of the main
 # enum class, so that method calls and instance checks etc will work intuitively.
 # We might be able to do this a little more neatly with a metaclass, but this'll do.
-TransactionData.V1 = type("TransactionData.V1", (TransactionData.V1, TransactionData,), {})  # type: ignore
+TransactionData.VERSION1 = type("TransactionData.VERSION1", (TransactionData.VERSION1, TransactionData,), {})  # type: ignore
 
 
 
@@ -17469,23 +17469,23 @@ class _UniffiConverterTypeTransactionData(_UniffiConverterRustBuffer):
     def read(buf):
         variant = buf.read_i32()
         if variant == 1:
-            return TransactionData.V1(
+            return TransactionData.VERSION1(
                 _UniffiConverterTypeTransactionDataV1.read(buf),
             )
         raise InternalError("Raw enum value doesn't match any cases")
 
     @staticmethod
     def check_lower(value):
-        if value.is_V1():
-            _UniffiConverterTypeTransactionDataV1.check_lower(value.v1)
+        if value.is_VERSION1():
+            _UniffiConverterTypeTransactionDataV1.check_lower(value._values[0])
             return
         raise ValueError(value)
 
     @staticmethod
     def write(value, buf):
-        if value.is_V1():
+        if value.is_VERSION1():
             buf.write_i32(1)
-            _UniffiConverterTypeTransactionDataV1.write(value.v1, buf)
+            _UniffiConverterTypeTransactionDataV1.write(value._values[0], buf)
 
 
 

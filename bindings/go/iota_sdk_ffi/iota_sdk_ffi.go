@@ -29019,12 +29019,12 @@ func (_ FfiDestroyerTransactionBlockKindInput) Destroy(value TransactionBlockKin
 type TransactionData interface {
 	Destroy()
 }
-type TransactionDataV1 struct {
-	V1 *TransactionDataV1
+type TransactionDataVersion1 struct {
+	Field0 *TransactionDataV1
 }
 
-func (e TransactionDataV1) Destroy() {
-		FfiDestroyerTransactionDataV1{}.Destroy(e.V1);
+func (e TransactionDataVersion1) Destroy() {
+		FfiDestroyerTransactionDataV1{}.Destroy(e.Field0);
 }
 
 type FfiConverterTransactionData struct {}
@@ -29042,7 +29042,7 @@ func (FfiConverterTransactionData) Read(reader io.Reader) TransactionData {
 	id := readInt32(reader)
 	switch (id) {
 		case 1:
-			return TransactionDataV1{
+			return TransactionDataVersion1{
 				FfiConverterTransactionDataV1INSTANCE.Read(reader),
 			};
 		default:
@@ -29052,9 +29052,9 @@ func (FfiConverterTransactionData) Read(reader io.Reader) TransactionData {
 
 func (FfiConverterTransactionData) Write(writer io.Writer, value TransactionData) {
 	switch variant_value := value.(type) {
-		case TransactionDataV1:
+		case TransactionDataVersion1:
 			writeInt32(writer, 1)
-			FfiConverterTransactionDataV1INSTANCE.Write(writer, variant_value.V1)
+			FfiConverterTransactionDataV1INSTANCE.Write(writer, variant_value.Field0)
 		default:
 			_ = variant_value
 			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterTransactionData.Write", value))

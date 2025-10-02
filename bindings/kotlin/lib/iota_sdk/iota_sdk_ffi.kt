@@ -49370,8 +49370,8 @@ public object FfiConverterTypeTransactionBlockKindInput: FfiConverterRustBuffer<
 
 sealed class TransactionData: Disposable  {
     
-    data class V1(
-        val `v1`: TransactionDataV1) : TransactionData() {
+    data class Version1(
+        val v1: TransactionDataV1) : TransactionData() {
         companion object
     }
     
@@ -49380,10 +49380,10 @@ sealed class TransactionData: Disposable  {
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
     override fun destroy() {
         when(this) {
-            is TransactionData.V1 -> {
+            is TransactionData.Version1 -> {
                 
     Disposable.destroy(
-        this.`v1`
+        this.v1
     )
                 
             }
@@ -49399,7 +49399,7 @@ sealed class TransactionData: Disposable  {
 public object FfiConverterTypeTransactionData : FfiConverterRustBuffer<TransactionData>{
     override fun read(buf: ByteBuffer): TransactionData {
         return when(buf.getInt()) {
-            1 -> TransactionData.V1(
+            1 -> TransactionData.Version1(
                 FfiConverterTypeTransactionDataV1.read(buf),
                 )
             else -> throw RuntimeException("invalid enum value, something is very wrong!!")
@@ -49407,20 +49407,20 @@ public object FfiConverterTypeTransactionData : FfiConverterRustBuffer<Transacti
     }
 
     override fun allocationSize(value: TransactionData) = when(value) {
-        is TransactionData.V1 -> {
+        is TransactionData.Version1 -> {
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterTypeTransactionDataV1.allocationSize(value.`v1`)
+                + FfiConverterTypeTransactionDataV1.allocationSize(value.v1)
             )
         }
     }
 
     override fun write(value: TransactionData, buf: ByteBuffer) {
         when(value) {
-            is TransactionData.V1 -> {
+            is TransactionData.Version1 -> {
                 buf.putInt(1)
-                FfiConverterTypeTransactionDataV1.write(value.`v1`, buf)
+                FfiConverterTypeTransactionDataV1.write(value.v1, buf)
                 Unit
             }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }

@@ -29,15 +29,13 @@ pub mod v1;
 
 #[derive(Clone, uniffi::Enum)]
 pub enum TransactionData {
-    V1 { v1: Arc<TransactionDataV1> },
+    Version1(Arc<TransactionDataV1>),
 }
 
 impl From<iota_types::TransactionData> for TransactionData {
     fn from(value: iota_types::TransactionData) -> Self {
         match value {
-            iota_types::TransactionData::V1(v1) => TransactionData::V1 {
-                v1: Arc::new(v1.into()),
-            },
+            iota_types::TransactionData::V1(v1) => TransactionData::Version1(Arc::new(v1.into())),
         }
     }
 }
@@ -45,7 +43,7 @@ impl From<iota_types::TransactionData> for TransactionData {
 impl From<TransactionData> for iota_types::TransactionData {
     fn from(value: TransactionData) -> Self {
         match value {
-            TransactionData::V1 { v1 } => iota_types::TransactionData::V1(v1.0.clone()),
+            TransactionData::Version1(v1) => iota_types::TransactionData::V1(v1.0.clone()),
         }
     }
 }
