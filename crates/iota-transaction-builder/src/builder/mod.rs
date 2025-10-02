@@ -9,7 +9,10 @@ use std::{
 };
 
 use iota_crypto::IotaSigner;
-use iota_graphql_client::{Client, DryRunResult};
+use iota_graphql_client::{
+    Client, DryRunResult,
+    query_types::{ObjectRef, TransactionMetadata},
+};
 use iota_types::{
     Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
     Transaction, TransactionEffects, TransactionExpiration, TypeTag,
@@ -832,9 +835,35 @@ impl<L> TransactionBuilder<Client, L> {
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
         let txn = self.resolve_ptb().await?;
+        if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
+            return Err(Error::DryRun(format!(
+                "gas coins were provided without a gas budget"
+            )));
+        }
+        let gas_objects = txn
+            .gas_payment
+            .objects
+            .iter()
+            .map(|r| ObjectRef {
+                address: r.object_id,
+                digest: r.digest.to_base58(),
+                version: r.version,
+            })
+            .collect::<Vec<_>>();
         let res = self
             .client
-            .dry_run_tx(&txn, skip_checks)
+            .dry_run_tx_kind(
+                &txn.kind,
+                skip_checks,
+                TransactionMetadata {
+                    gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
+                    gas_budget: (txn.gas_payment.budget != 0).then_some(txn.gas_payment.budget),
+                    gas_price: Some(txn.gas_payment.price),
+                    gas_sponsor: Some(txn.gas_payment.owner),
+                    sender: Some(txn.sender),
+                    ..Default::default()
+                },
+            )
             .await
             .map_err(Error::Client)?;
         Ok(res)
