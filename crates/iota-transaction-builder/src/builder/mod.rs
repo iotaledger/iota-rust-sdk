@@ -36,7 +36,7 @@ use crate::{
 mod named_results;
 pub(crate) mod ptb_arguments;
 
-/// A transaction builder which can be used to construct [`Transaction`]s.
+/// A transaction builder which can be used to construct [`TransactionData`]s.
 #[derive(Debug, Clone)]
 #[repr(C)]
 pub struct TransactionBuilder<C = (), L = ()> {
@@ -45,7 +45,7 @@ pub struct TransactionBuilder<C = (), L = ()> {
     last_command: PhantomData<L>,
 }
 
-/// Transaction data used to build a [`Transaction`].
+/// Transaction data used to build a [`TransactionData`].
 #[derive(Debug, Clone)]
 #[repr(C)]
 pub struct TransactionBuildData {
