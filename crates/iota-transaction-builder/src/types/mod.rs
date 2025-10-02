@@ -8,7 +8,7 @@ use iota_types::{Address, TypeTag};
 mod move_arg;
 mod move_type;
 
-pub use move_arg::{MoveArg, PureBytes};
+pub use move_arg::{MoveArg, MoveArgCollection, PureBytes};
 pub use move_type::{MoveType, MoveTypes};
 use primitive_types::U256;
 
@@ -20,9 +20,15 @@ macro_rules! impl_simple_move_type {
             }
         }
 
+        impl MoveArg for &$rust_ty {
+            fn pure_bytes(self) -> PureBytes {
+                PureBytes(bcs::to_bytes(self).expect("bcs serialization failed"))
+            }
+        }
+
         impl MoveArg for $rust_ty {
-            fn pure_bytes(&self) -> Vec<u8> {
-                bcs::to_bytes(self).expect("bcs serialization failed")
+            fn pure_bytes(self) -> PureBytes {
+                PureBytes(bcs::to_bytes(&self).expect("bcs serialization failed"))
             }
         }
     };

@@ -31,7 +31,8 @@ use crate::{
 };
 
 mod named_results;
-pub(crate) mod ptb_arguments;
+/// Argument types for PTBs
+pub mod ptb_arguments;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
