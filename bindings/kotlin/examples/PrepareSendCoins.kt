@@ -12,7 +12,6 @@ fun main() = runBlocking {
                 Address.fromHex(
                         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
                 )
-
         val toAddress =
                 Address.fromHex(
                         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
@@ -24,7 +23,6 @@ fun main() = runBlocking {
                 ObjectId.fromHex(
                         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9"
                 )
-
         val gasCoinId =
                 ObjectId.fromHex(
                         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
@@ -32,8 +30,7 @@ fun main() = runBlocking {
 
         val builder = TransactionBuilder.init(fromAddress, client)
 
-        builder.sendCoins(listOf(coinId), toAddress, 50000000000)
-
+        builder.sendCoins(listOf(coinId), toAddress, 50000000000uL)
         builder.gas(gasCoinId).gasBudget(1000000000uL)
 
         val txn = builder.finish()
