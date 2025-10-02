@@ -33,7 +33,7 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
     derive(serde_derive::Serialize, serde_derive::Deserialize)
 )]
 pub enum TransactionData {
-    #[serde(rename = "1")]
+    #[cfg_attr(feature = "serde", serde(rename = "1"))]
     V1(TransactionDataV1),
     // When new variants are introduced, it is important that we check version support
     // in the validity_check function based on the protocol config.
