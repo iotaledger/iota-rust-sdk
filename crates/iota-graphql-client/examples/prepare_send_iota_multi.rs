@@ -45,7 +45,7 @@ async fn main() -> Result<()> {
         builder.transfer_objects(Address::from_str(address)?, res(&labels[i]));
     }
 
-    builder.gas(gas_coin).gas_budget(1000000000);
+    builder.gas(gas_coin);
 
     let txn = builder.finish().await?;
 

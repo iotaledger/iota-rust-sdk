@@ -44,7 +44,7 @@ fun main() = runBlocking {
                         PtbArgument.objectId(stakedIota.objectId())
                 ),
         )
-        builder.gas(gasCoin.objectId()).gasBudget(1000000000uL)
+        builder.gas(gasCoin.objectId())
 
         val res = builder.dryRun()
 

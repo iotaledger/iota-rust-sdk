@@ -22,7 +22,7 @@ func main() {
 
 	builder := sdk.TransactionBuilderInit(fromAddress, client)
 	builder.TransferObjects(toAddress, []*sdk.PtbArgument{sdk.PtbArgumentObjectId(coinObjId)})
-	builder.Gas(gasCoinObjId).GasBudget(1000000000)
+	builder.Gas(gasCoinObjId)
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {

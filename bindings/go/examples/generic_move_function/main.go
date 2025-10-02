@@ -37,7 +37,7 @@ func main() {
 		nil,
 	)
 
-	builder.Gas(gas_coin_id).GasBudget(1000000000)
+	builder.Gas(gas_coin_id)
 
 	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {

@@ -34,7 +34,7 @@ async def main():
     builder.split_coins(gas_coin_id, amounts, labels)
     for i, r in enumerate(recipients):
         builder.transfer_objects(Address.from_hex(r[0]), [PtbArgument.res(labels[i])])
-    builder.gas(gas_coin_id).gas_budget(1000000000)
+    builder.gas(gas_coin_id)
 
     txn = await builder.finish()
 

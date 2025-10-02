@@ -43,7 +43,7 @@ func main() {
 		builder.TransferObjects(recipient, []*sdk.PtbArgument{sdk.PtbArgumentRes(labels[idx])})
 	}
 
-	builder.Gas(gasCoinId).GasBudget(1000000000)
+	builder.Gas(gasCoinId)
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {

@@ -62,7 +62,7 @@ fun main() = runBlocking {
                 )
         )
 
-        builder.gas(gasCoinId).gasBudget(1000000000uL)
+        builder.gas(gasCoinId)
 
         val res = builder.dryRun()
 

@@ -48,7 +48,7 @@ fun main() = runBlocking {
                         PtbArgument.address(validator.address)
                 ),
         )
-        builder.gas(gasCoinId).gasBudget(1000000000uL)
+        builder.gas(gasCoinId)
 
         val res = builder.dryRun()
 

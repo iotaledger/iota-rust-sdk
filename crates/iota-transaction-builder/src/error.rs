@@ -45,4 +45,6 @@ pub enum Error {
     Signature(iota_crypto::SignatureError),
     #[error(transparent)]
     Client(iota_graphql_client::error::Error),
+    #[error("Failed to dry run transaction: {0}")]
+    DryRun(String),
 }

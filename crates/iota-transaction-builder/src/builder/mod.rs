@@ -813,9 +813,12 @@ impl<L> TransactionBuilder<Client, L> {
         if self.data.gas_budget.is_none() {
             let res = self
                 .client
-                .dry_run_tx(&txn, true)
+                .dry_run_tx_kind(&txn.kind, true, Default::default())
                 .await
                 .map_err(Error::Client)?;
+            if let Some(err) = res.error {
+                return Err(Error::DryRun(err));
+            }
             txn.gas_payment.budget = res
                 .effects
                 .ok_or_else(|| Error::MissingGasBudget)?

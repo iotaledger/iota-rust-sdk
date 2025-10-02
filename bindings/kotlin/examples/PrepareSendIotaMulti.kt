@@ -53,7 +53,7 @@ fun main() = runBlocking {
         for ((i, r) in recipients.withIndex()) {
             builder.transferObjects(Address.fromHex(r.first), listOf(PtbArgument.res(labels[i])))
         }
-        builder.gas(gasCoinId).gasBudget(1000000000uL)
+        builder.gas(gasCoinId)
 
         val txn = builder.finish()
 

@@ -38,7 +38,7 @@ async def main():
                 PtbArgument.object_id(staked_iota.object_id()),
             ],
         )
-        builder.gas(gas_coin.object_id()).gas_budget(1000000000)
+        builder.gas(gas_coin.object_id())
 
         res = await builder.dry_run()
         if res.error is not None:

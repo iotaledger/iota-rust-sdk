@@ -50,8 +50,7 @@ async fn main() -> Result<()> {
             SharedMut(ObjectId::from_str("0x5")?),
             staked_iota.object_id(),
         ))
-        .gas(gas_coin.object_id())
-        .gas_budget(1000000000);
+        .gas(gas_coin.object_id());
 
     let res = builder.dry_run(false).await?;
 

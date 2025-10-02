@@ -41,7 +41,7 @@ async def main():
                 PtbArgument.address(validator.address),
             ],
         )
-        builder.gas(gas_coin_id).gas_budget(1000000000)
+        builder.gas(gas_coin_id)
 
         res = await builder.dry_run()
         if res.error is not None:

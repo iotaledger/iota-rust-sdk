@@ -51,7 +51,7 @@ async def main():
         [TypeTag.new_address(), TypeTag.new_u64()],
     )
 
-    builder.gas(gas_coin_id).gas_budget(1000000000)
+    builder.gas(gas_coin_id)
 
     res = await builder.dry_run()
 

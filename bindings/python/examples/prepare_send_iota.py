@@ -31,7 +31,7 @@ async def main():
             to_address,
             [PtbArgument.object_id(coin_id)],
         )
-        builder.gas(gas_coin_id).gas_budget(1000000000)
+        builder.gas(gas_coin_id)
 
         txn = await builder.finish()
 
