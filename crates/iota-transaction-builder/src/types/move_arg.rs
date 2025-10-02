@@ -73,7 +73,7 @@ impl<const N: usize, T: MoveArg> MoveArgCollection for [T; N] {
         PureBytes(
             u32_as_uleb128(self.len() as u32)
                 .into_iter()
-                .chain(self.into_iter().map(|val| val.pure_bytes().0).flatten())
+                .chain(self.into_iter().flat_map(|val| val.pure_bytes().0))
                 .collect(),
         )
     }
@@ -84,7 +84,7 @@ impl<T: MoveArg> MoveArgCollection for Vec<T> {
         PureBytes(
             u32_as_uleb128(self.len() as u32)
                 .into_iter()
-                .chain(self.into_iter().map(|val| val.pure_bytes().0).flatten())
+                .chain(self.into_iter().flat_map(|val| val.pure_bytes().0))
                 .collect(),
         )
     }
