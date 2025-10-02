@@ -48,7 +48,7 @@ async def main():
         [TypeTag.new_address(), TypeTag.new_u64()],
     )
 
-    res = await builder.dry_run(True)
+    res = await builder.dry_run()
 
     if res.error is not None:
         raise Exception(f"Failed to call generic Move function: {res.error}")

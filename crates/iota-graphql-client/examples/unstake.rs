@@ -36,7 +36,7 @@ async fn main() -> Result<()> {
             staked_iota.object_id(),
         ));
 
-    let res = builder.dry_run(true).await?;
+    let res = builder.dry_run(false).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to unstake: {err}");

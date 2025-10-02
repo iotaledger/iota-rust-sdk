@@ -97,7 +97,7 @@ async def main():
             ["target_address"],
         )
 
-        res = await builder.dry_run(True)
+        res = await builder.dry_run()
 
         if res.error is not None:
             raise Exception(f"Failed to lookup name: {res.error}")

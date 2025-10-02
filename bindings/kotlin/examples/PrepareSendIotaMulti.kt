@@ -59,7 +59,7 @@ fun main() = runBlocking {
         println("Signing Digest: ${hexEncode(txn.signingDigest())}")
         println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")
 
-        val res = builder.dryRun(true)
+        val res = builder.dryRun()
 
         if (res.error != null) {
             throw Exception("Failed to send IOTA: ${res.error}")

@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
         .generics::<(Address, u64)>()
         .arguments((vec![address1, address2], vec![10000000u64, 20000000u64]));
 
-    let res = builder.dry_run(true).await?;
+    let res = builder.dry_run(false).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to call generic Move function: {err}");

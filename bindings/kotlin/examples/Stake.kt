@@ -44,7 +44,7 @@ fun main() = runBlocking {
                 ),
         )
 
-        val res = builder.dryRun(true)
+        val res = builder.dryRun()
 
         if (res.error != null) {
             throw Exception("Failed to stake: ${res.error}")

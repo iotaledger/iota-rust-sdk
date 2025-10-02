@@ -31,7 +31,7 @@ async def main():
             ],
         )
 
-        res = await builder.dry_run(True)
+        res = await builder.dry_run()
         if res.error is not None:
             raise Exception("Failed to unstake:", res.error)
 

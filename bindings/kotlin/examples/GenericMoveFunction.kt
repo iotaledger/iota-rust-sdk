@@ -56,7 +56,7 @@ fun main() = runBlocking {
                 )
         )
 
-        val res = builder.dryRun(true)
+        val res = builder.dryRun()
 
         if (res.error != null) {
             println("Failed to call generic Move function: $res.error")

@@ -57,7 +57,7 @@ func main() {
 		nil,
 	)
 
-	res, err := builder.DryRun(true)
+	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}

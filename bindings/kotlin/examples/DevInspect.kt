@@ -110,7 +110,7 @@ fun main() = runBlocking {
                 listOf("target_address")
         )
 
-        val res = builder.dryRun(true)
+        val res = builder.dryRun(false)
 
         if (res.error != null) {
             throw Exception("Failed to lookup name: ${res.error}")
