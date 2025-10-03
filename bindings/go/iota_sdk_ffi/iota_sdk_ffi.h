@@ -1638,7 +1638,7 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(void* ptr, void* owne
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DRY_RUN_TX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DRY_RUN_TX
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(void* ptr, RustBuffer tx, RustBuffer skip_checks
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(void* ptr, void* tx, RustBuffer skip_checks
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DRY_RUN_TX_KIND
@@ -1683,7 +1683,7 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(void* ptr, RustBuffe
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_EXECUTE_TX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_EXECUTE_TX
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(void* ptr, RustBuffer signatures, RustBuffer tx
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(void* ptr, RustBuffer signatures, void* tx
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_LATEST_CHECKPOINT_SEQUENCE_NUMBER
@@ -2103,7 +2103,7 @@ void* uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_message(voi
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_MULTISIGAGGREGATOR_NEW_WITH_TRANSACTION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_MULTISIGAGGREGATOR_NEW_WITH_TRANSACTION
-void* uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction(void* committee, RustBuffer transaction, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction(void* committee, void* transaction, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MULTISIGAGGREGATOR_FINISH
@@ -3774,6 +3774,21 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(void* pt
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UPGRADE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UPGRADE
 void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(void* ptr, RustBuffer modules, RustBuffer dependencies, void* package, void* ticket, RustBuffer name, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONDATA
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONDATA
+void* uniffi_iota_sdk_ffi_fn_clone_transactiondata(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONDATA
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONDATA
+void uniffi_iota_sdk_ffi_fn_free_transactiondata(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONDATA_AS_V1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONDATA_AS_V1
+void* uniffi_iota_sdk_ffi_fn_method_transactiondata_as_v1(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONDATAV1
@@ -7028,6 +7043,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_UPGRADE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_UPGRADE
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONDATA_AS_V1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONDATA_AS_V1
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactiondata_as_v1(void
     
 );
 #endif

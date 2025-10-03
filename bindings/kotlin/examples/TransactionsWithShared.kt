@@ -17,7 +17,7 @@ fun main() = runBlocking {
         val transactions = client.transactions(TransactionsFilter(inputObject = sharedObjId))
 
         for (transaction in transactions.data) {
-            println("Digest: ${transaction.transaction.digest().toBase58()}")
+            println("Digest: ${transaction.transaction.asV1().digest().toBase58()}")
         }
     } catch (e: Exception) {
         e.printStackTrace()

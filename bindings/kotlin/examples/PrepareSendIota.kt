@@ -30,7 +30,7 @@ fun main() = runBlocking {
                 listOf(PtbArgument.objectId(coinId)),
         )
 
-        val txn = builder.finish()
+        val txn = builder.finish().asV1()
 
         println("Signing Digest: ${hexEncode(txn.signingDigest())}")
         println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")

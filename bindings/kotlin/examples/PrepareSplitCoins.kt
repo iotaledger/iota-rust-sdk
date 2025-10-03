@@ -36,7 +36,7 @@ fun main() = runBlocking {
                 .gas(coinId)
                 .gasBudget(1000000000uL)
 
-        val txn = builder.finish()
+        val txn = builder.finish().asV1()
 
         println("Signing Digest: ${hexEncode(txn.signingDigest())}")
         println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")

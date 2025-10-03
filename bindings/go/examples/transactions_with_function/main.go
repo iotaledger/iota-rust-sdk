@@ -22,6 +22,6 @@ func main() {
 	}
 
 	for _, transaction := range transactions.Data {
-		fmt.Println("Digest:", transaction.Transaction.Digest().ToBase58())
+		fmt.Println("Digest:", transaction.Transaction.AsV1().Digest().ToBase58())
 	}
 }

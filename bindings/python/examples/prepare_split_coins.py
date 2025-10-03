@@ -35,7 +35,7 @@ async def main():
             1000000000
         )
 
-        txn = await builder.finish()
+        txn = (await builder.finish()).as_v1()
 
         print("Signing Digest:", hex_encode(txn.signing_digest()))
         print("Txn Bytes:", base64_encode(txn.bcs_serialize()))

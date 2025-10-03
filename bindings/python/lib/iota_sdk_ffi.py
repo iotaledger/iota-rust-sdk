@@ -673,7 +673,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 50359:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 1590:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 44700:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -691,7 +691,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 20245:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 26664:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 48726:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1129,7 +1129,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish() != 18914:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish() != 28876:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 43178:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1156,6 +1156,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 34068:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondata_as_v1() != 9244:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_bcs_serialize() != 15911:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1511,7 +1513,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message() != 41388:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction() != 30674:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction() != 37226:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new() != 40069:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3133,7 +3135,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins.argtypes = (
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx.argtypes = (
     ctypes.c_void_p,
-    _UniffiRustBuffer,
+    ctypes.c_void_p,
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx.restype = ctypes.c_uint64
@@ -3188,7 +3190,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_events.restype = ctypes.c
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
-    _UniffiRustBuffer,
+    ctypes.c_void_p,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_latest_checkpoint_sequence_number.argtypes = (
@@ -3641,7 +3643,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_messag
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_message.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction.argtypes = (
     ctypes.c_void_p,
-    _UniffiRustBuffer,
+    ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction.restype = ctypes.c_void_p
@@ -5376,6 +5378,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactiondata.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactiondata.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactiondata.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactiondata.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondata_as_v1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondata_as_v1.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactiondatav1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7586,6 +7603,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objec
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondata_as_v1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondata_as_v1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_bcs_serialize.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_bcs_serialize.restype = ctypes.c_uint16
@@ -8660,6 +8680,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -17425,9 +17447,9 @@ class _UniffiConverterTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
 
 
 
-class TransactionData:
+class TransactionDataInner:
     def __init__(self):
-        raise RuntimeError("TransactionData cannot be instantiated directly")
+        raise RuntimeError("TransactionDataInner cannot be instantiated directly")
 
     # Each enum variant is a nested class of the enum itself.
     class VERSION1:
@@ -17440,7 +17462,7 @@ class TransactionData:
             return self._values[index]
 
         def __str__(self):
-            return f"TransactionData.VERSION1{self._values!r}"
+            return f"TransactionDataInner.VERSION1{self._values!r}"
 
         def __eq__(self, other):
             if not other.is_VERSION1():
@@ -17451,25 +17473,25 @@ class TransactionData:
     # For each variant, we have `is_NAME` and `is_name` methods for easily checking
     # whether an instance is that variant.
     def is_VERSION1(self) -> bool:
-        return isinstance(self, TransactionData.VERSION1)
+        return isinstance(self, TransactionDataInner.VERSION1)
     def is_version1(self) -> bool:
-        return isinstance(self, TransactionData.VERSION1)
+        return isinstance(self, TransactionDataInner.VERSION1)
     
 
 # Now, a little trick - we make each nested variant class be a subclass of the main
 # enum class, so that method calls and instance checks etc will work intuitively.
 # We might be able to do this a little more neatly with a metaclass, but this'll do.
-TransactionData.VERSION1 = type("TransactionData.VERSION1", (TransactionData.VERSION1, TransactionData,), {})  # type: ignore
+TransactionDataInner.VERSION1 = type("TransactionDataInner.VERSION1", (TransactionDataInner.VERSION1, TransactionDataInner,), {})  # type: ignore
 
 
 
 
-class _UniffiConverterTypeTransactionData(_UniffiConverterRustBuffer):
+class _UniffiConverterTypeTransactionDataInner(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         variant = buf.read_i32()
         if variant == 1:
-            return TransactionData.VERSION1(
+            return TransactionDataInner.VERSION1(
                 _UniffiConverterTypeTransactionDataV1.read(buf),
             )
         raise InternalError("Raw enum value doesn't match any cases")
@@ -35541,9 +35563,9 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
                 self._uniffi_clone_pointer(), 
             ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
             # lift function
             _UniffiConverterTypeTransactionData.lift,
             
@@ -35889,6 +35911,72 @@ class _UniffiConverterTypeTransactionBuilder:
 
     @classmethod
     def write(cls, value: TransactionBuilderProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class TransactionDataProtocol(typing.Protocol):
+    def as_v1(self, ):
+        raise NotImplementedError
+# TransactionData is a Rust-only trait - it's a wrapper around a Rust implementation.
+class TransactionData():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactiondata, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactiondata, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def as_v1(self, ) -> "TransactionDataV1":
+        return _UniffiConverterTypeTransactionDataV1.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondata_as_v1,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeTransactionData:
+
+    @staticmethod
+    def lift(value: int):
+        return TransactionData._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: TransactionData):
+        if not isinstance(value, TransactionData):
+            raise TypeError("Expected TransactionData instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: TransactionDataProtocol):
+        if not isinstance(value, TransactionData):
+            raise TypeError("Expected TransactionData instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: TransactionDataProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class TransactionDataV1Protocol(typing.Protocol):
     """
@@ -39168,7 +39256,7 @@ __all__ = [
     "SignatureScheme",
     "TransactionArgument",
     "TransactionBlockKindInput",
-    "TransactionData",
+    "TransactionDataInner",
     "TransactionExpiration",
     "TypeArgumentError",
     "UnchangedSharedKind",
@@ -39332,6 +39420,7 @@ __all__ = [
     "StructTag",
     "SystemPackage",
     "TransactionBuilder",
+    "TransactionData",
     "TransactionDataV1",
     "TransactionEffects",
     "TransactionEvents",
