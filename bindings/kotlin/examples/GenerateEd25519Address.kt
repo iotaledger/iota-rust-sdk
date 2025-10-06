@@ -7,12 +7,13 @@ import kotlin.io.println
 
 fun main() {
     val privateKey = Ed25519PrivateKey.generate()
+    val privateKeyBech32 = privateKey.toBech32()
     val publicKey = privateKey.publicKey()
     val publicKeyBytes = publicKey.toBytes()
     val flaggedPublicKey = byteArrayOf((publicKey.scheme().ordinal + 1).toByte()) + publicKeyBytes
     val address = publicKey.deriveAddress()
 
-    println("Private Key: ${base64Encode(privateKey.toDer())}")
+    println("Private Key: ${privateKeyBech32}")
     println("Public Key: ${base64Encode(publicKeyBytes)}")
     println("Public Key With Flag: ${base64Encode(flaggedPublicKey)}")
     println("Address: ${address.toHex()}")

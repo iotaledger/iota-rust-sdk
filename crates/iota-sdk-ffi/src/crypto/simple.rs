@@ -41,6 +41,31 @@ impl SimpleKeypair {
         self.verifying_key().public_key()
     }
 
+    /// Encode a SimpleKeypair as `flag || privkey` in bytes
+    pub fn to_bytes(&self) -> Vec<u8> {
+        self.0.to_bytes()
+    }
+
+    /// Decode a SimpleKeypair from `flag || privkey` bytes
+    #[uniffi::constructor]
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
+        Ok(iota_crypto::simple::SimpleKeypair::from_bytes(bytes)?.into())
+    }
+
+    /// Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
+    /// "iotaprivkey" to a string. Note that the pubkey is not encoded.
+    pub fn to_bech32(&self) -> Result<String> {
+        Ok(self.0.to_bech32()?)
+    }
+
+    /// Decode a SimpleKeypair from `flag || privkey` in Bech32 starting with
+    /// "iotaprivkey" to SimpleKeypair. The public key is computed directly from
+    /// the private key bytes.
+    #[uniffi::constructor]
+    pub fn from_bech32(value: &str) -> Result<Self> {
+        Ok(iota_crypto::simple::SimpleKeypair::from_bech32(value)?.into())
+    }
+
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
     /// format).
     #[uniffi::constructor]

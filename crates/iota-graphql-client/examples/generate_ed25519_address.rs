@@ -7,6 +7,7 @@ use rand::rngs::OsRng;
 
 fn main() {
     let private_key = Ed25519PrivateKey::generate(OsRng);
+    let private_key_bech32 = private_key.to_bech32().unwrap();
     let public_key = private_key.public_key();
     let address = public_key.derive_address();
 
@@ -14,10 +15,7 @@ fn main() {
     flagged_public_key.extend_from_slice(public_key.as_bytes());
     let encoded_public_key = Base64::encode_string(&flagged_public_key);
 
-    println!(
-        "Private Key: {}",
-        Base64::encode_string(&private_key.to_der().unwrap())
-    );
+    println!("Private Key: {private_key_bech32}");
     println!("Public Key: {public_key}");
     println!("Public Key With Flag: {encoded_public_key}");
     println!("Address: {address}");

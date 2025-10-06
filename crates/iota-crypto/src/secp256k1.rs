@@ -60,6 +60,11 @@ impl Secp256k1PrivateKey {
         Secp256k1PublicKey::new(self.0.verifying_key().as_ref().to_bytes().into())
     }
 
+    /// Return the raw 32-byte private key
+    pub fn to_bytes(&self) -> [u8; Self::LENGTH] {
+        self.0.to_bytes().into()
+    }
+
     pub fn generate<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
@@ -108,6 +113,68 @@ impl Secp256k1PrivateKey {
             .to_pkcs8_pem(pkcs8::LineEnding::default())
             .map_err(SignatureError::from_source)
             .map(|pem| (*pem).to_owned())
+    }
+
+    #[cfg(feature = "bech32")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
+    /// Encode this private key as `flag || privkey` in Bech32 starting with
+    /// "iotaprivkey" to a string.
+    pub fn to_bech32(&self) -> Result<String, SignatureError> {
+        use bech32::Hrp;
+
+        const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
+        let hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
+            .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
+
+        let mut bytes = Vec::new();
+        bytes.push(SignatureScheme::Secp256k1.to_u8());
+        bytes.extend_from_slice(&self.to_bytes());
+
+        bech32::encode::<bech32::Bech32>(hrp, &bytes)
+            .map_err(|e| SignatureError::from_source(format!("bech32 encoding failed: {e}")))
+    }
+
+    #[cfg(feature = "bech32")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
+    /// Decode a private key from `flag || privkey` in Bech32 starting with
+    /// "iotaprivkey".
+    pub fn from_bech32(value: &str) -> Result<Self, SignatureError> {
+        use bech32::Hrp;
+
+        const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
+        let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
+            .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
+
+        let (hrp, data) = bech32::decode(value)
+            .map_err(|e| SignatureError::from_source(format!("bech32 decoding failed: {e}")))?;
+
+        if hrp != expected_hrp {
+            return Err(SignatureError::from_source(format!(
+                "invalid HRP: expected {IOTA_PRIV_KEY_PREFIX}, got {hrp}"
+            )));
+        }
+
+        if data.is_empty() {
+            return Err(SignatureError::from_source("empty bech32 data"));
+        }
+
+        let flag = SignatureScheme::from_byte(data[0])
+            .map_err(|e| SignatureError::from_source(format!("invalid signature scheme: {e:?}")))?;
+
+        if flag != SignatureScheme::Secp256k1 {
+            return Err(SignatureError::from_source(format!(
+                "invalid signature scheme: expected Secp256k1, got {flag:?}"
+            )));
+        }
+
+        let key_bytes = &data[1..];
+        if key_bytes.len() != Self::LENGTH {
+            return Err(SignatureError::from_source("invalid secp256k1 key length"));
+        }
+
+        let mut arr = [0u8; Self::LENGTH];
+        arr.copy_from_slice(key_bytes);
+        Self::new(arr)
     }
 
     #[cfg(feature = "pem")]

@@ -66,6 +66,24 @@ impl Ed25519PrivateKey {
         Ok(self.0.to_pem()?)
     }
 
+    /// Serialize this private key to bytes.
+    pub fn to_bytes(&self) -> Vec<u8> {
+        self.0.to_bytes().to_vec()
+    }
+
+    /// Encode this private key as `flag || privkey` in Bech32 starting with
+    /// "iotaprivkey" to a string.
+    pub fn to_bech32(&self) -> Result<String> {
+        Ok(self.0.to_bech32()?)
+    }
+
+    /// Decode a private key from `flag || privkey` in Bech32 starting with
+    /// "iotaprivkey".
+    #[uniffi::constructor]
+    pub fn from_bech32(value: &str) -> Result<Self> {
+        Ok(iota_crypto::ed25519::Ed25519PrivateKey::from_bech32(value)?.into())
+    }
+
     pub fn try_sign(&self, message: &[u8]) -> Result<Ed25519Signature> {
         Ok(iota_crypto::Signer::<iota_types::Ed25519Signature>::try_sign(&self.0, message)?.into())
     }
