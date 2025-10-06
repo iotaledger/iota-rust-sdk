@@ -92,11 +92,7 @@ impl PTBArgument {
 
     #[uniffi::constructor]
     pub fn u128(value: &str) -> Self {
-        Self(
-            u128::from_str_radix(value, 10)
-                .expect("invalid u128")
-                .into(),
-        )
+        Self(value.parse::<u128>().expect("invalid u128").into())
     }
 
     #[uniffi::constructor]

@@ -136,6 +136,22 @@ impl<const N: usize> PTBArguments for [ObjectId; N] {
     }
 }
 
+impl PTBArguments for Vec<Res> {
+    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            args.push(input.arg(ptb));
+        }
+    }
+}
+
+impl<const N: usize> PTBArguments for [Res; N] {
+    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            args.push(input.arg(ptb));
+        }
+    }
+}
+
 impl<T> PTBArguments for &[T]
 where
     for<'a> &'a T: PTBArgument,
