@@ -5,6 +5,9 @@ use iota_crypto::{Signer, Verifier};
 use iota_types::SignatureScheme;
 
 use crate::{
+    crypto::{
+        ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey, secp256r1::Secp256r1PrivateKey,
+    },
     error::Result,
     types::{crypto::multisig::MultisigMemberPublicKey, signature::SimpleSignature},
 };
@@ -29,6 +32,27 @@ pub struct SimpleKeypair(pub iota_crypto::simple::SimpleKeypair);
 
 #[uniffi::export]
 impl SimpleKeypair {
+    #[uniffi::constructor]
+    pub fn from_ed25519(keypair: &Ed25519PrivateKey) -> Self {
+        Self(iota_crypto::simple::SimpleKeypair::from(
+            (**keypair).clone(),
+        ))
+    }
+
+    #[uniffi::constructor]
+    pub fn from_secp256k1(keypair: &Secp256k1PrivateKey) -> Self {
+        Self(iota_crypto::simple::SimpleKeypair::from(
+            (**keypair).clone(),
+        ))
+    }
+
+    #[uniffi::constructor]
+    pub fn from_secp256r1(keypair: &Secp256r1PrivateKey) -> Self {
+        Self(iota_crypto::simple::SimpleKeypair::from(
+            (**keypair).clone(),
+        ))
+    }
+
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
     }

@@ -6,9 +6,10 @@
 use std::{
     collections::{BTreeMap, HashMap},
     marker::PhantomData,
+    time::Duration,
 };
 
-use iota_crypto::IotaSigner;
+use iota_crypto::{IotaSigner, simple::SimpleKeypair};
 use iota_graphql_client::{
     Client, DryRunResult,
     query_types::{ObjectRef, TransactionMetadata},
@@ -17,11 +18,13 @@ use iota_types::{
     Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
     Transaction, TransactionEffects, TransactionExpiration, TypeTag,
 };
+use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
     PTBArgument,
     builder::{
+        gas_station::GasStationData,
         named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArguments,
     },
@@ -34,6 +37,7 @@ use crate::{
     },
 };
 
+pub(crate) mod gas_station;
 mod named_results;
 /// Argument types for PTBs
 pub mod ptb_arguments;
@@ -69,6 +73,8 @@ pub struct TransactionBuildData {
     expiration: TransactionExpiration,
     /// The map of user-defined names that map to a particular command's result.
     named_results: HashMap<String, Argument>,
+    /// The data used for gas station sponsorship.
+    gas_station_data: Option<GasStationData>,
 }
 
 impl TransactionBuildData {
@@ -178,6 +184,7 @@ impl TransactionBuilder {
                 sponsor: Default::default(),
                 expiration: Default::default(),
                 named_results: Default::default(),
+                gas_station_data: Default::default(),
             },
             client: (),
             last_command: PhantomData,
@@ -215,11 +222,15 @@ impl<C, L> TransactionBuilder<C, L> {
         unsafe { core::mem::transmute(self) }
     }
 
-    fn state_change<U: Into<Command>>(&mut self, command: U) -> &mut TransactionBuilder<C, U> {
-        self.command(command.into());
+    fn state_change<U>(&mut self) -> &mut TransactionBuilder<C, U> {
         // Safe to transmute because the generic type is contained in PhantomData and
         // the struct is repr(C)
         unsafe { core::mem::transmute(self) }
+    }
+
+    fn cmd_state_change<U: Into<Command>>(&mut self, command: U) -> &mut TransactionBuilder<C, U> {
+        self.command(command.into());
+        self.state_change()
     }
 
     /// Get the current set gas coins.
@@ -243,6 +254,12 @@ impl<C, L> TransactionBuilder<C, L> {
     pub fn sponsor(&mut self, sponsor: Address) -> &mut Self {
         self.data.sponsor(sponsor);
         self
+    }
+
+    /// Set the gas station sponsor. Optional.
+    pub fn gas_station_sponsor(&mut self, url: Url) -> &mut TransactionBuilder<C, GasStationData> {
+        self.data.gas_station_data = Some(GasStationData::new(url));
+        self.state_change()
     }
 
     /// Set the expiration. Optional.
@@ -311,7 +328,7 @@ impl<C, L> TransactionBuilder<C, L> {
         module: &str,
         function: &str,
     ) -> &mut TransactionBuilder<C, MoveCall> {
-        self.state_change(MoveCall {
+        self.cmd_state_change(MoveCall {
             package: package_id.into(),
             module: Identifier::new(module)
                 .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
@@ -328,7 +345,7 @@ impl<C, L> TransactionBuilder<C, L> {
             PublishType::Path(_path) => todo!("load the package from the path"),
             PublishType::Compiled(m) => m,
         };
-        self.state_change(Publish {
+        self.cmd_state_change(Publish {
             modules: module.modules,
             dependencies: module.dependencies,
         })
@@ -449,7 +466,7 @@ impl<L> TransactionBuilder<(), L> {
             false,
         );
         let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
-        self.state_change(SplitCoins {
+        self.cmd_state_change(SplitCoins {
             coin,
             amounts: split_amounts,
         })
@@ -484,7 +501,7 @@ impl<L> TransactionBuilder<(), L> {
         elements: impl IntoIterator<Item = Argument>,
         type_tag: impl Into<Option<TypeTag>>,
     ) -> &mut TransactionBuilder<(), MakeMoveVector> {
-        self.state_change(MakeMoveVector {
+        self.cmd_state_change(MakeMoveVector {
             type_: type_tag.into(),
             elements: elements.into_iter().collect(),
         })
@@ -657,7 +674,7 @@ impl<L> TransactionBuilder<Client, L> {
     ) -> &mut TransactionBuilder<Client, SplitCoins> {
         let coin = self.set_input(InputKind::ImmutableOrOwned(coin), false);
         let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
-        self.state_change(SplitCoins {
+        self.cmd_state_change(SplitCoins {
             coin,
             amounts: split_amounts,
         })
@@ -675,7 +692,7 @@ impl<L> TransactionBuilder<Client, L> {
             PublishType::Compiled(m) => m,
         };
         let ticket = self.apply_argument(upgrade_cap);
-        self.state_change(Upgrade {
+        self.cmd_state_change(Upgrade {
             modules: module.modules,
             dependencies: module.dependencies,
             package: package_id,
@@ -692,7 +709,7 @@ impl<L> TransactionBuilder<Client, L> {
         for e in elements {
             args.extend(self.apply_arguments(e));
         }
-        self.state_change(MakeMoveVector {
+        self.cmd_state_change(MakeMoveVector {
             type_: Some(U::type_tag()),
             elements: args,
         })
@@ -871,23 +888,73 @@ impl<L> TransactionBuilder<Client, L> {
         Ok(res)
     }
 
-    /// Execute the transaction and optionally wait for finalization.
+    /// Execute the transaction and optionally wait for finalization. The
+    /// GraphQL client will be used unless a gas station was configured, in
+    /// which case the transaction will be sent to the endpoint for execution.
     pub async fn execute(
+        mut self,
+        keypair: &SimpleKeypair,
+        wait_for_finalization: bool,
+    ) -> Result<Option<TransactionEffects>, Error> {
+        let gas_station_data = self.data.gas_station_data.take();
+        let client = self.client.clone();
+        let mut txn = self.finish().await?;
+
+        let res = if let Some(gas_station_data) = gas_station_data {
+            let digest = gas_station_data.execute_txn(&mut txn, keypair).await?;
+            client
+                .transaction_effects(digest)
+                .await
+                .map_err(Error::Client)?
+        } else {
+            client
+                .execute_tx(
+                    &[keypair.sign_transaction(&txn).map_err(Error::Signature)?],
+                    &txn,
+                )
+                .await
+                .map_err(Error::Client)?
+        };
+
+        let mut retries_left = 100;
+        if wait_for_finalization {
+            while retries_left > 0
+                && client
+                    .transaction(txn.digest())
+                    .await
+                    .map_err(Error::Client)?
+                    .is_none()
+            {
+                tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+                retries_left -= 1;
+            }
+        }
+        Ok(res)
+    }
+
+    /// Execute the transaction with a sponsor keypair and optionally wait for
+    /// finalization.
+    pub async fn execute_with_sponsor(
         self,
-        keypairs: &[iota_crypto::simple::SimpleKeypair],
+        keypair: &SimpleKeypair,
+        sponsor_keypair: &SimpleKeypair,
         wait_for_finalization: bool,
     ) -> Result<Option<TransactionEffects>, Error> {
         let client = self.client.clone();
         let txn = self.finish().await?;
-        let signatures = keypairs
-            .iter()
-            .map(|key| key.sign_transaction(&txn))
-            .collect::<Result<Vec<_>, _>>()
-            .map_err(Error::Signature)?;
+
+        let mut signatures = vec![keypair.sign_transaction(&txn).map_err(Error::Signature)?];
+        signatures.push(
+            sponsor_keypair
+                .sign_transaction(&txn)
+                .map_err(Error::Signature)?,
+        );
+
         let res = client
             .execute_tx(&signatures, &txn)
             .await
             .map_err(Error::Client)?;
+
         if wait_for_finalization {
             while client
                 .transaction(txn.digest())
@@ -988,5 +1055,27 @@ impl<C, L: Into<Command>> TransactionBuilder<C, L> {
     /// Get the argument representing the last command.
     pub fn arg(&mut self) -> Argument {
         Argument::Result((self.data.commands.len() - 1) as _)
+    }
+}
+
+impl<C> TransactionBuilder<C, GasStationData> {
+    /// Set the gas reservation duration for a gas station sponsor.
+    pub fn gas_reservation_duration(&mut self, duration: Duration) -> &mut Self {
+        if let Some(data) = &mut self.data.gas_station_data {
+            data.set_gas_reservation_duration(duration);
+        }
+        self
+    }
+
+    /// Add a header that will be passed to the gas station sponsor request.
+    pub fn add_gas_station_header(
+        &mut self,
+        name: reqwest::header::HeaderName,
+        value: reqwest::header::HeaderValue,
+    ) -> &mut Self {
+        if let Some(data) = &mut self.data.gas_station_data {
+            data.add_header(name, value);
+        }
+        self
     }
 }

@@ -12,7 +12,7 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Ed25519PrivateKey(iota_crypto::ed25519::Ed25519PrivateKey);
 
 #[uniffi::export]

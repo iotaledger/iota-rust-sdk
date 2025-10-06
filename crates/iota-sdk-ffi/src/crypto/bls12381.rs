@@ -17,7 +17,7 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Bls12381PrivateKey(pub iota_crypto::bls12381::Bls12381PrivateKey);
 
 #[uniffi::export]
