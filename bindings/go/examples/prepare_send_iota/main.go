@@ -18,11 +18,8 @@ func main() {
 
 	coinObjId, _ := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
 
-	gasCoinObjId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
-
 	builder := sdk.TransactionBuilderInit(fromAddress, client)
 	builder.TransferObjects(toAddress, []*sdk.PtbArgument{sdk.PtbArgumentObjectId(coinObjId)})
-	builder.Gas(gasCoinObjId).GasBudget(1000000000)
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
@@ -36,7 +33,8 @@ func main() {
 	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
 	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
 
-	res, err := builder.DryRun(false)
+	skipChecks := bool(false)
+	res, err := client.DryRunTx(txn, &skipChecks)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to send IOTA: %v", err)
 	}

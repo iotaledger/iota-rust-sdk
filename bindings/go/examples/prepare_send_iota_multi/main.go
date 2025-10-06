@@ -15,7 +15,7 @@ func main() {
 
 	sender, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
-	gasCoinId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
+	coinId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 
 	recipients := []struct {
 		address string
@@ -35,15 +35,13 @@ func main() {
 		amounts = append(amounts, r.amount)
 	}
 
-	// Split the gas coin into multiple coins
-	builder.SplitCoins(gasCoinId, amounts, labels)
+	// Split a coin into multiple coins
+	builder.SplitCoins(coinId, amounts, labels)
 
 	for idx, r := range recipients {
 		recipient, _ := sdk.AddressFromHex(r.address)
 		builder.TransferObjects(recipient, []*sdk.PtbArgument{sdk.PtbArgumentRes(labels[idx])})
 	}
-
-	builder.Gas(gasCoinId).GasBudget(1000000000)
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
@@ -57,7 +55,8 @@ func main() {
 	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
 	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
 
-	res, err := builder.DryRun(false)
+	skipChecks := bool(false)
+	res, err := client.DryRunTx(txn, &skipChecks)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run send IOTA: %v", err)
 	}

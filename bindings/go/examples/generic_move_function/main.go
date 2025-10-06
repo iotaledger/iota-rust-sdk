@@ -14,7 +14,6 @@ func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
 	sender, _ := sdk.AddressFromHex("0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e")
-	gas_coin_id, _ := sdk.ObjectIdFromHex("0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a")
 
 	builder := sdk.TransactionBuilderInit(sender, client)
 
@@ -36,8 +35,6 @@ func main() {
 		[]*sdk.TypeTag{sdk.TypeTagNewAddress(), sdk.TypeTagNewU64()},
 		nil,
 	)
-
-	builder.Gas(gas_coin_id).GasBudget(1000000000)
 
 	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {

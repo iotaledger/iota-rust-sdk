@@ -12,9 +12,6 @@ async def main():
     sender = Address.from_hex(
         "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e"
     )
-    gas_coin_id = ObjectId.from_hex(
-        "0xa1d009e8dafe20b1cba05e08aea488aafae1f89d892c3eaef6c0994e155e441a"
-    )
 
     builder = await TransactionBuilder.init(sender, client)
 
@@ -50,8 +47,6 @@ async def main():
         [PtbArgument.res("addresses"), PtbArgument.res("amounts")],
         [TypeTag.new_address(), TypeTag.new_u64()],
     )
-
-    builder.gas(gas_coin_id).gas_budget(1000000000)
 
     res = await builder.dry_run()
 

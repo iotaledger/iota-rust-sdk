@@ -17,17 +17,9 @@ async def main():
             raise Exception("no staked iotas found")
         staked_iota = staked_iotas.data[0]
 
-        gas_coins = await client.objects(
-            ObjectFilter(
-                type_tag=str(StructTag.gas_coin()),
-                owner=staked_iota.owner().as_address(),
-            )
+        builder = await TransactionBuilder.init(
+            staked_iota.owner().as_address(), client
         )
-        if len(gas_coins.data) == 0:
-            raise Exception("no gas coin found")
-        gas_coin = gas_coins.data[0]
-
-        builder = await TransactionBuilder.init(gas_coin.owner().as_address(), client)
 
         builder.move_call(
             Address.from_hex("0x3"),
@@ -38,7 +30,6 @@ async def main():
                 PtbArgument.object_id(staked_iota.object_id()),
             ],
         )
-        builder.gas(gas_coin.object_id()).gas_budget(1000000000)
 
         res = await builder.dry_run()
         if res.error is not None:
