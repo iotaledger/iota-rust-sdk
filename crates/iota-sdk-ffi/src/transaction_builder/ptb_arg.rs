@@ -6,6 +6,7 @@ use std::sync::Arc;
 use iota_transaction_builder::{
     PureBytes, Receiving, Shared, SharedMut, builder::ptb_arguments::Res, res,
 };
+use primitive_types::U256;
 
 use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
@@ -19,6 +20,7 @@ enum PTBArg {
     U32(u32),
     U64(u64),
     U128(u128),
+    U256(U256),
     String(String),
     Vector(Vec<PureBytes>),
     Res(Res),
@@ -89,8 +91,17 @@ impl PTBArgument {
     }
 
     #[uniffi::constructor]
-    pub fn u128(bytes: &[u8]) -> Self {
-        Self(u128::from_le_bytes(bytes.try_into().expect("invalid le bytes for u128")).into())
+    pub fn u128(value: &str) -> Self {
+        Self(
+            u128::from_str_radix(value, 10)
+                .expect("invalid u128")
+                .into(),
+        )
+    }
+
+    #[uniffi::constructor]
+    pub fn u256(value: &str) -> Self {
+        Self(U256::from_dec_str(value).expect("invalid u256").into())
     }
 
     #[uniffi::constructor]
@@ -155,6 +166,7 @@ impl iota_transaction_builder::PTBArgument for &PTBArg {
             PTBArg::U32(val) => val.arg(ptb),
             PTBArg::U64(val) => val.arg(ptb),
             PTBArg::U128(val) => val.arg(ptb),
+            PTBArg::U256(val) => val.arg(ptb),
             PTBArg::String(val) => val.arg(ptb),
             PTBArg::Vector(pure_bytes) => pure_bytes.clone().arg(ptb),
             PTBArg::Res(res) => res.arg(ptb),
