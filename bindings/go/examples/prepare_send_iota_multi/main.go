@@ -35,7 +35,7 @@ func main() {
 		amounts = append(amounts, r.amount)
 	}
 
-	// Split the gas coin into multiple coins
+	// Split a coin into multiple coins
 	builder.SplitCoins(coinId, amounts, labels)
 
 	for idx, r := range recipients {
