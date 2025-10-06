@@ -147,6 +147,30 @@ where
     }
 }
 
+impl PTBArguments for Vec<Res> {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
+impl<T: PTBArguments> PTBArguments for [T] {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
+impl<const N: usize, T: PTBArguments> PTBArguments for [T; N] {
+    fn push_args(&self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            input.push_args(ptb, args);
+        }
+    }
+}
+
 /// Allows specifying shared parameters.
 pub struct Shared<T>(pub T);
 

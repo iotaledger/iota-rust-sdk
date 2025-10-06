@@ -152,7 +152,6 @@ mod tests {
                 .unwrap(),
         ));
         tx.gas_price(1000);
-        tx.gas_budget(500000000);
 
         tx.finish().unwrap();
     }

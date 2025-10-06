@@ -444,6 +444,15 @@ impl StructTag {
         }
     }
 
+    pub fn timelocked_staked_iota() -> Self {
+        Self {
+            address: Address::THREE,
+            module: Identifier::new("timelocked_staking").unwrap(),
+            name: Identifier::new("TimelockedStakedIota").unwrap(),
+            type_params: vec![],
+        }
+    }
+
     pub fn address(&self) -> Address {
         self.address
     }
