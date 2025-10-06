@@ -77,6 +77,8 @@ pub use keypair::{SimpleKeypair, SimpleVerifyingKey};
     doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 mod keypair {
+    #[cfg(feature = "bech32")]
+    use bech32::Hrp;
     use iota_sdk_types::{
         MultisigMemberPublicKey, SignatureScheme, SimpleSignature, UserSignature,
     };
@@ -219,8 +221,6 @@ mod keypair {
         #[cfg(feature = "bech32")]
         #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
         pub fn to_bech32(&self) -> Result<String, SignatureError> {
-            use bech32::Hrp;
-
             let hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
                 .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
             let bytes = self.to_bytes();
@@ -235,8 +235,6 @@ mod keypair {
         #[cfg(feature = "bech32")]
         #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
         pub fn from_bech32(value: &str) -> Result<Self, SignatureError> {
-            use bech32::Hrp;
-
             let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
                 .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
 

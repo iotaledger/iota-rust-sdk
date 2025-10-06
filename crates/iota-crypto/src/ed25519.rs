@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+#[cfg(feature = "bech32")]
+use bech32::Hrp;
 use iota_sdk_types::{
     Ed25519PublicKey, Ed25519Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
@@ -117,8 +119,6 @@ impl Ed25519PrivateKey {
     /// Encode this private key as `flag || privkey` in Bech32 starting with
     /// "iotaprivkey" to a string.
     pub fn to_bech32(&self) -> Result<String, SignatureError> {
-        use bech32::Hrp;
-
         let hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
             .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
 
@@ -135,8 +135,6 @@ impl Ed25519PrivateKey {
     /// Decode a private key from `flag || privkey` in Bech32 starting with
     /// "iotaprivkey".
     pub fn from_bech32(value: &str) -> Result<Self, SignatureError> {
-        use bech32::Hrp;
-
         let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
             .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
 
