@@ -309,16 +309,15 @@ mod type_digest {
 
     impl crate::TransactionData {
         pub fn digest(&self) -> Digest {
-            match self {
-                crate::TransactionData::V1(tx) => tx.digest(),
-            }
+            const SALT: &str = "TransactionData::";
+            type_digest(SALT, &self)
         }
     }
 
     impl crate::TransactionDataV1 {
         pub fn digest(&self) -> Digest {
             const SALT: &str = "TransactionData::";
-            type_digest(SALT, self)
+            type_digest(SALT, &crate::TransactionData::V1(self.clone()))
         }
     }
 
@@ -354,24 +353,24 @@ mod signing_message {
 
     impl TransactionData {
         pub fn signing_digest(&self) -> SigningDigest {
-            let intent = Intent {
+            const INTENT: Intent = Intent {
                 scope: IntentScope::TransactionData,
                 version: IntentVersion::V0,
                 app_id: IntentAppId::Iota,
             };
-            let digest = signing_digest(intent, self);
+            let digest = signing_digest(INTENT, self);
             digest.into_inner()
         }
     }
 
     impl TransactionDataV1 {
         pub fn signing_digest(&self) -> SigningDigest {
-            let intent = Intent {
+            const INTENT: Intent = Intent {
                 scope: IntentScope::TransactionData,
                 version: IntentVersion::V0,
                 app_id: IntentAppId::Iota,
             };
-            let digest = signing_digest(intent, self);
+            let digest = signing_digest(INTENT, &TransactionData::V1(self.clone()));
             digest.into_inner()
         }
     }
