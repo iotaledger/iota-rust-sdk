@@ -2212,6 +2212,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3330,6 +3332,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string(
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32(
 ): Short
@@ -4490,9 +4494,11 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(`id`: Pointer,unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(`string`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(`value`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32(`value`: Int,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7038,10 +7044,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string() != 60971.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 39528.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 33699.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16() != 58656.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256() != 46000.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32() != 13754.toShort()) {
@@ -27302,11 +27311,11 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
-         fun `u128`(`bytes`: kotlin.ByteArray): PtbArgument {
+         fun `u128`(`value`: kotlin.String): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(
-        FfiConverterByteArray.lower(`bytes`),_status)
+        FfiConverterString.lower(`value`),_status)
 }
     )
     }
@@ -27317,6 +27326,16 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(
         FfiConverterUShort.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u256`(`value`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256(
+        FfiConverterString.lower(`value`),_status)
 }
     )
     }

@@ -2717,12 +2717,17 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(RustBuffer string, R
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U128
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U128
-void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(RustBuffer bytes, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(RustBuffer value, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U16
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U16
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(uint16_t value, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U256
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U256
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256(RustBuffer value, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U32
@@ -8258,6 +8263,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_U16
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_U16
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_U256
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_U256
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256(void
     
 );
 #endif
