@@ -6,6 +6,8 @@ use iota_sdk_types::{
     Ed25519PublicKey, Ed25519Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
 
+#[cfg(feature = "bech32")]
+use crate::IOTA_PRIV_KEY_PREFIX;
 use crate::{SignatureError, Signer, Verifier};
 
 #[derive(Clone, Eq, PartialEq)]
@@ -117,7 +119,6 @@ impl Ed25519PrivateKey {
     pub fn to_bech32(&self) -> Result<String, SignatureError> {
         use bech32::Hrp;
 
-        const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
         let hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
             .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
 
@@ -136,7 +137,6 @@ impl Ed25519PrivateKey {
     pub fn from_bech32(value: &str) -> Result<Self, SignatureError> {
         use bech32::Hrp;
 
-        const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
         let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
             .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
 

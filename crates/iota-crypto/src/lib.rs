@@ -154,3 +154,8 @@ impl<T: Verifier<UserSignature>> IotaVerifier for T {
         self.verify(&message, signature)
     }
 }
+
+#[cfg(feature = "bech32")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
+/// Bech32 prefix for IOTA private keys
+pub const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";

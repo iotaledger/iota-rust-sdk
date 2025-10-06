@@ -82,12 +82,9 @@ mod keypair {
     };
     use signature::{Signer, Verifier};
 
-    use crate::SignatureError;
-
-    /// Bech32 prefix for IOTA private keys
     #[cfg(feature = "bech32")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
-    pub const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
+    use crate::IOTA_PRIV_KEY_PREFIX;
+    use crate::SignatureError;
 
     #[derive(Debug, Clone)]
     pub struct SimpleKeypair {

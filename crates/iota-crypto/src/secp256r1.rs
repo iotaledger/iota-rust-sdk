@@ -11,9 +11,11 @@ use p256::{
 };
 use signature::{Signer, Verifier};
 
+#[cfg(feature = "bech32")]
+use crate::IOTA_PRIV_KEY_PREFIX;
 use crate::SignatureError;
 
-#[derive(Clone)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct Secp256r1PrivateKey(SigningKey);
 
 impl std::fmt::Debug for Secp256r1PrivateKey {
@@ -122,7 +124,6 @@ impl Secp256r1PrivateKey {
     pub fn to_bech32(&self) -> Result<String, SignatureError> {
         use bech32::Hrp;
 
-        const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
         let hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
             .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
 
@@ -130,7 +131,7 @@ impl Secp256r1PrivateKey {
         bytes.push(SignatureScheme::Secp256r1.to_u8());
         bytes.extend_from_slice(&self.to_bytes());
 
-        bech32::encode::<bech32::Bech32>(hrp, &bytes)
+        bech32::encode::<bech32::Bech32m>(hrp, &bytes)
             .map_err(|e| SignatureError::from_source(format!("bech32 encoding failed: {e}")))
     }
 
@@ -141,7 +142,6 @@ impl Secp256r1PrivateKey {
     pub fn from_bech32(value: &str) -> Result<Self, SignatureError> {
         use bech32::Hrp;
 
-        const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
         let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
             .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
 
