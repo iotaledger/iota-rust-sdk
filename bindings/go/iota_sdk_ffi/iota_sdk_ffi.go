@@ -4898,25 +4898,25 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet()
 	})
-	if checksum != 60053 {
+	if checksum != 41429 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet()
 	})
-	if checksum != 12434 {
+	if checksum != 53173 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet()
 	})
-	if checksum != 14673 {
+	if checksum != 11124 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet: UniFFI API checksum mismatch")
 	}
@@ -4959,11 +4959,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localhost()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet()
 	})
-	if checksum != 5570 {
+	if checksum != 2330 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localhost: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5247,6 +5247,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas()
+	})
+	if checksum != 10767 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id()
 	})
 	if checksum != 41681 {
@@ -5303,7 +5312,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128()
 	})
-	if checksum != 39528 {
+	if checksum != 33699 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128: UniFFI API checksum mismatch")
 	}
@@ -5315,6 +5324,15 @@ func uniffiCheckChecksums() {
 	if checksum != 58656 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256()
+	})
+	if checksum != 46000 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10744,21 +10762,21 @@ func NewFaucetClient(faucetUrl string) *FaucetClient {
 }
 
 
-// Set to devnet faucet.
+// Create a new Faucet client connected to the `devnet` faucet.
 func FaucetClientNewDevnet() *FaucetClient {
 	return FfiConverterFaucetClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet(_uniffiStatus)
 	}))
 }
 
-// Set to local faucet.
-func FaucetClientNewLocal() *FaucetClient {
+// Create a new Faucet client connected to a `localnet` faucet.
+func FaucetClientNewLocalnet() *FaucetClient {
 	return FfiConverterFaucetClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(_uniffiStatus)
 	}))
 }
 
-// Set to testnet faucet.
+// Create a new Faucet client connected to the `testnet` faucet.
 func FaucetClientNewTestnet() *FaucetClient {
 	return FfiConverterFaucetClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_testnet(_uniffiStatus)
@@ -11410,9 +11428,9 @@ func GraphQlClientNewDevnet() *GraphQlClient {
 
 // Create a new GraphQL client connected to the `localhost` GraphQL server:
 // {DEFAULT_LOCAL_HOST}.
-func GraphQlClientNewLocalhost() *GraphQlClient {
+func GraphQlClientNewLocalnet() *GraphQlClient {
 	return FfiConverterGraphQlClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localhost(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet(_uniffiStatus)
 	}))
 }
 
@@ -16127,6 +16145,12 @@ func PtbArgumentDigest(digest *Digest) *PtbArgument {
 	}))
 }
 
+func PtbArgumentGas() *PtbArgument {
+	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(_uniffiStatus)
+	}))
+}
+
 func PtbArgumentObjectId(id *ObjectId) *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(FfiConverterObjectIdINSTANCE.Lower(id),_uniffiStatus)
@@ -16163,15 +16187,21 @@ func PtbArgumentString(string string) *PtbArgument {
 	}))
 }
 
-func PtbArgumentU128(bytes []byte) *PtbArgument {
+func PtbArgumentU128(value string) *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
 	}))
 }
 
 func PtbArgumentU16(value uint16) *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(FfiConverterUint16INSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func PtbArgumentU256(value string) *PtbArgument {
+	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
 	}))
 }
 
