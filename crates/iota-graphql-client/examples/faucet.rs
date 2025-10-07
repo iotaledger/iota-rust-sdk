@@ -9,7 +9,9 @@ use iota_types::Address;
 async fn main() -> Result<()> {
     let address =
         Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
-    let faucet_receipt = FaucetClient::local().request_and_wait(address).await?;
+    let faucet_receipt = FaucetClient::new_localnet()
+        .request_and_wait(address)
+        .await?;
     if let Some(receipt) = faucet_receipt {
         println!("Faucet receipt:");
         for coin in &receipt.sent {

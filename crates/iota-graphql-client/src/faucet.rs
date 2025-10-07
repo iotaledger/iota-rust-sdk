@@ -77,19 +77,19 @@ impl FaucetClient {
         FaucetClient { faucet_url, inner }
     }
 
-    /// Set to local faucet.
-    pub fn local() -> Self {
-        Self::new(FAUCET_LOCAL_HOST)
+    /// Create a new Faucet client connected to the `testnet` faucet.
+    pub fn new_testnet() -> Self {
+        Self::new(FAUCET_TESTNET_HOST)
     }
 
-    /// Set to devnet faucet.
-    pub fn devnet() -> Self {
+    /// Create a new Faucet client connected to the `devnet` faucet.
+    pub fn new_devnet() -> Self {
         Self::new(FAUCET_DEVNET_HOST)
     }
 
-    /// Set to testnet faucet.
-    pub fn testnet() -> Self {
-        Self::new(FAUCET_TESTNET_HOST)
+    /// Create a new Faucet client connected to a `localnet` faucet.
+    pub fn new_localnet() -> Self {
+        Self::new(FAUCET_LOCAL_HOST)
     }
 
     /// Request gas from the faucet. Note that this will return the UUID of the

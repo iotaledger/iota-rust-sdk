@@ -2236,6 +2236,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3279,7 +3283,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local(
+fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet(
 ): Short
@@ -3291,7 +3295,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_devnet(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localhost(
+fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet(
 ): Short
@@ -3355,6 +3359,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(
@@ -3370,6 +3376,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string(
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32(
 ): Short
@@ -4050,7 +4058,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new(`faucetUrl`: RustBuffer.
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_testnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -4094,7 +4102,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new(`server`: RustBuffer.By
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_devnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localhost(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_mainnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -4530,6 +4538,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address(`address`: Pointer,un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4542,9 +4552,11 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(`id`: Pointer,unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(`string`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(`value`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32(`value`: Int,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6999,13 +7011,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 13557.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 60053.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 41429.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local() != 12434.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet() != 53173.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet() != 14673.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet() != 11124.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_genesisobject_new() != 35390.toShort()) {
@@ -7020,7 +7032,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_devnet() != 6494.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localhost() != 5570.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet() != 2330.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet() != 3613.toShort()) {
@@ -7116,6 +7128,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest() != 54344.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas() != 10767.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id() != 41681.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7134,10 +7149,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string() != 60971.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 39528.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 33699.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16() != 58656.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256() != 46000.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32() != 13754.toShort()) {
@@ -17941,7 +17959,7 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
     companion object {
         
     /**
-     * Set to devnet faucet.
+     * Create a new Faucet client connected to the `devnet` faucet.
      */ fun `newDevnet`(): FaucetClient {
             return FfiConverterTypeFaucetClient.lift(
     uniffiRustCall() { _status ->
@@ -17954,11 +17972,11 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
 
         
     /**
-     * Set to local faucet.
-     */ fun `newLocal`(): FaucetClient {
+     * Create a new Faucet client connected to a `localnet` faucet.
+     */ fun `newLocalnet`(): FaucetClient {
             return FfiConverterTypeFaucetClient.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(
         _status)
 }
     )
@@ -17967,7 +17985,7 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
 
         
     /**
-     * Set to testnet faucet.
+     * Create a new Faucet client connected to the `testnet` faucet.
      */ fun `newTestnet`(): FaucetClient {
             return FfiConverterTypeFaucetClient.lift(
     uniffiRustCall() { _status ->
@@ -20385,10 +20403,10 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     /**
      * Create a new GraphQL client connected to the `localhost` GraphQL server:
      * {DEFAULT_LOCAL_HOST}.
-     */ fun `newLocalhost`(): GraphQlClient {
+     */ fun `newLocalnet`(): GraphQlClient {
             return FfiConverterTypeGraphQLClient.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localhost(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet(
         _status)
 }
     )
@@ -27398,6 +27416,16 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
+         fun `gas`(): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(
+        _status)
+}
+    )
+    }
+    
+
          fun `objectId`(`id`: ObjectId): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
@@ -27458,11 +27486,11 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
-         fun `u128`(`bytes`: kotlin.ByteArray): PtbArgument {
+         fun `u128`(`value`: kotlin.String): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(
-        FfiConverterByteArray.lower(`bytes`),_status)
+        FfiConverterString.lower(`value`),_status)
 }
     )
     }
@@ -27473,6 +27501,16 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(
         FfiConverterUShort.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u256`(`value`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256(
+        FfiConverterString.lower(`value`),_status)
 }
     )
     }

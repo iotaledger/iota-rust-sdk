@@ -1485,9 +1485,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet(RustCallStatus 
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCAL
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCAL
-void* uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local(RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCALNET
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCALNET
+void* uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(RustCallStatus *out_status
     
 );
 #endif
@@ -1598,9 +1598,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_devnet(RustCallStatus
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_GRAPHQLCLIENT_NEW_LOCALHOST
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_GRAPHQLCLIENT_NEW_LOCALHOST
-void* uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localhost(RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_GRAPHQLCLIENT_NEW_LOCALNET
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_GRAPHQLCLIENT_NEW_LOCALNET
+void* uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet(RustCallStatus *out_status
     
 );
 #endif
@@ -2694,6 +2694,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address(void* address, Rust
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(void* digest, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_GAS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_GAS
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(void* id, RustCallStatus *out_status
@@ -2726,12 +2732,17 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(RustBuffer string, R
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U128
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U128
-void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(RustBuffer bytes, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(RustBuffer value, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U16
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U16
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(uint16_t value, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U256
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U256
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256(RustBuffer value, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U32
@@ -8092,9 +8103,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCAL
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCAL
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCALNET
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCALNET
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet(void
     
 );
 #endif
@@ -8128,9 +8139,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_devnet(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_GRAPHQLCLIENT_NEW_LOCALHOST
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_GRAPHQLCLIENT_NEW_LOCALHOST
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localhost(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_GRAPHQLCLIENT_NEW_LOCALNET
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_GRAPHQLCLIENT_NEW_LOCALNET
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet(void
     
 );
 #endif
@@ -8320,6 +8331,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_GAS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_GAS
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(void
@@ -8365,6 +8382,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_U16
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_U16
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_U256
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_U256
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256(void
     
 );
 #endif
