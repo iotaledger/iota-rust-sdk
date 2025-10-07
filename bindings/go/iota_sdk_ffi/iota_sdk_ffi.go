@@ -4959,11 +4959,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localhost()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet()
 	})
-	if checksum != 5570 {
+	if checksum != 2330 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localhost: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -11410,9 +11410,9 @@ func GraphQlClientNewDevnet() *GraphQlClient {
 
 // Create a new GraphQL client connected to the `localhost` GraphQL server:
 // {DEFAULT_LOCAL_HOST}.
-func GraphQlClientNewLocalhost() *GraphQlClient {
+func GraphQlClientNewLocalnet() *GraphQlClient {
 	return FfiConverterGraphQlClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localhost(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet(_uniffiStatus)
 	}))
 }
 
