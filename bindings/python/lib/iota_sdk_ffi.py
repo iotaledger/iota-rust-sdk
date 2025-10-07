@@ -1469,11 +1469,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 13557:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 60053:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 41429:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local() != 12434:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet() != 53173:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet() != 14673:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet() != 11124:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_genesisobject_new() != 35390:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1483,7 +1483,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_devnet() != 6494:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localhost() != 5570:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet() != 2330:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet() != 3613:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2971,10 +2971,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet.argtypes =
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_testnet.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -3080,10 +3080,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_devnet.argtypes 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_devnet.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localhost.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localhost.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_mainnet.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -8057,9 +8057,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet.restype = ctypes.c_uint16
@@ -8075,9 +8075,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new.restype = 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_devnet.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_devnet.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localhost.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localhost.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_localnet.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet.restype = ctypes.c_uint16
@@ -25890,7 +25890,7 @@ class FaucetClient():
     @classmethod
     def new_devnet(cls, ):
         """
-        Set to devnet faucet.
+        Create a new Faucet client connected to the `devnet` faucet.
         """
 
         # Call the (fallible) function before creating any half-baked object instances.
@@ -25898,19 +25898,19 @@ class FaucetClient():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_local(cls, ):
+    def new_localnet(cls, ):
         """
-        Set to local faucet.
+        Create a new Faucet client connected to a `localnet` faucet.
         """
 
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local,)
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet,)
         return cls._make_instance_(pointer)
 
     @classmethod
     def new_testnet(cls, ):
         """
-        Set to testnet faucet.
+        Create a new Faucet client connected to the `testnet` faucet.
         """
 
         # Call the (fallible) function before creating any half-baked object instances.
@@ -26723,14 +26723,14 @@ class GraphQlClient():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_localhost(cls, ):
+    def new_localnet(cls, ):
         """
         Create a new GraphQL client connected to the `localhost` GraphQL server:
         {DEFAULT_LOCAL_HOST}.
         """
 
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localhost,)
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_graphqlclient_new_localnet,)
         return cls._make_instance_(pointer)
 
     @classmethod
