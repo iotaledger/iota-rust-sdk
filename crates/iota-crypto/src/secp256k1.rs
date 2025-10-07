@@ -116,7 +116,6 @@ impl Secp256k1PrivateKey {
     }
 }
 
-#[cfg(feature = "bech32")]
 impl crate::PrivateKeyExt for Secp256k1PrivateKey {
     const SCHEME: SignatureScheme = SignatureScheme::Secp256k1;
 

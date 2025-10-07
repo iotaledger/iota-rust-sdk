@@ -111,7 +111,6 @@ impl Ed25519PrivateKey {
     }
 }
 
-#[cfg(feature = "bech32")]
 impl crate::PrivateKeyExt for Ed25519PrivateKey {
     const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
 

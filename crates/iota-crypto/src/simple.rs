@@ -538,7 +538,6 @@ mod keypair {
         }
     }
 
-    #[cfg(feature = "bech32")]
     impl crate::PrivateKeyExt for SimpleKeypair {
         // SimpleKeypair doesn't have a single scheme since it can contain any scheme
         // We provide a dummy value since we override all methods
