@@ -16,7 +16,7 @@ func main() {
 		log.Fatalf("Failed to create address: %v", err)
 	}
 
-	faucetClient := sdk.FaucetClientNewLocal()
+	faucetClient := sdk.FaucetClientNewLocalnet()
 
 	faucetReceipt, err := faucetClient.RequestAndWait(address)
 	if err.(*sdk.SdkFfiError) != nil {

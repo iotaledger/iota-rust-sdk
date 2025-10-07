@@ -25,22 +25,22 @@ impl FaucetClient {
         Self(iota_graphql_client::faucet::FaucetClient::new(&faucet_url))
     }
 
-    /// Set to local faucet.
+    /// Create a new Faucet client connected to the `testnet` faucet.
     #[uniffi::constructor]
-    pub fn new_local() -> Self {
-        Self(iota_graphql_client::faucet::FaucetClient::new_localnet())
+    pub fn new_testnet() -> Self {
+        Self(iota_graphql_client::faucet::FaucetClient::new_testnet())
     }
 
-    /// Set to devnet faucet.
+    /// Create a new Faucet client connected to the `devnet` faucet.
     #[uniffi::constructor]
     pub fn new_devnet() -> Self {
         Self(iota_graphql_client::faucet::FaucetClient::new_devnet())
     }
 
-    /// Set to testnet faucet.
+    /// Create a new Faucet client connected to a `localnet` faucet.
     #[uniffi::constructor]
-    pub fn new_testnet() -> Self {
-        Self(iota_graphql_client::faucet::FaucetClient::new_testnet())
+    pub fn new_localnet() -> Self {
+        Self(iota_graphql_client::faucet::FaucetClient::new_localnet())
     }
 
     /// Request gas from the faucet. Note that this will return the UUID of the

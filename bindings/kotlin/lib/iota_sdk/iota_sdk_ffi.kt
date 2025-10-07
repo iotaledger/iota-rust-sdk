@@ -3235,7 +3235,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local(
+fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet(
 ): Short
@@ -3992,7 +3992,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new(`faucetUrl`: RustBuffer.
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_testnet(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6894,13 +6894,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 13557.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 60053.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 41429.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local() != 12434.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet() != 53173.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet() != 14673.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet() != 11124.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_genesisobject_new() != 35390.toShort()) {
@@ -17766,7 +17766,7 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
     companion object {
         
     /**
-     * Set to devnet faucet.
+     * Create a new Faucet client connected to the `devnet` faucet.
      */ fun `newDevnet`(): FaucetClient {
             return FfiConverterTypeFaucetClient.lift(
     uniffiRustCall() { _status ->
@@ -17779,11 +17779,11 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
 
         
     /**
-     * Set to local faucet.
-     */ fun `newLocal`(): FaucetClient {
+     * Create a new Faucet client connected to a `localnet` faucet.
+     */ fun `newLocalnet`(): FaucetClient {
             return FfiConverterTypeFaucetClient.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(
         _status)
 }
     )
@@ -17792,7 +17792,7 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
 
         
     /**
-     * Set to testnet faucet.
+     * Create a new Faucet client connected to the `testnet` faucet.
      */ fun `newTestnet`(): FaucetClient {
             return FfiConverterTypeFaucetClient.lift(
     uniffiRustCall() { _status ->

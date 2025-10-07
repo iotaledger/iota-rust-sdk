@@ -4898,25 +4898,25 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet()
 	})
-	if checksum != 60053 {
+	if checksum != 41429 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet()
 	})
-	if checksum != 12434 {
+	if checksum != 53173 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet()
 	})
-	if checksum != 14673 {
+	if checksum != 11124 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_testnet: UniFFI API checksum mismatch")
 	}
@@ -10744,21 +10744,21 @@ func NewFaucetClient(faucetUrl string) *FaucetClient {
 }
 
 
-// Set to devnet faucet.
+// Create a new Faucet client connected to the `devnet` faucet.
 func FaucetClientNewDevnet() *FaucetClient {
 	return FfiConverterFaucetClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet(_uniffiStatus)
 	}))
 }
 
-// Set to local faucet.
-func FaucetClientNewLocal() *FaucetClient {
+// Create a new Faucet client connected to a `localnet` faucet.
+func FaucetClientNewLocalnet() *FaucetClient {
 	return FfiConverterFaucetClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(_uniffiStatus)
 	}))
 }
 
-// Set to testnet faucet.
+// Create a new Faucet client connected to the `testnet` faucet.
 func FaucetClientNewTestnet() *FaucetClient {
 	return FfiConverterFaucetClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_testnet(_uniffiStatus)

@@ -1470,9 +1470,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_devnet(RustCallStatus 
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCAL
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCAL
-void* uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_local(RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCALNET
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCALNET
+void* uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_localnet(RustCallStatus *out_status
     
 );
 #endif
@@ -7973,9 +7973,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCAL
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCAL
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_local(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCALNET
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_FAUCETCLIENT_NEW_LOCALNET
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_localnet(void
     
 );
 #endif
