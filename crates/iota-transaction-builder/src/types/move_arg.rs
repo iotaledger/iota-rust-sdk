@@ -1,68 +1,101 @@
 // Copyright 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::{Digest, ObjectId};
+use iota_types::Digest;
 
-use crate::types::ArgType;
+/// Pure BCS bytes
+#[derive(Clone, Debug, Default)]
+pub struct PureBytes(pub Vec<u8>);
 
 /// A trait which defines how types are serialized for move calls.
 pub trait MoveArg {
-    /// Get the param type.
-    fn arg_type(&self) -> ArgType;
+    /// Get the pure BCS bytes.
+    fn pure_bytes(self) -> PureBytes;
 }
 
-impl MoveArg for ObjectId {
-    fn arg_type(&self) -> ArgType {
-        ArgType::Object(*self)
+impl MoveArg for PureBytes {
+    fn pure_bytes(self) -> PureBytes {
+        self
+    }
+}
+
+impl MoveArg for &Digest {
+    fn pure_bytes(self) -> PureBytes {
+        PureBytes(bcs::to_bytes(self).expect("bcs serialization failed"))
     }
 }
 
 impl MoveArg for Digest {
-    fn arg_type(&self) -> ArgType {
-        ArgType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
-    }
-}
-
-impl MoveArg for ArgType {
-    fn arg_type(&self) -> ArgType {
-        self.clone()
+    fn pure_bytes(self) -> PureBytes {
+        PureBytes(bcs::to_bytes(&self).expect("bcs serialization failed"))
     }
 }
 
 impl MoveArg for () {
-    fn arg_type(&self) -> ArgType {
-        ArgType::Pure(Vec::new())
-    }
-}
-
-impl MoveArg for str {
-    fn arg_type(&self) -> ArgType {
-        ArgType::Pure(bcs::to_bytes(self).expect("bcs serialization failed"))
+    fn pure_bytes(self) -> PureBytes {
+        Default::default()
     }
 }
 
 impl MoveArg for &str {
-    fn arg_type(&self) -> ArgType {
-        (*self).arg_type()
+    fn pure_bytes(self) -> PureBytes {
+        PureBytes(bcs::to_bytes(&self).expect("bcs serialization failed"))
+    }
+}
+
+impl MoveArg for &String {
+    fn pure_bytes(self) -> PureBytes {
+        self.as_str().pure_bytes()
     }
 }
 
 impl MoveArg for String {
-    fn arg_type(&self) -> ArgType {
-        self.as_str().arg_type()
+    fn pure_bytes(self) -> PureBytes {
+        self.as_str().pure_bytes()
     }
 }
 
-impl<T: MoveArg> MoveArg for Vec<T> {
-    fn arg_type(&self) -> ArgType {
-        let mut res = u32_as_uleb128(self.len() as u32);
-        for val in self {
-            match val.arg_type() {
-                ArgType::Object(object_id) => res.extend(object_id.as_bytes()),
-                ArgType::Pure(items) => res.extend(items),
-            }
+/// A trait which defines how collections of move arg types are serialized for
+/// move calls.
+pub trait MoveArgCollection {
+    /// Get the pure BCS bytes.
+    fn collection_bytes(self) -> PureBytes;
+}
+
+impl<T: MoveArg> MoveArgCollection for T {
+    fn collection_bytes(self) -> PureBytes {
+        self.pure_bytes()
+    }
+}
+
+impl<const N: usize, T: MoveArg> MoveArgCollection for [T; N] {
+    fn collection_bytes(self) -> PureBytes {
+        PureBytes(
+            u32_as_uleb128(self.len() as u32)
+                .into_iter()
+                .chain(self.into_iter().flat_map(|val| val.pure_bytes().0))
+                .collect(),
+        )
+    }
+}
+
+impl<T: MoveArg> MoveArgCollection for Vec<T> {
+    fn collection_bytes(self) -> PureBytes {
+        PureBytes(
+            u32_as_uleb128(self.len() as u32)
+                .into_iter()
+                .chain(self.into_iter().flat_map(|val| val.pure_bytes().0))
+                .collect(),
+        )
+    }
+}
+
+impl<T: MoveArg> MoveArgCollection for Option<T> {
+    fn collection_bytes(self) -> PureBytes {
+        match self {
+            Some(value) => PureBytes([&[1], &value.pure_bytes().0[..]].concat()),
+            None => PureBytes(vec![0; 1]),
         }
-        ArgType::Pure(res)
     }
 }
 
@@ -77,28 +110,4 @@ fn u32_as_uleb128(mut value: u32) -> Vec<u8> {
     // Write the remaining bits of data and set the highest bit to 0.
     res.push(value as u8);
     res
-}
-
-impl<T: MoveArg> MoveArg for Box<T> {
-    fn arg_type(&self) -> ArgType {
-        self.as_ref().arg_type()
-    }
-}
-
-impl<T: MoveArg> MoveArg for Option<T> {
-    fn arg_type(&self) -> ArgType {
-        match self {
-            Some(value) => match value.arg_type() {
-                ArgType::Object(object_id) => ArgType::Pure([&[1], object_id.as_bytes()].concat()),
-                ArgType::Pure(items) => ArgType::Pure([&[1], &items[..]].concat()),
-            },
-            None => ArgType::Pure(vec![0; 1]),
-        }
-    }
-}
-
-impl<T: MoveArg> MoveArg for &T {
-    fn arg_type(&self) -> ArgType {
-        (*self).arg_type()
-    }
 }

@@ -23,7 +23,7 @@ async fn main() -> Result<()> {
     builder
         .split_coins(coin, [1000, 2000, 3000])
         .name(("coin1", "coin2", "coin3"))
-        .transfer_objects(sender, [res("coin1"), res("coin2"), res("coin3")])
+        .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")))
         .gas(coin)
         .gas_budget(1000000000);
 
