@@ -673,7 +673,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 50359:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 44700:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 12272:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -691,7 +691,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 20245:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 48726:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1123,13 +1123,15 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1() != 53004:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 4054:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish() != 28876:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish() != 32200:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 43178:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1157,22 +1159,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 34068:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondata_as_v1() != 9244:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_bcs_serialize() != 15911:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_digest() != 12510:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_expiration() != 52883:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_gas_payment() != 51085:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_kind() != 32867:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_sender() != 36034:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_signing_digest() != 2752:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_digest() != 46963:
@@ -1182,6 +1168,20 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest() != 55750:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events() != 36651:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_bcs_serialize() != 43460:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest() != 52708:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_expiration() != 9317:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_gas_payment() != 61676:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_kind() != 56302:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender() != 8513:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest() != 34103:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transferobjects_address() != 37833:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1513,7 +1513,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message() != 41388:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction() != 37226:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction() != 27644:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new() != 40069:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1669,8 +1669,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init() != 29935:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondatav1_new() != 64291:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() != 63561:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310:
@@ -1686,6 +1684,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() != 9153:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 37051:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new() != 17484:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new() != 22470:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5244,6 +5244,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transaction.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transaction.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transaction.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transaction.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_as_v1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_as_v1.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionbuilder.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5378,74 +5393,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactiondata.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactiondata.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactiondata.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactiondata.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondata_as_v1.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondata_as_v1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactiondatav1.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactiondatav1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactiondatav1.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactiondatav1.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactiondatav1_new.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactiondatav1_new.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_bcs_serialize.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_bcs_serialize.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_digest.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_digest.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_expiration.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_expiration.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_gas_payment.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_gas_payment.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_kind.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_kind.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_sender.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_sender.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_signing_digest.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_signing_digest.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactioneffects.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5541,6 +5488,59 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_sta
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionv1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionv1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionv1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionv1.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_bcs_serialize.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_bcs_serialize.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transferobjects.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7552,6 +7552,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run.restype = ctypes.c_uint16
@@ -7603,30 +7606,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objec
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondata_as_v1.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondata_as_v1.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_bcs_serialize.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_bcs_serialize.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_digest.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_digest.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_expiration.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_expiration.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_gas_payment.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_gas_payment.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_kind.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_kind.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_sender.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_sender.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_signing_digest.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_signing_digest.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1.restype = ctypes.c_uint16
@@ -7642,6 +7621,27 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_bcs_serialize.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_bcs_serialize.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_expiration.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_expiration.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_gas_payment.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_gas_payment.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_kind.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_kind.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transferobjects_address.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transferobjects_address.restype = ctypes.c_uint16
@@ -8371,9 +8371,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new.restype = 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondatav1_new.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactiondatav1_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1.restype = ctypes.c_uint16
@@ -8398,6 +8395,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programm
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new.restype = ctypes.c_uint16
@@ -12529,9 +12529,9 @@ class _UniffiConverterTypeServiceConfig(_UniffiConverterRustBuffer):
 
 
 class SignedTransaction:
-    transaction: "TransactionData"
+    transaction: "Transaction"
     signatures: "typing.List[UserSignature]"
-    def __init__(self, *, transaction: "TransactionData", signatures: "typing.List[UserSignature]"):
+    def __init__(self, *, transaction: "Transaction", signatures: "typing.List[UserSignature]"):
         self.transaction = transaction
         self.signatures = signatures
 
@@ -12549,18 +12549,18 @@ class _UniffiConverterTypeSignedTransaction(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return SignedTransaction(
-            transaction=_UniffiConverterTypeTransactionData.read(buf),
+            transaction=_UniffiConverterTypeTransaction.read(buf),
             signatures=_UniffiConverterSequenceTypeUserSignature.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterTypeTransactionData.check_lower(value.transaction)
+        _UniffiConverterTypeTransaction.check_lower(value.transaction)
         _UniffiConverterSequenceTypeUserSignature.check_lower(value.signatures)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterTypeTransactionData.write(value.transaction, buf)
+        _UniffiConverterTypeTransaction.write(value.transaction, buf)
         _UniffiConverterSequenceTypeUserSignature.write(value.signatures, buf)
 
 
@@ -17447,74 +17447,6 @@ class _UniffiConverterTypeTransactionBlockKindInput(_UniffiConverterRustBuffer):
 
 
 
-class TransactionDataInner:
-    def __init__(self):
-        raise RuntimeError("TransactionDataInner cannot be instantiated directly")
-
-    # Each enum variant is a nested class of the enum itself.
-    class VERSION1:
-        def __init__(self, *values):
-            if len(values) != 1:
-                raise TypeError(f"Expected 1 arguments, found {len(values)}")
-            self._values = values
-
-        def __getitem__(self, index):
-            return self._values[index]
-
-        def __str__(self):
-            return f"TransactionDataInner.VERSION1{self._values!r}"
-
-        def __eq__(self, other):
-            if not other.is_VERSION1():
-                return False
-            return self._values == other._values
-    
-
-    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
-    # whether an instance is that variant.
-    def is_VERSION1(self) -> bool:
-        return isinstance(self, TransactionDataInner.VERSION1)
-    def is_version1(self) -> bool:
-        return isinstance(self, TransactionDataInner.VERSION1)
-    
-
-# Now, a little trick - we make each nested variant class be a subclass of the main
-# enum class, so that method calls and instance checks etc will work intuitively.
-# We might be able to do this a little more neatly with a metaclass, but this'll do.
-TransactionDataInner.VERSION1 = type("TransactionDataInner.VERSION1", (TransactionDataInner.VERSION1, TransactionDataInner,), {})  # type: ignore
-
-
-
-
-class _UniffiConverterTypeTransactionDataInner(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        variant = buf.read_i32()
-        if variant == 1:
-            return TransactionDataInner.VERSION1(
-                _UniffiConverterTypeTransactionDataV1.read(buf),
-            )
-        raise InternalError("Raw enum value doesn't match any cases")
-
-    @staticmethod
-    def check_lower(value):
-        if value.is_VERSION1():
-            _UniffiConverterTypeTransactionDataV1.check_lower(value._values[0])
-            return
-        raise ValueError(value)
-
-    @staticmethod
-    def write(value, buf):
-        if value.is_VERSION1():
-            buf.write_i32(1)
-            _UniffiConverterTypeTransactionDataV1.write(value._values[0], buf)
-
-
-
-
-
-
-
 class TransactionExpiration:
     """
     A TTL for a transaction
@@ -17623,6 +17555,74 @@ class _UniffiConverterTypeTransactionExpiration(_UniffiConverterRustBuffer):
         if value.is_EPOCH():
             buf.write_i32(2)
             _UniffiConverterUInt64.write(value._values[0], buf)
+
+
+
+
+
+
+
+class TransactionInner:
+    def __init__(self):
+        raise RuntimeError("TransactionInner cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class VERSION1:
+        def __init__(self, *values):
+            if len(values) != 1:
+                raise TypeError(f"Expected 1 arguments, found {len(values)}")
+            self._values = values
+
+        def __getitem__(self, index):
+            return self._values[index]
+
+        def __str__(self):
+            return f"TransactionInner.VERSION1{self._values!r}"
+
+        def __eq__(self, other):
+            if not other.is_VERSION1():
+                return False
+            return self._values == other._values
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_VERSION1(self) -> bool:
+        return isinstance(self, TransactionInner.VERSION1)
+    def is_version1(self) -> bool:
+        return isinstance(self, TransactionInner.VERSION1)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+TransactionInner.VERSION1 = type("TransactionInner.VERSION1", (TransactionInner.VERSION1, TransactionInner,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeTransactionInner(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return TransactionInner.VERSION1(
+                _UniffiConverterTypeTransactionV1.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_VERSION1():
+            _UniffiConverterTypeTransactionV1.check_lower(value._values[0])
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_VERSION1():
+            buf.write_i32(1)
+            _UniffiConverterTypeTransactionV1.write(value._values[0], buf)
 
 
 
@@ -26430,7 +26430,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def dry_run_tx(self, tx: "TransactionData",skip_checks: "typing.Union[object, typing.Optional[bool]]" = _DEFAULT):
+    def dry_run_tx(self, tx: "Transaction",skip_checks: "typing.Union[object, typing.Optional[bool]]" = _DEFAULT):
         """
         Dry run a [`Transaction`] and return the transaction effects and dry run
         error (if any).
@@ -26533,7 +26533,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "TransactionData"):
+    def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction"):
         """
         Execute a transaction.
         """
@@ -27059,7 +27059,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def dry_run_tx(self, tx: "TransactionData",skip_checks: "typing.Union[object, typing.Optional[bool]]" = _DEFAULT) -> "DryRunResult":
+    async def dry_run_tx(self, tx: "Transaction",skip_checks: "typing.Union[object, typing.Optional[bool]]" = _DEFAULT) -> "DryRunResult":
         """
         Dry run a [`Transaction`] and return the transaction effects and dry run
         error (if any).
@@ -27070,7 +27070,7 @@ _UniffiConverterTypeSdkFfiError,
         checks. Defaults to false.
         """
 
-        _UniffiConverterTypeTransactionData.check_lower(tx)
+        _UniffiConverterTypeTransaction.check_lower(tx)
         
         if skip_checks is _DEFAULT:
             skip_checks = None
@@ -27079,7 +27079,7 @@ _UniffiConverterTypeSdkFfiError,
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeTransactionData.lower(tx),
+        _UniffiConverterTypeTransaction.lower(tx),
         _UniffiConverterOptionalBool.lower(skip_checks)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -27376,20 +27376,20 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "TransactionData") -> "typing.Optional[TransactionEffects]":
+    async def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction") -> "typing.Optional[TransactionEffects]":
         """
         Execute a transaction.
         """
 
         _UniffiConverterSequenceTypeUserSignature.check_lower(signatures)
         
-        _UniffiConverterTypeTransactionData.check_lower(tx)
+        _UniffiConverterTypeTransaction.check_lower(tx)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterSequenceTypeUserSignature.lower(signatures),
-        _UniffiConverterTypeTransactionData.lower(tx)
+        _UniffiConverterTypeTransaction.lower(tx)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -29525,15 +29525,15 @@ class MultisigAggregator():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_with_transaction(cls, committee: "MultisigCommittee",transaction: "TransactionData"):
+    def new_with_transaction(cls, committee: "MultisigCommittee",transaction: "Transaction"):
         _UniffiConverterTypeMultisigCommittee.check_lower(committee)
         
-        _UniffiConverterTypeTransactionData.check_lower(transaction)
+        _UniffiConverterTypeTransaction.check_lower(transaction)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction,
         _UniffiConverterTypeMultisigCommittee.lower(committee),
-        _UniffiConverterTypeTransactionData.lower(transaction))
+        _UniffiConverterTypeTransaction.lower(transaction))
         return cls._make_instance_(pointer)
 
 
@@ -35292,6 +35292,72 @@ class _UniffiConverterTypeSystemPackage:
     @classmethod
     def write(cls, value: SystemPackageProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class TransactionProtocol(typing.Protocol):
+    def as_v1(self, ):
+        raise NotImplementedError
+# Transaction is a Rust-only trait - it's a wrapper around a Rust implementation.
+class Transaction():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transaction, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transaction, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def as_v1(self, ) -> "TransactionV1":
+        return _UniffiConverterTypeTransactionV1.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_as_v1,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeTransaction:
+
+    @staticmethod
+    def lift(value: int):
+        return Transaction._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: Transaction):
+        if not isinstance(value, Transaction):
+            raise TypeError("Expected Transaction instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: TransactionProtocol):
+        if not isinstance(value, Transaction):
+            raise TypeError("Expected Transaction instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: TransactionProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class TransactionBuilderProtocol(typing.Protocol):
     """
     A builder for creating transactions. Use [`finish`](Self::finish) to
@@ -35554,7 +35620,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def finish(self, ) -> "TransactionData":
+    async def finish(self, ) -> "Transaction":
         """
         Convert this builder into a transaction.
         """
@@ -35567,7 +35633,7 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
             # lift function
-            _UniffiConverterTypeTransactionData.lift,
+            _UniffiConverterTypeTransaction.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -35911,243 +35977,6 @@ class _UniffiConverterTypeTransactionBuilder:
 
     @classmethod
     def write(cls, value: TransactionBuilderProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class TransactionDataProtocol(typing.Protocol):
-    def as_v1(self, ):
-        raise NotImplementedError
-# TransactionData is a Rust-only trait - it's a wrapper around a Rust implementation.
-class TransactionData():
-    _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactiondata, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactiondata, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-    def as_v1(self, ) -> "TransactionDataV1":
-        return _UniffiConverterTypeTransactionDataV1.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondata_as_v1,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-
-class _UniffiConverterTypeTransactionData:
-
-    @staticmethod
-    def lift(value: int):
-        return TransactionData._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: TransactionData):
-        if not isinstance(value, TransactionData):
-            raise TypeError("Expected TransactionData instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: TransactionDataProtocol):
-        if not isinstance(value, TransactionData):
-            raise TypeError("Expected TransactionData instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: TransactionDataProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
-class TransactionDataV1Protocol(typing.Protocol):
-    """
-    A transaction
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    transaction = %x00 transaction-v1
-
-    transaction-v1 = transaction-kind address gas-payment transaction-expiration
-    ```
-    """
-
-    def bcs_serialize(self, ):
-        raise NotImplementedError
-    def digest(self, ):
-        raise NotImplementedError
-    def expiration(self, ):
-        raise NotImplementedError
-    def gas_payment(self, ):
-        raise NotImplementedError
-    def kind(self, ):
-        raise NotImplementedError
-    def sender(self, ):
-        raise NotImplementedError
-    def signing_digest(self, ):
-        raise NotImplementedError
-# TransactionDataV1 is a Rust-only trait - it's a wrapper around a Rust implementation.
-class TransactionDataV1():
-    """
-    A transaction
-
-    # BCS
-
-    The BCS serialized form for this type is defined by the following ABNF:
-
-    ```text
-    transaction = %x00 transaction-v1
-
-    transaction-v1 = transaction-kind address gas-payment transaction-expiration
-    ```
-    """
-
-    _pointer: ctypes.c_void_p
-    def __init__(self, kind: "TransactionKind",sender: "Address",gas_payment: "GasPayment",expiration: "TransactionExpiration"):
-        _UniffiConverterTypeTransactionKind.check_lower(kind)
-        
-        _UniffiConverterTypeAddress.check_lower(sender)
-        
-        _UniffiConverterTypeGasPayment.check_lower(gas_payment)
-        
-        _UniffiConverterTypeTransactionExpiration.check_lower(expiration)
-        
-        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactiondatav1_new,
-        _UniffiConverterTypeTransactionKind.lower(kind),
-        _UniffiConverterTypeAddress.lower(sender),
-        _UniffiConverterTypeGasPayment.lower(gas_payment),
-        _UniffiConverterTypeTransactionExpiration.lower(expiration))
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactiondatav1, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactiondatav1, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-
-
-    def bcs_serialize(self, ) -> "bytes":
-        return _UniffiConverterBytes.lift(
-            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_bcs_serialize,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def digest(self, ) -> "Digest":
-        return _UniffiConverterTypeDigest.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_digest,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def expiration(self, ) -> "TransactionExpiration":
-        return _UniffiConverterTypeTransactionExpiration.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_expiration,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def gas_payment(self, ) -> "GasPayment":
-        return _UniffiConverterTypeGasPayment.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_gas_payment,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def kind(self, ) -> "TransactionKind":
-        return _UniffiConverterTypeTransactionKind.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_kind,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def sender(self, ) -> "Address":
-        return _UniffiConverterTypeAddress.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_sender,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def signing_digest(self, ) -> "bytes":
-        return _UniffiConverterBytes.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_signing_digest,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-
-class _UniffiConverterTypeTransactionDataV1:
-
-    @staticmethod
-    def lift(value: int):
-        return TransactionDataV1._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: TransactionDataV1):
-        if not isinstance(value, TransactionDataV1):
-            raise TypeError("Expected TransactionDataV1 instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: TransactionDataV1Protocol):
-        if not isinstance(value, TransactionDataV1):
-            raise TypeError("Expected TransactionDataV1 instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: TransactionDataV1Protocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class TransactionEffectsProtocol(typing.Protocol):
     """
@@ -36524,6 +36353,177 @@ class _UniffiConverterTypeTransactionKind:
 
     @classmethod
     def write(cls, value: TransactionKindProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class TransactionV1Protocol(typing.Protocol):
+    """
+    A transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    transaction = %x00 transaction-v1
+
+    transaction-v1 = transaction-kind address gas-payment transaction-expiration
+    ```
+    """
+
+    def bcs_serialize(self, ):
+        raise NotImplementedError
+    def digest(self, ):
+        raise NotImplementedError
+    def expiration(self, ):
+        raise NotImplementedError
+    def gas_payment(self, ):
+        raise NotImplementedError
+    def kind(self, ):
+        raise NotImplementedError
+    def sender(self, ):
+        raise NotImplementedError
+    def signing_digest(self, ):
+        raise NotImplementedError
+# TransactionV1 is a Rust-only trait - it's a wrapper around a Rust implementation.
+class TransactionV1():
+    """
+    A transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    transaction = %x00 transaction-v1
+
+    transaction-v1 = transaction-kind address gas-payment transaction-expiration
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, kind: "TransactionKind",sender: "Address",gas_payment: "GasPayment",expiration: "TransactionExpiration"):
+        _UniffiConverterTypeTransactionKind.check_lower(kind)
+        
+        _UniffiConverterTypeAddress.check_lower(sender)
+        
+        _UniffiConverterTypeGasPayment.check_lower(gas_payment)
+        
+        _UniffiConverterTypeTransactionExpiration.check_lower(expiration)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new,
+        _UniffiConverterTypeTransactionKind.lower(kind),
+        _UniffiConverterTypeAddress.lower(sender),
+        _UniffiConverterTypeGasPayment.lower(gas_payment),
+        _UniffiConverterTypeTransactionExpiration.lower(expiration))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionv1, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionv1, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def bcs_serialize(self, ) -> "bytes":
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_bcs_serialize,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def digest(self, ) -> "Digest":
+        return _UniffiConverterTypeDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def expiration(self, ) -> "TransactionExpiration":
+        return _UniffiConverterTypeTransactionExpiration.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def gas_payment(self, ) -> "GasPayment":
+        return _UniffiConverterTypeGasPayment.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def kind(self, ) -> "TransactionKind":
+        return _UniffiConverterTypeTransactionKind.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def sender(self, ) -> "Address":
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def signing_digest(self, ) -> "bytes":
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeTransactionV1:
+
+    @staticmethod
+    def lift(value: int):
+        return TransactionV1._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: TransactionV1):
+        if not isinstance(value, TransactionV1):
+            raise TypeError("Expected TransactionV1 instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: TransactionV1Protocol):
+        if not isinstance(value, TransactionV1):
+            raise TypeError("Expected TransactionV1 instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: TransactionV1Protocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class TransferObjectsProtocol(typing.Protocol):
     """
@@ -39256,8 +39256,8 @@ __all__ = [
     "SignatureScheme",
     "TransactionArgument",
     "TransactionBlockKindInput",
-    "TransactionDataInner",
     "TransactionExpiration",
+    "TransactionInner",
     "TypeArgumentError",
     "UnchangedSharedKind",
     "ActiveJwk",
@@ -39419,12 +39419,12 @@ __all__ = [
     "SplitCoins",
     "StructTag",
     "SystemPackage",
+    "Transaction",
     "TransactionBuilder",
-    "TransactionData",
-    "TransactionDataV1",
     "TransactionEffects",
     "TransactionEvents",
     "TransactionKind",
+    "TransactionV1",
     "TransferObjects",
     "TypeTag",
     "Upgrade",

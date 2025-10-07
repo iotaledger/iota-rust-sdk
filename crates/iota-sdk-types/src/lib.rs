@@ -167,8 +167,8 @@ pub use transaction::{
     ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind, ExecutionTimeObservation,
     ExecutionTimeObservationKey, ExecutionTimeObservations, GasPayment, GenesisTransaction, Input,
     MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate,
-    SenderSignedTransaction, SignedTransaction, SplitCoins, SystemPackage, TransactionData,
-    TransactionDataV1, TransactionExpiration, TransactionKind, TransferObjects, Upgrade,
+    SenderSignedTransaction, SignedTransaction, SplitCoins, SystemPackage, Transaction,
+    TransactionExpiration, TransactionKind, TransactionV1, TransferObjects, Upgrade,
     ValidatorExecutionTimeObservation, VersionAssignment,
 };
 pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag};

@@ -1316,7 +1316,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx()
 	})
-	if checksum != 44700 {
+	if checksum != 12272 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx: UniFFI API checksum mismatch")
 	}
@@ -1397,7 +1397,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx()
 	})
-	if checksum != 48726 {
+	if checksum != 41079 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx: UniFFI API checksum mismatch")
 	}
@@ -3339,6 +3339,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1()
+	})
+	if checksum != 53004 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run()
 	})
 	if checksum != 11138 {
@@ -3368,7 +3377,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish()
 	})
-	if checksum != 28876 {
+	if checksum != 32200 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish: UniFFI API checksum mismatch")
 	}
@@ -3492,78 +3501,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondata_as_v1()
-	})
-	if checksum != 9244 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondata_as_v1: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_bcs_serialize()
-	})
-	if checksum != 15911 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_bcs_serialize: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_digest()
-	})
-	if checksum != 12510 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_digest: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_expiration()
-	})
-	if checksum != 52883 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_expiration: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_gas_payment()
-	})
-	if checksum != 51085 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_gas_payment: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_kind()
-	})
-	if checksum != 32867 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_kind: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_sender()
-	})
-	if checksum != 36034 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_sender: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_signing_digest()
-	})
-	if checksum != 2752 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactiondatav1_signing_digest: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1()
 	})
 	if checksum != 48710 {
@@ -3605,6 +3542,69 @@ func uniffiCheckChecksums() {
 	if checksum != 36651 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionevents_events: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionv1_bcs_serialize()
+	})
+	if checksum != 43460 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionv1_bcs_serialize: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest()
+	})
+	if checksum != 52708 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionv1_expiration()
+	})
+	if checksum != 9317 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionv1_expiration: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionv1_gas_payment()
+	})
+	if checksum != 61676 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionv1_gas_payment: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionv1_kind()
+	})
+	if checksum != 56302 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionv1_kind: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender()
+	})
+	if checksum != 8513 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest()
+	})
+	if checksum != 34103 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5096,7 +5096,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction()
 	})
-	if checksum != 37226 {
+	if checksum != 27644 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction: UniFFI API checksum mismatch")
 	}
@@ -5796,15 +5796,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactiondatav1_new()
-	})
-	if checksum != 64291 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactiondatav1_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1()
 	})
 	if checksum != 63561 {
@@ -5873,6 +5864,15 @@ func uniffiCheckChecksums() {
 	if checksum != 37051 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new()
+	})
+	if checksum != 17484 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -11212,7 +11212,7 @@ type GraphQlClientInterface interface {
 	// prevent access to objects that are owned by addresses other than the
 	// sender, and calling non-public, non-entry functions, and some other
 	// checks. Defaults to false.
-	DryRunTx(tx *TransactionData, skipChecks *bool) (DryRunResult, error)
+	DryRunTx(tx *Transaction, skipChecks *bool) (DryRunResult, error)
 	// Dry run a [`TransactionKind`] and return the transaction effects and dry
 	// run error (if any).
 	//
@@ -11273,7 +11273,7 @@ type GraphQlClientInterface interface {
 	// (optional) event filter.
 	Events(filter *EventFilter, paginationFilter *PaginationFilter) (EventPage, error)
 	// Execute a transaction.
-	ExecuteTx(signatures []*UserSignature, tx *TransactionData) (**TransactionEffects, error)
+	ExecuteTx(signatures []*UserSignature, tx *Transaction) (**TransactionEffects, error)
 	// Return the sequence number of the latest checkpoint that has been
 	// executed.
 	LatestCheckpointSequenceNumber() (*uint64, error)
@@ -11684,7 +11684,7 @@ func (_self *GraphQlClient) Coins(owner *Address, paginationFilter *PaginationFi
 // prevent access to objects that are owned by addresses other than the
 // sender, and calling non-public, non-entry functions, and some other
 // checks. Defaults to false.
-func (_self *GraphQlClient) DryRunTx(tx *TransactionData, skipChecks *bool) (DryRunResult, error) {
+func (_self *GraphQlClient) DryRunTx(tx *Transaction, skipChecks *bool) (DryRunResult, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -11701,7 +11701,7 @@ func (_self *GraphQlClient) DryRunTx(tx *TransactionData, skipChecks *bool) (Dry
 			return FfiConverterDryRunResultINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(
-		_pointer,FfiConverterTransactionDataINSTANCE.Lower(tx), FfiConverterOptionalBoolINSTANCE.Lower(skipChecks)),
+		_pointer,FfiConverterTransactionINSTANCE.Lower(tx), FfiConverterOptionalBoolINSTANCE.Lower(skipChecks)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12015,7 +12015,7 @@ func (_self *GraphQlClient) Events(filter *EventFilter, paginationFilter *Pagina
 }
 
 // Execute a transaction.
-func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *TransactionData) (**TransactionEffects, error) {
+func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transaction) (**TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12032,7 +12032,7 @@ func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transacti
 			return FfiConverterOptionalTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
-		_pointer,FfiConverterSequenceUserSignatureINSTANCE.Lower(signatures), FfiConverterTransactionDataINSTANCE.Lower(tx)),
+		_pointer,FfiConverterSequenceUserSignatureINSTANCE.Lower(signatures), FfiConverterTransactionINSTANCE.Lower(tx)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -14149,9 +14149,9 @@ func MultisigAggregatorNewWithMessage(committee *MultisigCommittee, message []by
 	}))
 }
 
-func MultisigAggregatorNewWithTransaction(committee *MultisigCommittee, transaction *TransactionData) *MultisigAggregator {
+func MultisigAggregatorNewWithTransaction(committee *MultisigCommittee, transaction *Transaction) *MultisigAggregator {
 	return FfiConverterMultisigAggregatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction(FfiConverterMultisigCommitteeINSTANCE.Lower(committee), FfiConverterTransactionDataINSTANCE.Lower(transaction),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction(FfiConverterMultisigCommitteeINSTANCE.Lower(committee), FfiConverterTransactionINSTANCE.Lower(transaction),_uniffiStatus)
 	}))
 }
 
@@ -19642,6 +19642,76 @@ func (_ FfiDestroyerSystemPackage) Destroy(value *SystemPackage) {
 
 
 
+type TransactionInterface interface {
+	AsV1() *TransactionV1
+}
+type Transaction struct {
+	ffiObject FfiObject
+}
+
+
+
+
+func (_self *Transaction) AsV1() *TransactionV1 {
+	_pointer := _self.ffiObject.incrementPointer("*Transaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transaction_as_v1(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *Transaction) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterTransaction struct {}
+
+var FfiConverterTransactionINSTANCE = FfiConverterTransaction{}
+
+
+func (c FfiConverterTransaction) Lift(pointer unsafe.Pointer) *Transaction {
+	result := &Transaction {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_transaction(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_transaction(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Transaction).Destroy)
+	return result
+}
+
+func (c FfiConverterTransaction) Read(reader io.Reader) *Transaction {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterTransaction) Lower(value *Transaction) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Transaction")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterTransaction) Write(writer io.Writer, value *Transaction) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerTransaction struct {}
+
+func (_ FfiDestroyerTransaction) Destroy(value *Transaction) {
+		value.Destroy()
+}
+
+
+
 // A builder for creating transactions. Use [`finish`](Self::finish) to
 // finalize the transaction data.
 type TransactionBuilderInterface interface {
@@ -19652,7 +19722,7 @@ type TransactionBuilderInterface interface {
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *TransactionBuilder
 	// Convert this builder into a transaction.
-	Finish() (*TransactionData, error)
+	Finish() (*Transaction, error)
 	// Add a gas object to use to pay for the transaction.
 	Gas(objectId *ObjectId) *TransactionBuilder
 	// Set the gas budget for the transaction.
@@ -19816,7 +19886,7 @@ func (_self *TransactionBuilder) Expiration(epoch uint64) *TransactionBuilder {
 }
 
 // Convert this builder into a transaction.
-func (_self *TransactionBuilder) Finish() (*TransactionData, error) {
+func (_self *TransactionBuilder) Finish() (*Transaction, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19827,8 +19897,8 @@ func (_self *TransactionBuilder) Finish() (*TransactionData, error) {
 			return res
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *TransactionData {
-			return FfiConverterTransactionDataINSTANCE.Lift(ffi)
+		func(ffi unsafe.Pointer) *Transaction {
+			return FfiConverterTransactionINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
 		_pointer,),
@@ -20046,247 +20116,6 @@ func (c FfiConverterTransactionBuilder) Write(writer io.Writer, value *Transacti
 type FfiDestroyerTransactionBuilder struct {}
 
 func (_ FfiDestroyerTransactionBuilder) Destroy(value *TransactionBuilder) {
-		value.Destroy()
-}
-
-
-
-type TransactionDataInterface interface {
-	AsV1() *TransactionDataV1
-}
-type TransactionData struct {
-	ffiObject FfiObject
-}
-
-
-
-
-func (_self *TransactionData) AsV1() *TransactionDataV1 {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionData")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionDataV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_transactiondata_as_v1(
-		_pointer,_uniffiStatus)
-	}))
-}
-func (object *TransactionData) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterTransactionData struct {}
-
-var FfiConverterTransactionDataINSTANCE = FfiConverterTransactionData{}
-
-
-func (c FfiConverterTransactionData) Lift(pointer unsafe.Pointer) *TransactionData {
-	result := &TransactionData {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_transactiondata(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_transactiondata(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*TransactionData).Destroy)
-	return result
-}
-
-func (c FfiConverterTransactionData) Read(reader io.Reader) *TransactionData {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterTransactionData) Lower(value *TransactionData) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*TransactionData")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterTransactionData) Write(writer io.Writer, value *TransactionData) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerTransactionData struct {}
-
-func (_ FfiDestroyerTransactionData) Destroy(value *TransactionData) {
-		value.Destroy()
-}
-
-
-
-// A transaction
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// transaction = %x00 transaction-v1
-//
-// transaction-v1 = transaction-kind address gas-payment transaction-expiration
-// ```
-type TransactionDataV1Interface interface {
-	BcsSerialize() ([]byte, error)
-	Digest() *Digest
-	Expiration() TransactionExpiration
-	GasPayment() GasPayment
-	Kind() *TransactionKind
-	Sender() *Address
-	SigningDigest() []byte
-}
-// A transaction
-//
-// # BCS
-//
-// The BCS serialized form for this type is defined by the following ABNF:
-//
-// ```text
-// transaction = %x00 transaction-v1
-//
-// transaction-v1 = transaction-kind address gas-payment transaction-expiration
-// ```
-type TransactionDataV1 struct {
-	ffiObject FfiObject
-}
-func NewTransactionDataV1(kind *TransactionKind, sender *Address, gasPayment GasPayment, expiration TransactionExpiration) *TransactionDataV1 {
-	return FfiConverterTransactionDataV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactiondatav1_new(FfiConverterTransactionKindINSTANCE.Lower(kind), FfiConverterAddressINSTANCE.Lower(sender), FfiConverterGasPaymentINSTANCE.Lower(gasPayment), FfiConverterTransactionExpirationINSTANCE.Lower(expiration),_uniffiStatus)
-	}))
-}
-
-
-
-
-func (_self *TransactionDataV1) BcsSerialize() ([]byte, error) {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDataV1")
-	defer _self.ffiObject.decrementPointer()
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_bcs_serialize(
-		_pointer,_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-func (_self *TransactionDataV1) Digest() *Digest {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDataV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_digest(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *TransactionDataV1) Expiration() TransactionExpiration {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDataV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionExpirationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_expiration(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *TransactionDataV1) GasPayment() GasPayment {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDataV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterGasPaymentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_gas_payment(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *TransactionDataV1) Kind() *TransactionKind {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDataV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_kind(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *TransactionDataV1) Sender() *Address {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDataV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_sender(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *TransactionDataV1) SigningDigest() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionDataV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactiondatav1_signing_digest(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-func (object *TransactionDataV1) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterTransactionDataV1 struct {}
-
-var FfiConverterTransactionDataV1INSTANCE = FfiConverterTransactionDataV1{}
-
-
-func (c FfiConverterTransactionDataV1) Lift(pointer unsafe.Pointer) *TransactionDataV1 {
-	result := &TransactionDataV1 {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_transactiondatav1(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_transactiondatav1(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*TransactionDataV1).Destroy)
-	return result
-}
-
-func (c FfiConverterTransactionDataV1) Read(reader io.Reader) *TransactionDataV1 {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterTransactionDataV1) Lower(value *TransactionDataV1) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*TransactionDataV1")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterTransactionDataV1) Write(writer io.Writer, value *TransactionDataV1) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerTransactionDataV1 struct {}
-
-func (_ FfiDestroyerTransactionDataV1) Destroy(value *TransactionDataV1) {
 		value.Destroy()
 }
 
@@ -20640,6 +20469,177 @@ func (c FfiConverterTransactionKind) Write(writer io.Writer, value *TransactionK
 type FfiDestroyerTransactionKind struct {}
 
 func (_ FfiDestroyerTransactionKind) Destroy(value *TransactionKind) {
+		value.Destroy()
+}
+
+
+
+// A transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// transaction = %x00 transaction-v1
+//
+// transaction-v1 = transaction-kind address gas-payment transaction-expiration
+// ```
+type TransactionV1Interface interface {
+	BcsSerialize() ([]byte, error)
+	Digest() *Digest
+	Expiration() TransactionExpiration
+	GasPayment() GasPayment
+	Kind() *TransactionKind
+	Sender() *Address
+	SigningDigest() []byte
+}
+// A transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// transaction = %x00 transaction-v1
+//
+// transaction-v1 = transaction-kind address gas-payment transaction-expiration
+// ```
+type TransactionV1 struct {
+	ffiObject FfiObject
+}
+func NewTransactionV1(kind *TransactionKind, sender *Address, gasPayment GasPayment, expiration TransactionExpiration) *TransactionV1 {
+	return FfiConverterTransactionV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(FfiConverterTransactionKindINSTANCE.Lower(kind), FfiConverterAddressINSTANCE.Lower(sender), FfiConverterGasPaymentINSTANCE.Lower(gasPayment), FfiConverterTransactionExpirationINSTANCE.Lower(expiration),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *TransactionV1) BcsSerialize() ([]byte, error) {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionv1_bcs_serialize(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *TransactionV1) Digest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *TransactionV1) Expiration() TransactionExpiration {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionExpirationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *TransactionV1) GasPayment() GasPayment {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterGasPaymentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *TransactionV1) Kind() *TransactionKind {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *TransactionV1) Sender() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *TransactionV1) SigningDigest() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *TransactionV1) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterTransactionV1 struct {}
+
+var FfiConverterTransactionV1INSTANCE = FfiConverterTransactionV1{}
+
+
+func (c FfiConverterTransactionV1) Lift(pointer unsafe.Pointer) *TransactionV1 {
+	result := &TransactionV1 {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_transactionv1(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_transactionv1(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*TransactionV1).Destroy)
+	return result
+}
+
+func (c FfiConverterTransactionV1) Read(reader io.Reader) *TransactionV1 {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterTransactionV1) Lower(value *TransactionV1) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*TransactionV1")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterTransactionV1) Write(writer io.Writer, value *TransactionV1) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerTransactionV1 struct {}
+
+func (_ FfiDestroyerTransactionV1) Destroy(value *TransactionV1) {
 		value.Destroy()
 }
 
@@ -26150,12 +26150,12 @@ func (_ FfiDestroyerServiceConfig) Destroy(value ServiceConfig) {
 	value.Destroy()
 }
 type SignedTransaction struct {
-	Transaction *TransactionData
+	Transaction *Transaction
 	Signatures []*UserSignature
 }
 
 func (r *SignedTransaction) Destroy() {
-		FfiDestroyerTransactionData{}.Destroy(r.Transaction);
+		FfiDestroyerTransaction{}.Destroy(r.Transaction);
 		FfiDestroyerSequenceUserSignature{}.Destroy(r.Signatures);
 }
 
@@ -26169,7 +26169,7 @@ func (c FfiConverterSignedTransaction) Lift(rb RustBufferI) SignedTransaction {
 
 func (c FfiConverterSignedTransaction) Read(reader io.Reader) SignedTransaction {
 	return SignedTransaction {
-			FfiConverterTransactionDataINSTANCE.Read(reader),
+			FfiConverterTransactionINSTANCE.Read(reader),
 			FfiConverterSequenceUserSignatureINSTANCE.Read(reader),
 	}
 }
@@ -26179,7 +26179,7 @@ func (c FfiConverterSignedTransaction) Lower(value SignedTransaction) C.RustBuff
 }
 
 func (c FfiConverterSignedTransaction) Write(writer io.Writer, value SignedTransaction) {
-		FfiConverterTransactionDataINSTANCE.Write(writer, value.Transaction);
+		FfiConverterTransactionINSTANCE.Write(writer, value.Transaction);
 		FfiConverterSequenceUserSignatureINSTANCE.Write(writer, value.Signatures);
 }
 
@@ -29093,58 +29093,6 @@ func (_ FfiDestroyerTransactionBlockKindInput) Destroy(value TransactionBlockKin
 }
 
 
-type TransactionDataInner interface {
-	Destroy()
-}
-type TransactionDataInnerVersion1 struct {
-	Field0 *TransactionDataV1
-}
-
-func (e TransactionDataInnerVersion1) Destroy() {
-		FfiDestroyerTransactionDataV1{}.Destroy(e.Field0);
-}
-
-type FfiConverterTransactionDataInner struct {}
-
-var FfiConverterTransactionDataInnerINSTANCE = FfiConverterTransactionDataInner{}
-
-func (c FfiConverterTransactionDataInner) Lift(rb RustBufferI) TransactionDataInner {
-	return LiftFromRustBuffer[TransactionDataInner](c, rb)
-}
-
-func (c FfiConverterTransactionDataInner) Lower(value TransactionDataInner) C.RustBuffer {
-	return LowerIntoRustBuffer[TransactionDataInner](c, value)
-}
-func (FfiConverterTransactionDataInner) Read(reader io.Reader) TransactionDataInner {
-	id := readInt32(reader)
-	switch (id) {
-		case 1:
-			return TransactionDataInnerVersion1{
-				FfiConverterTransactionDataV1INSTANCE.Read(reader),
-			};
-		default:
-			panic(fmt.Sprintf("invalid enum value %v in FfiConverterTransactionDataInner.Read()", id));
-	}
-}
-
-func (FfiConverterTransactionDataInner) Write(writer io.Writer, value TransactionDataInner) {
-	switch variant_value := value.(type) {
-		case TransactionDataInnerVersion1:
-			writeInt32(writer, 1)
-			FfiConverterTransactionDataV1INSTANCE.Write(writer, variant_value.Field0)
-		default:
-			_ = variant_value
-			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterTransactionDataInner.Write", value))
-	}
-}
-
-type FfiDestroyerTransactionDataInner struct {}
-
-func (_ FfiDestroyerTransactionDataInner) Destroy(value TransactionDataInner) {
-	value.Destroy()
-}
-
-
 // A TTL for a transaction
 //
 // # BCS
@@ -29216,6 +29164,58 @@ func (FfiConverterTransactionExpiration) Write(writer io.Writer, value Transacti
 type FfiDestroyerTransactionExpiration struct {}
 
 func (_ FfiDestroyerTransactionExpiration) Destroy(value TransactionExpiration) {
+	value.Destroy()
+}
+
+
+type TransactionInner interface {
+	Destroy()
+}
+type TransactionInnerVersion1 struct {
+	Field0 *TransactionV1
+}
+
+func (e TransactionInnerVersion1) Destroy() {
+		FfiDestroyerTransactionV1{}.Destroy(e.Field0);
+}
+
+type FfiConverterTransactionInner struct {}
+
+var FfiConverterTransactionInnerINSTANCE = FfiConverterTransactionInner{}
+
+func (c FfiConverterTransactionInner) Lift(rb RustBufferI) TransactionInner {
+	return LiftFromRustBuffer[TransactionInner](c, rb)
+}
+
+func (c FfiConverterTransactionInner) Lower(value TransactionInner) C.RustBuffer {
+	return LowerIntoRustBuffer[TransactionInner](c, value)
+}
+func (FfiConverterTransactionInner) Read(reader io.Reader) TransactionInner {
+	id := readInt32(reader)
+	switch (id) {
+		case 1:
+			return TransactionInnerVersion1{
+				FfiConverterTransactionV1INSTANCE.Read(reader),
+			};
+		default:
+			panic(fmt.Sprintf("invalid enum value %v in FfiConverterTransactionInner.Read()", id));
+	}
+}
+
+func (FfiConverterTransactionInner) Write(writer io.Writer, value TransactionInner) {
+	switch variant_value := value.(type) {
+		case TransactionInnerVersion1:
+			writeInt32(writer, 1)
+			FfiConverterTransactionV1INSTANCE.Write(writer, variant_value.Field0)
+		default:
+			_ = variant_value
+			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterTransactionInner.Write", value))
+	}
+}
+
+type FfiDestroyerTransactionInner struct {}
+
+func (_ FfiDestroyerTransactionInner) Destroy(value TransactionInner) {
 	value.Destroy()
 }
 

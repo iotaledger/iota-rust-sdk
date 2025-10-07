@@ -28,45 +28,45 @@ use crate::{
 pub mod v1;
 
 #[derive(Clone, uniffi::Enum)]
-pub enum TransactionDataInner {
-    Version1(Arc<TransactionDataV1>),
+pub enum TransactionInner {
+    Version1(Arc<TransactionV1>),
 }
 
 // Wrapper around the enum, because we can't have methods on enums in uniffi
 #[derive(Clone, uniffi::Object)]
-pub struct TransactionData {
-    pub inner: TransactionDataInner,
+pub struct Transaction {
+    pub inner: TransactionInner,
 }
 
 #[uniffi::export]
-impl TransactionData {
-    pub fn as_v1(&self) -> Arc<TransactionDataV1> {
+impl Transaction {
+    pub fn as_v1(&self) -> Arc<TransactionV1> {
         match &self.inner {
-            TransactionDataInner::Version1(tx) => tx.clone(),
+            TransactionInner::Version1(tx) => tx.clone(),
         }
     }
 }
 
-impl From<iota_types::TransactionData> for TransactionData {
-    fn from(value: iota_types::TransactionData) -> Self {
+impl From<iota_types::Transaction> for Transaction {
+    fn from(value: iota_types::Transaction) -> Self {
         match value {
-            iota_types::TransactionData::V1(v1) => TransactionData {
-                inner: TransactionDataInner::Version1(Arc::new(v1.into())),
+            iota_types::Transaction::V1(v1) => Transaction {
+                inner: TransactionInner::Version1(Arc::new(v1.into())),
             },
         }
     }
 }
 
-impl From<TransactionData> for iota_types::TransactionData {
-    fn from(value: TransactionData) -> Self {
+impl From<Transaction> for iota_types::Transaction {
+    fn from(value: Transaction) -> Self {
         match value.inner {
-            TransactionDataInner::Version1(v1) => iota_types::TransactionData::V1(v1.0.clone()),
+            TransactionInner::Version1(v1) => iota_types::Transaction::V1(v1.0.clone()),
         }
     }
 }
 
-impl From<&TransactionData> for iota_types::TransactionData {
-    fn from(value: &TransactionData) -> Self {
+impl From<&Transaction> for iota_types::Transaction {
+    fn from(value: &Transaction) -> Self {
         value.clone().into()
     }
 }
@@ -83,10 +83,10 @@ impl From<&TransactionData> for iota_types::TransactionData {
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct TransactionDataV1(pub iota_types::TransactionDataV1);
+pub struct TransactionV1(pub iota_types::TransactionV1);
 
 #[uniffi::export]
-impl TransactionDataV1 {
+impl TransactionV1 {
     #[uniffi::constructor]
     pub fn new(
         kind: &TransactionKind,
@@ -94,7 +94,7 @@ impl TransactionDataV1 {
         gas_payment: GasPayment,
         expiration: TransactionExpiration,
     ) -> Self {
-        Self(iota_types::TransactionDataV1 {
+        Self(iota_types::TransactionV1 {
             kind: kind.0.clone(),
             sender: **sender,
             gas_payment: gas_payment.into(),
@@ -133,7 +133,7 @@ impl TransactionDataV1 {
 
 #[derive(uniffi::Record)]
 pub struct SignedTransaction {
-    pub transaction: Arc<TransactionData>,
+    pub transaction: Arc<Transaction>,
     pub signatures: Vec<Arc<UserSignature>>,
 }
 

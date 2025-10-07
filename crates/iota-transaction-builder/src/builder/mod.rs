@@ -15,7 +15,7 @@ use iota_graphql_client::{
 };
 use iota_types::{
     Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
-    TransactionData, TransactionDataV1, TransactionEffects, TransactionExpiration, TypeTag,
+    Transaction, TransactionEffects, TransactionExpiration, TransactionV1, TypeTag,
 };
 use serde::Serialize;
 
@@ -36,7 +36,7 @@ use crate::{
 mod named_results;
 pub(crate) mod ptb_arguments;
 
-/// A transaction builder which can be used to construct [`TransactionData`]s.
+/// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
 #[repr(C)]
 pub struct TransactionBuilder<C = (), L = ()> {
@@ -45,7 +45,7 @@ pub struct TransactionBuilder<C = (), L = ()> {
     last_command: PhantomData<L>,
 }
 
-/// Transaction data used to build a [`TransactionData`].
+/// Transaction data used to build a [`Transaction`].
 #[derive(Debug, Clone)]
 #[repr(C)]
 pub struct TransactionBuildData {
@@ -484,7 +484,7 @@ impl<L> TransactionBuilder<(), L> {
     }
 
     /// Convert this builder into a transaction.
-    pub fn finish(mut self) -> Result<TransactionData, Error> {
+    pub fn finish(mut self) -> Result<Transaction, Error> {
         let Some(price) = self.data.gas_price else {
             return Err(Error::MissingGasPrice);
         };
@@ -521,7 +521,7 @@ impl<L> TransactionBuilder<(), L> {
             .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
-        Ok(TransactionDataV1 {
+        Ok(TransactionV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
@@ -696,7 +696,7 @@ impl<L> TransactionBuilder<Client, L> {
         })
     }
 
-    async fn resolve_ptb(&mut self) -> Result<TransactionData, Error> {
+    async fn resolve_ptb(&mut self) -> Result<Transaction, Error> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
@@ -795,7 +795,7 @@ impl<L> TransactionBuilder<Client, L> {
                 .map_err(Error::Client)?
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
-        Ok(TransactionDataV1 {
+        Ok(TransactionV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
@@ -813,7 +813,7 @@ impl<L> TransactionBuilder<Client, L> {
     }
 
     /// Convert this builder into a transaction.
-    pub async fn finish(mut self) -> Result<TransactionData, Error> {
+    pub async fn finish(mut self) -> Result<Transaction, Error> {
         let mut txn = self.resolve_ptb().await?;
         if self.data.gas_budget.is_none() {
             let res = self
@@ -826,7 +826,7 @@ impl<L> TransactionBuilder<Client, L> {
             }
 
             match &mut txn {
-                TransactionData::V1(t) => {
+                Transaction::V1(t) => {
                     t.gas_payment.budget = res
                         .effects
                         .ok_or_else(|| Error::MissingGasBudget)?

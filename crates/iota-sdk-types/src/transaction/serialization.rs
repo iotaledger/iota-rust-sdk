@@ -739,7 +739,7 @@ mod signed_transaction {
     use super::*;
     use crate::{
         UserSignature,
-        transaction::{SignedTransaction, TransactionData},
+        transaction::{SignedTransaction, Transaction},
     };
 
     /// Intents are defined as:
@@ -774,8 +774,8 @@ mod signed_transaction {
     /// ```
     struct IntentMessageWrappedTransaction;
 
-    impl SerializeAs<TransactionData> for IntentMessageWrappedTransaction {
-        fn serialize_as<S>(transaction: &TransactionData, serializer: S) -> Result<S::Ok, S::Error>
+    impl SerializeAs<Transaction> for IntentMessageWrappedTransaction {
+        fn serialize_as<S>(transaction: &Transaction, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
         {
@@ -790,12 +790,12 @@ mod signed_transaction {
         }
     }
 
-    impl<'de> DeserializeAs<'de, TransactionData> for IntentMessageWrappedTransaction {
-        fn deserialize_as<D>(deserializer: D) -> Result<TransactionData, D::Error>
+    impl<'de> DeserializeAs<'de, Transaction> for IntentMessageWrappedTransaction {
+        fn deserialize_as<D>(deserializer: D) -> Result<Transaction, D::Error>
         where
             D: Deserializer<'de>,
         {
-            let (scope, version, app, transaction): (u8, u8, u8, TransactionData) =
+            let (scope, version, app, transaction): (u8, u8, u8, Transaction) =
                 Deserialize::deserialize(deserializer)?;
             match (scope, version, app) {
                 (0, 0, 0) => {}
@@ -815,14 +815,14 @@ mod signed_transaction {
     #[derive(serde_derive::Serialize)]
     struct BinarySignedTransactionWithIntentMessageRef<'a> {
         #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
-        transaction: &'a TransactionData,
+        transaction: &'a Transaction,
         signatures: &'a Vec<UserSignature>,
     }
 
     #[derive(serde_derive::Deserialize)]
     struct BinarySignedTransactionWithIntentMessage {
         #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
-        transaction: TransactionData,
+        transaction: Transaction,
         signatures: Vec<UserSignature>,
     }
 
@@ -1032,7 +1032,7 @@ mod test {
 
     use crate::{
         Digest, ObjectId, ObjectReference,
-        transaction::{Argument, Input, TransactionData},
+        transaction::{Argument, Input, Transaction},
     };
 
     #[test]
@@ -1122,7 +1122,7 @@ mod test {
 
         for fixture in [GENESIS_TRANSACTION, CONSENSUS_PROLOGUE, EPOCH_CHANGE, PTB] {
             let fixture = Base64::decode_vec(fixture.trim()).unwrap();
-            let tx: TransactionData = bcs::from_bytes(&fixture).unwrap();
+            let tx: Transaction = bcs::from_bytes(&fixture).unwrap();
             assert_eq!(bcs::to_bytes(&tx).unwrap(), fixture);
 
             let json = serde_json::to_string_pretty(&tx).unwrap();
