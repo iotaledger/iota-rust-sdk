@@ -124,9 +124,11 @@ impl crate::PrivateKeyExt for Secp256r1PrivateKey {
         self.0.to_bytes().as_slice().to_vec()
     }
 
-    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, SignatureError> {
+    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
         if bytes.len() != Self::LENGTH {
-            return Err(SignatureError::from_source("invalid secp256r1 key length"));
+            return Err(crate::PrivateKeyError::InvalidScheme(
+                "invalid secp256r1 key length".to_string(),
+            ));
         }
 
         let mut arr = [0u8; Self::LENGTH];

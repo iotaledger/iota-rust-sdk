@@ -561,16 +561,17 @@ mod keypair {
             }
         }
 
-        fn from_raw_bytes(_bytes: &[u8]) -> Result<Self, crate::SignatureError> {
+        fn from_raw_bytes(_bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
             // SimpleKeypair can't be created from raw bytes without knowing the scheme
             // This should not be called since SimpleKeypair overrides from_flagged_bytes
-            Err(crate::SignatureError::from_source(
-                "SimpleKeypair should use from_bytes instead",
+            Err(crate::PrivateKeyError::InvalidScheme(
+                "SimpleKeypair should use from_bytes instead".to_string(),
             ))
         }
 
-        fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, crate::SignatureError> {
+        fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
             Self::from_bytes(bytes)
+                .map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
         }
     }
 }
