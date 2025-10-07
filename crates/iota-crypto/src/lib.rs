@@ -155,24 +155,63 @@ impl<T: Verifier<UserSignature>> IotaVerifier for T {
     }
 }
 
+/// Bech32 prefix for IOTA private keys
 #[cfg(feature = "bech32")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
-/// Bech32 prefix for IOTA private keys
 pub const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
 
-#[cfg(feature = "bech32")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
-/// Trait for types that support Bech32 encoding/decoding
-pub trait Bech32 {
+/// Extension trait for private key types
+pub trait PrivateKeyExt {
+    /// The signature scheme for this key type
+    const SCHEME: iota_sdk_types::SignatureScheme;
+
+    /// Returns the signature scheme for this private key
+    fn scheme(&self) -> iota_sdk_types::SignatureScheme {
+        Self::SCHEME
+    }
+
+    /// Returns the raw bytes of this private key
+    fn to_bytes(&self) -> Vec<u8>;
+
+    /// Creates an instance from raw key bytes (without scheme flag)
+    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, SignatureError>
+    where
+        Self: Sized;
+
     /// Returns the bytes with signature scheme flag prepended
-    fn to_flagged_bytes(&self) -> Vec<u8>;
+    fn to_flagged_bytes(&self) -> Vec<u8> {
+        let key_bytes = self.to_bytes();
+        let mut bytes = Vec::with_capacity(1 + key_bytes.len());
+        bytes.push(self.scheme().to_u8());
+        bytes.extend_from_slice(&key_bytes);
+        bytes
+    }
 
     /// Creates an instance from bytes that include the signature scheme flag
     fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, SignatureError>
     where
-        Self: Sized;
+        Self: Sized,
+    {
+        if bytes.is_empty() {
+            return Err(SignatureError::from_source("empty flagged bytes"));
+        }
 
-    /// Encode this instance in Bech32 format with "iotaprivkey" prefix
+        let flag = iota_sdk_types::SignatureScheme::from_byte(bytes[0])
+            .map_err(|e| SignatureError::from_source(format!("invalid signature scheme: {e:?}")))?;
+
+        if flag != Self::SCHEME {
+            return Err(SignatureError::from_source(format!(
+                "invalid signature scheme: expected {:?}, got {flag:?}",
+                Self::SCHEME
+            )));
+        }
+
+        let key_bytes = &bytes[1..];
+        Self::from_raw_bytes(key_bytes)
+    }
+
+    /// Encode this private key in Bech32 format with "iotaprivkey" prefix
+    #[cfg(feature = "bech32")]
     fn to_bech32(&self) -> Result<String, SignatureError> {
         use bech32::Hrp;
 
@@ -185,7 +224,8 @@ pub trait Bech32 {
             .map_err(|e| SignatureError::from_source(format!("bech32 encoding failed: {e}")))
     }
 
-    /// Decode an instance from Bech32 format with "iotaprivkey" prefix
+    /// Decode a private key from Bech32 format with "iotaprivkey" prefix
+    #[cfg(feature = "bech32")]
     fn from_bech32(value: &str) -> Result<Self, SignatureError>
     where
         Self: Sized,

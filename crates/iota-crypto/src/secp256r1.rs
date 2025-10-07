@@ -58,11 +58,6 @@ impl Secp256r1PrivateKey {
         Secp256r1PublicKey::new(self.0.verifying_key().as_ref().to_bytes().into())
     }
 
-    /// Return the raw 32-byte private key
-    pub fn to_bytes(&self) -> [u8; Self::LENGTH] {
-        self.0.to_bytes().into()
-    }
-
     pub fn generate<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
@@ -122,35 +117,20 @@ impl Secp256r1PrivateKey {
 }
 
 #[cfg(feature = "bech32")]
-impl crate::Bech32 for Secp256r1PrivateKey {
-    fn to_flagged_bytes(&self) -> Vec<u8> {
-        let mut bytes = Vec::new();
-        bytes.push(SignatureScheme::Secp256r1.to_u8());
-        bytes.extend_from_slice(&self.to_bytes());
-        bytes
+impl crate::PrivateKeyExt for Secp256r1PrivateKey {
+    const SCHEME: SignatureScheme = SignatureScheme::Secp256r1;
+
+    fn to_bytes(&self) -> Vec<u8> {
+        self.0.to_bytes().as_slice().to_vec()
     }
 
-    fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, SignatureError> {
-        if bytes.is_empty() {
-            return Err(SignatureError::from_source("empty flagged bytes"));
-        }
-
-        let flag = SignatureScheme::from_byte(bytes[0])
-            .map_err(|e| SignatureError::from_source(format!("invalid signature scheme: {e:?}")))?;
-
-        if flag != SignatureScheme::Secp256r1 {
-            return Err(SignatureError::from_source(format!(
-                "invalid signature scheme: expected Secp256r1, got {flag:?}"
-            )));
-        }
-
-        let key_bytes = &bytes[1..];
-        if key_bytes.len() != Self::LENGTH {
+    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, SignatureError> {
+        if bytes.len() != Self::LENGTH {
             return Err(SignatureError::from_source("invalid secp256r1 key length"));
         }
 
         let mut arr = [0u8; Self::LENGTH];
-        arr.copy_from_slice(key_bytes);
+        arr.copy_from_slice(bytes);
         Ok(Self::new(arr))
     }
 }

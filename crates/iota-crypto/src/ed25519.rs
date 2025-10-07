@@ -53,11 +53,6 @@ impl Ed25519PrivateKey {
         self.verifying_key().public_key()
     }
 
-    /// Return the raw 32-byte private key
-    pub fn to_bytes(&self) -> [u8; Self::LENGTH] {
-        self.0.to_bytes()
-    }
-
     pub fn generate<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
@@ -117,35 +112,21 @@ impl Ed25519PrivateKey {
 }
 
 #[cfg(feature = "bech32")]
-impl crate::Bech32 for Ed25519PrivateKey {
-    fn to_flagged_bytes(&self) -> Vec<u8> {
-        let mut bytes = Vec::new();
-        bytes.push(SignatureScheme::Ed25519.to_u8());
-        bytes.extend_from_slice(&self.to_bytes());
-        bytes
+impl crate::PrivateKeyExt for Ed25519PrivateKey {
+    const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
+
+    /// Return the raw 32-byte private key
+    fn to_bytes(&self) -> Vec<u8> {
+        self.0.to_bytes().to_vec()
     }
 
-    fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, SignatureError> {
-        if bytes.is_empty() {
-            return Err(SignatureError::from_source("empty flagged bytes"));
-        }
-
-        let flag = SignatureScheme::from_byte(bytes[0])
-            .map_err(|e| SignatureError::from_source(format!("invalid signature scheme: {e:?}")))?;
-
-        if flag != SignatureScheme::Ed25519 {
-            return Err(SignatureError::from_source(format!(
-                "invalid signature scheme: expected Ed25519, got {flag:?}"
-            )));
-        }
-
-        let key_bytes = &bytes[1..];
-        if key_bytes.len() != Self::LENGTH {
+    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, SignatureError> {
+        if bytes.len() != Self::LENGTH {
             return Err(SignatureError::from_source("invalid ed25519 key length"));
         }
 
         let mut arr = [0u8; Self::LENGTH];
-        arr.copy_from_slice(key_bytes);
+        arr.copy_from_slice(bytes);
         Ok(Self::new(arr))
     }
 }

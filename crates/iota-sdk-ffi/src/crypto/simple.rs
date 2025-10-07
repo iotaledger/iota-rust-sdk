@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_crypto::{Bech32, Signer, Verifier};
+use iota_crypto::{PrivateKeyExt, Signer, Verifier};
 use iota_types::SignatureScheme;
 
 use crate::{

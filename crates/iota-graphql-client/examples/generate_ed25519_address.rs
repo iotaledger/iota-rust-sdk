@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use base64ct::{Base64, Encoding};
-use iota_crypto::{Bech32, ed25519::Ed25519PrivateKey};
+use iota_crypto::{PrivateKeyExt, ed25519::Ed25519PrivateKey};
 use rand::rngs::OsRng;
 
 fn main() {

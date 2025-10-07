@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_crypto::Bech32;
+use iota_crypto::PrivateKeyExt;
 use iota_types::SignatureScheme;
 use rand::rngs::OsRng;
 

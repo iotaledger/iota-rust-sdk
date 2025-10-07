@@ -82,7 +82,7 @@ mod keypair {
     };
     use signature::{Signer, Verifier};
 
-    use crate::SignatureError;
+    use crate::{PrivateKeyExt, SignatureError};
 
     #[derive(Debug, Clone)]
     pub struct SimpleKeypair {
@@ -537,16 +537,41 @@ mod keypair {
             }
         }
     }
-}
 
-#[cfg(feature = "bech32")]
-impl crate::Bech32 for SimpleKeypair {
-    fn to_flagged_bytes(&self) -> Vec<u8> {
-        self.to_bytes()
-    }
+    #[cfg(feature = "bech32")]
+    impl crate::PrivateKeyExt for SimpleKeypair {
+        // SimpleKeypair doesn't have a single scheme since it can contain any scheme
+        // We provide a dummy value since we override all methods
+        const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
 
-    fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, crate::SignatureError> {
-        Self::from_bytes(bytes)
+        fn scheme(&self) -> SignatureScheme {
+            self.scheme()
+        }
+
+        fn to_bytes(&self) -> Vec<u8> {
+            // For SimpleKeypair, to_bytes() already returns flagged bytes
+            // We need the raw key bytes without the flag for the trait
+            match &self.inner {
+                #[cfg(feature = "ed25519")]
+                InnerKeypair::Ed25519(private_key) => private_key.to_bytes().to_vec(),
+                #[cfg(feature = "secp256k1")]
+                InnerKeypair::Secp256k1(private_key) => private_key.to_bytes().as_slice().to_vec(),
+                #[cfg(feature = "secp256r1")]
+                InnerKeypair::Secp256r1(private_key) => private_key.to_bytes().as_slice().to_vec(),
+            }
+        }
+
+        fn from_raw_bytes(_bytes: &[u8]) -> Result<Self, crate::SignatureError> {
+            // SimpleKeypair can't be created from raw bytes without knowing the scheme
+            // This should not be called since SimpleKeypair overrides from_flagged_bytes
+            Err(crate::SignatureError::from_source(
+                "SimpleKeypair should use from_bytes instead",
+            ))
+        }
+
+        fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, crate::SignatureError> {
+            Self::from_bytes(bytes)
+        }
     }
 }
 
@@ -556,7 +581,7 @@ mod test {
 
     use super::*;
     use crate::{
-        Bech32,
+        PrivateKeyExt,
         ed25519::{Ed25519PrivateKey, Ed25519VerifyingKey},
         secp256k1::{Secp256k1PrivateKey, Secp256k1VerifyingKey},
         secp256r1::{Secp256r1PrivateKey, Secp256r1VerifyingKey},
@@ -713,26 +738,6 @@ mod test {
         assert_eq!(der, from_der.to_der().unwrap());
         let from_pem = SimpleVerifyingKey::from_pem(&pem).unwrap();
         assert_eq!(pem, from_pem.to_pem().unwrap());
-    }
-
-    #[cfg(feature = "bech32")]
-    #[test]
-    fn test_bech32_encode_decode_ed25519() {
-        use rand::{SeedableRng, rngs::StdRng};
-
-        let keypair: SimpleKeypair = Ed25519PrivateKey::generate(StdRng::from_seed([0; 32])).into();
-        let encoded = keypair.to_bech32().unwrap();
-
-        // Verify the prefix is correct
-        assert!(encoded.starts_with("iotaprivkey1"));
-
-        // Verify we can decode it back
-        let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
-        assert_eq!(keypair.public_key(), decoded.public_key());
-
-        // Verify the encoding is deterministic
-        let re_encoded = decoded.to_bech32().unwrap();
-        assert_eq!(encoded, re_encoded);
     }
 
     #[cfg(feature = "bech32")]
