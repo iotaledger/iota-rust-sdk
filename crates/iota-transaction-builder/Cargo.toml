@@ -13,7 +13,7 @@ derive_more = { version = "2.0", features = ["from"] }
 iota-crypto = { package = "iota-crypto", path = "../iota-crypto", features = ["ed25519"] }
 iota-graphql-client = { package = "iota-graphql-client", path = "../iota-graphql-client" }
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde", "hash"] }
-primitive-types = { version = "0.13", features = ["impl-serde"] }
+primitive-types = { version = "0.14", features = ["impl-serde"] }
 serde = "1.0"
 thiserror = "2.0"
 tokio = { version = "1.0", features = ["full"] }

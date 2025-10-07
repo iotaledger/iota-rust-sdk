@@ -81,8 +81,8 @@ impl GraphQLClient {
     /// Create a new GraphQL client connected to the `localhost` GraphQL server:
     /// {DEFAULT_LOCAL_HOST}.
     #[uniffi::constructor]
-    pub fn new_localhost() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_localhost()))
+    pub fn new_localnet() -> Self {
+        Self(RwLock::new(iota_graphql_client::Client::new_localnet()))
     }
 
     /// Get the chain identifier.

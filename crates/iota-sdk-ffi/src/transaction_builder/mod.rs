@@ -3,7 +3,7 @@
 
 use std::sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard};
 
-use iota_transaction_builder::{MovePackageData, PTBArguments};
+use iota_transaction_builder::MovePackageData;
 use iota_types::Input;
 
 use crate::{

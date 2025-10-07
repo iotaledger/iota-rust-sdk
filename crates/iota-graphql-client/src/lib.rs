@@ -416,9 +416,9 @@ impl Client {
         Self::new(DEVNET_HOST).expect("Invalid devnet URL")
     }
 
-    /// Create a new GraphQL client connected to the `localhost` GraphQL server:
+    /// Create a new GraphQL client connected to a `localnet` GraphQL server:
     /// {DEFAULT_LOCAL_HOST}.
-    pub fn new_localhost() -> Self {
+    pub fn new_localnet() -> Self {
         Self::new(LOCAL_HOST).expect("Invalid localhost URL")
     }
 
@@ -1718,7 +1718,7 @@ mod tests {
             "mainnet" => Client::new_mainnet(),
             "testnet" => Client::new_testnet(),
             "devnet" => Client::new_devnet(),
-            "local" => Client::new_localhost(),
+            "local" => Client::new_localnet(),
             _ => Client::new(&network).expect("Invalid network URL: {network}"),
         }
     }
@@ -2070,9 +2070,9 @@ mod tests {
     async fn test_coins_stream() {
         let client = test_client();
         let faucet = match client.rpc_server().as_str() {
-            LOCAL_HOST => FaucetClient::local(),
-            TESTNET_HOST => FaucetClient::testnet(),
-            DEVNET_HOST => FaucetClient::devnet(),
+            LOCAL_HOST => FaucetClient::new_localnet(),
+            TESTNET_HOST => FaucetClient::new_testnet(),
+            DEVNET_HOST => FaucetClient::new_devnet(),
             _ => return,
         };
         let key = Ed25519PublicKey::generate(rand::thread_rng());
