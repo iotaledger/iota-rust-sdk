@@ -5,7 +5,6 @@ use base64ct::Encoding;
 use eyre::{Result, bail};
 use iota_graphql_client::Client;
 use iota_transaction_builder::TransactionBuilder;
-use iota_types::ObjectId;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -16,10 +15,7 @@ async fn main() -> Result<()> {
 
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
 
-    builder.transfer_objects(
-        recipient,
-        "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699".parse::<ObjectId>()?,
-    );
+    builder.send_iota(recipient, 1_000_000_000);
 
     let txn = builder.finish().await?;
 
@@ -32,10 +28,10 @@ async fn main() -> Result<()> {
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        bail!("Failed to dry run command `transfer_objects`: {err}");
+        bail!("Failed to dry run the command `send_iota`: {err}");
     }
 
-    println!("Dry run of `transfer_objects` command successful!");
+    println!("Dry run of `send_iota` command successful!");
 
     Ok(())
 }

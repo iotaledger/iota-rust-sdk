@@ -1,23 +1,18 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::str::FromStr;
-
 use base64ct::Encoding;
-use eyre::Result;
+use eyre::{Result, bail};
 use iota_graphql_client::Client;
 use iota_transaction_builder::{TransactionBuilder, res};
-use iota_types::{Address, ObjectId};
+use iota_types::Address;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let client = Client::new_devnet();
 
-    let coin =
-        ObjectId::from_str("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
-
-    let sender =
-        Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    let coin = "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab".parse()?;
+    let sender = "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c".parse()?;
 
     // Recipients and amounts
     let recipients = [
@@ -42,7 +37,7 @@ async fn main() -> Result<()> {
 
     // Transfer each split coin to the corresponding recipient
     for (i, (address, _)) in recipients.iter().enumerate() {
-        builder.transfer_objects(Address::from_str(address)?, res(&labels[i]));
+        builder.transfer_objects(Address::from_hex(address)?, res(&labels[i]));
     }
 
     let txn = builder.finish().await?;
@@ -56,10 +51,10 @@ async fn main() -> Result<()> {
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        eyre::bail!("Failed to send IOTA: {err}");
+        bail!("Failed to dry run commands `split_coins`, `transfer_objects`: {err}");
     }
 
-    println!("Send IOTA dry run was successful!");
+    println!("Dry run of `split_coins`, `transfer_objects` commands successful!");
 
     Ok(())
 }
