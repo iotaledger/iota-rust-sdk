@@ -56,10 +56,7 @@ pem = [
 bls12381 = ["dep:blst", "dep:rand_core", "dep:roaring", "signature/std"]
 
 [dependencies]
-iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = [
-  "hash",
-  "serde",
-] }
+iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
 signature = "2.2"
 
 # RNG support
@@ -69,18 +66,13 @@ rand_core = { version = "0.6.4", optional = true }
 ed25519-dalek = { version = "2.1.1", optional = true }
 
 # secp256r1 support
-p256 = { version = "0.13.2", default-features = false, features = [
-  "ecdsa",
-  "std",
-], optional = true }
+p256 = { version = "0.13.2", default-features = false, features = ["ecdsa", "std"], optional = true }
 
 # passkey verification support
 sha2 = { version = "0.10.8", optional = true }
 
 # secp256k1 support
-k256 = { version = "0.13.4", default-features = false, features = [
-  "ecdsa",
-], optional = true }
+k256 = { version = "0.13.4", default-features = false, features = ["ecdsa"], optional = true }
 
 # zklogin verification support
 ark-bn254 = { version = "0.4.0", optional = true }
@@ -113,9 +105,7 @@ rand = "0.8.5"
 serde_json = { version = "1.0.128" }
 
 # proptest support in tests
-iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = [
-  "proptest",
-] }
+iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = ["proptest"] }
 proptest = { version = "1.6.0", default-features = false, features = ["std"] }
 test-strategy = "0.4.0"
 
