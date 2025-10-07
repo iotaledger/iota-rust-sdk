@@ -27,9 +27,9 @@ async def main():
 
         res = await client.dry_run_tx(txn)
         if res.error is not None:
-            raise Exception("Failed to dry run the command `send_iota`:", res.error)
+            raise Exception("Dry run failed:", res.error)
 
-        print("Dry run of `send_iota` command successful!")
+        print("Dry run successful!")
 
     except Exception as e:
         print(f"Error: {e}")

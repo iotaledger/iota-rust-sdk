@@ -38,10 +38,10 @@ fun main() = runBlocking {
         val res = builder.dryRun()
 
         if (res.error != null) {
-            throw Exception("Failed to send IOTA: ${res.error}")
+            throw Exception("Dry run failed: ${res.error}")
         }
 
-        println("Send IOTA dry run was successful!")
+        println("Dry run successful!")
     } catch (e: Exception) {
         e.printStackTrace()
     }

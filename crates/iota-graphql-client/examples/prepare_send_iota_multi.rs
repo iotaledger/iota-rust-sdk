@@ -51,10 +51,10 @@ async fn main() -> Result<()> {
     let res = client.dry_run_tx(&txn, false).await?;
 
     if let Some(err) = res.error {
-        bail!("Failed to dry run commands `split_coins`, `transfer_objects`: {err}");
+        bail!("Dry run failed: {err}");
     }
 
-    println!("Dry run of `split_coins`, `transfer_objects` commands successful!");
+    println!("Dry run successful!");
 
     Ok(())
 }

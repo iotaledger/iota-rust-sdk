@@ -34,12 +34,12 @@ func main() {
 	skipChecks := bool(false)
 	res, err := client.DryRunTx(txn, &skipChecks)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to dry run the command `send_iota`: %v", err)
+		log.Fatalf("Dry run failed: %v", err)
 	}
 
 	if res.Error != nil {
-		log.Fatalf("Failed to dry run the command `send_iota`: %v", *res.Error)
+		log.Fatalf("Dry run failed: %v", *res.Error)
 	}
 
-	log.Print("Dry run of `send_iota` command successful!")
+	log.Print("Dry run successful!")
 }

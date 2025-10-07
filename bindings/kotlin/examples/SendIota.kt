@@ -29,10 +29,10 @@ fun main() = runBlocking {
         val res = builder.dryRun()
 
         if (res.error != null) {
-            throw Exception("Failed to dry run the command `send_iota`: ${res.error}")
+            throw Exception("Dry run failed: ${res.error}")
         }
 
-        println("Dry run of `send_iota` command successful!")
+        println("Dry run successful!")
     } catch (e: Exception) {
         e.printStackTrace()
     }

@@ -10,11 +10,11 @@ async def main():
     try:
         client = GraphQlClient.new_devnet()
 
-        from_address = Address.from_hex(
+        sender = Address.from_hex(
             "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
         )
 
-        to_address = Address.from_hex(
+        recipient = Address.from_hex(
             "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
         )
 
@@ -22,9 +22,9 @@ async def main():
             "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
         )
 
-        builder = await TransactionBuilder.init(from_address, client)
+        builder = await TransactionBuilder.init(sender, client)
         builder.transfer_objects(
-            to_address,
+            recipient,
             [PtbArgument.object_id(coin_id)],
         )
 
@@ -33,11 +33,12 @@ async def main():
         print("Signing Digest:", hex_encode(txn.signing_digest()))
         print("Txn Bytes:", base64_encode(txn.bcs_serialize()))
 
+        print("Sending ")
         res = await client.dry_run_tx(txn)
         if res.error is not None:
-            raise Exception("Failed to send IOTA:", res.error)
+            raise Exception("Dry run failed:", res.error)
 
-        print("Send IOTA dry run was successful!")
+        print("Dry run successful!")
 
     except Exception as e:
         print(f"Error: {e}")

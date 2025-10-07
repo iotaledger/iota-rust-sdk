@@ -36,12 +36,12 @@ func main() {
 	skipChecks := bool(false)
 	res, err := client.DryRunTx(txn, &skipChecks)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to send IOTA: %v", err)
+		log.Fatalf("Dry run failed: %v", err)
 	}
 
 	if res.Error != nil {
-		log.Fatalf("Failed to send IOTA: %v", *res.Error)
+		log.Fatalf("Dry run failed: %v", *res.Error)
 	}
 
-	log.Print("Send IOTA dry run was successful!")
+	log.Print("Dry run successful!")
 }

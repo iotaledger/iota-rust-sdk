@@ -8,13 +8,10 @@ import asyncio
 
 async def main():
     client = GraphQlClient.new_devnet()
+
     sender = Address.from_hex(
         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
     )
-    coin_id = ObjectId.from_hex(
-        "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
-    )
-
     recipients = [
         (
             "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11",
@@ -25,6 +22,10 @@ async def main():
             2_000_000_000,
         ),
     ]
+
+    coin_id = ObjectId.from_hex(
+        "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
+    )
 
     amounts = [r[1] for r in recipients]
     labels = [f"coin{i}" for i in range(len(recipients))]
@@ -43,9 +44,9 @@ async def main():
     res = await client.dry_run_tx(txn)
 
     if res.error is not None:
-        raise Exception(f"Failed to send IOTA: {res.error}")
+        raise Exception("Dry run failed:", res.error)
 
-    print("Send IOTA dry run was successful!")
+    print("Dry run successful!")
 
 
 if __name__ == "__main__":
