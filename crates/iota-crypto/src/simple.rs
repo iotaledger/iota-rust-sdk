@@ -77,15 +77,11 @@ pub use keypair::{SimpleKeypair, SimpleVerifyingKey};
     doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 mod keypair {
-    #[cfg(feature = "bech32")]
-    use bech32::Hrp;
     use iota_sdk_types::{
         MultisigMemberPublicKey, SignatureScheme, SimpleSignature, UserSignature,
     };
     use signature::{Signer, Verifier};
 
-    #[cfg(feature = "bech32")]
-    use crate::IOTA_PRIV_KEY_PREFIX;
     use crate::SignatureError;
 
     #[derive(Debug, Clone)]
@@ -214,40 +210,6 @@ mod keypair {
                     "unsupported signature scheme for SimpleKeypair",
                 )),
             }
-        }
-
-        /// Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
-        /// "iotaprivkey" to a string. Note that the pubkey is not encoded.
-        #[cfg(feature = "bech32")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
-        pub fn to_bech32(&self) -> Result<String, SignatureError> {
-            let hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
-                .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
-            let bytes = self.to_bytes();
-
-            bech32::encode::<bech32::Bech32>(hrp, &bytes)
-                .map_err(|e| SignatureError::from_source(format!("bech32 encoding failed: {e}")))
-        }
-
-        /// Decode a SimpleKeypair from `flag || privkey` in Bech32 starting
-        /// with "iotaprivkey" to SimpleKeypair. The public key is
-        /// computed directly from the private key bytes.
-        #[cfg(feature = "bech32")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
-        pub fn from_bech32(value: &str) -> Result<Self, SignatureError> {
-            let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
-                .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
-
-            let (hrp, data) = bech32::decode(value)
-                .map_err(|e| SignatureError::from_source(format!("bech32 decoding failed: {e}")))?;
-
-            if hrp != expected_hrp {
-                return Err(SignatureError::from_source(format!(
-                    "invalid HRP: expected {IOTA_PRIV_KEY_PREFIX}, got {hrp}"
-                )));
-            }
-
-            Self::from_bytes(&data)
         }
 
         #[cfg(feature = "pem")]
@@ -577,12 +539,24 @@ mod keypair {
     }
 }
 
+#[cfg(feature = "bech32")]
+impl crate::Bech32 for SimpleKeypair {
+    fn to_flagged_bytes(&self) -> Vec<u8> {
+        self.to_bytes()
+    }
+
+    fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, crate::SignatureError> {
+        Self::from_bytes(bytes)
+    }
+}
+
 #[cfg(test)]
 mod test {
     use test_strategy::proptest;
 
     use super::*;
     use crate::{
+        Bech32,
         ed25519::{Ed25519PrivateKey, Ed25519VerifyingKey},
         secp256k1::{Secp256k1PrivateKey, Secp256k1VerifyingKey},
         secp256r1::{Secp256r1PrivateKey, Secp256r1VerifyingKey},

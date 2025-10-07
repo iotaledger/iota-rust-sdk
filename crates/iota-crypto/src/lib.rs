@@ -159,3 +159,55 @@ impl<T: Verifier<UserSignature>> IotaVerifier for T {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
 /// Bech32 prefix for IOTA private keys
 pub const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
+
+#[cfg(feature = "bech32")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
+/// Trait for types that support Bech32 encoding/decoding
+pub trait Bech32 {
+    /// Returns the bytes with signature scheme flag prepended
+    fn to_flagged_bytes(&self) -> Vec<u8>;
+
+    /// Creates an instance from bytes that include the signature scheme flag
+    fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, SignatureError>
+    where
+        Self: Sized;
+
+    /// Encode this instance in Bech32 format with "iotaprivkey" prefix
+    fn to_bech32(&self) -> Result<String, SignatureError> {
+        use bech32::Hrp;
+
+        let hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
+            .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
+
+        let bytes = self.to_flagged_bytes();
+
+        bech32::encode::<bech32::Bech32>(hrp, &bytes)
+            .map_err(|e| SignatureError::from_source(format!("bech32 encoding failed: {e}")))
+    }
+
+    /// Decode an instance from Bech32 format with "iotaprivkey" prefix
+    fn from_bech32(value: &str) -> Result<Self, SignatureError>
+    where
+        Self: Sized,
+    {
+        use bech32::Hrp;
+
+        let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
+            .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
+
+        let (hrp, data) = bech32::decode(value)
+            .map_err(|e| SignatureError::from_source(format!("bech32 decoding failed: {e}")))?;
+
+        if hrp != expected_hrp {
+            return Err(SignatureError::from_source(format!(
+                "invalid HRP: expected {IOTA_PRIV_KEY_PREFIX}, got {hrp}"
+            )));
+        }
+
+        if data.is_empty() {
+            return Err(SignatureError::from_source("empty bech32 data"));
+        }
+
+        Self::from_flagged_bytes(&data)
+    }
+}

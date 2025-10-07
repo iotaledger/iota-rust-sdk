@@ -1,14 +1,13 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_crypto::{Signer, Verifier};
+use iota_crypto::{Bech32, Signer, Verifier};
 use iota_types::SignatureScheme;
 
 use crate::{
     error::Result,
     types::{crypto::multisig::MultisigMemberPublicKey, signature::SimpleSignature},
 };
-
 #[derive(derive_more::From, uniffi::Object)]
 pub struct SimpleVerifier(iota_crypto::simple::SimpleVerifier);
 

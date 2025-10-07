@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_crypto::{Signer, Verifier};
+use iota_crypto::{Bech32, Signer, Verifier};
 use iota_types::SignatureScheme;
 use rand::rngs::OsRng;
 

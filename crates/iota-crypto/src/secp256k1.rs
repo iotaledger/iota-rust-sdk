@@ -2,8 +2,6 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-#[cfg(feature = "bech32")]
-use bech32::Hrp;
 use iota_sdk_types::{
     Secp256k1PublicKey, Secp256k1Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
@@ -13,8 +11,6 @@ use k256::{
 };
 use signature::{Signer, Verifier};
 
-#[cfg(feature = "bech32")]
-use crate::IOTA_PRIV_KEY_PREFIX;
 use crate::SignatureError;
 
 #[derive(Clone, Eq, PartialEq)]
@@ -119,44 +115,27 @@ impl Secp256k1PrivateKey {
             .map(|pem| (*pem).to_owned())
     }
 
-    #[cfg(feature = "bech32")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
-    /// Encode this private key as `flag || privkey` in Bech32 starting with
-    /// "iotaprivkey" to a string.
-    pub fn to_bech32(&self) -> Result<String, SignatureError> {
-        let hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
-            .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
+    #[cfg(feature = "pem")]
+    pub(crate) fn from_k256(private_key: SigningKey) -> Self {
+        Self(private_key)
+    }
+}
 
+#[cfg(feature = "bech32")]
+impl crate::Bech32 for Secp256k1PrivateKey {
+    fn to_flagged_bytes(&self) -> Vec<u8> {
         let mut bytes = Vec::new();
         bytes.push(SignatureScheme::Secp256k1.to_u8());
         bytes.extend_from_slice(&self.to_bytes());
-
-        bech32::encode::<bech32::Bech32m>(hrp, &bytes)
-            .map_err(|e| SignatureError::from_source(format!("bech32 encoding failed: {e}")))
+        bytes
     }
 
-    #[cfg(feature = "bech32")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
-    /// Decode a private key from `flag || privkey` in Bech32 starting with
-    /// "iotaprivkey".
-    pub fn from_bech32(value: &str) -> Result<Self, SignatureError> {
-        let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
-            .map_err(|e| SignatureError::from_source(format!("invalid HRP: {e}")))?;
-
-        let (hrp, data) = bech32::decode(value)
-            .map_err(|e| SignatureError::from_source(format!("bech32 decoding failed: {e}")))?;
-
-        if hrp != expected_hrp {
-            return Err(SignatureError::from_source(format!(
-                "invalid HRP: expected {IOTA_PRIV_KEY_PREFIX}, got {hrp}"
-            )));
+    fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, SignatureError> {
+        if bytes.is_empty() {
+            return Err(SignatureError::from_source("empty flagged bytes"));
         }
 
-        if data.is_empty() {
-            return Err(SignatureError::from_source("empty bech32 data"));
-        }
-
-        let flag = SignatureScheme::from_byte(data[0])
+        let flag = SignatureScheme::from_byte(bytes[0])
             .map_err(|e| SignatureError::from_source(format!("invalid signature scheme: {e:?}")))?;
 
         if flag != SignatureScheme::Secp256k1 {
@@ -165,7 +144,7 @@ impl Secp256k1PrivateKey {
             )));
         }
 
-        let key_bytes = &data[1..];
+        let key_bytes = &bytes[1..];
         if key_bytes.len() != Self::LENGTH {
             return Err(SignatureError::from_source("invalid secp256k1 key length"));
         }
@@ -173,11 +152,6 @@ impl Secp256k1PrivateKey {
         let mut arr = [0u8; Self::LENGTH];
         arr.copy_from_slice(key_bytes);
         Self::new(arr)
-    }
-
-    #[cfg(feature = "pem")]
-    pub(crate) fn from_k256(private_key: SigningKey) -> Self {
-        Self(private_key)
     }
 }
 
