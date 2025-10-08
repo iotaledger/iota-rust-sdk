@@ -5,8 +5,8 @@ use std::str::FromStr;
 
 use eyre::{OptionExt, Result};
 use iota_graphql_client::Client;
-use iota_transaction_builder::{Function, TransactionBuilder, unresolved::Input};
-use iota_types::{Address, Identifier, ObjectId};
+use iota_transaction_builder::{SharedMut, TransactionBuilder};
+use iota_types::{Address, ObjectId};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -28,51 +28,19 @@ async fn main() -> Result<()> {
         validator.name.as_deref().unwrap_or("with no name")
     );
 
-    let coin = client
-        .object(
+    let mut builder = TransactionBuilder::new(my_address).with_client(client);
+
+    builder
+        .move_call(Address::THREE, "iota_system", "request_add_stake")
+        .arguments((
+            SharedMut(ObjectId::from_str("0x5")?),
             ObjectId::from_str(
                 "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
             )?,
-            None,
-        )
-        .await?
-        .ok_or_eyre("missing object")?;
-    let gas_coin = client
-        .object(
-            ObjectId::from_str(
-                "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
-            )?,
-            None,
-        )
-        .await?
-        .ok_or_eyre("missing gas coin")?;
+            &validator.address.address,
+        ));
 
-    let mut builder = TransactionBuilder::new();
-    let inputs = vec![
-        builder.input(Input::shared(ObjectId::from_str("0x5")?, 1, true)),
-        builder.input(Input::from(&coin).with_owned_kind()),
-        builder.input(Input::pure(&validator.address.address)?),
-    ];
-    builder.move_call(
-        Function::new(
-            Address::THREE,
-            Identifier::new("iota_system")?,
-            Identifier::new("request_add_stake")?,
-            Default::default(),
-        ),
-        inputs,
-    );
-    builder.set_sender(my_address);
-    builder.set_gas_budget(50000000);
-    builder.set_gas_price(
-        client
-            .reference_gas_price(None)
-            .await?
-            .ok_or_eyre("missing ref gas price")?,
-    );
-    builder.add_gas_objects([Input::from(&gas_coin).with_owned_kind()]);
-    let txn = builder.finish()?;
-    let res = client.dry_run_tx(&txn, false).await?;
+    let res = builder.dry_run(false).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to stake: {err}");

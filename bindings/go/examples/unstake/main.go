@@ -22,67 +22,27 @@ func main() {
 	}
 	stakedIota := stakedIotas.Data[0]
 
-	gasCoinType := sdk.StructTagGasCoin().String()
-	gasCoins, err := client.Objects(&sdk.ObjectFilter{TypeTag: &gasCoinType, Owner: stakedIota.Owner().AsAddressOpt()}, nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas coin: %v", err)
-	}
-	if len(gasCoins.Data) == 0 {
-		log.Fatal("No gas coins found")
-	}
-	gasCoin := gasCoins.Data[0]
+	iotaSystemAddress, _ := sdk.AddressFromHex("0x3")
 
-	iotaSystemAddress, err := sdk.AddressFromHex("0x3")
-	if err != nil {
-		log.Fatalf("Failed to parse address: %v", err)
-	}
+	iotaSystemId, _ := sdk.ObjectIdFromHex("0x5")
 
-	iotaSystemId, err := sdk.ObjectIdFromHex("0x5")
-	if err != nil {
-		log.Fatalf("Failed to parse object ID: %v", err)
-	}
+	iotaSystemModule, _ := sdk.NewIdentifier("iota_system")
 
-	iotaSystemModule, err := sdk.NewIdentifier("iota_system")
-	if err != nil {
-		log.Fatalf("Failed to parse identifier: %v", err)
-	}
+	requestAddStakeFn, _ := sdk.NewIdentifier("request_withdraw_stake")
 
-	requestAddStakeFn, err := sdk.NewIdentifier("request_withdraw_stake")
-	if err != nil {
-		log.Fatalf("Failed to parse identifier: %v", err)
-	}
-
-	builder := sdk.NewTransactionBuilder()
-	inputs := []*sdk.Argument{
-		builder.Input(sdk.UnresolvedInputNewShared(iotaSystemId, 1, true)),
-		builder.Input(sdk.UnresolvedInputFromObject(stakedIota).WithOwnedKind()),
-	}
+	builder := sdk.TransactionBuilderInit(stakedIota.Owner().AsAddress(), client)
 	builder.MoveCall(
-		sdk.Function{
-			Package:  iotaSystemAddress,
-			Module:   iotaSystemModule,
-			Function: requestAddStakeFn,
-			TypeArgs: []*sdk.TypeTag{},
-		},
-		inputs,
+		iotaSystemAddress,
+		iotaSystemModule,
+		requestAddStakeFn,
+		[]*sdk.PtbArgument{sdk.PtbArgumentSharedMut(iotaSystemId), sdk.PtbArgumentObjectId(stakedIota.ObjectId())},
+		nil,
+		nil,
 	)
-	builder.SetSender(gasCoin.Owner().AsAddress())
-	builder.SetGasBudget(50000000)
-	gasPrice, err := client.ReferenceGasPrice(nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas price: %v", err)
-	}
-	builder.SetGasPrice(*gasPrice)
-	builder.AddGasObjects([]*sdk.UnresolvedInput{sdk.UnresolvedInputFromObject(gasCoin).WithOwnedKind()})
 
-	txn, err := builder.Finish()
-	if err != nil {
-		log.Fatalf("Failed to create transaction: %v", err)
-	}
-
-	res, err := client.DryRunTx(txn, nil)
+	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas price: %v", err)
+		log.Fatalf("Failed to unstake: %v", err)
 	}
 
 	if res.Error != nil {

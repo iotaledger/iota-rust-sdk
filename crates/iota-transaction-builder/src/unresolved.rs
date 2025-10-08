@@ -1,395 +1,235 @@
-// Copyright (c) Mysten Labs, Inc.
-// Modifications Copyright (c) 2025 IOTA Stiftung
+// Copyright 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use base64ct::Encoding;
-use iota_types::{Address, Command, Digest, ObjectId, TransactionExpiration, Version};
+//! Types representing unresolved data in a PTB.
 
-// A potentially unresolved user transaction. Note that one can construct a
-// fully resolved transaction using this type by providing all the required
-// data.
-#[derive(serde::Serialize, serde::Deserialize)]
-#[serde(rename = "UnresolvedTransaction")]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-pub struct Transaction {
-    #[serde(flatten)]
-    pub ptb: ProgrammableTransaction,
-    pub sender: Address,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub gas_payment: Option<GasPayment>,
-    pub expiration: TransactionExpiration,
-}
+use std::collections::HashMap;
 
-#[derive(serde::Serialize, serde::Deserialize)]
-#[serde(rename = "UnresolvedProgrammableTransaction")]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-pub struct ProgrammableTransaction {
-    pub inputs: Vec<Input>,
-    pub commands: Vec<Command>,
-}
+use iota_types::{Identifier, ObjectId, ObjectReference, TypeTag};
 
-#[derive(serde::Serialize, serde::Deserialize)]
-#[serde(rename = "UnresolvedGasPayment")]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-pub struct GasPayment {
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub objects: Vec<ObjectReference>,
-    pub owner: Address,
-    #[serde(
-        with = "OptionReadableDisplay",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
-    #[cfg_attr(feature = "schemars", schemars(with = "Option<_schemars::U64>"))]
-    pub price: Option<u64>,
-    #[serde(
-        with = "OptionReadableDisplay",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
-    #[cfg_attr(feature = "schemars", schemars(with = "Option<_schemars::U64>"))]
-    pub budget: Option<u64>,
-}
+/// An identifier indicating the unresolved index of an input.
+pub type InputId = usize;
 
-#[derive(Clone, Debug)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[derive(serde::Serialize, serde::Deserialize)]
-#[serde(rename = "UnresolvedObjectReference")]
-pub struct ObjectReference {
-    pub object_id: ObjectId,
-    #[serde(
-        with = "OptionReadableDisplay",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
-    #[cfg_attr(feature = "schemars", schemars(with = "Option<_schemars::U64>"))]
-    pub version: Option<Version>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub digest: Option<Digest>,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[derive(serde::Serialize, serde::Deserialize)]
-#[serde(rename = "UnresolvedInputKind")]
-#[serde(rename_all = "snake_case")]
-pub enum InputKind {
-    Pure,
-    Shared,
-    Receiving,
-    ImmutableOrOwned,
-    Literal,
-}
-
-/// A potentially unresolved transaction input. Note that one can construct a
-/// fully resolved input using the provided constructors, but this struct is
-/// also useful when the input data is not complete.
-///
-/// If used in the context of transaction builder, make sure to call
-/// `tx.resolve` function on the transaction builder to resolve all unresolved
-/// inputs.
-#[derive(Clone, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[serde(rename = "UnresolvedInput")]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Input {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub kind: Option<InputKind>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Value>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    /// Unique identifier for this object.
-    pub object_id: Option<ObjectId>,
-    /// Either the `initial_shared_version` if object is a shared object, or the
-    /// `version` if this is an owned object.
-    /// The semantics of version can change depending on whether the object is
-    /// shared or not. For shared objects, this is the initial version the
-    /// object was shared at. For all other objects, this is the version of
-    /// the object.
-    #[serde(
-        with = "OptionReadableDisplay",
-        default,
-        skip_serializing_if = "Option::is_none",
-        alias = "initial_shared_version"
-    )]
-    #[cfg_attr(feature = "schemars", schemars(with = "Option<_schemars::U64>"))]
-    pub version: Option<Version>,
-    /// The digest of this object. This field is only relevant for
-    /// owned/immutable/receiving inputs.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub digest: Option<Digest>,
-    /// Whether this object is mutable. This field is only relevant for shared
-    /// objects.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub mutable: Option<bool>,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema), schemars(untagged))]
-#[derive(serde::Serialize, serde::Deserialize)]
-#[serde(rename = "UnresolvedValue")]
-#[serde(try_from = "serde_json::Value", into = "serde_json::Value")]
-pub enum Value {
-    Null,
-    Bool(bool),
-    Number(u64),
-    String(String),
-    Array(Vec<Value>),
+    pub kind: InputKind,
+    pub is_gas: bool,
 }
 
 impl Input {
-    /// Return an owned kind of object with all required fields.
-    pub fn owned(object_id: ObjectId, version: u64, digest: Digest) -> Self {
-        Self {
-            kind: Some(InputKind::ImmutableOrOwned),
-            object_id: Some(object_id),
-            version: Some(version),
-            digest: Some(digest),
-            ..Default::default()
-        }
-    }
-
-    /// Return an immutable kind of object with all required fields.
-    pub fn immutable(object_id: ObjectId, version: u64, digest: Digest) -> Self {
-        Self {
-            kind: Some(InputKind::ImmutableOrOwned),
-            object_id: Some(object_id),
-            version: Some(version),
-            digest: Some(digest),
-            ..Default::default()
-        }
-    }
-
-    /// Return a receiving kind of object with all required fields.
-    pub fn receiving(object_id: ObjectId, version: u64, digest: Digest) -> Self {
-        Self {
-            kind: Some(InputKind::Receiving),
-            object_id: Some(object_id),
-            version: Some(version),
-            digest: Some(digest),
-            ..Default::default()
-        }
-    }
-
-    /// Return a shared object.
-    /// - `mutable` controls whether a command can accept the object by value or
-    ///   mutable reference.
-    /// - `initial_shared_version` is the first version the object was shared
-    ///   at.
-    pub fn shared(object_id: ObjectId, initial_shared_version: u64, mutable: bool) -> Self {
-        Self {
-            kind: Some(InputKind::Shared),
-            object_id: Some(object_id),
-            version: Some(initial_shared_version),
-            mutable: Some(mutable),
-            ..Default::default()
-        }
-    }
-
-    pub fn pure<T: serde::Serialize>(value: &T) -> Result<Self, crate::error::Error> {
-        Ok(Self {
-            kind: Some(InputKind::Pure),
-            value: Some(Value::String(base64ct::Base64::encode_string(
-                &bcs::to_bytes(value).map_err(crate::Error::Bcs)?,
-            ))),
-            ..Default::default()
-        })
-    }
-
-    pub fn pure_bytes(bytes: &[u8]) -> Self {
-        Self {
-            kind: Some(InputKind::Pure),
-            value: Some(Value::String(base64ct::Base64::encode_string(bytes))),
-            ..Default::default()
-        }
-    }
-
-    /// Return an object with only its unique identifier.
-    pub fn by_id(object_id: ObjectId) -> Self {
-        Self {
-            object_id: Some(object_id),
-            ..Default::default()
-        }
-    }
-
-    /// Set the object kind to immutable.
-    pub fn with_immutable_kind(self) -> Self {
-        Self {
-            kind: Some(InputKind::ImmutableOrOwned),
-            ..self
-        }
-    }
-
-    /// Set the object kind to owned.
-    pub fn with_owned_kind(self) -> Self {
-        Self {
-            kind: Some(InputKind::ImmutableOrOwned),
-            ..self
-        }
-    }
-
-    /// Set the object kind to receiving.
-    pub fn with_receiving_kind(self) -> Self {
-        Self {
-            kind: Some(InputKind::Receiving),
-            ..self
-        }
-    }
-
-    /// Set the object kind to shared.
-    pub fn with_shared_kind(self) -> Self {
-        Self {
-            kind: Some(InputKind::Shared),
-            ..self
-        }
-    }
-
-    /// Set the specified version.
-    pub fn with_version(self, version: u64) -> Self {
-        Self {
-            version: Some(version),
-            ..self
-        }
-    }
-
-    /// Set the specified digest.
-    pub fn with_digest(self, digest: Digest) -> Self {
-        Self {
-            digest: Some(digest),
-            ..self
-        }
-    }
-
-    // Shared fields
-
-    /// Set the initial shared version.
-    pub fn with_initial_shared_version(self, initial_version: u64) -> Self {
-        Self {
-            kind: Some(InputKind::Shared),
-            version: Some(initial_version),
-            ..self
-        }
-    }
-
-    /// Make the object shared and set `mutable` to true when the input is used
-    /// by value.
-    pub fn by_val(self) -> Self {
-        Self {
-            kind: Some(InputKind::Shared),
-            mutable: Some(true),
-            ..self
-        }
-    }
-
-    /// Make the object shared and set `mutable` to false when the input is used
-    /// by reference.
-    pub fn by_ref(self) -> Self {
-        Self {
-            kind: Some(InputKind::Shared),
-            mutable: Some(false),
-            ..self
-        }
-    }
-
-    /// Make the object shared and set `mutable` to true when the input is used
-    /// by mutable reference.
-    pub fn by_mut(self) -> Self {
-        Self {
-            kind: Some(InputKind::Shared),
-            mutable: Some(true),
-            ..self
+    pub fn object_id(&self) -> Option<&ObjectId> {
+        match &self.kind {
+            InputKind::ImmutableOrOwned(object_id)
+            | InputKind::Shared { object_id, .. }
+            | InputKind::Receiving(object_id) => Some(object_id),
+            InputKind::Input(input) => match input {
+                iota_types::Input::Pure { .. } => None,
+                iota_types::Input::ImmutableOrOwned(ObjectReference { object_id, .. })
+                | iota_types::Input::Shared { object_id, .. }
+                | iota_types::Input::Receiving(ObjectReference { object_id, .. }) => {
+                    Some(object_id)
+                }
+            },
         }
     }
 }
 
-impl TryFrom<serde_json::Value> for Value {
-    type Error = &'static str;
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum InputKind {
+    ImmutableOrOwned(ObjectId),
+    Shared { object_id: ObjectId, mutable: bool },
+    Receiving(ObjectId),
+    Input(iota_types::Input),
+}
 
-    fn try_from(value: serde_json::Value) -> Result<Self, Self::Error> {
-        let v = match value {
-            serde_json::Value::Null => Self::Null,
-            serde_json::Value::Bool(b) => Self::Bool(b),
-            serde_json::Value::Number(n) => {
-                Self::Number(n.as_u64().ok_or("expected unsigned integer")?)
+#[derive(Debug, Clone, derive_more::From)]
+pub enum Command {
+    MoveCall(MoveCall),
+    TransferObjects(TransferObjects),
+    SplitCoins(SplitCoins),
+    MergeCoins(MergeCoins),
+    Publish(Publish),
+    MakeMoveVector(MakeMoveVector),
+    Upgrade(Upgrade),
+}
+
+impl Command {
+    pub fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::Command {
+        match self {
+            Command::MoveCall(move_call) => {
+                iota_types::Command::MoveCall(move_call.resolve(input_map))
             }
-            serde_json::Value::String(s) => Self::String(s),
-            serde_json::Value::Array(a) => Self::Array(
-                a.into_iter()
-                    .map(Self::try_from)
-                    .collect::<Result<_, _>>()?,
-            ),
-            serde_json::Value::Object(_) => return Err("objects are not supported"),
-        };
-
-        Ok(v)
-    }
-}
-
-impl From<Value> for serde_json::Value {
-    fn from(value: Value) -> Self {
-        match value {
-            Value::Null => Self::Null,
-            Value::Bool(b) => Self::Bool(b),
-            Value::Number(n) => Self::Number(n.into()),
-            Value::String(s) => Self::String(s),
-            Value::Array(a) => Self::Array(a.into_iter().map(Into::into).collect()),
-        }
-    }
-}
-
-impl From<&iota_types::Object> for Input {
-    fn from(object: &iota_types::Object) -> Self {
-        use iota_types::Owner;
-
-        let input = Input::by_id(object.object_id())
-            .with_digest(object.digest())
-            .with_version(object.version());
-        match object.owner() {
-            Owner::Address(_) => input,
-            Owner::Object(_) => input,
-            Owner::Shared(at_version) => input.with_initial_shared_version(*at_version),
-            Owner::Immutable => input.with_immutable_kind(),
-        }
-    }
-}
-
-impl From<ObjectId> for Input {
-    fn from(object_id: ObjectId) -> Self {
-        Input::by_id(object_id)
-    }
-}
-
-pub(crate) type OptionReadableDisplay =
-    ::serde_with::As<Option<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
-
-#[cfg(feature = "schemars")]
-mod _schemars {
-    use schemars::{
-        JsonSchema,
-        schema::{InstanceType, Metadata, SchemaObject},
-    };
-
-    pub(crate) struct U64;
-
-    impl JsonSchema for U64 {
-        fn schema_name() -> String {
-            "u64".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 64-bit unsigned integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("u64".to_owned()),
-                ..Default::default()
+            Command::TransferObjects(transfer_objects) => {
+                iota_types::Command::TransferObjects(transfer_objects.resolve(input_map))
             }
-            .into()
+            Command::SplitCoins(split_coins) => {
+                iota_types::Command::SplitCoins(split_coins.resolve(input_map))
+            }
+            Command::MergeCoins(merge_coins) => {
+                iota_types::Command::MergeCoins(merge_coins.resolve(input_map))
+            }
+            Command::Publish(publish) => iota_types::Command::Publish(publish.resolve()),
+            Command::MakeMoveVector(make_move_vector) => {
+                iota_types::Command::MakeMoveVector(make_move_vector.resolve(input_map))
+            }
+            Command::Upgrade(upgrade) => iota_types::Command::Upgrade(upgrade.resolve(input_map)),
         }
+    }
+}
 
-        fn is_referenceable() -> bool {
-            false
+#[derive(Debug, Clone)]
+pub struct MoveCall {
+    pub package: ObjectId,
+    pub module: Identifier,
+    pub function: Identifier,
+    pub type_arguments: Vec<TypeTag>,
+    pub arguments: Vec<Argument>,
+}
+
+impl MoveCall {
+    fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::MoveCall {
+        iota_types::MoveCall {
+            package: self.package,
+            module: self.module,
+            function: self.function,
+            type_arguments: self.type_arguments,
+            arguments: self
+                .arguments
+                .into_iter()
+                .map(|c| c.resolve(input_map))
+                .collect(),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Upgrade {
+    pub modules: Vec<Vec<u8>>,
+    pub dependencies: Vec<ObjectId>,
+    pub package: ObjectId,
+    pub ticket: Argument,
+}
+
+impl Upgrade {
+    fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::Upgrade {
+        iota_types::Upgrade {
+            modules: self.modules,
+            dependencies: self.dependencies,
+            package: self.package,
+            ticket: self.ticket.resolve(input_map),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct MakeMoveVector {
+    pub type_: Option<TypeTag>,
+    pub elements: Vec<Argument>,
+}
+
+impl MakeMoveVector {
+    fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::MakeMoveVector {
+        iota_types::MakeMoveVector {
+            type_: self.type_,
+            elements: self
+                .elements
+                .into_iter()
+                .map(|c| c.resolve(input_map))
+                .collect(),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct TransferObjects {
+    pub objects: Vec<Argument>,
+    pub address: Argument,
+}
+
+impl TransferObjects {
+    fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::TransferObjects {
+        iota_types::TransferObjects {
+            objects: self
+                .objects
+                .into_iter()
+                .map(|c| c.resolve(input_map))
+                .collect(),
+            address: self.address.resolve(input_map),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct SplitCoins {
+    pub coin: Argument,
+    pub amounts: Vec<Argument>,
+}
+
+impl SplitCoins {
+    fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::SplitCoins {
+        iota_types::SplitCoins {
+            coin: self.coin.resolve(input_map),
+            amounts: self
+                .amounts
+                .into_iter()
+                .map(|c| c.resolve(input_map))
+                .collect(),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct MergeCoins {
+    pub coin: Argument,
+    pub coins_to_merge: Vec<Argument>,
+}
+
+impl MergeCoins {
+    fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::MergeCoins {
+        iota_types::MergeCoins {
+            coin: self.coin.resolve(input_map),
+            coins_to_merge: self
+                .coins_to_merge
+                .into_iter()
+                .map(|c| c.resolve(input_map))
+                .collect(),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Publish {
+    pub modules: Vec<Vec<u8>>,
+    pub dependencies: Vec<ObjectId>,
+}
+
+impl Publish {
+    fn resolve(self) -> iota_types::Publish {
+        iota_types::Publish {
+            modules: self.modules,
+            dependencies: self.dependencies,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum Argument {
+    Gas,
+    Input(InputId),
+    Result(u16),
+    NestedResult(u16, u16),
+}
+
+impl Argument {
+    fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::Argument {
+        match self {
+            Argument::Gas => iota_types::Argument::Gas,
+            Argument::Input(i) => input_map
+                .get(&i)
+                .map(|i| iota_types::Argument::Input(*i))
+                .unwrap_or(iota_types::Argument::Gas),
+            Argument::Result(i) => iota_types::Argument::Result(i),
+            Argument::NestedResult(i1, i2) => iota_types::Argument::NestedResult(i1, i2),
         }
     }
 }

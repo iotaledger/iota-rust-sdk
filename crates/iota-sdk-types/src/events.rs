@@ -42,19 +42,15 @@ pub struct Event {
     /// Package id of the top-level function invoked by a MoveCall command which
     /// triggered this event to be emitted.
     pub package_id: ObjectId,
-
     /// Module name of the top-level function invoked by a MoveCall command
     /// which triggered this event to be emitted.
     pub module: Identifier,
-
     /// Address of the account that sent the transaction where this event was
     /// emitted.
     pub sender: Address,
-
     /// The type of the event emitted
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
     pub type_: StructTag,
-
     /// BCS serialized bytes of the event
     #[cfg_attr(
         feature = "serde",
@@ -74,10 +70,8 @@ pub struct Event {
 pub struct BalanceChange {
     /// Owner of the balance change
     pub address: Address,
-
     /// Type of the Coin
     pub coin_type: TypeTag,
-
     /// The amount indicate the balance value changes.
     ///
     /// A negative amount means spending coin value and positive means receiving

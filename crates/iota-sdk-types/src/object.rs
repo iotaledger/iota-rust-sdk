@@ -19,7 +19,7 @@ pub type Version = u64;
 /// ```text
 /// object-ref = object-id u64 digest
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde_derive::Serialize, serde_derive::Deserialize)
@@ -28,13 +28,13 @@ pub type Version = u64;
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ObjectReference {
     /// The object id of this object.
-    object_id: ObjectId,
+    pub object_id: ObjectId,
     /// The version of this object.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    version: Version,
+    pub version: Version,
     /// The digest of this object.
-    digest: Digest,
+    pub digest: Digest,
 }
 
 impl ObjectReference {
@@ -187,7 +187,6 @@ impl ObjectData {
 pub struct MovePackage {
     /// Address or Id of this package
     pub id: ObjectId,
-
     /// Most move packages are uniquely identified by their ID (i.e. there is
     /// only one version per ID), but the version is still stored because
     /// one package may be an upgrade of another (at a different ID), in
@@ -201,7 +200,6 @@ pub struct MovePackage {
     /// ID, and they are always loaded at their latest version.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
-
     /// Set of modules defined by this package
     #[cfg_attr(
         feature = "serde",
@@ -214,11 +212,9 @@ pub struct MovePackage {
         )
     )]
     pub modules: BTreeMap<Identifier, Vec<u8>>,
-
     /// Maps struct/module to a package version where it was first defined,
     /// stored as a vector for simple serialization and deserialization.
     pub type_origin_table: Vec<TypeOrigin>,
-
     /// For each dependency, maps original package ID to the info about the
     /// (upgraded) dependency version that this package is using
     #[cfg_attr(
@@ -699,15 +695,12 @@ mod serialization {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         owner: Owner,
-
         #[serde(with = "::serde_with::As::<ReadableObjectType>")]
         #[serde(rename = "type")]
         #[cfg_attr(feature = "schemars", schemars(with = "String"))]
         type_: ObjectType,
-
         #[serde(flatten)]
         data: ReadableObjectData,
-
         previous_transaction: Digest,
         #[serde(with = "crate::_serde::ReadableDisplay")]
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -903,12 +896,10 @@ mod serialization {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         owner: Owner,
-
         #[serde(with = "::serde_with::As::<ReadableObjectType>")]
         #[serde(rename = "type")]
         #[cfg_attr(feature = "schemars", schemars(with = "String"))]
         type_: ObjectType,
-
         #[serde(flatten)]
         data: ReadableObjectData,
     }

@@ -1,0 +1,57 @@
+[package]
+name = "iota-sdk"
+version = "3.0.0"
+authors = ["IOTA Foundation <info@iota.org>"]
+edition = "2021"
+license = "Apache-2.0"
+description = "The official SDK for IOTA"
+
+[features]
+default = [
+  "crypto",
+  "ed25519",
+  "secp256r1",
+  "passkey",
+  "secp256k1",
+  "zklogin",
+  "pem",
+  "bls12381",
+  "graphql",
+  "txn-builder",
+  "types",
+  "serde",
+  "rand",
+  "hash",
+  "proptest",
+  "schemars",
+]
+
+# Crypto
+crypto = ["dep:iota-crypto"]
+ed25519 = ["crypto", "iota-crypto/ed25519"]
+secp256r1 = ["crypto", "iota-crypto/secp256r1"]
+passkey = ["crypto", "iota-crypto/passkey"]
+secp256k1 = ["crypto", "iota-crypto/secp256k1"]
+zklogin = ["crypto", "iota-crypto/zklogin"]
+pem = ["crypto", "iota-crypto/pem"]
+bls12381 = ["crypto", "iota-crypto/bls12381"]
+
+# GraphQL
+graphql = ["dep:iota-graphql-client"]
+
+# Transaction Builder
+txn-builder = ["dep:iota-transaction-builder"]
+
+# Types
+types = ["dep:iota-sdk-types"]
+serde = ["types", "iota-sdk-types/serde"]
+rand = ["types", "iota-sdk-types/rand"]
+hash = ["types", "iota-sdk-types/hash"]
+proptest = ["types", "iota-sdk-types/proptest"]
+schemars = ["types", "iota-sdk-types/schemars"]
+
+[dependencies]
+iota-crypto = { path = "../iota-crypto", features = ["ed25519"], optional = true }
+iota-graphql-client = { path = "../iota-graphql-client", optional = true }
+iota-sdk-types = { path = "../iota-sdk-types", features = ["rand"], optional = true }
+iota-transaction-builder = { path = "../iota-transaction-builder", optional = true }

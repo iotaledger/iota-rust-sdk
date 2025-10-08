@@ -13,180 +13,97 @@ import (
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	senderAddress, err := sdk.AddressFromHex("0x0")
-	if err != nil {
-		log.Fatalf("Failed to parse sender address: %v", err)
-	}
+	sender, _ := sdk.AddressFromHex("0x0")
 
-	iotaNamesPackageAddress, err := sdk.AddressFromHex("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
-	if err != nil {
-		log.Fatalf("Failed to parse IOTA names package address: %v", err)
-	}
+	iotaNamesPackageAddress, _ := sdk.AddressFromHex("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
 
-	iotaNamesObjectId, err := sdk.ObjectIdFromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
-	if err != nil {
-		log.Fatalf("Failed to parse IOTA names object ID: %v", err)
-	}
+	iotaNamesObjectId, _ := sdk.ObjectIdFromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
 
-	stdlibAddress, err := sdk.AddressFromHex("0x1")
-	if err != nil {
-		log.Fatalf("Failed to parse stdlib address: %v", err)
-	}
+	stdlibAddress, _ := sdk.AddressFromHex("0x1")
 
 	name := "name.iota"
 	fmt.Printf("Looking up name: %s\n", name)
 
-	builder := sdk.NewTransactionBuilder()
+	builder := sdk.TransactionBuilderInit(sender, client)
 
 	// Create identifiers
-	iotaNamesModule, err := sdk.NewIdentifier("iota_names")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	registryFn, err := sdk.NewIdentifier("registry")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	nameModule, err := sdk.NewIdentifier("name")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	newFn, err := sdk.NewIdentifier("new")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	lookupFn, err := sdk.NewIdentifier("lookup")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	optionModule, err := sdk.NewIdentifier("option")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	borrowFn, err := sdk.NewIdentifier("borrow")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	nameRecordModule, err := sdk.NewIdentifier("name_record")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	targetAddressFn, err := sdk.NewIdentifier("target_address")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
+	iotaNamesModule, _ := sdk.NewIdentifier("iota_names")
+	nameModule, _ := sdk.NewIdentifier("name")
+	nameNewFn, _ := sdk.NewIdentifier("new")
+	lookupFn, _ := sdk.NewIdentifier("lookup")
+	optionModule, _ := sdk.NewIdentifier("option")
+	borrowFn, _ := sdk.NewIdentifier("borrow")
+	targetAddressFn, _ := sdk.NewIdentifier("target_address")
+	registryModule, _ := sdk.NewIdentifier("registry")
+	registryName, _ := sdk.NewIdentifier("Registry")
 
-	// Create type tags
-	registryName, err := sdk.NewIdentifier("Registry")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	registryType := sdk.NewStructTag(iotaNamesPackageAddress, registryFn, registryName, []*sdk.TypeTag{})
+	registryType := sdk.NewStructTag(iotaNamesPackageAddress, registryModule, registryName, []*sdk.TypeTag{})
 
-	nameRecordName, err := sdk.NewIdentifier("NameRecord")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
+	nameRecordModule, _ := sdk.NewIdentifier("name_record")
+	nameRecordName, _ := sdk.NewIdentifier("NameRecord")
 	nameRecordType := sdk.NewStructTag(iotaNamesPackageAddress, nameRecordModule, nameRecordName, []*sdk.TypeTag{})
 
 	// 1. Get the registry
-	registryInput := builder.Input(sdk.UnresolvedInputNewShared(iotaNamesObjectId, 365644877, true))
-	iotaNames := builder.MoveCall(
-		sdk.Function{
-			Package:  iotaNamesPackageAddress,
-			Module:   iotaNamesModule,
-			Function: registryFn,
-			TypeArgs: []*sdk.TypeTag{sdk.TypeTagNewStruct(registryType)},
-		},
-		[]*sdk.Argument{registryInput},
+	builder.MoveCall(
+		iotaNamesPackageAddress,
+		iotaNamesModule,
+		registryModule,
+		[]*sdk.PtbArgument{sdk.PtbArgumentSharedMut(iotaNamesObjectId)},
+		[]*sdk.TypeTag{sdk.TypeTagNewStruct(registryType)},
+		[]string{"iota_names"},
 	)
 
 	// 2. Create name from string
-	// BCS encode the string: length (as varint) + UTF-8 bytes
-	nameBytes := []byte(name)
-	nameLen := len(nameBytes)
-	var bcsEncodedName []byte
-	if nameLen < 128 {
-		// For strings shorter than 128 bytes, length is encoded as single byte
-		bcsEncodedName = append([]byte{byte(nameLen)}, nameBytes...)
-	} else {
-		// For longer strings, we'd need proper varint encoding
-		// but for this example, the name should be short
-		panic("String too long for simple BCS encoding")
-	}
-	nameInput := builder.Input(sdk.UnresolvedInputNewPure(bcsEncodedName))
-	nameResult := builder.MoveCall(
-		sdk.Function{
-			Package:  iotaNamesPackageAddress,
-			Module:   nameModule,
-			Function: newFn,
-			TypeArgs: []*sdk.TypeTag{},
-		},
-		[]*sdk.Argument{nameInput},
+	builder.MoveCall(
+		iotaNamesPackageAddress,
+		nameModule,
+		nameNewFn,
+		[]*sdk.PtbArgument{sdk.PtbArgumentString(name)},
+		nil,
+		[]string{"name"},
 	)
 
 	// 3. Lookup name record
-	nameRecordOption := builder.MoveCall(
-		sdk.Function{
-			Package:  iotaNamesPackageAddress,
-			Module:   registryFn,
-			Function: lookupFn,
-			TypeArgs: []*sdk.TypeTag{},
-		},
-		[]*sdk.Argument{iotaNames, nameResult},
+	builder.MoveCall(
+		iotaNamesPackageAddress,
+		registryModule,
+		lookupFn,
+		[]*sdk.PtbArgument{sdk.PtbArgumentRes("iota_names"), sdk.PtbArgumentRes("name")},
+		nil,
+		[]string{"name_record_opt"},
 	)
 
 	// 4. Borrow name record from option
-	nameRecord := builder.MoveCall(
-		sdk.Function{
-			Package:  stdlibAddress,
-			Module:   optionModule,
-			Function: borrowFn,
-			TypeArgs: []*sdk.TypeTag{sdk.TypeTagNewStruct(nameRecordType)},
-		},
-		[]*sdk.Argument{nameRecordOption},
+	builder.MoveCall(
+		stdlibAddress,
+		optionModule,
+		borrowFn,
+		[]*sdk.PtbArgument{sdk.PtbArgumentRes("name_record_opt")},
+		[]*sdk.TypeTag{sdk.TypeTagNewStruct(nameRecordType)},
+		[]string{"name_record"},
 	)
 
 	// 5. Get target address from name record
-	targetAddressOption := builder.MoveCall(
-		sdk.Function{
-			Package:  iotaNamesPackageAddress,
-			Module:   nameRecordModule,
-			Function: targetAddressFn,
-			TypeArgs: []*sdk.TypeTag{},
-		},
-		[]*sdk.Argument{nameRecord},
+	builder.MoveCall(
+		iotaNamesPackageAddress,
+		nameRecordModule,
+		targetAddressFn,
+		[]*sdk.PtbArgument{sdk.PtbArgumentRes("name_record")},
+		nil,
+		[]string{"target_address_opt"},
 	)
 
 	// 6. Borrow address from option
 	builder.MoveCall(
-		sdk.Function{
-			Package:  stdlibAddress,
-			Module:   optionModule,
-			Function: borrowFn,
-			TypeArgs: []*sdk.TypeTag{sdk.TypeTagNewAddress()},
-		},
-		[]*sdk.Argument{targetAddressOption},
+		stdlibAddress,
+		optionModule,
+		borrowFn,
+		[]*sdk.PtbArgument{sdk.PtbArgumentRes("target_address_opt")},
+		[]*sdk.TypeTag{sdk.TypeTagNewAddress()},
+		[]string{"target_address"},
 	)
 
-	builder.SetSender(senderAddress)
-	builder.SetGasBudget(50000000)
-	gasPrice, err := client.ReferenceGasPrice(nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas price: %v", err)
-	}
-	if gasPrice == nil {
-		log.Fatalf("Missing reference gas price")
-	}
-	builder.SetGasPrice(*gasPrice)
-
-	txn, err := builder.Finish()
-	if err != nil {
-		log.Fatalf("Failed to create transaction: %v", err)
-	}
-
-	skipChecks := true
-	res, err := client.DryRunTx(txn, &skipChecks)
+	res, err := builder.DryRun(true)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run transaction: %v", err)
 	}

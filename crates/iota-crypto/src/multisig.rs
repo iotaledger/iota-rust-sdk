@@ -37,7 +37,6 @@ impl MultisigVerifier {
                 MultisigMemberSignature::Ed25519(ed25519_signature),
             ) => crate::ed25519::Ed25519VerifyingKey::new(ed25519_public_key)?
                 .verify(message, ed25519_signature),
-
             #[cfg(not(feature = "secp256k1"))]
             (MultisigMemberPublicKey::Secp256k1(_), MultisigMemberSignature::Secp256k1(_)) => Err(
                 SignatureError::from_source("support for secp256k1 is not enabled"),
@@ -48,7 +47,6 @@ impl MultisigVerifier {
                 MultisigMemberSignature::Secp256k1(k1_signature),
             ) => crate::secp256k1::Secp256k1VerifyingKey::new(k1_public_key)?
                 .verify(message, k1_signature),
-
             #[cfg(not(feature = "secp256r1"))]
             (MultisigMemberPublicKey::Secp256r1(_), MultisigMemberSignature::Secp256r1(_)) => Err(
                 SignatureError::from_source("support for secp256r1 is not enabled"),
@@ -59,7 +57,6 @@ impl MultisigVerifier {
                 MultisigMemberSignature::Secp256r1(r1_signature),
             ) => crate::secp256r1::Secp256r1VerifyingKey::new(r1_public_key)?
                 .verify(message, r1_signature),
-
             #[cfg(not(feature = "zklogin"))]
             (MultisigMemberPublicKey::ZkLogin(_), MultisigMemberSignature::ZkLogin(_)) => Err(
                 SignatureError::from_source("support for zklogin is not enabled"),
@@ -230,7 +227,6 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
                 crate::simple::SimpleVerifier.verify(message, simple_signature)
             }
             UserSignature::Multisig(multisig) => self.inner.verify(message, multisig),
-
             #[cfg(not(feature = "zklogin"))]
             UserSignature::ZkLogin(_) => Err(SignatureError::from_source(
                 "support for zklogin is not enabled",
@@ -383,7 +379,6 @@ fn multisig_pubkey_and_signature_from_user_signature(
             MultisigMemberPublicKey::Secp256r1(public_key),
             MultisigMemberSignature::Secp256r1(signature),
         )),
-
         #[cfg(not(feature = "zklogin"))]
         UserSignature::ZkLogin(_) => Err(SignatureError::from_source(
             "support for zklogin is not enabled",

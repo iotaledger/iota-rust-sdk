@@ -257,7 +257,6 @@ impl Identifier {
             }
             true
         }
-
         // Rust const fn's don't currently support slicing or indexing &str's, so we
         // have to operate on the underlying byte slice. This is not a problem as
         // valid identifiers are (currently) ASCII-only.
@@ -315,7 +314,6 @@ impl std::borrow::Borrow<IdentifierRef> for Identifier {
         self
     }
 }
-
 #[derive(Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[repr(transparent)]
 pub struct IdentifierRef(str);
@@ -451,6 +449,15 @@ impl StructTag {
             address: Address::THREE,
             module: Identifier::new("staking_pool").unwrap(),
             name: Identifier::new("StakedIota").unwrap(),
+            type_params: vec![],
+        }
+    }
+
+    pub fn timelocked_staked_iota() -> Self {
+        Self {
+            address: Address::THREE,
+            module: Identifier::new("timelocked_staking").unwrap(),
+            name: Identifier::new("TimelockedStakedIota").unwrap(),
             type_params: vec![],
         }
     }

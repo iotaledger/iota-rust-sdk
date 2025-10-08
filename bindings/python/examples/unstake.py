@@ -17,40 +17,21 @@ async def main():
             raise Exception("no staked iotas found")
         staked_iota = staked_iotas.data[0]
 
-        gas_coins = await client.objects(
-            ObjectFilter(
-                type_tag=str(StructTag.gas_coin()),
-                owner=staked_iota.owner().as_address(),
-            )
+        builder = await TransactionBuilder.init(
+            staked_iota.owner().as_address(), client
         )
-        if len(gas_coins.data) == 0:
-            raise Exception("no gas coin found")
-        gas_coin = gas_coins.data[0]
 
-        builder = TransactionBuilder()
-        inputs = [
-            builder.input(
-                UnresolvedInput.new_shared(ObjectId.from_hex("0x5"), 1, True)
-            ),
-            builder.input(UnresolvedInput.from_object(staked_iota).with_owned_kind()),
-        ]
         builder.move_call(
-            Function(
-                package=Address.from_hex("0x3"),
-                module=Identifier("iota_system"),
-                function=Identifier("request_withdraw_stake"),
-            ),
-            inputs,
-        )
-        builder.set_sender(gas_coin.owner().as_address())
-        builder.set_gas_budget(50000000)
-        builder.set_gas_price(await client.reference_gas_price() or 100)
-        builder.add_gas_objects(
-            [UnresolvedInput.from_object(gas_coin).with_owned_kind()]
+            Address.from_hex("0x3"),
+            Identifier("iota_system"),
+            Identifier("request_withdraw_stake"),
+            [
+                PtbArgument.shared_mut(ObjectId.from_hex("0x5")),
+                PtbArgument.object_id(staked_iota.object_id()),
+            ],
         )
 
-        txn = builder.finish()
-        res = await client.dry_run_tx(txn)
+        res = await builder.dry_run()
         if res.error is not None:
             raise Exception("Failed to unstake:", res.error)
 

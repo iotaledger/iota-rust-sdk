@@ -18,6 +18,7 @@ base64ct = { version = "1.6.0", features = ["alloc", "std"] }
 bcs = "0.1.6"
 derive_more = { version = "2.0", features = ["from", "deref", "display"] }
 hex = "0.4.3"
+primitive-types = { version = "0.14", features = ["impl-serde"] }
 rand = "0.8"
 roaring = { version = "0.11.2", default-features = false }
 serde = { version = "1.0.144" }
@@ -25,7 +26,7 @@ serde_json = "1.0.95"
 tokio = { version = "1.36.0", features = ["time"] }
 uniffi = { version = "0.29", features = ["cli", "tokio"] }
 
-iota-crypto = { path = "../iota-crypto", features = ["bls12381", "ed25519", "secp256r1", "passkey", "secp256k1", "zklogin", "pem"] }
+iota-crypto = { path = "../iota-crypto", features = ["bls12381", "ed25519", "secp256r1", "passkey", "secp256k1", "zklogin", "pem", "bech32"] }
 iota-graphql-client = { path = "../iota-graphql-client" }
 iota-transaction-builder = { path = "../iota-transaction-builder" }
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["hash", "rand"] }

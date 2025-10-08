@@ -55,7 +55,7 @@ async fn main() -> Result<()> {
     let address = Address::from_str("IOTA_ADDRESS_HERE")?;
     // Request gas from the faucet and wait until a coin is received
     // As the client is set to devnet, faucet will use the devnet faucet.
-    let faucet = FaucetClient::devnet().request_and_wait(address).await?;
+    let faucet = FaucetClient::new_devnet().request_and_wait(address).await?;
     if let Some(resp) = faucet {
         let coins = resp.sent;
         for coin in coins {
@@ -64,7 +64,7 @@ async fn main() -> Result<()> {
     }
 
     // Request gas from the testnet faucet by explicitly setting the faucet to testnet
-    let faucet_testnet = FaucetClient::testnet().request_and_wait(address).await?;
+    let faucet_testnet = FaucetClient::new_testnet().request_and_wait(address).await?;
     Ok(())
 }
 ```

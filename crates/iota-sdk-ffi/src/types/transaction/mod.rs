@@ -199,16 +199,8 @@ impl ProgrammableTransaction {
     #[uniffi::constructor]
     pub fn new(inputs: Vec<Arc<Input>>, commands: Vec<Arc<Command>>) -> Self {
         Self(iota_types::ProgrammableTransaction {
-            inputs: inputs
-                .iter()
-                .cloned()
-                .map(|input| input.0.clone())
-                .collect(),
-            commands: commands
-                .iter()
-                .cloned()
-                .map(|command| command.0.clone())
-                .collect(),
+            inputs: inputs.iter().map(|input| input.0.clone()).collect(),
+            commands: commands.iter().map(|command| command.0.clone()).collect(),
         })
     }
 
@@ -1590,11 +1582,7 @@ impl MoveCall {
                 .iter()
                 .map(|type_argument| type_argument.0.clone())
                 .collect(),
-            arguments: arguments
-                .iter()
-                .cloned()
-                .map(|argument| argument.0)
-                .collect(),
+            arguments: arguments.iter().map(|argument| argument.0).collect(),
         })
     }
 
