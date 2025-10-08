@@ -19,32 +19,13 @@ fun main() = runBlocking {
         println("Sender address: ${senderAddress.toHex()}")
 
         // Request funds from faucet
-        val faucet = FaucetClient.newLocal()
+        val faucet = FaucetClient.newLocalnet()
         faucet.requestAndWait(senderAddress)
 
-        val client = GraphQlClient.newLocalhost()
-        // Get coins for the sender address
-        val coinsPage = client.coins(senderAddress, null, null)
-        if (coinsPage.data.isEmpty()) {
-            throw Exception("No coins found")
-        }
-        val gasCoin = coinsPage.data[0]
+        val client = GraphQlClient.newLocalnet()
 
         val builder = TransactionBuilder.init(senderAddress, client)
-
-        // Split the amount from the gas coin
-        builder.splitCoins(gasCoin.id(), listOf(amount), listOf("coin1"))
-
-        // Transfer the split coin
-        builder.transferObjects(recipientAddress, listOf(PtbArgument.res("coin1")))
-
-        builder.gas(gasCoin.id()).gasBudget(50000000.toULong())
-        val gasPrice = client.referenceGasPrice(null)
-        if (gasPrice == null) {
-            throw Exception("Failed to get gas price")
-        }
-        builder.gasPrice(gasPrice)
-
+        builder.sendIota(recipientAddress, amount)
         val txn = builder.finish()
 
         val dryRunResult = client.dryRunTx(txn, false)

@@ -4,7 +4,7 @@
 use eyre::Result;
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
 use iota_graphql_client::{Client, faucet::FaucetClient};
-use iota_transaction_builder::{TransactionBuilder, res};
+use iota_transaction_builder::TransactionBuilder;
 use iota_types::Address;
 
 #[tokio::main]
@@ -20,35 +20,14 @@ async fn main() -> Result<()> {
     println!("Sender address: {sender_address}");
 
     // Request funds from faucet
-    FaucetClient::local()
+    FaucetClient::new_localnet()
         .request_and_wait(sender_address)
         .await?;
 
-    let client = Client::new_localhost();
-    // Get coins for the sender address
-    let coins_page = client
-        .coins(sender_address, None, Default::default())
-        .await?;
-    let gas_coin = coins_page.data.first().expect("no gas coin found");
+    let client = Client::new_localnet();
 
     let mut builder = TransactionBuilder::new(sender_address).with_client(client.clone());
-
-    // Split the amount from the gas coin
-    builder
-        .split_coins(*gas_coin.id(), vec![amount])
-        .name("coin1");
-
-    // Transfer the split coin
-    builder.transfer_objects(recipient_address, vec![res("coin1")]);
-
-    builder.gas(*gas_coin.id()).gas_budget(50_000_000);
-    builder.gas_price(
-        client
-            .reference_gas_price(None)
-            .await?
-            .expect("missing ref gas price"),
-    );
-
+    builder.send_iota(recipient_address, amount);
     let tx = builder.finish().await?;
 
     let dry_run_result = client.dry_run_tx(&tx, false).await?;

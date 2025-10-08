@@ -20,30 +20,13 @@ async def main():
         print(f"Sender address: {sender_address.to_hex()}")
 
         # Request funds from faucet
-        faucet = FaucetClient.new_local()
+        faucet = FaucetClient.new_localnet()
         await faucet.request_and_wait(sender_address)
 
-        client = GraphQlClient.new_localhost()
-        # Get coins for the sender address
-        coins_page = await client.coins(sender_address, None, None)
-        if not coins_page.data:
-            raise Exception("No coins found")
-        gas_coin = coins_page.data[0]
+        client = GraphQlClient.new_localnet()
 
         builder = await TransactionBuilder.init(sender_address, client)
-
-        # Split the amount from the gas coin
-        builder.split_coins(gas_coin.id(), [amount], ["coin1"])
-
-        # Transfer the split coin
-        builder.transfer_objects(recipient_address, [PtbArgument.res("coin1")])
-
-        builder.gas(gas_coin.id()).gas_budget(50000000)
-        gas_price = await client.reference_gas_price(None)
-        if gas_price is None:
-            raise Exception("Failed to get gas price")
-        builder.gas_price(gas_price)
-
+        builder.send_iota(recipient_address, [amount])
         txn = await builder.finish()
 
         dry_run_result = await client.dry_run_tx(txn, False)

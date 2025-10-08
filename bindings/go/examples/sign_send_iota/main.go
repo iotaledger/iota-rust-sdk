@@ -26,46 +26,16 @@ func main() {
 	log.Printf("Sender address: %s", senderAddress.ToHex())
 
 	// Request funds from faucet
-	faucet := sdk.FaucetClientNewLocal()
+	faucet := sdk.FaucetClientNewLocalnet()
 	_, err = faucet.RequestAndWait(senderAddress)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
-	client := sdk.GraphQlClientNewLocalhost()
-	// Get coins for the sender address
-	coinsPage, err := client.Coins(senderAddress, nil, nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get coins: %v", err)
-	}
-	if len(coinsPage.Data) == 0 {
-		log.Fatalf("No coins found")
-	}
-	gasCoin := coinsPage.Data[0]
-
-	gasObject, err := client.Object(gasCoin.Id(), nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas object: %v", err)
-	}
-	if gasObject == nil {
-		log.Fatalf("Missing gas object")
-	}
+	client := sdk.GraphQlClientNewLocalnet()
 
 	builder := sdk.TransactionBuilderInit(senderAddress, client)
-
-	// Split the amount from the gas coin
-	builder.SplitCoins(gasCoin.Id(), []uint64{amount}, []string{"coin1"})
-
-	// Transfer the split coin
-	builder.TransferObjects(recipientAddress, []*sdk.PtbArgument{sdk.PtbArgumentRes("coin1")})
-
-	builder.Gas(gasCoin.Id()).GasBudget(50000000)
-	gasPrice, err := client.ReferenceGasPrice(nil)
-	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to get gas price: %v", err)
-	}
-	builder.GasPrice(*gasPrice)
-
+	builder.SendIota(recipientAddress, &amount)
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
