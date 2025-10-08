@@ -384,25 +384,25 @@ mod signing_message {
 
     impl PersonalMessage<'_> {
         pub fn signing_digest(&self) -> SigningDigest {
-            let intent = Intent {
+            const INTENT: Intent = Intent {
                 scope: IntentScope::PersonalMessage,
                 version: IntentVersion::V0,
                 app_id: IntentAppId::Iota,
             };
-            let digest = signing_digest(intent, &self.0);
+            let digest = signing_digest(INTENT, &self.0);
             digest.into_inner()
         }
     }
 
     impl crate::CheckpointSummary {
         pub fn signing_message(&self) -> Vec<u8> {
-            let intent = Intent {
+            const INTENT: Intent = Intent {
                 scope: IntentScope::CheckpointSummary,
                 version: IntentVersion::V0,
                 app_id: IntentAppId::Iota,
             };
             let mut message = Vec::new();
-            message.extend(intent.to_bytes());
+            message.extend(INTENT.to_bytes());
             bcs::serialize_into(&mut message, self).unwrap();
             bcs::serialize_into(&mut message, &self.epoch).unwrap();
             message
