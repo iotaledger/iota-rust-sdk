@@ -18,6 +18,7 @@ pub mod signature;
 pub mod struct_tag;
 pub mod transaction;
 pub mod type_tag;
+pub mod validator;
 
 #[derive(derive_more::From, uniffi::Object)]
 pub struct PersonalMessage(iota_types::PersonalMessage<'static>);

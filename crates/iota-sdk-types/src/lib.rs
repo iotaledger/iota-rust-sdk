@@ -125,6 +125,7 @@ mod object_id;
 mod transaction;
 mod type_tag;
 mod u256;
+mod validator;
 
 pub use address::{Address, AddressParseError};
 pub use checkpoint::{
@@ -138,9 +139,8 @@ pub use crypto::{
     InvalidZkLoginAuthenticatorError, Jwk, JwkId, MultisigAggregatedSignature, MultisigCommittee,
     MultisigMember, MultisigMemberPublicKey, MultisigMemberSignature, PasskeyAuthenticator,
     PasskeyPublicKey, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
-    Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
-    ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
-    ZkLoginAuthenticator, ZkLoginClaim, ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
+    Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature, ZkLoginAuthenticator,
+    ZkLoginClaim, ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
 };
 pub use digest::{Digest, DigestParseError, SigningDigest};
 pub use effects::{
@@ -173,6 +173,9 @@ pub use transaction::{
     ValidatorExecutionTimeObservation, VersionAssignment,
 };
 pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag};
+pub use validator::{
+    ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
+};
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
