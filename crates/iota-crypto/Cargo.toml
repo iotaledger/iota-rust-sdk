@@ -58,6 +58,7 @@ bls12381 = ["dep:blst", "dep:rand_core", "dep:roaring", "signature/std"]
 [dependencies]
 iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
 signature = "2.2"
+thiserror = "2.0"
 
 # RNG support
 rand_core = { version = "0.6.4", optional = true }

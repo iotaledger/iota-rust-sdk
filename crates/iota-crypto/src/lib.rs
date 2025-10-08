@@ -8,30 +8,22 @@ use iota_sdk_types::{PersonalMessage, Transaction, UserSignature};
 pub use signature::{Error as SignatureError, Signer, Verifier};
 
 /// Error type for private key encoding/decoding operations
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(thiserror::Error, Debug)]
+#[non_exhaustive]
 pub enum PrivateKeyError {
     /// Empty input data
+    #[error("empty data: {0}")]
     EmptyData(String),
     /// Invalid signature scheme
+    #[error("invalid signature scheme: {0}")]
     InvalidScheme(String),
     /// Bech32 encoding/decoding error
+    #[error("bech32 error: {0}")]
     Bech32(String),
     /// HRP (Human Readable Part) error
+    #[error("bech32 HRP error: {0}")]
     Bech32Hrp(String),
 }
-
-impl std::fmt::Display for PrivateKeyError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PrivateKeyError::EmptyData(msg) => write!(f, "empty data: {msg}"),
-            PrivateKeyError::InvalidScheme(msg) => write!(f, "invalid signature scheme: {msg}"),
-            PrivateKeyError::Bech32(msg) => write!(f, "bech32 error: {msg}"),
-            PrivateKeyError::Bech32Hrp(msg) => write!(f, "bech32 HRP error: {msg}"),
-        }
-    }
-}
-
-impl std::error::Error for PrivateKeyError {}
 
 #[cfg(feature = "bls12381")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "bls12381")))]
