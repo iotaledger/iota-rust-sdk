@@ -999,6 +999,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32()
+	})
+	if checksum != 64514 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes()
+	})
+	if checksum != 26261 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der()
 	})
 	if checksum != 61433 {
@@ -1400,6 +1418,33 @@ func uniffiCheckChecksums() {
 	if checksum != 41079 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name()
+	})
+	if checksum != 53764 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup()
+	})
+	if checksum != 20908 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations()
+	})
+	if checksum != 44467 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2214,6 +2259,105 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_name_format()
+	})
+	if checksum != 66 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_name_format: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_name_is_sln()
+	})
+	if checksum != 9860 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_name_is_sln: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_name_is_subname()
+	})
+	if checksum != 22382 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_name_is_subname: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_name_label()
+	})
+	if checksum != 9695 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_name_label: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_name_labels()
+	})
+	if checksum != 44675 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_name_labels: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_name_num_labels()
+	})
+	if checksum != 62037 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_name_num_labels: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_name_parent()
+	})
+	if checksum != 40819 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_name_parent: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_nameregistration_expiration_timestamp_ms()
+	})
+	if checksum != 13855 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_nameregistration_expiration_timestamp_ms: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_nameregistration_id()
+	})
+	if checksum != 17049 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_nameregistration_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_nameregistration_name()
+	})
+	if checksum != 16565 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_nameregistration_name: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_nameregistration_name_str()
+	})
+	if checksum != 19903 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_nameregistration_name_str: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_object_as_package()
 	})
 	if checksum != 21763 {
@@ -2664,6 +2808,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32()
+	})
+	if checksum != 60488 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes()
+	})
+	if checksum != 18583 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_der()
 	})
 	if checksum != 65507 {
@@ -2844,6 +3006,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32()
+	})
+	if checksum != 4230 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes()
+	})
+	if checksum != 8648 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der()
 	})
 	if checksum != 48507 {
@@ -3020,6 +3200,24 @@ func uniffiCheckChecksums() {
 	if checksum != 19826 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32()
+	})
+	if checksum != 4776 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes()
+	})
+	if checksum != 1555 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4653,6 +4851,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32()
+	})
+	if checksum != 16842 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der()
 	})
 	if checksum != 42838 {
@@ -5121,6 +5328,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_name_from_str()
+	})
+	if checksum != 30248 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_name_from_str: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_nameregistration_new()
+	})
+	if checksum != 19327 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_nameregistration_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_object_new()
 	})
 	if checksum != 41346 {
@@ -5418,6 +5643,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32()
+	})
+	if checksum != 34529 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der()
 	})
 	if checksum != 45448 {
@@ -5544,6 +5778,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32()
+	})
+	if checksum != 7016 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der()
 	})
 	if checksum != 63595 {
@@ -5666,6 +5909,24 @@ func uniffiCheckChecksums() {
 	if checksum != 57317 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32()
+	})
+	if checksum != 51811 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes()
+	})
+	if checksum != 9299 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9536,6 +9797,11 @@ func (_ FfiDestroyerDigest) Destroy(value *Digest) {
 type Ed25519PrivateKeyInterface interface {
 	PublicKey() *Ed25519PublicKey
 	Scheme() SignatureScheme
+	// Encode this private key as `flag || privkey` in Bech32 starting with
+	// "iotaprivkey" to a string.
+	ToBech32() (string, error)
+	// Serialize this private key to bytes.
+	ToBytes() []byte
 	// Serialize this private key as DER-encoded PKCS#8
 	ToDer() ([]byte, error)
 	// Serialize this private key as PEM-encoded PKCS#8
@@ -9560,6 +9826,20 @@ func NewEd25519PrivateKey(bytes []byte) (*Ed25519PrivateKey, error) {
 		}
 }
 
+
+// Decode a private key from `flag || privkey` in Bech32 starting with
+// "iotaprivkey".
+func Ed25519PrivateKeyFromBech32(value string) (*Ed25519PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 // Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
 // format).
@@ -9611,6 +9891,37 @@ func (_self *Ed25519PrivateKey) Scheme() SignatureScheme {
 	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Encode this private key as `flag || privkey` in Bech32 starting with
+// "iotaprivkey" to a string.
+func (_self *Ed25519PrivateKey) ToBech32() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bech32(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize this private key to bytes.
+func (_self *Ed25519PrivateKey) ToBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -11283,6 +11594,12 @@ type GraphQlClientInterface interface {
 	Events(filter *EventFilter, paginationFilter *PaginationFilter) (EventPage, error)
 	// Execute a transaction.
 	ExecuteTx(signatures []*UserSignature, tx *Transaction) (**TransactionEffects, error)
+	// Get the default name pointing to this address, if one exists.
+	IotaNamesDefaultName(address *Address, format *NameFormat) (**Name, error)
+	// Return the resolved address for the given name.
+	IotaNamesLookup(name string) (**Address, error)
+	// Find all registration NFTs for the given address.
+	IotaNamesRegistrations(address *Address, paginationFilter PaginationFilter) (NameRegistrationPage, error)
 	// Return the sequence number of the latest checkpoint that has been
 	// executed.
 	LatestCheckpointSequenceNumber() (*uint64, error)
@@ -12042,6 +12359,102 @@ func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transacti
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
 		_pointer,FfiConverterSequenceUserSignatureINSTANCE.Lower(signatures), FfiConverterTransactionINSTANCE.Lower(tx)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Get the default name pointing to this address, if one exists.
+func (_self *GraphQlClient) IotaNamesDefaultName(address *Address, format *NameFormat) (**Name, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) **Name {
+			return FfiConverterOptionalNameINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_default_name(
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalNameFormatINSTANCE.Lower(format)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Return the resolved address for the given name.
+func (_self *GraphQlClient) IotaNamesLookup(name string) (**Address, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) **Address {
+			return FfiConverterOptionalAddressINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_lookup(
+		_pointer,FfiConverterStringINSTANCE.Lower(name)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Find all registration NFTs for the given address.
+func (_self *GraphQlClient) IotaNamesRegistrations(address *Address, paginationFilter PaginationFilter) (NameRegistrationPage, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) NameRegistrationPage {
+			return FfiConverterNameRegistrationPageINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations(
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -15184,6 +15597,283 @@ func (_ FfiDestroyerMultisigVerifier) Destroy(value *MultisigVerifier) {
 
 
 
+type NameInterface interface {
+	// Formats a name into a string based on the available output formats.
+	// The default separator is `.`
+	Format(format NameFormat) string
+	// Returns whether this name is a second-level name (Ex. `test.iota`)
+	IsSln() bool
+	// Returns whether this name is a subname (Ex. `sub.test.iota`)
+	IsSubname() bool
+	// Get the label at the given index
+	Label(index uint32) *string
+	// Get all of the labels. NOTE: These are in reverse order starting with
+	// the top-level name and proceeding to subnames.
+	Labels() []string
+	// Returns the number of labels including TLN.
+	NumLabels() uint32
+	// parents; second-level names return `None`.
+	Parent() **Name
+}
+type Name struct {
+	ffiObject FfiObject
+}
+
+
+func NameFromStr(s string) (*Name, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_name_from_str(FfiConverterStringINSTANCE.Lower(s),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Name
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterNameINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+
+// Formats a name into a string based on the available output formats.
+// The default separator is `.`
+func (_self *Name) Format(format NameFormat) string {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_name_format(
+		_pointer,FfiConverterNameFormatINSTANCE.Lower(format),_uniffiStatus),
+	}
+	}))
+}
+
+// Returns whether this name is a second-level name (Ex. `test.iota`)
+func (_self *Name) IsSln() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_name_is_sln(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns whether this name is a subname (Ex. `sub.test.iota`)
+func (_self *Name) IsSubname() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_name_is_subname(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Get the label at the given index
+func (_self *Name) Label(index uint32) *string {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_name_label(
+		_pointer,FfiConverterUint32INSTANCE.Lower(index),_uniffiStatus),
+	}
+	}))
+}
+
+// Get all of the labels. NOTE: These are in reverse order starting with
+// the top-level name and proceeding to subnames.
+func (_self *Name) Labels() []string {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_name_labels(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the number of labels including TLN.
+func (_self *Name) NumLabels() uint32 {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint32INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint32_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_name_num_labels(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// parents; second-level names return `None`.
+func (_self *Name) Parent() **Name {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalNameINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_name_parent(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *Name) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterName struct {}
+
+var FfiConverterNameINSTANCE = FfiConverterName{}
+
+
+func (c FfiConverterName) Lift(pointer unsafe.Pointer) *Name {
+	result := &Name {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_name(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_name(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Name).Destroy)
+	return result
+}
+
+func (c FfiConverterName) Read(reader io.Reader) *Name {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterName) Lower(value *Name) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Name")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterName) Write(writer io.Writer, value *Name) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerName struct {}
+
+func (_ FfiDestroyerName) Destroy(value *Name) {
+		value.Destroy()
+}
+
+
+
+// An object to manage a second-level name (SLN).
+type NameRegistrationInterface interface {
+	ExpirationTimestampMs() uint64
+	Id() *ObjectId
+	Name() *Name
+	NameStr() string
+}
+// An object to manage a second-level name (SLN).
+type NameRegistration struct {
+	ffiObject FfiObject
+}
+func NewNameRegistration(id *ObjectId, name *Name, nameStr string, expirationTimestampMs uint64) *NameRegistration {
+	return FfiConverterNameRegistrationINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_nameregistration_new(FfiConverterObjectIdINSTANCE.Lower(id), FfiConverterNameINSTANCE.Lower(name), FfiConverterStringINSTANCE.Lower(nameStr), FfiConverterUint64INSTANCE.Lower(expirationTimestampMs),_uniffiStatus)
+	}))
+}
+
+
+
+
+func (_self *NameRegistration) ExpirationTimestampMs() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*NameRegistration")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_nameregistration_expiration_timestamp_ms(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *NameRegistration) Id() *ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*NameRegistration")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_nameregistration_id(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *NameRegistration) Name() *Name {
+	_pointer := _self.ffiObject.incrementPointer("*NameRegistration")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterNameINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_nameregistration_name(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *NameRegistration) NameStr() string {
+	_pointer := _self.ffiObject.incrementPointer("*NameRegistration")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_nameregistration_name_str(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *NameRegistration) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterNameRegistration struct {}
+
+var FfiConverterNameRegistrationINSTANCE = FfiConverterNameRegistration{}
+
+
+func (c FfiConverterNameRegistration) Lift(pointer unsafe.Pointer) *NameRegistration {
+	result := &NameRegistration {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_nameregistration(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_nameregistration(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*NameRegistration).Destroy)
+	return result
+}
+
+func (c FfiConverterNameRegistration) Read(reader io.Reader) *NameRegistration {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterNameRegistration) Lower(value *NameRegistration) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*NameRegistration")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterNameRegistration) Write(writer io.Writer, value *NameRegistration) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerNameRegistration struct {}
+
+func (_ FfiDestroyerNameRegistration) Destroy(value *NameRegistration) {
+		value.Destroy()
+}
+
+
+
 // An object on the IOTA blockchain
 //
 // # BCS
@@ -17002,6 +17692,11 @@ func (_ FfiDestroyerPublish) Destroy(value *Publish) {
 type Secp256k1PrivateKeyInterface interface {
 	PublicKey() *Secp256k1PublicKey
 	Scheme() SignatureScheme
+	// Encode this private key as `flag || privkey` in Bech32 starting with
+	// "iotaprivkey" to a string.
+	ToBech32() (string, error)
+	// Serialize this private key to bytes.
+	ToBytes() []byte
 	// Serialize this private key as DER-encoded PKCS#8
 	ToDer() ([]byte, error)
 	// Serialize this private key as PEM-encoded PKCS#8
@@ -17026,6 +17721,20 @@ func NewSecp256k1PrivateKey(bytes []byte) (*Secp256k1PrivateKey, error) {
 		}
 }
 
+
+// Decode a private key from `flag || privkey` in Bech32 starting with
+// "iotaprivkey".
+func Secp256k1PrivateKeyFromBech32(value string) (*Secp256k1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256k1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256k1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 // Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
 // format).
@@ -17077,6 +17786,37 @@ func (_self *Secp256k1PrivateKey) Scheme() SignatureScheme {
 	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Encode this private key as `flag || privkey` in Bech32 starting with
+// "iotaprivkey" to a string.
+func (_self *Secp256k1PrivateKey) ToBech32() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize this private key to bytes.
+func (_self *Secp256k1PrivateKey) ToBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -17777,6 +18517,11 @@ type Secp256r1PrivateKeyInterface interface {
 	// Get the public key corresponding to this private key.
 	PublicKey() *Secp256r1PublicKey
 	Scheme() SignatureScheme
+	// Encode this private key as `flag || privkey` in Bech32 starting with
+	// "iotaprivkey" to a string.
+	ToBech32() (string, error)
+	// Serialize this private key to bytes.
+	ToBytes() []byte
 	// Serialize this private key as DER-encoded PKCS#8
 	ToDer() ([]byte, error)
 	// Serialize this private key as PEM-encoded PKCS#8
@@ -17804,6 +18549,20 @@ func NewSecp256r1PrivateKey(bytes []byte) (*Secp256r1PrivateKey, error) {
 		}
 }
 
+
+// Decode a private key from `flag || privkey` in Bech32 starting with
+// "iotaprivkey".
+func Secp256r1PrivateKeyFromBech32(value string) (*Secp256r1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 // Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
 // format).
@@ -17857,6 +18616,37 @@ func (_self *Secp256r1PrivateKey) Scheme() SignatureScheme {
 	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Encode this private key as `flag || privkey` in Bech32 starting with
+// "iotaprivkey" to a string.
+func (_self *Secp256r1PrivateKey) ToBech32() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize this private key to bytes.
+func (_self *Secp256r1PrivateKey) ToBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -18559,6 +19349,11 @@ func (_ FfiDestroyerSecp256r1VerifyingKey) Destroy(value *Secp256r1VerifyingKey)
 type SimpleKeypairInterface interface {
 	PublicKey() *MultisigMemberPublicKey
 	Scheme() SignatureScheme
+	// Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
+	// "iotaprivkey" to a string. Note that the pubkey is not encoded.
+	ToBech32() (string, error)
+	// Encode a SimpleKeypair as `flag || privkey` in bytes
+	ToBytes() []byte
 	// Serialize this private key as DER-encoded PKCS#8
 	ToDer() ([]byte, error)
 	// Serialize this private key as DER-encoded PKCS#8
@@ -18570,6 +19365,34 @@ type SimpleKeypair struct {
 	ffiObject FfiObject
 }
 
+
+// Decode a SimpleKeypair from `flag || privkey` in Bech32 starting with
+// "iotaprivkey" to SimpleKeypair. The public key is computed directly from
+// the private key bytes.
+func SimpleKeypairFromBech32(value string) (*SimpleKeypair, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *SimpleKeypair
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSimpleKeypairINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Decode a SimpleKeypair from `flag || privkey` bytes
+func SimpleKeypairFromBytes(bytes []byte) (*SimpleKeypair, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *SimpleKeypair
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSimpleKeypairINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 // Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
 // format).
@@ -18615,6 +19438,37 @@ func (_self *SimpleKeypair) Scheme() SignatureScheme {
 	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
+// "iotaprivkey" to a string. Note that the pubkey is not encoded.
+func (_self *SimpleKeypair) ToBech32() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleKeypair")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Encode a SimpleKeypair as `flag || privkey` in bytes
+func (_self *SimpleKeypair) ToBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleKeypair")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -25425,6 +26279,49 @@ type FfiDestroyerMoveStructTypeParameter struct {}
 func (_ FfiDestroyerMoveStructTypeParameter) Destroy(value MoveStructTypeParameter) {
 	value.Destroy()
 }
+// A page of items returned by the GraphQL server.
+type NameRegistrationPage struct {
+	// Information about the page, such as the cursor and whether there are
+	// more pages.
+	PageInfo PageInfo
+	// The data returned by the server.
+	Data []*NameRegistration
+}
+
+func (r *NameRegistrationPage) Destroy() {
+		FfiDestroyerPageInfo{}.Destroy(r.PageInfo);
+		FfiDestroyerSequenceNameRegistration{}.Destroy(r.Data);
+}
+
+type FfiConverterNameRegistrationPage struct {}
+
+var FfiConverterNameRegistrationPageINSTANCE = FfiConverterNameRegistrationPage{}
+
+func (c FfiConverterNameRegistrationPage) Lift(rb RustBufferI) NameRegistrationPage {
+	return LiftFromRustBuffer[NameRegistrationPage](c, rb)
+}
+
+func (c FfiConverterNameRegistrationPage) Read(reader io.Reader) NameRegistrationPage {
+	return NameRegistrationPage {
+			FfiConverterPageInfoINSTANCE.Read(reader),
+			FfiConverterSequenceNameRegistrationINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterNameRegistrationPage) Lower(value NameRegistrationPage) C.RustBuffer {
+	return LowerIntoRustBuffer[NameRegistrationPage](c, value)
+}
+
+func (c FfiConverterNameRegistrationPage) Write(writer io.Writer, value NameRegistrationPage) {
+		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
+		FfiConverterSequenceNameRegistrationINSTANCE.Write(writer, value.Data);
+}
+
+type FfiDestroyerNameRegistrationPage struct {}
+
+func (_ FfiDestroyerNameRegistrationPage) Destroy(value NameRegistrationPage) {
+	value.Destroy()
+}
 type ObjectFilter struct {
 	TypeTag *string
 	Owner **Address
@@ -28433,6 +29330,41 @@ func (_ FfiDestroyerMoveVisibility) Destroy(value MoveVisibility) {
 }
 
 
+// Two different view options for a name.
+// `At` -> `test@example` | `Dot` -> `test.example.iota`
+type NameFormat uint
+
+const (
+	NameFormatAt NameFormat = 1
+	NameFormatDot NameFormat = 2
+)
+
+type FfiConverterNameFormat struct {}
+
+var FfiConverterNameFormatINSTANCE = FfiConverterNameFormat{}
+
+func (c FfiConverterNameFormat) Lift(rb RustBufferI) NameFormat {
+	return LiftFromRustBuffer[NameFormat](c, rb)
+}
+
+func (c FfiConverterNameFormat) Lower(value NameFormat) C.RustBuffer {
+	return LowerIntoRustBuffer[NameFormat](c, value)
+}
+func (FfiConverterNameFormat) Read(reader io.Reader) NameFormat {
+	id := readInt32(reader)
+	return NameFormat(id)
+}
+
+func (FfiConverterNameFormat) Write(writer io.Writer, value NameFormat) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerNameFormat struct {}
+
+func (_ FfiDestroyerNameFormat) Destroy(value NameFormat) {
+}
+
+
 // State of an object prior to execution
 //
 // If an object exists (at root-level) in the store prior to this transaction,
@@ -29855,6 +30787,43 @@ func (_ FfiDestroyerOptionalMultisigAggregatedSignature) Destroy(value **Multisi
 	}
 }
 
+type FfiConverterOptionalName struct{}
+
+var FfiConverterOptionalNameINSTANCE = FfiConverterOptionalName{}
+
+func (c FfiConverterOptionalName) Lift(rb RustBufferI) **Name {
+	return LiftFromRustBuffer[**Name](c, rb)
+}
+
+func (_ FfiConverterOptionalName) Read(reader io.Reader) **Name {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterNameINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalName) Lower(value **Name) C.RustBuffer {
+	return LowerIntoRustBuffer[**Name](c, value)
+}
+
+func (_ FfiConverterOptionalName) Write(writer io.Writer, value **Name) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterNameINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalName struct {}
+
+func (_ FfiDestroyerOptionalName) Destroy(value **Name) {
+	if value != nil {
+		FfiDestroyerName{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalObject struct{}
 
 var FfiConverterOptionalObjectINSTANCE = FfiConverterOptionalObject{}
@@ -31258,6 +32227,43 @@ type FfiDestroyerOptionalMoveVisibility struct {}
 func (_ FfiDestroyerOptionalMoveVisibility) Destroy(value *MoveVisibility) {
 	if value != nil {
 		FfiDestroyerMoveVisibility{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalNameFormat struct{}
+
+var FfiConverterOptionalNameFormatINSTANCE = FfiConverterOptionalNameFormat{}
+
+func (c FfiConverterOptionalNameFormat) Lift(rb RustBufferI) *NameFormat {
+	return LiftFromRustBuffer[*NameFormat](c, rb)
+}
+
+func (_ FfiConverterOptionalNameFormat) Read(reader io.Reader) *NameFormat {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterNameFormatINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalNameFormat) Lower(value *NameFormat) C.RustBuffer {
+	return LowerIntoRustBuffer[*NameFormat](c, value)
+}
+
+func (_ FfiConverterOptionalNameFormat) Write(writer io.Writer, value *NameFormat) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterNameFormatINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalNameFormat struct {}
+
+func (_ FfiDestroyerOptionalNameFormat) Destroy(value *NameFormat) {
+	if value != nil {
+		FfiDestroyerNameFormat{}.Destroy(*value)
 	}
 }
 
@@ -32679,6 +33685,49 @@ type FfiDestroyerSequenceMultisigMemberSignature struct {}
 func (FfiDestroyerSequenceMultisigMemberSignature) Destroy(sequence []*MultisigMemberSignature) {
 	for _, value := range sequence {
 		FfiDestroyerMultisigMemberSignature{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceNameRegistration struct{}
+
+var FfiConverterSequenceNameRegistrationINSTANCE = FfiConverterSequenceNameRegistration{}
+
+func (c FfiConverterSequenceNameRegistration) Lift(rb RustBufferI) []*NameRegistration {
+	return LiftFromRustBuffer[[]*NameRegistration](c, rb)
+}
+
+func (c FfiConverterSequenceNameRegistration) Read(reader io.Reader) []*NameRegistration {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*NameRegistration, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterNameRegistrationINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceNameRegistration) Lower(value []*NameRegistration) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*NameRegistration](c, value)
+}
+
+func (c FfiConverterSequenceNameRegistration) Write(writer io.Writer, value []*NameRegistration) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*NameRegistration is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterNameRegistrationINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceNameRegistration struct {}
+
+func (FfiDestroyerSequenceNameRegistration) Destroy(sequence []*NameRegistration) {
+	for _, value := range sequence {
+		FfiDestroyerNameRegistration{}.Destroy(value)
 	}
 }
 

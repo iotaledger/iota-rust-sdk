@@ -111,6 +111,27 @@ impl Ed25519PrivateKey {
     }
 }
 
+impl crate::PrivateKeyExt for Ed25519PrivateKey {
+    const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
+
+    /// Return the raw 32-byte private key
+    fn to_bytes(&self) -> Vec<u8> {
+        self.0.to_bytes().to_vec()
+    }
+
+    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
+        if bytes.len() != Self::LENGTH {
+            return Err(crate::PrivateKeyError::InvalidScheme(
+                "invalid ed25519 key length".to_string(),
+            ));
+        }
+
+        let mut arr = [0u8; Self::LENGTH];
+        arr.copy_from_slice(bytes);
+        Ok(Self::new(arr))
+    }
+}
+
 impl Signer<Ed25519Signature> for Ed25519PrivateKey {
     fn try_sign(&self, msg: &[u8]) -> Result<Ed25519Signature, SignatureError> {
         self.0
