@@ -10,6 +10,9 @@ pub mod output_types;
 pub mod pagination;
 pub mod query_types;
 pub mod streams;
+
+use std::str::FromStr;
+
 use base64ct::Encoding;
 use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::{Error, Kind};
@@ -18,6 +21,7 @@ use iota_types::{
     Address, CheckpointSequenceNumber, CheckpointSummary, Digest, MovePackage, Object, ObjectId,
     SignedTransaction, Transaction, TransactionEffects, TransactionKind, TypeTag, UserSignature,
     framework::Coin,
+    iota_names::{NameFormat, NameRegistration, name::Name},
 };
 pub use output_types::*;
 use query_types::{
@@ -44,7 +48,11 @@ use crate::{
     error::Result,
     pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
-        CheckpointTotalTxQuery, TransactionBlockWithEffectsQuery, TransactionBlocksWithEffectsQuery,
+        CheckpointTotalTxQuery, IotaNamesAddressDefaultNameQuery,
+        IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs, IotaNamesDefaultNameQuery,
+        IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery, ResolveIotaNamesAddressArgs,
+        ResolveIotaNamesAddressQuery, TransactionBlockWithEffectsQuery,
+        TransactionBlocksWithEffectsQuery,
     },
 };
 
@@ -1693,6 +1701,103 @@ impl Client {
                 .map(TryInto::try_into)
                 .collect::<Result<Vec<_>>>()?,
         ))
+    }
+
+    /// Return the resolved address for the given name.
+    pub async fn iota_names_lookup(&self, name: &str) -> Result<Option<Address>> {
+        let operation = ResolveIotaNamesAddressQuery::build(ResolveIotaNamesAddressArgs {
+            name: name.to_owned(),
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        let Some(ResolveIotaNamesAddressQuery {
+            resolve_iota_names_address: Some(address),
+        }) = response.data
+        else {
+            return Ok(None);
+        };
+
+        Ok(Some(address.address))
+    }
+
+    /// Find all registration NFTs for the given address.
+    pub async fn iota_names_registrations(
+        &self,
+        address: Address,
+        pagination_filter: PaginationFilter,
+    ) -> Result<Page<NameRegistration>> {
+        let PaginationFilterResponse {
+            after,
+            before,
+            first,
+            last,
+        } = self.pagination_filter(pagination_filter).await;
+        let operation = IotaNamesAddressRegistrationsQuery::build(IotaNamesRegistrationsArgs {
+            address,
+            after,
+            before,
+            first,
+            last,
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        let Some(IotaNamesAddressRegistrationsQuery {
+            address:
+                Some(IotaNamesRegistrationsQuery {
+                    iota_names_registrations,
+                }),
+        }) = response.data
+        else {
+            return Ok(Page::new_empty());
+        };
+
+        Ok(Page::new(
+            iota_names_registrations.page_info,
+            iota_names_registrations
+                .nodes
+                .into_iter()
+                .map(TryInto::try_into)
+                .collect::<Result<Vec<_>>>()?,
+        ))
+    }
+
+    /// Get the default name pointing to this address, if one exists.
+    pub async fn iota_names_default_name(
+        &self,
+        address: Address,
+        format: impl Into<Option<NameFormat>>,
+    ) -> Result<Option<Name>> {
+        let operation = IotaNamesAddressDefaultNameQuery::build(IotaNamesDefaultNameArgs {
+            address,
+            format: format.into().map(Into::into),
+        });
+        let response = self.run_query(&operation).await?;
+
+        if let Some(errors) = response.errors {
+            return Err(Error::graphql_error(errors));
+        }
+
+        let Some(IotaNamesAddressDefaultNameQuery {
+            address:
+                Some(IotaNamesDefaultNameQuery {
+                    iota_names_default_name: Some(name),
+                }),
+        }) = response.data
+        else {
+            return Ok(None);
+        };
+
+        Ok(Some(Name::from_str(&name).map_err(|_| {
+            Error::from_error(Kind::Parse, format!("invalid name: {name}"))
+        })?))
     }
 }
 

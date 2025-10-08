@@ -119,6 +119,7 @@ mod events;
 mod execution_status;
 pub mod framework;
 mod gas;
+pub mod iota_names;
 mod object;
 mod object_id;
 mod transaction;
