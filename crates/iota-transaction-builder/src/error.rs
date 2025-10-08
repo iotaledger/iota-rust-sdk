@@ -75,4 +75,6 @@ pub enum Error {
     Client(iota_graphql_client::error::Error),
     #[error("Failed to dry run transaction: {0}")]
     DryRun(String),
+    #[error("Timeout waiting for transaction finalization")]
+    FinalizationTimeout,
 }

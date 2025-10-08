@@ -925,6 +925,9 @@ impl<L> TransactionBuilder<Client, L> {
                     .map_err(Error::Client)?
                     .is_none()
             {
+                if retries_left == 1 {
+                    return Err(Error::FinalizationTimeout);
+                }
                 tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
                 retries_left -= 1;
             }
