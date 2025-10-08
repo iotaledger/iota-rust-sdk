@@ -392,6 +392,7 @@ impl Object {
     }
 
     /// Return this object's reference
+    #[cfg(feature = "serde")]
     pub fn object_ref(&self) -> ObjectReference {
         ObjectReference {
             object_id: self.object_id(),
