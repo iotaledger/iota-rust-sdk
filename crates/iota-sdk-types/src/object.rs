@@ -391,6 +391,15 @@ impl Object {
         }
     }
 
+    /// Return this object's reference
+    pub fn object_ref(&self) -> ObjectReference {
+        ObjectReference {
+            object_id: self.object_id(),
+            version: self.version(),
+            digest: self.digest(),
+        }
+    }
+
     /// Return this object's version
     pub fn version(&self) -> Version {
         match &self.data {

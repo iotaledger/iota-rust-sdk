@@ -11,11 +11,11 @@ use std::{
 use iota_crypto::IotaSigner;
 use iota_graphql_client::{
     Client, DryRunResult,
-    query_types::{ObjectRef, TransactionMetadata},
+    query_types::{ObjectFilter, ObjectRef, TransactionMetadata},
 };
 use iota_types::{
     Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
-    Transaction, TransactionEffects, TransactionExpiration, TypeTag,
+    StructTag, Transaction, TransactionEffects, TransactionExpiration, TypeTag,
 };
 use serde::Serialize;
 
@@ -702,6 +702,30 @@ impl<L> TransactionBuilder<Client, L> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
+        if !self.data.inputs.values().any(|i| i.is_gas) {
+            for coin in self
+                .client
+                .objects(
+                    ObjectFilter {
+                        type_: Some(
+                            StructTag::coin(TypeTag::Struct(Box::new(StructTag::gas_coin())))
+                                .to_string(),
+                        ),
+                        owner: Some(self.data.sender),
+                        ..Default::default()
+                    },
+                    Default::default(),
+                )
+                .await
+                .map_err(Error::Client)?
+                .data
+            {
+                self.set_input(
+                    InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
+                    true,
+                );
+            }
+        }
         for (id, input) in std::mem::take(&mut self.data.inputs) {
             match input.kind {
                 InputKind::ImmutableOrOwned(object_id) | InputKind::Receiving(object_id) => {
