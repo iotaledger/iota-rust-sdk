@@ -7,7 +7,6 @@ import iota_sdk.Identifier
 import iota_sdk.ObjectFilter
 import iota_sdk.ObjectId
 import iota_sdk.PtbArgument
-import iota_sdk.StructTag
 import iota_sdk.TransactionBuilder
 import kotlinx.coroutines.runBlocking
 
@@ -21,19 +20,7 @@ fun main() = runBlocking {
         }
         val stakedIota = stakedIotas.data[0]
 
-        val gasCoins =
-                client.objects(
-                        ObjectFilter(
-                                typeTag = StructTag.gasCoin().toString(),
-                                owner = stakedIota.owner().asAddress()
-                        )
-                )
-        if (gasCoins.data.isEmpty()) {
-            throw Exception("no gas coins found")
-        }
-        val gasCoin = gasCoins.data[0]
-
-        val builder = TransactionBuilder.init(gasCoin.owner().asAddress(), client)
+        val builder = TransactionBuilder.init(stakedIota.owner().asAddress(), client)
 
         builder.moveCall(
                 Address.fromHex("0x3"),
@@ -44,7 +31,6 @@ fun main() = runBlocking {
                         PtbArgument.objectId(stakedIota.objectId())
                 ),
         )
-        builder.gas(gasCoin.objectId()).gasBudget(1000000000uL)
 
         val res = builder.dryRun()
 

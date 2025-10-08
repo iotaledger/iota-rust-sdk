@@ -34,8 +34,6 @@ func main() {
 
 	coinObjId, _ := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
 
-	gasCoinObjId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
-
 	iotaSystemAddress, _ := sdk.AddressFromHex("0x3")
 
 	iotaSystemId, _ := sdk.ObjectIdFromHex("0x5")
@@ -58,7 +56,6 @@ func main() {
 		nil,
 		nil,
 	)
-	builder.Gas(gasCoinObjId).GasBudget(1000000000)
 
 	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {

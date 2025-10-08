@@ -9,7 +9,10 @@ use std::{
 };
 
 use iota_crypto::IotaSigner;
-use iota_graphql_client::{Client, DryRunResult};
+use iota_graphql_client::{
+    Client, DryRunResult,
+    query_types::{ObjectRef, TransactionMetadata},
+};
 use iota_types::{
     Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
     Transaction, TransactionEffects, TransactionExpiration, TypeTag,
@@ -17,6 +20,7 @@ use iota_types::{
 use serde::Serialize;
 
 use crate::{
+    PTBArgument,
     builder::{
         named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArguments,
@@ -31,7 +35,8 @@ use crate::{
 };
 
 mod named_results;
-pub(crate) mod ptb_arguments;
+/// Argument types for PTBs
+pub mod ptb_arguments;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
@@ -190,6 +195,11 @@ impl TransactionBuilder {
 }
 
 impl<C, L> TransactionBuilder<C, L> {
+    /// Apply the given parameter and return the generated argument
+    pub fn apply_argument<P: PTBArgument>(&mut self, param: P) -> Argument {
+        param.arg(&mut self.data)
+    }
+
     /// Apply the given parameters and return the generated arguments
     pub fn apply_arguments<P: PTBArguments>(&mut self, param: P) -> Vec<Argument> {
         param.args(&mut self.data)
@@ -654,7 +664,7 @@ impl<L> TransactionBuilder<Client, L> {
     }
 
     /// Upgrade a move package.
-    pub fn upgrade<U: PTBArguments>(
+    pub fn upgrade<U: PTBArgument>(
         &mut self,
         package_id: ObjectId,
         upgrade_cap: U,
@@ -664,16 +674,12 @@ impl<L> TransactionBuilder<Client, L> {
             PublishType::Path(_path) => todo!("load the package from the path"),
             PublishType::Compiled(m) => m,
         };
-        let ticket = self.apply_arguments(upgrade_cap);
-        if ticket.len() != 1 {
-            // TODO: Maybe there's a better way
-            panic!("invalid upgrade cap");
-        }
+        let ticket = self.apply_argument(upgrade_cap);
         self.state_change(Upgrade {
             modules: module.modules,
             dependencies: module.dependencies,
             package: package_id,
-            ticket: ticket.into_iter().next().unwrap(),
+            ticket,
         })
     }
 
@@ -813,9 +819,12 @@ impl<L> TransactionBuilder<Client, L> {
         if self.data.gas_budget.is_none() {
             let res = self
                 .client
-                .dry_run_tx(&txn, true)
+                .dry_run_tx_kind(&txn.kind, true, Default::default())
                 .await
                 .map_err(Error::Client)?;
+            if let Some(err) = res.error {
+                return Err(Error::DryRun(err));
+            }
             txn.gas_payment.budget = res
                 .effects
                 .ok_or_else(|| Error::MissingGasBudget)?
@@ -829,9 +838,34 @@ impl<L> TransactionBuilder<Client, L> {
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
         let txn = self.resolve_ptb().await?;
+        if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
+            return Err(Error::DryRun(
+                "gas coins were provided without a gas budget".to_owned(),
+            ));
+        }
+        let gas_objects = txn
+            .gas_payment
+            .objects
+            .iter()
+            .map(|r| ObjectRef {
+                address: r.object_id,
+                digest: r.digest.to_base58(),
+                version: r.version,
+            })
+            .collect::<Vec<_>>();
         let res = self
             .client
-            .dry_run_tx(&txn, skip_checks)
+            .dry_run_tx_kind(
+                &txn.kind,
+                skip_checks,
+                TransactionMetadata {
+                    gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
+                    gas_budget: (txn.gas_payment.budget != 0).then_some(txn.gas_payment.budget),
+                    gas_price: Some(txn.gas_payment.price),
+                    gas_sponsor: Some(txn.gas_payment.owner),
+                    sender: Some(txn.sender),
+                },
+            )
             .await
             .map_err(Error::Client)?;
         Ok(res)

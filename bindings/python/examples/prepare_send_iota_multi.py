@@ -11,7 +11,7 @@ async def main():
     sender = Address.from_hex(
         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
     )
-    gas_coin_id = ObjectId.from_hex(
+    coin_id = ObjectId.from_hex(
         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
     )
 
@@ -31,17 +31,16 @@ async def main():
 
     builder = await TransactionBuilder.init(sender, client)
 
-    builder.split_coins(gas_coin_id, amounts, labels)
+    builder.split_coins(coin_id, amounts, labels)
     for i, r in enumerate(recipients):
         builder.transfer_objects(Address.from_hex(r[0]), [PtbArgument.res(labels[i])])
-    builder.gas(gas_coin_id).gas_budget(1000000000)
 
     txn = await builder.finish()
 
     print("Signing Digest:", hex_encode(txn.signing_digest()))
     print("Txn Bytes:", base64_encode(txn.bcs_serialize()))
 
-    res = await builder.dry_run()
+    res = await client.dry_run_tx(txn)
 
     if res.error is not None:
         raise Exception(f"Failed to send IOTA: {res.error}")

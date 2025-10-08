@@ -31,11 +31,6 @@ fun main() = runBlocking {
                         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
                 )
 
-        val gasCoinId =
-                ObjectId.fromHex(
-                        "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
-                )
-
         val builder = TransactionBuilder.init(myAddress, client)
 
         builder.moveCall(
@@ -48,7 +43,6 @@ fun main() = runBlocking {
                         PtbArgument.address(validator.address)
                 ),
         )
-        builder.gas(gasCoinId).gasBudget(1000000000uL)
 
         val res = builder.dryRun()
 

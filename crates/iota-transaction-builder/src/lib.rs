@@ -16,9 +16,10 @@ pub mod unresolved;
 pub use self::{
     builder::{
         TransactionBuilder,
-        ptb_arguments::{PTBArguments, Receiving, Shared, SharedMut, res},
+        ptb_arguments::{PTBArgument, PTBArguments, Receiving, Shared, SharedMut, res},
     },
     publish_type::MovePackageData,
+    types::PureBytes,
 };
 
 #[cfg(test)]
@@ -82,9 +83,9 @@ mod tests {
         Vec<CoinInfo>,
     ) {
         let (address, pk) = helper_address_pk();
-        let client = Client::new_localhost();
+        let client = Client::new_localnet();
         let mut tx = TransactionBuilder::new(address).with_client(client.clone());
-        let coins = FaucetClient::local()
+        let coins = FaucetClient::new_localnet()
             .request_and_wait(address)
             .await
             .unwrap()
@@ -151,7 +152,6 @@ mod tests {
                 .unwrap(),
         ));
         tx.gas_price(1000);
-        tx.gas_budget(500000000);
 
         tx.finish().unwrap();
     }
@@ -161,7 +161,7 @@ mod tests {
         let (mut tx, _, pk, coins) = helper_setup().await;
 
         // get the object information from the client
-        let client = Client::new_localhost();
+        let client = Client::new_localnet();
         let coin = coins.first().unwrap().id;
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, coin);
@@ -193,7 +193,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_split_transfer() {
-        let client = Client::new_localhost();
+        let client = Client::new_localnet();
         let (mut tx, _, pk, _) = helper_setup().await;
 
         // transfer 1 IOTA from Gas coin
@@ -313,7 +313,7 @@ mod tests {
         }
         wait_for_tx_and_check_effects_status_success(effects).await;
 
-        let client = Client::new_localhost();
+        let client = Client::new_localnet();
         let mut tx = TransactionBuilder::new(address).with_client(client.clone());
         let mut upgrade_cap = None;
         for o in created_objs {
