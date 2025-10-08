@@ -11,17 +11,17 @@ import (
 
 func main() {
 	privateKey := sdk.Ed25519PrivateKeyGenerate()
+	privateKeyBech32, err := privateKey.ToBech32()
+	if err != nil {
+		panic(err)
+	}
 	publicKey := privateKey.PublicKey()
 	address := publicKey.DeriveAddress()
 	publicKeyBytes := publicKey.ToBytes()
 
 	flaggedPublicKey := append([]byte{byte(sdk.SignatureSchemeEd25519)}, publicKeyBytes...)
-	privateKeyDer, err := privateKey.ToDer()
-	if err != nil {
-		panic(err)
-	}
 
-	fmt.Println("Private Key:", sdk.Base64Encode(privateKeyDer))
+	fmt.Println("Private Key:", privateKeyBech32)
 	fmt.Println("Public Key:", sdk.Base64Encode(publicKeyBytes))
 	fmt.Println("Public Key With Flag:", sdk.Base64Encode(flaggedPublicKey))
 	fmt.Println("Address:", address.ToHex())

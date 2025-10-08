@@ -2214,6 +2214,32 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2370,6 +2396,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes(
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der(
 ): Short
@@ -2741,6 +2771,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_der(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_pem(
@@ -2781,6 +2815,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem(
@@ -2820,6 +2858,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user(
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_der(
 ): Short
@@ -3183,6 +3225,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_digest_generate(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem(
@@ -3353,6 +3397,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_programmabletransaction_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_publish_new(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem(
@@ -3381,6 +3427,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem(
@@ -3408,6 +3456,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der(
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der(
 ): Short
@@ -3868,6 +3920,8 @@ fun uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey(`ptr`: Pointer,uniffi_out_err
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ed25519privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -3879,6 +3933,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new(`bytes`: RustBuffer
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_der(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -4574,6 +4632,8 @@ fun uniffi_iota_sdk_ffi_fn_clone_secp256k1privatekey(`ptr`: Pointer,uniffi_out_e
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256k1privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -4585,6 +4645,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_new(`bytes`: RustBuff
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_public_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_der(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -4662,6 +4726,8 @@ fun uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(`ptr`: Pointer,uniffi_out_e
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -4673,6 +4739,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(`bytes`: RustBuff
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -4750,6 +4820,10 @@ fun uniffi_iota_sdk_ffi_fn_clone_simplekeypair(`ptr`: Pointer,uniffi_out_err: Un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_simplekeypair(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -4757,6 +4831,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(`s`: RustBuffer.By
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -5607,6 +5685,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme() != 8128.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32() != 64514.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes() != 26261.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der() != 61433.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6162,6 +6246,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme() != 60810.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32() != 60488.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes() != 18583.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_der() != 65507.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6222,6 +6312,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme() != 20973.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32() != 4230.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes() != 8648.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der() != 48507.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6280,6 +6376,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme() != 19826.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32() != 4776.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes() != 1555.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_der() != 22161.toShort()) {
@@ -6825,6 +6927,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() != 8094.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32() != 16842.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der() != 42838.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7080,6 +7185,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_publish_new() != 4785.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32() != 34529.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der() != 45448.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7122,6 +7230,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new() != 16080.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32() != 7016.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der() != 63595.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7162,6 +7273,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new() != 57317.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32() != 51811.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes() != 9299.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der() != 24923.toShort()) {
@@ -14797,6 +14914,17 @@ public interface Ed25519PrivateKeyInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Encode this private key as `flag || privkey` in Bech32 starting with
+     * "iotaprivkey" to a string.
+     */
+    fun `toBech32`(): kotlin.String
+    
+    /**
+     * Serialize this private key to bytes.
+     */
+    fun `toBytes`(): kotlin.ByteArray
+    
+    /**
      * Serialize this private key as DER-encoded PKCS#8
      */
     fun `toDer`(): kotlin.ByteArray
@@ -14932,6 +15060,38 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
 
     
     /**
+     * Encode this private key as `flag || privkey` in Bech32 starting with
+     * "iotaprivkey" to a string.
+     */
+    @Throws(SdkFfiException::class)override fun `toBech32`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bech32(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Serialize this private key to bytes.
+     */override fun `toBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Serialize this private key as DER-encoded PKCS#8
      */
     @Throws(SdkFfiException::class)override fun `toDer`(): kotlin.ByteArray {
@@ -15017,6 +15177,21 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
 
     
     companion object {
+        
+    /**
+     * Decode a private key from `flag || privkey` in Bech32 starting with
+     * "iotaprivkey".
+     */
+    @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): Ed25519PrivateKey {
+            return FfiConverterTypeEd25519PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(
+        FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
         
     /**
      * Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
@@ -29311,6 +29486,17 @@ public interface Secp256k1PrivateKeyInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Encode this private key as `flag || privkey` in Bech32 starting with
+     * "iotaprivkey" to a string.
+     */
+    fun `toBech32`(): kotlin.String
+    
+    /**
+     * Serialize this private key to bytes.
+     */
+    fun `toBytes`(): kotlin.ByteArray
+    
+    /**
      * Serialize this private key as DER-encoded PKCS#8
      */
     fun `toDer`(): kotlin.ByteArray
@@ -29446,6 +29632,38 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
 
     
     /**
+     * Encode this private key as `flag || privkey` in Bech32 starting with
+     * "iotaprivkey" to a string.
+     */
+    @Throws(SdkFfiException::class)override fun `toBech32`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Serialize this private key to bytes.
+     */override fun `toBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Serialize this private key as DER-encoded PKCS#8
      */
     @Throws(SdkFfiException::class)override fun `toDer`(): kotlin.ByteArray {
@@ -29531,6 +29749,21 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
 
     
     companion object {
+        
+    /**
+     * Decode a private key from `flag || privkey` in Bech32 starting with
+     * "iotaprivkey".
+     */
+    @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): Secp256k1PrivateKey {
+            return FfiConverterTypeSecp256k1PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(
+        FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
         
     /**
      * Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
@@ -30959,6 +31192,17 @@ public interface Secp256r1PrivateKeyInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Encode this private key as `flag || privkey` in Bech32 starting with
+     * "iotaprivkey" to a string.
+     */
+    fun `toBech32`(): kotlin.String
+    
+    /**
+     * Serialize this private key to bytes.
+     */
+    fun `toBytes`(): kotlin.ByteArray
+    
+    /**
      * Serialize this private key as DER-encoded PKCS#8
      */
     fun `toDer`(): kotlin.ByteArray
@@ -31106,6 +31350,38 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
 
     
     /**
+     * Encode this private key as `flag || privkey` in Bech32 starting with
+     * "iotaprivkey" to a string.
+     */
+    @Throws(SdkFfiException::class)override fun `toBech32`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Serialize this private key to bytes.
+     */override fun `toBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Serialize this private key as DER-encoded PKCS#8
      */
     @Throws(SdkFfiException::class)override fun `toDer`(): kotlin.ByteArray {
@@ -31200,6 +31476,21 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
 
     
     companion object {
+        
+    /**
+     * Decode a private key from `flag || privkey` in Bech32 starting with
+     * "iotaprivkey".
+     */
+    @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): Secp256r1PrivateKey {
+            return FfiConverterTypeSecp256r1PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
+        FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
         
     /**
      * Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
@@ -32628,6 +32919,17 @@ public interface SimpleKeypairInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
+     * "iotaprivkey" to a string. Note that the pubkey is not encoded.
+     */
+    fun `toBech32`(): kotlin.String
+    
+    /**
+     * Encode a SimpleKeypair as `flag || privkey` in bytes
+     */
+    fun `toBytes`(): kotlin.ByteArray
+    
+    /**
      * Serialize this private key as DER-encoded PKCS#8
      */
     fun `toDer`(): kotlin.ByteArray
@@ -32752,6 +33054,38 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
 
     
     /**
+     * Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
+     * "iotaprivkey" to a string. Note that the pubkey is not encoded.
+     */
+    @Throws(SdkFfiException::class)override fun `toBech32`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Encode a SimpleKeypair as `flag || privkey` in bytes
+     */override fun `toBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Serialize this private key as DER-encoded PKCS#8
      */
     @Throws(SdkFfiException::class)override fun `toDer`(): kotlin.ByteArray {
@@ -32811,6 +33145,36 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
 
     
     companion object {
+        
+    /**
+     * Decode a SimpleKeypair from `flag || privkey` in Bech32 starting with
+     * "iotaprivkey" to SimpleKeypair. The public key is computed directly from
+     * the private key bytes.
+     */
+    @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): SimpleKeypair {
+            return FfiConverterTypeSimpleKeypair.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(
+        FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Decode a SimpleKeypair from `flag || privkey` bytes
+     */
+    @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): SimpleKeypair {
+            return FfiConverterTypeSimpleKeypair.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(
+        FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
         
     /**
      * Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary

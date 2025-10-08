@@ -999,6 +999,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32()
+	})
+	if checksum != 64514 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes()
+	})
+	if checksum != 26261 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der()
 	})
 	if checksum != 61433 {
@@ -2664,6 +2682,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32()
+	})
+	if checksum != 60488 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes()
+	})
+	if checksum != 18583 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_der()
 	})
 	if checksum != 65507 {
@@ -2844,6 +2880,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32()
+	})
+	if checksum != 4230 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes()
+	})
+	if checksum != 8648 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der()
 	})
 	if checksum != 48507 {
@@ -3020,6 +3074,24 @@ func uniffiCheckChecksums() {
 	if checksum != 19826 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32()
+	})
+	if checksum != 4776 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes()
+	})
+	if checksum != 1555 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4653,6 +4725,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32()
+	})
+	if checksum != 16842 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der()
 	})
 	if checksum != 42838 {
@@ -5418,6 +5499,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32()
+	})
+	if checksum != 34529 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der()
 	})
 	if checksum != 45448 {
@@ -5544,6 +5634,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32()
+	})
+	if checksum != 7016 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der()
 	})
 	if checksum != 63595 {
@@ -5666,6 +5765,24 @@ func uniffiCheckChecksums() {
 	if checksum != 57317 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32()
+	})
+	if checksum != 51811 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes()
+	})
+	if checksum != 9299 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9536,6 +9653,11 @@ func (_ FfiDestroyerDigest) Destroy(value *Digest) {
 type Ed25519PrivateKeyInterface interface {
 	PublicKey() *Ed25519PublicKey
 	Scheme() SignatureScheme
+	// Encode this private key as `flag || privkey` in Bech32 starting with
+	// "iotaprivkey" to a string.
+	ToBech32() (string, error)
+	// Serialize this private key to bytes.
+	ToBytes() []byte
 	// Serialize this private key as DER-encoded PKCS#8
 	ToDer() ([]byte, error)
 	// Serialize this private key as PEM-encoded PKCS#8
@@ -9560,6 +9682,20 @@ func NewEd25519PrivateKey(bytes []byte) (*Ed25519PrivateKey, error) {
 		}
 }
 
+
+// Decode a private key from `flag || privkey` in Bech32 starting with
+// "iotaprivkey".
+func Ed25519PrivateKeyFromBech32(value string) (*Ed25519PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 // Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
 // format).
@@ -9611,6 +9747,37 @@ func (_self *Ed25519PrivateKey) Scheme() SignatureScheme {
 	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Encode this private key as `flag || privkey` in Bech32 starting with
+// "iotaprivkey" to a string.
+func (_self *Ed25519PrivateKey) ToBech32() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bech32(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize this private key to bytes.
+func (_self *Ed25519PrivateKey) ToBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -17002,6 +17169,11 @@ func (_ FfiDestroyerPublish) Destroy(value *Publish) {
 type Secp256k1PrivateKeyInterface interface {
 	PublicKey() *Secp256k1PublicKey
 	Scheme() SignatureScheme
+	// Encode this private key as `flag || privkey` in Bech32 starting with
+	// "iotaprivkey" to a string.
+	ToBech32() (string, error)
+	// Serialize this private key to bytes.
+	ToBytes() []byte
 	// Serialize this private key as DER-encoded PKCS#8
 	ToDer() ([]byte, error)
 	// Serialize this private key as PEM-encoded PKCS#8
@@ -17026,6 +17198,20 @@ func NewSecp256k1PrivateKey(bytes []byte) (*Secp256k1PrivateKey, error) {
 		}
 }
 
+
+// Decode a private key from `flag || privkey` in Bech32 starting with
+// "iotaprivkey".
+func Secp256k1PrivateKeyFromBech32(value string) (*Secp256k1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256k1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256k1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 // Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
 // format).
@@ -17077,6 +17263,37 @@ func (_self *Secp256k1PrivateKey) Scheme() SignatureScheme {
 	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Encode this private key as `flag || privkey` in Bech32 starting with
+// "iotaprivkey" to a string.
+func (_self *Secp256k1PrivateKey) ToBech32() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize this private key to bytes.
+func (_self *Secp256k1PrivateKey) ToBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -17777,6 +17994,11 @@ type Secp256r1PrivateKeyInterface interface {
 	// Get the public key corresponding to this private key.
 	PublicKey() *Secp256r1PublicKey
 	Scheme() SignatureScheme
+	// Encode this private key as `flag || privkey` in Bech32 starting with
+	// "iotaprivkey" to a string.
+	ToBech32() (string, error)
+	// Serialize this private key to bytes.
+	ToBytes() []byte
 	// Serialize this private key as DER-encoded PKCS#8
 	ToDer() ([]byte, error)
 	// Serialize this private key as PEM-encoded PKCS#8
@@ -17804,6 +18026,20 @@ func NewSecp256r1PrivateKey(bytes []byte) (*Secp256r1PrivateKey, error) {
 		}
 }
 
+
+// Decode a private key from `flag || privkey` in Bech32 starting with
+// "iotaprivkey".
+func Secp256r1PrivateKeyFromBech32(value string) (*Secp256r1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 // Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
 // format).
@@ -17857,6 +18093,37 @@ func (_self *Secp256r1PrivateKey) Scheme() SignatureScheme {
 	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Encode this private key as `flag || privkey` in Bech32 starting with
+// "iotaprivkey" to a string.
+func (_self *Secp256r1PrivateKey) ToBech32() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize this private key to bytes.
+func (_self *Secp256r1PrivateKey) ToBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -18559,6 +18826,11 @@ func (_ FfiDestroyerSecp256r1VerifyingKey) Destroy(value *Secp256r1VerifyingKey)
 type SimpleKeypairInterface interface {
 	PublicKey() *MultisigMemberPublicKey
 	Scheme() SignatureScheme
+	// Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
+	// "iotaprivkey" to a string. Note that the pubkey is not encoded.
+	ToBech32() (string, error)
+	// Encode a SimpleKeypair as `flag || privkey` in bytes
+	ToBytes() []byte
 	// Serialize this private key as DER-encoded PKCS#8
 	ToDer() ([]byte, error)
 	// Serialize this private key as DER-encoded PKCS#8
@@ -18570,6 +18842,34 @@ type SimpleKeypair struct {
 	ffiObject FfiObject
 }
 
+
+// Decode a SimpleKeypair from `flag || privkey` in Bech32 starting with
+// "iotaprivkey" to SimpleKeypair. The public key is computed directly from
+// the private key bytes.
+func SimpleKeypairFromBech32(value string) (*SimpleKeypair, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *SimpleKeypair
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSimpleKeypairINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Decode a SimpleKeypair from `flag || privkey` bytes
+func SimpleKeypairFromBytes(bytes []byte) (*SimpleKeypair, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *SimpleKeypair
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSimpleKeypairINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 // Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
 // format).
@@ -18615,6 +18915,37 @@ func (_self *SimpleKeypair) Scheme() SignatureScheme {
 	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
+// "iotaprivkey" to a string. Note that the pubkey is not encoded.
+func (_self *SimpleKeypair) ToBech32() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleKeypair")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Encode a SimpleKeypair as `flag || privkey` in bytes
+func (_self *SimpleKeypair) ToBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleKeypair")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
