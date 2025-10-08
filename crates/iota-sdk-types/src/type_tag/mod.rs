@@ -268,6 +268,7 @@ impl Identifier {
             _ => false,
         }
     }
+
     /// Return true if this character can appear in a Move identifier.
     ///
     /// Note: there are stricter restrictions on whether a character can begin a
@@ -302,6 +303,7 @@ impl PartialEq<str> for Identifier {
 
 impl std::ops::Deref for Identifier {
     type Target = IdentifierRef;
+
     fn deref(&self) -> &IdentifierRef {
         unsafe { std::mem::transmute::<&str, &IdentifierRef>(self.0.as_ref()) }
     }
@@ -321,6 +323,7 @@ impl IdentifierRef {
         if !Identifier::is_valid(s) {
             panic!("String is not a valid Move identifier");
         }
+
         // SAFETY: the following transmute is safe because
         // (1) it's equivalent to the unsafe-reborrow inside IdentStr::ref_cast()
         //     (which we can't use b/c it's not const).
@@ -332,18 +335,22 @@ impl IdentifierRef {
         // is_valid check.
         unsafe { std::mem::transmute::<&'static str, &'static Self>(s) }
     }
+
     /// Returns true if this string is a valid identifier.
     pub fn is_valid(s: &str) -> bool {
         Identifier::is_valid(s)
     }
+
     /// Returns the length of `self` in bytes.
     pub fn len(&self) -> usize {
         self.0.len()
     }
+
     /// Returns `true` if `self` has a length of zero bytes.
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
+
     /// Converts `self` to a `&str`.
     ///
     /// This is not implemented as a `From` trait to discourage automatic
@@ -351,6 +358,7 @@ impl IdentifierRef {
     pub fn as_str(&self) -> &str {
         &self.0
     }
+
     /// Converts `self` to a byte slice.
     pub fn as_bytes(&self) -> &[u8] {
         self.0.as_bytes()
@@ -365,6 +373,7 @@ impl From<&IdentifierRef> for Identifier {
 
 impl ToOwned for IdentifierRef {
     type Owned = Identifier;
+
     fn to_owned(&self) -> Identifier {
         Identifier(self.0.into())
     }

@@ -13,7 +13,7 @@ use signature::{Signer, Verifier};
 
 use crate::SignatureError;
 
-#[derive(Clone)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct Secp256k1PrivateKey(SigningKey);
 
 impl std::fmt::Debug for Secp256k1PrivateKey {
@@ -113,6 +113,26 @@ impl Secp256k1PrivateKey {
     #[cfg(feature = "pem")]
     pub(crate) fn from_k256(private_key: SigningKey) -> Self {
         Self(private_key)
+    }
+}
+
+impl crate::PrivateKeyExt for Secp256k1PrivateKey {
+    const SCHEME: SignatureScheme = SignatureScheme::Secp256k1;
+
+    fn to_bytes(&self) -> Vec<u8> {
+        self.0.to_bytes().as_slice().to_vec()
+    }
+
+    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
+        if bytes.len() != Self::LENGTH {
+            return Err(crate::PrivateKeyError::InvalidScheme(
+                "invalid secp256k1 key length".to_string(),
+            ));
+        }
+
+        let mut arr = [0u8; Self::LENGTH];
+        arr.copy_from_slice(bytes);
+        Self::new(arr).map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
     }
 }
 
