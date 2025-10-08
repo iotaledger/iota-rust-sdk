@@ -8,4 +8,5 @@ pub mod passkey;
 pub mod secp256k1;
 pub mod secp256r1;
 pub mod simple;
+pub mod validator;
 pub mod zklogin;
