@@ -7,6 +7,7 @@ services:
     container_name: gas-station-redis
     volumes:
       - redis_data:/data
+    network_mode: host
   iota-gas-station:
     image: "${DOCKER_IMAGE:-iotaledger/gas-station:latest}"
     build:
@@ -28,6 +29,7 @@ services:
       - GAS_STATION_AUTH=${GAS_STATION_AUTH:-}
     volumes:
       - ${LOCAL_CONFIG_PATH:-./config.yaml}:/app/config.yaml
+    network_mode: host
 
 volumes:
   redis_data:

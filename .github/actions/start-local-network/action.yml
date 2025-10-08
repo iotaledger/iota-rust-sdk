@@ -42,3 +42,5 @@ runs:
 
         echo "Starting Gas Station"
         docker compose -f ./.github/actions/start-local-network/gas_station_compose.yml up -d
+
+        docker logs iota-gas-station & sleep 10
