@@ -455,6 +455,15 @@ impl Object {
     pub fn storage_rebate(&self) -> u64 {
         self.storage_rebate
     }
+
+    #[cfg(feature = "serde")]
+    pub fn to_rust<T: serde::de::DeserializeOwned>(&self) -> anyhow::Result<T> {
+        use anyhow::Context;
+
+        Ok(bcs::from_bytes::<T>(
+            &self.as_struct_opt().context("not a struct")?.contents,
+        )?)
+    }
 }
 
 fn id_opt(contents: &[u8]) -> Option<ObjectId> {
