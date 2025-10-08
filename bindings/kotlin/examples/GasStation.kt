@@ -14,6 +14,7 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newLocalnet()
         var gasStationUrl = "http://0.0.0.0:9527"
+        var gasStationAuthToken = "test"
         var keypair = Ed25519PrivateKey.generate()
         var sender = keypair.publicKey().deriveAddress()
         var simpleKey = SimpleKeypair.fromEd25519(keypair)
@@ -29,11 +30,9 @@ fun main() = runBlocking {
                 )
         )
 
-        var token = "test"
-
         builder.gasStationSponsor(
                 gasStationUrl,
-                headers = mapOf("Authorization" to listOf("Bearer $token"))
+                headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken"))
         )
 
         val res = builder.execute(simpleKey, true)

@@ -12,12 +12,11 @@ use reqwest::header::HeaderValue;
 async fn main() -> Result<()> {
     let client = Client::new_localnet();
     let gas_station_url = reqwest::Url::parse("http://0.0.0.0:9527")?;
+    let gas_station_auth_token = "test";
     let keypair = Ed25519PrivateKey::generate(rand::thread_rng());
     let sender = keypair.public_key().derive_address();
 
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
-
-    let token = "test";
 
     builder
         .move_call(Address::ONE, "u64", "sqrt")
@@ -25,7 +24,7 @@ async fn main() -> Result<()> {
         .gas_station_sponsor(gas_station_url)
         .add_gas_station_header(
             reqwest::header::AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {token}"))?,
+            HeaderValue::from_str(&format!("Bearer {gas_station_auth_token}"))?,
         );
 
     let res = builder.execute(&keypair.into(), true).await?;

@@ -9,6 +9,7 @@ from lib.iota_sdk_ffi import *
 async def main():
     client = GraphQlClient.new_localnet()
     gas_station_url = "http://0.0.0.0:9527"
+    gas_station_auth_token = "test"
     keypair = Ed25519PrivateKey.generate()
     sender = keypair.public_key().derive_address()
     simple_key = SimpleKeypair.from_ed25519(keypair)
@@ -22,10 +23,8 @@ async def main():
         [PtbArgument.u64(64)],
     )
 
-    token = "test"
-
     builder.gas_station_sponsor(
-        gas_station_url, headers={"Authorization": [f"Bearer {token}"]}
+        gas_station_url, headers={"Authorization": [f"Bearer {gas_station_auth_token}"]}
     )
 
     res = await builder.execute(simple_key, True)

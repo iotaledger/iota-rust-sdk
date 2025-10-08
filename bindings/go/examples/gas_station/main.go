@@ -12,6 +12,7 @@ import (
 func main() {
 	client := sdk.GraphQlClientNewLocalnet()
 	gasStationUrl := "http://0.0.0.0:9527"
+	gasStationAuthToken := "test"
 	keypair := sdk.Ed25519PrivateKeyGenerate()
 	sender := keypair.PublicKey().DeriveAddress()
 	simpleKey := sdk.SimpleKeypairFromEd25519(keypair)
@@ -31,10 +32,8 @@ func main() {
 		nil,
 	)
 
-	token := "test"
-
 	headers := make(map[string][]string)
-	headers["Authorization"] = []string{fmt.Sprintf("Bearer %v", token)}
+	headers["Authorization"] = []string{fmt.Sprintf("Bearer %v", gasStationAuthToken)}
 
 	builder.GasStationSponsor(gasStationUrl, nil, &headers)
 
