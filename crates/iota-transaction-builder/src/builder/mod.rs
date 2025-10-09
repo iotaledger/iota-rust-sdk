@@ -707,10 +707,7 @@ impl<L> TransactionBuilder<Client, L> {
                 .client
                 .objects(
                     ObjectFilter {
-                        type_: Some(
-                            StructTag::coin(TypeTag::Struct(Box::new(StructTag::gas_coin())))
-                                .to_string(),
-                        ),
+                        type_: Some(StructTag::gas_coin().to_string()),
                         owner: Some(self.data.sender),
                         ..Default::default()
                     },
