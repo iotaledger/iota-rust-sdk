@@ -1142,7 +1142,7 @@ mod transaction_expiration {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use base64ct::{Base64, Encoding};
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
