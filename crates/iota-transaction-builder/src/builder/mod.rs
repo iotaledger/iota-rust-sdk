@@ -918,15 +918,16 @@ impl<L> TransactionBuilder<Client, L> {
 
         let mut retries_left = 100;
         if wait_for_finalization {
+            let digest = txn.digest();
             while retries_left > 0
                 && client
-                    .transaction(txn.digest())
+                    .transaction(digest)
                     .await
                     .map_err(Error::Client)?
                     .is_none()
             {
                 if retries_left == 1 {
-                    return Err(Error::FinalizationTimeout);
+                    return Err(Error::FinalizationTimeout(digest));
                 }
                 tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
                 retries_left -= 1;

@@ -5,7 +5,7 @@
 //! Transaction Builder errors.
 
 use base64ct::Error as Base64Error;
-use iota_types::ObjectId;
+use iota_types::{Digest, ObjectId};
 
 use crate::builder::gas_station::{GasStationVersion, VersionParsingError};
 
@@ -75,6 +75,6 @@ pub enum Error {
     Client(iota_graphql_client::error::Error),
     #[error("Failed to dry run transaction: {0}")]
     DryRun(String),
-    #[error("Timeout waiting for transaction finalization")]
-    FinalizationTimeout,
+    #[error("Timeout waiting for transaction finalization, digest: {0}")]
+    FinalizationTimeout(Digest),
 }
