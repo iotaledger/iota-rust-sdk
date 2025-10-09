@@ -636,7 +636,7 @@ impl Client {
                     type_: Some(
                         coin_type
                             .into()
-                            .map(|coin_type| StructTag::coin(coin_type))
+                            .map(StructTag::coin)
                             .unwrap_or_else(|| StructTag {
                                 address: Address::TWO,
                                 module: IdentifierRef::const_new("coin").into(),
