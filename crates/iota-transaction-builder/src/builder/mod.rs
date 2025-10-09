@@ -708,27 +708,25 @@ impl<L> TransactionBuilder<Client, L> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
-        if default_gas {
-            if !self.data.inputs.values().any(|i| i.is_gas) {
-                for coin in self
-                    .client
-                    .objects(
-                        ObjectFilter {
-                            type_: Some(StructTag::gas_coin().to_string()),
-                            owner: Some(self.data.sender),
-                            ..Default::default()
-                        },
-                        Default::default(),
-                    )
-                    .await
-                    .map_err(Error::Client)?
-                    .data
-                {
-                    self.set_input(
-                        InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
-                        true,
-                    );
-                }
+        if default_gas && !self.data.inputs.values().any(|i| i.is_gas) {
+            for coin in self
+                .client
+                .objects(
+                    ObjectFilter {
+                        type_: Some(StructTag::gas_coin().to_string()),
+                        owner: Some(self.data.sender),
+                        ..Default::default()
+                    },
+                    Default::default(),
+                )
+                .await
+                .map_err(Error::Client)?
+                .data
+            {
+                self.set_input(
+                    InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
+                    true,
+                );
             }
         }
         for (id, input) in std::mem::take(&mut self.data.inputs) {
