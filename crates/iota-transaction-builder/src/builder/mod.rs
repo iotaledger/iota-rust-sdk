@@ -27,7 +27,7 @@ use crate::{
     },
     error::Error,
     publish_type::PublishType,
-    types::MoveTypes,
+    types::{MoveType, MoveTypes},
     unresolved::{
         Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
         Publish, SplitCoins, TransferObjects, Upgrade,
@@ -452,13 +452,16 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Make a move vector from a list of elements.
-    pub fn make_move_vec<U: PTBArguments>(
+    pub fn make_move_vec<T: PTBArgument + MoveType>(
         &mut self,
-        elements: U,
+        elements: impl IntoIterator<Item = T>,
     ) -> &mut TransactionBuilder<C, MakeMoveVector> {
-        let elements = self.apply_arguments(elements);
+        let elements = elements
+            .into_iter()
+            .map(|e| self.apply_argument(e))
+            .collect();
         self.state_change(MakeMoveVector {
-            type_: None,
+            type_: Some(T::type_tag()),
             elements,
         })
     }

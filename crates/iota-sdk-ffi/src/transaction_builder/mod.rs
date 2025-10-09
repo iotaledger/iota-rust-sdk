@@ -202,7 +202,14 @@ impl TransactionBuilder {
     ) -> Arc<Self> {
         use iota_transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
-            builder.make_move_vec(PTBArgs(elements));
+            let cmd = Command::MakeMoveVector(MakeMoveVector {
+                type_: Some(type_tag.0.clone()),
+                elements: elements
+                    .iter()
+                    .map(|e| builder.apply_argument(e.as_ref()))
+                    .collect(),
+            });
+            builder.named_command(cmd, name);
         });
         self
     }
