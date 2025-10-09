@@ -73,7 +73,13 @@ pub struct TransactionBuildData {
 
 impl TransactionBuildData {
     fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
-        if let Some((i, input)) = self.inputs.iter_mut().find(|(_, input)| input.kind == kind) {
+        if let Some((i, input)) = self.inputs.iter_mut().find(|(_, input)| {
+            match (kind.object_id(), input.kind.object_id()) {
+                (Some(id1), Some(id2)) => id1 == id2,
+                (None, None) => kind == input.kind,
+                _ => false,
+            }
+        }) {
             if is_gas {
                 input.is_gas = true;
             }
