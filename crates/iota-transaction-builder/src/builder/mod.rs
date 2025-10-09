@@ -704,29 +704,31 @@ impl<L> TransactionBuilder<Client, L> {
         })
     }
 
-    async fn resolve_ptb(&mut self) -> Result<Transaction, Error> {
+    async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
-        if !self.data.inputs.values().any(|i| i.is_gas) {
-            for coin in self
-                .client
-                .objects(
-                    ObjectFilter {
-                        type_: Some(StructTag::gas_coin().to_string()),
-                        owner: Some(self.data.sender),
-                        ..Default::default()
-                    },
-                    Default::default(),
-                )
-                .await
-                .map_err(Error::Client)?
-                .data
-            {
-                self.set_input(
-                    InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
-                    true,
-                );
+        if default_gas {
+            if !self.data.inputs.values().any(|i| i.is_gas) {
+                for coin in self
+                    .client
+                    .objects(
+                        ObjectFilter {
+                            type_: Some(StructTag::gas_coin().to_string()),
+                            owner: Some(self.data.sender),
+                            ..Default::default()
+                        },
+                        Default::default(),
+                    )
+                    .await
+                    .map_err(Error::Client)?
+                    .data
+                {
+                    self.set_input(
+                        InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
+                        true,
+                    );
+                }
             }
         }
         for (id, input) in std::mem::take(&mut self.data.inputs) {
@@ -842,7 +844,7 @@ impl<L> TransactionBuilder<Client, L> {
 
     /// Convert this builder into a transaction.
     pub async fn finish(mut self) -> Result<Transaction, Error> {
-        let mut txn = self.resolve_ptb().await?;
+        let mut txn = self.resolve_ptb(true).await?;
         if self.data.gas_budget.is_none() {
             let res = self
                 .client
@@ -864,7 +866,7 @@ impl<L> TransactionBuilder<Client, L> {
 
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
-        let txn = self.resolve_ptb().await?;
+        let txn = self.resolve_ptb(false).await?;
         if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
             return Err(Error::DryRun(
                 "gas coins were provided without a gas budget".to_owned(),
