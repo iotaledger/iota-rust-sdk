@@ -83,6 +83,11 @@ impl TransactionBuildData {
             if is_gas {
                 input.is_gas = true;
             }
+            // If the new input is already resolved, replace the old one in case it was
+            // unresolved
+            if let new_kind @ InputKind::Input(_) = kind {
+                input.kind = new_kind;
+            }
             return Argument::Input(*i as _);
         }
         let idx = self
