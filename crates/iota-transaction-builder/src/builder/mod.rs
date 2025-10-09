@@ -11,11 +11,11 @@ use std::{
 use iota_crypto::IotaSigner;
 use iota_graphql_client::{
     Client, DryRunResult,
-    query_types::{ObjectRef, TransactionMetadata},
+    query_types::{ObjectFilter, ObjectRef, TransactionMetadata},
 };
 use iota_types::{
     Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
-    Transaction, TransactionEffects, TransactionExpiration, TypeTag,
+    StructTag, Transaction, TransactionEffects, TransactionExpiration, TypeTag,
 };
 use serde::Serialize;
 
@@ -73,9 +73,20 @@ pub struct TransactionBuildData {
 
 impl TransactionBuildData {
     fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
-        if let Some((i, input)) = self.inputs.iter_mut().find(|(_, input)| input.kind == kind) {
+        if let Some((i, input)) = self.inputs.iter_mut().find(|(_, input)| {
+            match (kind.object_id(), input.kind.object_id()) {
+                (Some(id1), Some(id2)) => id1 == id2,
+                (None, None) => kind == input.kind,
+                _ => false,
+            }
+        }) {
             if is_gas {
                 input.is_gas = true;
+            }
+            // If the new input is already resolved, replace the old one in case it was
+            // unresolved
+            if let new_kind @ InputKind::Input(_) = kind {
+                input.kind = new_kind;
             }
             return Argument::Input(*i as _);
         }
@@ -698,10 +709,31 @@ impl<L> TransactionBuilder<Client, L> {
         })
     }
 
-    async fn resolve_ptb(&mut self) -> Result<Transaction, Error> {
+    async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
+        if default_gas && !self.data.inputs.values().any(|i| i.is_gas) {
+            for coin in self
+                .client
+                .objects(
+                    ObjectFilter {
+                        type_: Some(StructTag::gas_coin().to_string()),
+                        owner: Some(self.data.sender),
+                        ..Default::default()
+                    },
+                    Default::default(),
+                )
+                .await
+                .map_err(Error::Client)?
+                .data
+            {
+                self.set_input(
+                    InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
+                    true,
+                );
+            }
+        }
         for (id, input) in std::mem::take(&mut self.data.inputs) {
             match input.kind {
                 InputKind::ImmutableOrOwned(object_id) | InputKind::Receiving(object_id) => {
@@ -815,7 +847,7 @@ impl<L> TransactionBuilder<Client, L> {
 
     /// Convert this builder into a transaction.
     pub async fn finish(mut self) -> Result<Transaction, Error> {
-        let mut txn = self.resolve_ptb().await?;
+        let mut txn = self.resolve_ptb(true).await?;
         if self.data.gas_budget.is_none() {
             let res = self
                 .client
@@ -837,7 +869,7 @@ impl<L> TransactionBuilder<Client, L> {
 
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
-        let txn = self.resolve_ptb().await?;
+        let txn = self.resolve_ptb(false).await?;
         if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
             return Err(Error::DryRun(
                 "gas coins were provided without a gas budget".to_owned(),
