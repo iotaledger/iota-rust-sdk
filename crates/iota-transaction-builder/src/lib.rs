@@ -198,7 +198,7 @@ mod tests {
 
         // transfer 1 IOTA from Gas coin
         let gas = tx.get_gas()[0];
-        tx.split_coins(gas, [1_000_000_000]).name("coin");
+        tx.split_coins(gas, [1_000_000_000u64]).name("coin");
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, res("coin"));
 
@@ -220,7 +220,7 @@ mod tests {
         let coin = coins.first().unwrap().id;
 
         // transfer 1 IOTA
-        tx.split_coins(coin, [1_000_000_000]);
+        tx.split_coins(coin, [1_000_000_000u64]);
 
         let effects = tx.execute(&[pk.into()], true).await.unwrap();
 

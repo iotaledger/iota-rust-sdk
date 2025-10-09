@@ -1197,17 +1197,17 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 49808:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 10444:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 15164:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 15827:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 29895:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 16395:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 34656:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -18782,6 +18782,33 @@ class _UniffiConverterOptionalTypePasskeyAuthenticator(_UniffiConverterRustBuffe
 
 
 
+class _UniffiConverterOptionalTypePtbArgument(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypePtbArgument.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypePtbArgument.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypePtbArgument.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeSecp256k1PublicKey(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -20153,31 +20180,6 @@ class _UniffiConverterSequenceInt32(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterInt32.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceUInt64(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterUInt64.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterUInt64.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterUInt64.read(buf) for i in range(count)
         ]
 
 
@@ -36608,7 +36610,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def merge_coins(self, coin: "ObjectId",coins_to_merge: "typing.List[ObjectId]"):
+    def merge_coins(self, coin: "PtbArgument",coins_to_merge: "typing.List[PtbArgument]"):
         """
         Merge a list of coins into a single coin, without producing any result.
         """
@@ -36638,20 +36640,20 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def send_coins(self, coins: "typing.List[ObjectId]",recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def send_coins(self, coins: "typing.List[PtbArgument]",recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT):
         """
         Transfer some coins to a recipient address. If multiple coins are
         provided then they will be merged.
         """
 
         raise NotImplementedError
-    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT):
         """
         Send IOTA to a recipient address.
         """
 
         raise NotImplementedError
-    def split_coins(self, coin: "ObjectId",amounts: "typing.List[int]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
+    def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
         Split a coin by the provided amounts.
         """
@@ -36909,19 +36911,19 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def merge_coins(self, coin: "ObjectId",coins_to_merge: "typing.List[ObjectId]") -> "TransactionBuilder":
+    def merge_coins(self, coin: "PtbArgument",coins_to_merge: "typing.List[PtbArgument]") -> "TransactionBuilder":
         """
         Merge a list of coins into a single coin, without producing any result.
         """
 
-        _UniffiConverterTypeObjectId.check_lower(coin)
+        _UniffiConverterTypePtbArgument.check_lower(coin)
         
-        _UniffiConverterSequenceTypeObjectId.check_lower(coins_to_merge)
+        _UniffiConverterSequenceTypePtbArgument.check_lower(coins_to_merge)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeObjectId.lower(coin),
-        _UniffiConverterSequenceTypeObjectId.lower(coins_to_merge))
+        _UniffiConverterTypePtbArgument.lower(coin),
+        _UniffiConverterSequenceTypePtbArgument.lower(coins_to_merge))
         )
 
 
@@ -36999,32 +37001,32 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def send_coins(self, coins: "typing.List[ObjectId]",recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "TransactionBuilder":
+    def send_coins(self, coins: "typing.List[PtbArgument]",recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Transfer some coins to a recipient address. If multiple coins are
         provided then they will be merged.
         """
 
-        _UniffiConverterSequenceTypeObjectId.check_lower(coins)
+        _UniffiConverterSequenceTypePtbArgument.check_lower(coins)
         
         _UniffiConverterTypeAddress.check_lower(recipient)
         
         if amount is _DEFAULT:
             amount = None
-        _UniffiConverterOptionalUInt64.check_lower(amount)
+        _UniffiConverterOptionalTypePtbArgument.check_lower(amount)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins,self._uniffi_clone_pointer(),
-        _UniffiConverterSequenceTypeObjectId.lower(coins),
+        _UniffiConverterSequenceTypePtbArgument.lower(coins),
         _UniffiConverterTypeAddress.lower(recipient),
-        _UniffiConverterOptionalUInt64.lower(amount))
+        _UniffiConverterOptionalTypePtbArgument.lower(amount))
         )
 
 
 
 
 
-    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "TransactionBuilder":
+    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Send IOTA to a recipient address.
         """
@@ -37033,26 +37035,26 @@ _UniffiConverterTypeSdkFfiError,
         
         if amount is _DEFAULT:
             amount = None
-        _UniffiConverterOptionalUInt64.check_lower(amount)
+        _UniffiConverterOptionalTypePtbArgument.check_lower(amount)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota,self._uniffi_clone_pointer(),
         _UniffiConverterTypeAddress.lower(recipient),
-        _UniffiConverterOptionalUInt64.lower(amount))
+        _UniffiConverterOptionalTypePtbArgument.lower(amount))
         )
 
 
 
 
 
-    def split_coins(self, coin: "ObjectId",amounts: "typing.List[int]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "TransactionBuilder":
+    def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Split a coin by the provided amounts.
         """
 
-        _UniffiConverterTypeObjectId.check_lower(coin)
+        _UniffiConverterTypePtbArgument.check_lower(coin)
         
-        _UniffiConverterSequenceUInt64.check_lower(amounts)
+        _UniffiConverterSequenceTypePtbArgument.check_lower(amounts)
         
         if names is _DEFAULT:
             names = []
@@ -37060,8 +37062,8 @@ _UniffiConverterTypeSdkFfiError,
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeObjectId.lower(coin),
-        _UniffiConverterSequenceUInt64.lower(amounts),
+        _UniffiConverterTypePtbArgument.lower(coin),
+        _UniffiConverterSequenceTypePtbArgument.lower(amounts),
         _UniffiConverterSequenceString.lower(names))
         )
 

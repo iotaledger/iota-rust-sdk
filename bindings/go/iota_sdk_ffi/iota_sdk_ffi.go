@@ -3674,7 +3674,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins()
 	})
-	if checksum != 10444 {
+	if checksum != 15164 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins: UniFFI API checksum mismatch")
 	}
@@ -3701,7 +3701,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins()
 	})
-	if checksum != 15827 {
+	if checksum != 434 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins: UniFFI API checksum mismatch")
 	}
@@ -3710,7 +3710,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota()
 	})
-	if checksum != 29895 {
+	if checksum != 16395 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota: UniFFI API checksum mismatch")
 	}
@@ -3719,7 +3719,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins()
 	})
-	if checksum != 34656 {
+	if checksum != 17747 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins: UniFFI API checksum mismatch")
 	}
@@ -20709,7 +20709,7 @@ type TransactionBuilderInterface interface {
 	// the type indicated by `type_tag`.
 	MakeMoveVec(elements []*PtbArgument, typeTag *TypeTag, name string) *TransactionBuilder
 	// Merge a list of coins into a single coin, without producing any result.
-	MergeCoins(coin *ObjectId, coinsToMerge []*ObjectId) *TransactionBuilder
+	MergeCoins(coin *PtbArgument, coinsToMerge []*PtbArgument) *TransactionBuilder
 	// Call a Move function with the given arguments.
 	MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, names []string) *TransactionBuilder
 	// Publish a list of modules with the given dependencies. The result
@@ -20728,11 +20728,11 @@ type TransactionBuilderInterface interface {
 	Publish(modules [][]byte, dependencies []*ObjectId, upgradeCapName string) *TransactionBuilder
 	// Transfer some coins to a recipient address. If multiple coins are
 	// provided then they will be merged.
-	SendCoins(coins []*ObjectId, recipient *Address, amount *uint64) *TransactionBuilder
+	SendCoins(coins []*PtbArgument, recipient *Address, amount **PtbArgument) *TransactionBuilder
 	// Send IOTA to a recipient address.
-	SendIota(recipient *Address, amount *uint64) *TransactionBuilder
+	SendIota(recipient *Address, amount **PtbArgument) *TransactionBuilder
 	// Split a coin by the provided amounts.
-	SplitCoins(coin *ObjectId, amounts []uint64, names []string) *TransactionBuilder
+	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
 	Sponsor(sponsor *Address) *TransactionBuilder
 	// Transfer a list of objects to the given address, without producing any
@@ -20933,12 +20933,12 @@ func (_self *TransactionBuilder) MakeMoveVec(elements []*PtbArgument, typeTag *T
 }
 
 // Merge a list of coins into a single coin, without producing any result.
-func (_self *TransactionBuilder) MergeCoins(coin *ObjectId, coinsToMerge []*ObjectId) *TransactionBuilder {
+func (_self *TransactionBuilder) MergeCoins(coin *PtbArgument, coinsToMerge []*PtbArgument) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(coin), FfiConverterSequenceObjectIdINSTANCE.Lower(coinsToMerge),_uniffiStatus)
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(coin), FfiConverterSequencePtbArgumentINSTANCE.Lower(coinsToMerge),_uniffiStatus)
 	}))
 }
 
@@ -20976,32 +20976,32 @@ func (_self *TransactionBuilder) Publish(modules [][]byte, dependencies []*Objec
 
 // Transfer some coins to a recipient address. If multiple coins are
 // provided then they will be merged.
-func (_self *TransactionBuilder) SendCoins(coins []*ObjectId, recipient *Address, amount *uint64) *TransactionBuilder {
+func (_self *TransactionBuilder) SendCoins(coins []*PtbArgument, recipient *Address, amount **PtbArgument) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(
-		_pointer,FfiConverterSequenceObjectIdINSTANCE.Lower(coins), FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterOptionalUint64INSTANCE.Lower(amount),_uniffiStatus)
+		_pointer,FfiConverterSequencePtbArgumentINSTANCE.Lower(coins), FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterOptionalPtbArgumentINSTANCE.Lower(amount),_uniffiStatus)
 	}))
 }
 
 // Send IOTA to a recipient address.
-func (_self *TransactionBuilder) SendIota(recipient *Address, amount *uint64) *TransactionBuilder {
+func (_self *TransactionBuilder) SendIota(recipient *Address, amount **PtbArgument) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
-		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterOptionalUint64INSTANCE.Lower(amount),_uniffiStatus)
+		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterOptionalPtbArgumentINSTANCE.Lower(amount),_uniffiStatus)
 	}))
 }
 
 // Split a coin by the provided amounts.
-func (_self *TransactionBuilder) SplitCoins(coin *ObjectId, amounts []uint64, names []string) *TransactionBuilder {
+func (_self *TransactionBuilder) SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(coin), FfiConverterSequenceUint64INSTANCE.Lower(amounts), FfiConverterSequenceStringINSTANCE.Lower(names),_uniffiStatus)
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(coin), FfiConverterSequencePtbArgumentINSTANCE.Lower(amounts), FfiConverterSequenceStringINSTANCE.Lower(names),_uniffiStatus)
 	}))
 }
 
@@ -30898,6 +30898,43 @@ func (_ FfiDestroyerOptionalObjectId) Destroy(value **ObjectId) {
 	}
 }
 
+type FfiConverterOptionalPtbArgument struct{}
+
+var FfiConverterOptionalPtbArgumentINSTANCE = FfiConverterOptionalPtbArgument{}
+
+func (c FfiConverterOptionalPtbArgument) Lift(rb RustBufferI) **PtbArgument {
+	return LiftFromRustBuffer[**PtbArgument](c, rb)
+}
+
+func (_ FfiConverterOptionalPtbArgument) Read(reader io.Reader) **PtbArgument {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterPtbArgumentINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalPtbArgument) Lower(value **PtbArgument) C.RustBuffer {
+	return LowerIntoRustBuffer[**PtbArgument](c, value)
+}
+
+func (_ FfiConverterOptionalPtbArgument) Write(writer io.Writer, value **PtbArgument) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterPtbArgumentINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalPtbArgument struct {}
+
+func (_ FfiDestroyerOptionalPtbArgument) Destroy(value **PtbArgument) {
+	if value != nil {
+		FfiDestroyerPtbArgument{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalPasskeyAuthenticator struct{}
 
 var FfiConverterOptionalPasskeyAuthenticatorINSTANCE = FfiConverterOptionalPasskeyAuthenticator{}
@@ -32825,49 +32862,6 @@ type FfiDestroyerSequenceInt32 struct {}
 func (FfiDestroyerSequenceInt32) Destroy(sequence []int32) {
 	for _, value := range sequence {
 		FfiDestroyerInt32{}.Destroy(value)
-	}
-}
-
-type FfiConverterSequenceUint64 struct{}
-
-var FfiConverterSequenceUint64INSTANCE = FfiConverterSequenceUint64{}
-
-func (c FfiConverterSequenceUint64) Lift(rb RustBufferI) []uint64 {
-	return LiftFromRustBuffer[[]uint64](c, rb)
-}
-
-func (c FfiConverterSequenceUint64) Read(reader io.Reader) []uint64 {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]uint64, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterUint64INSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceUint64) Lower(value []uint64) C.RustBuffer {
-	return LowerIntoRustBuffer[[]uint64](c, value)
-}
-
-func (c FfiConverterSequenceUint64) Write(writer io.Writer, value []uint64) {
-	if len(value) > math.MaxInt32 {
-		panic("[]uint64 is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterUint64INSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceUint64 struct {}
-
-func (FfiDestroyerSequenceUint64) Destroy(sequence []uint64) {
-	for _, value := range sequence {
-		FfiDestroyerUint64{}.Destroy(value)
 	}
 }
 

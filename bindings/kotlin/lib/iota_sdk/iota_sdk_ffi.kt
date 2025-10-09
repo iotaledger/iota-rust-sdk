@@ -6684,7 +6684,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 49808.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 10444.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 15164.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281.toShort()) {
@@ -6693,13 +6693,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 15827.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 29895.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 16395.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 34656.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655.toShort()) {
@@ -36711,7 +36711,7 @@ public interface TransactionBuilderInterface {
     /**
      * Merge a list of coins into a single coin, without producing any result.
      */
-    fun `mergeCoins`(`coin`: ObjectId, `coinsToMerge`: List<ObjectId>): TransactionBuilder
+    fun `mergeCoins`(`coin`: PtbArgument, `coinsToMerge`: List<PtbArgument>): TransactionBuilder
     
     /**
      * Call a Move function with the given arguments.
@@ -36739,17 +36739,17 @@ public interface TransactionBuilderInterface {
      * Transfer some coins to a recipient address. If multiple coins are
      * provided then they will be merged.
      */
-    fun `sendCoins`(`coins`: List<ObjectId>, `recipient`: Address, `amount`: kotlin.ULong? = null): TransactionBuilder
+    fun `sendCoins`(`coins`: List<PtbArgument>, `recipient`: Address, `amount`: PtbArgument? = null): TransactionBuilder
     
     /**
      * Send IOTA to a recipient address.
      */
-    fun `sendIota`(`recipient`: Address, `amount`: kotlin.ULong? = null): TransactionBuilder
+    fun `sendIota`(`recipient`: Address, `amount`: PtbArgument? = null): TransactionBuilder
     
     /**
      * Split a coin by the provided amounts.
      */
-    fun `splitCoins`(`coin`: ObjectId, `amounts`: List<kotlin.ULong>, `names`: List<kotlin.String> = listOf()): TransactionBuilder
+    fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String> = listOf()): TransactionBuilder
     
     /**
      * Set the sponsor of the transaction.
@@ -37017,12 +37017,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     /**
      * Merge a list of coins into a single coin, without producing any result.
-     */override fun `mergeCoins`(`coin`: ObjectId, `coinsToMerge`: List<ObjectId>): TransactionBuilder {
+     */override fun `mergeCoins`(`coin`: PtbArgument, `coinsToMerge`: List<PtbArgument>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
-        it, FfiConverterTypeObjectId.lower(`coin`),FfiConverterSequenceTypeObjectId.lower(`coinsToMerge`),_status)
+        it, FfiConverterTypePTBArgument.lower(`coin`),FfiConverterSequenceTypePTBArgument.lower(`coinsToMerge`),_status)
 }
     }
     )
@@ -37075,12 +37075,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     /**
      * Transfer some coins to a recipient address. If multiple coins are
      * provided then they will be merged.
-     */override fun `sendCoins`(`coins`: List<ObjectId>, `recipient`: Address, `amount`: kotlin.ULong?): TransactionBuilder {
+     */override fun `sendCoins`(`coins`: List<PtbArgument>, `recipient`: Address, `amount`: PtbArgument?): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(
-        it, FfiConverterSequenceTypeObjectId.lower(`coins`),FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalULong.lower(`amount`),_status)
+        it, FfiConverterSequenceTypePTBArgument.lower(`coins`),FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalTypePTBArgument.lower(`amount`),_status)
 }
     }
     )
@@ -37090,12 +37090,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     /**
      * Send IOTA to a recipient address.
-     */override fun `sendIota`(`recipient`: Address, `amount`: kotlin.ULong?): TransactionBuilder {
+     */override fun `sendIota`(`recipient`: Address, `amount`: PtbArgument?): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
-        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalULong.lower(`amount`),_status)
+        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalTypePTBArgument.lower(`amount`),_status)
 }
     }
     )
@@ -37105,12 +37105,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     /**
      * Split a coin by the provided amounts.
-     */override fun `splitCoins`(`coin`: ObjectId, `amounts`: List<kotlin.ULong>, `names`: List<kotlin.String>): TransactionBuilder {
+     */override fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
-        it, FfiConverterTypeObjectId.lower(`coin`),FfiConverterSequenceULong.lower(`amounts`),FfiConverterSequenceString.lower(`names`),_status)
+        it, FfiConverterTypePTBArgument.lower(`coin`),FfiConverterSequenceTypePTBArgument.lower(`amounts`),FfiConverterSequenceString.lower(`names`),_status)
 }
     }
     )
@@ -51684,6 +51684,38 @@ public object FfiConverterOptionalTypeObjectId: FfiConverterRustBuffer<ObjectId?
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypePTBArgument: FfiConverterRustBuffer<PtbArgument?> {
+    override fun read(buf: ByteBuffer): PtbArgument? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypePTBArgument.read(buf)
+    }
+
+    override fun allocationSize(value: PtbArgument?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypePTBArgument.allocationSize(value)
+        }
+    }
+
+    override fun write(value: PtbArgument?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypePTBArgument.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypePasskeyAuthenticator: FfiConverterRustBuffer<PasskeyAuthenticator?> {
     override fun read(buf: ByteBuffer): PasskeyAuthenticator? {
         if (buf.get().toInt() == 0) {
@@ -53334,34 +53366,6 @@ public object FfiConverterSequenceInt: FfiConverterRustBuffer<List<kotlin.Int>> 
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterInt.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterSequenceULong: FfiConverterRustBuffer<List<kotlin.ULong>> {
-    override fun read(buf: ByteBuffer): List<kotlin.ULong> {
-        val len = buf.getInt()
-        return List<kotlin.ULong>(len) {
-            FfiConverterULong.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<kotlin.ULong>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterULong.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<kotlin.ULong>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterULong.write(it, buf)
         }
     }
 }

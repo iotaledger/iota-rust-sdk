@@ -127,9 +127,13 @@ impl TransactionBuilder {
 
     /// Send IOTA to a recipient address.
     #[uniffi::method(default(amount = None))]
-    pub fn send_iota(self: Arc<Self>, recipient: &Address, amount: Option<u64>) -> Arc<Self> {
+    pub fn send_iota(
+        self: Arc<Self>,
+        recipient: &Address,
+        amount: Option<Arc<PTBArgument>>,
+    ) -> Arc<Self> {
         self.write(|builder| {
-            builder.send_iota(**recipient, amount);
+            builder.send_iota(**recipient, amount.as_deref());
         });
         self
     }
@@ -139,12 +143,12 @@ impl TransactionBuilder {
     #[uniffi::method(default(amount = None))]
     pub fn send_coins(
         self: Arc<Self>,
-        coins: Vec<Arc<ObjectId>>,
+        coins: Vec<Arc<PTBArgument>>,
         recipient: &Address,
-        amount: Option<u64>,
+        amount: Option<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.send_coins(coins.into_iter().map(|v| **v), **recipient, amount);
+            builder.send_coins(PTBArgs(coins), **recipient, amount.as_deref());
         });
         self
     }
@@ -166,12 +170,12 @@ impl TransactionBuilder {
     #[uniffi::method(default(names = []))]
     pub fn split_coins(
         self: Arc<Self>,
-        coin: &ObjectId,
-        amounts: Vec<u64>,
+        coin: &PTBArgument,
+        amounts: Vec<Arc<PTBArgument>>,
         names: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.split_coins(**coin, amounts).name(names);
+            builder.split_coins(coin, PTBArgs(amounts)).name(names);
         });
         self
     }
@@ -179,11 +183,11 @@ impl TransactionBuilder {
     /// Merge a list of coins into a single coin, without producing any result.
     pub fn merge_coins(
         self: Arc<Self>,
-        coin: &ObjectId,
-        coins_to_merge: Vec<Arc<ObjectId>>,
+        coin: &PTBArgument,
+        coins_to_merge: Vec<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.merge_coins(**coin, coins_to_merge.into_iter().map(|v| **v));
+            builder.merge_coins(coin, PTBArgs(coins_to_merge));
         });
         self
     }
@@ -198,15 +202,7 @@ impl TransactionBuilder {
     ) -> Arc<Self> {
         use iota_transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
-            let mut args = Vec::new();
-            for e in elements {
-                args.extend(builder.apply_arguments(e));
-            }
-            let cmd = Command::MakeMoveVector(MakeMoveVector {
-                type_: Some(type_tag.0.clone()),
-                elements: args,
-            });
-            builder.named_command(cmd, name);
+            builder.make_move_vec(PTBArgs(elements));
         });
         self
     }

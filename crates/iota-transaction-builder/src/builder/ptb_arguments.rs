@@ -1,7 +1,7 @@
 // Copyright 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::ObjectId;
+use iota_types::{ObjectId, ObjectReference};
 
 use crate::{
     builder::TransactionBuildData,
@@ -31,6 +31,15 @@ impl PTBArgument for iota_types::Input {
 impl PTBArgument for ObjectId {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         ptb.set_input(InputKind::ImmutableOrOwned(self), false)
+    }
+}
+
+impl PTBArgument for ObjectReference {
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        ptb.set_input(
+            InputKind::Input(iota_types::Input::ImmutableOrOwned(self)),
+            false,
+        )
     }
 }
 
@@ -136,6 +145,22 @@ impl<const N: usize> PTBArguments for [ObjectId; N] {
     }
 }
 
+impl PTBArguments for Vec<ObjectReference> {
+    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            args.push(input.arg(ptb));
+        }
+    }
+}
+
+impl<const N: usize> PTBArguments for [ObjectReference; N] {
+    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
+        for input in self {
+            args.push(input.arg(ptb));
+        }
+    }
+}
+
 impl PTBArguments for Vec<Res> {
     fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         for input in self {
@@ -190,6 +215,25 @@ impl PTBArgument for &Shared<ObjectId> {
     }
 }
 
+impl PTBArgument for Shared<ObjectReference> {
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        (&self).arg(ptb)
+    }
+}
+
+impl PTBArgument for &Shared<ObjectReference> {
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        ptb.set_input(
+            InputKind::Input(iota_types::Input::Shared {
+                object_id: self.0.object_id,
+                mutable: false,
+                initial_shared_version: self.0.version,
+            }),
+            false,
+        )
+    }
+}
+
 /// Allows specifying shared mutable parameters.
 pub struct SharedMut<T>(pub T);
 
@@ -217,6 +261,25 @@ impl PTBArgument for &SharedMut<ObjectId> {
     }
 }
 
+impl PTBArgument for SharedMut<ObjectReference> {
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        (&self).arg(ptb)
+    }
+}
+
+impl PTBArgument for &SharedMut<ObjectReference> {
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        ptb.set_input(
+            InputKind::Input(iota_types::Input::Shared {
+                object_id: self.0.object_id,
+                mutable: true,
+                initial_shared_version: self.0.version,
+            }),
+            false,
+        )
+    }
+}
+
 /// Allows specifying receiving parameters.
 pub struct Receiving<T>(pub T);
 
@@ -235,6 +298,21 @@ impl PTBArgument for Receiving<ObjectId> {
 impl PTBArgument for &Receiving<ObjectId> {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         ptb.set_input(InputKind::Receiving(self.0), false)
+    }
+}
+
+impl PTBArgument for Receiving<ObjectReference> {
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        (&self).arg(ptb)
+    }
+}
+
+impl PTBArgument for &Receiving<ObjectReference> {
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        ptb.set_input(
+            InputKind::Input(iota_types::Input::Receiving(self.0.clone())),
+            false,
+        )
     }
 }
 
