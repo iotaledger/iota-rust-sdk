@@ -19,7 +19,7 @@ async def main():
         )
 
         builder = await TransactionBuilder.init(from_address, client)
-        builder.send_iota(to_address, PtbArgument.u64(50000000000))
+        builder.send_iota(to_address, PtbArgument.u64(5000000000))
 
         txn = await builder.finish()
 

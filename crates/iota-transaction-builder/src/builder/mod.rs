@@ -737,7 +737,6 @@ impl<L> TransactionBuilder<Client, L> {
     pub async fn finish(mut self) -> Result<Transaction, Error> {
         let mut txn = self.resolve_ptb(true).await?;
         if self.data.gas_budget.is_none() {
-            println!("{txn:#?}");
             let res = self
                 .client
                 .dry_run_tx_kind(&txn.kind, true, Default::default())
