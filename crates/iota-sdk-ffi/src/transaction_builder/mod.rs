@@ -133,7 +133,7 @@ impl TransactionBuilder {
         amount: Option<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.send_iota(**recipient, amount.as_deref());
+            builder.send_iota::<&PTBArgument>(**recipient, amount.as_deref());
         });
         self
     }
@@ -148,7 +148,7 @@ impl TransactionBuilder {
         amount: Option<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.send_coins(coins, **recipient, amount.as_deref());
+            builder.send_coins::<_, &PTBArgument>(coins, **recipient, amount.as_deref());
         });
         self
     }
