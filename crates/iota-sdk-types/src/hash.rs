@@ -441,7 +441,7 @@ impl crate::ObjectId {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use test_strategy::proptest;
 
     use super::HashingIntent;
