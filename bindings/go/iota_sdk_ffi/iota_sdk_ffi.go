@@ -3611,9 +3611,18 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute()
 	})
-	if checksum != 4054 {
+	if checksum != 27688 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor()
+	})
+	if checksum != 53109 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3659,6 +3668,15 @@ func uniffiCheckChecksums() {
 	if checksum != 7437 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor()
+	})
+	if checksum != 41106 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5940,11 +5958,38 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519()
+	})
+	if checksum != 22142 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem()
 	})
 	if checksum != 2041 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1()
+	})
+	if checksum != 46546 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1()
+	})
+	if checksum != 13117 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -19408,6 +19453,12 @@ func SimpleKeypairFromDer(bytes []byte) (*SimpleKeypair, error) {
 		}
 }
 
+func SimpleKeypairFromEd25519(keypair *Ed25519PrivateKey) *SimpleKeypair {
+	return FfiConverterSimpleKeypairINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(FfiConverterEd25519PrivateKeyINSTANCE.Lower(keypair),_uniffiStatus)
+	}))
+}
+
 // Deserialize PKCS#8-encoded private key from PEM.
 func SimpleKeypairFromPem(s string) (*SimpleKeypair, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
@@ -19419,6 +19470,18 @@ func SimpleKeypairFromPem(s string) (*SimpleKeypair, error) {
 		} else {
 			return FfiConverterSimpleKeypairINSTANCE.Lift(_uniffiRV), nil
 		}
+}
+
+func SimpleKeypairFromSecp256k1(keypair *Secp256k1PrivateKey) *SimpleKeypair {
+	return FfiConverterSimpleKeypairINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(FfiConverterSecp256k1PrivateKeyINSTANCE.Lower(keypair),_uniffiStatus)
+	}))
+}
+
+func SimpleKeypairFromSecp256r1(keypair *Secp256r1PrivateKey) *SimpleKeypair {
+	return FfiConverterSimpleKeypairINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(FfiConverterSecp256r1PrivateKeyINSTANCE.Lower(keypair),_uniffiStatus)
+	}))
 }
 
 
@@ -20694,7 +20757,9 @@ type TransactionBuilderInterface interface {
 	// Dry run the transaction.
 	DryRun(skipChecks bool) (DryRunResult, error)
 	// Execute the transaction and optionally wait for finalization.
-	Execute(keypairs []*SimpleKeypair, waitForFinalization bool) (**TransactionEffects, error)
+	Execute(keypair *SimpleKeypair, waitForFinalization bool) (**TransactionEffects, error)
+	// Execute the transaction and optionally wait for finalization.
+	ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitForFinalization bool) (**TransactionEffects, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *TransactionBuilder
 	// Convert this builder into a transaction.
@@ -20705,6 +20770,8 @@ type TransactionBuilderInterface interface {
 	GasBudget(budget uint64) *TransactionBuilder
 	// Set the gas price for the transaction.
 	GasPrice(price uint64) *TransactionBuilder
+	// Set the gas station sponsor.
+	GasStationSponsor(url string, duration *time.Duration, headers *map[string][]string) *TransactionBuilder
 	// Make a move vector from a list of elements. The elements must all be of
 	// the type indicated by `type_tag`.
 	MakeMoveVec(elements []*PtbArgument, typeTag *TypeTag, name string) *TransactionBuilder
@@ -20820,7 +20887,7 @@ func (_self *TransactionBuilder) DryRun(skipChecks bool) (DryRunResult, error) {
 }
 
 // Execute the transaction and optionally wait for finalization.
-func (_self *TransactionBuilder) Execute(keypairs []*SimpleKeypair, waitForFinalization bool) (**TransactionEffects, error) {
+func (_self *TransactionBuilder) Execute(keypair *SimpleKeypair, waitForFinalization bool) (**TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -20837,7 +20904,39 @@ func (_self *TransactionBuilder) Execute(keypairs []*SimpleKeypair, waitForFinal
 			return FfiConverterOptionalTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
-		_pointer,FfiConverterSequenceSimpleKeypairINSTANCE.Lower(keypairs), FfiConverterBoolINSTANCE.Lower(waitForFinalization)),
+		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterBoolINSTANCE.Lower(waitForFinalization)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Execute the transaction and optionally wait for finalization.
+func (_self *TransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitForFinalization bool) (**TransactionEffects, error) {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) **TransactionEffects {
+			return FfiConverterOptionalTransactionEffectsINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(
+		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterSimpleKeypairINSTANCE.Lower(sponsorKeypair), FfiConverterBoolINSTANCE.Lower(waitForFinalization)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -20918,6 +21017,16 @@ func (_self *TransactionBuilder) GasPrice(price uint64) *TransactionBuilder {
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(
 		_pointer,FfiConverterUint64INSTANCE.Lower(price),_uniffiStatus)
+	}))
+}
+
+// Set the gas station sponsor.
+func (_self *TransactionBuilder) GasStationSponsor(url string, duration *time.Duration, headers *map[string][]string) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor(
+		_pointer,FfiConverterStringINSTANCE.Lower(url), FfiConverterOptionalDurationINSTANCE.Lower(duration), FfiConverterOptionalMapStringSequenceStringINSTANCE.Lower(headers),_uniffiStatus)
 	}))
 }
 
@@ -30454,6 +30563,43 @@ func (_ FfiDestroyerOptionalBytes) Destroy(value *[]byte) {
 	}
 }
 
+type FfiConverterOptionalDuration struct{}
+
+var FfiConverterOptionalDurationINSTANCE = FfiConverterOptionalDuration{}
+
+func (c FfiConverterOptionalDuration) Lift(rb RustBufferI) *time.Duration {
+	return LiftFromRustBuffer[*time.Duration](c, rb)
+}
+
+func (_ FfiConverterOptionalDuration) Read(reader io.Reader) *time.Duration {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterDurationINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalDuration) Lower(value *time.Duration) C.RustBuffer {
+	return LowerIntoRustBuffer[*time.Duration](c, value)
+}
+
+func (_ FfiConverterOptionalDuration) Write(writer io.Writer, value *time.Duration) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterDurationINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalDuration struct {}
+
+func (_ FfiDestroyerOptionalDuration) Destroy(value *time.Duration) {
+	if value != nil {
+		FfiDestroyerDuration{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalAddress struct{}
 
 var FfiConverterOptionalAddressINSTANCE = FfiConverterOptionalAddress{}
@@ -32674,6 +32820,43 @@ func (_ FfiDestroyerOptionalSequenceMoveAbility) Destroy(value *[]MoveAbility) {
 	}
 }
 
+type FfiConverterOptionalMapStringSequenceString struct{}
+
+var FfiConverterOptionalMapStringSequenceStringINSTANCE = FfiConverterOptionalMapStringSequenceString{}
+
+func (c FfiConverterOptionalMapStringSequenceString) Lift(rb RustBufferI) *map[string][]string {
+	return LiftFromRustBuffer[*map[string][]string](c, rb)
+}
+
+func (_ FfiConverterOptionalMapStringSequenceString) Read(reader io.Reader) *map[string][]string {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMapStringSequenceStringINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMapStringSequenceString) Lower(value *map[string][]string) C.RustBuffer {
+	return LowerIntoRustBuffer[*map[string][]string](c, value)
+}
+
+func (_ FfiConverterOptionalMapStringSequenceString) Write(writer io.Writer, value *map[string][]string) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMapStringSequenceStringINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMapStringSequenceString struct {}
+
+func (_ FfiDestroyerOptionalMapStringSequenceString) Destroy(value *map[string][]string) {
+	if value != nil {
+		FfiDestroyerMapStringSequenceString{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalTypeBase64 struct{}
 
 var FfiConverterOptionalTypeBase64INSTANCE = FfiConverterOptionalTypeBase64{}
@@ -33857,49 +34040,6 @@ type FfiDestroyerSequencePtbArgument struct {}
 func (FfiDestroyerSequencePtbArgument) Destroy(sequence []*PtbArgument) {
 	for _, value := range sequence {
 		FfiDestroyerPtbArgument{}.Destroy(value)
-	}
-}
-
-type FfiConverterSequenceSimpleKeypair struct{}
-
-var FfiConverterSequenceSimpleKeypairINSTANCE = FfiConverterSequenceSimpleKeypair{}
-
-func (c FfiConverterSequenceSimpleKeypair) Lift(rb RustBufferI) []*SimpleKeypair {
-	return LiftFromRustBuffer[[]*SimpleKeypair](c, rb)
-}
-
-func (c FfiConverterSequenceSimpleKeypair) Read(reader io.Reader) []*SimpleKeypair {
-	length := readInt32(reader)
-	if length == 0 {
-		return nil
-	}
-	result := make([]*SimpleKeypair, 0, length)
-	for i := int32(0); i < length; i++ {
-		result = append(result, FfiConverterSimpleKeypairINSTANCE.Read(reader))
-	}
-	return result
-}
-
-func (c FfiConverterSequenceSimpleKeypair) Lower(value []*SimpleKeypair) C.RustBuffer {
-	return LowerIntoRustBuffer[[]*SimpleKeypair](c, value)
-}
-
-func (c FfiConverterSequenceSimpleKeypair) Write(writer io.Writer, value []*SimpleKeypair) {
-	if len(value) > math.MaxInt32 {
-		panic("[]*SimpleKeypair is too large to fit into Int32")
-	}
-
-	writeInt32(writer, int32(len(value)))
-	for _, item := range value {
-		FfiConverterSimpleKeypairINSTANCE.Write(writer, item)
-	}
-}
-
-type FfiDestroyerSequenceSimpleKeypair struct {}
-
-func (FfiDestroyerSequenceSimpleKeypair) Destroy(sequence []*SimpleKeypair) {
-	for _, value := range sequence {
-		FfiDestroyerSimpleKeypair{}.Destroy(value)
 	}
 }
 
@@ -35405,6 +35545,50 @@ type FfiDestroyerSequenceMoveAbility struct {}
 func (FfiDestroyerSequenceMoveAbility) Destroy(sequence []MoveAbility) {
 	for _, value := range sequence {
 		FfiDestroyerMoveAbility{}.Destroy(value)
+	}
+}
+
+type FfiConverterMapStringSequenceString struct {}
+
+var FfiConverterMapStringSequenceStringINSTANCE = FfiConverterMapStringSequenceString{}
+
+func (c FfiConverterMapStringSequenceString) Lift(rb RustBufferI) map[string][]string {
+	return LiftFromRustBuffer[map[string][]string](c, rb)
+}
+
+func (_ FfiConverterMapStringSequenceString) Read(reader io.Reader) map[string][]string {
+	result := make(map[string][]string)
+	length := readInt32(reader)
+	for i := int32(0); i < length; i++ {
+		key := FfiConverterStringINSTANCE.Read(reader)
+		value := FfiConverterSequenceStringINSTANCE.Read(reader)
+		result[key] = value
+	}
+	return result
+}
+
+func (c FfiConverterMapStringSequenceString) Lower(value map[string][]string) C.RustBuffer {
+	return LowerIntoRustBuffer[map[string][]string](c, value)
+}
+
+func (_ FfiConverterMapStringSequenceString) Write(writer io.Writer, mapValue map[string][]string) {
+	if len(mapValue) > math.MaxInt32 {
+		panic("map[string][]string is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(mapValue)))
+	for key, value := range mapValue {
+		FfiConverterStringINSTANCE.Write(writer, key)
+		FfiConverterSequenceStringINSTANCE.Write(writer, value)
+	}
+}
+
+type FfiDestroyerMapStringSequenceString struct {}
+
+func (_ FfiDestroyerMapStringSequenceString) Destroy(mapValue map[string][]string) {
+	for key, value := range mapValue {
+		FfiDestroyerString{}.Destroy(key)
+		FfiDestroyerSequenceString{}.Destroy(value)
 	}
 }
 
