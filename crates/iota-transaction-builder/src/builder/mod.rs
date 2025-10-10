@@ -583,6 +583,10 @@ impl<L> TransactionBuilder<Client, L> {
         let mut input_map = HashMap::new();
 
         if default_gas && !self.data.inputs.values().any(|i| i.is_gas) {
+            // Some commands have arguments which cannot safely be replaced by
+            // `Argument::Gas`, so we need to find any instances of
+            // these and ensure that we don't use those coins
+            // as gas.
             let mut unusable_object_ids = HashSet::new();
             for cmd in &self.data.commands {
                 for arg in match cmd {
