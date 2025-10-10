@@ -1183,7 +1183,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 4054:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 27688:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 53109:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1194,6 +1196,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() != 48686:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() != 7437:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor() != 41106:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 49808:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1711,7 +1715,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der() != 24923:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519() != 22142:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem() != 2041:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1() != 46546:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1() != 13117:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519() != 65185:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5184,11 +5194,26 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5595,10 +5620,17 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run.argtypes = (
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute.argtypes = (
     ctypes.c_void_p,
-    _UniffiRustBuffer,
+    ctypes.c_void_p,
     ctypes.c_int8,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.c_int8,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint64,
@@ -5627,6 +5659,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price.argtypes =
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
@@ -7906,6 +7946,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration.restype = ctypes.c_uint16
@@ -7921,6 +7964,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec.restype = ctypes.c_uint16
@@ -8695,9 +8741,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519.restype = ctypes.c_uint16
@@ -18481,6 +18536,33 @@ class _UniffiConverterOptionalBytes(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalDuration(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterDuration.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterDuration.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterDuration.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeAddress(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -20128,6 +20210,33 @@ class _UniffiConverterOptionalSequenceTypeMoveAbility(_UniffiConverterRustBuffer
 
 
 
+class _UniffiConverterOptionalMapStringSequenceString(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterMapStringSequenceString.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterMapStringSequenceString.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterMapStringSequenceString.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeBase64(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -20805,31 +20914,6 @@ class _UniffiConverterSequenceTypePtbArgument(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypePtbArgument.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceTypeSimpleKeypair(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeSimpleKeypair.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeSimpleKeypair.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeSimpleKeypair.read(buf) for i in range(count)
         ]
 
 
@@ -21706,6 +21790,39 @@ class _UniffiConverterSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
         return [
             _UniffiConverterTypeMoveAbility.read(buf) for i in range(count)
         ]
+
+
+
+class _UniffiConverterMapStringSequenceString(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, items):
+        for (key, value) in items.items():
+            _UniffiConverterString.check_lower(key)
+            _UniffiConverterSequenceString.check_lower(value)
+
+    @classmethod
+    def write(cls, items, buf):
+        buf.write_i32(len(items))
+        for (key, value) in items.items():
+            _UniffiConverterString.write(key, buf)
+            _UniffiConverterSequenceString.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative map size")
+
+        # It would be nice to use a dict comprehension,
+        # but in Python 3.7 and before the evaluation order is not according to spec,
+        # so we we're reading the value before the key.
+        # This loop makes the order explicit: first reading the key, then the value.
+        d = {}
+        for i in range(count):
+            key = _UniffiConverterString.read(buf)
+            val = _UniffiConverterSequenceString.read(buf)
+            d[key] = val
+        return d
 
 
 
@@ -35366,6 +35483,15 @@ class SimpleKeypair():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def from_ed25519(cls, keypair: "Ed25519PrivateKey"):
+        _UniffiConverterTypeEd25519PrivateKey.check_lower(keypair)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519,
+        _UniffiConverterTypeEd25519PrivateKey.lower(keypair))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def from_pem(cls, s: "str"):
         """
         Deserialize PKCS#8-encoded private key from PEM.
@@ -35376,6 +35502,24 @@ class SimpleKeypair():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem,
         _UniffiConverterString.lower(s))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_secp256k1(cls, keypair: "Secp256k1PrivateKey"):
+        _UniffiConverterTypeSecp256k1PrivateKey.check_lower(keypair)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1,
+        _UniffiConverterTypeSecp256k1PrivateKey.lower(keypair))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_secp256r1(cls, keypair: "Secp256r1PrivateKey"):
+        _UniffiConverterTypeSecp256r1PrivateKey.check_lower(keypair)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1,
+        _UniffiConverterTypeSecp256r1PrivateKey.lower(keypair))
         return cls._make_instance_(pointer)
 
 
@@ -36662,7 +36806,13 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def execute(self, keypairs: "typing.List[SimpleKeypair]",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT):
+    def execute(self, keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT):
+        """
+        Execute the transaction and optionally wait for finalization.
+        """
+
+        raise NotImplementedError
+    def execute_with_sponsor(self, keypair: "SimpleKeypair",sponsor_keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT):
         """
         Execute the transaction and optionally wait for finalization.
         """
@@ -36695,6 +36845,12 @@ class TransactionBuilderProtocol(typing.Protocol):
     def gas_price(self, price: "int"):
         """
         Set the gas price for the transaction.
+        """
+
+        raise NotImplementedError
+    def gas_station_sponsor(self, url: "str",duration: "typing.Union[object, typing.Optional[Duration]]" = _DEFAULT,headers: "typing.Union[object, typing.Optional[dict[str, typing.List[str]]]]" = _DEFAULT):
+        """
+        Set the gas station sponsor.
         """
 
         raise NotImplementedError
@@ -36866,12 +37022,12 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute(self, keypairs: "typing.List[SimpleKeypair]",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "typing.Optional[TransactionEffects]":
+    async def execute(self, keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "typing.Optional[TransactionEffects]":
         """
         Execute the transaction and optionally wait for finalization.
         """
 
-        _UniffiConverterSequenceTypeSimpleKeypair.check_lower(keypairs)
+        _UniffiConverterTypeSimpleKeypair.check_lower(keypair)
         
         if wait_for_finalization is _DEFAULT:
             wait_for_finalization = False
@@ -36880,7 +37036,40 @@ _UniffiConverterTypeSdkFfiError,
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterSequenceTypeSimpleKeypair.lower(keypairs),
+        _UniffiConverterTypeSimpleKeypair.lower(keypair),
+        _UniffiConverterBool.lower(wait_for_finalization)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeTransactionEffects.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def execute_with_sponsor(self, keypair: "SimpleKeypair",sponsor_keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "typing.Optional[TransactionEffects]":
+        """
+        Execute the transaction and optionally wait for finalization.
+        """
+
+        _UniffiConverterTypeSimpleKeypair.check_lower(keypair)
+        
+        _UniffiConverterTypeSimpleKeypair.check_lower(sponsor_keypair)
+        
+        if wait_for_finalization is _DEFAULT:
+            wait_for_finalization = False
+        _UniffiConverterBool.check_lower(wait_for_finalization)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeSimpleKeypair.lower(keypair),
+        _UniffiConverterTypeSimpleKeypair.lower(sponsor_keypair),
         _UniffiConverterBool.lower(wait_for_finalization)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -36977,6 +37166,32 @@ _UniffiConverterTypeSdkFfiError,
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price,self._uniffi_clone_pointer(),
         _UniffiConverterUInt64.lower(price))
+        )
+
+
+
+
+
+    def gas_station_sponsor(self, url: "str",duration: "typing.Union[object, typing.Optional[Duration]]" = _DEFAULT,headers: "typing.Union[object, typing.Optional[dict[str, typing.List[str]]]]" = _DEFAULT) -> "TransactionBuilder":
+        """
+        Set the gas station sponsor.
+        """
+
+        _UniffiConverterString.check_lower(url)
+        
+        if duration is _DEFAULT:
+            duration = None
+        _UniffiConverterOptionalDuration.check_lower(duration)
+        
+        if headers is _DEFAULT:
+            headers = None
+        _UniffiConverterOptionalMapStringSequenceString.check_lower(headers)
+        
+        return _UniffiConverterTypeTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor,self._uniffi_clone_pointer(),
+        _UniffiConverterString.lower(url),
+        _UniffiConverterOptionalDuration.lower(duration),
+        _UniffiConverterOptionalMapStringSequenceString.lower(headers))
         )
 
 

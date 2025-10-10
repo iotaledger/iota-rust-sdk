@@ -13,7 +13,7 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Secp256k1PrivateKey(iota_crypto::secp256k1::Secp256k1PrivateKey);
 
 #[uniffi::export]

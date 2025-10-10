@@ -1,7 +1,11 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard};
+use std::{
+    collections::HashMap,
+    sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
+    time::Duration,
+};
 
 use iota_transaction_builder::MovePackageData;
 use iota_types::Input;
@@ -90,6 +94,33 @@ impl TransactionBuilder {
     pub fn sponsor(self: Arc<Self>, sponsor: &Address) -> Arc<Self> {
         self.write(|builder| {
             builder.sponsor(**sponsor);
+        });
+        self
+    }
+
+    /// Set the gas station sponsor.
+    #[uniffi::method(default(duration = None, headers = None))]
+    pub fn gas_station_sponsor(
+        self: Arc<Self>,
+        url: String,
+        duration: Option<Duration>,
+        headers: Option<HashMap<String, Vec<String>>>,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"));
+            if let Some(duration) = duration {
+                b.gas_reservation_duration(duration);
+            }
+            if let Some(headers) = headers {
+                for (name, values) in headers {
+                    for value in values {
+                        b.add_gas_station_header(
+                            name.parse().expect("invalid header name"),
+                            value.parse().expect("invalid header value"),
+                        );
+                    }
+                }
+            }
         });
         self
     }
@@ -299,12 +330,32 @@ impl TransactionBuilder {
     #[uniffi::method(default(wait_for_finalization = false))]
     pub async fn execute(
         &self,
-        keypairs: &[Arc<SimpleKeypair>],
+        keypair: &SimpleKeypair,
         wait_for_finalization: bool,
     ) -> Result<Option<Arc<TransactionEffects>>> {
-        let keypairs = keypairs.iter().map(|v| v.0.clone()).collect::<Vec<_>>();
         Ok(self
-            .read(|builder| builder.clone().execute(&keypairs, wait_for_finalization))
+            .read(|builder| builder.clone().execute(&keypair.0, wait_for_finalization))
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
+    }
+
+    /// Execute the transaction and optionally wait for finalization.
+    #[uniffi::method(default(wait_for_finalization = false))]
+    pub async fn execute_with_sponsor(
+        &self,
+        keypair: &SimpleKeypair,
+        sponsor_keypair: &SimpleKeypair,
+        wait_for_finalization: bool,
+    ) -> Result<Option<Arc<TransactionEffects>>> {
+        Ok(self
+            .read(|builder| {
+                builder.clone().execute_with_sponsor(
+                    &keypair.0,
+                    &sponsor_keypair.0,
+                    wait_for_finalization,
+                )
+            })
             .await?
             .map(Into::into)
             .map(Arc::new))

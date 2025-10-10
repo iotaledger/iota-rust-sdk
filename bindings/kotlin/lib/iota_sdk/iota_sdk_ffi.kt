@@ -3025,6 +3025,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish(
@@ -3034,6 +3036,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas(
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec(
 ): Short
@@ -3551,7 +3555,13 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519(
 ): Short
@@ -4964,7 +4974,13 @@ fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(`bytes`: RustBuf
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(`keypair`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(`keypair`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(`keypair`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5122,7 +5138,9 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(`sender`: Pointer
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run(`ptr`: Pointer,`skipChecks`: Byte,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(`ptr`: Pointer,`keypairs`: RustBuffer.ByValue,`waitForFinalization`: Byte,
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(`ptr`: Pointer,`keypair`: Pointer,`waitForFinalization`: Byte,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(`ptr`: Pointer,`keypair`: Pointer,`sponsorKeypair`: Pointer,`waitForFinalization`: Byte,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(`ptr`: Pointer,`epoch`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5133,6 +5151,8 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(`ptr`: Pointer,`objectI
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(`ptr`: Pointer,`budget`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(`ptr`: Pointer,`price`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor(`ptr`: Pointer,`url`: RustBuffer.ByValue,`duration`: RustBuffer.ByValue,`headers`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(`ptr`: Pointer,`elements`: RustBuffer.ByValue,`typeTag`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6693,7 +6713,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 4054.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 27688.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 53109.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328.toShort()) {
@@ -6709,6 +6732,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() != 7437.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor() != 41106.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 49808.toShort()) {
@@ -7485,7 +7511,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der() != 24923.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519() != 22142.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem() != 2041.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1() != 46546.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1() != 13117.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519() != 65185.toShort()) {
@@ -34205,6 +34240,16 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     }
     
 
+         fun `fromEd25519`(`keypair`: Ed25519PrivateKey): SimpleKeypair {
+            return FfiConverterTypeSimpleKeypair.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(
+        FfiConverterTypeEd25519PrivateKey.lower(`keypair`),_status)
+}
+    )
+    }
+    
+
         
     /**
      * Deserialize PKCS#8-encoded private key from PEM.
@@ -34214,6 +34259,26 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(
         FfiConverterString.lower(`s`),_status)
+}
+    )
+    }
+    
+
+         fun `fromSecp256k1`(`keypair`: Secp256k1PrivateKey): SimpleKeypair {
+            return FfiConverterTypeSimpleKeypair.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(
+        FfiConverterTypeSecp256k1PrivateKey.lower(`keypair`),_status)
+}
+    )
+    }
+    
+
+         fun `fromSecp256r1`(`keypair`: Secp256r1PrivateKey): SimpleKeypair {
+            return FfiConverterTypeSimpleKeypair.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(
+        FfiConverterTypeSecp256r1PrivateKey.lower(`keypair`),_status)
 }
     )
     }
@@ -36778,7 +36843,12 @@ public interface TransactionBuilderInterface {
     /**
      * Execute the transaction and optionally wait for finalization.
      */
-    suspend fun `execute`(`keypairs`: List<SimpleKeypair>, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects?
+    suspend fun `execute`(`keypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects?
+    
+    /**
+     * Execute the transaction and optionally wait for finalization.
+     */
+    suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects?
     
     /**
      * Set the expiration of the transaction to be a specific epoch.
@@ -36804,6 +36874,11 @@ public interface TransactionBuilderInterface {
      * Set the gas price for the transaction.
      */
     fun `gasPrice`(`price`: kotlin.ULong): TransactionBuilder
+    
+    /**
+     * Set the gas station sponsor.
+     */
+    fun `gasStationSponsor`(`url`: kotlin.String, `duration`: java.time.Duration? = null, `headers`: Map<kotlin.String, List<kotlin.String>>? = null): TransactionBuilder
     
     /**
      * Make a move vector from a list of elements. The elements must all be of
@@ -36999,12 +37074,36 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `execute`(`keypairs`: List<SimpleKeypair>, `waitForFinalization`: kotlin.Boolean) : TransactionEffects? {
+    override suspend fun `execute`(`keypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean) : TransactionEffects? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
                 thisPtr,
-                FfiConverterSequenceTypeSimpleKeypair.lower(`keypairs`),FfiConverterBoolean.lower(`waitForFinalization`),
+                FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterBoolean.lower(`waitForFinalization`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterOptionalTypeTransactionEffects.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Execute the transaction and optionally wait for finalization.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean) : TransactionEffects? {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(
+                thisPtr,
+                FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterTypeSimpleKeypair.lower(`sponsorKeypair`),FfiConverterBoolean.lower(`waitForFinalization`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -37095,6 +37194,21 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(
         it, FfiConverterULong.lower(`price`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Set the gas station sponsor.
+     */override fun `gasStationSponsor`(`url`: kotlin.String, `duration`: java.time.Duration?, `headers`: Map<kotlin.String, List<kotlin.String>>?): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor(
+        it, FfiConverterString.lower(`url`),FfiConverterOptionalDuration.lower(`duration`),FfiConverterOptionalMapStringSequenceString.lower(`headers`),_status)
 }
     }
     )
@@ -51403,6 +51517,38 @@ public object FfiConverterOptionalByteArray: FfiConverterRustBuffer<kotlin.ByteA
 /**
  * @suppress
  */
+public object FfiConverterOptionalDuration: FfiConverterRustBuffer<java.time.Duration?> {
+    override fun read(buf: ByteBuffer): java.time.Duration? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterDuration.read(buf)
+    }
+
+    override fun allocationSize(value: java.time.Duration?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterDuration.allocationSize(value)
+        }
+    }
+
+    override fun write(value: java.time.Duration?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterDuration.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeAddress: FfiConverterRustBuffer<Address?> {
     override fun read(buf: ByteBuffer): Address? {
         if (buf.get().toInt() == 0) {
@@ -53355,6 +53501,38 @@ public object FfiConverterOptionalSequenceTypeMoveAbility: FfiConverterRustBuffe
 /**
  * @suppress
  */
+public object FfiConverterOptionalMapStringSequenceString: FfiConverterRustBuffer<Map<kotlin.String, List<kotlin.String>>?> {
+    override fun read(buf: ByteBuffer): Map<kotlin.String, List<kotlin.String>>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterMapStringSequenceString.read(buf)
+    }
+
+    override fun allocationSize(value: Map<kotlin.String, List<kotlin.String>>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterMapStringSequenceString.allocationSize(value)
+        }
+    }
+
+    override fun write(value: Map<kotlin.String, List<kotlin.String>>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterMapStringSequenceString.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeBase64: FfiConverterRustBuffer<Base64?> {
     override fun read(buf: ByteBuffer): Base64? {
         if (buf.get().toInt() == 0) {
@@ -54113,34 +54291,6 @@ public object FfiConverterSequenceTypePTBArgument: FfiConverterRustBuffer<List<P
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypePTBArgument.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterSequenceTypeSimpleKeypair: FfiConverterRustBuffer<List<SimpleKeypair>> {
-    override fun read(buf: ByteBuffer): List<SimpleKeypair> {
-        val len = buf.getInt()
-        return List<SimpleKeypair>(len) {
-            FfiConverterTypeSimpleKeypair.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<SimpleKeypair>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeSimpleKeypair.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<SimpleKeypair>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterTypeSimpleKeypair.write(it, buf)
         }
     }
 }
@@ -55121,6 +55271,45 @@ public object FfiConverterSequenceTypeMoveAbility: FfiConverterRustBuffer<List<M
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeMoveAbility.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterMapStringSequenceString: FfiConverterRustBuffer<Map<kotlin.String, List<kotlin.String>>> {
+    override fun read(buf: ByteBuffer): Map<kotlin.String, List<kotlin.String>> {
+        val len = buf.getInt()
+        return buildMap<kotlin.String, List<kotlin.String>>(len) {
+            repeat(len) {
+                val k = FfiConverterString.read(buf)
+                val v = FfiConverterSequenceString.read(buf)
+                this[k] = v
+            }
+        }
+    }
+
+    override fun allocationSize(value: Map<kotlin.String, List<kotlin.String>>): ULong {
+        val spaceForMapSize = 4UL
+        val spaceForChildren = value.map { (k, v) ->
+            FfiConverterString.allocationSize(k) +
+            FfiConverterSequenceString.allocationSize(v)
+        }.sum()
+        return spaceForMapSize + spaceForChildren
+    }
+
+    override fun write(value: Map<kotlin.String, List<kotlin.String>>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        // The parens on `(k, v)` here ensure we're calling the right method,
+        // which is important for compatibility with older android devices.
+        // Ref https://blog.danlew.net/2017/03/16/kotlin-puzzler-whose-line-is-it-anyways/
+        value.forEach { (k, v) ->
+            FfiConverterString.write(k, buf)
+            FfiConverterSequenceString.write(v, buf)
         }
     }
 }

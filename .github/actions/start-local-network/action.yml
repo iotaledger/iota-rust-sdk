@@ -21,3 +21,26 @@ runs:
         echo "$(pwd)" >> $GITHUB_PATH
         ./iota start --force-regenesis --with-faucet --with-indexer --with-graphql --pg-port 5432 --pg-db-name iota_indexer_v2 --epoch-duration-ms $EPOCH_DURATION_MS &
         sleep $((EPOCH_DURATION_MS / 1000)) # wait for the first epoch to end
+
+    - name: Start gas station and request faucet coins
+      shell: bash
+      env:
+        GAS_STATION_AUTH: "test"
+      run: |
+        ./iota client -y new-env --alias localnet --rpc http://127.0.0.1:9000 --graphql http://0.0.0.0:9125 --faucet http://127.0.0.1:9123/v1/gas
+        ./iota keytool update-alias $(./iota client active-address) gas_station
+
+        echo "Getting keypair"
+        private_key="$(./iota keytool export gas_station --json | jq -r '.["exportedPrivateKey"]')"
+        key="$(./iota keytool convert $private_key --json | jq -r '.["base64WithFlag"]')"
+
+        echo "Setting keypair in config"
+        sed -i "s|<keypair>|$key|g" ./.github/actions/start-local-network/config.yaml
+
+        echo "Requesting faucet coins"
+        ./iota client faucet --address gas_station
+
+        echo "Starting Gas Station"
+        docker compose -f ./.github/actions/start-local-network/gas_station_compose.yml up -d
+
+        docker logs iota-gas-station & sleep 10
