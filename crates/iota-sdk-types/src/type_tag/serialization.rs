@@ -322,7 +322,7 @@ mod json_schema {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use std::str::FromStr;
 
     #[cfg(target_arch = "wasm32")]

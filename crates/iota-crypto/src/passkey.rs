@@ -65,7 +65,7 @@ impl Verifier<UserSignature> for PasskeyVerifier {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use iota_sdk_types::Transaction;
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;

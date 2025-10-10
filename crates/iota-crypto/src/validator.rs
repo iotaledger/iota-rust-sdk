@@ -319,7 +319,7 @@ impl ValidatorCommitteeSignatureAggregator {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use iota_sdk_types::ValidatorCommitteeMember;
     use test_strategy::proptest;
 
