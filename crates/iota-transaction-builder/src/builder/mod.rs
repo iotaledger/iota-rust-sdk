@@ -4,7 +4,7 @@
 //! Builder for Programmable Transactions.
 
 use std::{
-    collections::{BTreeMap, HashMap},
+    collections::{BTreeMap, HashMap, HashSet},
     marker::PhantomData,
     time::Duration,
 };
@@ -581,7 +581,25 @@ impl<L> TransactionBuilder<Client, L> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
+
         if default_gas && !self.data.inputs.values().any(|i| i.is_gas) {
+            let mut unusable_object_ids = HashSet::new();
+            for cmd in &self.data.commands {
+                for arg in match cmd {
+                    Command::MoveCall(MoveCall { arguments, .. }) => arguments.as_slice(),
+                    Command::TransferObjects(TransferObjects { objects, .. }) => objects.as_slice(),
+                    Command::MergeCoins(MergeCoins { coins_to_merge, .. }) => {
+                        coins_to_merge.as_slice()
+                    }
+                    _ => &[],
+                } {
+                    if let Argument::Input(idx) = arg {
+                        if let Some(obj_id) = self.data.inputs[idx].object_id() {
+                            unusable_object_ids.insert(*obj_id);
+                        }
+                    }
+                }
+            }
             for coin in self
                 .client
                 .objects(
@@ -596,10 +614,12 @@ impl<L> TransactionBuilder<Client, L> {
                 .map_err(Error::Client)?
                 .data
             {
-                self.set_input(
-                    InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
-                    true,
-                );
+                if !unusable_object_ids.contains(&coin.object_id()) {
+                    self.set_input(
+                        InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
+                        true,
+                    );
+                }
             }
         }
         for (id, input) in std::mem::take(&mut self.data.inputs) {
@@ -717,6 +737,7 @@ impl<L> TransactionBuilder<Client, L> {
     pub async fn finish(mut self) -> Result<Transaction, Error> {
         let mut txn = self.resolve_ptb(true).await?;
         if self.data.gas_budget.is_none() {
+            println!("{txn:#?}");
             let res = self
                 .client
                 .dry_run_tx_kind(&txn.kind, true, Default::default())
