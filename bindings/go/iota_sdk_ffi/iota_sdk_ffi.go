@@ -5481,6 +5481,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_from_base58()
+	})
+	if checksum != 5017 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_from_base58: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas()
 	})
 	if checksum != 10767 {
@@ -5517,6 +5526,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex()
+	})
+	if checksum != 48453 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res()
 	})
 	if checksum != 47661 {
@@ -5535,11 +5553,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_from_hex()
+	})
+	if checksum != 60985 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_from_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut()
 	})
 	if checksum != 43242 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut_from_hex()
+	})
+	if checksum != 52415 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut_from_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -16856,6 +16892,18 @@ func PtbArgumentDigest(digest *Digest) *PtbArgument {
 	}))
 }
 
+func PtbArgumentDigestFromBase58(base58 string) (*PtbArgument, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_from_base58(FfiConverterStringINSTANCE.Lower(base58),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *PtbArgument
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterPtbArgumentINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
 func PtbArgumentGas() *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(_uniffiStatus)
@@ -16886,6 +16934,18 @@ func PtbArgumentReceiving(id *ObjectId) *PtbArgument {
 	}))
 }
 
+func PtbArgumentReceivingFromHex(hex string) (*PtbArgument, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *PtbArgument
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterPtbArgumentINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
 func PtbArgumentRes(name string) *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
@@ -16898,10 +16958,34 @@ func PtbArgumentShared(id *ObjectId) *PtbArgument {
 	}))
 }
 
+func PtbArgumentSharedFromHex(hex string) (*PtbArgument, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_from_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *PtbArgument
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterPtbArgumentINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
 func PtbArgumentSharedMut(id *ObjectId) *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(FfiConverterObjectIdINSTANCE.Lower(id),_uniffiStatus)
 	}))
+}
+
+func PtbArgumentSharedMutFromHex(hex string) (*PtbArgument, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut_from_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *PtbArgument
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterPtbArgumentINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 func PtbArgumentString(string string) *PtbArgument {
