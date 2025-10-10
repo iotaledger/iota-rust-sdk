@@ -10050,14 +10050,24 @@ class ChangedObject:
     providing more detailed semantics on object changes.
     """
 
-    def __init__(self, *, object_id: "ObjectId", input_state: "ObjectIn", output_state: "ObjectOut", id_operation: "IdOperation"):
+    object_type: "typing.Optional[str]"
+    """
+    Optional object type information. This is not part of the BCS protocol
+    data but can be populated from other sources when available.
+    """
+
+    def __init__(self, *, object_id: "ObjectId", input_state: "ObjectIn", output_state: "ObjectOut", id_operation: "IdOperation", object_type: "typing.Optional[str]" = _DEFAULT):
         self.object_id = object_id
         self.input_state = input_state
         self.output_state = output_state
         self.id_operation = id_operation
+        if object_type is _DEFAULT:
+            self.object_type = None
+        else:
+            self.object_type = object_type
 
     def __str__(self):
-        return "ChangedObject(object_id={}, input_state={}, output_state={}, id_operation={})".format(self.object_id, self.input_state, self.output_state, self.id_operation)
+        return "ChangedObject(object_id={}, input_state={}, output_state={}, id_operation={}, object_type={})".format(self.object_id, self.input_state, self.output_state, self.id_operation, self.object_type)
 
     def __eq__(self, other):
         if self.object_id != other.object_id:
@@ -10067,6 +10077,8 @@ class ChangedObject:
         if self.output_state != other.output_state:
             return False
         if self.id_operation != other.id_operation:
+            return False
+        if self.object_type != other.object_type:
             return False
         return True
 
@@ -10078,6 +10090,7 @@ class _UniffiConverterTypeChangedObject(_UniffiConverterRustBuffer):
             input_state=_UniffiConverterTypeObjectIn.read(buf),
             output_state=_UniffiConverterTypeObjectOut.read(buf),
             id_operation=_UniffiConverterTypeIdOperation.read(buf),
+            object_type=_UniffiConverterOptionalString.read(buf),
         )
 
     @staticmethod
@@ -10086,6 +10099,7 @@ class _UniffiConverterTypeChangedObject(_UniffiConverterRustBuffer):
         _UniffiConverterTypeObjectIn.check_lower(value.input_state)
         _UniffiConverterTypeObjectOut.check_lower(value.output_state)
         _UniffiConverterTypeIdOperation.check_lower(value.id_operation)
+        _UniffiConverterOptionalString.check_lower(value.object_type)
 
     @staticmethod
     def write(value, buf):
@@ -10093,6 +10107,7 @@ class _UniffiConverterTypeChangedObject(_UniffiConverterRustBuffer):
         _UniffiConverterTypeObjectIn.write(value.input_state, buf)
         _UniffiConverterTypeObjectOut.write(value.output_state, buf)
         _UniffiConverterTypeIdOperation.write(value.id_operation, buf)
+        _UniffiConverterOptionalString.write(value.object_type, buf)
 
 
 class CheckpointSummaryPage:

@@ -115,6 +115,12 @@ pub struct ChangedObject {
     /// This information isn't required by the protocol but is useful for
     /// providing more detailed semantics on object changes.
     pub id_operation: IdOperation,
+    /// Optional object type information. This is not part of the BCS protocol
+    /// data but can be populated from other sources when available.
+    #[cfg_attr(feature = "serde", serde(skip))]
+    #[cfg_attr(feature = "proptest", strategy(proptest::strategy::Just(None)))]
+    #[cfg_attr(feature = "schemars", schemars(skip))]
+    pub object_type: Option<String>,
 }
 
 /// A shared object that wasn't changed during execution

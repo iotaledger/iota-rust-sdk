@@ -30,7 +30,6 @@ func main() {
 		sender,
 		[]*sdk.PtbArgument{sdk.PtbArgumentRes("coin1"), sdk.PtbArgumentRes("coin2"), sdk.PtbArgumentRes("coin3")},
 	)
-	builder.Gas(coinObjId).GasBudget(1000000000)
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
@@ -44,14 +43,13 @@ func main() {
 	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
 	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
 
-	res, err := builder.DryRun(false)
+	skipChecks := bool(false)
+	res, err := client.DryRunTx(txn, &skipChecks)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to split coins: %v", err)
+		log.Fatalf("Failed to dry run split coins: %v", err)
 	}
-
 	if res.Error != nil {
 		log.Fatalf("Failed to split coins: %v", *res.Error)
 	}
-
 	log.Print("Split coins dry run was successful!")
 }

@@ -42,7 +42,9 @@ pub use dynamic_fields::{
 };
 pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
-pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
+pub use execute_tx::{
+    ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult, ObjectChangeConnection,
+};
 pub use iota_names::{
     IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs,
     IotaNamesDefaultNameQuery, IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery,
@@ -72,10 +74,11 @@ pub use protocol_config::{
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
 pub use transaction::{
-    TransactionBlock, TransactionBlockArgs, TransactionBlockEffectsQuery,
-    TransactionBlockKindInput, TransactionBlockQuery, TransactionBlockWithEffects,
-    TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
-    TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery, TransactionsFilter,
+    ObjectChange as TransactionObjectChange, TransactionBlock, TransactionBlockArgs,
+    TransactionBlockEffectsQuery, TransactionBlockKindInput, TransactionBlockQuery,
+    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
+    TransactionsFilter,
 };
 
 use crate::error;
