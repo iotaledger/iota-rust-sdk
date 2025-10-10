@@ -65,8 +65,20 @@ impl PTBArgument {
     }
 
     #[uniffi::constructor]
+    pub fn shared_from_hex(hex: &str) -> Result<Self> {
+        Ok(Self::Shared(Shared(iota_types::ObjectId::from_hex(hex)?)))
+    }
+
+    #[uniffi::constructor]
     pub fn shared_mut(id: &ObjectId) -> Self {
         Self::SharedMut(SharedMut(**id))
+    }
+
+    #[uniffi::constructor]
+    pub fn shared_mut_from_hex(hex: &str) -> Result<Self> {
+        Ok(Self::SharedMut(SharedMut(iota_types::ObjectId::from_hex(
+            hex,
+        )?)))
     }
 
     #[uniffi::constructor]
@@ -75,8 +87,20 @@ impl PTBArgument {
     }
 
     #[uniffi::constructor]
+    pub fn receiving_from_hex(hex: &str) -> Result<Self> {
+        Ok(Self::Receiving(Receiving(iota_types::ObjectId::from_hex(
+            hex,
+        )?)))
+    }
+
+    #[uniffi::constructor]
     pub fn digest(digest: &Digest) -> Self {
         Self::Digest(**digest)
+    }
+
+    #[uniffi::constructor]
+    pub fn digest_from_base58(base58: &str) -> Result<Self> {
+        Ok(Self::Digest(iota_types::Digest::from_base58(base58)?))
     }
 
     #[uniffi::constructor]
