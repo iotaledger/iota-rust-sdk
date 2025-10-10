@@ -87,7 +87,7 @@ where
         PureBytes(
             u32_as_uleb128(self.len() as u32)
                 .into_iter()
-                .chain(self.into_iter().flat_map(|val| val.pure_bytes().0))
+                .chain(self.iter().flat_map(|val| val.pure_bytes().0))
                 .collect(),
         )
     }
