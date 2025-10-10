@@ -10,7 +10,7 @@ use crate::{
     crypto::simple::SimpleKeypair,
     error::Result,
     graphql::GraphQLClient,
-    transaction_builder::ptb_arg::{PTBArgs, PTBArgument},
+    transaction_builder::ptb_arg::PTBArgument,
     types::{
         address::Address,
         graphql::DryRunResult,
@@ -118,7 +118,7 @@ impl TransactionBuilder {
         self.write(|builder| {
             builder
                 .move_call(**package, &module.as_str(), &function.as_str())
-                .arguments(PTBArgs(arguments))
+                .arguments(arguments)
                 .type_tags(type_args.into_iter().map(|v| v.0.clone()))
                 .name(names);
         });
@@ -148,7 +148,7 @@ impl TransactionBuilder {
         amount: Option<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.send_coins(PTBArgs(coins), **recipient, amount.as_deref());
+            builder.send_coins(coins, **recipient, amount.as_deref());
         });
         self
     }
@@ -161,7 +161,7 @@ impl TransactionBuilder {
         objects: Vec<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.transfer_objects(**recipient, PTBArgs(objects));
+            builder.transfer_objects(**recipient, objects);
         });
         self
     }
@@ -175,7 +175,7 @@ impl TransactionBuilder {
         names: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.split_coins(coin, PTBArgs(amounts)).name(names);
+            builder.split_coins(coin, amounts).name(names);
         });
         self
     }
@@ -187,7 +187,7 @@ impl TransactionBuilder {
         coins_to_merge: Vec<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.merge_coins(coin, PTBArgs(coins_to_merge));
+            builder.merge_coins(coin, coins_to_merge);
         });
         self
     }

@@ -2789,6 +2789,11 @@ void uniffi_iota_sdk_ffi_fn_free_ptbargument(void* ptr, RustCallStatus *out_stat
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address(void* address, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_ADDRESS_FROM_HEX
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_ADDRESS_FROM_HEX
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_from_hex(RustBuffer hex, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_DIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_DIGEST
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(void* digest, RustCallStatus *out_status
@@ -2803,6 +2808,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(RustCallStatus *out_sta
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(void* id, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID_FROM_HEX
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID_FROM_HEX
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex(RustBuffer hex, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RECEIVING
@@ -2858,11 +2868,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64(uint64_t value, RustCal
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U8
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_U8
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8(uint8_t value, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_VECTOR
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_VECTOR
-void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_vector(RustBuffer vec, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_PASSKEYAUTHENTICATOR
@@ -8521,6 +8526,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_ADDRESS_FROM_HEX
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_ADDRESS_FROM_HEX
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_from_hex(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_DIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_DIGEST
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest(void
@@ -8536,6 +8547,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID_FROM_HEX
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID_FROM_HEX
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex(void
     
 );
 #endif
@@ -8602,12 +8619,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_U8
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_U8
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_VECTOR
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_VECTOR
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_vector(void
     
 );
 #endif

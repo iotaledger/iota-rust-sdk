@@ -5,12 +5,13 @@ use iota_types::{ObjectId, ObjectReference};
 
 use crate::{
     builder::TransactionBuildData,
-    types::{MoveArg, MoveArgCollection},
+    types::MoveArg,
     unresolved::{Argument, InputKind},
 };
 
-/// A trait which defines an argument for a
+/// A trait which defines a single argument for a
 /// [`TransactionBuilder`](crate::TransactionBuilder).
+#[diagnostic::on_unimplemented(message = "Provided value is not a valid move argument.")]
 pub trait PTBArgument {
     /// Get the argument.
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument;
@@ -43,15 +44,28 @@ impl PTBArgument for ObjectReference {
     }
 }
 
-impl<T: MoveArgCollection> PTBArgument for T {
+impl<T: MoveArg> PTBArgument for T {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.pure_bytes(self.collection_bytes().0)
+        ptb.pure_bytes(self.pure_bytes().0)
     }
 }
 
-/// A trait which defines arguments for a
+impl<T> PTBArgument for std::sync::Arc<T>
+where
+    for<'a> &'a T: PTBArgument,
+{
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        self.as_ref().arg(ptb)
+    }
+}
+
+/// A trait which defines a list of arguments for a
 /// [`TransactionBuilder`](crate::TransactionBuilder).
-pub trait PTBArguments {
+#[diagnostic::on_unimplemented(
+    message = "Provided value is not a valid list of arguments.",
+    note = "Expected a tuple, vector, array, or slice of types that implement `PTBArgument`."
+)]
+pub trait PTBArgumentList {
     /// Get the arguments.
     fn args(self, ptb: &mut TransactionBuildData) -> Vec<Argument>
     where
@@ -68,12 +82,12 @@ pub trait PTBArguments {
 
 macro_rules! impl_ptb_args_tuple {
     ($(($n:tt, $T:ident)),*) => {
-        impl<$($T),+> PTBArguments for ($($T),+)
-        where $($T: PTBArguments),+
+        impl<$($T),+> PTBArgumentList for ($($T),+)
+        where $($T: PTBArgument),+
         {
             fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
                 $(
-                    self.$n.push_args(ptb, args);
+                    args.push(self.$n.arg(ptb));
                 )+
             }
         }
@@ -82,22 +96,7 @@ macro_rules! impl_ptb_args_tuple {
 
 variadics_please::all_tuples_enumerated!(impl_ptb_args_tuple, 2, 15, T);
 
-impl<T> PTBArguments for std::sync::Arc<T>
-where
-    for<'a> &'a T: PTBArguments,
-{
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        self.as_ref().push_args(ptb, args);
-    }
-}
-
-impl<T: PTBArgument> PTBArguments for T {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        args.push(self.arg(ptb))
-    }
-}
-
-impl PTBArguments for Vec<Argument> {
+impl<T: PTBArgument> PTBArgumentList for Vec<T> {
     fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         for input in self {
             args.push(input.arg(ptb));
@@ -105,7 +104,7 @@ impl PTBArguments for Vec<Argument> {
     }
 }
 
-impl<const N: usize> PTBArguments for [Argument; N] {
+impl<const N: usize, T: PTBArgument> PTBArgumentList for [T; N] {
     fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         for input in self {
             args.push(input.arg(ptb));
@@ -113,71 +112,7 @@ impl<const N: usize> PTBArguments for [Argument; N] {
     }
 }
 
-impl PTBArguments for Vec<iota_types::Input> {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
-    }
-}
-
-impl<const N: usize> PTBArguments for [iota_types::Input; N] {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
-    }
-}
-
-impl PTBArguments for Vec<ObjectId> {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
-    }
-}
-
-impl<const N: usize> PTBArguments for [ObjectId; N] {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
-    }
-}
-
-impl PTBArguments for Vec<ObjectReference> {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
-    }
-}
-
-impl<const N: usize> PTBArguments for [ObjectReference; N] {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
-    }
-}
-
-impl PTBArguments for Vec<Res> {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
-    }
-}
-
-impl<const N: usize> PTBArguments for [Res; N] {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
-    }
-}
-
-impl<T> PTBArguments for &[T]
+impl<T> PTBArgumentList for &[T]
 where
     for<'a> &'a T: PTBArgument,
 {

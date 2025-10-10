@@ -23,7 +23,7 @@ use crate::{
     PTBArgument,
     builder::{
         named_results::{NamedResult, NamedResults},
-        ptb_arguments::PTBArguments,
+        ptb_arguments::PTBArgumentList,
     },
     error::Error,
     publish_type::PublishType,
@@ -212,7 +212,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Apply the given parameters and return the generated arguments
-    pub fn apply_arguments<P: PTBArguments>(&mut self, param: P) -> Vec<Argument> {
+    pub fn apply_arguments<P: PTBArgumentList>(&mut self, param: P) -> Vec<Argument> {
         param.args(&mut self.data)
     }
 
@@ -346,7 +346,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Transfer objects to a recipient address.
-    pub fn transfer_objects<U: PTBArguments>(
+    pub fn transfer_objects<U: PTBArgumentList>(
         &mut self,
         recipient: Address,
         objects: U,
@@ -362,7 +362,7 @@ impl<C, L> TransactionBuilder<C, L> {
 
     /// Transfer some coins to a recipient address. If multiple coins are
     /// provided then they will be merged.
-    pub fn send_coins<T: PTBArguments, U: PTBArgument>(
+    pub fn send_coins<T: PTBArgumentList, U: PTBArgument>(
         &mut self,
         coins: T,
         recipient: Address,
@@ -406,7 +406,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Merge multiple coins into one.
-    pub fn merge_coins<T: PTBArgument, U: PTBArguments>(
+    pub fn merge_coins<T: PTBArgument, U: PTBArgumentList>(
         &mut self,
         primary_coin: T,
         consumed_coins: U,
@@ -421,7 +421,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Split a coin into many.
-    pub fn split_coins<T: PTBArgument, U: PTBArguments>(
+    pub fn split_coins<T: PTBArgument, U: PTBArgumentList>(
         &mut self,
         coin: T,
         split_amounts: U,
@@ -798,7 +798,7 @@ impl TransactionBuilder<(), MoveCall> {
 
 impl TransactionBuilder<Client, MoveCall> {
     /// Set the call params. Optional.
-    pub fn arguments<U: PTBArguments>(&mut self, params: U) -> &mut Self {
+    pub fn arguments<U: PTBArgumentList>(&mut self, params: U) -> &mut Self {
         let args = self.apply_arguments(params);
         let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
             unreachable!();
@@ -846,7 +846,7 @@ impl TransactionBuilder<Client, Publish> {
     pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder<Client> {
         let cap = self.arg();
         self.move_call(Address::TWO, "package", "upgrade_package")
-            .arguments(cap)
+            .arguments([cap])
             .name(name)
             .reset()
     }

@@ -55,6 +55,12 @@ impl MoveArg for String {
     }
 }
 
+impl<T: MoveArgCollection> MoveArg for T {
+    fn pure_bytes(self) -> PureBytes {
+        self.collection_bytes()
+    }
+}
+
 /// A trait which defines how collections of move arg types are serialized for
 /// move calls.
 pub trait MoveArgCollection {
@@ -62,13 +68,21 @@ pub trait MoveArgCollection {
     fn collection_bytes(self) -> PureBytes;
 }
 
-impl<T: MoveArg> MoveArgCollection for T {
+impl<const N: usize, T: MoveArg> MoveArgCollection for [T; N] {
     fn collection_bytes(self) -> PureBytes {
-        self.pure_bytes()
+        PureBytes(
+            u32_as_uleb128(self.len() as u32)
+                .into_iter()
+                .chain(self.into_iter().flat_map(|val| val.pure_bytes().0))
+                .collect(),
+        )
     }
 }
 
-impl<const N: usize, T: MoveArg> MoveArgCollection for [T; N] {
+impl<T> MoveArgCollection for &[T]
+where
+    for<'a> &'a T: MoveArg,
+{
     fn collection_bytes(self) -> PureBytes {
         PureBytes(
             u32_as_uleb128(self.len() as u32)

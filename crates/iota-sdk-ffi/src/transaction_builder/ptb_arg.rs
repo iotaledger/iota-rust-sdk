@@ -8,10 +8,13 @@ use iota_transaction_builder::{
 };
 use primitive_types::U256;
 
-use crate::types::{address::Address, digest::Digest, object::ObjectId};
+use crate::{
+    error::Result,
+    types::{address::Address, digest::Digest, object::ObjectId},
+};
 
-#[derive(derive_more::From)]
-enum PTBArg {
+#[derive(uniffi::Object, derive_more::From)]
+pub enum PTBArgument {
     ObjectId(iota_types::ObjectId),
     Address(iota_types::Address),
     Digest(iota_types::Digest),
@@ -22,7 +25,6 @@ enum PTBArg {
     U128(u128),
     U256(U256),
     String(String),
-    Vector(Vec<PureBytes>),
     Res(Res),
     Shared(Shared<iota_types::ObjectId>),
     SharedMut(SharedMut<iota_types::ObjectId>),
@@ -30,98 +32,91 @@ enum PTBArg {
     Gas,
 }
 
-#[derive(uniffi::Object)]
-pub struct PTBArgument(PTBArg);
-
 #[uniffi::export]
 impl PTBArgument {
     #[uniffi::constructor]
     pub fn res(name: String) -> Self {
-        Self(res(name).into())
+        Self::Res(res(name))
     }
 
     #[uniffi::constructor]
     pub fn object_id(id: &ObjectId) -> Self {
-        Self((**id).into())
+        Self::ObjectId(**id)
+    }
+
+    #[uniffi::constructor]
+    pub fn object_id_from_hex(hex: &str) -> Result<Self> {
+        Ok(Self::ObjectId(iota_types::ObjectId::from_hex(hex)?))
     }
 
     #[uniffi::constructor]
     pub fn address(address: &Address) -> Self {
-        Self((**address).into())
+        Self::Address(**address)
+    }
+
+    #[uniffi::constructor]
+    pub fn address_from_hex(hex: &str) -> Result<Self> {
+        Ok(Self::Address(iota_types::Address::from_hex(hex)?))
     }
 
     #[uniffi::constructor]
     pub fn shared(id: &ObjectId) -> Self {
-        Self(Shared(**id).into())
+        Self::Shared(Shared(**id))
     }
 
     #[uniffi::constructor]
     pub fn shared_mut(id: &ObjectId) -> Self {
-        Self(SharedMut(**id).into())
+        Self::SharedMut(SharedMut(**id))
     }
 
     #[uniffi::constructor]
     pub fn receiving(id: &ObjectId) -> Self {
-        Self(Receiving(**id).into())
+        Self::Receiving(Receiving(**id))
     }
 
     #[uniffi::constructor]
     pub fn digest(digest: &Digest) -> Self {
-        Self((**digest).into())
+        Self::Digest(**digest)
     }
 
     #[uniffi::constructor]
     pub fn u8(value: u8) -> Self {
-        Self(value.into())
+        Self::U8(value)
     }
 
     #[uniffi::constructor]
     pub fn u16(value: u16) -> Self {
-        Self(value.into())
+        Self::U16(value)
     }
 
     #[uniffi::constructor]
     pub fn u32(value: u32) -> Self {
-        Self(value.into())
+        Self::U32(value)
     }
 
     #[uniffi::constructor]
     pub fn u64(value: u64) -> Self {
-        Self(value.into())
+        Self::U64(value)
     }
 
     #[uniffi::constructor]
-    pub fn u128(value: &str) -> Self {
-        Self(value.parse::<u128>().expect("invalid u128").into())
+    pub fn u128(value: &str) -> Result<Self> {
+        Ok(Self::U128(value.parse::<u128>()?))
     }
 
     #[uniffi::constructor]
-    pub fn u256(value: &str) -> Self {
-        Self(U256::from_dec_str(value).expect("invalid u256").into())
+    pub fn u256(value: &str) -> Result<Self> {
+        Ok(Self::U256(U256::from_dec_str(value)?))
     }
 
     #[uniffi::constructor]
     pub fn string(string: String) -> Self {
-        Self(string.into())
-    }
-
-    #[uniffi::constructor]
-    pub fn vector(vec: Vec<Vec<u8>>) -> Self {
-        Self(vec.into_iter().map(PureBytes).collect::<Vec<_>>().into())
+        Self::String(string)
     }
 
     #[uniffi::constructor]
     pub fn gas() -> Self {
-        Self(PTBArg::Gas)
-    }
-}
-
-impl iota_transaction_builder::PTBArgument for PTBArgument {
-    fn arg(
-        self,
-        ptb: &mut iota_transaction_builder::builder::TransactionBuildData,
-    ) -> iota_transaction_builder::unresolved::Argument {
-        self.0.arg(ptb)
+        Self::Gas
     }
 }
 
@@ -130,46 +125,22 @@ impl iota_transaction_builder::PTBArgument for &PTBArgument {
         self,
         ptb: &mut iota_transaction_builder::builder::TransactionBuildData,
     ) -> iota_transaction_builder::unresolved::Argument {
-        self.0.arg(ptb)
-    }
-}
-
-pub struct PTBArgs(pub Vec<Arc<PTBArgument>>);
-
-impl iota_transaction_builder::PTBArguments for PTBArgs {
-    fn push_args(
-        self,
-        ptb: &mut iota_transaction_builder::builder::TransactionBuildData,
-        args: &mut Vec<iota_transaction_builder::unresolved::Argument>,
-    ) {
-        for arg in &self.0 {
-            args.push(iota_transaction_builder::PTBArgument::arg(&arg.0, ptb))
-        }
-    }
-}
-
-impl iota_transaction_builder::PTBArgument for &PTBArg {
-    fn arg(
-        self,
-        ptb: &mut iota_transaction_builder::builder::TransactionBuildData,
-    ) -> iota_transaction_builder::unresolved::Argument {
         match self {
-            PTBArg::ObjectId(object_id) => object_id.arg(ptb),
-            PTBArg::Address(address) => address.arg(ptb),
-            PTBArg::Digest(digest) => digest.arg(ptb),
-            PTBArg::U8(val) => val.arg(ptb),
-            PTBArg::U16(val) => val.arg(ptb),
-            PTBArg::U32(val) => val.arg(ptb),
-            PTBArg::U64(val) => val.arg(ptb),
-            PTBArg::U128(val) => val.arg(ptb),
-            PTBArg::U256(val) => val.arg(ptb),
-            PTBArg::String(val) => val.arg(ptb),
-            PTBArg::Vector(pure_bytes) => pure_bytes.clone().arg(ptb),
-            PTBArg::Res(res) => res.arg(ptb),
-            PTBArg::Shared(shared) => shared.arg(ptb),
-            PTBArg::SharedMut(shared_mut) => shared_mut.arg(ptb),
-            PTBArg::Receiving(receiving) => receiving.arg(ptb),
-            PTBArg::Gas => iota_transaction_builder::unresolved::Argument::Gas,
+            PTBArgument::ObjectId(object_id) => object_id.arg(ptb),
+            PTBArgument::Address(address) => address.arg(ptb),
+            PTBArgument::Digest(digest) => digest.arg(ptb),
+            PTBArgument::U8(val) => val.arg(ptb),
+            PTBArgument::U16(val) => val.arg(ptb),
+            PTBArgument::U32(val) => val.arg(ptb),
+            PTBArgument::U64(val) => val.arg(ptb),
+            PTBArgument::U128(val) => val.arg(ptb),
+            PTBArgument::U256(val) => val.arg(ptb),
+            PTBArgument::String(val) => val.arg(ptb),
+            PTBArgument::Res(res) => res.arg(ptb),
+            PTBArgument::Shared(shared) => shared.arg(ptb),
+            PTBArgument::SharedMut(shared_mut) => shared_mut.arg(ptb),
+            PTBArgument::Receiving(receiving) => receiving.arg(ptb),
+            PTBArgument::Gas => iota_transaction_builder::unresolved::Argument::Gas,
         }
     }
 }

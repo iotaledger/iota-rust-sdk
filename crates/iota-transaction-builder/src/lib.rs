@@ -16,7 +16,7 @@ pub mod unresolved;
 pub use self::{
     builder::{
         TransactionBuilder,
-        ptb_arguments::{PTBArgument, PTBArguments, Receiving, Shared, SharedMut, res},
+        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
     },
     publish_type::MovePackageData,
     types::PureBytes,
@@ -164,7 +164,7 @@ mod tests {
         let client = Client::new_localnet();
         let coin = coins.first().unwrap().id;
         let recipient = Address::generate(rand::thread_rng());
-        tx.transfer_objects(recipient, coin);
+        tx.transfer_objects(recipient, [coin]);
 
         let effects = tx.execute(&[pk.into()], true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -185,7 +185,7 @@ mod tests {
         let (mut tx, _, pk, _) = helper_setup().await;
         tx.move_call(Address::ONE, "option", "is_none")
             .generics::<u64>()
-            .arguments(Some(1u64));
+            .arguments([Some(1u64)]);
 
         let effects = tx.execute(&[pk.into()], true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -200,7 +200,7 @@ mod tests {
         let gas = tx.get_gas()[0];
         tx.split_coins(gas, [1_000_000_000u64]).name("coin");
         let recipient = Address::generate(rand::thread_rng());
-        tx.transfer_objects(recipient, res("coin"));
+        tx.transfer_objects(recipient, [res("coin")]);
 
         let effects = tx.execute(&[pk.into()], true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -272,7 +272,7 @@ mod tests {
         let package = move_package_data("package_test_example_v1.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, res("cap"));
+            .transfer_objects(address, [res("cap")]);
 
         let effects = tx.execute(&[pk.into()], true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -286,7 +286,7 @@ mod tests {
         let package = move_package_data("package_test_example_v2.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, res("cap"));
+            .transfer_objects(address, [res("cap")]);
 
         let effects = tx.execute(&keys, true).await;
         let mut package_id: Option<ObjectId> = None;
