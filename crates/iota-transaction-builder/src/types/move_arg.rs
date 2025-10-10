@@ -31,12 +31,6 @@ impl MoveArg for Digest {
     }
 }
 
-impl MoveArg for () {
-    fn pure_bytes(self) -> PureBytes {
-        Default::default()
-    }
-}
-
 impl MoveArg for &str {
     fn pure_bytes(self) -> PureBytes {
         PureBytes(bcs::to_bytes(&self).expect("bcs serialization failed"))
