@@ -22,7 +22,7 @@ fun main() = runBlocking {
 
         builder.sendIota(
                 toAddress,
-                5000000000uL,
+                PtbArgument.u64(50000000000uL),
         )
 
         val txn = builder.finish()
