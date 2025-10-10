@@ -12,13 +12,13 @@ import (
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	fromAddress, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+	sender, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
-	toAddress, _ := sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
-	amount := uint64(5000000000)
+	coin0, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
+	coin1, _ := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
 
-	builder := sdk.TransactionBuilderInit(fromAddress, client)
-	builder.SendIota(toAddress, &amount)
+	builder := sdk.TransactionBuilderInit(sender, client)
+	builder.MergeCoins(coin0, []*sdk.ObjectId{coin1})
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
@@ -32,15 +32,14 @@ func main() {
 	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
 	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
 
-	skipChecks := bool(false)
-	res, err := client.DryRunTx(txn, &skipChecks)
+	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to send IOTA: %v", err)
+		log.Fatalf("Failed to merge coins: %v", err)
 	}
 
 	if res.Error != nil {
-		log.Fatalf("Failed to send IOTA: %v", *res.Error)
+		log.Fatalf("Failed to merge coins: %v", *res.Error)
 	}
 
-	log.Print("Send IOTA dry run was successful!")
+	log.Print("Merge coins dry run was successful!")
 }

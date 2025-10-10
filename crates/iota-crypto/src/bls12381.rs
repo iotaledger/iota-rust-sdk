@@ -134,7 +134,7 @@ impl Verifier<Bls12381Signature> for Bls12381VerifyingKey {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use test_strategy::proptest;
 
     use super::*;

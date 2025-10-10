@@ -289,22 +289,21 @@ impl Verifier<UserSignature> for Ed25519Verifier {
 }
 
 #[cfg(test)]
-mod test {
-    use iota_sdk_types::PersonalMessage;
+mod tests {
+    use iota_sdk_types::{PersonalMessage, Transaction};
     use test_strategy::proptest;
 
     use super::*;
     use crate::{IotaSigner, IotaVerifier};
 
-    // TODO need to export proptest impl from core crate
-    // #[proptest]
-    // fn transaction_signing(signer: Ed25519PrivateKey, transaction: Transaction) {
-    //     let signature = signer.sign_transaction(&transaction).unwrap();
-    //     let verifier = signer.public_key();
-    //     verifier
-    //         .verify_transaction(&transaction, &signature)
-    //         .unwrap();
-    // }
+    #[proptest]
+    fn transaction_signing(signer: Ed25519PrivateKey, transaction: Transaction) {
+        let signature = signer.sign_transaction(&transaction).unwrap();
+        let verifier = signer.verifying_key();
+        verifier
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+    }
 
     #[proptest]
     fn personal_message_signing(signer: Ed25519PrivateKey, message: Vec<u8>) {

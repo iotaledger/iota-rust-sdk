@@ -292,7 +292,7 @@ impl Verifier<UserSignature> for Secp256k1Verifier {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use iota_sdk_types::PersonalMessage;
     use test_strategy::proptest;
     #[cfg(target_arch = "wasm32")]
