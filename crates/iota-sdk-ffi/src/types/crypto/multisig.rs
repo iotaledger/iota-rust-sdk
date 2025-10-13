@@ -5,12 +5,15 @@ use std::sync::Arc;
 
 use iota_types::SignatureScheme;
 
-use crate::types::{
-    address::Address,
-    crypto::{
-        Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
-        Secp256r1PublicKey, Secp256r1Signature,
-        zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
+use crate::{
+    export_object_bcs_conversion,
+    types::{
+        address::Address,
+        crypto::{
+            Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
+            Secp256r1PublicKey, Secp256r1Signature,
+            zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
+        },
     },
 };
 
@@ -410,3 +413,11 @@ impl MultisigMember {
         self.0.weight()
     }
 }
+
+export_object_bcs_conversion!(
+    MultisigMemberSignature,
+    MultisigMemberPublicKey,
+    MultisigAggregatedSignature,
+    MultisigCommittee,
+    MultisigMember
+);

@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use crate::types::struct_tag::StructTag;
+use crate::{export_object_bcs_conversion, types::struct_tag::StructTag};
 
 /// Type of a move value
 ///
@@ -180,3 +180,5 @@ impl TypeTag {
         Self(iota_types::TypeTag::Struct(Box::new(struct_tag.0.clone())))
     }
 }
+
+export_object_bcs_conversion!(TypeTag);

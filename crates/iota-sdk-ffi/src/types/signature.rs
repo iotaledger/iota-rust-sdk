@@ -7,6 +7,7 @@ use iota_types::{SignatureScheme, ZkLoginClaim};
 
 use crate::{
     error::Result,
+    export_object_bcs_conversion, export_record_enum_bcs_conversion,
     types::crypto::{
         Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
         Secp256r1PublicKey, Secp256r1Signature, multisig::MultisigAggregatedSignature,
@@ -319,3 +320,5 @@ impl SimpleSignature {
         (*self.0.as_secp256r1_pub_key()).into()
     }
 }
+
+export_object_bcs_conversion!(UserSignature, SimpleSignature);

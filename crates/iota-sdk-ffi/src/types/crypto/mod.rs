@@ -11,6 +11,7 @@ use iota_types::SignatureScheme;
 
 use crate::{
     error::Result,
+    export_object_bcs_conversion,
     types::{address::Address, signature::SimpleSignature},
 };
 
@@ -209,4 +210,15 @@ impl_crypto_object!(
     /// secp256r1-public-key = 33OCTECT
     /// ```
     Secp256r1Signature
+);
+
+export_object_bcs_conversion!(
+    Ed25519PublicKey,
+    Bls12381PublicKey,
+    Secp256k1PublicKey,
+    Secp256r1PublicKey,
+    Ed25519Signature,
+    Bls12381Signature,
+    Secp256k1Signature,
+    Secp256r1Signature,
 );

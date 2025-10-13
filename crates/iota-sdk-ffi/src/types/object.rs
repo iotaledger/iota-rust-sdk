@@ -11,6 +11,7 @@ pub type Version = iota_types::Version;
 
 use crate::{
     error::Result,
+    export_object_bcs_conversion, export_record_enum_bcs_conversion,
     types::{
         address::Address,
         digest::Digest,
@@ -636,3 +637,13 @@ impl GenesisObject {
         self.0.data().clone().into()
     }
 }
+
+export_record_enum_bcs_conversion!(ObjectReference, TypeOrigin, UpgradeInfo, MoveStruct);
+export_object_bcs_conversion!(
+    ObjectId,
+    Object,
+    ObjectData,
+    MovePackage,
+    Owner,
+    GenesisObject
+);

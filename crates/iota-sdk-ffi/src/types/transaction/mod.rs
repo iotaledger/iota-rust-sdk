@@ -10,6 +10,7 @@ use iota_types::{
 
 use crate::{
     error::Result,
+    export_object_bcs_conversion, export_record_enum_bcs_conversion,
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
@@ -80,10 +81,6 @@ impl Transaction {
 
     pub fn signing_digest(&self) -> Vec<u8> {
         self.0.signing_digest().to_vec()
-    }
-
-    pub fn bcs_serialize(&self) -> Result<Vec<u8>> {
-        Ok(bcs::to_bytes(&self.0)?)
     }
 }
 
@@ -1623,3 +1620,41 @@ impl MoveCall {
             .collect()
     }
 }
+
+export_object_bcs_conversion!(
+    Transaction,
+    TransactionKind,
+    ProgrammableTransaction,
+    Input,
+    Command,
+    TransferObjects,
+    SplitCoins,
+    MergeCoins,
+    Publish,
+    MakeMoveVector,
+    Upgrade,
+    ConsensusCommitPrologueV1,
+    ConsensusDeterminedVersionAssignments,
+    CancelledTransaction,
+    VersionAssignment,
+    GenesisTransaction,
+    ChangeEpoch,
+    SystemPackage,
+    ChangeEpochV2,
+    ExecutionTimeObservation,
+    ExecutionTimeObservations,
+    ValidatorExecutionTimeObservation,
+    ExecutionTimeObservationKey,
+    TransactionEffects,
+    Argument,
+    MoveCall,
+);
+export_record_enum_bcs_conversion!(
+    SignedTransaction,
+    AuthenticatorStateExpire,
+    AuthenticatorStateUpdateV1,
+    ActiveJwk,
+    RandomnessStateUpdate,
+    GasPayment,
+    TransactionExpiration,
+);

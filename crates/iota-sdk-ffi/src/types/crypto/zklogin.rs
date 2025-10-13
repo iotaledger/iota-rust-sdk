@@ -7,6 +7,7 @@ use iota_types::{Jwk, JwkId, ZkLoginClaim};
 
 use crate::{
     error::{Result, SdkFfiError},
+    export_object_bcs_conversion, export_record_enum_bcs_conversion,
     types::{address::Address, signature::SimpleSignature},
 };
 
@@ -430,3 +431,14 @@ pub struct Jwk {
     /// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
     pub alg: String,
 }
+
+export_object_bcs_conversion!(
+    ZkLoginAuthenticator,
+    ZkLoginPublicIdentifier,
+    ZkLoginProof,
+    CircomG1,
+    CircomG2,
+    Bn254FieldElement
+);
+
+export_record_enum_bcs_conversion!(ZkLoginClaim, JwkId, Jwk);

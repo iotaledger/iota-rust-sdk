@@ -7,6 +7,7 @@ use iota_crypto::Verifier;
 
 use crate::{
     error::Result,
+    export_object_bcs_conversion,
     types::{address::Address, crypto::Secp256r1PublicKey, signature::SimpleSignature},
 };
 
@@ -113,3 +114,5 @@ impl PasskeyPublicKey {
         self.0.derive_address().into()
     }
 }
+
+export_object_bcs_conversion!(PasskeyAuthenticator);

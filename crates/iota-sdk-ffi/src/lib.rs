@@ -137,3 +137,43 @@ pub fn hex_encode(input: &[u8]) -> String {
 pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
     Ok(hex::decode(input)?)
 }
+
+#[macro_export]
+macro_rules! export_record_enum_bcs_conversion {
+    ($($name:ident),+ $(,)?) => {
+        paste::paste! {$(
+            /// Create `$name` from BCS encoded bytes.
+            #[uniffi::export]
+            pub fn [< $name:snake _from_bcs >](bcs: Vec<u8>) -> crate::error::Result<$name> {
+                let data = bcs::from_bytes::<iota_types::$name>(&bcs)?;
+                Ok(data.into())
+            }
+
+            /// Convert `$name` to BCS encoded bytes.
+            #[uniffi::export]
+            pub fn [< $name:snake _to_bcs >](data: $name) -> crate::error::Result<Vec<u8>> {
+                let data: iota_types::$name = data.into();
+                Ok(bcs::to_bytes(&data)?)
+            }
+        )+}
+    }
+}
+
+#[macro_export]
+macro_rules! export_object_bcs_conversion {
+    ($($name:ident),+ $(,)?) => {$(
+        #[uniffi::export]
+        impl $name {
+            /// Create this type from BCS encoded bytes.
+            #[uniffi::constructor]
+            pub fn from_bcs(bcs: Vec<u8>) -> crate::error::Result<Self> {
+                Ok(Self(bcs::from_bytes::<iota_types::$name>(&bcs)?))
+            }
+
+            /// Convert this type to BCS encoded bytes.
+            pub fn to_bcs(&self) -> crate::error::Result<Vec<u8>> {
+                Ok(bcs::to_bytes(&self.0)?)
+            }
+        }
+    )+}
+}

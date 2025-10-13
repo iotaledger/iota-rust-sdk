@@ -5,6 +5,7 @@ use std::sync::Arc;
 
 use crate::{
     error::Result,
+    export_object_bcs_conversion,
     types::{address::Address, type_tag::TypeTag},
 };
 
@@ -106,3 +107,5 @@ impl StructTag {
         self.0.address().into()
     }
 }
+
+export_object_bcs_conversion!(Identifier, StructTag);

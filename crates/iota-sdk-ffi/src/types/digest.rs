@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::error::Result;
+use crate::{error::Result, export_object_bcs_conversion};
 
 /// A 32-byte Blake2b256 hash output.
 ///
@@ -46,3 +46,5 @@ impl Digest {
         self.0.to_base58()
     }
 }
+
+export_object_bcs_conversion!(Digest);

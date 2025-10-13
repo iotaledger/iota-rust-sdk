@@ -5,7 +5,11 @@ use std::sync::Arc;
 
 use iota_types::{CommandArgumentError, Identifier, TypeArgumentError};
 
-use crate::types::{address::Address, digest::Digest, object::ObjectId};
+use crate::{
+    error::Result,
+    export_record_enum_bcs_conversion,
+    types::{address::Address, digest::Digest, object::ObjectId},
+};
 
 /// The status of an executed Transaction
 ///
@@ -756,3 +760,12 @@ pub enum TypeArgumentError {
     /// A type provided did not match the specified constraint
     ConstraintNotSatisfied,
 }
+
+export_record_enum_bcs_conversion!(
+    ExecutionStatus,
+    ExecutionError,
+    MoveLocation,
+    CommandArgumentError,
+    PackageUpgradeError,
+    TypeArgumentError
+);

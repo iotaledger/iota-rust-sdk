@@ -1,7 +1,12 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::error::Result;
+use base64ct::Encoding;
+
+use crate::{
+    base64_encode,
+    error::{Result, SdkFfiError},
+};
 
 /// Unique identifier for an Account on the IOTA blockchain.
 ///
@@ -72,6 +77,11 @@ impl Address {
     }
 
     #[uniffi::constructor]
+    pub fn from_bcs(bcs: Vec<u8>) -> Result<Self> {
+        Ok(Self(bcs::from_bytes::<iota_types::Address>(&bcs)?))
+    }
+
+    #[uniffi::constructor]
     pub fn generate() -> Self {
         let mut rng = rand::thread_rng();
         Self(iota_types::Address::generate(&mut rng))
@@ -83,5 +93,9 @@ impl Address {
 
     pub fn to_hex(&self) -> String {
         self.0.to_hex()
+    }
+
+    pub fn to_bcs(&self) -> Result<Vec<u8>> {
+        Ok(bcs::to_bytes(&self.0)?)
     }
 }
