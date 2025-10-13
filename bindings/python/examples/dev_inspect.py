@@ -9,7 +9,7 @@ async def main():
     try:
         client = GraphQlClient.new_devnet()
 
-        sender = Address.from_hex("0x0")
+        sender = Address.zero()
 
         iota_names_package_address = Address.from_hex(
             "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba"
@@ -17,7 +17,7 @@ async def main():
         iota_names_object_id = ObjectId.from_hex(
             "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
         )
-        stdlib_address = Address.from_hex("0x1")
+        stdlib_address = Address.std_lib()
 
         name = "name.iota"
         print(f"Looking up name: {name}")

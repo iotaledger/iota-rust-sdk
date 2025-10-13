@@ -1,8 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::str::FromStr;
-
 use eyre::{OptionExt, Result};
 use iota_graphql_client::{Client, query_types::ObjectFilter};
 use iota_transaction_builder::{SharedMut, TransactionBuilder};
@@ -31,10 +29,7 @@ async fn main() -> Result<()> {
 
     builder
         .move_call(Address::SYSTEM, "iota_system", "request_withdraw_stake")
-        .arguments((
-            SharedMut(ObjectId::from_str("0x5")?),
-            staked_iota.object_id(),
-        ));
+        .arguments((SharedMut(ObjectId::SYSTEM), staked_iota.object_id()));
 
     let res = builder.dry_run(false).await?;
 

@@ -34,6 +34,8 @@ pub struct ObjectId(Address);
 impl ObjectId {
     pub const LENGTH: usize = Address::LENGTH;
     pub const ZERO: Self = Self(Address::ZERO);
+    pub const SYSTEM: Self = Self(Address::from_u8(5));
+    pub const CLOCK: Self = Self(Address::from_u8(6));
 
     /// Generates a new ObjectId from the provided byte array.
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {

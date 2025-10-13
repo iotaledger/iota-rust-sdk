@@ -84,6 +84,22 @@ impl ObjectId {
     }
 }
 
+macro_rules! named_object_id {
+    ($($constant:ident),+ $(,)?) => {
+        paste::paste! {
+            #[uniffi::export]
+            impl ObjectId {$(
+                #[uniffi::constructor]
+                pub fn [< $constant:lower >]() -> Self {
+                    Self(iota_types::ObjectId::$constant)
+                }
+            )+}
+        }
+    }
+}
+
+named_object_id!(ZERO, SYSTEM, CLOCK);
+
 /// Reference to an object
 ///
 /// Contains sufficient information to uniquely identify a specific object.

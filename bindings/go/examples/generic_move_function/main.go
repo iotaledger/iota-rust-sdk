@@ -23,7 +23,7 @@ func main() {
 	builder.MakeMoveVec([]*sdk.PtbArgument{sdk.PtbArgumentAddress(addr1), sdk.PtbArgumentAddress(addr2)}, sdk.TypeTagNewAddress(), "addresses")
 	builder.MakeMoveVec([]*sdk.PtbArgument{sdk.PtbArgumentU64(10_000_000), sdk.PtbArgumentU64(20_000_000)}, sdk.TypeTagNewU64(), "amounts")
 
-	package_id, _ := sdk.AddressFromHex("0x2")
+	package_id := sdk.AddressFramework()
 	module_name, _ := sdk.NewIdentifier("vec_map")
 	function_name, _ := sdk.NewIdentifier("from_keys_values")
 

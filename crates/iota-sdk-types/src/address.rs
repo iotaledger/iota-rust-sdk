@@ -75,14 +75,12 @@ impl Address {
     pub const STD_LIB: Self = Self::from_u8(1);
     pub const FRAMEWORK: Self = Self::from_u8(2);
     pub const SYSTEM: Self = Self::from_u8(3);
-    pub const SYSTEM_OBJ: Self = Self::from_u8(5);
-    pub const CLOCK: Self = Self::from_u8(6);
 
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
         Self(bytes)
     }
 
-    const fn from_u8(byte: u8) -> Self {
+    pub(crate) const fn from_u8(byte: u8) -> Self {
         let mut address = Self::ZERO;
         address.0[31] = byte;
         address

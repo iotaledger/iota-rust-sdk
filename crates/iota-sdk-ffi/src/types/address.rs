@@ -85,3 +85,19 @@ impl Address {
         self.0.to_hex()
     }
 }
+
+macro_rules! named_address {
+    ($($constant:ident),+ $(,)?) => {
+        paste::paste! {
+            #[uniffi::export]
+            impl Address {$(
+                #[uniffi::constructor]
+                pub fn [< $constant:lower >]() -> Self {
+                    Self(iota_types::Address::$constant)
+                }
+            )+}
+        }
+    }
+}
+
+named_address!(ZERO, STD_LIB, FRAMEWORK, SYSTEM);
