@@ -5,50 +5,50 @@ import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
-        try {
-                val client = GraphQlClient.newDevnet()
+    try {
+        val client = GraphQlClient.newDevnet()
 
-                val sender =
-                        Address.fromHex(
-                                "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
-                        )
-                val sponsor =
-                        Address.fromHex(
-                                "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
-                        )
-
-                val builder = TransactionBuilder.init(sender, client)
-
-                val packageAddr = Address.fromHex("0x1")
-                val moduleName = Identifier("u8")
-                val functionName = Identifier("max")
-
-                builder.moveCall(
-                        packageAddr,
-                        moduleName,
-                        functionName,
-                        listOf(PtbArgument.u8(0u), PtbArgument.u8(1u)),
+        val sender =
+                Address.fromHex(
+                        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                )
+        val sponsor =
+                Address.fromHex(
+                        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
                 )
 
-                val gasObjId =
-                        ObjectId.fromHex(
-                                "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
-                        )
-                builder.gas(gasObjId).sponsor(sponsor)
+        val builder = TransactionBuilder.init(sender, client)
 
-                val txn = builder.finish()
+        val packageAddr = Address.fromHex("0x1")
+        val moduleName = Identifier("u8")
+        val functionName = Identifier("max")
 
-                println("Signing Digest: ${hexEncode(txn.signingDigest())}")
-                println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")
+        builder.moveCall(
+                packageAddr,
+                moduleName,
+                functionName,
+                listOf(PtbArgument.u8(0u), PtbArgument.u8(1u)),
+        )
 
-                val res = client.dryRunTx(txn, false)
+        val gasObjId =
+                ObjectId.fromHex(
+                        "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
+                )
+        builder.gas(gasObjId).sponsor(sponsor)
 
-                if (res.error != null) {
-                        throw Exception("Failed to send gas sponsor tx: ${res.error}")
-                }
+        val txn = builder.finish()
 
-                println("Gas sponsor tx dry run was successful!")
-        } catch (e: Exception) {
-                e.printStackTrace()
+        println("Signing Digest: ${hexEncode(txn.signingDigest())}")
+        println("Txn Bytes: ${txn.bcsSerializeBase64()}")
+
+        val res = client.dryRunTx(txn, false)
+
+        if (res.error != null) {
+            throw Exception("Failed to send gas sponsor tx: ${res.error}")
         }
+
+        println("Gas sponsor tx dry run was successful!")
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 }

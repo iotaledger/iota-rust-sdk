@@ -2286,6 +2286,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3009,6 +3013,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_systempackage_version(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize_base64(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_digest(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_expiration(
@@ -3020,6 +3026,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_transaction_kind(
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_sender(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run(
 ): Short
@@ -5098,6 +5106,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transaction_new(`kind`: Pointer,`sender`:
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transaction_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transaction_expiration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5109,6 +5119,8 @@ fun uniffi_iota_sdk_ffi_fn_method_transaction_kind(`ptr`: Pointer,uniffi_out_err
 fun uniffi_iota_sdk_ffi_fn_method_transaction_sender(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6672,6 +6684,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize() != 39185.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize_base64() != 32647.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest() != 52429.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6688,6 +6703,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest() != 36608.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex() != 13703.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138.toShort()) {
@@ -36399,6 +36417,8 @@ public interface TransactionInterface {
     
     fun `bcsSerialize`(): kotlin.ByteArray
     
+    fun `bcsSerializeBase64`(): kotlin.String
+    
     fun `digest`(): Digest
     
     fun `expiration`(): TransactionExpiration
@@ -36410,6 +36430,8 @@ public interface TransactionInterface {
     fun `sender`(): Address
     
     fun `signingDigest`(): kotlin.ByteArray
+    
+    fun `signingDigestHex`(): kotlin.String
     
     companion object
 }
@@ -36529,6 +36551,19 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
     }
     
 
+    
+    @Throws(SdkFfiException::class)override fun `bcsSerializeBase64`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize_base64(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `digest`(): Digest {
             return FfiConverterTypeDigest.lift(
     callWithPointer {
@@ -36594,6 +36629,18 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `signingDigestHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(
         it, _status)
 }
     }

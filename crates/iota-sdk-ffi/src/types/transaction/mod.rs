@@ -9,7 +9,9 @@ use iota_types::{
 };
 
 use crate::{
+    base64_encode,
     error::Result,
+    hex_encode,
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
@@ -82,8 +84,16 @@ impl Transaction {
         self.0.signing_digest().to_vec()
     }
 
+    pub fn signing_digest_hex(&self) -> String {
+        hex_encode(&self.0.signing_digest())
+    }
+
     pub fn bcs_serialize(&self) -> Result<Vec<u8>> {
         Ok(bcs::to_bytes(&self.0)?)
+    }
+
+    pub fn bcs_serialize_base64(&self) -> Result<String> {
+        Ok(base64_encode(&self.bcs_serialize()?))
     }
 }
 

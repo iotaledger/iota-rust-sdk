@@ -3887,6 +3887,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_transaction_new(void* kind, void* sende
 RustBuffer uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_BCS_SERIALIZE_BASE64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_BCS_SERIALIZE_BASE64
+RustBuffer uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize_base64(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_DIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_DIGEST
 void* uniffi_iota_sdk_ffi_fn_method_transaction_digest(void* ptr, RustCallStatus *out_status
@@ -3915,6 +3920,11 @@ void* uniffi_iota_sdk_ffi_fn_method_transaction_sender(void* ptr, RustCallStatus
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_SIGNING_DIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_SIGNING_DIGEST
 RustBuffer uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_SIGNING_DIGEST_HEX
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_SIGNING_DIGEST_HEX
+RustBuffer uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONBUILDER
@@ -7268,6 +7278,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_BCS_SERIALIZE_BASE64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_BCS_SERIALIZE_BASE64
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize_base64(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_DIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_DIGEST
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_digest(void
@@ -7301,6 +7317,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_sender(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_SIGNING_DIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_SIGNING_DIGEST
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_SIGNING_DIGEST_HEX
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_SIGNING_DIGEST_HEX
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex(void
     
 );
 #endif

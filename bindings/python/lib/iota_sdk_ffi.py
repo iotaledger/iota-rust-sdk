@@ -1169,6 +1169,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize() != 39185:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize_base64() != 32647:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest() != 52429:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration() != 47752:
@@ -1180,6 +1182,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender() != 38190:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest() != 36608:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex() != 13703:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5533,6 +5537,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize_base64.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize_base64.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_digest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5563,6 +5572,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionbuilder.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7887,6 +7901,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize_base64.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize_base64.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest.restype = ctypes.c_uint16
@@ -7905,6 +7922,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender.restype = ctyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run.restype = ctypes.c_uint16
@@ -36543,6 +36563,8 @@ class TransactionProtocol(typing.Protocol):
 
     def bcs_serialize(self, ):
         raise NotImplementedError
+    def bcs_serialize_base64(self, ):
+        raise NotImplementedError
     def digest(self, ):
         raise NotImplementedError
     def expiration(self, ):
@@ -36554,6 +36576,8 @@ class TransactionProtocol(typing.Protocol):
     def sender(self, ):
         raise NotImplementedError
     def signing_digest(self, ):
+        raise NotImplementedError
+    def signing_digest_hex(self, ):
         raise NotImplementedError
 # Transaction is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Transaction():
@@ -36615,6 +36639,15 @@ class Transaction():
 
 
 
+    def bcs_serialize_base64(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize_base64,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def digest(self, ) -> "Digest":
         return _UniffiConverterTypeDigest.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_digest,self._uniffi_clone_pointer(),)
@@ -36663,6 +36696,15 @@ class Transaction():
     def signing_digest(self, ) -> "bytes":
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def signing_digest_hex(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex,self._uniffi_clone_pointer(),)
         )
 
 
