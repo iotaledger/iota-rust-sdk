@@ -5382,6 +5382,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec()
+	})
+	if checksum != 22295 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128()
 	})
 	if checksum != 8902 {
@@ -14467,6 +14476,12 @@ func MoveArgOption(value **MoveArg) *MoveArg {
 func MoveArgString(string string) *MoveArg {
 	return FfiConverterMoveArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_movearg_string(FfiConverterStringINSTANCE.Lower(string),_uniffiStatus)
+	}))
+}
+
+func MoveArgStringVec(addresses []string) *MoveArg {
+	return FfiConverterMoveArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec(FfiConverterSequenceStringINSTANCE.Lower(addresses),_uniffiStatus)
 	}))
 }
 

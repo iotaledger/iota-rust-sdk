@@ -1577,6 +1577,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string() != 18343:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec() != 22295:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128() != 8902:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128_vec() != 64018:
@@ -3718,6 +3720,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u128.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8810,6 +8817,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_option.restype = cty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128.restype = ctypes.c_uint16
@@ -30228,6 +30238,15 @@ class MoveArg():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string,
         _UniffiConverterString.lower(string))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def string_vec(cls, addresses: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(addresses)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec,
+        _UniffiConverterSequenceString.lower(addresses))
         return cls._make_instance_(pointer)
 
     @classmethod

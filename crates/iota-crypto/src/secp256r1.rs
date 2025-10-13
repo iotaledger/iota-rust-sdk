@@ -120,6 +120,7 @@ impl crate::PrivateKeyExt for Secp256r1PrivateKey {
     const SCHEME: SignatureScheme = SignatureScheme::Secp256r1;
 
     fn to_bytes(&self) -> Vec<u8> {
+        #[expect(deprecated)]
         self.0.to_bytes().as_slice().to_vec()
     }
 

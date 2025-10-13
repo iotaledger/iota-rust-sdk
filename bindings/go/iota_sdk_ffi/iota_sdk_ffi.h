@@ -2031,6 +2031,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_movearg_option(RustBuffer value, RustCa
 void* uniffi_iota_sdk_ffi_fn_constructor_movearg_string(RustBuffer string, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_MOVEARG_STRING_VEC
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_MOVEARG_STRING_VEC
+void* uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec(RustBuffer addresses, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_MOVEARG_U128
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_MOVEARG_U128
 void* uniffi_iota_sdk_ffi_fn_constructor_movearg_u128(RustBuffer value, RustCallStatus *out_status
@@ -8714,6 +8719,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_movearg_option(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_MOVEARG_STRING
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_MOVEARG_STRING
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_movearg_string(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_MOVEARG_STRING_VEC
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_MOVEARG_STRING_VEC
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec(void
     
 );
 #endif

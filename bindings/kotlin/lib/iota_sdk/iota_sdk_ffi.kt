@@ -2374,6 +2374,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3505,6 +3507,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_option(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_string(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128_vec(
@@ -4535,6 +4539,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec_from_base58(`digests`:
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_option(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_string(`string`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u128(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7546,6 +7552,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string() != 18343.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec() != 22295.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128() != 8902.toShort()) {
@@ -22644,6 +22653,16 @@ open class MoveArg: Disposable, AutoCloseable, MoveArgInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_string(
         FfiConverterString.lower(`string`),_status)
+}
+    )
+    }
+    
+
+         fun `stringVec`(`addresses`: List<kotlin.String>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec(
+        FfiConverterSequenceString.lower(`addresses`),_status)
 }
     )
     }
