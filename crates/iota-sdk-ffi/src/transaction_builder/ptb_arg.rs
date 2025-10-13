@@ -37,7 +37,7 @@ impl MoveArg {
     }
 
     #[uniffi::constructor]
-    pub fn address_from_hex(hex: &str) -> Result<Self> {
+    pub fn address_from_hex(hex: String) -> Result<Self> {
         Ok(Self::Address(iota_types::Address::from_hex(hex)?))
     }
 
@@ -47,7 +47,7 @@ impl MoveArg {
     }
 
     #[uniffi::constructor]
-    pub fn digest_from_base58(base58: &str) -> Result<Self> {
+    pub fn digest_from_base58(base58: String) -> Result<Self> {
         Ok(Self::Digest(iota_types::Digest::from_base58(base58)?))
     }
 
@@ -77,13 +77,13 @@ impl MoveArg {
     }
 
     #[uniffi::constructor]
-    pub fn u128(value: &str) -> Result<Self> {
+    pub fn u128(value: String) -> Result<Self> {
         Ok(Self::U128(value.parse::<u128>()?))
     }
 
     #[uniffi::constructor]
-    pub fn u256(value: &str) -> Result<Self> {
-        Ok(Self::U256(U256::from_dec_str(value)?))
+    pub fn u256(value: String) -> Result<Self> {
+        Ok(Self::U256(U256::from_dec_str(&value)?))
     }
 
     #[uniffi::constructor]
@@ -101,7 +101,7 @@ impl MoveArg {
         Self::Vector(
             addresses
                 .into_iter()
-                .map(|a| MoveArg::Address(**a))
+                .map(|a| MoveArg::address(&a))
                 .collect(),
         )
     }
@@ -111,14 +111,14 @@ impl MoveArg {
         Ok(Self::Vector(
             addresses
                 .into_iter()
-                .map(|a| Self::address_from_hex(&a))
+                .map(MoveArg::address_from_hex)
                 .collect::<Result<Vec<_>>>()?,
         ))
     }
 
     #[uniffi::constructor]
     pub fn digest_vec(digests: Vec<Arc<Digest>>) -> Self {
-        Self::Vector(digests.into_iter().map(|d| MoveArg::Digest(**d)).collect())
+        Self::Vector(digests.into_iter().map(|d| MoveArg::digest(&d)).collect())
     }
 
     #[uniffi::constructor]
@@ -126,34 +126,34 @@ impl MoveArg {
         Ok(Self::Vector(
             digests
                 .into_iter()
-                .map(|d| Self::digest_from_base58(&d))
+                .map(MoveArg::digest_from_base58)
                 .collect::<Result<Vec<_>>>()?,
         ))
     }
 
     #[uniffi::constructor]
     pub fn bool_vec(values: Vec<bool>) -> Self {
-        Self::Vector(values.into_iter().map(|val| MoveArg::Bool(val)).collect())
+        Self::Vector(values.into_iter().map(MoveArg::bool).collect())
     }
 
     #[uniffi::constructor]
     pub fn u8_vec(values: Vec<u8>) -> Self {
-        Self::Vector(values.into_iter().map(|val| MoveArg::U8(val)).collect())
+        Self::Vector(values.into_iter().map(MoveArg::u8).collect())
     }
 
     #[uniffi::constructor]
     pub fn u16_vec(values: Vec<u16>) -> Self {
-        Self::Vector(values.into_iter().map(|val| MoveArg::U16(val)).collect())
+        Self::Vector(values.into_iter().map(MoveArg::u16).collect())
     }
 
     #[uniffi::constructor]
     pub fn u32_vec(values: Vec<u32>) -> Self {
-        Self::Vector(values.into_iter().map(|val| MoveArg::U32(val)).collect())
+        Self::Vector(values.into_iter().map(MoveArg::u32).collect())
     }
 
     #[uniffi::constructor]
     pub fn u64_vec(values: Vec<u64>) -> Self {
-        Self::Vector(values.into_iter().map(|val| MoveArg::U64(val)).collect())
+        Self::Vector(values.into_iter().map(MoveArg::u64).collect())
     }
 
     #[uniffi::constructor]
@@ -161,7 +161,7 @@ impl MoveArg {
         Ok(Self::Vector(
             values
                 .into_iter()
-                .map(|val| Result::Ok(MoveArg::U128(val.parse::<u128>()?)))
+                .map(MoveArg::u128)
                 .collect::<Result<Vec<_>>>()?,
         ))
     }
@@ -171,9 +171,14 @@ impl MoveArg {
         Ok(Self::Vector(
             values
                 .into_iter()
-                .map(|val| Result::Ok(MoveArg::U256(U256::from_dec_str(&val)?)))
+                .map(MoveArg::u256)
                 .collect::<Result<Vec<_>>>()?,
         ))
+    }
+
+    #[uniffi::constructor]
+    pub fn string_vec(addresses: Vec<String>) -> Self {
+        Self::Vector(addresses.into_iter().map(MoveArg::string).collect())
     }
 }
 
@@ -274,7 +279,7 @@ impl PTBArgument {
     }
 
     #[uniffi::constructor]
-    pub fn address_from_hex(hex: &str) -> Result<Self> {
+    pub fn address_from_hex(hex: String) -> Result<Self> {
         Ok(Self::Move(MoveArg::address_from_hex(hex)?))
     }
 
@@ -284,7 +289,7 @@ impl PTBArgument {
     }
 
     #[uniffi::constructor]
-    pub fn digest_from_base58(base58: &str) -> Result<Self> {
+    pub fn digest_from_base58(base58: String) -> Result<Self> {
         Ok(Self::Move(MoveArg::digest_from_base58(base58)?))
     }
 
@@ -314,12 +319,12 @@ impl PTBArgument {
     }
 
     #[uniffi::constructor]
-    pub fn u128(value: &str) -> Result<Self> {
+    pub fn u128(value: String) -> Result<Self> {
         Ok(Self::Move(MoveArg::u128(value)?))
     }
 
     #[uniffi::constructor]
-    pub fn u256(value: &str) -> Result<Self> {
+    pub fn u256(value: String) -> Result<Self> {
         Ok(Self::Move(MoveArg::u256(value)?))
     }
 
