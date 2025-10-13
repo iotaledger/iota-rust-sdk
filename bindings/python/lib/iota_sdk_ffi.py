@@ -681,7 +681,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 29988:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 6963:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -27150,7 +27150,7 @@ class GraphQlClientProtocol(typing.Protocol):
         ```rust,ignore
 
         let client = iota_graphql_client::Client::new_devnet();
-        let address = Address::from_str("0x5").unwrap();
+        let address = ObjectId::SYSTEM.into();
         let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
 
         # alternatively, pass in the bcs bytes
@@ -27848,7 +27848,7 @@ _UniffiConverterTypeSdkFfiError,
         ```rust,ignore
 
         let client = iota_graphql_client::Client::new_devnet();
-        let address = Address::from_str("0x5").unwrap();
+        let address = ObjectId::SYSTEM.into();
         let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
 
         # alternatively, pass in the bcs bytes

@@ -5982,7 +5982,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 29988.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 6963.toShort()) {
@@ -19126,7 +19126,7 @@ public interface GraphQlClientInterface {
      * ```rust,ignore
      *
      * let client = iota_graphql_client::Client::new_devnet();
-     * let address = Address::from_str("0x5").unwrap();
+     * let address = ObjectId::SYSTEM.into();
      * let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
      *
      * # alternatively, pass in the bcs bytes
@@ -19755,7 +19755,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      * ```rust,ignore
      *
      * let client = iota_graphql_client::Client::new_devnet();
-     * let address = Address::from_str("0x5").unwrap();
+     * let address = ObjectId::SYSTEM.into();
      * let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
      *
      * # alternatively, pass in the bcs bytes
