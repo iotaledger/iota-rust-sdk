@@ -14,7 +14,7 @@ use crate::{
     crypto::simple::SimpleKeypair,
     error::Result,
     graphql::GraphQLClient,
-    transaction_builder::ptb_arg::PTBArgument,
+    transaction_builder::ptb_arg::{MoveArg, PTBArgument},
     types::{
         address::Address,
         graphql::DryRunResult,
@@ -227,7 +227,7 @@ impl TransactionBuilder {
     /// the type indicated by `type_tag`.
     pub fn make_move_vec(
         self: Arc<Self>,
-        elements: Vec<Arc<PTBArgument>>,
+        elements: Vec<Arc<MoveArg>>,
         type_tag: &TypeTag,
         name: String,
     ) -> Arc<Self> {

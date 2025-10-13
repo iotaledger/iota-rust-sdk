@@ -35,6 +35,12 @@ impl PTBArgument for ObjectId {
     }
 }
 
+impl PTBArgument for &ObjectId {
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        (*self).arg(ptb)
+    }
+}
+
 impl PTBArgument for ObjectReference {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         ptb.set_input(
@@ -252,6 +258,7 @@ impl PTBArgument for &Receiving<ObjectReference> {
 }
 
 /// The result of a previous command by name.
+#[derive(Debug, Clone)]
 pub struct Res(String);
 
 /// Get the result of a previous command by name.
