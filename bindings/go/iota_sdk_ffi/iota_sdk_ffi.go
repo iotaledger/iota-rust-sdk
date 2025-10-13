@@ -3537,15 +3537,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize()
-	})
-	if checksum != 39185 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_digest()
 	})
 	if checksum != 52429 {
@@ -3596,6 +3587,24 @@ func uniffiCheckChecksums() {
 	if checksum != 36608 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64()
+	})
+	if checksum != 60127 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_to_bytes()
+	})
+	if checksum != 46058 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_to_bytes: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6107,6 +6116,24 @@ func uniffiCheckChecksums() {
 	if checksum != 4081 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transaction_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_base64()
+	})
+	if checksum != 623 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_base64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_bytes()
+	})
+	if checksum != 60971 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_bytes: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -20592,13 +20619,16 @@ func (_ FfiDestroyerSystemPackage) Destroy(value *SystemPackage) {
 // transaction-v1 = transaction-kind address gas-payment transaction-expiration
 // ```
 type TransactionInterface interface {
-	BcsSerialize() ([]byte, error)
 	Digest() *Digest
 	Expiration() TransactionExpiration
 	GasPayment() GasPayment
 	Kind() *TransactionKind
 	Sender() *Address
 	SigningDigest() []byte
+	// Serialize the transaction as a base64-encoded string.
+	ToBase64() (string, error)
+	// Serialize the transaction as a `Vec<u8>` of BCS bytes.
+	ToBytes() ([]byte, error)
 }
 // A transaction
 //
@@ -20621,24 +20651,33 @@ func NewTransaction(kind *TransactionKind, sender *Address, gasPayment GasPaymen
 }
 
 
-
-
-func (_self *Transaction) BcsSerialize() ([]byte, error) {
-	_pointer := _self.ffiObject.incrementPointer("*Transaction")
-	defer _self.ffiObject.decrementPointer()
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize(
-		_pointer,_uniffiStatus),
-	}
+// Deserialize a transaction from a base64-encoded string.
+func TransactionNewFromBase64(bytes string) (*Transaction, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_base64(FfiConverterStringINSTANCE.Lower(bytes),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
+			var _uniffiDefaultValue *Transaction
 			return _uniffiDefaultValue, _uniffiErr
 		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+			return FfiConverterTransactionINSTANCE.Lift(_uniffiRV), nil
 		}
 }
+
+// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
+func TransactionNewFromBytes(bytes []byte) (*Transaction, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Transaction
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterTransactionINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
 
 func (_self *Transaction) Digest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*Transaction")
@@ -20698,6 +20737,42 @@ func (_self *Transaction) SigningDigest() []byte {
 		_pointer,_uniffiStatus),
 	}
 	}))
+}
+
+// Serialize the transaction as a base64-encoded string.
+func (_self *Transaction) ToBase64() (string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Transaction")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Serialize the transaction as a `Vec<u8>` of BCS bytes.
+func (_self *Transaction) ToBytes() ([]byte, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Transaction")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transaction_to_bytes(
+		_pointer,_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 func (object *Transaction) Destroy() {
 	runtime.SetFinalizer(object, nil)

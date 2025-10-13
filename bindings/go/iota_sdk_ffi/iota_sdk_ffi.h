@@ -3882,9 +3882,14 @@ void uniffi_iota_sdk_ffi_fn_free_transaction(void* ptr, RustCallStatus *out_stat
 void* uniffi_iota_sdk_ffi_fn_constructor_transaction_new(void* kind, void* sender, RustBuffer gas_payment, RustBuffer expiration, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_BCS_SERIALIZE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_BCS_SERIALIZE
-RustBuffer uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize(void* ptr, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTION_NEW_FROM_BASE64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTION_NEW_FROM_BASE64
+void* uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_base64(RustBuffer bytes, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTION_NEW_FROM_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTION_NEW_FROM_BYTES
+void* uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_bytes(RustBuffer bytes, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_DIGEST
@@ -3915,6 +3920,16 @@ void* uniffi_iota_sdk_ffi_fn_method_transaction_sender(void* ptr, RustCallStatus
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_SIGNING_DIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_SIGNING_DIGEST
 RustBuffer uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_TO_BASE64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_TO_BASE64
+RustBuffer uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_TO_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTION_TO_BYTES
+RustBuffer uniffi_iota_sdk_ffi_fn_method_transaction_to_bytes(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONBUILDER
@@ -7262,12 +7277,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_systempackage_version(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_BCS_SERIALIZE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_BCS_SERIALIZE
-uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize(void
-    
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_DIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_DIGEST
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_digest(void
@@ -7301,6 +7310,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_sender(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_SIGNING_DIGEST
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_SIGNING_DIGEST
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_TO_BASE64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_TO_BASE64
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_TO_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTION_TO_BYTES
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transaction_to_bytes(void
     
 );
 #endif
@@ -8975,6 +8996,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTION_NEW
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTION_NEW
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transaction_new(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTION_NEW_FROM_BASE64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTION_NEW_FROM_BASE64
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_base64(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTION_NEW_FROM_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTION_NEW_FROM_BYTES
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_bytes(void
     
 );
 #endif

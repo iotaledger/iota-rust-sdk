@@ -82,8 +82,26 @@ impl Transaction {
         self.0.signing_digest().to_vec()
     }
 
-    pub fn bcs_serialize(&self) -> Result<Vec<u8>> {
-        Ok(bcs::to_bytes(&self.0)?)
+    /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
+    pub fn to_bytes(&self) -> Result<Vec<u8>> {
+        Ok(self.0.to_bytes()?)
+    }
+
+    /// Serialize the transaction as a base64-encoded string.
+    pub fn to_base64(&self) -> Result<String> {
+        Ok(self.0.to_base64()?)
+    }
+
+    /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
+    #[uniffi::constructor]
+    pub fn new_from_bytes(bytes: Vec<u8>) -> Result<Self> {
+        Ok(Self(iota_types::Transaction::from_bytes(&bytes)?))
+    }
+
+    /// Deserialize a transaction from a base64-encoded string.
+    #[uniffi::constructor]
+    pub fn new_from_base64(bytes: String) -> Result<Self> {
+        Ok(Self(iota_types::Transaction::from_base64(&bytes)?))
     }
 }
 
