@@ -1053,7 +1053,7 @@ impl TransactionBuilder<(), Publish> {
     /// commands.
     pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder {
         let cap = self.arg();
-        self.move_call(Address::TWO, "package", "upgrade_package")
+        self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
             .name(name)
             .reset()
@@ -1065,7 +1065,7 @@ impl TransactionBuilder<Client, Publish> {
     /// commands.
     pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder<Client> {
         let cap = self.arg();
-        self.move_call(Address::TWO, "package", "upgrade_package")
+        self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments(cap)
             .name(name)
             .reset()

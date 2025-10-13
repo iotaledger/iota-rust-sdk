@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
         TransactionBuilder::new(*staked_iota.owner().as_address()).with_client(client);
 
     builder
-        .move_call(Address::THREE, "iota_system", "request_withdraw_stake")
+        .move_call(Address::SYSTEM, "iota_system", "request_withdraw_stake")
         .arguments((
             SharedMut(ObjectId::from_str("0x5")?),
             staked_iota.object_id(),

@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(my_address).with_client(client);
 
     builder
-        .move_call(Address::THREE, "iota_system", "request_add_stake")
+        .move_call(Address::SYSTEM, "iota_system", "request_add_stake")
         .arguments((
             SharedMut(ObjectId::from_str("0x5")?),
             ObjectId::from_str(

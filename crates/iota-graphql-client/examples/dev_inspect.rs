@@ -50,7 +50,7 @@ async fn main() -> Result<()> {
 
     // Step 4: Borrow the name record from the option
     builder
-        .move_call(Address::ONE, "option", "borrow")
+        .move_call(Address::STD_LIB, "option", "borrow")
         .arguments(res("name_record_opt"))
         .type_tags([TypeTag::Struct(Box::new(StructTag {
             address: iota_names_package_address,
@@ -69,7 +69,7 @@ async fn main() -> Result<()> {
     // Step 6: Borrow the address from the option (this returns the resolved
     // address)
     builder
-        .move_call(Address::ONE, "option", "borrow")
+        .move_call(Address::STD_LIB, "option", "borrow")
         .arguments(res("target_address_opt"))
         .generics::<Address>()
         .name("target_address");
