@@ -453,6 +453,15 @@ impl StructTag {
         }
     }
 
+    pub fn upgrade_cap() -> Self {
+        Self {
+            address: Address::TWO,
+            module: Identifier::new("package").unwrap(),
+            name: Identifier::new("UpgradeCap").unwrap(),
+            type_params: vec![],
+        }
+    }
+
     pub fn address(&self) -> Address {
         self.address
     }

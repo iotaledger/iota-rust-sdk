@@ -39,7 +39,7 @@ impl From<MovePackageData> for PublishType {
 
 /// Type corresponding to the output of `iota move build
 /// --dump-bytecode-as-base64`
-#[derive(serde::Deserialize, Debug)]
+#[derive(serde::Deserialize, Debug, Clone)]
 pub struct MovePackageData {
     /// The package modules as a series of bytes
     #[serde(deserialize_with = "bcs_from_str")]
