@@ -13,7 +13,7 @@ async def main():
 
 		builder = await TransactionBuilder.init(sender, client)
 
-		package_addr = Address.from_hex("0x1")
+		package_addr = Address.std_lib()
 		module_name = Identifier("u64")
 		function_name = Identifier("max")
 

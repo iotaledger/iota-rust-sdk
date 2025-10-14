@@ -15,7 +15,7 @@ fun main() = runBlocking {
 
                 val builder = TransactionBuilder.init(sender, client)
 
-                val packageAddr = Address.fromHex("0x1")
+                val packageAddr = Address.stdLib()
                 val moduleName = Identifier("u64")
                 val functionName = Identifier("max")
 
