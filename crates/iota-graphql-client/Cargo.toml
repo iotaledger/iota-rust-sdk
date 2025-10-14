@@ -16,6 +16,7 @@ cynic = "3.7.3"
 derive_more = { version = "2.0", features = ["from"] }
 eyre = "0.6"
 futures = "0.3.29"
+hex = "0.4.3"
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde"] }
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
 serde = { version = "1.0.144" }
