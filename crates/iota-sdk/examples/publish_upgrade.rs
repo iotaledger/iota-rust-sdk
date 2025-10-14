@@ -10,7 +10,7 @@ use eyre::{Result, bail};
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
 use iota_graphql_client::{Client, faucet::FaucetClient, pagination::PaginationFilter};
 use iota_transaction_builder::{MovePackageData, TransactionBuilder, res};
-use iota_types::{Address, Digest, Input, ObjectId, ObjectOut, StructTag};
+use iota_types::{Address, Input, ObjectId, ObjectOut, StructTag};
 use rand::rngs::OsRng;
 
 #[tokio::main]
@@ -84,12 +84,10 @@ async fn main() -> Result<()> {
     // Resolve UpgradeCap and PackageId via the client
     let mut upgrade_cap = None::<ObjectId>;
     let mut package_id = None::<ObjectId>;
-    let mut package_digest = None::<Digest>;
-    let mut upgrade_cap_digest = None::<Digest>;
 
     for changed_obj in effects.as_v1().changed_objects.iter() {
         match changed_obj.output_state {
-            ObjectOut::ObjectWrite { digest, owner } => {
+            ObjectOut::ObjectWrite { owner, .. } => {
                 let object_id = changed_obj.object_id;
                 let Some(obj) = client.object(object_id, None).await? else {
                     bail!("Missing object {object_id}");
@@ -98,15 +96,13 @@ async fn main() -> Result<()> {
                     println!("UpgradeCap={object_id}");
                     println!("Owner: {owner}");
                     upgrade_cap.replace(object_id);
-                    upgrade_cap_digest.replace(digest);
                 }
             }
-            ObjectOut::PackageWrite { version, digest } => {
+            ObjectOut::PackageWrite { version, .. } => {
                 let pkg_id = changed_obj.object_id;
                 println!("PackageId={pkg_id}");
                 println!("Package version: {version}");
                 package_id.replace(pkg_id);
-                package_digest.replace(digest);
             }
             _ => continue,
         }
@@ -144,6 +140,7 @@ async fn main() -> Result<()> {
 
     builder.upgrade(package_id, res("upgrade_ticket"), data);
     let tx = builder.finish().await?;
+    println!("{tx:#?}");
 
     // Perform a dry-run to check if everything is fine
     let res = client.dry_run_tx(&tx, false).await?;
