@@ -16,7 +16,7 @@ pub mod unresolved;
 pub use self::{
     builder::{
         TransactionBuilder,
-        ptb_arguments::{PTBArgument, PTBArguments, Receiving, Shared, SharedMut, res},
+        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
     },
     publish_type::MovePackageData,
     types::PureBytes,
@@ -164,9 +164,9 @@ mod tests {
         let client = Client::new_localnet();
         let coin = coins.first().unwrap().id;
         let recipient = Address::generate(rand::thread_rng());
-        tx.transfer_objects(recipient, coin);
+        tx.transfer_objects(recipient, [coin]);
 
-        let effects = tx.execute(&[pk.into()], true).await;
+        let effects = tx.execute(&pk.into(), true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
 
         // check that recipient has 1 coin
@@ -185,9 +185,9 @@ mod tests {
         let (mut tx, _, pk, _) = helper_setup().await;
         tx.move_call(Address::ONE, "option", "is_none")
             .generics::<u64>()
-            .arguments(Some(1u64));
+            .arguments([Some(1u64)]);
 
-        let effects = tx.execute(&[pk.into()], true).await;
+        let effects = tx.execute(&pk.into(), true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
     }
 
@@ -198,11 +198,11 @@ mod tests {
 
         // transfer 1 IOTA from Gas coin
         let gas = tx.get_gas()[0];
-        tx.split_coins(gas, [1_000_000_000]).name("coin");
+        tx.split_coins(gas, [1_000_000_000u64]).name("coin");
         let recipient = Address::generate(rand::thread_rng());
-        tx.transfer_objects(recipient, res("coin"));
+        tx.transfer_objects(recipient, [res("coin")]);
 
-        let effects = tx.execute(&[pk.into()], true).await;
+        let effects = tx.execute(&pk.into(), true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
 
         // check that recipient has 1 coin
@@ -220,9 +220,9 @@ mod tests {
         let coin = coins.first().unwrap().id;
 
         // transfer 1 IOTA
-        tx.split_coins(coin, [1_000_000_000]);
+        tx.split_coins(coin, [1_000_000_000u64]);
 
-        let effects = tx.execute(&[pk.into()], true).await.unwrap();
+        let effects = tx.execute(&pk.into(), true).await.unwrap();
 
         let expected_status = ExecutionStatus::Success;
         // The tx failed, so we expect Failure instead of Success
@@ -244,7 +244,7 @@ mod tests {
         tx.merge_coins(coin1, coins_to_merge);
         let client = tx.get_client().clone();
 
-        let effects = tx.execute(&[pk.into()], true).await;
+        let effects = tx.execute(&pk.into(), true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
 
         // check that there are two coins
@@ -261,7 +261,7 @@ mod tests {
 
         tx.make_move_vec([1u64]);
 
-        let effects = tx.execute(&[pk.into()], true).await;
+        let effects = tx.execute(&pk.into(), true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
     }
 
@@ -272,23 +272,23 @@ mod tests {
         let package = move_package_data("package_test_example_v1.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, res("cap"));
+            .transfer_objects(address, [res("cap")]);
 
-        let effects = tx.execute(&[pk.into()], true).await;
+        let effects = tx.execute(&pk.into(), true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
     }
 
     #[tokio::test]
     async fn test_upgrade() {
         let (mut tx, address, pk, coins) = helper_setup().await;
-        let keys = [pk.into()];
+        let key = pk.into();
 
         let package = move_package_data("package_test_example_v2.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, res("cap"));
+            .transfer_objects(address, [res("cap")]);
 
-        let effects = tx.execute(&keys, true).await;
+        let effects = tx.execute(&key, true).await;
         let mut package_id: Option<ObjectId> = None;
         let mut created_objs = vec![];
         if let Ok(Some(ref effects)) = effects {
@@ -348,7 +348,7 @@ mod tests {
 
         tx.gas(coins.last().unwrap().id);
 
-        let effects = tx.execute(&keys, true).await;
+        let effects = tx.execute(&key, true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
     }
 }

@@ -7,9 +7,31 @@
 use iota_sdk_types::{PersonalMessage, Transaction, UserSignature};
 pub use signature::{Error as SignatureError, Signer, Verifier};
 
+/// Error type for private key encoding/decoding operations
+#[derive(thiserror::Error, Debug)]
+#[non_exhaustive]
+pub enum PrivateKeyError {
+    /// Empty input data
+    #[error("empty data: {0}")]
+    EmptyData(String),
+    /// Invalid signature scheme
+    #[error("invalid signature scheme: {0}")]
+    InvalidScheme(String),
+    /// Bech32 encoding/decoding error
+    #[error("bech32 error: {0}")]
+    Bech32(String),
+    /// HRP (Human Readable Part) error
+    #[error("bech32 HRP error: {0}")]
+    Bech32Hrp(String),
+}
+
 #[cfg(feature = "bls12381")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "bls12381")))]
 pub mod bls12381;
+
+#[cfg(feature = "bls12381")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bls12381")))]
+pub mod validator;
 
 #[cfg(feature = "ed25519")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
@@ -152,5 +174,102 @@ impl<T: Verifier<UserSignature>> IotaVerifier for T {
     ) -> Result<(), SignatureError> {
         let message = message.signing_digest();
         self.verify(&message, signature)
+    }
+}
+
+/// Bech32 prefix for IOTA private keys
+#[cfg(feature = "bech32")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
+pub const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
+
+/// Extension trait for private key types
+pub trait PrivateKeyExt {
+    /// The signature scheme for this key type
+    const SCHEME: iota_sdk_types::SignatureScheme;
+
+    /// Returns the signature scheme for this private key
+    fn scheme(&self) -> iota_sdk_types::SignatureScheme {
+        Self::SCHEME
+    }
+
+    /// Returns the raw bytes of this private key
+    fn to_bytes(&self) -> Vec<u8>;
+
+    /// Creates an instance from raw key bytes (without scheme flag)
+    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, PrivateKeyError>
+    where
+        Self: Sized;
+
+    /// Returns the bytes with signature scheme flag prepended
+    fn to_flagged_bytes(&self) -> Vec<u8> {
+        let key_bytes = self.to_bytes();
+        let mut bytes = Vec::with_capacity(1 + key_bytes.len());
+        bytes.push(self.scheme().to_u8());
+        bytes.extend_from_slice(&key_bytes);
+        bytes
+    }
+
+    /// Creates an instance from bytes that include the signature scheme flag
+    fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, PrivateKeyError>
+    where
+        Self: Sized,
+    {
+        if bytes.is_empty() {
+            return Err(PrivateKeyError::EmptyData("flagged bytes".to_string()));
+        }
+
+        let flag = iota_sdk_types::SignatureScheme::from_byte(bytes[0])
+            .map_err(|e| PrivateKeyError::InvalidScheme(format!("{e:?}")))?;
+
+        if flag != Self::SCHEME {
+            return Err(PrivateKeyError::InvalidScheme(format!(
+                "expected {:?}, got {flag:?}",
+                Self::SCHEME
+            )));
+        }
+
+        let key_bytes = &bytes[1..];
+        Self::from_raw_bytes(key_bytes)
+    }
+
+    /// Encode this private key in Bech32 format with "iotaprivkey" prefix
+    #[cfg(feature = "bech32")]
+    fn to_bech32(&self) -> Result<String, PrivateKeyError> {
+        use bech32::Hrp;
+
+        let hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
+            .map_err(|e| PrivateKeyError::Bech32Hrp(format!("{e}")))?;
+
+        let bytes = self.to_flagged_bytes();
+
+        bech32::encode::<bech32::Bech32>(hrp, &bytes)
+            .map_err(|e| PrivateKeyError::Bech32(format!("encoding failed: {e}")))
+    }
+
+    /// Decode a private key from Bech32 format with "iotaprivkey" prefix
+    #[cfg(feature = "bech32")]
+    fn from_bech32(value: &str) -> Result<Self, PrivateKeyError>
+    where
+        Self: Sized,
+    {
+        use bech32::Hrp;
+
+        let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
+            .map_err(|e| PrivateKeyError::Bech32Hrp(format!("{e}")))?;
+
+        let (hrp, data) = bech32::decode(value)
+            .map_err(|e| PrivateKeyError::Bech32(format!("decoding failed: {e}")))?;
+
+        if hrp != expected_hrp {
+            return Err(PrivateKeyError::Bech32Hrp(format!(
+                "expected {IOTA_PRIV_KEY_PREFIX}, got {hrp}"
+            )));
+        }
+
+        if data.is_empty() {
+            return Err(PrivateKeyError::EmptyData("bech32 data".to_string()));
+        }
+
+        Self::from_flagged_bytes(&data)
     }
 }

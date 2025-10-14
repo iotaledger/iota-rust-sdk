@@ -18,15 +18,8 @@ async def main():
             "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
         )
 
-        coin_id = ObjectId.from_hex(
-            "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
-        )
-
         builder = await TransactionBuilder.init(from_address, client)
-        builder.transfer_objects(
-            to_address,
-            [PtbArgument.object_id(coin_id)],
-        )
+        builder.send_iota(to_address, PtbArgument.u64(5000000000))
 
         txn = await builder.finish()
 

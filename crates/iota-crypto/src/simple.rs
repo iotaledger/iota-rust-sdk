@@ -82,7 +82,7 @@ mod keypair {
     };
     use signature::{Signer, Verifier};
 
-    use crate::SignatureError;
+    use crate::{PrivateKeyExt, SignatureError};
 
     #[derive(Debug, Clone)]
     pub struct SimpleKeypair {
@@ -134,6 +134,82 @@ mod keypair {
 
         pub fn public_key(&self) -> MultisigMemberPublicKey {
             self.verifying_key().public_key()
+        }
+
+        /// Encode a SimpleKeypair as `flag || privkey` in bytes
+        pub fn to_bytes(&self) -> Vec<u8> {
+            let mut bytes = Vec::new();
+            bytes.push(self.scheme().to_u8());
+
+            match &self.inner {
+                #[cfg(feature = "ed25519")]
+                InnerKeypair::Ed25519(private_key) => {
+                    bytes.extend_from_slice(&private_key.to_bytes());
+                }
+                #[cfg(feature = "secp256k1")]
+                InnerKeypair::Secp256k1(private_key) => {
+                    bytes.extend_from_slice(&private_key.to_bytes());
+                }
+                #[cfg(feature = "secp256r1")]
+                InnerKeypair::Secp256r1(private_key) => {
+                    bytes.extend_from_slice(&private_key.to_bytes());
+                }
+            }
+
+            bytes
+        }
+
+        /// Decode a SimpleKeypair from `flag || privkey` bytes
+        pub fn from_bytes(bytes: &[u8]) -> Result<Self, SignatureError> {
+            if bytes.is_empty() {
+                return Err(SignatureError::from_source("empty bytes"));
+            }
+
+            let flag = SignatureScheme::from_byte(bytes[0]).map_err(|e| {
+                SignatureError::from_source(format!("invalid signature scheme: {:?}", e))
+            })?;
+            let key_bytes = &bytes[1..];
+
+            match flag {
+                #[cfg(feature = "ed25519")]
+                SignatureScheme::Ed25519 => {
+                    if key_bytes.len() != crate::ed25519::Ed25519PrivateKey::LENGTH {
+                        return Err(SignatureError::from_source("invalid ed25519 key length"));
+                    }
+                    let mut arr = [0u8; crate::ed25519::Ed25519PrivateKey::LENGTH];
+                    arr.copy_from_slice(key_bytes);
+                    Ok(Self {
+                        inner: InnerKeypair::Ed25519(crate::ed25519::Ed25519PrivateKey::new(arr)),
+                    })
+                }
+                #[cfg(feature = "secp256k1")]
+                SignatureScheme::Secp256k1 => {
+                    if key_bytes.len() != crate::secp256k1::Secp256k1PrivateKey::LENGTH {
+                        return Err(SignatureError::from_source("invalid secp256k1 key length"));
+                    }
+                    let mut arr = [0u8; crate::secp256k1::Secp256k1PrivateKey::LENGTH];
+                    arr.copy_from_slice(key_bytes);
+                    crate::secp256k1::Secp256k1PrivateKey::new(arr)
+                        .map(InnerKeypair::Secp256k1)
+                        .map(|inner| Self { inner })
+                }
+                #[cfg(feature = "secp256r1")]
+                SignatureScheme::Secp256r1 => {
+                    if key_bytes.len() != crate::secp256r1::Secp256r1PrivateKey::LENGTH {
+                        return Err(SignatureError::from_source("invalid secp256r1 key length"));
+                    }
+                    let mut arr = [0u8; crate::secp256r1::Secp256r1PrivateKey::LENGTH];
+                    arr.copy_from_slice(key_bytes);
+                    Ok(Self {
+                        inner: InnerKeypair::Secp256r1(crate::secp256r1::Secp256r1PrivateKey::new(
+                            arr,
+                        )),
+                    })
+                }
+                _ => Err(SignatureError::from_source(
+                    "unsupported signature scheme for SimpleKeypair",
+                )),
+            }
         }
 
         #[cfg(feature = "pem")]
@@ -461,14 +537,51 @@ mod keypair {
             }
         }
     }
+
+    impl crate::PrivateKeyExt for SimpleKeypair {
+        // SimpleKeypair doesn't have a single scheme since it can contain any scheme
+        // We provide a dummy value since we override all methods
+        const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
+
+        fn scheme(&self) -> SignatureScheme {
+            self.scheme()
+        }
+
+        fn to_bytes(&self) -> Vec<u8> {
+            // For SimpleKeypair, to_bytes() already returns flagged bytes
+            // We need the raw key bytes without the flag for the trait
+            match &self.inner {
+                #[cfg(feature = "ed25519")]
+                InnerKeypair::Ed25519(private_key) => private_key.to_bytes().to_vec(),
+                #[cfg(feature = "secp256k1")]
+                InnerKeypair::Secp256k1(private_key) => private_key.to_bytes().as_slice().to_vec(),
+                #[cfg(feature = "secp256r1")]
+                InnerKeypair::Secp256r1(private_key) => private_key.to_bytes().as_slice().to_vec(),
+            }
+        }
+
+        fn from_raw_bytes(_bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
+            // SimpleKeypair can't be created from raw bytes without knowing the scheme
+            // This should not be called since SimpleKeypair overrides from_flagged_bytes
+            Err(crate::PrivateKeyError::InvalidScheme(
+                "SimpleKeypair should use from_bytes instead".to_string(),
+            ))
+        }
+
+        fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
+            Self::from_bytes(bytes)
+                .map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
+        }
+    }
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use test_strategy::proptest;
 
     use super::*;
     use crate::{
+        PrivateKeyExt,
         ed25519::{Ed25519PrivateKey, Ed25519VerifyingKey},
         secp256k1::{Secp256k1PrivateKey, Secp256k1VerifyingKey},
         secp256r1::{Secp256r1PrivateKey, Secp256r1VerifyingKey},
@@ -625,5 +738,69 @@ mod test {
         assert_eq!(der, from_der.to_der().unwrap());
         let from_pem = SimpleVerifyingKey::from_pem(&pem).unwrap();
         assert_eq!(pem, from_pem.to_pem().unwrap());
+    }
+
+    #[cfg(feature = "bech32")]
+    #[test]
+    fn test_bech32_roundtrip_ed25519() {
+        use rand::{SeedableRng, rngs::StdRng};
+
+        let keypair: SimpleKeypair = Ed25519PrivateKey::generate(StdRng::from_seed([1; 32])).into();
+        let encoded = keypair.to_bech32().unwrap();
+        let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
+        assert_eq!(keypair.public_key(), decoded.public_key());
+
+        // Verify it encodes to the same string
+        let re_encoded = decoded.to_bech32().unwrap();
+        assert_eq!(encoded, re_encoded);
+    }
+
+    #[cfg(feature = "bech32")]
+    #[test]
+    fn test_bech32_roundtrip_secp256k1() {
+        use rand::{SeedableRng, rngs::StdRng};
+
+        let keypair: SimpleKeypair =
+            Secp256k1PrivateKey::generate(StdRng::from_seed([2; 32])).into();
+        let encoded = keypair.to_bech32().unwrap();
+        let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
+        assert_eq!(keypair.public_key(), decoded.public_key());
+
+        // Verify it encodes to the same string
+        let re_encoded = decoded.to_bech32().unwrap();
+        assert_eq!(encoded, re_encoded);
+    }
+
+    #[cfg(feature = "bech32")]
+    #[test]
+    fn test_bech32_roundtrip_secp256r1() {
+        use rand::{SeedableRng, rngs::StdRng};
+
+        let keypair: SimpleKeypair =
+            Secp256r1PrivateKey::generate(StdRng::from_seed([3; 32])).into();
+        let encoded = keypair.to_bech32().unwrap();
+        let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
+        assert_eq!(keypair.public_key(), decoded.public_key());
+
+        // Verify it encodes to the same string
+        let re_encoded = decoded.to_bech32().unwrap();
+        assert_eq!(encoded, re_encoded);
+    }
+
+    #[cfg(feature = "bech32")]
+    #[test]
+    fn test_bech32_invalid_hrp() {
+        let invalid_hrp =
+            "invalidprivkey1qzdlfxn2qa2lj5uprl8pyhexs02sg2wrhdy7qaq50cqgnffw4c247zslwv6";
+        let result = SimpleKeypair::from_bech32(invalid_hrp);
+        assert!(result.is_err());
+    }
+
+    #[cfg(feature = "bech32")]
+    #[test]
+    fn test_bech32_invalid_data() {
+        let invalid_data = "iotaprivkey1invalid";
+        let result = SimpleKeypair::from_bech32(invalid_data);
+        assert!(result.is_err());
     }
 }

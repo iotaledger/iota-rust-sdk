@@ -216,7 +216,7 @@ impl std::error::Error for DigestParseError {}
 pub type SigningDigest = [u8; Digest::LENGTH];
 
 #[cfg(test)]
-mod test {
+mod tests {
     use test_strategy::proptest;
 
     use super::*;

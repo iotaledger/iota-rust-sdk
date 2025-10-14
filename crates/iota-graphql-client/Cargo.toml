@@ -26,8 +26,7 @@ tracing = "0.1.37"
 url = "2.5.3"
 
 [dev-dependencies]
-hex = "0.4.3"
-iota-crypto = { path = "../iota-crypto", features = ["ed25519", "pem"] }
+iota-crypto = { path = "../iota-crypto", features = ["ed25519", "pem", "bech32"] }
 iota-transaction-builder = { path = "../iota-transaction-builder" }
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde", "rand", "hash"] }
 rand = "0.8.5"

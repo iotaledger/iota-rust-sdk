@@ -9,6 +9,7 @@ use crate::types::{
     coin::Coin,
     events::Event,
     graphql::{DynamicFieldOutput, Epoch, TransactionDataEffects, Validator},
+    iota_names::NameRegistration,
     object::{MovePackage, Object},
     transaction::{SignedTransaction, TransactionEffects},
 };
@@ -76,6 +77,7 @@ define_paged_object!(ObjectPage, Object);
 define_paged_object!(TransactionEffectsPage, TransactionEffects);
 define_paged_object!(MovePackagePage, MovePackage);
 define_paged_object!(CheckpointSummaryPage, CheckpointSummary);
+define_paged_object!(NameRegistrationPage, NameRegistration);
 
 uniffi::custom_type!(Value, String, {
     remote,

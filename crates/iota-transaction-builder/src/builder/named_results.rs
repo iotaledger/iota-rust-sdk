@@ -6,45 +6,31 @@ use crate::{builder::TransactionBuildData, unresolved::Argument};
 /// A trait that defines a named result, either a string or nothing.
 pub trait NamedResult {
     /// Get the named result argument.
-    fn named_result(&self, ptb: &mut TransactionBuildData) -> Argument;
+    fn named_result(&self, ptb: &mut TransactionBuildData) -> Argument {
+        Argument::Result((ptb.commands.len() - 1) as _)
+    }
 
     /// Push the named result to the PTB.
     fn push_named_result(self, arg: Argument, ptb: &mut TransactionBuildData);
 }
 
 impl NamedResult for () {
-    fn named_result(&self, ptb: &mut TransactionBuildData) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
-    }
-
     fn push_named_result(self, _: Argument, _: &mut TransactionBuildData) {}
 }
 
 impl NamedResult for &str {
-    fn named_result(&self, ptb: &mut TransactionBuildData) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
-    }
-
     fn push_named_result(self, arg: Argument, ptb: &mut TransactionBuildData) {
         ptb.named_results.insert(self.to_owned(), arg);
     }
 }
 
 impl NamedResult for String {
-    fn named_result(&self, ptb: &mut TransactionBuildData) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
-    }
-
     fn push_named_result(self, arg: Argument, ptb: &mut TransactionBuildData) {
         ptb.named_results.insert(self.to_owned(), arg);
     }
 }
 
 impl<T: NamedResult> NamedResult for Option<T> {
-    fn named_result(&self, ptb: &mut TransactionBuildData) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
-    }
-
     fn push_named_result(self, arg: Argument, ptb: &mut TransactionBuildData) {
         if let Some(s) = self {
             s.push_named_result(arg, ptb)

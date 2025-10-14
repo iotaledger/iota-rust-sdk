@@ -391,6 +391,16 @@ impl Object {
         }
     }
 
+    /// Return this object's reference
+    #[cfg(all(feature = "hash", feature = "serde"))]
+    pub fn object_ref(&self) -> ObjectReference {
+        ObjectReference {
+            object_id: self.object_id(),
+            version: self.version(),
+            digest: self.digest(),
+        }
+    }
+
     /// Return this object's version
     pub fn version(&self) -> Version {
         match &self.data {
@@ -454,6 +464,15 @@ impl Object {
     /// deletes this object.
     pub fn storage_rebate(&self) -> u64 {
         self.storage_rebate
+    }
+
+    #[cfg(feature = "serde")]
+    pub fn to_rust<T: serde::de::DeserializeOwned>(&self) -> anyhow::Result<T> {
+        use anyhow::Context;
+
+        Ok(bcs::from_bytes::<T>(
+            &self.as_struct_opt().context("not a struct")?.contents,
+        )?)
     }
 }
 
@@ -1009,7 +1028,7 @@ mod serialization {
     }
 
     #[cfg(test)]
-    mod test {
+    mod tests {
         #[cfg(target_arch = "wasm32")]
         use wasm_bindgen_test::wasm_bindgen_test as test;
 

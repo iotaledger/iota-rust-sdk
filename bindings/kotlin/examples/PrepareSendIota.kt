@@ -18,16 +18,11 @@ fun main() = runBlocking {
                         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
                 )
 
-        val coinId =
-                ObjectId.fromHex(
-                        "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
-                )
-
         val builder = TransactionBuilder.init(fromAddress, client)
 
-        builder.transferObjects(
+        builder.sendIota(
                 toAddress,
-                listOf(PtbArgument.objectId(coinId)),
+                PtbArgument.u64(5000000000uL),
         )
 
         val txn = builder.finish()

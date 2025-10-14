@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_crypto::{Signer, Verifier};
+use iota_crypto::{PrivateKeyExt, Signer, Verifier};
 use iota_types::SignatureScheme;
 use rand::rngs::OsRng;
 
@@ -15,7 +15,7 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
 pub struct Secp256r1PrivateKey(pub iota_crypto::secp256r1::Secp256r1PrivateKey);
 
 #[uniffi::export]
@@ -87,6 +87,24 @@ impl Secp256r1PrivateKey {
     /// Serialize this private key as PEM-encoded PKCS#8
     pub fn to_pem(&self) -> Result<String> {
         Ok(self.0.to_pem()?)
+    }
+
+    /// Serialize this private key to bytes.
+    pub fn to_bytes(&self) -> Vec<u8> {
+        self.0.to_bytes().to_vec()
+    }
+
+    /// Encode this private key as `flag || privkey` in Bech32 starting with
+    /// "iotaprivkey" to a string.
+    pub fn to_bech32(&self) -> Result<String> {
+        Ok(self.0.to_bech32()?)
+    }
+
+    /// Decode a private key from `flag || privkey` in Bech32 starting with
+    /// "iotaprivkey".
+    #[uniffi::constructor]
+    pub fn from_bech32(value: &str) -> Result<Self> {
+        Ok(iota_crypto::secp256r1::Secp256r1PrivateKey::from_bech32(value)?.into())
     }
 }
 
