@@ -37782,6 +37782,20 @@ class _UniffiConverterTypeSystemPackage:
     def write(cls, value: SystemPackageProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class TransactionProtocol(typing.Protocol):
+    """
+    Transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    transaction = %x00 transaction-v1
+
+    transaction-v1 = transaction-kind address gas-payment transaction-expiration
+    ```
+    """
+
     def as_v1(self, ):
         raise NotImplementedError
     def bcs_serialize(self, ):
@@ -37800,6 +37814,20 @@ class TransactionProtocol(typing.Protocol):
         raise NotImplementedError
 # Transaction is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Transaction():
+    """
+    Transaction
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    transaction = %x00 transaction-v1
+
+    transaction-v1 = transaction-kind address gas-payment transaction-expiration
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     
     def __init__(self, *args, **kwargs):

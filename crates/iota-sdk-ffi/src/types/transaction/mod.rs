@@ -27,16 +27,25 @@ use crate::{
 
 pub mod v1;
 
+/// Transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction = %x00 transaction-v1
+///
+/// transaction-v1 = transaction-kind address gas-payment transaction-expiration
+/// ```
 #[derive(Clone, uniffi::Object)]
-pub enum Transaction {
-    Version1(Arc<TransactionV1>),
-}
+pub struct Transaction(iota_types::Transaction);
 
 #[uniffi::export]
 impl Transaction {
     pub fn as_v1(&self) -> Arc<TransactionV1> {
-        match self {
-            Transaction::Version1(tx) => tx.clone(),
+        match &self.0 {
+            iota_types::Transaction::V1(tx) => Arc::new(TransactionV1(tx.clone())),
         }
     }
 
@@ -71,17 +80,13 @@ impl Transaction {
 
 impl From<iota_types::Transaction> for Transaction {
     fn from(value: iota_types::Transaction) -> Self {
-        match value {
-            iota_types::Transaction::V1(v1) => Transaction::Version1(Arc::new(v1.into())),
-        }
+        Transaction(value)
     }
 }
 
 impl From<Transaction> for iota_types::Transaction {
     fn from(value: Transaction) -> Self {
-        match value {
-            Transaction::Version1(v1) => iota_types::Transaction::V1(v1.0.clone()),
-        }
+        value.0
     }
 }
 

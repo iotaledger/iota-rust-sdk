@@ -21597,6 +21597,17 @@ func (_ FfiDestroyerSystemPackage) Destroy(value *SystemPackage) {
 
 
 
+// Transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// transaction = %x00 transaction-v1
+//
+// transaction-v1 = transaction-kind address gas-payment transaction-expiration
+// ```
 type TransactionInterface interface {
 	AsV1() *TransactionV1
 	BcsSerialize() ([]byte, error)
@@ -21607,6 +21618,17 @@ type TransactionInterface interface {
 	Sender() *Address
 	SigningDigest() []byte
 }
+// Transaction
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// transaction = %x00 transaction-v1
+//
+// transaction-v1 = transaction-kind address gas-payment transaction-expiration
+// ```
 type Transaction struct {
 	ffiObject FfiObject
 }

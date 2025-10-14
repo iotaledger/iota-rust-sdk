@@ -37678,6 +37678,19 @@ public object FfiConverterTypeSystemPackage: FfiConverter<SystemPackage, Pointer
 //
 
 
+/**
+ * Transaction
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * transaction = %x00 transaction-v1
+ *
+ * transaction-v1 = transaction-kind address gas-payment transaction-expiration
+ * ```
+ */
 public interface TransactionInterface {
     
     fun `asV1`(): TransactionV1
@@ -37699,6 +37712,19 @@ public interface TransactionInterface {
     companion object
 }
 
+/**
+ * Transaction
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * transaction = %x00 transaction-v1
+ *
+ * transaction-v1 = transaction-kind address gas-payment transaction-expiration
+ * ```
+ */
 open class Transaction: Disposable, AutoCloseable, TransactionInterface
 {
 
