@@ -7,7 +7,7 @@
 pub use iota_crypto as crypto;
 #[cfg(feature = "graphql")]
 pub use iota_graphql_client as graphql_client;
-#[cfg(feature = "types")]
-pub use iota_sdk_types as types;
 #[cfg(feature = "txn-builder")]
 pub use iota_transaction_builder as transaction_builder;
+#[cfg(feature = "types")]
+pub use iota_types as types;

@@ -25,7 +25,7 @@ fun main() = runBlocking {
         val client = GraphQlClient.newLocalnet()
 
         val builder = TransactionBuilder.init(senderAddress, client)
-        builder.sendIota(recipientAddress, amount)
+        builder.sendIota(recipientAddress, PtbArgument.u64(amount))
         val txn = builder.finish()
 
         val dryRunResult = client.dryRunTx(txn, false)
