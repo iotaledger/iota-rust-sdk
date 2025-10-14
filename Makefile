@@ -34,6 +34,7 @@ test-with-localnet: package_test_example_v1.json package_test_example_v2.json ##
 .PHONY: wasm
 wasm: ## Build WASM modules
 	$(MAKE) -C crates/iota-crypto wasm
+	$(MAKE) -C crates/iota-graphql-client wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
 	$(MAKE) -C crates/iota-transaction-builder wasm
 
