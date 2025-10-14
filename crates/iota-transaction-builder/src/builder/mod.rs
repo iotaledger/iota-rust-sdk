@@ -362,8 +362,7 @@ impl<C, L> TransactionBuilder<C, L> {
         })
     }
 
-    /// Transfer objects to a recipient address. For more information about
-    /// usage, see the [crate documentation](crate).
+    /// Transfer objects to a recipient address.
     ///
     /// # Example
     ///
@@ -644,7 +643,8 @@ impl<L> TransactionBuilder<Client, L> {
         &self.client
     }
 
-    /// Add a gas coin that will be consumed. Optional.
+    /// Add a gas coin that will be consumed. If no gas coins are provided, the
+    /// client will set a default list owned by the sender.
     ///
     /// # Example
     ///
