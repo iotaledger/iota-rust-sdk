@@ -1352,7 +1352,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field()
 	})
-	if checksum != 29988 {
+	if checksum != 17199 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field: UniFFI API checksum mismatch")
 	}
@@ -4518,6 +4518,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_framework()
+	})
+	if checksum != 52951 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_framework: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes()
 	})
 	if checksum != 58901 {
@@ -4541,6 +4550,33 @@ func uniffiCheckChecksums() {
 	if checksum != 48865 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_generate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib()
+	})
+	if checksum != 35825 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_system()
+	})
+	if checksum != 4297 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_system: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_zero()
+	})
+	if checksum != 46553 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_zero: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5625,6 +5661,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock()
+	})
+	if checksum != 14732 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id()
 	})
 	if checksum != 16970 {
@@ -5648,6 +5693,24 @@ func uniffiCheckChecksums() {
 	if checksum != 30954 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system()
+	})
+	if checksum != 9600 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_system: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero()
+	})
+	if checksum != 40526 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7390,6 +7453,12 @@ type Address struct {
 }
 
 
+func AddressFramework() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_framework(_uniffiStatus)
+	}))
+}
+
 func AddressFromBytes(bytes []byte) (*Address, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
@@ -7417,6 +7486,24 @@ func AddressFromHex(hex string) (*Address, error) {
 func AddressGenerate() *Address {
 	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_address_generate(_uniffiStatus)
+	}))
+}
+
+func AddressStdLib() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib(_uniffiStatus)
+	}))
+}
+
+func AddressSystem() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_system(_uniffiStatus)
+	}))
+}
+
+func AddressZero() *Address {
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_zero(_uniffiStatus)
 	}))
 }
 
@@ -12024,7 +12111,7 @@ type GraphQlClientInterface interface {
 	// ```rust,ignore
 	//
 	// let client = iota_graphql_client::Client::new_devnet();
-	// let address = Address::from_str("0x5").unwrap();
+	// let address = ObjectId::SYSTEM.into();
 	// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
 	//
 	// # alternatively, pass in the bcs bytes
@@ -12562,7 +12649,7 @@ func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta Transac
 // ```rust,ignore
 //
 // let client = iota_graphql_client::Client::new_devnet();
-// let address = Address::from_str("0x5").unwrap();
+// let address = ObjectId::SYSTEM.into();
 // let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
 //
 // # alternatively, pass in the bcs bytes
@@ -17043,6 +17130,12 @@ type ObjectId struct {
 }
 
 
+func ObjectIdClock() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(_uniffiStatus)
+	}))
+}
+
 // Create an ObjectId from a transaction digest and the number of objects
 // that have been created during a transactions.
 func ObjectIdDeriveId(digest *Digest, count uint64) *ObjectId {
@@ -17073,6 +17166,18 @@ func ObjectIdFromHex(hex string) (*ObjectId, error) {
 		} else {
 			return FfiConverterObjectIdINSTANCE.Lift(_uniffiRV), nil
 		}
+}
+
+func ObjectIdSystem() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_system(_uniffiStatus)
+	}))
+}
+
+func ObjectIdZero() *ObjectId {
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(_uniffiStatus)
+	}))
 }
 
 
