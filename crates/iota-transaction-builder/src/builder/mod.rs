@@ -310,6 +310,36 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Send IOTA to a recipient address.
+    ///
+    /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+    /// equals 1_000_000_000 NANOS.
+    /// If `amount` is provided, that amount is split from the gas coin and
+    /// sent.
+    /// If `amount` is `None`, the entire gas coin is transferred.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use iota_graphql_client::Client;
+    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_types::Address;
+    ///
+    /// #[tokio::main]
+    /// async fn main() -> eyre::Result<()> {
+    ///     let client = Client::new_devnet();
+    ///     let from_address = Address::from_hex(
+    ///         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c",
+    ///     )?;
+    ///     let to_address = Address::from_hex(
+    ///         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
+    ///     )?;
+    ///
+    ///     let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    ///     builder.send_iota::<u64>(to_address, 5000000000u64);
+    ///     let txn = builder.finish().await?;
+    ///     Ok(())
+    /// }
+    /// ```
     pub fn send_iota<T: PTBArgument>(
         &mut self,
         recipient: Address,

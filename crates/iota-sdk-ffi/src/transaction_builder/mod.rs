@@ -157,6 +157,12 @@ impl TransactionBuilder {
     }
 
     /// Send IOTA to a recipient address.
+    ///
+    /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+    /// equals 1_000_000_000 NANOS.
+    /// If `amount` is provided, that amount is split from the gas coin and
+    /// sent.
+    /// If `amount` is `None`, the entire gas coin is transferred.
     #[uniffi::method(default(amount = None))]
     pub fn send_iota(
         self: Arc<Self>,
