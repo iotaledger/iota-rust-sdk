@@ -22,9 +22,12 @@
 //! ### Example with Client Resolution
 //!
 //! ```
+//! # use std::str::FromStr;
 //! use iota_graphql_client::Client;
 //! use iota_transaction_builder::TransactionBuilder;
-//! use iota_types::{Address, ObjectId};
+//! use iota_types::{Address, Transaction, ObjectId};
+//!
+//! # tokio::runtime::Runtime::new().unwrap().block_on(async {
 //!
 //! let sender =
 //!     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
@@ -39,29 +42,38 @@
 //! builder.send_coins([coin], to_address, 50000000000u64);
 //!
 //! let txn: Transaction = builder.finish().await?;
+//! # Result::<_, eyre::Error>::Ok(())
+//! });
 //! ```
 //!
 //! ### Example without Client Resolution
 //!
 //! ```
+//! # use std::str::FromStr;
 //! use iota_transaction_builder::TransactionBuilder;
-//! use iota_types::{Address, Digest, ObjectId, ObjectReference};
+//! use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
 //!
-//! let sender = Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
-//! let to_address = Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+//! let sender =
+//!     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+//! let to_address =
+//!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //!
 //! let mut builder = TransactionBuilder::new(sender);
 //!
 //! let coin = ObjectReference {
-//!     object_id: ObjectId::from_str("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?,
-//!     digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW"),
+//!     object_id: ObjectId::from_str(
+//!         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
+//!     )?,
+//!     digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
 //!     version: 435090179,
-//! }
+//! };
 //! let gas_coin = ObjectReference {
-//!     object_id: ObjectId::from_str("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?,
-//!     digest: Digest::from_str("cKOESJxR5LJQxVM5xJbWMPzj3B+BBaNPwLe5DC2aaHA="),
+//!     object_id: ObjectId::from_str(
+//!         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+//!     )?,
+//!     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
 //!     version: 473053810,
-//! }
+//! };
 //!
 //! builder
 //!     .send_coins([coin], to_address, 50000000000u64)
@@ -70,6 +82,7 @@
 //!     .gas_price(100);
 //!
 //! let txn: Transaction = builder.finish()?;
+//! # Result::<_, eyre::Error>::Ok(())
 //! ```
 //!
 //! NOTE: It is possible to provide an [ObjectId](iota_types::ObjectId) to an
@@ -149,6 +162,23 @@
 //! execute the transaction via [dry_run](TransactionBuilder::dry_run) and
 //! [execute](TransactionBuilder::execute).
 //!
+//! When the transaction is resolved, the builder will try to ensure a valid
+//! state by de-duplicating and converting appropriate inputs into references to
+//! the gas coin. This means that the same input can be passed multiple times
+//! and the final transaction will only contain one instance. However, in some
+//! cases an invalid state can still be reached. For instance, if a coin is used
+//! both for gas and as part of a group of coins, i.e. when transferring
+//! objects, the transaction can not possibly be valid.
+//!
+//! ### Defaults
+//!
+//! When a client is provided, the builder can set some values by default. The
+//! following are the default behaviors for each metadata value.
+//!
+//! - Gas: One page of coins owned by the sender.
+//! - Gas Budget: A dry run will be used to estimate.
+//! - Gas Price: The current reference gas price.
+//!
 //! ## Gas Station
 //!
 //! The Transaction Builder supports executing via a
@@ -207,7 +237,7 @@
 //! public fun from_keys_values<K: copy, V>(mut keys: vector<K>, mut values: vector<V>): VecMap<K, V>
 //! ```
 //!
-//! ```
+//! ```ignore
 //! builder
 //!     .move_call(Address::TWO, "vec_map", "from_keys_values")
 //!     .generics::<(Address, u64)>()
@@ -220,6 +250,7 @@
 //! [MoveArg](types::MoveArg).
 //!
 //! ```
+//! # use std::str::FromStr;
 //! # use iota_transaction_builder::types::{MoveArg, MoveType, PureBytes};
 //! # use iota_types::TypeTag;
 //! #[derive(serde::Serialize)]
