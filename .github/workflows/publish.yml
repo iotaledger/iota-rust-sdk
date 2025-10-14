@@ -16,7 +16,7 @@ jobs:
         run: |-
           cargo release \
             publish \
-            --package iota-sdk \
+            --workspace \
             --all-features \
             --no-confirm \
             --execute
