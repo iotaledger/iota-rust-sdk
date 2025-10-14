@@ -452,14 +452,14 @@ impl<C, L> TransactionBuilder<C, L> {
     pub fn upgrade<U: PTBArgument>(
         &mut self,
         package_id: ObjectId,
-        upgrade_cap: U,
+        upgrade_ticket: U,
         kind: impl Into<PublishType>,
     ) -> &mut TransactionBuilder<C, Upgrade> {
         let module = match kind.into() {
             PublishType::Path(_path) => todo!("load the package from the path"),
             PublishType::Compiled(m) => m,
         };
-        let ticket = self.apply_argument(upgrade_cap);
+        let ticket = self.apply_argument(upgrade_ticket);
         self.cmd_state_change(Upgrade {
             modules: module.modules,
             dependencies: module.dependencies,

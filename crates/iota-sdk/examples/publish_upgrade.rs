@@ -9,8 +9,8 @@
 use eyre::{Result, bail};
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
 use iota_graphql_client::{Client, faucet::FaucetClient, pagination::PaginationFilter};
-use iota_transaction_builder::{MovePackageData, TransactionBuilder};
-use iota_types::{ObjectId, ObjectOut, StructTag};
+use iota_transaction_builder::{MovePackageData, TransactionBuilder, res};
+use iota_types::{Address, Digest, Input, ObjectId, ObjectOut, StructTag};
 use rand::rngs::OsRng;
 
 #[tokio::main]
@@ -18,10 +18,10 @@ async fn main() -> Result<()> {
     // Parse the compiled `first_package` example from the monorepo created with
     // `iota move build --dump-bytecode-as-base64`
     let data = serde_json::from_str::<MovePackageData>(SERIALIZED_FIRST_PACKAGE)?;
-    let Some(digest) = data.digest else {
-        bail!("Invalid move package");
+    let Some(compiled_package_digest) = data.digest else {
+        bail!("Missing compiled package digest");
     };
-    println!("Digest={digest}");
+    println!("Compiled Package Digest={compiled_package_digest}");
 
     // Create a random private key to derive a sender address and for signing
     let private_key = Ed25519PrivateKey::generate(OsRng);
@@ -49,20 +49,26 @@ async fn main() -> Result<()> {
 
     // Build the `publish` transaction
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
-    builder.gas_budget(50_000_000);
-    builder.gas(gas);
-    builder.publish(data.clone());
+    builder
+        .gas_budget(50_000_000)
+        .gas(gas)
+        .publish(data.clone())
+        .name("publish");
+
+    // Transfer the `UpgradeCap` to the `sender`
+    builder.transfer_objects(sender, [res("publish")]);
+
     let tx = builder.finish().await?;
 
     // Perform a dry-run to check if everything is fine
-    let res = client.dry_run_tx(&tx, false).await?;
-    if let Some(err) = res.error {
+    let result = client.dry_run_tx(&tx, false).await?;
+    if let Some(err) = result.error {
         bail!("Dry run failed: {err}");
     }
     println!("Dry run succeeded");
 
     // Check on the dry-run effects
-    let Some(effects) = res.effects else {
+    let Some(effects) = result.effects else {
         bail!("Missing transaction effects");
     };
     println!("Effects status (dry run): {:?}", effects.status());
@@ -80,10 +86,12 @@ async fn main() -> Result<()> {
     // Resolve UpgradeCap and PackageId via the client
     let mut upgrade_cap = None::<ObjectId>;
     let mut package_id = None::<ObjectId>;
-    let effects_v1 = effects.as_v1();
-    for changed_obj in effects_v1.changed_objects.iter() {
+    let mut package_digest = None::<Digest>;
+    let mut upgrade_cap_digest = None::<Digest>;
+
+    for changed_obj in effects.as_v1().changed_objects.iter() {
         match changed_obj.output_state {
-            ObjectOut::ObjectWrite { owner, .. } => {
+            ObjectOut::ObjectWrite { digest, owner } => {
                 let object_id = changed_obj.object_id;
                 let Some(obj) = client.object(object_id, None).await? else {
                     bail!("Missing object {object_id}");
@@ -92,30 +100,58 @@ async fn main() -> Result<()> {
                     println!("UpgradeCap={object_id}");
                     println!("Owner: {owner}");
                     upgrade_cap.replace(object_id);
+                    upgrade_cap_digest.replace(digest);
                 }
             }
-            ObjectOut::PackageWrite { version, .. } => {
+            ObjectOut::PackageWrite { version, digest } => {
                 let pkg_id = changed_obj.object_id;
                 println!("PackageId={pkg_id}");
                 println!("Package version: {version}");
+                println!("Package digest: {digest}");
                 package_id.replace(pkg_id);
+                package_digest.replace(digest);
             }
             _ => continue,
         }
     }
 
-    let Some(upgrade_cap) = upgrade_cap else {
-        bail!("Missing upgrade cap")
+    let Some(upgrade_cap_id) = upgrade_cap else {
+        bail!("Missing upgrade cap");
     };
     let Some(package_id) = package_id else {
-        bail!("Missing package id")
+        bail!("Missing package id");
+    };
+    // let Some(package_digest) = package_digest else {
+    //     bail!("Missing package digest");
+    // };
+    // let Some(upgrade_cap_digest) = upgrade_cap_digest else {
+    //     bail!("Missing upgrade cap digest");
+    // };
+
+    let Some(obj_ref) = client
+        .object(upgrade_cap_id, None)
+        .await?
+        .map(|obj| obj.object_ref())
+    else {
+        bail!("Missing object");
     };
 
-    // Build the `upgrade` transaction
+    // Make a `move_call` to create the `UpgradeTicket`
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
-    builder.gas_budget(50_000_000);
-    builder.gas(gas);
-    builder.upgrade(package_id, upgrade_cap, data);
+
+    let upgrade_arg = builder.input(Input::ImmutableOrOwned(obj_ref));
+    let policy_arg = builder.pure(255);
+    let digest_arg = builder.pure(compiled_package_digest);
+
+    // Build the `upgrade` transaction
+    builder
+        .gas_budget(50_000_000)
+        .gas(gas)
+        .move_call(Address::TWO, "package", "authorize_upgrade")
+        .arguments([upgrade_arg, policy_arg, digest_arg])
+        .name("upgrade_ticket");
+
+    builder.upgrade(package_id, res("upgrade_ticket"), data);
     let tx = builder.finish().await?;
 
     // Perform a dry-run to check if everything is fine
@@ -142,8 +178,7 @@ async fn main() -> Result<()> {
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
     // Print the new package version (should now be 2)
-    let effects_v1 = effects.as_v1();
-    for changed_obj in effects_v1.changed_objects.iter() {
+    for changed_obj in effects.as_v1().changed_objects.iter() {
         match changed_obj.output_state {
             ObjectOut::PackageWrite { version, .. } => {
                 let pkg_id = changed_obj.object_id;
