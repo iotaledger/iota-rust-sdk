@@ -90,7 +90,7 @@ macro_rules! named_object_id {
             #[uniffi::export]
             impl ObjectId {$(
                 #[uniffi::constructor]
-                pub fn [< $constant:lower >]() -> Self {
+                pub const fn [< $constant:lower >]() -> Self {
                     Self(iota_types::ObjectId::$constant)
                 }
             )+}
