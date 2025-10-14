@@ -40,7 +40,7 @@ async def main():
         if effects is None:
             raise Exception("Transaction execution failed")
         print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
-        print(f"Transaction status: {effects.status}")
+        print(f"Transaction status: {effects.as_v1().status}")
         print(f"Effects: {effects.as_v1()}")
 
     except Exception as e:
