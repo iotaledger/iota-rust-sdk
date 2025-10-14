@@ -72,7 +72,7 @@ impl Secp256r1PublicKey {
         let key_bytes = self.as_bytes();
         let mut bytes = Vec::with_capacity(1 + key_bytes.len());
         bytes.push(self.scheme().to_u8());
-        bytes.extend_from_slice(&key_bytes);
+        bytes.extend_from_slice(key_bytes);
         bytes
     }
 }
