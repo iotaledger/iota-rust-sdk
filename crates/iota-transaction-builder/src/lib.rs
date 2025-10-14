@@ -1,7 +1,245 @@
 // Copyright 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Provides tools to simplify usage of the IOTA SDK.
+//! # IOTA Transaction Builder
+//!
+//! This crate contains the [TransactionBuilder], which allows for simple
+//! construction of Programmable Transactions which can be executed on the IOTA
+//! network.
+//!
+//! The builder is designed to allow for a lot of flexibility while also
+//! reducing the necessary boilerplate code. It uses a type-state pattern to
+//! ensure the proper flow through the various functions. It is chainable via
+//! mutable references.
+//!
+//! ## Online vs. Offline Builder
+//!
+//! The Transaction Builder can be used with or without a
+//! [GraphQLClient](iota_graphql_client::Client). When one is provided via the
+//! [with_client](TransactionBuilder::with_client) method, the resulting builder
+//! will use it to find and validate provided IDs.
+//!
+//! ### Example with Client Resolution
+//!
+//! ```
+//! use iota_graphql_client::Client;
+//! use iota_transaction_builder::TransactionBuilder;
+//! use iota_types::{Address, ObjectId};
+//!
+//! let sender =
+//!     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+//! let to_address =
+//!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+//!
+//! let mut builder = TransactionBuilder::new(sender).with_client(Client::new_devnet());
+//!
+//! let coin =
+//!     ObjectId::from_str("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?;
+//!
+//! builder.send_coins([coin], to_address, 50000000000u64);
+//!
+//! let txn: Transaction = builder.finish().await?;
+//! ```
+//!
+//! ### Example without Client Resolution
+//!
+//! ```
+//! use iota_transaction_builder::TransactionBuilder;
+//! use iota_types::{Address, Digest, ObjectId, ObjectReference};
+//!
+//! let sender = Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+//! let to_address = Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+//!
+//! let mut builder = TransactionBuilder::new(sender);
+//!
+//! let coin = ObjectReference {
+//!     object_id: ObjectId::from_str("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?,
+//!     digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW"),
+//!     version: 435090179,
+//! }
+//! let gas_coin = ObjectReference {
+//!     object_id: ObjectId::from_str("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?,
+//!     digest: Digest::from_str("cKOESJxR5LJQxVM5xJbWMPzj3B+BBaNPwLe5DC2aaHA="),
+//!     version: 473053810,
+//! }
+//!
+//! builder
+//!     .send_coins([coin], to_address, 50000000000u64)
+//!     .gas(gas_coin)
+//!     .gas_budget(1000000000)
+//!     .gas_price(100);
+//!
+//! let txn: Transaction = builder.finish()?;
+//! ```
+//!
+//! NOTE: It is possible to provide an [ObjectId](iota_types::ObjectId) to an
+//! offline client builder, but this will cause the builder to fail when calling
+//! `finish`.
+//!
+//! ## Methods
+//!
+//! There are three kinds of methods available:
+//!
+//! ### Commands
+//!
+//! Each command method adds one or more commands to the final transaction. Some
+//! commands have optional follow-up methods. All command results can be named
+//! via [name](TransactionBuilder::name);
+//!
+//! - [move_call](TransactionBuilder::move_call): Call a move function.
+//!     - `arguments`: Add arguments to the move call.
+//!     - `generics`: Add generic types to the move call using types that
+//!       implement [MoveType](types::MoveType).
+//!     - `type_tags`: Add generic types directly using the
+//!       [TypeTag](iota_types::TypeTag).
+//! - [send_iota](TransactionBuilder::send_iota): Send IOTA coins to a recipient
+//!   address.
+//! - [send_coins](TransactionBuilder::send_coins): Send coins of any type to a
+//!   recipient address.
+//! - [merge_coins](TransactionBuilder::merge_coins): Merge a list of coins into
+//!   a single primary coin.
+//! - [split_coins](TransactionBuilder::split_coins): Split a coin into coins of
+//!   various amounts.
+//! - [transfer_objects](TransactionBuilder::transfer_objects): Send objects to
+//!   a recipient address.
+//! - [publish](TransactionBuilder::publish): Publish a move package.
+//!     - `package_id`: Name the package ID returned by the publish call.
+//! - [upgrade](TransactionBuilder::upgrade): Upgrade a move package.
+//! - [make_move_vec](TransactionBuilder::make_move_vec): Create a move
+//!   `vector`.
+//!
+//! ### Metadata
+//!
+//! These methods set various metadata which may be needed for the execution.
+//!
+//! - [gas](TransactionBuilder::gas): Add a gas coin to pay for the execution.
+//! - [gas_coins](TransactionBuilder::gas_coins): Add gas coins to pay for the
+//!   execution.
+//! - [gas_budget](TransactionBuilder::gas_budget): Set the maximum gas budget
+//!   to spend.
+//! - [gas_price](TransactionBuilder::gas_price): Set the gas price.
+//! - [sponsor](TransactionBuilder::sponsor): Set the gas sponsor address.
+//! - [gas_station_sponsor](TransactionBuilder::gas_station_sponsor): Set the
+//!   gas station URL. See [Gas Station](crate#gas-station) for more info.
+//! - [expiration](TransactionBuilder::expiration): Set the transaction
+//!   expiration epoch.
+//!
+//! ### Other
+//!
+//! Many other methods exist, either to get data or allow for development on top
+//! of the builder. Typically, these methods should not be needed, but they are
+//! made available for special circumstances.
+//!
+//! - [apply_argument](TransactionBuilder::apply_argument)
+//! - [apply_arguments](TransactionBuilder::apply_arguments)
+//! - [input](TransactionBuilder::input)
+//! - [pure_bytes](TransactionBuilder::pure_bytes)
+//! - [pure](TransactionBuilder::pure)
+//! - [command](TransactionBuilder::command)
+//! - [named_command](TransactionBuilder::named_command)
+//!
+//! ## Finalization and Execution
+//!
+//! There are several ways to finish the builder. First, the
+//! [finish](TransactionBuilder::finish) method can be used to return the
+//! resulting [Transaction](iota_types::Transaction), which can be manually
+//! serialized, executed, etc.
+//!
+//! Additionally, when a client is provided, the builder can directly dry-run or
+//! execute the transaction via [dry_run](TransactionBuilder::dry_run) and
+//! [execute](TransactionBuilder::execute).
+//!
+//! ## Gas Station
+//!
+//! The Transaction Builder supports executing via a
+//! [Gas Station](https://github.com/iotaledger/gas-station). To do so, the URL
+//! must be provided via
+//! [gas_station_sponsor](TransactionBuilder::gas_station_sponsor). Additional
+//! configuration can then be provided via
+//! [gas_reservation_duration](TransactionBuilder::gas_reservation_duration) and
+//! [add_gas_station_header](TransactionBuilder::add_gas_station_header).
+//!
+//! By default the request will contain the header `Content-Type:
+//! application/json`
+//!
+//! When this data has been set, calling [execute](TransactionBuilder::execute)
+//! will request gas from and send the resulting transaction to this endpoint
+//! instead of using the GraphQL client.
+//!
+//! ## Traits and Helpers
+//!
+//! This crate provides several traits which enable the functionality of the
+//! builder. Often, when providing arguments, functions will accept either a
+//! single [PTBArgument] or a [PTBArgumentList].
+//!
+//! [PTBArgument] is implemented for any type implementing
+//! [MoveArg](types::MoveArg) as well as:
+//! - [unresolved::Argument]: Arguments returned by various builder functions.
+//!   Distinct from [iota_types::Argument], which cannot be used.
+//! - [Input](iota_types::Input): A resolved input.
+//! - [ObjectId](iota_types::ObjectId): An object's ID. Can only be used when a
+//!   client is provided. This will be assumed immutable or owned.
+//! - [ObjectReference](iota_types::ObjectReference): An object's reference.
+//!   This will be assumed immutable or owned.
+//! - [Res](builder::ptb_arguments::Res): A reference to the result of a
+//!   previous named command, set with [name](TransactionBuilder::name).
+//! - [Shared]: Allows specifying shared immutable move objects.
+//! - [SharedMut]: Allows specifying shared mutable move objects.
+//! - [Receiving]: Allows specifying receiving move objects.
+//!
+//! [PTBArgumentList] is implemented for collection types, and represents a set
+//! of arguments. For move calls, this enables tuples of rust values to
+//! represent the parameters defined in the smart contract. For calls like
+//! [merge_coins](TransactionBuilder::merge_coins), this can represent a list of
+//! coins.
+//!
+//! [MoveArg](types::MoveArg) represents types that can be serialized and
+//! provided to the transaction as pure bytes.
+//!
+//! [MoveType](types::MoveType) defines the type tag for a rust type, so that it
+//! can be used for generic arguments.
+//!
+//! ### Example
+//!
+//! The following function is defined in move in `vec_map`:
+//!
+//! ```ignore
+//! public fun from_keys_values<K: copy, V>(mut keys: vector<K>, mut values: vector<V>): VecMap<K, V>
+//! ```
+//!
+//! ```
+//! builder
+//!     .move_call(Address::TWO, "vec_map", "from_keys_values")
+//!     .generics::<(Address, u64)>()
+//!     .arguments((vec![address1, address2], vec![10000000u64, 20000000u64]));
+//! ```
+//!
+//! ### Custom Type
+//!
+//! In order to use a custom type, implement [MoveType](types::MoveType) and
+//! [MoveArg](types::MoveArg).
+//!
+//! ```
+//! # use iota_transaction_builder::types::{MoveArg, MoveType, PureBytes};
+//! # use iota_types::TypeTag;
+//! #[derive(serde::Serialize)]
+//! struct MyStruct {
+//!     val1: String,
+//!     val2: u64,
+//! }
+//!
+//! impl MoveType for MyStruct {
+//!     fn type_tag() -> TypeTag {
+//!         TypeTag::from_str("0x0::my_module::MyStruct").unwrap()
+//!     }
+//! }
+//!
+//! impl MoveArg for MyStruct {
+//!     fn pure_bytes(self) -> PureBytes {
+//!         PureBytes(bcs::to_bytes(&self).unwrap())
+//!     }
+//! }
+//! ```
 
 #![warn(missing_docs)]
 #![deny(unreachable_pub)]
