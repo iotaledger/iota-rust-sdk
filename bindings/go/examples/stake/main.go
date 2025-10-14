@@ -34,9 +34,9 @@ func main() {
 
 	coinObjId, _ := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
 
-	iotaSystemAddress, _ := sdk.AddressFromHex("0x3")
+	iotaSystemAddress := sdk.AddressSystem()
 
-	iotaSystemId, _ := sdk.ObjectIdFromHex("0x5")
+	iotaSystemId := sdk.ObjectIdSystem()
 
 	iotaSystemModule, _ := sdk.NewIdentifier("iota_system")
 

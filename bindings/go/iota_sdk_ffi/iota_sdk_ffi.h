@@ -388,6 +388,12 @@ void* uniffi_iota_sdk_ffi_fn_clone_address(void* ptr, RustCallStatus *out_status
 void uniffi_iota_sdk_ffi_fn_free_address(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_FRAMEWORK
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_FRAMEWORK
+void* uniffi_iota_sdk_ffi_fn_constructor_address_framework(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_FROM_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_FROM_BYTES
 void* uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(RustBuffer bytes, RustCallStatus *out_status
@@ -401,6 +407,24 @@ void* uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(RustBuffer hex, RustCa
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_GENERATE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_GENERATE
 void* uniffi_iota_sdk_ffi_fn_constructor_address_generate(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_STD_LIB
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_STD_LIB
+void* uniffi_iota_sdk_ffi_fn_constructor_address_std_lib(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_SYSTEM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_SYSTEM
+void* uniffi_iota_sdk_ffi_fn_constructor_address_system(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_ZERO
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_ZERO
+void* uniffi_iota_sdk_ffi_fn_constructor_address_zero(RustCallStatus *out_status
     
 );
 #endif
@@ -2737,6 +2761,12 @@ void* uniffi_iota_sdk_ffi_fn_clone_objectid(void* ptr, RustCallStatus *out_statu
 void uniffi_iota_sdk_ffi_fn_free_objectid(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_CLOCK
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_CLOCK
+void* uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_DERIVE_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_DERIVE_ID
 void* uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(void* digest, uint64_t count, RustCallStatus *out_status
@@ -2750,6 +2780,18 @@ void* uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes(RustBuffer bytes, R
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_FROM_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_FROM_HEX
 void* uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(RustBuffer hex, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_SYSTEM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_SYSTEM
+void* uniffi_iota_sdk_ffi_fn_constructor_objectid_system(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_ZERO
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_ZERO
+void* uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(RustCallStatus *out_status
+    
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_DERIVE_DYNAMIC_CHILD_ID
@@ -8162,6 +8204,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_FRAMEWORK
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_FRAMEWORK
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_framework(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_FROM_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_FROM_BYTES
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(void
@@ -8177,6 +8225,24 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_GENERATE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_GENERATE
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_generate(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_STD_LIB
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_STD_LIB
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_SYSTEM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_SYSTEM
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_system(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_ZERO
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_ZERO
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_zero(void
     
 );
 #endif
@@ -8900,6 +8966,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct(voi
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_CLOCK
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_CLOCK
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_DERIVE_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_DERIVE_ID
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id(void
@@ -8915,6 +8987,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_FROM_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_FROM_HEX
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_SYSTEM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_SYSTEM
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_system(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_ZERO
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_ZERO
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero(void
     
 );
 #endif

@@ -2380,6 +2380,20 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3321,11 +3335,19 @@ fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_framework(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_generate(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_system(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_zero(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_argument_new_gas(
 ): Short
@@ -3567,11 +3589,17 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package(
 ): Short
@@ -3900,11 +3928,19 @@ internal interface UniffiLib : Library {
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_address_framework(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_generate(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_std_lib(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_system(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_zero(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_address_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -4830,11 +4866,17 @@ fun uniffi_iota_sdk_ffi_fn_clone_objectid(`ptr`: Pointer,uniffi_out_err: UniffiR
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objectid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(`digest`: Pointer,`count`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(`ptr`: Pointer,`keyTypeTag`: Pointer,`keyBytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6222,7 +6264,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 29988.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 6963.toShort()) {
@@ -7281,6 +7323,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks() != 49665.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7288,6 +7333,15 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib() != 35825.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_system() != 4297.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_zero() != 46553.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_argument_new_gas() != 14489.toShort()) {
@@ -7650,6 +7704,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() != 1861.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock() != 14732.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id() != 16970.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7657,6 +7714,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero() != 40526.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package() != 63533.toShort()) {
@@ -8859,6 +8922,16 @@ open class Address: Disposable, AutoCloseable, AddressInterface
 
     
     companion object {
+         fun `framework`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_framework(
+        _status)
+}
+    )
+    }
+    
+
         
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Address {
             return FfiConverterTypeAddress.lift(
@@ -8885,6 +8958,36 @@ open class Address: Disposable, AutoCloseable, AddressInterface
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_generate(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stdLib`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib(
+        _status)
+}
+    )
+    }
+    
+
+         fun `system`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_system(
+        _status)
+}
+    )
+    }
+    
+
+         fun `zero`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_zero(
         _status)
 }
     )
@@ -19443,7 +19546,7 @@ public interface GraphQlClientInterface {
      * ```rust,ignore
      *
      * let client = iota_graphql_client::Client::new_devnet();
-     * let address = Address::from_str("0x5").unwrap();
+     * let address = ObjectId::SYSTEM.into();
      * let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
      *
      * # alternatively, pass in the bcs bytes
@@ -20072,7 +20175,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      * ```rust,ignore
      *
      * let client = iota_graphql_client::Client::new_devnet();
-     * let address = Address::from_str("0x5").unwrap();
+     * let address = ObjectId::SYSTEM.into();
      * let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
      *
      * # alternatively, pass in the bcs bytes
@@ -28233,6 +28336,16 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
 
     
     companion object {
+         fun `clock`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(
+        _status)
+}
+    )
+    }
+    
+
         
     /**
      * Create an ObjectId from a transaction digest and the number of objects
@@ -28264,6 +28377,26 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(
         FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+         fun `system`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_system(
+        _status)
+}
+    )
+    }
+    
+
+         fun `zero`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(
+        _status)
 }
     )
     }

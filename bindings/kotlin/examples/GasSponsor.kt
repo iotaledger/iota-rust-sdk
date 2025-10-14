@@ -19,7 +19,7 @@ fun main() = runBlocking {
 
         val builder = TransactionBuilder.init(sender, client)
 
-        val packageAddr = Address.fromHex("0x1")
+        val packageAddr = Address.stdLib()
         val moduleName = Identifier("u8")
         val functionName = Identifier("max")
 
@@ -38,7 +38,7 @@ fun main() = runBlocking {
 
         val txn = builder.finish()
 
-        println("Signing Digest: ${hexEncode(txn.signingDigest())}")
+        println("Signing Digest: ${txn.signingDigestHex()}")
         println("Txn Bytes: ${txn.bcsSerializeBase64()}")
 
         val res = client.dryRunTx(txn, false)

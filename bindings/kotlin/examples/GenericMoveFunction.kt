@@ -30,7 +30,7 @@ fun main() = runBlocking {
                         "0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3"
                 )
 
-        val package_addr = Address.fromHex("0x2")
+        val package_addr = Address.framework()
         val module_name = Identifier("vec_map")
         val function_name = Identifier("from_keys_values")
 

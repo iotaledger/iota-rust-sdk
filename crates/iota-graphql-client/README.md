@@ -21,7 +21,7 @@ executing transactions and more.
 
 Instantiate a client with [`Client::new(server: &str)`] or use one of the predefined functions for different networks [`Client`].
 
-```rust, no_run
+```rust, ignore
 use iota_graphql_client::Client;
 use eyre::Result;
 
@@ -43,7 +43,7 @@ The client provides an API to request gas from the faucet. The `request_and_wait
 
 ### Example for standard devnet/testnet/local networks.
 
-```rust, no_run
+```rust, ignore
 use iota_graphql_client::faucet::FaucetClient;
 use iota_types::Address;
 
@@ -73,7 +73,7 @@ async fn main() -> Result<()> {
 
 Note that this `FaucetClient` is explicitly designed to work with two endpoints: `v1/gas`, and `v1/status`. When passing in the custom faucet URL, skip the final endpoint and only pass in the top-level url (e.g., `https://faucet.devnet.iota.cafe`).
 
-```rust, no_run
+```rust, ignore
 use iota_graphql_client::faucet::FaucetClient;
 use iota_types::Address;
 
