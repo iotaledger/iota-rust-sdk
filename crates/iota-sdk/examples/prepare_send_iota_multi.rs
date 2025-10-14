@@ -42,7 +42,7 @@ async fn main() -> Result<()> {
 
     // Transfer each split coin to the corresponding recipient
     for (i, (address, _)) in recipients.iter().enumerate() {
-        builder.transfer_objects(Address::from_str(address)?, res(&labels[i]));
+        builder.transfer_objects(Address::from_str(address)?, [res(&labels[i])]);
     }
 
     let txn = builder.finish().await?;

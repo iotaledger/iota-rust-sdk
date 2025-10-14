@@ -3,7 +3,6 @@
 
 use std::{
     collections::{BTreeMap, HashMap},
-    str::FromStr,
     sync::Arc,
 };
 
@@ -52,7 +51,7 @@ impl ObjectId {
 
     #[uniffi::constructor]
     pub fn from_hex(hex: &str) -> Result<Self> {
-        Ok(Self(iota_types::ObjectId::from_str(hex)?))
+        Ok(Self(iota_types::ObjectId::from_hex(hex)?))
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
