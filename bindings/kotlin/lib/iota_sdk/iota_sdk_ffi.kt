@@ -52605,69 +52605,6 @@ public object FfiConverterTypeTransactionExpiration : FfiConverterRustBuffer<Tra
 
 
 
-sealed class TransactionInner: Disposable  {
-    
-    data class Version1(
-        val v1: TransactionV1) : TransactionInner() {
-        companion object
-    }
-    
-
-    
-    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
-    override fun destroy() {
-        when(this) {
-            is TransactionInner.Version1 -> {
-                
-    Disposable.destroy(
-        this.v1
-    )
-                
-            }
-        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
-    }
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeTransactionInner : FfiConverterRustBuffer<TransactionInner>{
-    override fun read(buf: ByteBuffer): TransactionInner {
-        return when(buf.getInt()) {
-            1 -> TransactionInner.Version1(
-                FfiConverterTypeTransactionV1.read(buf),
-                )
-            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
-        }
-    }
-
-    override fun allocationSize(value: TransactionInner) = when(value) {
-        is TransactionInner.Version1 -> {
-            // Add the size for the Int that specifies the variant plus the size needed for all fields
-            (
-                4UL
-                + FfiConverterTypeTransactionV1.allocationSize(value.v1)
-            )
-        }
-    }
-
-    override fun write(value: TransactionInner, buf: ByteBuffer) {
-        when(value) {
-            is TransactionInner.Version1 -> {
-                buf.putInt(1)
-                FfiConverterTypeTransactionV1.write(value.v1, buf)
-                Unit
-            }
-        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
-    }
-}
-
-
-
-
-
 /**
  * An error with a type argument
  *

@@ -27,22 +27,16 @@ use crate::{
 
 pub mod v1;
 
-#[derive(Clone, uniffi::Enum)]
-pub enum TransactionInner {
-    Version1(Arc<TransactionV1>),
-}
-
-// Wrapper around the enum, because we can't have methods on enums in uniffi
 #[derive(Clone, uniffi::Object)]
-pub struct Transaction {
-    pub inner: TransactionInner,
+pub enum Transaction {
+    Version1(Arc<TransactionV1>),
 }
 
 #[uniffi::export]
 impl Transaction {
     pub fn as_v1(&self) -> Arc<TransactionV1> {
-        match &self.inner {
-            TransactionInner::Version1(tx) => tx.clone(),
+        match self {
+            Transaction::Version1(tx) => tx.clone(),
         }
     }
 
@@ -78,17 +72,15 @@ impl Transaction {
 impl From<iota_types::Transaction> for Transaction {
     fn from(value: iota_types::Transaction) -> Self {
         match value {
-            iota_types::Transaction::V1(v1) => Transaction {
-                inner: TransactionInner::Version1(Arc::new(v1.into())),
-            },
+            iota_types::Transaction::V1(v1) => Transaction::Version1(Arc::new(v1.into())),
         }
     }
 }
 
 impl From<Transaction> for iota_types::Transaction {
     fn from(value: Transaction) -> Self {
-        match value.inner {
-            TransactionInner::Version1(v1) => iota_types::Transaction::V1(v1.0.clone()),
+        match value {
+            Transaction::Version1(v1) => iota_types::Transaction::V1(v1.0.clone()),
         }
     }
 }

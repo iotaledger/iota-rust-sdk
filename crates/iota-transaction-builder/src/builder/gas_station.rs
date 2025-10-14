@@ -374,10 +374,12 @@ impl GasStationData {
             .join(GasStationRequestKind::ExecuteTx.as_path())
             .map_err(Error::InvalidUrl)?;
 
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);
+        let final_tx = Transaction::V1(txn);
+        let tx_bytes =
+            base64ct::Base64::encode_string(&bcs::to_bytes(&final_tx).map_err(Error::Bcs)?);
 
         let user_sig = keypair
-            .sign_transaction(&Transaction::V1(txn))
+            .sign_transaction(&final_tx)
             .map_err(Error::Signature)?
             .to_base64();
 

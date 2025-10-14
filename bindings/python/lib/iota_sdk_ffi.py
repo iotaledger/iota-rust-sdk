@@ -18634,74 +18634,6 @@ class _UniffiConverterTypeTransactionExpiration(_UniffiConverterRustBuffer):
 
 
 
-class TransactionInner:
-    def __init__(self):
-        raise RuntimeError("TransactionInner cannot be instantiated directly")
-
-    # Each enum variant is a nested class of the enum itself.
-    class VERSION1:
-        def __init__(self, *values):
-            if len(values) != 1:
-                raise TypeError(f"Expected 1 arguments, found {len(values)}")
-            self._values = values
-
-        def __getitem__(self, index):
-            return self._values[index]
-
-        def __str__(self):
-            return f"TransactionInner.VERSION1{self._values!r}"
-
-        def __eq__(self, other):
-            if not other.is_VERSION1():
-                return False
-            return self._values == other._values
-    
-
-    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
-    # whether an instance is that variant.
-    def is_VERSION1(self) -> bool:
-        return isinstance(self, TransactionInner.VERSION1)
-    def is_version1(self) -> bool:
-        return isinstance(self, TransactionInner.VERSION1)
-    
-
-# Now, a little trick - we make each nested variant class be a subclass of the main
-# enum class, so that method calls and instance checks etc will work intuitively.
-# We might be able to do this a little more neatly with a metaclass, but this'll do.
-TransactionInner.VERSION1 = type("TransactionInner.VERSION1", (TransactionInner.VERSION1, TransactionInner,), {})  # type: ignore
-
-
-
-
-class _UniffiConverterTypeTransactionInner(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        variant = buf.read_i32()
-        if variant == 1:
-            return TransactionInner.VERSION1(
-                _UniffiConverterTypeTransactionV1.read(buf),
-            )
-        raise InternalError("Raw enum value doesn't match any cases")
-
-    @staticmethod
-    def check_lower(value):
-        if value.is_VERSION1():
-            _UniffiConverterTypeTransactionV1.check_lower(value._values[0])
-            return
-        raise ValueError(value)
-
-    @staticmethod
-    def write(value, buf):
-        if value.is_VERSION1():
-            buf.write_i32(1)
-            _UniffiConverterTypeTransactionV1.write(value._values[0], buf)
-
-
-
-
-
-
-
 class TypeArgumentError(enum.Enum):
     """
     An error with a type argument
@@ -41963,7 +41895,6 @@ __all__ = [
     "TransactionArgument",
     "TransactionBlockKindInput",
     "TransactionExpiration",
-    "TransactionInner",
     "TypeArgumentError",
     "UnchangedSharedKind",
     "ActiveJwk",

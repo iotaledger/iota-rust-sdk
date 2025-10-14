@@ -31331,58 +31331,6 @@ func (_ FfiDestroyerTransactionExpiration) Destroy(value TransactionExpiration) 
 }
 
 
-type TransactionInner interface {
-	Destroy()
-}
-type TransactionInnerVersion1 struct {
-	Field0 *TransactionV1
-}
-
-func (e TransactionInnerVersion1) Destroy() {
-		FfiDestroyerTransactionV1{}.Destroy(e.Field0);
-}
-
-type FfiConverterTransactionInner struct {}
-
-var FfiConverterTransactionInnerINSTANCE = FfiConverterTransactionInner{}
-
-func (c FfiConverterTransactionInner) Lift(rb RustBufferI) TransactionInner {
-	return LiftFromRustBuffer[TransactionInner](c, rb)
-}
-
-func (c FfiConverterTransactionInner) Lower(value TransactionInner) C.RustBuffer {
-	return LowerIntoRustBuffer[TransactionInner](c, value)
-}
-func (FfiConverterTransactionInner) Read(reader io.Reader) TransactionInner {
-	id := readInt32(reader)
-	switch (id) {
-		case 1:
-			return TransactionInnerVersion1{
-				FfiConverterTransactionV1INSTANCE.Read(reader),
-			};
-		default:
-			panic(fmt.Sprintf("invalid enum value %v in FfiConverterTransactionInner.Read()", id));
-	}
-}
-
-func (FfiConverterTransactionInner) Write(writer io.Writer, value TransactionInner) {
-	switch variant_value := value.(type) {
-		case TransactionInnerVersion1:
-			writeInt32(writer, 1)
-			FfiConverterTransactionV1INSTANCE.Write(writer, variant_value.Field0)
-		default:
-			_ = variant_value
-			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterTransactionInner.Write", value))
-	}
-}
-
-type FfiDestroyerTransactionInner struct {}
-
-func (_ FfiDestroyerTransactionInner) Destroy(value TransactionInner) {
-	value.Destroy()
-}
-
-
 // An error with a type argument
 //
 // # BCS
