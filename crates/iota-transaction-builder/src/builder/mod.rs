@@ -177,7 +177,7 @@ impl TransactionBuildData {
     }
 
     /// Get the value for the given string in the named results map
-    pub fn get_named_result(&self, name: &str) -> Option<Argument> {
+    pub fn get_named_command(&self, name: &str) -> Option<Argument> {
         self.named_results.get(name).copied()
     }
 }
@@ -306,7 +306,7 @@ impl<C, L> TransactionBuilder<C, L> {
 
     /// Get the value for the given string in the named results map
     pub fn get_named_result(&self, name: &str) -> Option<Argument> {
-        self.data.get_named_result(name)
+        self.data.get_named_command(name)
     }
 
     /// Send IOTA to a recipient address.
