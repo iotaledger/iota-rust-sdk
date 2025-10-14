@@ -54,7 +54,7 @@ fun main() = runBlocking {
             builder.transferObjects(Address.fromHex(r.first), listOf(PtbArgument.res(labels[i])))
         }
 
-        val txn = builder.finish().asV1()
+        val txn = builder.finish()
 
         println("Signing Digest: ${hexEncode(txn.signingDigest())}")
         println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")

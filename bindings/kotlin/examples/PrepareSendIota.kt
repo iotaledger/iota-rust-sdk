@@ -25,7 +25,7 @@ fun main() = runBlocking {
                 PtbArgument.u64(5000000000uL),
         )
 
-        val txn = builder.finish().asV1()
+        val txn = builder.finish()
 
         println("Signing Digest: ${hexEncode(txn.signingDigest())}")
         println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")

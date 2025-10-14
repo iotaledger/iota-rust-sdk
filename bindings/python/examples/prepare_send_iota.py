@@ -21,7 +21,7 @@ async def main():
         builder = await TransactionBuilder.init(from_address, client)
         builder.send_iota(to_address, PtbArgument.u64(5000000000))
 
-        txn = (await builder.finish()).as_v1()
+        txn = await builder.finish()
 
         print("Signing Digest:", hex_encode(txn.signing_digest()))
         print("Txn Bytes:", base64_encode(txn.bcs_serialize()))
