@@ -66,6 +66,15 @@ impl Secp256r1PublicKey {
     pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
+
+    /// Returns the bytes with signature scheme flag prepended
+    pub fn to_flagged_bytes(&self) -> Vec<u8> {
+        let key_bytes = self.as_bytes();
+        let mut bytes = Vec::with_capacity(1 + key_bytes.len());
+        bytes.push(self.scheme().to_u8());
+        bytes.extend_from_slice(&key_bytes);
+        bytes
+    }
 }
 
 impl std::str::FromStr for Secp256r1PublicKey {

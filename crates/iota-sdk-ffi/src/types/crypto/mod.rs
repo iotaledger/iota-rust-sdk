@@ -91,6 +91,11 @@ impl Ed25519PublicKey {
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
     }
+
+    /// Returns the bytes with signature scheme flag prepended
+    pub fn to_flagged_bytes(&self) -> Vec<u8> {
+        self.0.to_flagged_bytes()
+    }
 }
 
 impl_crypto_object!(
@@ -123,6 +128,11 @@ impl Secp256k1PublicKey {
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
     }
+
+    /// Returns the bytes with signature scheme flag prepended
+    pub fn to_flagged_bytes(&self) -> Vec<u8> {
+        self.0.to_flagged_bytes()
+    }
 }
 
 impl_crypto_object!(
@@ -154,6 +164,11 @@ impl Secp256r1PublicKey {
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
+    }
+
+    /// Returns the bytes with signature scheme flag prepended
+    pub fn to_flagged_bytes(&self) -> Vec<u8> {
+        self.0.to_flagged_bytes()
     }
 }
 

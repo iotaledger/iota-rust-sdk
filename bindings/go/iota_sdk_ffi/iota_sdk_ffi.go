@@ -1098,6 +1098,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes()
+	})
+	if checksum != 31806 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes()
 	})
 	if checksum != 31911 {
@@ -2907,6 +2916,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes()
+	})
+	if checksum != 42834 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes()
 	})
 	if checksum != 49705 {
@@ -3101,6 +3119,15 @@ func uniffiCheckChecksums() {
 	if checksum != 21066 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes()
+	})
+	if checksum != 14205 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10616,6 +10643,8 @@ type Ed25519PublicKeyInterface interface {
 	// Return the flag for this signature scheme
 	Scheme() SignatureScheme
 	ToBytes() []byte
+	// Returns the bytes with signature scheme flag prepended
+	ToFlaggedBytes() []byte
 }
 // An ed25519 public key.
 //
@@ -10696,6 +10725,18 @@ func (_self *Ed25519PublicKey) ToBytes() []byte {
 	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the bytes with signature scheme flag prepended
+func (_self *Ed25519PublicKey) ToFlaggedBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -18974,6 +19015,8 @@ type Secp256k1PublicKeyInterface interface {
 	// Return the flag for this signature scheme
 	Scheme() SignatureScheme
 	ToBytes() []byte
+	// Returns the bytes with signature scheme flag prepended
+	ToFlaggedBytes() []byte
 }
 // A secp256k1 signature.
 //
@@ -19055,6 +19098,18 @@ func (_self *Secp256k1PublicKey) ToBytes() []byte {
 	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the bytes with signature scheme flag prepended
+func (_self *Secp256k1PublicKey) ToFlaggedBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -19807,6 +19862,8 @@ type Secp256r1PublicKeyInterface interface {
 	// Return the flag for this signature scheme
 	Scheme() SignatureScheme
 	ToBytes() []byte
+	// Returns the bytes with signature scheme flag prepended
+	ToFlaggedBytes() []byte
 }
 // A secp256r1 signature.
 //
@@ -19888,6 +19945,18 @@ func (_self *Secp256r1PublicKey) ToBytes() []byte {
 	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the bytes with signature scheme flag prepended
+func (_self *Secp256r1PublicKey) ToFlaggedBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(
 		_pointer,_uniffiStatus),
 	}
 	}))
