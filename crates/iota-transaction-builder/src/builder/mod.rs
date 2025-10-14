@@ -324,7 +324,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// use iota_transaction_builder::TransactionBuilder;
     /// use iota_types::Address;
     ///
-    /// #[tokio::main]
+    /// #[tokio::main(flavor = "current_thread")]
     /// async fn main() -> eyre::Result<()> {
     ///     let client = Client::new_devnet();
     ///     let from_address = Address::from_hex(
