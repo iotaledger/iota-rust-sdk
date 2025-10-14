@@ -622,7 +622,7 @@ mod serialization {
                         type_params,
                     } = s_inner.as_ref();
 
-                    if address == &Address::TWO
+                    if address == &Address::FRAMEWORK
                         && module == "iota"
                         && name == "IOTA"
                         && type_params.is_empty()
@@ -632,7 +632,7 @@ mod serialization {
                 }
 
                 Self::Coin(coin_type)
-            } else if address == &Address::THREE
+            } else if address == &Address::SYSTEM
                 && module == "staking_pool"
                 && name == "StakedIota"
                 && type_params.is_empty()
@@ -1040,7 +1040,7 @@ mod serialization {
             let o = Object {
                 data: ObjectData::Struct(MoveStruct {
                     type_: StructTag {
-                        address: Address::TWO,
+                        address: Address::FRAMEWORK,
                         module: Identifier::new("bar").unwrap(),
                         name: Identifier::new("foo").unwrap(),
                         type_params: Vec::new(),

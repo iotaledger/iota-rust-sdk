@@ -404,7 +404,7 @@ pub struct StructTag {
 impl StructTag {
     pub fn coin(type_tag: impl Into<TypeTag>) -> Self {
         Self {
-            address: Address::TWO,
+            address: Address::FRAMEWORK,
             module: IdentifierRef::const_new("coin").into(),
             name: IdentifierRef::const_new("Coin").into(),
             type_params: vec![type_tag.into()],
@@ -420,7 +420,10 @@ impl StructTag {
             type_params,
         } = self;
 
-        if address == &Address::TWO && module == "coin" && name == "Coin" && type_params.len() == 1
+        if address == &Address::FRAMEWORK
+            && module == "coin"
+            && name == "Coin"
+            && type_params.len() == 1
         {
             type_params.first()
         } else {
@@ -435,7 +438,7 @@ impl StructTag {
 
     pub fn iota() -> Self {
         Self {
-            address: Address::TWO,
+            address: Address::FRAMEWORK,
             module: IdentifierRef::const_new("iota").into(),
             name: IdentifierRef::const_new("IOTA").into(),
             type_params: vec![],
@@ -448,7 +451,7 @@ impl StructTag {
 
     pub fn staked_iota() -> Self {
         Self {
-            address: Address::THREE,
+            address: Address::SYSTEM,
             module: IdentifierRef::const_new("staking_pool").into(),
             name: IdentifierRef::const_new("StakedIota").into(),
             type_params: vec![],
@@ -457,7 +460,7 @@ impl StructTag {
 
     pub fn timelocked_staked_iota() -> Self {
         Self {
-            address: Address::THREE,
+            address: Address::SYSTEM,
             module: IdentifierRef::const_new("timelocked_staking").into(),
             name: IdentifierRef::const_new("TimelockedStakedIota").into(),
             type_params: vec![],
