@@ -467,7 +467,7 @@ impl StructTag {
 
     pub fn upgrade_cap() -> Self {
         Self {
-            address: Address::TWO,
+            address: Address::FRAMEWORK,
             module: Identifier::new("package").unwrap(),
             name: Identifier::new("UpgradeCap").unwrap(),
             type_params: vec![],

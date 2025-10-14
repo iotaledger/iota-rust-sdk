@@ -65,20 +65,18 @@ async fn main() -> Result<()> {
     if let Some(err) = result.error {
         bail!("Dry run failed: {err}");
     }
-    println!("Dry run succeeded");
-
-    // Check on the dry-run effects
     let Some(effects) = result.effects else {
-        bail!("Missing transaction effects");
+        bail!("Dry run failed: no effects");
     };
     println!("Effects status (dry run): {:?}", effects.status());
 
     // Sign and execute the transaction (publish the package)
+    println!("Publishing package");
     let sig = private_key.sign_transaction(&tx)?;
     let Some(effects) = client.execute_tx(&[sig], &tx).await? else {
-        bail!("Missing transaction effects");
+        bail!("Transaction failed: no effects");
     };
-    println!("Effects status: {:?}", effects.status());
+    println!("Effects status (publish): {:?}", effects.status());
 
     // Wait some time for the indexer to process the tx
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
@@ -107,7 +105,6 @@ async fn main() -> Result<()> {
                 let pkg_id = changed_obj.object_id;
                 println!("PackageId={pkg_id}");
                 println!("Package version: {version}");
-                println!("Package digest: {digest}");
                 package_id.replace(pkg_id);
                 package_digest.replace(digest);
             }
@@ -121,12 +118,6 @@ async fn main() -> Result<()> {
     let Some(package_id) = package_id else {
         bail!("Missing package id");
     };
-    // let Some(package_digest) = package_digest else {
-    //     bail!("Missing package digest");
-    // };
-    // let Some(upgrade_cap_digest) = upgrade_cap_digest else {
-    //     bail!("Missing upgrade cap digest");
-    // };
 
     let Some(obj_ref) = client
         .object(upgrade_cap_id, None)
@@ -147,7 +138,7 @@ async fn main() -> Result<()> {
     builder
         .gas_budget(50_000_000)
         .gas(gas)
-        .move_call(Address::TWO, "package", "authorize_upgrade")
+        .move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
         .arguments([upgrade_arg, policy_arg, digest_arg])
         .name("upgrade_ticket");
 
@@ -159,20 +150,18 @@ async fn main() -> Result<()> {
     if let Some(err) = res.error {
         bail!("Dry run failed: {err}");
     }
-    println!("Dry run succeeded");
-
-    // Check on the dry-run effects
     let Some(effects) = res.effects else {
-        bail!("Missing transaction effects");
+        bail!("Dry run failed: no effects");
     };
     println!("Effects status (dry run): {:?}", effects.status());
 
     // Sign and execute the transaction (upgrade the package)
+    println!("Upgrading package");
     let sig = private_key.sign_transaction(&tx)?;
     let Some(effects) = client.execute_tx(&[sig], &tx).await? else {
-        bail!("Missing transaction effects");
+        bail!("Transaction failed: no effects");
     };
-    println!("Effects status: {:?}", effects.status());
+    println!("Effects status (upgrade): {:?}", effects.status());
 
     // Wait some time for the indexer to process the tx
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
