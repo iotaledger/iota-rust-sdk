@@ -34,10 +34,17 @@ pub struct ObjectId(Address);
 impl ObjectId {
     pub const LENGTH: usize = Address::LENGTH;
     pub const ZERO: Self = Self(Address::ZERO);
+    pub const SYSTEM: Self = Self(Address::from_u8(5));
+    pub const CLOCK: Self = Self(Address::from_u8(6));
 
     /// Generates a new ObjectId from the provided byte array.
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
         Self(Address::new(bytes))
+    }
+
+    /// Parse an ObjectId from a hex string.
+    pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, super::address::AddressParseError> {
+        Address::from_hex(hex).map(Self)
     }
 
     /// Returns the underlying byte array of an ObjectId.

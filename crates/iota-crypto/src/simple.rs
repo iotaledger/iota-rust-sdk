@@ -576,7 +576,7 @@ mod keypair {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use test_strategy::proptest;
 
     use super::*;

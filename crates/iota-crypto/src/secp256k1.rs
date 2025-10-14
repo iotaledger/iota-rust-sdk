@@ -120,7 +120,7 @@ impl crate::PrivateKeyExt for Secp256k1PrivateKey {
     const SCHEME: SignatureScheme = SignatureScheme::Secp256k1;
 
     fn to_bytes(&self) -> Vec<u8> {
-        self.0.to_bytes().as_slice().to_vec()
+        self.0.to_bytes().to_vec()
     }
 
     fn from_raw_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
@@ -292,7 +292,7 @@ impl Verifier<UserSignature> for Secp256k1Verifier {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use iota_sdk_types::PersonalMessage;
     use test_strategy::proptest;
     #[cfg(target_arch = "wasm32")]

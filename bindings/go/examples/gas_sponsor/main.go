@@ -17,7 +17,7 @@ func main() {
 
 	builder := sdk.TransactionBuilderInit(sender, client)
 
-	packageAddr, _ := sdk.AddressFromHex("0x1")
+	packageAddr := sdk.AddressStdLib()
 	moduleName, _ := sdk.NewIdentifier("u8")
 	functionName, _ := sdk.NewIdentifier("max")
 

@@ -3,7 +3,6 @@
 
 pub mod multisig;
 pub mod passkey;
-pub mod validator;
 pub mod zklogin;
 
 use std::sync::Arc;

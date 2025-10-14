@@ -13,13 +13,13 @@ import (
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	sender, _ := sdk.AddressFromHex("0x0")
+	sender := sdk.AddressZero()
 
 	iotaNamesPackageAddress, _ := sdk.AddressFromHex("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
 
 	iotaNamesObjectId, _ := sdk.ObjectIdFromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
 
-	stdlibAddress, _ := sdk.AddressFromHex("0x1")
+	stdlibAddress := sdk.AddressStdLib()
 
 	name := "name.iota"
 	fmt.Printf("Looking up name: %s\n", name)

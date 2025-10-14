@@ -651,7 +651,7 @@ impl std::str::FromStr for Bn254FieldElement {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use std::str::FromStr;
 
     use num_bigint::BigUint;

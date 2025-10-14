@@ -42,10 +42,10 @@ fun main() = runBlocking {
         val builder = TransactionBuilder.init(sender, client)
 
         val labels = recipients.indices.map { "coin${it}" }
-        val amounts = recipients.map { it.second }
+        val amounts = recipients.map { PtbArgument.u64(it.second) }
 
         builder.splitCoins(
-                coinId,
+                PtbArgument.objectId(coinId),
                 amounts,
                 labels,
         )

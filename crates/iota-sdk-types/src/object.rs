@@ -391,6 +391,16 @@ impl Object {
         }
     }
 
+    /// Return this object's reference
+    #[cfg(all(feature = "hash", feature = "serde"))]
+    pub fn object_ref(&self) -> ObjectReference {
+        ObjectReference {
+            object_id: self.object_id(),
+            version: self.version(),
+            digest: self.digest(),
+        }
+    }
+
     /// Return this object's version
     pub fn version(&self) -> Version {
         match &self.data {
@@ -612,7 +622,7 @@ mod serialization {
                         type_params,
                     } = s_inner.as_ref();
 
-                    if address == &Address::TWO
+                    if address == &Address::FRAMEWORK
                         && module == "iota"
                         && name == "IOTA"
                         && type_params.is_empty()
@@ -622,7 +632,7 @@ mod serialization {
                 }
 
                 Self::Coin(coin_type)
-            } else if address == &Address::THREE
+            } else if address == &Address::SYSTEM
                 && module == "staking_pool"
                 && name == "StakedIota"
                 && type_params.is_empty()
@@ -1018,7 +1028,7 @@ mod serialization {
     }
 
     #[cfg(test)]
-    mod test {
+    mod tests {
         #[cfg(target_arch = "wasm32")]
         use wasm_bindgen_test::wasm_bindgen_test as test;
 
@@ -1030,7 +1040,7 @@ mod serialization {
             let o = Object {
                 data: ObjectData::Struct(MoveStruct {
                     type_: StructTag {
-                        address: Address::TWO,
+                        address: Address::FRAMEWORK,
                         module: Identifier::new("bar").unwrap(),
                         name: Identifier::new("foo").unwrap(),
                         type_params: Vec::new(),

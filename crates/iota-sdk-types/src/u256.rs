@@ -68,7 +68,7 @@ const ASSERT_ENDIANNESS: () = {
 };
 
 #[cfg(test)]
-mod test {
+mod tests {
     use std::str::FromStr;
 
     use num_bigint::BigUint;

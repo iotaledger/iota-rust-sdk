@@ -72,15 +72,15 @@ pub struct Address(
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
-    pub const ONE: Self = Self::from_u8(1);
-    pub const TWO: Self = Self::from_u8(2);
-    pub const THREE: Self = Self::from_u8(3);
+    pub const STD_LIB: Self = Self::from_u8(1);
+    pub const FRAMEWORK: Self = Self::from_u8(2);
+    pub const SYSTEM: Self = Self::from_u8(3);
 
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
         Self(bytes)
     }
 
-    const fn from_u8(byte: u8) -> Self {
+    pub(crate) const fn from_u8(byte: u8) -> Self {
         let mut address = Self::ZERO;
         address.0[31] = byte;
         address
@@ -266,7 +266,7 @@ impl schemars::JsonSchema for Address {
             metadata: Some(Box::new(Metadata {
                 title: Some(Self::schema_name()),
                 description: Some("A 32-byte IOTA address, encoded as a hex string.".to_owned()),
-                examples: vec![serde_json::to_value(Address::TWO).unwrap()],
+                examples: vec![serde_json::to_value(Address::FRAMEWORK).unwrap()],
                 ..Default::default()
             })),
             instance_type: Some(InstanceType::String.into()),
@@ -283,7 +283,7 @@ impl schemars::JsonSchema for Address {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use test_strategy::proptest;
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;

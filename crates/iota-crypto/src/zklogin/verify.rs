@@ -510,7 +510,7 @@ pub(crate) fn gen_address_seed_with_salt_hash(
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use iota_sdk_types::Ed25519Signature;
     #[cfg(test)]
     #[cfg(target_arch = "wasm32")]

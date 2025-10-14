@@ -1,7 +1,11 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard};
+use std::{
+    collections::HashMap,
+    sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
+    time::Duration,
+};
 
 use iota_transaction_builder::MovePackageData;
 use iota_types::Input;
@@ -10,7 +14,7 @@ use crate::{
     crypto::simple::SimpleKeypair,
     error::Result,
     graphql::GraphQLClient,
-    transaction_builder::ptb_arg::{PTBArgs, PTBArgument},
+    transaction_builder::ptb_arg::{MoveArg, PTBArgument},
     types::{
         address::Address,
         graphql::DryRunResult,
@@ -94,6 +98,33 @@ impl TransactionBuilder {
         self
     }
 
+    /// Set the gas station sponsor.
+    #[uniffi::method(default(duration = None, headers = None))]
+    pub fn gas_station_sponsor(
+        self: Arc<Self>,
+        url: String,
+        duration: Option<Duration>,
+        headers: Option<HashMap<String, Vec<String>>>,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"));
+            if let Some(duration) = duration {
+                b.gas_reservation_duration(duration);
+            }
+            if let Some(headers) = headers {
+                for (name, values) in headers {
+                    for value in values {
+                        b.add_gas_station_header(
+                            name.parse().expect("invalid header name"),
+                            value.parse().expect("invalid header value"),
+                        );
+                    }
+                }
+            }
+        });
+        self
+    }
+
     /// Set the expiration of the transaction to be a specific epoch.
     pub fn expiration(self: Arc<Self>, epoch: u64) -> Arc<Self> {
         self.write(|builder| {
@@ -118,7 +149,7 @@ impl TransactionBuilder {
         self.write(|builder| {
             builder
                 .move_call(**package, &module.as_str(), &function.as_str())
-                .arguments(PTBArgs(arguments))
+                .arguments(arguments)
                 .type_tags(type_args.into_iter().map(|v| v.0.clone()))
                 .name(names);
         });
@@ -127,9 +158,13 @@ impl TransactionBuilder {
 
     /// Send IOTA to a recipient address.
     #[uniffi::method(default(amount = None))]
-    pub fn send_iota(self: Arc<Self>, recipient: &Address, amount: Option<u64>) -> Arc<Self> {
+    pub fn send_iota(
+        self: Arc<Self>,
+        recipient: &Address,
+        amount: Option<Arc<PTBArgument>>,
+    ) -> Arc<Self> {
         self.write(|builder| {
-            builder.send_iota(**recipient, amount);
+            builder.send_iota::<&PTBArgument>(**recipient, amount.as_deref());
         });
         self
     }
@@ -139,12 +174,12 @@ impl TransactionBuilder {
     #[uniffi::method(default(amount = None))]
     pub fn send_coins(
         self: Arc<Self>,
-        coins: Vec<Arc<ObjectId>>,
+        coins: Vec<Arc<PTBArgument>>,
         recipient: &Address,
-        amount: Option<u64>,
+        amount: Option<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.send_coins(coins.into_iter().map(|v| **v), **recipient, amount);
+            builder.send_coins::<_, &PTBArgument>(coins, **recipient, amount.as_deref());
         });
         self
     }
@@ -157,7 +192,7 @@ impl TransactionBuilder {
         objects: Vec<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.transfer_objects(**recipient, PTBArgs(objects));
+            builder.transfer_objects(**recipient, objects);
         });
         self
     }
@@ -166,12 +201,12 @@ impl TransactionBuilder {
     #[uniffi::method(default(names = []))]
     pub fn split_coins(
         self: Arc<Self>,
-        coin: &ObjectId,
-        amounts: Vec<u64>,
+        coin: &PTBArgument,
+        amounts: Vec<Arc<PTBArgument>>,
         names: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.split_coins(**coin, amounts).name(names);
+            builder.split_coins(coin, amounts).name(names);
         });
         self
     }
@@ -179,11 +214,11 @@ impl TransactionBuilder {
     /// Merge a list of coins into a single coin, without producing any result.
     pub fn merge_coins(
         self: Arc<Self>,
-        coin: &ObjectId,
-        coins_to_merge: Vec<Arc<ObjectId>>,
+        coin: &PTBArgument,
+        coins_to_merge: Vec<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.merge_coins(**coin, coins_to_merge.into_iter().map(|v| **v));
+            builder.merge_coins(coin, coins_to_merge);
         });
         self
     }
@@ -192,19 +227,18 @@ impl TransactionBuilder {
     /// the type indicated by `type_tag`.
     pub fn make_move_vec(
         self: Arc<Self>,
-        elements: Vec<Arc<PTBArgument>>,
+        elements: Vec<Arc<MoveArg>>,
         type_tag: &TypeTag,
         name: String,
     ) -> Arc<Self> {
         use iota_transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
-            let mut args = Vec::new();
-            for e in elements {
-                args.extend(builder.apply_arguments(e));
-            }
             let cmd = Command::MakeMoveVector(MakeMoveVector {
                 type_: Some(type_tag.0.clone()),
-                elements: args,
+                elements: elements
+                    .iter()
+                    .map(|e| builder.apply_argument(e.as_ref()))
+                    .collect(),
             });
             builder.named_command(cmd, name);
         });
@@ -296,12 +330,32 @@ impl TransactionBuilder {
     #[uniffi::method(default(wait_for_finalization = false))]
     pub async fn execute(
         &self,
-        keypairs: &[Arc<SimpleKeypair>],
+        keypair: &SimpleKeypair,
         wait_for_finalization: bool,
     ) -> Result<Option<Arc<TransactionEffects>>> {
-        let keypairs = keypairs.iter().map(|v| v.0.clone()).collect::<Vec<_>>();
         Ok(self
-            .read(|builder| builder.clone().execute(&keypairs, wait_for_finalization))
+            .read(|builder| builder.clone().execute(&keypair.0, wait_for_finalization))
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
+    }
+
+    /// Execute the transaction and optionally wait for finalization.
+    #[uniffi::method(default(wait_for_finalization = false))]
+    pub async fn execute_with_sponsor(
+        &self,
+        keypair: &SimpleKeypair,
+        sponsor_keypair: &SimpleKeypair,
+        wait_for_finalization: bool,
+    ) -> Result<Option<Arc<TransactionEffects>>> {
+        Ok(self
+            .read(|builder| {
+                builder.clone().execute_with_sponsor(
+                    &keypair.0,
+                    &sponsor_keypair.0,
+                    wait_for_finalization,
+                )
+            })
             .await?
             .map(Into::into)
             .map(Arc::new))

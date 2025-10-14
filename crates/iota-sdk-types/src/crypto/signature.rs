@@ -853,7 +853,7 @@ mod serialization {
     }
 
     #[cfg(test)]
-    mod test {
+    mod tests {
         use base64ct::{Base64, Encoding};
         use test_strategy::proptest;
         #[cfg(target_arch = "wasm32")]

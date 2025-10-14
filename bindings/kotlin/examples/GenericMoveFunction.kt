@@ -6,7 +6,6 @@ import iota_sdk.GraphQlClient
 import iota_sdk.Identifier
 import iota_sdk.PtbArgument
 import iota_sdk.TransactionBuilder
-import iota_sdk.TypeTag
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlinx.coroutines.runBlocking
@@ -31,28 +30,17 @@ fun main() = runBlocking {
                         "0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3"
                 )
 
-        val package_addr = Address.fromHex("0x2")
+        val package_addr = Address.framework()
         val module_name = Identifier("vec_map")
         val function_name = Identifier("from_keys_values")
-
-        builder.makeMoveVec(
-                listOf(PtbArgument.address(address1), PtbArgument.address(address2)),
-                TypeTag.newAddress(),
-                "addresses"
-        )
-        builder.makeMoveVec(
-                listOf(PtbArgument.u64(10_000_000uL), PtbArgument.u64(20_000_000uL)),
-                TypeTag.newU64(),
-                "amounts"
-        )
 
         builder.moveCall(
                 package_addr,
                 module_name,
                 function_name,
                 listOf(
-                        PtbArgument.res("addresses"),
-                        PtbArgument.res("amounts"),
+                        PtbArgument.addressVec(listOf(address1, address2)),
+                        PtbArgument.u64Vec(listOf(10_000_000uL, 20_000_000uL)),
                 )
         )
 

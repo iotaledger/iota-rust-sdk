@@ -15,11 +15,10 @@ func main() {
 	fromAddress, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
 	toAddress, _ := sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
-
-	coinObjId, _ := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
+	amount := sdk.PtbArgumentU64(5000000000)
 
 	builder := sdk.TransactionBuilderInit(fromAddress, client)
-	builder.TransferObjects(toAddress, []*sdk.PtbArgument{sdk.PtbArgumentObjectId(coinObjId)})
+	builder.SendIota(toAddress, &amount)
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {

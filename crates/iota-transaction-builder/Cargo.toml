@@ -14,10 +14,18 @@ iota-crypto = { package = "iota-crypto", path = "../iota-crypto", features = ["e
 iota-graphql-client = { package = "iota-graphql-client", path = "../iota-graphql-client" }
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde", "hash"] }
 primitive-types = { version = "0.14", features = ["impl-serde"] }
+reqwest = "0.12"
 serde = "1.0"
+serde_json = "1.0"
 thiserror = "2.0"
-tokio = { version = "1.0", features = ["full"] }
 variadics_please = "1.1"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = { version = "0.2", features = ["js"] }
+tokio = { version = "1.0", features = ["macros", "rt"] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { version = "1.0", features = ["full"] }
 
 [dev-dependencies]
 eyre = "0.6"

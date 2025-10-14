@@ -29,6 +29,10 @@ pub enum PrivateKeyError {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "bls12381")))]
 pub mod bls12381;
 
+#[cfg(feature = "bls12381")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bls12381")))]
+pub mod validator;
+
 #[cfg(feature = "ed25519")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
 pub mod ed25519;

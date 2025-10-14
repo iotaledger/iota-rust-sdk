@@ -16,7 +16,7 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
 
-        val sender = Address.fromHex("0x0")
+        val sender = Address.zero()
 
         val iotaNamesPackageAddress =
                 Address.fromHex(
@@ -26,7 +26,7 @@ fun main() = runBlocking {
                 ObjectId.fromHex(
                         "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
                 )
-        val stdlibAddress = Address.fromHex("0x1")
+        val stdlibAddress = Address.stdLib()
 
         val name = "name.iota"
         println("Looking up name: $name")

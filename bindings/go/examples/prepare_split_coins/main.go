@@ -17,7 +17,15 @@ func main() {
 	coinObjId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 
 	builder := sdk.TransactionBuilderInit(sender, client)
-	builder.SplitCoins(coinObjId, []uint64{1000, 2000, 3000}, []string{"coin1", "coin2", "coin3"})
+	builder.SplitCoins(
+		sdk.PtbArgumentObjectId(coinObjId),
+		[]*sdk.PtbArgument{
+			sdk.PtbArgumentU64(1000),
+			sdk.PtbArgumentU64(2000),
+			sdk.PtbArgumentU64(3000),
+		},
+		[]string{"coin1", "coin2", "coin3"},
+	)
 	builder.TransferObjects(
 		sender,
 		[]*sdk.PtbArgument{sdk.PtbArgumentRes("coin1"), sdk.PtbArgumentRes("coin2"), sdk.PtbArgumentRes("coin3")},

@@ -42,6 +42,24 @@ pub enum InputKind {
     Input(iota_types::Input),
 }
 
+impl InputKind {
+    pub fn object_id(&self) -> Option<ObjectId> {
+        if let Self::ImmutableOrOwned(object_id)
+        | Self::Receiving(object_id)
+        | Self::Shared { object_id, .. }
+        | Self::Input(
+            iota_types::Input::ImmutableOrOwned(ObjectReference { object_id, .. })
+            | iota_types::Input::Receiving(ObjectReference { object_id, .. })
+            | iota_types::Input::Shared { object_id, .. },
+        ) = self
+        {
+            Some(*object_id)
+        } else {
+            None
+        }
+    }
+}
+
 #[derive(Debug, Clone, derive_more::From)]
 pub enum Command {
     MoveCall(MoveCall),
