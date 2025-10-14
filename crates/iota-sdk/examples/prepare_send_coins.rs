@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(from_address).with_client(client.clone());
 
     builder
-        .send_coins([coin], to_address, 50000000000)
+        .send_coins([coin], to_address, 50000000000u64)
         .gas(gas_coin)
         .gas_budget(1000000000);
 

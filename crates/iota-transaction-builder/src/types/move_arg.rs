@@ -31,12 +31,6 @@ impl MoveArg for Digest {
     }
 }
 
-impl MoveArg for () {
-    fn pure_bytes(self) -> PureBytes {
-        Default::default()
-    }
-}
-
 impl MoveArg for &str {
     fn pure_bytes(self) -> PureBytes {
         PureBytes(bcs::to_bytes(&self).expect("bcs serialization failed"))
@@ -55,17 +49,17 @@ impl MoveArg for String {
     }
 }
 
+impl<T: MoveArgCollection> MoveArg for T {
+    fn pure_bytes(self) -> PureBytes {
+        self.collection_bytes()
+    }
+}
+
 /// A trait which defines how collections of move arg types are serialized for
 /// move calls.
 pub trait MoveArgCollection {
     /// Get the pure BCS bytes.
     fn collection_bytes(self) -> PureBytes;
-}
-
-impl<T: MoveArg> MoveArgCollection for T {
-    fn collection_bytes(self) -> PureBytes {
-        self.pure_bytes()
-    }
 }
 
 impl<const N: usize, T: MoveArg> MoveArgCollection for [T; N] {
@@ -74,6 +68,20 @@ impl<const N: usize, T: MoveArg> MoveArgCollection for [T; N] {
             u32_as_uleb128(self.len() as u32)
                 .into_iter()
                 .chain(self.into_iter().flat_map(|val| val.pure_bytes().0))
+                .collect(),
+        )
+    }
+}
+
+impl<T> MoveArgCollection for &[T]
+where
+    for<'a> &'a T: MoveArg,
+{
+    fn collection_bytes(self) -> PureBytes {
+        PureBytes(
+            u32_as_uleb128(self.len() as u32)
+                .into_iter()
+                .chain(self.iter().flat_map(|val| val.pure_bytes().0))
                 .collect(),
         )
     }
