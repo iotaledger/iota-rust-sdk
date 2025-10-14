@@ -21,8 +21,12 @@ fun main() = runBlocking {
         val builder = TransactionBuilder.init(sender, client)
 
         builder.splitCoins(
-                        coinId,
-                        listOf(1000uL, 2000uL, 3000uL),
+                        PtbArgument.objectId(coinId),
+                        listOf(
+                                PtbArgument.u64(1000uL),
+                                PtbArgument.u64(2000uL),
+                                PtbArgument.u64(3000uL)
+                        ),
                         listOf("coin1", "coin2", "coin3")
                 )
                 .transferObjects(
