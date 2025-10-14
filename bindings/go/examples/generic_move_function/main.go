@@ -20,9 +20,6 @@ func main() {
 	addr1, _ := sdk.AddressFromHex("0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e")
 	addr2, _ := sdk.AddressFromHex("0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")
 
-	builder.MakeMoveVec([]*sdk.PtbArgument{sdk.PtbArgumentAddress(addr1), sdk.PtbArgumentAddress(addr2)}, sdk.TypeTagNewAddress(), "addresses")
-	builder.MakeMoveVec([]*sdk.PtbArgument{sdk.PtbArgumentU64(10_000_000), sdk.PtbArgumentU64(20_000_000)}, sdk.TypeTagNewU64(), "amounts")
-
 	package_id, _ := sdk.AddressFromHex("0x2")
 	module_name, _ := sdk.NewIdentifier("vec_map")
 	function_name, _ := sdk.NewIdentifier("from_keys_values")
@@ -31,7 +28,10 @@ func main() {
 		package_id,
 		module_name,
 		function_name,
-		[]*sdk.PtbArgument{sdk.PtbArgumentRes("addresses"), sdk.PtbArgumentRes("amounts")},
+		[]*sdk.PtbArgument{
+			sdk.PtbArgumentAddressVec([]*sdk.Address{addr1, addr2}),
+			sdk.PtbArgumentU64Vec([]uint64{10_000_000, 20_000_000}),
+		},
 		[]*sdk.TypeTag{sdk.TypeTagNewAddress(), sdk.TypeTagNewU64()},
 		nil,
 	)
