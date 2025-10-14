@@ -25,11 +25,11 @@ func main() {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	txnBytes, err := txn.AsV1().BcsSerialize()
+	txnBytes, err := txn.BcsSerialize()
 	if err != nil {
 		log.Fatalf("Failed to serialize transaction: %v", err)
 	}
-	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.AsV1().SigningDigest()))
+	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
 	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
 
 	skipChecks := bool(false)

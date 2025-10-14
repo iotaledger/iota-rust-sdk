@@ -45,6 +45,34 @@ impl Transaction {
             TransactionInner::Version1(tx) => tx.clone(),
         }
     }
+
+    pub fn kind(&self) -> TransactionKind {
+        self.as_v1().kind()
+    }
+
+    pub fn sender(&self) -> Address {
+        self.as_v1().sender()
+    }
+
+    pub fn gas_payment(&self) -> GasPayment {
+        self.as_v1().gas_payment()
+    }
+
+    pub fn expiration(&self) -> TransactionExpiration {
+        self.as_v1().expiration()
+    }
+
+    pub fn digest(&self) -> Digest {
+        self.as_v1().digest()
+    }
+
+    pub fn signing_digest(&self) -> Vec<u8> {
+        self.as_v1().signing_digest()
+    }
+
+    pub fn bcs_serialize(&self) -> Result<Vec<u8>> {
+        self.as_v1().bcs_serialize()
+    }
 }
 
 impl From<iota_types::Transaction> for Transaction {

@@ -2390,6 +2390,24 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3112,6 +3130,20 @@ fun uniffi_iota_sdk_ffi_checksum_method_systempackage_modules(
 fun uniffi_iota_sdk_ffi_checksum_method_systempackage_version(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_expiration(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_gas_payment(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_kind(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_sender(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run(
 ): Short
@@ -5410,6 +5442,20 @@ fun uniffi_iota_sdk_ffi_fn_free_transaction(`ptr`: Pointer,uniffi_out_err: Uniff
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_transaction_as_v1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transaction_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transaction_expiration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transaction_gas_payment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transaction_kind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transaction_sender(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6990,6 +7036,27 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1() != 53004.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize() != 39185.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest() != 52429.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_expiration() != 47752.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_gas_payment() != 5316.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_kind() != 49492.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender() != 38190.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest() != 36608.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138.toShort()) {
@@ -37615,6 +37682,20 @@ public interface TransactionInterface {
     
     fun `asV1`(): TransactionV1
     
+    fun `bcsSerialize`(): kotlin.ByteArray
+    
+    fun `digest`(): Digest
+    
+    fun `expiration`(): TransactionExpiration
+    
+    fun `gasPayment`(): GasPayment
+    
+    fun `kind`(): TransactionKind
+    
+    fun `sender`(): Address
+    
+    fun `signingDigest`(): kotlin.ByteArray
+    
     companion object
 }
 
@@ -37705,6 +37786,91 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_as_v1(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    @Throws(SdkFfiException::class)override fun `bcsSerialize`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `digest`(): Digest {
+            return FfiConverterTypeDigest.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `expiration`(): TransactionExpiration {
+            return FfiConverterTypeTransactionExpiration.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_expiration(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `gasPayment`(): GasPayment {
+            return FfiConverterTypeGasPayment.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_gas_payment(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `kind`(): TransactionKind {
+            return FfiConverterTypeTransactionKind.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_kind(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `sender`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_sender(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `signingDigest`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(
         it, _status)
 }
     }

@@ -13,7 +13,7 @@ async def main():
             TransactionsFilter(function="0x3::iota_system::request_add_stake"),
         )
         for transaction in transactions.data:
-            print("Digest:", transaction.transaction.as_v1().digest().to_base58())
+            print("Digest:", transaction.transaction.digest().to_base58())
     except Exception as e:
         print(f"Error: {e}")
 

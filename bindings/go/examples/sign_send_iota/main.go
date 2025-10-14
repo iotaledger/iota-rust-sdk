@@ -63,6 +63,6 @@ func main() {
 		log.Fatalf("Transaction execution failed")
 	}
 	log.Printf("Digest: %s", sdk.HexEncode((*effects).Digest().ToBytes()))
-	log.Printf("Transaction status: %v", (*effects).AsV1().Status)
+	log.Printf("Transaction status: %v", (*effects).Status)
 	log.Printf("Effects: %+v", (*effects).AsV1())
 }

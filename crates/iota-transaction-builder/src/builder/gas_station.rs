@@ -356,6 +356,7 @@ impl GasStationData {
         keypair: &SimpleKeypair,
     ) -> Result<Digest, Error> {
         let client = reqwest::Client::new();
+        let mut txn = txn.clone().as_v1();
         let reservation = self.reserve_gas(txn.gas_payment.budget, &client).await?;
         txn.gas_payment.owner = reservation.sponsor_address;
         txn.gas_payment.objects = reservation
@@ -373,10 +374,10 @@ impl GasStationData {
             .join(GasStationRequestKind::ExecuteTx.as_path())
             .map_err(Error::InvalidUrl)?;
 
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(txn).map_err(Error::Bcs)?);
+        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);
 
         let user_sig = keypair
-            .sign_transaction(txn)
+            .sign_transaction(&Transaction::V1(txn))
             .map_err(Error::Signature)?
             .to_base64();
 
