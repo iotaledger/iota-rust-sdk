@@ -92,7 +92,7 @@ macro_rules! named_address {
             #[uniffi::export]
             impl Address {$(
                 #[uniffi::constructor]
-                pub fn [< $constant:lower >]() -> Self {
+                pub const fn [< $constant:lower >]() -> Self {
                     Self(iota_types::Address::$constant)
                 }
             )+}
