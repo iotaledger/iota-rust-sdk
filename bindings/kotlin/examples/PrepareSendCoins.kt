@@ -20,18 +20,13 @@ fun main() = runBlocking {
         // This is a coin of type
         // 0x3358bea865960fea2a1c6844b6fc365f662463dd1821f619838eb2e606a53b6a::cert::CERT
         val coinId =
-                ObjectId.fromHex(
+                PtbArgument.objectIdFromHex(
                         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9"
-                )
-        val gasCoinId =
-                ObjectId.fromHex(
-                        "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
                 )
 
         val builder = TransactionBuilder.init(fromAddress, client)
 
-        builder.sendCoins(listOf(coinId), toAddress, 50000000000uL)
-        builder.gas(gasCoinId).gasBudget(1000000000uL)
+        builder.sendCoins(listOf(coinId), toAddress, PtbArgument.u64(50000000000uL))
 
         val txn = builder.finish()
 

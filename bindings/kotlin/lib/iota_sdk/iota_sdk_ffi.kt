@@ -2290,6 +2290,96 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3401,6 +3491,56 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_mergecoins_new(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_bool(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_bool_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_from_base58(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec_from_base58(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_option(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u16(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u16_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u256(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u256_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u32_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movecall_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new(
@@ -3447,35 +3587,73 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool_vec(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_from_base58(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec_from_base58(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_move_arg(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_from_hex(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut_from_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128_vec(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16_vec(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256_vec(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32_vec(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64_vec(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_vector(
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8_vec(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new(
 ): Short
@@ -4342,6 +4520,60 @@ fun uniffi_iota_sdk_ffi_fn_method_mergecoins_coin(`ptr`: Pointer,uniffi_out_err:
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_mergecoins_coins_to_merge(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_clone_movearg(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_movearg(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address(`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec_from_hex(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_bool(`value`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_bool_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_digest(`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_from_base58(`base58`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec(`digests`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec_from_base58(`digests`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_option(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_string(`string`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u128(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u128_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u16(`value`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u16_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u256(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u256_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u32(`value`: Int,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u32_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u64(`value`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u64_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u8(`value`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u8_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_movecall(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_movecall(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4672,35 +4904,73 @@ fun uniffi_iota_sdk_ffi_fn_free_ptbargument(`ptr`: Pointer,uniffi_out_err: Uniff
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address(`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec_from_hex(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool(`value`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(`digest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_from_base58(`base58`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_vec(`digests`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_vec_from_base58(`digests`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_move_arg(`arg`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_option(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string(`string`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16(`value`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32(`value`: Int,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64(`value`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8(`value`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_vector(`vec`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_passkeyauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6735,10 +7005,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor() != 41106.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 49808.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 64922.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 10444.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 15164.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281.toShort()) {
@@ -6747,13 +7017,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 15827.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 29895.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 16395.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 34656.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655.toShort()) {
@@ -7266,6 +7536,81 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_mergecoins_new() != 1506.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address() != 46522.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex() != 44452.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec() != 6097.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex() != 4963.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_bool() != 52909.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_bool_vec() != 25067.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest() != 60114.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_from_base58() != 42108.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec() != 42012.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec_from_base58() != 36057.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_option() != 48206.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string() != 18343.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec() != 22295.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128() != 8902.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128_vec() != 64018.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u16() != 62318.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u16_vec() != 29254.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u256() != 32008.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u256_vec() != 50179.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u32() != 16255.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u32_vec() != 41122.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64() != 7097.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64_vec() != 17684.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8() != 10135.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec() != 4587.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7335,16 +7680,52 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address() != 14619.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_from_hex() != 40759.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec() != 326.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex() != 60030.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool() != 51030.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool_vec() != 65126.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest() != 54344.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_from_base58() != 5017.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec() != 19113.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec_from_base58() != 59134.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas() != 10767.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_move_arg() != 26972.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id() != 41681.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex() != 47640.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option() != 37559.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving() != 50553.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex() != 48453.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661.toShort()) {
@@ -7353,31 +7734,52 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared() != 59619.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_from_hex() != 60985.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut() != 43242.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut_from_hex() != 52415.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string() != 60971.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 33699.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 47870.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128_vec() != 37355.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16() != 58656.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256() != 46000.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16_vec() != 10787.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256() != 19985.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256_vec() != 57693.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32() != 13754.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32_vec() != 50917.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64() != 6870.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64_vec() != 27400.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8() != 22414.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_vector() != 47179.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8_vec() != 51245.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new() != 30856.toShort()) {
@@ -22059,6 +22461,487 @@ public object FfiConverterTypeMergeCoins: FfiConverter<MergeCoins, Pointer> {
 //
 
 
+public interface MoveArgInterface {
+    
+    companion object
+}
+
+open class MoveArg: Disposable, AutoCloseable, MoveArgInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_movearg(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_movearg(pointer!!, status)
+        }
+    }
+
+    
+
+    
+    companion object {
+         fun `address`(`address`: Address): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_address(
+        FfiConverterTypeAddress.lower(`address`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `addressFromHex`(`hex`: kotlin.String): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+         fun `addressVec`(`addresses`: List<Address>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec(
+        FfiConverterSequenceTypeAddress.lower(`addresses`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `addressVecFromHex`(`addresses`: List<kotlin.String>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec_from_hex(
+        FfiConverterSequenceString.lower(`addresses`),_status)
+}
+    )
+    }
+    
+
+         fun `bool`(`value`: kotlin.Boolean): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_bool(
+        FfiConverterBoolean.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `boolVec`(`values`: List<kotlin.Boolean>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_bool_vec(
+        FfiConverterSequenceBoolean.lower(`values`),_status)
+}
+    )
+    }
+    
+
+         fun `digest`(`digest`: Digest): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest(
+        FfiConverterTypeDigest.lower(`digest`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `digestFromBase58`(`base58`: kotlin.String): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_from_base58(
+        FfiConverterString.lower(`base58`),_status)
+}
+    )
+    }
+    
+
+         fun `digestVec`(`digests`: List<Digest>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec(
+        FfiConverterSequenceTypeDigest.lower(`digests`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `digestVecFromBase58`(`digests`: List<kotlin.String>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec_from_base58(
+        FfiConverterSequenceString.lower(`digests`),_status)
+}
+    )
+    }
+    
+
+         fun `option`(`value`: MoveArg?): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_option(
+        FfiConverterOptionalTypeMoveArg.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `string`(`string`: kotlin.String): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_string(
+        FfiConverterString.lower(`string`),_status)
+}
+    )
+    }
+    
+
+         fun `stringVec`(`addresses`: List<kotlin.String>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec(
+        FfiConverterSequenceString.lower(`addresses`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `u128`(`value`: kotlin.String): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u128(
+        FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `u128Vec`(`values`: List<kotlin.String>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u128_vec(
+        FfiConverterSequenceString.lower(`values`),_status)
+}
+    )
+    }
+    
+
+         fun `u16`(`value`: kotlin.UShort): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u16(
+        FfiConverterUShort.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u16Vec`(`values`: List<kotlin.UShort>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u16_vec(
+        FfiConverterSequenceUShort.lower(`values`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `u256`(`value`: kotlin.String): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u256(
+        FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `u256Vec`(`values`: List<kotlin.String>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u256_vec(
+        FfiConverterSequenceString.lower(`values`),_status)
+}
+    )
+    }
+    
+
+         fun `u32`(`value`: kotlin.UInt): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u32(
+        FfiConverterUInt.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u32Vec`(`values`: List<kotlin.UInt>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u32_vec(
+        FfiConverterSequenceUInt.lower(`values`),_status)
+}
+    )
+    }
+    
+
+         fun `u64`(`value`: kotlin.ULong): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u64(
+        FfiConverterULong.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u64Vec`(`values`: List<kotlin.ULong>): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u64_vec(
+        FfiConverterSequenceULong.lower(`values`),_status)
+}
+    )
+    }
+    
+
+         fun `u8`(`value`: kotlin.UByte): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u8(
+        FfiConverterUByte.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u8Vec`(`values`: kotlin.ByteArray): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_u8_vec(
+        FfiConverterByteArray.lower(`values`),_status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveArg: FfiConverter<MoveArg, Pointer> {
+
+    override fun lower(value: MoveArg): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): MoveArg {
+        return MoveArg(value)
+    }
+
+    override fun read(buf: ByteBuffer): MoveArg {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: MoveArg) = 8UL
+
+    override fun write(value: MoveArg, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
 /**
  * Command to call a move function
  *
@@ -28381,11 +29264,95 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
+        
+    @Throws(SdkFfiException::class) fun `addressFromHex`(`hex`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_from_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+         fun `addressVec`(`addresses`: List<Address>): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec(
+        FfiConverterSequenceTypeAddress.lower(`addresses`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `addressVecFromHex`(`addresses`: List<kotlin.String>): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec_from_hex(
+        FfiConverterSequenceString.lower(`addresses`),_status)
+}
+    )
+    }
+    
+
+         fun `bool`(`value`: kotlin.Boolean): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool(
+        FfiConverterBoolean.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `boolVec`(`values`: List<kotlin.Boolean>): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool_vec(
+        FfiConverterSequenceBoolean.lower(`values`),_status)
+}
+    )
+    }
+    
+
          fun `digest`(`digest`: Digest): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest(
         FfiConverterTypeDigest.lower(`digest`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `digestFromBase58`(`base58`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_from_base58(
+        FfiConverterString.lower(`base58`),_status)
+}
+    )
+    }
+    
+
+         fun `digestVec`(`digests`: List<Digest>): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_vec(
+        FfiConverterSequenceTypeDigest.lower(`digests`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `digestVecFromBase58`(`digests`: List<kotlin.String>): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_vec_from_base58(
+        FfiConverterSequenceString.lower(`digests`),_status)
 }
     )
     }
@@ -28401,6 +29368,16 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
+         fun `moveArg`(`arg`: MoveArg): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_move_arg(
+        FfiConverterTypeMoveArg.lower(`arg`),_status)
+}
+    )
+    }
+    
+
          fun `objectId`(`id`: ObjectId): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
@@ -28411,11 +29388,43 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
+        
+    @Throws(SdkFfiException::class) fun `objectIdFromHex`(`hex`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+         fun `option`(`value`: MoveArg?): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_option(
+        FfiConverterOptionalTypeMoveArg.lower(`value`),_status)
+}
+    )
+    }
+    
+
          fun `receiving`(`id`: ObjectId): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(
         FfiConverterTypeObjectId.lower(`id`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `receivingFromHex`(`hex`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex(
+        FfiConverterString.lower(`hex`),_status)
 }
     )
     }
@@ -28441,11 +29450,33 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
+        
+    @Throws(SdkFfiException::class) fun `sharedFromHex`(`hex`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_from_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
          fun `sharedMut`(`id`: ObjectId): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut(
         FfiConverterTypeObjectId.lower(`id`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `sharedMutFromHex`(`hex`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut_from_hex(
+        FfiConverterString.lower(`hex`),_status)
 }
     )
     }
@@ -28461,11 +29492,23 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
-         fun `u128`(`value`: kotlin.String): PtbArgument {
+        
+    @Throws(SdkFfiException::class) fun `u128`(`value`: kotlin.String): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
-    uniffiRustCall() { _status ->
+    uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128(
         FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `u128Vec`(`values`: List<kotlin.String>): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128_vec(
+        FfiConverterSequenceString.lower(`values`),_status)
 }
     )
     }
@@ -28481,11 +29524,33 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
-         fun `u256`(`value`: kotlin.String): PtbArgument {
+         fun `u16Vec`(`values`: List<kotlin.UShort>): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16_vec(
+        FfiConverterSequenceUShort.lower(`values`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `u256`(`value`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256(
         FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `u256Vec`(`values`: List<kotlin.String>): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256_vec(
+        FfiConverterSequenceString.lower(`values`),_status)
 }
     )
     }
@@ -28501,11 +29566,31 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
+         fun `u32Vec`(`values`: List<kotlin.UInt>): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32_vec(
+        FfiConverterSequenceUInt.lower(`values`),_status)
+}
+    )
+    }
+    
+
          fun `u64`(`value`: kotlin.ULong): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64(
         FfiConverterULong.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u64Vec`(`values`: List<kotlin.ULong>): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64_vec(
+        FfiConverterSequenceULong.lower(`values`),_status)
 }
     )
     }
@@ -28521,11 +29606,11 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
-         fun `vector`(`vec`: List<kotlin.ByteArray>): PtbArgument {
+         fun `u8Vec`(`values`: kotlin.ByteArray): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_vector(
-        FfiConverterSequenceByteArray.lower(`vec`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8_vec(
+        FfiConverterByteArray.lower(`values`),_status)
 }
     )
     }
@@ -36838,12 +37923,12 @@ public interface TransactionBuilderInterface {
      * Make a move vector from a list of elements. The elements must all be of
      * the type indicated by `type_tag`.
      */
-    fun `makeMoveVec`(`elements`: List<PtbArgument>, `typeTag`: TypeTag, `name`: kotlin.String): TransactionBuilder
+    fun `makeMoveVec`(`elements`: List<MoveArg>, `typeTag`: TypeTag, `name`: kotlin.String): TransactionBuilder
     
     /**
      * Merge a list of coins into a single coin, without producing any result.
      */
-    fun `mergeCoins`(`coin`: ObjectId, `coinsToMerge`: List<ObjectId>): TransactionBuilder
+    fun `mergeCoins`(`coin`: PtbArgument, `coinsToMerge`: List<PtbArgument>): TransactionBuilder
     
     /**
      * Call a Move function with the given arguments.
@@ -36871,17 +37956,17 @@ public interface TransactionBuilderInterface {
      * Transfer some coins to a recipient address. If multiple coins are
      * provided then they will be merged.
      */
-    fun `sendCoins`(`coins`: List<ObjectId>, `recipient`: Address, `amount`: kotlin.ULong? = null): TransactionBuilder
+    fun `sendCoins`(`coins`: List<PtbArgument>, `recipient`: Address, `amount`: PtbArgument? = null): TransactionBuilder
     
     /**
      * Send IOTA to a recipient address.
      */
-    fun `sendIota`(`recipient`: Address, `amount`: kotlin.ULong? = null): TransactionBuilder
+    fun `sendIota`(`recipient`: Address, `amount`: PtbArgument? = null): TransactionBuilder
     
     /**
      * Split a coin by the provided amounts.
      */
-    fun `splitCoins`(`coin`: ObjectId, `amounts`: List<kotlin.ULong>, `names`: List<kotlin.String> = listOf()): TransactionBuilder
+    fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String> = listOf()): TransactionBuilder
     
     /**
      * Set the sponsor of the transaction.
@@ -37173,12 +38258,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     /**
      * Make a move vector from a list of elements. The elements must all be of
      * the type indicated by `type_tag`.
-     */override fun `makeMoveVec`(`elements`: List<PtbArgument>, `typeTag`: TypeTag, `name`: kotlin.String): TransactionBuilder {
+     */override fun `makeMoveVec`(`elements`: List<MoveArg>, `typeTag`: TypeTag, `name`: kotlin.String): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(
-        it, FfiConverterSequenceTypePTBArgument.lower(`elements`),FfiConverterTypeTypeTag.lower(`typeTag`),FfiConverterString.lower(`name`),_status)
+        it, FfiConverterSequenceTypeMoveArg.lower(`elements`),FfiConverterTypeTypeTag.lower(`typeTag`),FfiConverterString.lower(`name`),_status)
 }
     }
     )
@@ -37188,12 +38273,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     /**
      * Merge a list of coins into a single coin, without producing any result.
-     */override fun `mergeCoins`(`coin`: ObjectId, `coinsToMerge`: List<ObjectId>): TransactionBuilder {
+     */override fun `mergeCoins`(`coin`: PtbArgument, `coinsToMerge`: List<PtbArgument>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
-        it, FfiConverterTypeObjectId.lower(`coin`),FfiConverterSequenceTypeObjectId.lower(`coinsToMerge`),_status)
+        it, FfiConverterTypePTBArgument.lower(`coin`),FfiConverterSequenceTypePTBArgument.lower(`coinsToMerge`),_status)
 }
     }
     )
@@ -37246,12 +38331,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     /**
      * Transfer some coins to a recipient address. If multiple coins are
      * provided then they will be merged.
-     */override fun `sendCoins`(`coins`: List<ObjectId>, `recipient`: Address, `amount`: kotlin.ULong?): TransactionBuilder {
+     */override fun `sendCoins`(`coins`: List<PtbArgument>, `recipient`: Address, `amount`: PtbArgument?): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(
-        it, FfiConverterSequenceTypeObjectId.lower(`coins`),FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalULong.lower(`amount`),_status)
+        it, FfiConverterSequenceTypePTBArgument.lower(`coins`),FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalTypePTBArgument.lower(`amount`),_status)
 }
     }
     )
@@ -37261,12 +38346,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     /**
      * Send IOTA to a recipient address.
-     */override fun `sendIota`(`recipient`: Address, `amount`: kotlin.ULong?): TransactionBuilder {
+     */override fun `sendIota`(`recipient`: Address, `amount`: PtbArgument?): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
-        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalULong.lower(`amount`),_status)
+        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalTypePTBArgument.lower(`amount`),_status)
 }
     }
     )
@@ -37276,12 +38361,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     /**
      * Split a coin by the provided amounts.
-     */override fun `splitCoins`(`coin`: ObjectId, `amounts`: List<kotlin.ULong>, `names`: List<kotlin.String>): TransactionBuilder {
+     */override fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
-        it, FfiConverterTypeObjectId.lower(`coin`),FfiConverterSequenceULong.lower(`amounts`),FfiConverterSequenceString.lower(`names`),_status)
+        it, FfiConverterTypePTBArgument.lower(`coin`),FfiConverterSequenceTypePTBArgument.lower(`amounts`),FfiConverterSequenceString.lower(`names`),_status)
 }
     }
     )
@@ -51695,6 +52780,38 @@ public object FfiConverterOptionalTypeEd25519Signature: FfiConverterRustBuffer<E
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeMoveArg: FfiConverterRustBuffer<MoveArg?> {
+    override fun read(buf: ByteBuffer): MoveArg? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMoveArg.read(buf)
+    }
+
+    override fun allocationSize(value: MoveArg?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMoveArg.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MoveArg?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMoveArg.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeMoveFunction: FfiConverterRustBuffer<MoveFunction?> {
     override fun read(buf: ByteBuffer): MoveFunction? {
         if (buf.get().toInt() == 0) {
@@ -51877,6 +52994,38 @@ public object FfiConverterOptionalTypeObjectId: FfiConverterRustBuffer<ObjectId?
         } else {
             buf.put(1)
             FfiConverterTypeObjectId.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypePTBArgument: FfiConverterRustBuffer<PtbArgument?> {
+    override fun read(buf: ByteBuffer): PtbArgument? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypePTBArgument.read(buf)
+    }
+
+    override fun allocationSize(value: PtbArgument?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypePTBArgument.allocationSize(value)
+        }
+    }
+
+    override fun write(value: PtbArgument?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypePTBArgument.write(value, buf)
         }
     }
 }
@@ -53551,6 +54700,62 @@ public object FfiConverterOptionalTypeValue: FfiConverterRustBuffer<Value?> {
 /**
  * @suppress
  */
+public object FfiConverterSequenceUShort: FfiConverterRustBuffer<List<kotlin.UShort>> {
+    override fun read(buf: ByteBuffer): List<kotlin.UShort> {
+        val len = buf.getInt()
+        return List<kotlin.UShort>(len) {
+            FfiConverterUShort.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<kotlin.UShort>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterUShort.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<kotlin.UShort>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterUShort.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceUInt: FfiConverterRustBuffer<List<kotlin.UInt>> {
+    override fun read(buf: ByteBuffer): List<kotlin.UInt> {
+        val len = buf.getInt()
+        return List<kotlin.UInt>(len) {
+            FfiConverterUInt.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<kotlin.UInt>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterUInt.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<kotlin.UInt>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterUInt.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceInt: FfiConverterRustBuffer<List<kotlin.Int>> {
     override fun read(buf: ByteBuffer): List<kotlin.Int> {
         val len = buf.getInt()
@@ -53597,6 +54802,34 @@ public object FfiConverterSequenceULong: FfiConverterRustBuffer<List<kotlin.ULon
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterULong.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceBoolean: FfiConverterRustBuffer<List<kotlin.Boolean>> {
+    override fun read(buf: ByteBuffer): List<kotlin.Boolean> {
+        val len = buf.getInt()
+        return List<kotlin.Boolean>(len) {
+            FfiConverterBoolean.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<kotlin.Boolean>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterBoolean.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<kotlin.Boolean>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterBoolean.write(it, buf)
         }
     }
 }
@@ -54017,6 +55250,34 @@ public object FfiConverterSequenceTypeInput: FfiConverterRustBuffer<List<Input>>
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeInput.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveArg: FfiConverterRustBuffer<List<MoveArg>> {
+    override fun read(buf: ByteBuffer): List<MoveArg> {
+        val len = buf.getInt()
+        return List<MoveArg>(len) {
+            FfiConverterTypeMoveArg.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveArg>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveArg.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveArg>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveArg.write(it, buf)
         }
     }
 }

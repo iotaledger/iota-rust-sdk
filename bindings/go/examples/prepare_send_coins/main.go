@@ -17,13 +17,11 @@ func main() {
 
 	// This is a coin of type
 	// 0x3358bea865960fea2a1c6844b6fc365f662463dd1821f619838eb2e606a53b6a::cert::CERT
-	coinObjId, _ := sdk.ObjectIdFromHex("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")
-	amount := uint64(50000000000)
-	gasCoinObjId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
+	coinObjId, _ := sdk.PtbArgumentObjectIdFromHex("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")
+	amount := sdk.PtbArgumentU64(50000000000)
 
 	builder := sdk.TransactionBuilderInit(fromAddress, client)
-	builder.SendCoins([]*sdk.ObjectId{coinObjId}, toAddress, &amount)
-	builder.Gas(gasCoinObjId).GasBudget(1000000000)
+	builder.SendCoins([]*sdk.PtbArgument{coinObjId}, toAddress, &amount)
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {

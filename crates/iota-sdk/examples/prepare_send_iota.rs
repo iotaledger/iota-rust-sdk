@@ -20,7 +20,7 @@ async fn main() -> Result<()> {
 
     let mut builder = TransactionBuilder::new(from_address).with_client(client.clone());
 
-    builder.send_iota(to_address, 5000000000);
+    builder.send_iota(to_address, 5000000000u64);
 
     let txn = builder.finish().await?;
 

@@ -28,15 +28,15 @@ func main() {
 	builder := sdk.TransactionBuilderInit(sender, client)
 
 	// Prepare amounts and labels
-	var amounts []uint64
+	var amounts []*sdk.PtbArgument
 	var labels []string
 	for idx, r := range recipients {
 		labels = append(labels, fmt.Sprintf("coin%v", idx))
-		amounts = append(amounts, r.amount)
+		amounts = append(amounts, sdk.PtbArgumentU64(r.amount))
 	}
 
 	// Split a coin into multiple coins
-	builder.SplitCoins(coinId, amounts, labels)
+	builder.SplitCoins(sdk.PtbArgumentObjectId(coinId), amounts, labels)
 
 	for idx, r := range recipients {
 		recipient, _ := sdk.AddressFromHex(r.address)
