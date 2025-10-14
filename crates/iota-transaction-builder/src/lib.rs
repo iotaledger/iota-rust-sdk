@@ -27,7 +27,8 @@
 //! use iota_transaction_builder::TransactionBuilder;
 //! use iota_types::{Address, ObjectId, Transaction};
 //!
-//! # tokio::runtime::Runtime::new().unwrap().block_on(async {
+//! # #[tokio::main(flavor = "current_thread")]
+//! # async fn main() -> eyre::Result<()> {
 //!
 //! let sender =
 //!     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
@@ -42,8 +43,8 @@
 //! builder.send_coins([coin], to_address, 50000000000u64);
 //!
 //! let txn: Transaction = builder.finish().await?;
-//! # Result::<_, eyre::Error>::Ok(())
-//! # });
+//! # Ok(())
+//! # }
 //! ```
 //!
 //! ### Example without Client Resolution

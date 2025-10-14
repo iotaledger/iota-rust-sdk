@@ -372,7 +372,8 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
     /// # use iota_transaction_builder::{TransactionBuilder, res};
     ///
-    /// # tokio::runtime::Runtime::new().unwrap().block_on(async {
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
     ///
     /// let client = iota_graphql_client::Client::new_devnet();
     /// let sender =
@@ -410,8 +411,8 @@ impl<C, L> TransactionBuilder<C, L> {
     /// );
     ///
     /// let txn: Transaction = builder.finish().await?;
-    /// # Result::<_, eyre::Error>::Ok(())
-    /// # });
+    /// # Ok(())
+    /// # }
     /// ```
     pub fn transfer_objects<U: PTBArgumentList>(
         &mut self,
@@ -652,7 +653,8 @@ impl<L> TransactionBuilder<Client, L> {
     /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
     /// # use iota_transaction_builder::{TransactionBuilder, res, unresolved};
     ///
-    /// # tokio::runtime::Runtime::new().unwrap().block_on(async {
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
     /// let client = iota_graphql_client::Client::new_devnet();
     /// let sender =
     ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
@@ -667,8 +669,8 @@ impl<L> TransactionBuilder<Client, L> {
     ///     .gas(gas_coin);
     ///
     /// let txn: Transaction = builder.finish().await?;
-    /// # Result::<_, eyre::Error>::Ok(())
-    /// # });
+    /// # Ok(())
+    /// # }
     /// ```
     pub fn gas(&mut self, object_id: ObjectId) -> &mut Self {
         self.set_input(InputKind::ImmutableOrOwned(object_id), true);
