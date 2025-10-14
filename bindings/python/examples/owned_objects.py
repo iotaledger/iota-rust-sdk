@@ -8,7 +8,7 @@ import asyncio
 
 async def main():
     client = GraphQlClient.new_devnet()
-    address = Address.from_hex("0x0")
+    address = Address.zero()
     objects_page = await client.objects(ObjectFilter(owner=address))
     print(f"Owned objects({len(objects_page.data)}):")
     for obj in objects_page.data:

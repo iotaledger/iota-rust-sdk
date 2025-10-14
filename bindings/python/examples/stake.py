@@ -28,11 +28,11 @@ async def main():
         builder = await TransactionBuilder.init(my_address, client)
 
         builder.move_call(
-            Address.from_hex("0x3"),
+            Address.system(),
             Identifier("iota_system"),
             Identifier("request_add_stake"),
             [
-                PtbArgument.shared_mut(ObjectId.from_hex("0x5")),
+                PtbArgument.shared_mut(ObjectId.system()),
                 PtbArgument.object_id(coin_id),
                 PtbArgument.address(validator.address),
             ],
