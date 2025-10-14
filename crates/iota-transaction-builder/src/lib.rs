@@ -25,7 +25,7 @@
 //! # use std::str::FromStr;
 //! use iota_graphql_client::Client;
 //! use iota_transaction_builder::TransactionBuilder;
-//! use iota_types::{Address, Transaction, ObjectId};
+//! use iota_types::{Address, ObjectId, Transaction};
 //!
 //! # tokio::runtime::Runtime::new().unwrap().block_on(async {
 //!
@@ -43,7 +43,7 @@
 //!
 //! let txn: Transaction = builder.finish().await?;
 //! # Result::<_, eyre::Error>::Ok(())
-//! });
+//! # });
 //! ```
 //!
 //! ### Example without Client Resolution
