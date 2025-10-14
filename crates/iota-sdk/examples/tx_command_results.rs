@@ -29,12 +29,12 @@ async fn main() -> Result<()> {
 
     builder
         // Use the named results of previous commands to use as arguments
-        .split_coins(Argument::Gas, vec![res("res0"), res("res1")])
+        .split_coins(Argument::Gas, [res("res0"), res("res1")])
         // For nested results, a tuple or vec can be used to name them
         .name(vec!["coin0", "coin1"]);
 
     // Use named results as arguments
-    builder.transfer_objects(sender_address, vec![res("coin0"), res("coin1")]);
+    builder.transfer_objects(sender_address, [res("coin0"), res("coin1")]);
 
     let tx = builder.to_owned().finish().await?;
 
