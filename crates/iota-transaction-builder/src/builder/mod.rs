@@ -4,7 +4,7 @@
 //! Builder for Programmable Transactions.
 
 use std::{
-    collections::{BTreeMap, HashMap},
+    collections::{BTreeMap, HashMap, HashSet},
     marker::PhantomData,
     time::Duration,
 };
@@ -26,7 +26,7 @@ use crate::{
     builder::{
         gas_station::GasStationData,
         named_results::{NamedResult, NamedResults},
-        ptb_arguments::PTBArguments,
+        ptb_arguments::PTBArgumentList,
     },
     error::Error,
     publish_type::PublishType,
@@ -219,7 +219,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Apply the given parameters and return the generated arguments
-    pub fn apply_arguments<P: PTBArguments>(&mut self, param: P) -> Vec<Argument> {
+    pub fn apply_arguments<P: PTBArgumentList>(&mut self, param: P) -> Vec<Argument> {
         param.args(&mut self.data)
     }
 
@@ -310,14 +310,14 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Send IOTA to a recipient address.
-    pub fn send_iota(
+    pub fn send_iota<T: PTBArgument>(
         &mut self,
         recipient: Address,
-        amount: impl Into<Option<u64>>,
+        amount: impl Into<Option<T>>,
     ) -> &mut TransactionBuilder<C> {
         let rec_arg = self.pure(recipient);
         let coin_arg = if let Some(amount) = amount.into() {
-            let amt_arg = self.pure(amount);
+            let amt_arg = self.apply_argument(amount);
             self.command(Command::SplitCoins(SplitCoins {
                 coin: Argument::Gas,
                 amounts: vec![amt_arg],
@@ -361,6 +361,127 @@ impl<C, L> TransactionBuilder<C, L> {
             dependencies: module.dependencies,
         })
     }
+
+    /// Transfer objects to a recipient address.
+    pub fn transfer_objects<U: PTBArgumentList>(
+        &mut self,
+        recipient: Address,
+        objects: U,
+    ) -> &mut TransactionBuilder<C> {
+        let objects = self.apply_arguments(objects);
+        let cmd = Command::TransferObjects(TransferObjects {
+            objects,
+            address: self.pure(recipient),
+        });
+        self.command(cmd);
+        self.reset()
+    }
+
+    /// Transfer some coins to a recipient address. If multiple coins are
+    /// provided then they will be merged.
+    pub fn send_coins<T: PTBArgumentList, U: PTBArgument>(
+        &mut self,
+        coins: T,
+        recipient: Address,
+        amount: impl Into<Option<U>>,
+    ) -> &mut TransactionBuilder<C> {
+        let mut coin_args = self.apply_arguments(coins);
+        let coin_arg = if coin_args.is_empty() {
+            return self.reset();
+        } else if let [coin] = coin_args[..] {
+            if let Some(amount) = amount.into() {
+                let amt_arg = self.apply_argument(amount);
+                self.command(Command::SplitCoins(SplitCoins {
+                    coin,
+                    amounts: vec![amt_arg],
+                }))
+            } else {
+                coin
+            }
+        } else {
+            let primary_coin = coin_args.pop().unwrap();
+            let coin_arg = self.command(Command::MergeCoins(MergeCoins {
+                coin: primary_coin,
+                coins_to_merge: coin_args,
+            }));
+            if let Some(amount) = amount.into() {
+                let amt_arg = self.apply_argument(amount);
+                self.command(Command::SplitCoins(SplitCoins {
+                    coin: coin_arg,
+                    amounts: vec![amt_arg],
+                }))
+            } else {
+                coin_arg
+            }
+        };
+        let rec_arg = self.pure(recipient);
+        self.command(Command::TransferObjects(TransferObjects {
+            objects: vec![coin_arg],
+            address: rec_arg,
+        }));
+        self.reset()
+    }
+
+    /// Merge multiple coins into one.
+    pub fn merge_coins<T: PTBArgument, U: PTBArgumentList>(
+        &mut self,
+        primary_coin: T,
+        consumed_coins: U,
+    ) -> &mut TransactionBuilder<C> {
+        let coin = self.apply_argument(primary_coin);
+        let coins_to_merge = self.apply_arguments(consumed_coins);
+        self.command(Command::MergeCoins(MergeCoins {
+            coin,
+            coins_to_merge,
+        }));
+        self.reset()
+    }
+
+    /// Split a coin into many.
+    pub fn split_coins<T: PTBArgument, U: PTBArgumentList>(
+        &mut self,
+        coin: T,
+        split_amounts: U,
+    ) -> &mut TransactionBuilder<C, SplitCoins> {
+        let coin = self.apply_argument(coin);
+        let amounts = self.apply_arguments(split_amounts);
+        self.cmd_state_change(SplitCoins { coin, amounts })
+    }
+
+    /// Upgrade a move package.
+    pub fn upgrade<U: PTBArgument>(
+        &mut self,
+        package_id: ObjectId,
+        upgrade_cap: U,
+        kind: impl Into<PublishType>,
+    ) -> &mut TransactionBuilder<C, Upgrade> {
+        let module = match kind.into() {
+            PublishType::Path(_path) => todo!("load the package from the path"),
+            PublishType::Compiled(m) => m,
+        };
+        let ticket = self.apply_argument(upgrade_cap);
+        self.cmd_state_change(Upgrade {
+            modules: module.modules,
+            dependencies: module.dependencies,
+            package: package_id,
+            ticket,
+        })
+    }
+
+    /// Make a move vector from a list of elements.
+    pub fn make_move_vec<T: PTBArgument + MoveType>(
+        &mut self,
+        elements: impl IntoIterator<Item = T>,
+    ) -> &mut TransactionBuilder<C, MakeMoveVector> {
+        let elements = elements
+            .into_iter()
+            .map(|e| self.apply_argument(e))
+            .collect();
+        self.cmd_state_change(MakeMoveVector {
+            type_: Some(T::type_tag()),
+            elements,
+        })
+    }
 }
 
 impl<L> TransactionBuilder<(), L> {
@@ -379,143 +500,6 @@ impl<L> TransactionBuilder<(), L> {
             self.gas(obj_ref);
         }
         self
-    }
-
-    /// Transfer some coins to a recipient address. If multiple coins are
-    /// provided then they will be merged.
-    pub fn send_coins(
-        &mut self,
-        coins: impl IntoIterator<Item = ObjectReference>,
-        recipient: Address,
-        amount: impl Into<Option<u64>>,
-    ) -> &mut TransactionBuilder {
-        let mut coins = coins.into_iter().collect::<Vec<_>>();
-        let coin_arg = if coins.is_empty() {
-            return self.reset();
-        } else if coins.len() == 1 {
-            let coin = self.set_input(
-                InputKind::Input(iota_types::Input::ImmutableOrOwned(coins.pop().unwrap())),
-                false,
-            );
-            if let Some(amount) = amount.into() {
-                let amt_arg = self.pure(amount);
-                self.command(Command::SplitCoins(SplitCoins {
-                    coin,
-                    amounts: vec![amt_arg],
-                }))
-            } else {
-                coin
-            }
-        } else {
-            let primary_coin = self.set_input(
-                InputKind::Input(iota_types::Input::ImmutableOrOwned(coins.pop().unwrap())),
-                false,
-            );
-            let coins_to_merge = coins
-                .into_iter()
-                .map(|coin| {
-                    self.set_input(
-                        InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
-                        false,
-                    )
-                })
-                .collect();
-            let coin_arg = self.command(Command::MergeCoins(MergeCoins {
-                coin: primary_coin,
-                coins_to_merge,
-            }));
-            if let Some(amount) = amount.into() {
-                let amt_arg = self.pure(amount);
-                self.command(Command::SplitCoins(SplitCoins {
-                    coin: coin_arg,
-                    amounts: vec![amt_arg],
-                }))
-            } else {
-                coin_arg
-            }
-        };
-        let rec_arg = self.pure(recipient);
-        self.command(Command::TransferObjects(TransferObjects {
-            objects: vec![coin_arg],
-            address: rec_arg,
-        }));
-        self.reset()
-    }
-
-    /// Merge multiple coins into one.
-    pub fn merge_coins(
-        &mut self,
-        primary_coin: ObjectReference,
-        consumed_coins: impl IntoIterator<Item = ObjectReference>,
-    ) -> &mut TransactionBuilder {
-        let primary_coin = self.set_input(
-            InputKind::Input(iota_types::Input::ImmutableOrOwned(primary_coin)),
-            false,
-        );
-        let mut consumed = Vec::new();
-        for coin in consumed_coins {
-            consumed.push(self.set_input(
-                InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
-                false,
-            ));
-        }
-        self.command(Command::MergeCoins(MergeCoins {
-            coin: primary_coin,
-            coins_to_merge: consumed,
-        }));
-        self.reset()
-    }
-
-    /// Split a coin into many.
-    pub fn split_coins(
-        &mut self,
-        coin: ObjectReference,
-        split_amounts: impl IntoIterator<Item = u64>,
-    ) -> &mut TransactionBuilder<(), SplitCoins> {
-        let coin = self.set_input(
-            InputKind::Input(iota_types::Input::ImmutableOrOwned(coin)),
-            false,
-        );
-        let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
-        self.cmd_state_change(SplitCoins {
-            coin,
-            amounts: split_amounts,
-        })
-    }
-
-    /// Transfer objects to a recipient address.
-    pub fn transfer_objects(
-        &mut self,
-        recipient: Address,
-        objects: impl IntoIterator<Item = ObjectReference>,
-    ) -> &mut TransactionBuilder {
-        let objects = objects
-            .into_iter()
-            .map(|o| {
-                self.set_input(
-                    InputKind::Input(iota_types::Input::ImmutableOrOwned(o)),
-                    false,
-                )
-            })
-            .collect();
-        let cmd = Command::TransferObjects(TransferObjects {
-            objects,
-            address: self.pure(recipient),
-        });
-        self.command(cmd);
-        self.reset()
-    }
-
-    /// Make a move vector from a list of elements.
-    pub fn make_move_vec(
-        &mut self,
-        elements: impl IntoIterator<Item = Argument>,
-        type_tag: impl Into<Option<TypeTag>>,
-    ) -> &mut TransactionBuilder<(), MakeMoveVector> {
-        self.cmd_state_change(MakeMoveVector {
-            type_: type_tag.into(),
-            elements: elements.into_iter().collect(),
-        })
     }
 
     /// Convert this builder into a transaction.
@@ -593,144 +577,33 @@ impl<L> TransactionBuilder<Client, L> {
         self
     }
 
-    /// Transfer some coins to a recipient address. If multiple coins are
-    /// provided then they will be merged.
-    pub fn send_coins(
-        &mut self,
-        coins: impl IntoIterator<Item = ObjectId>,
-        recipient: Address,
-        amount: impl Into<Option<u64>>,
-    ) -> &mut TransactionBuilder<Client> {
-        let mut coins = coins.into_iter().collect::<Vec<_>>();
-        let coin_arg = if coins.is_empty() {
-            return self.reset();
-        } else if coins.len() == 1 {
-            let coin = self.set_input(InputKind::ImmutableOrOwned(coins.pop().unwrap()), false);
-            if let Some(amount) = amount.into() {
-                let amt_arg = self.pure(amount);
-                self.command(Command::SplitCoins(SplitCoins {
-                    coin,
-                    amounts: vec![amt_arg],
-                }))
-            } else {
-                coin
-            }
-        } else {
-            let primary_coin =
-                self.set_input(InputKind::ImmutableOrOwned(coins.pop().unwrap()), false);
-            let coins_to_merge = coins
-                .into_iter()
-                .map(|coin| self.set_input(InputKind::ImmutableOrOwned(coin), false))
-                .collect();
-            let coin_arg = self.command(Command::MergeCoins(MergeCoins {
-                coin: primary_coin,
-                coins_to_merge,
-            }));
-            if let Some(amount) = amount.into() {
-                let amt_arg = self.pure(amount);
-                self.command(Command::SplitCoins(SplitCoins {
-                    coin: coin_arg,
-                    amounts: vec![amt_arg],
-                }))
-            } else {
-                coin_arg
-            }
-        };
-        let rec_arg = self.pure(recipient);
-        self.command(Command::TransferObjects(TransferObjects {
-            objects: vec![coin_arg],
-            address: rec_arg,
-        }));
-        self.reset()
-    }
-
-    /// Transfer objects to a recipient address.
-    pub fn transfer_objects<U: PTBArguments>(
-        &mut self,
-        recipient: Address,
-        objects: U,
-    ) -> &mut TransactionBuilder<Client> {
-        let objects = self.apply_arguments(objects);
-        let cmd = Command::TransferObjects(TransferObjects {
-            objects,
-            address: self.pure(recipient),
-        });
-        self.command(cmd);
-        self.reset()
-    }
-
-    /// Merge multiple coins into one.
-    pub fn merge_coins(
-        &mut self,
-        primary_coin: ObjectId,
-        consumed_coins: impl IntoIterator<Item = ObjectId>,
-    ) -> &mut TransactionBuilder<Client> {
-        let primary_coin = self.set_input(InputKind::ImmutableOrOwned(primary_coin), false);
-        let mut consumed = Vec::new();
-        for coin in consumed_coins {
-            consumed.push(self.set_input(InputKind::ImmutableOrOwned(coin), false));
-        }
-        self.command(Command::MergeCoins(MergeCoins {
-            coin: primary_coin,
-            coins_to_merge: consumed,
-        }));
-        self.reset()
-    }
-
-    /// Split a coin into many.
-    pub fn split_coins(
-        &mut self,
-        coin: ObjectId,
-        split_amounts: impl IntoIterator<Item = u64>,
-    ) -> &mut TransactionBuilder<Client, SplitCoins> {
-        let coin = self.set_input(InputKind::ImmutableOrOwned(coin), false);
-        let split_amounts = split_amounts.into_iter().map(|v| self.pure(v)).collect();
-        self.cmd_state_change(SplitCoins {
-            coin,
-            amounts: split_amounts,
-        })
-    }
-
-    /// Upgrade a move package.
-    pub fn upgrade<U: PTBArgument>(
-        &mut self,
-        package_id: ObjectId,
-        upgrade_cap: U,
-        kind: impl Into<PublishType>,
-    ) -> &mut TransactionBuilder<Client, Upgrade> {
-        let module = match kind.into() {
-            PublishType::Path(_path) => todo!("load the package from the path"),
-            PublishType::Compiled(m) => m,
-        };
-        let ticket = self.apply_argument(upgrade_cap);
-        self.cmd_state_change(Upgrade {
-            modules: module.modules,
-            dependencies: module.dependencies,
-            package: package_id,
-            ticket,
-        })
-    }
-
-    /// Make a move vector from a list of elements.
-    pub fn make_move_vec<U: PTBArguments + MoveType>(
-        &mut self,
-        elements: impl IntoIterator<Item = U>,
-    ) -> &mut TransactionBuilder<Client, MakeMoveVector> {
-        let mut args = Vec::new();
-        for e in elements {
-            args.extend(self.apply_arguments(e));
-        }
-        self.cmd_state_change(MakeMoveVector {
-            type_: Some(U::type_tag()),
-            elements: args,
-        })
-    }
-
     async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
+
         if default_gas && !self.data.inputs.values().any(|i| i.is_gas) {
+            // Some commands have arguments which cannot safely be replaced by
+            // `Argument::Gas`, so we need to find any instances of
+            // these and ensure that we don't use those coins
+            // as gas.
+            let mut unusable_object_ids = HashSet::new();
+            for cmd in &self.data.commands {
+                for arg in match cmd {
+                    Command::MoveCall(MoveCall { arguments, .. }) => arguments.as_slice(),
+                    Command::TransferObjects(TransferObjects { objects, .. }) => objects.as_slice(),
+                    Command::MergeCoins(MergeCoins { coins_to_merge, .. }) => {
+                        coins_to_merge.as_slice()
+                    }
+                    _ => &[],
+                } {
+                    if let Argument::Input(idx) = arg {
+                        if let Some(obj_id) = self.data.inputs[idx].object_id() {
+                            unusable_object_ids.insert(*obj_id);
+                        }
+                    }
+                }
+            }
             for coin in self
                 .client
                 .objects(
@@ -745,10 +618,12 @@ impl<L> TransactionBuilder<Client, L> {
                 .map_err(Error::Client)?
                 .data
             {
-                self.set_input(
-                    InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
-                    true,
-                );
+                if !unusable_object_ids.contains(&coin.object_id()) {
+                    self.set_input(
+                        InputKind::Input(iota_types::Input::ImmutableOrOwned(coin.object_ref())),
+                        true,
+                    );
+                }
             }
         }
         for (id, input) in std::mem::take(&mut self.data.inputs) {
@@ -1018,7 +893,7 @@ impl TransactionBuilder<(), MoveCall> {
 
 impl TransactionBuilder<Client, MoveCall> {
     /// Set the call params. Optional.
-    pub fn arguments<U: PTBArguments>(&mut self, params: U) -> &mut Self {
+    pub fn arguments<U: PTBArgumentList>(&mut self, params: U) -> &mut Self {
         let args = self.apply_arguments(params);
         let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
             unreachable!();
@@ -1066,7 +941,7 @@ impl TransactionBuilder<Client, Publish> {
     pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder<Client> {
         let cap = self.arg();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
-            .arguments(cap)
+            .arguments([cap])
             .name(name)
             .reset()
     }

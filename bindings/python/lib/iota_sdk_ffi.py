@@ -1199,19 +1199,19 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_station_sponsor() != 41106:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 49808:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 64922:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 10444:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 15164:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 15827:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 29895:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 16395:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 34656:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1561,6 +1561,56 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_mergecoins_new() != 1506:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address() != 46522:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex() != 44452:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec() != 6097:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex() != 4963:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_bool() != 52909:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_bool_vec() != 25067:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest() != 60114:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_from_base58() != 42108:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec() != 42012:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec_from_base58() != 36057:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_option() != 48206:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string() != 18343:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec() != 22295:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128() != 8902:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128_vec() != 64018:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u16() != 62318:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u16_vec() != 29254:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u256() != 32008:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u256_vec() != 50179:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u32() != 16255:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u32_vec() != 41122:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64() != 7097:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64_vec() != 17684:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8() != 10135:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec() != 4587:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 17506:
@@ -1613,35 +1663,73 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address() != 14619:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_from_hex() != 40759:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec() != 326:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex() != 60030:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool() != 51030:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool_vec() != 65126:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest() != 54344:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_from_base58() != 5017:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec() != 19113:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec_from_base58() != 59134:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas() != 10767:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_move_arg() != 26972:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id() != 41681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex() != 47640:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option() != 37559:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving() != 50553:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex() != 48453:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared() != 59619:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_from_hex() != 60985:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut() != 43242:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut_from_hex() != 52415:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string() != 60971:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 33699:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128() != 47870:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128_vec() != 37355:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16() != 58656:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256() != 46000:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16_vec() != 10787:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256() != 19985:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256_vec() != 57693:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32() != 13754:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32_vec() != 50917:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64() != 6870:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64_vec() != 27400:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8() != 22414:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_vector() != 47179:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8_vec() != 51245:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new() != 30856:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3592,6 +3680,141 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_coins_to_merge.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_coins_to_merge.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movearg.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movearg.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movearg.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movearg.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec_from_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_bool.argtypes = (
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_bool.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_bool_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_bool_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_from_base58.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_from_base58.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec_from_base58.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec_from_base58.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_option.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_option.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u128.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u128.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u128_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u128_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u16.argtypes = (
+    ctypes.c_uint16,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u16.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u16_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u16_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u256.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u256.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u256_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u256_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u32.argtypes = (
+    ctypes.c_uint32,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u32.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u32_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u32_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u64.argtypes = (
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u64.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u64_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u64_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u8.argtypes = (
+    ctypes.c_uint8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u8.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u8_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u8_vec.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movecall.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4456,25 +4679,85 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_from_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec_from_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool.argtypes = (
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool_vec.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_from_base58.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_from_base58.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_vec_from_base58.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_vec_from_base58.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_move_arg.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_move_arg.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_option.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_option.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4485,11 +4768,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_from_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_from_hex.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut_from_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut_from_hex.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_string.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4500,36 +4793,61 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128_vec.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16.argtypes = (
     ctypes.c_uint16,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16_vec.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256_vec.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32.argtypes = (
     ctypes.c_uint32,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32_vec.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64.argtypes = (
     ctypes.c_uint64,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64_vec.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8.argtypes = (
     ctypes.c_uint8,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_vector.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8_vec.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_vector.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8_vec.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_passkeyauthenticator.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8517,6 +8835,81 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_mergecoins_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_mergecoins_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_bool.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_bool.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_bool_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_bool_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_from_base58.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_from_base58.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec_from_base58.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_digest_vec_from_base58.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_option.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_option.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_string_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u128_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u16.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u16.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u16_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u16_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u256.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u256.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u256_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u256_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u32.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u32.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u32_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u32_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new.restype = ctypes.c_uint16
@@ -8595,51 +8988,108 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_from_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool_vec.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_from_base58.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_from_base58.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec_from_base58.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_digest_vec_from_base58.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_gas.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_move_arg.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_move_arg.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_from_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_from_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut_from_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared_mut_from_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u128_vec.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u16_vec.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u256_vec.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u32_vec.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u64_vec.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_vector.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8_vec.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_vector.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8_vec.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new.restype = ctypes.c_uint16
@@ -9114,6 +9564,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -18738,6 +19190,33 @@ class _UniffiConverterOptionalTypeEd25519Signature(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeMoveArg(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveArg.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveArg.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveArg.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeMoveFunction(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -18922,6 +19401,33 @@ class _UniffiConverterOptionalTypePasskeyAuthenticator(_UniffiConverterRustBuffe
             return None
         elif flag == 1:
             return _UniffiConverterTypePasskeyAuthenticator.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypePtbArgument(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypePtbArgument.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypePtbArgument.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypePtbArgument.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -20304,6 +20810,56 @@ class _UniffiConverterOptionalTypeValue(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterSequenceUInt16(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterUInt16.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterUInt16.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterUInt16.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceUInt32(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterUInt32.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterUInt32.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterUInt32.read(buf) for i in range(count)
+        ]
+
+
+
 class _UniffiConverterSequenceInt32(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -20350,6 +20906,31 @@ class _UniffiConverterSequenceUInt64(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterUInt64.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceBool(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterBool.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterBool.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterBool.read(buf) for i in range(count)
         ]
 
 
@@ -20725,6 +21306,31 @@ class _UniffiConverterSequenceTypeInput(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeInput.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveArg(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveArg.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveArg.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveArg.read(buf) for i in range(count)
         ]
 
 
@@ -29587,6 +30193,287 @@ class _UniffiConverterTypeMergeCoins:
     @classmethod
     def write(cls, value: MergeCoinsProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class MoveArgProtocol(typing.Protocol):
+    pass
+# MoveArg is a Rust-only trait - it's a wrapper around a Rust implementation.
+class MoveArg():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_movearg, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movearg, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def address(cls, address: "Address"):
+        _UniffiConverterTypeAddress.check_lower(address)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address,
+        _UniffiConverterTypeAddress.lower(address))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def address_from_hex(cls, hex: "str"):
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def address_vec(cls, addresses: "typing.List[Address]"):
+        _UniffiConverterSequenceTypeAddress.check_lower(addresses)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec,
+        _UniffiConverterSequenceTypeAddress.lower(addresses))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def address_vec_from_hex(cls, addresses: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(addresses)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec_from_hex,
+        _UniffiConverterSequenceString.lower(addresses))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def bool(cls, value: "bool"):
+        _UniffiConverterBool.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_bool,
+        _UniffiConverterBool.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def bool_vec(cls, values: "typing.List[bool]"):
+        _UniffiConverterSequenceBool.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_bool_vec,
+        _UniffiConverterSequenceBool.lower(values))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def digest(cls, digest: "Digest"):
+        _UniffiConverterTypeDigest.check_lower(digest)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest,
+        _UniffiConverterTypeDigest.lower(digest))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def digest_from_base58(cls, base58: "str"):
+        _UniffiConverterString.check_lower(base58)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_from_base58,
+        _UniffiConverterString.lower(base58))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def digest_vec(cls, digests: "typing.List[Digest]"):
+        _UniffiConverterSequenceTypeDigest.check_lower(digests)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec,
+        _UniffiConverterSequenceTypeDigest.lower(digests))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def digest_vec_from_base58(cls, digests: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(digests)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_digest_vec_from_base58,
+        _UniffiConverterSequenceString.lower(digests))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def option(cls, value: "typing.Optional[MoveArg]"):
+        _UniffiConverterOptionalTypeMoveArg.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_option,
+        _UniffiConverterOptionalTypeMoveArg.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def string(cls, string: "str"):
+        _UniffiConverterString.check_lower(string)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string,
+        _UniffiConverterString.lower(string))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def string_vec(cls, addresses: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(addresses)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_string_vec,
+        _UniffiConverterSequenceString.lower(addresses))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u128(cls, value: "str"):
+        _UniffiConverterString.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u128,
+        _UniffiConverterString.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u128_vec(cls, values: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u128_vec,
+        _UniffiConverterSequenceString.lower(values))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u16(cls, value: "int"):
+        _UniffiConverterUInt16.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u16,
+        _UniffiConverterUInt16.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u16_vec(cls, values: "typing.List[int]"):
+        _UniffiConverterSequenceUInt16.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u16_vec,
+        _UniffiConverterSequenceUInt16.lower(values))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u256(cls, value: "str"):
+        _UniffiConverterString.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u256,
+        _UniffiConverterString.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u256_vec(cls, values: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u256_vec,
+        _UniffiConverterSequenceString.lower(values))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u32(cls, value: "int"):
+        _UniffiConverterUInt32.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u32,
+        _UniffiConverterUInt32.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u32_vec(cls, values: "typing.List[int]"):
+        _UniffiConverterSequenceUInt32.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u32_vec,
+        _UniffiConverterSequenceUInt32.lower(values))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u64(cls, value: "int"):
+        _UniffiConverterUInt64.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u64,
+        _UniffiConverterUInt64.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u64_vec(cls, values: "typing.List[int]"):
+        _UniffiConverterSequenceUInt64.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u64_vec,
+        _UniffiConverterSequenceUInt64.lower(values))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u8(cls, value: "int"):
+        _UniffiConverterUInt8.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u8,
+        _UniffiConverterUInt8.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u8_vec(cls, values: "bytes"):
+        _UniffiConverterBytes.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_u8_vec,
+        _UniffiConverterBytes.lower(values))
+        return cls._make_instance_(pointer)
+
+
+
+
+class _UniffiConverterTypeMoveArg:
+
+    @staticmethod
+    def lift(value: int):
+        return MoveArg._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: MoveArg):
+        if not isinstance(value, MoveArg):
+            raise TypeError("Expected MoveArg instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: MoveArgProtocol):
+        if not isinstance(value, MoveArg):
+            raise TypeError("Expected MoveArg instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: MoveArgProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class MoveCallProtocol(typing.Protocol):
     """
     Command to call a move function
@@ -33467,6 +34354,51 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def address_from_hex(cls, hex: "str"):
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_from_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def address_vec(cls, addresses: "typing.List[Address]"):
+        _UniffiConverterSequenceTypeAddress.check_lower(addresses)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec,
+        _UniffiConverterSequenceTypeAddress.lower(addresses))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def address_vec_from_hex(cls, addresses: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(addresses)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec_from_hex,
+        _UniffiConverterSequenceString.lower(addresses))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def bool(cls, value: "bool"):
+        _UniffiConverterBool.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool,
+        _UniffiConverterBool.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def bool_vec(cls, values: "typing.List[bool]"):
+        _UniffiConverterSequenceBool.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool_vec,
+        _UniffiConverterSequenceBool.lower(values))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def digest(cls, digest: "Digest"):
         _UniffiConverterTypeDigest.check_lower(digest)
         
@@ -33476,9 +34408,45 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def digest_from_base58(cls, base58: "str"):
+        _UniffiConverterString.check_lower(base58)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_from_base58,
+        _UniffiConverterString.lower(base58))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def digest_vec(cls, digests: "typing.List[Digest]"):
+        _UniffiConverterSequenceTypeDigest.check_lower(digests)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_vec,
+        _UniffiConverterSequenceTypeDigest.lower(digests))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def digest_vec_from_base58(cls, digests: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(digests)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_digest_vec_from_base58,
+        _UniffiConverterSequenceString.lower(digests))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def gas(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_gas,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def move_arg(cls, arg: "MoveArg"):
+        _UniffiConverterTypeMoveArg.check_lower(arg)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_move_arg,
+        _UniffiConverterTypeMoveArg.lower(arg))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -33491,12 +34459,39 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def object_id_from_hex(cls, hex: "str"):
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def option(cls, value: "typing.Optional[MoveArg]"):
+        _UniffiConverterOptionalTypeMoveArg.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_option,
+        _UniffiConverterOptionalTypeMoveArg.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def receiving(cls, id: "ObjectId"):
         _UniffiConverterTypeObjectId.check_lower(id)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving,
         _UniffiConverterTypeObjectId.lower(id))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def receiving_from_hex(cls, hex: "str"):
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex,
+        _UniffiConverterString.lower(hex))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -33518,12 +34513,30 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def shared_from_hex(cls, hex: "str"):
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_from_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def shared_mut(cls, id: "ObjectId"):
         _UniffiConverterTypeObjectId.check_lower(id)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut,
         _UniffiConverterTypeObjectId.lower(id))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def shared_mut_from_hex(cls, hex: "str"):
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared_mut_from_hex,
+        _UniffiConverterString.lower(hex))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -33540,8 +34553,17 @@ class PtbArgument():
         _UniffiConverterString.check_lower(value)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128,
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128,
         _UniffiConverterString.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u128_vec(cls, values: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u128_vec,
+        _UniffiConverterSequenceString.lower(values))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -33554,12 +34576,30 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def u16_vec(cls, values: "typing.List[int]"):
+        _UniffiConverterSequenceUInt16.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u16_vec,
+        _UniffiConverterSequenceUInt16.lower(values))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def u256(cls, value: "str"):
         _UniffiConverterString.check_lower(value)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256,
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256,
         _UniffiConverterString.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u256_vec(cls, values: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u256_vec,
+        _UniffiConverterSequenceString.lower(values))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -33572,12 +34612,30 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def u32_vec(cls, values: "typing.List[int]"):
+        _UniffiConverterSequenceUInt32.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u32_vec,
+        _UniffiConverterSequenceUInt32.lower(values))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def u64(cls, value: "int"):
         _UniffiConverterUInt64.check_lower(value)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64,
         _UniffiConverterUInt64.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u64_vec(cls, values: "typing.List[int]"):
+        _UniffiConverterSequenceUInt64.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u64_vec,
+        _UniffiConverterSequenceUInt64.lower(values))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -33590,12 +34648,12 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def vector(cls, vec: "typing.List[bytes]"):
-        _UniffiConverterSequenceBytes.check_lower(vec)
+    def u8_vec(cls, values: "bytes"):
+        _UniffiConverterBytes.check_lower(values)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_vector,
-        _UniffiConverterSequenceBytes.lower(vec))
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_u8_vec,
+        _UniffiConverterBytes.lower(values))
         return cls._make_instance_(pointer)
 
 
@@ -36862,14 +37920,14 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def make_move_vec(self, elements: "typing.List[PtbArgument]",type_tag: "TypeTag",name: "str"):
+    def make_move_vec(self, elements: "typing.List[MoveArg]",type_tag: "TypeTag",name: "str"):
         """
         Make a move vector from a list of elements. The elements must all be of
         the type indicated by `type_tag`.
         """
 
         raise NotImplementedError
-    def merge_coins(self, coin: "ObjectId",coins_to_merge: "typing.List[ObjectId]"):
+    def merge_coins(self, coin: "PtbArgument",coins_to_merge: "typing.List[PtbArgument]"):
         """
         Merge a list of coins into a single coin, without producing any result.
         """
@@ -36899,20 +37957,20 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def send_coins(self, coins: "typing.List[ObjectId]",recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def send_coins(self, coins: "typing.List[PtbArgument]",recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT):
         """
         Transfer some coins to a recipient address. If multiple coins are
         provided then they will be merged.
         """
 
         raise NotImplementedError
-    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT):
         """
         Send IOTA to a recipient address.
         """
 
         raise NotImplementedError
-    def split_coins(self, coin: "ObjectId",amounts: "typing.List[int]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
+    def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
         Split a coin by the provided amounts.
         """
@@ -37206,13 +38264,13 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def make_move_vec(self, elements: "typing.List[PtbArgument]",type_tag: "TypeTag",name: "str") -> "TransactionBuilder":
+    def make_move_vec(self, elements: "typing.List[MoveArg]",type_tag: "TypeTag",name: "str") -> "TransactionBuilder":
         """
         Make a move vector from a list of elements. The elements must all be of
         the type indicated by `type_tag`.
         """
 
-        _UniffiConverterSequenceTypePtbArgument.check_lower(elements)
+        _UniffiConverterSequenceTypeMoveArg.check_lower(elements)
         
         _UniffiConverterTypeTypeTag.check_lower(type_tag)
         
@@ -37220,7 +38278,7 @@ _UniffiConverterTypeSdkFfiError,
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec,self._uniffi_clone_pointer(),
-        _UniffiConverterSequenceTypePtbArgument.lower(elements),
+        _UniffiConverterSequenceTypeMoveArg.lower(elements),
         _UniffiConverterTypeTypeTag.lower(type_tag),
         _UniffiConverterString.lower(name))
         )
@@ -37229,19 +38287,19 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def merge_coins(self, coin: "ObjectId",coins_to_merge: "typing.List[ObjectId]") -> "TransactionBuilder":
+    def merge_coins(self, coin: "PtbArgument",coins_to_merge: "typing.List[PtbArgument]") -> "TransactionBuilder":
         """
         Merge a list of coins into a single coin, without producing any result.
         """
 
-        _UniffiConverterTypeObjectId.check_lower(coin)
+        _UniffiConverterTypePtbArgument.check_lower(coin)
         
-        _UniffiConverterSequenceTypeObjectId.check_lower(coins_to_merge)
+        _UniffiConverterSequenceTypePtbArgument.check_lower(coins_to_merge)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeObjectId.lower(coin),
-        _UniffiConverterSequenceTypeObjectId.lower(coins_to_merge))
+        _UniffiConverterTypePtbArgument.lower(coin),
+        _UniffiConverterSequenceTypePtbArgument.lower(coins_to_merge))
         )
 
 
@@ -37319,32 +38377,32 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def send_coins(self, coins: "typing.List[ObjectId]",recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "TransactionBuilder":
+    def send_coins(self, coins: "typing.List[PtbArgument]",recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Transfer some coins to a recipient address. If multiple coins are
         provided then they will be merged.
         """
 
-        _UniffiConverterSequenceTypeObjectId.check_lower(coins)
+        _UniffiConverterSequenceTypePtbArgument.check_lower(coins)
         
         _UniffiConverterTypeAddress.check_lower(recipient)
         
         if amount is _DEFAULT:
             amount = None
-        _UniffiConverterOptionalUInt64.check_lower(amount)
+        _UniffiConverterOptionalTypePtbArgument.check_lower(amount)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins,self._uniffi_clone_pointer(),
-        _UniffiConverterSequenceTypeObjectId.lower(coins),
+        _UniffiConverterSequenceTypePtbArgument.lower(coins),
         _UniffiConverterTypeAddress.lower(recipient),
-        _UniffiConverterOptionalUInt64.lower(amount))
+        _UniffiConverterOptionalTypePtbArgument.lower(amount))
         )
 
 
 
 
 
-    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "TransactionBuilder":
+    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Send IOTA to a recipient address.
         """
@@ -37353,26 +38411,26 @@ _UniffiConverterTypeSdkFfiError,
         
         if amount is _DEFAULT:
             amount = None
-        _UniffiConverterOptionalUInt64.check_lower(amount)
+        _UniffiConverterOptionalTypePtbArgument.check_lower(amount)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota,self._uniffi_clone_pointer(),
         _UniffiConverterTypeAddress.lower(recipient),
-        _UniffiConverterOptionalUInt64.lower(amount))
+        _UniffiConverterOptionalTypePtbArgument.lower(amount))
         )
 
 
 
 
 
-    def split_coins(self, coin: "ObjectId",amounts: "typing.List[int]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "TransactionBuilder":
+    def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Split a coin by the provided amounts.
         """
 
-        _UniffiConverterTypeObjectId.check_lower(coin)
+        _UniffiConverterTypePtbArgument.check_lower(coin)
         
-        _UniffiConverterSequenceUInt64.check_lower(amounts)
+        _UniffiConverterSequenceTypePtbArgument.check_lower(amounts)
         
         if names is _DEFAULT:
             names = []
@@ -37380,8 +38438,8 @@ _UniffiConverterTypeSdkFfiError,
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeObjectId.lower(coin),
-        _UniffiConverterSequenceUInt64.lower(amounts),
+        _UniffiConverterTypePtbArgument.lower(coin),
+        _UniffiConverterSequenceTypePtbArgument.lower(amounts),
         _UniffiConverterSequenceString.lower(names))
         )
 
@@ -40725,6 +41783,7 @@ __all__ = [
     "Input",
     "MakeMoveVector",
     "MergeCoins",
+    "MoveArg",
     "MoveCall",
     "MoveFunction",
     "MovePackage",

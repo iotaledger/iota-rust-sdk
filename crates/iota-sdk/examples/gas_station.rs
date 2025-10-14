@@ -20,7 +20,7 @@ async fn main() -> Result<()> {
 
     builder
         .move_call(Address::STD_LIB, "u64", "sqrt")
-        .arguments(64_u64)
+        .arguments([64_u64])
         .gas_station_sponsor(gas_station_url)
         .add_gas_station_header(
             reqwest::header::AUTHORIZATION,

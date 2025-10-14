@@ -42,6 +42,11 @@ impl ObjectId {
         Self(Address::new(bytes))
     }
 
+    /// Parse an ObjectId from a hex string.
+    pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, super::address::AddressParseError> {
+        Address::from_hex(hex).map(Self)
+    }
+
     /// Returns the underlying byte array of an ObjectId.
     pub const fn into_inner(self) -> [u8; Self::LENGTH] {
         self.0.into_inner()

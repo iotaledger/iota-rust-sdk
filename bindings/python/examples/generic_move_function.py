@@ -15,36 +15,21 @@ async def main():
 
     builder = await TransactionBuilder.init(sender, client)
 
-    builder.make_move_vec(
-        [
-            PtbArgument.address(
-                Address.from_hex(
-                    "0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e"
-                )
-            ),
-            PtbArgument.address(
-                Address.from_hex(
-                    "0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3"
-                )
-            ),
-        ],
-        TypeTag.new_address(),
-        "addresses",
+    addr1 = Address.from_hex(
+        "0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e"
     )
-    builder.make_move_vec(
-        [
-            PtbArgument.u64(10_000_000),
-            PtbArgument.u64(20_000_000),
-        ],
-        TypeTag.new_u64(),
-        "amounts",
+    addr2 = Address.from_hex(
+        "0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3"
     )
 
     builder.move_call(
         Address.framework(),
         Identifier("vec_map"),
         Identifier("from_keys_values"),
-        [PtbArgument.res("addresses"), PtbArgument.res("amounts")],
+        [
+            PtbArgument.address_vec([addr1, addr2]),
+            PtbArgument.u64_vec([10_000_000, 20_000_000]),
+        ],
         [TypeTag.new_address(), TypeTag.new_u64()],
     )
 
