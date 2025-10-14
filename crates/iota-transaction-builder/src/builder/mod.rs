@@ -176,7 +176,7 @@ impl TransactionBuildData {
         name.push_named_results(self);
     }
 
-    /// Get the value for the given string in the named results map
+    /// Get the value for the given string in the named commands map
     pub fn get_named_command(&self, name: &str) -> Option<Argument> {
         self.named_results.get(name).copied()
     }
