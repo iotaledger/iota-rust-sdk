@@ -404,7 +404,7 @@ pub struct StructTag {
 impl StructTag {
     pub fn coin(type_tag: TypeTag) -> Self {
         Self {
-            address: Address::TWO,
+            address: Address::FRAMEWORK,
             module: Identifier::new("coin").unwrap(),
             name: Identifier::new("Coin").unwrap(),
             type_params: vec![type_tag],
@@ -420,7 +420,10 @@ impl StructTag {
             type_params,
         } = self;
 
-        if address == &Address::TWO && module == "coin" && name == "Coin" && type_params.len() == 1
+        if address == &Address::FRAMEWORK
+            && module == "coin"
+            && name == "Coin"
+            && type_params.len() == 1
         {
             type_params.first()
         } else {
@@ -435,7 +438,7 @@ impl StructTag {
 
     pub fn gas_coin() -> Self {
         let iota = Self {
-            address: Address::TWO,
+            address: Address::FRAMEWORK,
             module: Identifier::new("iota").unwrap(),
             name: Identifier::new("IOTA").unwrap(),
             type_params: vec![],
@@ -446,7 +449,7 @@ impl StructTag {
 
     pub fn staked_iota() -> Self {
         Self {
-            address: Address::THREE,
+            address: Address::SYSTEM,
             module: Identifier::new("staking_pool").unwrap(),
             name: Identifier::new("StakedIota").unwrap(),
             type_params: vec![],
@@ -455,7 +458,7 @@ impl StructTag {
 
     pub fn timelocked_staked_iota() -> Self {
         Self {
-            address: Address::THREE,
+            address: Address::SYSTEM,
             module: Identifier::new("timelocked_staking").unwrap(),
             name: Identifier::new("TimelockedStakedIota").unwrap(),
             type_params: vec![],

@@ -681,7 +681,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 29988:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 6963:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1383,11 +1383,19 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks() != 49665:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 63442:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib() != 35825:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_system() != 4297:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_zero() != 46553:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_argument_new_gas() != 14489:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1629,11 +1637,17 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() != 1861:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock() != 14732:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id() != 16970:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero() != 40526:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package() != 63533:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2025,6 +2039,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_address.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_address.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_framework.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_framework.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2039,6 +2057,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_generate.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_generate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_system.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_system.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_zero.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_zero.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_bytes.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4451,6 +4481,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_objectid.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_objectid.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_clock.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_clock.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint64,
@@ -4467,6 +4501,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_system.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_system.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_zero.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_zero.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -8526,6 +8568,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify.restype = 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes.restype = ctypes.c_uint16
@@ -8535,6 +8580,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_system.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_system.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_zero.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_zero.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_argument_new_gas.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_argument_new_gas.restype = ctypes.c_uint16
@@ -8895,6 +8949,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id.restype = ctypes.c_uint16
@@ -8904,6 +8961,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objecttype_new_package.restype = ctypes.c_uint16
@@ -22686,6 +22749,12 @@ class Address():
         inst._pointer = pointer
         return inst
     @classmethod
+    def framework(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_framework,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def from_bytes(cls, bytes: "bytes"):
         _UniffiConverterBytes.check_lower(bytes)
         
@@ -22707,6 +22776,24 @@ class Address():
     def generate(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_generate,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def std_lib(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def system(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_system,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def zero(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_zero,)
         return cls._make_instance_(pointer)
 
 
@@ -27669,7 +27756,7 @@ class GraphQlClientProtocol(typing.Protocol):
         ```rust,ignore
 
         let client = iota_graphql_client::Client::new_devnet();
-        let address = Address::from_str("0x5").unwrap();
+        let address = ObjectId::SYSTEM.into();
         let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
 
         # alternatively, pass in the bcs bytes
@@ -28367,7 +28454,7 @@ _UniffiConverterTypeSdkFfiError,
         ```rust,ignore
 
         let client = iota_graphql_client::Client::new_devnet();
-        let address = Address::from_str("0x5").unwrap();
+        let address = ObjectId::SYSTEM.into();
         let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
 
         # alternatively, pass in the bcs bytes
@@ -33086,6 +33173,12 @@ class ObjectId():
         inst._pointer = pointer
         return inst
     @classmethod
+    def clock(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_clock,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def derive_id(cls, digest: "Digest",count: "int"):
         """
         Create an ObjectId from a transaction digest and the number of objects
@@ -33118,6 +33211,18 @@ class ObjectId():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex,
         _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def system(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_system,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def zero(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_zero,)
         return cls._make_instance_(pointer)
 
 

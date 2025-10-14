@@ -19,7 +19,7 @@ func main() {
 
 	builder := sdk.TransactionBuilderInit(sender, client)
 
-	package_id, _ := sdk.AddressFromHex("0x1")
+	package_id := sdk.AddressStdLib()
 	module_name, _ := sdk.NewIdentifier("u64")
 	function_name, _ := sdk.NewIdentifier("sqrt")
 

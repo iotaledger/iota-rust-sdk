@@ -9,7 +9,7 @@ use iota_types::Address;
 async fn main() -> Result<()> {
     let client = Client::new_devnet();
 
-    let address = Address::from_hex("0x0")?;
+    let address = Address::ZERO;
     let owned_objects_page = client
         .objects(
             Some(ObjectFilter {

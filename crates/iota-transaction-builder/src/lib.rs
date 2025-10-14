@@ -183,7 +183,7 @@ mod tests {
         // set up the sender, gas object, gas budget, and gas price and return the pk to
         // sign
         let (mut tx, _, pk, _) = helper_setup().await;
-        tx.move_call(Address::ONE, "option", "is_none")
+        tx.move_call(Address::STD_LIB, "option", "is_none")
             .generics::<u64>()
             .arguments([Some(1u64)]);
 
@@ -330,7 +330,7 @@ mod tests {
         let updated_package = move_package_data("package_test_example_v2.json");
 
         // we need this ticket to authorize the upgrade
-        tx.move_call(Address::TWO, "package", "authorize_upgrade")
+        tx.move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
             .arguments((
                 upgrade_cap.unwrap(),
                 0u8,
@@ -343,7 +343,7 @@ mod tests {
             .arg();
 
         // commit the upgrade
-        tx.move_call(Address::TWO, "package", "commit_upgrade")
+        tx.move_call(Address::FRAMEWORK, "package", "commit_upgrade")
             .arguments((upgrade_cap.unwrap(), receipt));
 
         tx.gas(coins.last().unwrap().id);

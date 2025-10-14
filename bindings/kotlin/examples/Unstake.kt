@@ -23,11 +23,11 @@ fun main() = runBlocking {
         val builder = TransactionBuilder.init(stakedIota.owner().asAddress(), client)
 
         builder.moveCall(
-                Address.fromHex("0x3"),
+                Address.system(),
                 Identifier("iota_system"),
                 Identifier("request_withdraw_stake"),
                 listOf(
-                        PtbArgument.sharedMut(ObjectId.fromHex("0x5")),
+                        PtbArgument.sharedMut(ObjectId.system()),
                         PtbArgument.objectId(stakedIota.objectId())
                 ),
         )

@@ -1584,7 +1584,7 @@ impl Client {
     /// ```rust,ignore
     /// 
     /// let client = iota_graphql_client::Client::new_devnet();
-    /// let address = Address::from_str("0x5").unwrap();
+    /// let address = ObjectId::system().into();
     /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
     ///
     /// # alternatively, pass in the bcs bytes
@@ -1807,7 +1807,7 @@ impl Client {
 mod tests {
     use base64ct::Encoding;
     use futures::StreamExt;
-    use iota_types::{Ed25519PublicKey, TypeTag};
+    use iota_types::{Address, Ed25519PublicKey, ObjectId, TypeTag};
     use tokio::time;
 
     use crate::{
@@ -1847,7 +1847,7 @@ mod tests {
     async fn test_balance_query() {
         let client = test_client();
         client
-            .balance("0x1".parse().unwrap(), None)
+            .balance(Address::STD_LIB, None)
             .await
             .map_err(|e| {
                 format!(
@@ -2128,7 +2128,7 @@ mod tests {
     async fn test_object_query() {
         let client = test_client();
         client
-            .object("0x5".parse().unwrap(), None)
+            .object(ObjectId::SYSTEM, None)
             .await
             .map_err(|e| {
                 format!(
@@ -2144,7 +2144,7 @@ mod tests {
     async fn test_object_bcs_query() {
         let client = test_client();
         client
-            .object_bcs("0x5".parse().unwrap())
+            .object_bcs(ObjectId::SYSTEM)
             .await
             .map_err(|e| {
                 format!(
@@ -2160,7 +2160,7 @@ mod tests {
     async fn test_coins_query() {
         let client = test_client();
         client
-            .coins("0x1".parse().unwrap(), None, PaginationFilter::default())
+            .coins(Address::STD_LIB, None, PaginationFilter::default())
             .await
             .map_err(|e| {
                 format!(
@@ -2300,7 +2300,7 @@ mod tests {
         let client = test_client();
         let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
         client
-            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, BcsName(bcs))
+            .dynamic_field(ObjectId::SYSTEM.into(), TypeTag::U64, BcsName(bcs))
             .await
             .map_err(|e| {
                 format!(
@@ -2311,7 +2311,7 @@ mod tests {
             .unwrap();
 
         client
-            .dynamic_field("0x5".parse().unwrap(), TypeTag::U64, 2u64)
+            .dynamic_field(ObjectId::SYSTEM.into(), TypeTag::U64, 2u64)
             .await
             .map_err(|e| {
                 format!(
@@ -2326,7 +2326,7 @@ mod tests {
     async fn test_dynamic_fields_query() {
         let client = test_client();
         client
-            .dynamic_fields("0x5".parse().unwrap(), PaginationFilter::default())
+            .dynamic_fields(ObjectId::SYSTEM.into(), PaginationFilter::default())
             .await
             .map_err(|e| {
                 format!(
@@ -2396,7 +2396,7 @@ mod tests {
     async fn test_package() {
         let client = test_client();
         client
-            .package("0x2".parse().unwrap(), None)
+            .package(Address::FRAMEWORK, None)
             .await
             .map_err(|e| {
                 format!(
@@ -2412,7 +2412,7 @@ mod tests {
     async fn test_latest_package_query() {
         let client = test_client();
         client
-            .package_latest("0x2".parse().unwrap())
+            .package_latest(Address::FRAMEWORK)
             .await
             .map_err(|e| {
                 format!(

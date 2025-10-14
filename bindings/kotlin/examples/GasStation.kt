@@ -22,7 +22,7 @@ fun main() = runBlocking {
         val builder = TransactionBuilder.init(sender, client)
 
         builder.moveCall(
-                Address.fromHex("0x1"),
+                Address.stdLib(),
                 Identifier("u64"),
                 Identifier("sqrt"),
                 listOf(
