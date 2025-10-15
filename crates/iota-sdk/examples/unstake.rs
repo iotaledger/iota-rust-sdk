@@ -31,7 +31,11 @@ async fn main() -> Result<()> {
         .move_call(Address::SYSTEM, "iota_system", "request_withdraw_stake")
         .arguments((SharedMut(ObjectId::SYSTEM), staked_iota.object_id()));
 
-    builder.dry_run(false).await?;
+    let res = builder.dry_run(false).await?;
+
+    if let Some(err) = res.error {
+        eyre::bail!("Failed to unstake: {err}");
+    }
 
     println!("Unstake dry run was successful!");
 

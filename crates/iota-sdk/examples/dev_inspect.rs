@@ -76,6 +76,10 @@ async fn main() -> Result<()> {
 
     let res = builder.dry_run(true).await?;
 
+    if let Some(err) = res.error {
+        eyre::bail!("Failed to lookup name: {err}");
+    }
+
     // Extract the resolved address from the last result
     match res
         .results
