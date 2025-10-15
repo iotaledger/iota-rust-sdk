@@ -21,13 +21,13 @@ async fn main() -> Result<()> {
     let Some(compiled_package_digest) = data.digest else {
         bail!("Missing compiled package digest");
     };
-    println!("Compiled Package Digest={compiled_package_digest}");
+    println!("Compiled Package Digest: {compiled_package_digest}");
 
     // Create a random private key to derive a sender address and for signing
     let private_key = Ed25519PrivateKey::generate(OsRng);
     let public_key = private_key.public_key();
     let sender = public_key.derive_address();
-    println!("Sender={sender}");
+    println!("Sender: {sender}");
 
     // Fund the sender address for gas payment
     let faucet = FaucetClient::new_localnet();
@@ -35,7 +35,7 @@ async fn main() -> Result<()> {
         bail!("Failed to request coins from faucet");
     };
     println!(
-        "Balance={}",
+        "Available Balance: {}",
         receipt.sent.iter().map(|coin| coin.amount).sum::<u64>()
     );
 
@@ -47,18 +47,22 @@ async fn main() -> Result<()> {
         .data[0]
         .id();
 
-    // Build the `publish` transaction
+    // Build the `publish` PTB, that consists of 2 steps
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
-    builder
+
+    // 1. Create the upgrade cap
+    builder.publish(data.clone()).name("upgrade_cap");
+
+    // 2. Transfer the upgrade cap to the sender address
+    builder.transfer_objects(sender, [res("upgrade_cap")]);
+
+    // Finalize the PTB
+    let tx = builder
         .gas_budget(50_000_000)
         .gas(gas)
-        .publish(data.clone())
-        .name("publish");
-
-    // Transfer the `UpgradeCap` to the `sender`
-    builder.transfer_objects(sender, [res("publish")]);
-
-    let tx = builder.finish().await?;
+        .clone()
+        .finish()
+        .await?;
 
     // Perform a dry-run to check if everything is fine
     let result = client.dry_run_tx(&tx, false).await?;
@@ -93,14 +97,14 @@ async fn main() -> Result<()> {
                     bail!("Missing object {object_id}");
                 };
                 if obj.as_struct().type_ == StructTag::upgrade_cap() {
-                    println!("UpgradeCap={object_id}");
-                    println!("Owner: {owner}");
+                    println!("UpgradeCap: {object_id}");
+                    println!("UpgradeCapOwner: {}", owner.into_address());
                     upgrade_cap.replace(object_id);
                 }
             }
             ObjectOut::PackageWrite { version, .. } => {
                 let pkg_id = changed_obj.object_id;
-                println!("PackageId={pkg_id}");
+                println!("PackageId: {pkg_id}");
                 println!("Package version: {version}");
                 package_id.replace(pkg_id);
             }
@@ -115,32 +119,48 @@ async fn main() -> Result<()> {
         bail!("Missing package id");
     };
 
-    let Some(obj_ref) = client
+    let Some(upgrade_cap_ref) = client
         .object(upgrade_cap_id, None)
         .await?
         .map(|obj| obj.object_ref())
     else {
-        bail!("Missing object");
+        bail!("Missing upgrade cap object");
     };
 
-    // Make a `move_call` to create the `UpgradeTicket`
+    // Build the `upgrade` PTB, that consists of 3 steps
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
 
-    let upgrade_arg = builder.input(Input::ImmutableOrOwned(obj_ref));
-    let policy_arg = builder.pure(255);
-    let digest_arg = builder.pure(compiled_package_digest);
+    let upgrade_cap_arg = builder.input(Input::ImmutableOrOwned(upgrade_cap_ref));
+    let upgrade_policy_arg = builder.pure(0);
+    let compiled_package_digest_arg = builder.pure(compiled_package_digest);
 
-    // Build the `upgrade` transaction
+    // 1. Create the upgrade ticket
     builder
-        .gas_budget(50_000_000)
-        .gas(gas)
         .move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
-        .arguments([upgrade_arg, policy_arg, digest_arg])
+        .arguments([
+            upgrade_cap_arg,
+            upgrade_policy_arg,
+            compiled_package_digest_arg,
+        ])
         .name("upgrade_ticket");
 
-    builder.upgrade(package_id, res("upgrade_ticket"), data);
-    let tx = builder.finish().await?;
-    println!("{tx:#?}");
+    // 2. Get the upgrade receipt
+    builder
+        .upgrade(package_id, res("upgrade_ticket"), data)
+        .name("upgrade_receipt");
+
+    // 3. Finalize the upgrade
+    builder
+        .move_call(Address::FRAMEWORK, "package", "commit_upgrade")
+        .arguments((upgrade_cap_arg, res("upgrade_receipt")));
+
+    // Finalize the PTB
+    let tx = builder
+        .gas_budget(50_000_000)
+        .gas(gas)
+        .clone()
+        .finish()
+        .await?;
 
     // Perform a dry-run to check if everything is fine
     let res = client.dry_run_tx(&tx, false).await?;
@@ -168,7 +188,7 @@ async fn main() -> Result<()> {
         match changed_obj.output_state {
             ObjectOut::PackageWrite { version, .. } => {
                 let pkg_id = changed_obj.object_id;
-                println!("PackageId={pkg_id}");
+                println!("PackageId: {pkg_id}");
                 println!("Package version: {version}")
             }
             _ => continue,
