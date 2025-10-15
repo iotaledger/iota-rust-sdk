@@ -25,7 +25,7 @@ use crate::{
         signature::UserSignature,
         struct_tag::StructTag,
         transaction::{
-            DryRunEffects, SignedTransaction, Transaction, TransactionEffects, TransactionKind,
+            DryRunResult, SignedTransaction, Transaction, TransactionEffects, TransactionKind,
         },
         type_tag::TypeTag,
     },
@@ -841,7 +841,7 @@ impl GraphQLClient {
         &self,
         tx: &Transaction,
         skip_checks: Option<bool>,
-    ) -> Result<DryRunEffects> {
+    ) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
@@ -866,7 +866,7 @@ impl GraphQLClient {
         tx_kind: &TransactionKind,
         tx_meta: TransactionMetadata,
         skip_checks: Option<bool>,
-    ) -> Result<DryRunEffects> {
+    ) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
@@ -1028,7 +1028,7 @@ impl iota_transaction_builder::ClientMethods for GraphQLClient {
         &self,
         tx: &iota_types::Transaction,
         skip_checks: bool,
-    ) -> Result<iota_types::DryRunEffects, Self::Error> {
+    ) -> Result<iota_types::DryRunResult, Self::Error> {
         iota_transaction_builder::ClientMethods::dry_run_tx(&*self.0.read().await, tx, skip_checks)
             .await
     }

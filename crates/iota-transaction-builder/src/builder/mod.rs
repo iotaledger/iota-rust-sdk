@@ -12,7 +12,7 @@ use std::{
 use iota_crypto::{IotaSigner, simple::SimpleKeypair};
 use iota_graphql_client::Client;
 use iota_types::{
-    Address, DryRunEffects, GasPayment, Identifier, ObjectId, ObjectReference, Owner,
+    Address, DryRunResult, GasPayment, Identifier, ObjectId, ObjectReference, Owner,
     ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
     TypeTag,
 };
@@ -764,7 +764,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     }
 
     /// Dry run the transaction.
-    pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunEffects, Error> {
+    pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
         if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
             return Err(Error::DryRun(

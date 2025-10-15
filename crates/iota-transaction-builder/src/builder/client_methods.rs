@@ -6,7 +6,7 @@ use iota_graphql_client::{
     query_types::{ObjectFilter, TransactionMetadata},
 };
 use iota_types::{
-    Address, Digest, DryRunEffects, Object, ObjectId, SignedTransaction, Transaction,
+    Address, Digest, DryRunResult, Object, ObjectId, SignedTransaction, Transaction,
     TransactionEffects, TypeTag, UserSignature,
 };
 
@@ -63,7 +63,7 @@ pub trait ClientMethods {
         &self,
         tx: &Transaction,
         skip_checks: bool,
-    ) -> impl std::future::Future<Output = Result<DryRunEffects, Self::Error>>;
+    ) -> impl std::future::Future<Output = Result<DryRunResult, Self::Error>>;
 
     /// Execute a transaction
     fn execute_tx(
@@ -128,7 +128,7 @@ impl<T: ClientMethods> ClientMethods for &T {
         &self,
         tx: &Transaction,
         skip_checks: bool,
-    ) -> impl std::future::Future<Output = Result<DryRunEffects, Self::Error>> {
+    ) -> impl std::future::Future<Output = Result<DryRunResult, Self::Error>> {
         (*self).dry_run_tx(tx, skip_checks)
     }
 
@@ -209,7 +209,7 @@ impl ClientMethods for iota_graphql_client::Client {
         &self,
         tx: &Transaction,
         skip_checks: bool,
-    ) -> Result<DryRunEffects, Self::Error> {
+    ) -> Result<DryRunResult, Self::Error> {
         let gas_objects = tx
             .gas_payment
             .objects
@@ -299,7 +299,7 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
         &self,
         tx: &Transaction,
         skip_checks: bool,
-    ) -> impl std::future::Future<Output = Result<DryRunEffects, Self::Error>> {
+    ) -> impl std::future::Future<Output = Result<DryRunResult, Self::Error>> {
         self.as_ref().dry_run_tx(tx, skip_checks)
     }
 

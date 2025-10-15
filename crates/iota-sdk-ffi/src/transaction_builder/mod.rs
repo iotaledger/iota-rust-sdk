@@ -19,7 +19,7 @@ use crate::{
         address::Address,
         object::ObjectId,
         struct_tag::Identifier,
-        transaction::{DryRunEffects, Transaction, TransactionEffects},
+        transaction::{DryRunResult, Transaction, TransactionEffects},
         type_tag::TypeTag,
     },
 };
@@ -316,7 +316,7 @@ impl TransactionBuilder {
 
     /// Dry run the transaction.
     #[uniffi::method(default(skip_checks = false))]
-    pub async fn dry_run(&self, skip_checks: bool) -> Result<DryRunEffects> {
+    pub async fn dry_run(&self, skip_checks: bool) -> Result<DryRunResult> {
         Ok(self
             .read(|builder| builder.clone().dry_run(skip_checks))
             .await?

@@ -1608,7 +1608,7 @@ impl From<DryRunEffect> for iota_types::DryRunEffect {
 /// transaction, any errors that may have occurred, and intermediate results for
 /// each command.
 #[derive(uniffi::Record)]
-pub struct DryRunEffects {
+pub struct DryRunResult {
     /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
     /// The intermediate results for each command of the dry run execution,
@@ -1620,9 +1620,9 @@ pub struct DryRunEffects {
     pub effects: Option<Arc<TransactionEffects>>,
 }
 
-impl From<iota_types::DryRunEffects> for DryRunEffects {
-    fn from(value: iota_types::DryRunEffects) -> Self {
-        DryRunEffects {
+impl From<iota_types::DryRunResult> for DryRunResult {
+    fn from(value: iota_types::DryRunResult) -> Self {
+        DryRunResult {
             error: value.error,
             results: value.results.into_iter().map(Into::into).collect(),
             transaction: value.transaction.map(Into::into),
@@ -1631,9 +1631,9 @@ impl From<iota_types::DryRunEffects> for DryRunEffects {
     }
 }
 
-impl From<DryRunEffects> for iota_types::DryRunEffects {
-    fn from(value: DryRunEffects) -> Self {
-        iota_types::DryRunEffects {
+impl From<DryRunResult> for iota_types::DryRunResult {
+    fn from(value: DryRunResult) -> Self {
+        iota_types::DryRunResult {
             error: value.error,
             results: value.results.into_iter().map(Into::into).collect(),
             transaction: value.transaction.map(Into::into),

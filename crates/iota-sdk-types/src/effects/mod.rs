@@ -72,7 +72,7 @@ impl TransactionEffects {
 /// transaction and intermediate results for each command.
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct DryRunEffects {
+pub struct DryRunResult {
     /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
     /// The intermediate results for each command of the dry run execution,
