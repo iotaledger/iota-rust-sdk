@@ -50,7 +50,7 @@ pub struct Event {
     pub sender: Address,
     /// The type of the event emitted
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
-    pub type_: StructTag,
+    pub type_tag: StructTag,
     /// BCS serialized bytes of the event
     #[cfg_attr(
         feature = "serde",

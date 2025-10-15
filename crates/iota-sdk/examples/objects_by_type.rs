@@ -10,7 +10,7 @@ async fn main() -> Result<()> {
     let staked_iotas = client
         .objects(
             ObjectFilter {
-                type_: "0x3::staking_pool::StakedIota".to_owned().into(),
+                type_tag: "0x3::staking_pool::StakedIota".to_owned().into(),
                 ..Default::default()
             },
             Default::default(),

@@ -304,7 +304,7 @@ pub struct MoveStruct {
         feature = "serde",
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
-    pub type_: StructTag,
+    pub type_tag: StructTag,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
@@ -412,7 +412,7 @@ impl Object {
     /// Return this object's type
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
-            ObjectData::Struct(struct_) => ObjectType::Struct(struct_.type_.clone()),
+            ObjectData::Struct(struct_) => ObjectType::Struct(struct_.type_tag.clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
     }
@@ -526,7 +526,7 @@ impl GenesisObject {
 
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
-            ObjectData::Struct(struct_) => ObjectType::Struct(struct_.type_.clone()),
+            ObjectData::Struct(struct_) => ObjectType::Struct(struct_.type_tag.clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
     }
@@ -708,7 +708,7 @@ mod serialization {
         #[serde(with = "::serde_with::As::<ReadableObjectType>")]
         #[serde(rename = "type")]
         #[cfg_attr(feature = "schemars", schemars(with = "String"))]
-        type_: ObjectType,
+        object_type: ObjectType,
         #[serde(flatten)]
         data: ReadableObjectData,
         previous_transaction: Digest,
@@ -799,7 +799,7 @@ mod serialization {
                     owner: self.owner,
                     previous_transaction: self.previous_transaction,
                     storage_rebate: self.storage_rebate,
-                    type_: self.object_type(),
+                    object_type: self.object_type(),
                     data: self.readable_object_data(),
                 };
                 readable.serialize(serializer)
@@ -827,12 +827,12 @@ mod serialization {
                     owner,
                     previous_transaction,
                     storage_rebate,
-                    type_,
+                    object_type,
                     data,
                 } = Deserialize::deserialize(deserializer)?;
 
                 // check if package or struct
-                let data = match (type_, data) {
+                let data = match (object_type, data) {
                     (
                         ObjectType::Package,
                         ReadableObjectData::Package(ReadablePackage {
@@ -848,7 +848,7 @@ mod serialization {
                         linkage_table,
                     }),
                     (
-                        ObjectType::Struct(type_),
+                        ObjectType::Struct(type_tag),
                         ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
@@ -857,7 +857,7 @@ mod serialization {
                         }
 
                         ObjectData::Struct(MoveStruct {
-                            type_,
+                            type_tag,
                             version,
                             contents,
                         })
@@ -909,7 +909,7 @@ mod serialization {
         #[serde(with = "::serde_with::As::<ReadableObjectType>")]
         #[serde(rename = "type")]
         #[cfg_attr(feature = "schemars", schemars(with = "String"))]
-        type_: ObjectType,
+        object_type: ObjectType,
         #[serde(flatten)]
         data: ReadableObjectData,
     }
@@ -955,7 +955,7 @@ mod serialization {
                     object_id: self.object_id(),
                     version: self.version(),
                     owner: self.owner,
-                    type_: self.object_type(),
+                    object_type: self.object_type(),
                     data: self.readable_object_data(),
                 };
                 readable.serialize(serializer)
@@ -979,12 +979,12 @@ mod serialization {
                     object_id,
                     version,
                     owner,
-                    type_,
+                    object_type,
                     data,
                 } = Deserialize::deserialize(deserializer)?;
 
                 // check if package or struct
-                let data = match (type_, data) {
+                let data = match (object_type, data) {
                     (
                         ObjectType::Package,
                         ReadableObjectData::Package(ReadablePackage {
@@ -1000,7 +1000,7 @@ mod serialization {
                         linkage_table,
                     }),
                     (
-                        ObjectType::Struct(type_),
+                        ObjectType::Struct(type_tag),
                         ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
@@ -1009,7 +1009,7 @@ mod serialization {
                         }
 
                         ObjectData::Struct(MoveStruct {
-                            type_,
+                            type_tag,
                             version,
                             contents,
                         })
@@ -1039,7 +1039,7 @@ mod serialization {
         fn obj() {
             let o = Object {
                 data: ObjectData::Struct(MoveStruct {
-                    type_: StructTag {
+                    type_tag: StructTag {
                         address: Address::FRAMEWORK,
                         module: Identifier::new("bar").unwrap(),
                         name: Identifier::new("foo").unwrap(),

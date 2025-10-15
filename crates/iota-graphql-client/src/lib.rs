@@ -633,7 +633,7 @@ impl Client {
         let response = self
             .objects(
                 Some(ObjectFilter {
-                    type_: Some(
+                    type_tag: Some(
                         coin_type
                             .into()
                             .map(StructTag::coin)
@@ -932,7 +932,7 @@ impl Client {
     ///
     /// ```rust,ignore
     /// let filter = ObjectFilter {
-    ///     type_: None,
+    ///     type_tag: None,
     ///     owner: Some(Address::from_str("test").unwrap().into()),
     ///     object_ids: None,
     /// };
@@ -1622,14 +1622,14 @@ impl Client {
     pub async fn dynamic_field(
         &self,
         address: Address,
-        type_: TypeTag,
+        type_tag: TypeTag,
         name: impl Into<NameValue>,
     ) -> Result<Option<DynamicFieldOutput>> {
         let bcs = name.into().0;
         let operation = DynamicFieldQuery::build(DynamicFieldArgs {
             address,
             name: crate::query_types::DynamicFieldName {
-                type_: type_.to_string(),
+                type_tag: type_tag.to_string(),
                 bcs: crate::query_types::Base64(base64ct::Base64::encode_string(&bcs)),
             },
         });
@@ -1662,14 +1662,14 @@ impl Client {
     pub async fn dynamic_object_field(
         &self,
         address: Address,
-        type_: TypeTag,
+        type_tag: TypeTag,
         name: impl Into<NameValue>,
     ) -> Result<Option<DynamicFieldOutput>> {
         let bcs = name.into().0;
         let operation = DynamicObjectFieldQuery::build(DynamicFieldArgs {
             address,
             name: crate::query_types::DynamicFieldName {
-                type_: type_.to_string(),
+                type_tag: type_tag.to_string(),
                 bcs: crate::query_types::Base64(base64ct::Base64::encode_string(&bcs)),
             },
         });

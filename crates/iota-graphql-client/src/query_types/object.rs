@@ -56,7 +56,7 @@ pub struct Object {
 #[cynic(schema = "rpc", graphql_type = "ObjectFilter")]
 pub struct ObjectFilter {
     #[cynic(rename = "type")]
-    pub type_: Option<String>,
+    pub type_tag: Option<String>,
     pub owner: Option<Address>,
     pub object_ids: Option<Vec<ObjectId>>,
 }

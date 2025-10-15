@@ -56,6 +56,7 @@ pub struct EventFilter {
 pub struct Event {
     pub sending_module: Option<MoveModuleQuery>,
     pub sender: Option<GQLAddress>,
+    // TODO thibault
     pub type_: MoveType,
     pub bcs: Base64,
     pub timestamp: Option<DateTime>,

@@ -141,14 +141,14 @@ impl Upgrade {
 
 #[derive(Debug, Clone)]
 pub struct MakeMoveVector {
-    pub type_: Option<TypeTag>,
+    pub type_tag: Option<TypeTag>,
     pub elements: Vec<Argument>,
 }
 
 impl MakeMoveVector {
     fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::MakeMoveVector {
         iota_types::MakeMoveVector {
-            type_: self.type_,
+            type_tag: self.type_tag,
             elements: self
                 .elements
                 .into_iter()

@@ -85,7 +85,7 @@ async fn main() -> Result<()> {
         .results
         .last()
         .and_then(|effect| effect.return_values.first())
-        .filter(|rv| matches!(rv.type_, TypeTag::Address))
+        .filter(|rv| matches!(rv.type_tag, TypeTag::Address))
         .and_then(|rv| TryInto::<[u8; 32]>::try_into(rv.bcs.as_slice()).ok())
         .map(Address::from)
     {
