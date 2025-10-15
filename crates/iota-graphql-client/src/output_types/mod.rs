@@ -86,7 +86,7 @@ impl TryFrom<&GraphQLDryRunMutation> for DryRunMutation {
 
     fn try_from(mutation: &GraphQLDryRunMutation) -> Result<Self> {
         let input = TransactionArgument::try_from(&mutation.input)?;
-        let type_tag = TypeTag::from_str(&mutation.type_tag.repr)?;
+        let type_tag = TypeTag::from_str(&mutation.move_type.repr)?;
         let bcs = base64ct::Base64::decode_vec(&mutation.bcs.0)?;
 
         Ok(DryRunMutation {
