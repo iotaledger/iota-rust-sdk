@@ -675,7 +675,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 50359:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 47450:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 12272:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -696,6 +696,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 20245:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins() != 24826:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name() != 53764:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3412,6 +3414,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx.argtypes = (
     ctypes.c_void_p,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_default_name.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -7605,6 +7613,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events.restype = ct
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name.restype = ctypes.c_uint16
@@ -27797,13 +27808,12 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def coins(self, owner: "Address",pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,coin_type: "typing.Union[object, typing.Optional[str]]" = _DEFAULT):
+    def coins(self, owner: "Address",pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,coin_type: "typing.Union[object, typing.Optional[StructTag]]" = _DEFAULT):
         """
         Get the list of coins for the specified address.
 
-        If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-        which will return all coins. For IOTA coin, pass in the coin type:
-        `0x2::coin::Coin<0x2::iota::IOTA>`.
+        If `coin_type` is not provided, all coins will be returned. For IOTA
+        coins, pass in the coin type: `0x2::iota::IOTA`.
         """
 
         raise NotImplementedError
@@ -27913,6 +27923,12 @@ class GraphQlClientProtocol(typing.Protocol):
     def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction"):
         """
         Execute a transaction.
+        """
+
+        raise NotImplementedError
+    def gas_coins(self, owner: "Address",pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
+        """
+        Get the list of gas coins for the specified address.
         """
 
         raise NotImplementedError
@@ -28415,13 +28431,12 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def coins(self, owner: "Address",pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,coin_type: "typing.Union[object, typing.Optional[str]]" = _DEFAULT) -> "CoinPage":
+    async def coins(self, owner: "Address",pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,coin_type: "typing.Union[object, typing.Optional[StructTag]]" = _DEFAULT) -> "CoinPage":
         """
         Get the list of coins for the specified address.
 
-        If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-        which will return all coins. For IOTA coin, pass in the coin type:
-        `0x2::coin::Coin<0x2::iota::IOTA>`.
+        If `coin_type` is not provided, all coins will be returned. For IOTA
+        coins, pass in the coin type: `0x2::iota::IOTA`.
         """
 
         _UniffiConverterTypeAddress.check_lower(owner)
@@ -28432,14 +28447,14 @@ _UniffiConverterTypeSdkFfiError,
         
         if coin_type is _DEFAULT:
             coin_type = None
-        _UniffiConverterOptionalString.check_lower(coin_type)
+        _UniffiConverterOptionalTypeStructTag.check_lower(coin_type)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(owner),
         _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter),
-        _UniffiConverterOptionalString.lower(coin_type)
+        _UniffiConverterOptionalTypeStructTag.lower(coin_type)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -28791,6 +28806,36 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
             _UniffiConverterOptionalTypeTransactionEffects.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def gas_coins(self, owner: "Address",pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "CoinPage":
+        """
+        Get the list of gas coins for the specified address.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(owner)
+        
+        if pagination_filter is _DEFAULT:
+            pagination_filter = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(owner),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeCoinPage.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
