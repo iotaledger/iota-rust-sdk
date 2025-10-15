@@ -87,7 +87,7 @@ impl MultisigAggregator {
         Self(
             iota_crypto::multisig::MultisigAggregator::new_with_transaction(
                 committee.0.clone(),
-                &transaction.clone().into(),
+                &transaction.0,
             ),
         )
     }

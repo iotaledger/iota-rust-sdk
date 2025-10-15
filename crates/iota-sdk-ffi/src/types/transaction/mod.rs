@@ -39,7 +39,7 @@ pub mod v1;
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
 #[derive(Clone, uniffi::Object)]
-pub struct Transaction(iota_types::Transaction);
+pub struct Transaction(pub iota_types::Transaction);
 
 #[uniffi::export]
 impl Transaction {
@@ -75,24 +75,6 @@ impl Transaction {
 
     pub fn bcs_serialize(&self) -> Result<Vec<u8>> {
         self.as_v1().bcs_serialize()
-    }
-}
-
-impl From<iota_types::Transaction> for Transaction {
-    fn from(value: iota_types::Transaction) -> Self {
-        Transaction(value)
-    }
-}
-
-impl From<Transaction> for iota_types::Transaction {
-    fn from(value: Transaction) -> Self {
-        value.0
-    }
-}
-
-impl From<&Transaction> for iota_types::Transaction {
-    fn from(value: &Transaction) -> Self {
-        value.clone().into()
     }
 }
 
@@ -165,7 +147,7 @@ pub struct SignedTransaction {
 impl From<iota_types::SignedTransaction> for SignedTransaction {
     fn from(value: iota_types::SignedTransaction) -> Self {
         Self {
-            transaction: Arc::new(value.transaction.into()),
+            transaction: Arc::new(Transaction(value.transaction)),
             signatures: value
                 .signatures
                 .into_iter()
@@ -179,7 +161,7 @@ impl From<iota_types::SignedTransaction> for SignedTransaction {
 impl From<SignedTransaction> for iota_types::SignedTransaction {
     fn from(value: SignedTransaction) -> Self {
         Self {
-            transaction: value.transaction.as_ref().into(),
+            transaction: value.transaction.0.clone(),
             signatures: value.signatures.into_iter().map(|v| v.0.clone()).collect(),
         }
     }

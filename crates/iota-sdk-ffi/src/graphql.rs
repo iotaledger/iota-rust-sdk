@@ -618,7 +618,7 @@ impl GraphQLClient {
                     .into_iter()
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
-                &tx.clone().into(),
+                &tx.0,
             )
             .await?
             .map(Into::into)
@@ -820,7 +820,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .dry_run_tx(&tx.clone().into(), skip_checks.unwrap_or(false))
+            .dry_run_tx(&tx.0, skip_checks.unwrap_or(false))
             .await?
             .into())
     }
