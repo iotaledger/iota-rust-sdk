@@ -201,7 +201,7 @@ impl ClientMethods for iota_graphql_client::Client {
     }
 
     async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
-        let res = self.dry_run_tx(&tx, true).await?;
+        let res = self.dry_run_tx(tx, true).await?;
         Ok(res.effects.map(|e| e.gas_summary().gas_used()))
     }
 
