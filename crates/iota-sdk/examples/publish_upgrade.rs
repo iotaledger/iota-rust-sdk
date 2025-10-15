@@ -8,7 +8,7 @@
 
 use eyre::{Result, bail};
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
-use iota_graphql_client::{Client, faucet::FaucetClient, pagination::PaginationFilter};
+use iota_graphql_client::{Client, faucet::FaucetClient};
 use iota_transaction_builder::{MovePackageData, TransactionBuilder, res};
 use iota_types::{Address, Input, ObjectId, ObjectOut, StructTag};
 use rand::rngs::OsRng;
@@ -41,11 +41,6 @@ async fn main() -> Result<()> {
 
     // Get a gas coin id
     let client = Client::new_localnet();
-    let gas = *client
-        .coins(sender, None, PaginationFilter::default())
-        .await?
-        .data[0]
-        .id();
 
     // Build the `publish` PTB, that consists of 2 steps
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
@@ -57,12 +52,7 @@ async fn main() -> Result<()> {
     builder.transfer_objects(sender, [res("upgrade_cap")]);
 
     // Finalize the PTB
-    let tx = builder
-        .gas_budget(50_000_000)
-        .gas(gas)
-        .clone()
-        .finish()
-        .await?;
+    let tx = builder.finish().await?;
 
     // Perform a dry-run to check if everything is fine
     let result = client.dry_run_tx(&tx, false).await?;
@@ -131,7 +121,7 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
 
     let upgrade_cap_arg = builder.input(Input::ImmutableOrOwned(upgrade_cap_ref));
-    let upgrade_policy_arg = builder.pure(0);
+    let upgrade_policy_arg = builder.pure(0u8);
     let compiled_package_digest_arg = builder.pure(compiled_package_digest);
 
     // 1. Create the upgrade ticket
@@ -155,19 +145,14 @@ async fn main() -> Result<()> {
         .arguments((upgrade_cap_arg, res("upgrade_receipt")));
 
     // Finalize the PTB
-    let tx = builder
-        .gas_budget(50_000_000)
-        .gas(gas)
-        .clone()
-        .finish()
-        .await?;
+    let tx = builder.finish().await?;
 
     // Perform a dry-run to check if everything is fine
-    let res = client.dry_run_tx(&tx, false).await?;
-    if let Some(err) = res.error {
+    let result = client.dry_run_tx(&tx, false).await?;
+    if let Some(err) = result.error {
         bail!("Dry run failed: {err}");
     }
-    let Some(effects) = res.effects else {
+    let Some(effects) = result.effects else {
         bail!("Dry run failed: no effects");
     };
     println!("Effects status (dry run): {:?}", effects.status());
