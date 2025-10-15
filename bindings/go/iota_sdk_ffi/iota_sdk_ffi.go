@@ -26136,7 +26136,7 @@ type Event struct {
 	// emitted.
 	Sender *Address
 	// The type of the event emitted
-	Type string
+	TypeTag string
 	// BCS serialized bytes of the event
 	Contents []byte
 	// UTC timestamp in milliseconds since epoch (1/1/1970)
@@ -26151,7 +26151,7 @@ func (r *Event) Destroy() {
 		FfiDestroyerObjectId{}.Destroy(r.PackageId);
 		FfiDestroyerString{}.Destroy(r.Module);
 		FfiDestroyerAddress{}.Destroy(r.Sender);
-		FfiDestroyerString{}.Destroy(r.Type);
+		FfiDestroyerString{}.Destroy(r.TypeTag);
 		FfiDestroyerBytes{}.Destroy(r.Contents);
 		FfiDestroyerString{}.Destroy(r.Timestamp);
 		FfiDestroyerString{}.Destroy(r.Data);
@@ -26187,7 +26187,7 @@ func (c FfiConverterEvent) Write(writer io.Writer, value Event) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.PackageId);
 		FfiConverterStringINSTANCE.Write(writer, value.Module);
 		FfiConverterAddressINSTANCE.Write(writer, value.Sender);
-		FfiConverterStringINSTANCE.Write(writer, value.Type);
+		FfiConverterStringINSTANCE.Write(writer, value.TypeTag);
 		FfiConverterBytesINSTANCE.Write(writer, value.Contents);
 		FfiConverterStringINSTANCE.Write(writer, value.Timestamp);
 		FfiConverterStringINSTANCE.Write(writer, value.Data);
@@ -26760,12 +26760,12 @@ func (_ FfiDestroyerMoveEnumVariant) Destroy(value MoveEnumVariant) {
 }
 type MoveField struct {
 	Name string
-	Type *OpenMoveType
+	TypeTag *OpenMoveType
 }
 
 func (r *MoveField) Destroy() {
 		FfiDestroyerString{}.Destroy(r.Name);
-		FfiDestroyerOptionalOpenMoveType{}.Destroy(r.Type);
+		FfiDestroyerOptionalOpenMoveType{}.Destroy(r.TypeTag);
 }
 
 type FfiConverterMoveField struct {}
@@ -26789,7 +26789,7 @@ func (c FfiConverterMoveField) Lower(value MoveField) C.RustBuffer {
 
 func (c FfiConverterMoveField) Write(writer io.Writer, value MoveField) {
 		FfiConverterStringINSTANCE.Write(writer, value.Name);
-		FfiConverterOptionalOpenMoveTypeINSTANCE.Write(writer, value.Type);
+		FfiConverterOptionalOpenMoveTypeINSTANCE.Write(writer, value.TypeTag);
 }
 
 type FfiDestroyerMoveField struct {}
