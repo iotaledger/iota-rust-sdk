@@ -743,24 +743,21 @@ impl<L> TransactionBuilder<Client, L> {
     pub async fn finish(mut self) -> Result<Transaction, Error> {
         let mut txn = self.resolve_ptb(true).await?;
         if self.data.gas_budget.is_none() {
+            let Transaction::V1(txn) = &mut txn;
             let res = self
                 .client
-                .dry_run_tx_kind(&txn.clone().as_v1().kind, true, Default::default())
+                .dry_run_tx_kind(&txn.kind, true, Default::default())
                 .await
                 .map_err(Error::Client)?;
             if let Some(err) = res.error {
                 return Err(Error::DryRun(err));
             }
 
-            match &mut txn {
-                Transaction::V1(t) => {
-                    t.gas_payment.budget = res
-                        .effects
-                        .ok_or_else(|| Error::MissingGasBudget)?
-                        .gas_summary()
-                        .gas_used();
-                }
-            }
+            txn.gas_payment.budget = res
+                .effects
+                .ok_or_else(|| Error::MissingGasBudget)?
+                .gas_summary()
+                .gas_used();
         }
 
         Ok(txn)
@@ -768,7 +765,8 @@ impl<L> TransactionBuilder<Client, L> {
 
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
-        let txn = self.resolve_ptb(false).await?.as_v1();
+        let txn = self.resolve_ptb(false).await?;
+        let Transaction::V1(txn) = &txn;
         if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
             return Err(Error::DryRun(
                 "gas coins were provided without a gas budget".to_owned(),

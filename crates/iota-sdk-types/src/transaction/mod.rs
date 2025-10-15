@@ -40,11 +40,7 @@ pub enum Transaction {
 }
 
 impl Transaction {
-    pub fn as_v1(self) -> TransactionV1 {
-        match self {
-            Transaction::V1(tx) => tx,
-        }
-    }
+    crate::def_is_as_into_opt!(V1(TransactionV1));
 }
 
 impl From<TransactionV1> for Transaction {
