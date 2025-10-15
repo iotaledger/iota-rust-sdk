@@ -24,6 +24,7 @@ use crate::{
         iota_names::Name,
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
+        struct_tag::StructTag,
         transaction::{SignedTransaction, Transaction, TransactionEffects, TransactionKind},
         type_tag::TypeTag,
     },
@@ -169,21 +170,41 @@ impl GraphQLClient {
 
     /// Get the list of coins for the specified address.
     ///
-    /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-    /// which will return all coins. For IOTA coin, pass in the coin type:
-    /// `0x2::coin::Coin<0x2::iota::IOTA>`.
+    /// If `coin_type` is not provided, all coins will be returned. For IOTA
+    /// coins, pass in the coin type: `0x2::iota::IOTA`.
     #[uniffi::method(default(pagination_filter = None, coin_type = None))]
     pub async fn coins(
         &self,
         owner: &Address,
         pagination_filter: Option<PaginationFilter>,
-        coin_type: Option<String>,
+        coin_type: Option<Arc<StructTag>>,
     ) -> Result<CoinPage> {
         Ok(self
             .0
             .read()
             .await
-            .coins(**owner, coin_type, pagination_filter.unwrap_or_default())
+            .coins(
+                **owner,
+                coin_type.map(|t| t.0.clone()),
+                pagination_filter.unwrap_or_default(),
+            )
+            .await?
+            .map(Into::into)
+            .into())
+    }
+
+    /// Get the list of gas coins for the specified address.
+    #[uniffi::method(default(pagination_filter = None))]
+    pub async fn gas_coins(
+        &self,
+        owner: &Address,
+        pagination_filter: Option<PaginationFilter>,
+    ) -> Result<CoinPage> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .gas_coins(**owner, pagination_filter.unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
