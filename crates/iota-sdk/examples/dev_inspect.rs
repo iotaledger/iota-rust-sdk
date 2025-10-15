@@ -76,16 +76,12 @@ async fn main() -> Result<()> {
 
     let res = builder.dry_run(true).await?;
 
-    if let Some(err) = res.error {
-        eyre::bail!("Failed to lookup name: {err}");
-    }
-
     // Extract the resolved address from the last result
     match res
         .results
         .last()
         .and_then(|effect| effect.return_values.first())
-        .filter(|rv| matches!(rv.type_, TypeTag::Address))
+        .filter(|rv| matches!(rv.type_tag, TypeTag::Address))
         .and_then(|rv| TryInto::<[u8; 32]>::try_into(rv.bcs.as_slice()).ok())
         .map(Address::from)
     {

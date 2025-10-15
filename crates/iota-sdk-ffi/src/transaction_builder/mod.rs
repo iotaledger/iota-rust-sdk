@@ -17,10 +17,9 @@ use crate::{
     transaction_builder::ptb_arg::{MoveArg, PTBArgument},
     types::{
         address::Address,
-        graphql::DryRunResult,
         object::ObjectId,
         struct_tag::Identifier,
-        transaction::{Transaction, TransactionEffects},
+        transaction::{DryRunEffects, Transaction, TransactionEffects},
         type_tag::TypeTag,
     },
 };
@@ -31,13 +30,13 @@ mod ptb_arg;
 /// finalize the transaction data.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct TransactionBuilder(
-    RwLock<iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>>,
+    RwLock<iota_transaction_builder::TransactionBuilder<Arc<GraphQLClient>>>,
 );
 
 impl TransactionBuilder {
     fn read<F, T>(&self, f: F) -> T
     where
-        F: FnOnce(&iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>) -> T,
+        F: FnOnce(&iota_transaction_builder::TransactionBuilder<Arc<GraphQLClient>>) -> T,
     {
         let lock = self.0.read().expect("error reading from builder");
         f(&lock)
@@ -45,9 +44,7 @@ impl TransactionBuilder {
 
     fn write<F, T>(&self, f: F) -> T
     where
-        F: FnOnce(
-            &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
-        ) -> T,
+        F: FnOnce(&mut iota_transaction_builder::TransactionBuilder<Arc<GraphQLClient>>) -> T,
     {
         let mut lock = self.0.write().expect("error writing to builder");
         f(&mut lock)
@@ -58,10 +55,10 @@ impl TransactionBuilder {
 impl TransactionBuilder {
     /// Create a new transaction builder and initialize its elements to default.
     #[uniffi::constructor(name = "init")]
-    pub async fn new(sender: &Address, client: &GraphQLClient) -> Self {
+    pub async fn new(sender: &Address, client: Arc<GraphQLClient>) -> Self {
         Self(
             iota_transaction_builder::TransactionBuilder::new(**sender)
-                .with_client(client.inner().read().await.clone())
+                .with_client(client)
                 .into(),
         )
     }
@@ -319,7 +316,7 @@ impl TransactionBuilder {
 
     /// Dry run the transaction.
     #[uniffi::method(default(skip_checks = false))]
-    pub async fn dry_run(&self, skip_checks: bool) -> Result<DryRunResult> {
+    pub async fn dry_run(&self, skip_checks: bool) -> Result<DryRunEffects> {
         Ok(self
             .read(|builder| builder.clone().dry_run(skip_checks))
             .await?

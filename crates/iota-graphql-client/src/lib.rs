@@ -18,9 +18,9 @@ use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::{Error, Kind};
 use futures::Stream;
 use iota_types::{
-    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, IdentifierRef, MovePackage,
-    Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionEffects,
-    TransactionKind, TypeTag, UserSignature,
+    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, DryRunEffect, DryRunEffects,
+    IdentifierRef, MovePackage, Object, ObjectId, SignedTransaction, StructTag, Transaction,
+    TransactionEffects, TransactionKind, TypeTag, UserSignature,
     framework::Coin,
     iota_names::{NameFormat, NameRegistration, name::Name},
 };
@@ -215,7 +215,7 @@ impl Client {
     /// prevent access to objects that are owned by addresses other than the
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks.
-    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
+    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunEffects> {
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx)?);
         self.dry_run(tx_bytes, skip_checks, None).await
     }
@@ -234,7 +234,7 @@ impl Client {
         tx_kind: &TransactionKind,
         skip_checks: bool,
         tx_meta: TransactionMetadata,
-    ) -> Result<DryRunResult> {
+    ) -> Result<DryRunEffects> {
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx_kind)?);
         self.dry_run(tx_bytes, skip_checks, Some(tx_meta)).await
     }
@@ -245,7 +245,7 @@ impl Client {
         tx_bytes: String,
         skip_checks: bool,
         tx_meta: impl Into<Option<TransactionMetadata>>,
-    ) -> Result<DryRunResult> {
+    ) -> Result<DryRunEffects> {
         let operation = DryRunQuery::build(DryRunArgs {
             tx_bytes,
             skip_checks,
@@ -295,7 +295,7 @@ impl Client {
             .map(|bcs| bcs::from_bytes::<SignedTransaction>(&bcs))
             .transpose()?;
 
-        Ok(DryRunResult {
+        Ok(DryRunEffects {
             error,
             results,
             transaction,

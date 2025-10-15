@@ -1464,6 +1464,184 @@ impl TransactionEffects {
     }
 }
 
+/// A transaction argument used in programmable transactions.
+#[derive(uniffi::Enum)]
+pub enum TransactionArgument {
+    /// Reference to the gas coin.
+    GasCoin,
+    /// An input to the programmable transaction block.
+    Input {
+        /// Index of the programmable transaction block input (0-indexed).
+        ix: u32,
+    },
+    /// The result of another transaction command.
+    Result {
+        /// The index of the previous command (0-indexed) that returned this
+        /// result.
+        cmd: u32,
+        /// If the previous command returns multiple values, this is the index
+        /// of the individual result among the multiple results from
+        /// that command (also 0-indexed).
+        ix: Option<u32>,
+    },
+}
+
+impl From<iota_types::TransactionArgument> for TransactionArgument {
+    fn from(value: iota_types::TransactionArgument) -> Self {
+        match value {
+            iota_types::TransactionArgument::GasCoin => TransactionArgument::GasCoin,
+            iota_types::TransactionArgument::Input { ix } => TransactionArgument::Input { ix },
+            iota_types::TransactionArgument::Result { cmd, ix } => {
+                TransactionArgument::Result { cmd, ix }
+            }
+        }
+    }
+}
+
+impl From<TransactionArgument> for iota_types::TransactionArgument {
+    fn from(value: TransactionArgument) -> Self {
+        match value {
+            TransactionArgument::GasCoin => iota_types::TransactionArgument::GasCoin,
+            TransactionArgument::Input { ix } => iota_types::TransactionArgument::Input { ix },
+            TransactionArgument::Result { cmd, ix } => {
+                iota_types::TransactionArgument::Result { cmd, ix }
+            }
+        }
+    }
+}
+
+/// A return value from a command in the dry run.
+#[derive(uniffi::Record)]
+pub struct DryRunReturn {
+    /// The Move type of the return value.
+    pub type_tag: Arc<TypeTag>,
+    /// The BCS representation of the return value.
+    pub bcs: Vec<u8>,
+}
+
+impl From<iota_types::DryRunReturn> for DryRunReturn {
+    fn from(value: iota_types::DryRunReturn) -> Self {
+        DryRunReturn {
+            type_tag: Arc::new(value.type_tag.into()),
+            bcs: value.bcs,
+        }
+    }
+}
+
+impl From<DryRunReturn> for iota_types::DryRunReturn {
+    fn from(value: DryRunReturn) -> Self {
+        iota_types::DryRunReturn {
+            type_tag: value.type_tag.0.clone(),
+            bcs: value.bcs,
+        }
+    }
+}
+
+/// A mutation to an argument that was mutably borrowed by a command.
+#[derive(uniffi::Record)]
+pub struct DryRunMutation {
+    /// The transaction argument that was mutated.
+    pub input: TransactionArgument,
+    /// The Move type of the mutated value.
+    pub type_tag: Arc<TypeTag>,
+    /// The BCS representation of the mutated value.
+    pub bcs: Vec<u8>,
+}
+
+impl From<iota_types::DryRunMutation> for DryRunMutation {
+    fn from(value: iota_types::DryRunMutation) -> Self {
+        DryRunMutation {
+            input: value.input.into(),
+            type_tag: Arc::new(value.type_tag.into()),
+            bcs: value.bcs,
+        }
+    }
+}
+
+impl From<DryRunMutation> for iota_types::DryRunMutation {
+    fn from(value: DryRunMutation) -> Self {
+        iota_types::DryRunMutation {
+            input: value.input.into(),
+            type_tag: value.type_tag.0.clone(),
+            bcs: value.bcs,
+        }
+    }
+}
+
+/// Effects of a single command in the dry run, including mutated references
+/// and return values.
+#[derive(uniffi::Record)]
+pub struct DryRunEffect {
+    /// Changes made to arguments that were mutably borrowed by this command.
+    pub mutated_references: Vec<DryRunMutation>,
+    /// Return results of this command.
+    pub return_values: Vec<DryRunReturn>,
+}
+
+impl From<iota_types::DryRunEffect> for DryRunEffect {
+    fn from(value: iota_types::DryRunEffect) -> Self {
+        DryRunEffect {
+            mutated_references: value
+                .mutated_references
+                .into_iter()
+                .map(Into::into)
+                .collect(),
+            return_values: value.return_values.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl From<DryRunEffect> for iota_types::DryRunEffect {
+    fn from(value: DryRunEffect) -> Self {
+        iota_types::DryRunEffect {
+            mutated_references: value
+                .mutated_references
+                .into_iter()
+                .map(Into::into)
+                .collect(),
+            return_values: value.return_values.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+/// The result of a simulation (dry run), which includes the effects of the
+/// transaction, any errors that may have occurred, and intermediate results for
+/// each command.
+#[derive(uniffi::Record)]
+pub struct DryRunEffects {
+    /// The error that occurred during dry run execution, if any.
+    pub error: Option<String>,
+    /// The intermediate results for each command of the dry run execution,
+    /// including contents of mutated references and return values.
+    pub results: Vec<DryRunEffect>,
+    /// The transaction block representing the dry run execution.
+    pub transaction: Option<SignedTransaction>,
+    /// The effects of the transaction execution.
+    pub effects: Option<Arc<TransactionEffects>>,
+}
+
+impl From<iota_types::DryRunEffects> for DryRunEffects {
+    fn from(value: iota_types::DryRunEffects) -> Self {
+        DryRunEffects {
+            error: value.error,
+            results: value.results.into_iter().map(Into::into).collect(),
+            transaction: value.transaction.map(Into::into),
+            effects: value.effects.map(Into::into).map(Arc::new),
+        }
+    }
+}
+
+impl From<DryRunEffects> for iota_types::DryRunEffects {
+    fn from(value: DryRunEffects) -> Self {
+        iota_types::DryRunEffects {
+            error: value.error,
+            results: value.results.into_iter().map(Into::into).collect(),
+            transaction: value.transaction.map(Into::into),
+            effects: value.effects.map(|v| v.0.clone()),
+        }
+    }
+}
+
 /// A TTL for a transaction
 ///
 /// # BCS

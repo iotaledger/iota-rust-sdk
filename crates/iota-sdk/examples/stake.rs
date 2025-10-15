@@ -40,11 +40,7 @@ async fn main() -> Result<()> {
             &validator.address.address,
         ));
 
-    let res = builder.dry_run(false).await?;
-
-    if let Some(err) = res.error {
-        eyre::bail!("Failed to stake: {err}");
-    }
+    builder.dry_run(false).await?;
 
     println!("Stake dry run was successful!");
 

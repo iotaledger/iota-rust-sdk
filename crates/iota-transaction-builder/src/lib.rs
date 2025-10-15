@@ -16,6 +16,7 @@ pub mod unresolved;
 pub use self::{
     builder::{
         TransactionBuilder,
+        client_methods::ClientMethods,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
     },
     publish_type::MovePackageData,
@@ -314,7 +315,7 @@ mod tests {
         wait_for_tx_and_check_effects_status_success(effects).await;
 
         let client = Client::new_localnet();
-        let mut tx = TransactionBuilder::new(address).with_client(client.clone());
+        let mut tx = TransactionBuilder::new(address).with_client(&client);
         let mut upgrade_cap = None;
         for o in created_objs {
             let obj = client.object(o, None).await.unwrap().unwrap();

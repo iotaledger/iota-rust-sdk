@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
 
     let client = Client::new_localnet();
 
-    let mut builder = TransactionBuilder::new(sender_address).with_client(client.clone());
+    let mut builder = TransactionBuilder::new(sender_address).with_client(&client);
     builder.send_iota(recipient_address, amount);
     let tx = builder.finish().await?;
 

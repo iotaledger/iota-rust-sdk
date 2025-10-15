@@ -17,15 +17,16 @@ use crate::{
         checkpoint::CheckpointSummary,
         digest::Digest,
         graphql::{
-            CoinMetadata, DryRunResult, DynamicFieldOutput, Epoch, EventFilter, MoveFunction,
-            MoveModule, ObjectFilter, TransactionDataEffects, TransactionMetadata,
-            TransactionsFilter,
+            CoinMetadata, DynamicFieldOutput, Epoch, EventFilter, MoveFunction, MoveModule,
+            ObjectFilter, TransactionDataEffects, TransactionMetadata, TransactionsFilter,
         },
         iota_names::Name,
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
         struct_tag::StructTag,
-        transaction::{SignedTransaction, Transaction, TransactionEffects, TransactionKind},
+        transaction::{
+            DryRunEffects, SignedTransaction, Transaction, TransactionEffects, TransactionKind,
+        },
         type_tag::TypeTag,
     },
     uniffi_helpers::{
@@ -42,6 +43,10 @@ pub struct GraphQLClient(RwLock<iota_graphql_client::Client>);
 impl GraphQLClient {
     pub fn inner(&self) -> &RwLock<iota_graphql_client::Client> {
         &self.0
+    }
+
+    pub fn into_inner(self) -> RwLock<iota_graphql_client::Client> {
+        self.0
     }
 }
 
@@ -836,7 +841,7 @@ impl GraphQLClient {
         &self,
         tx: &Transaction,
         skip_checks: Option<bool>,
-    ) -> Result<DryRunResult> {
+    ) -> Result<DryRunEffects> {
         Ok(self
             .0
             .read()
@@ -861,7 +866,7 @@ impl GraphQLClient {
         tx_kind: &TransactionKind,
         tx_meta: TransactionMetadata,
         skip_checks: Option<bool>,
-    ) -> Result<DryRunResult> {
+    ) -> Result<DryRunEffects> {
         Ok(self
             .0
             .read()
@@ -954,4 +959,86 @@ pub struct Query {
     #[uniffi(default = None)]
     #[serde(default)]
     pub variables: Option<serde_json::Value>,
+}
+
+impl iota_transaction_builder::ClientMethods for GraphQLClient {
+    type Error = <iota_graphql_client::Client as iota_transaction_builder::ClientMethods>::Error;
+
+    async fn object(
+        &self,
+        object_id: iota_types::ObjectId,
+        version: impl Into<Option<u64>>,
+    ) -> Result<Option<iota_types::Object>, Self::Error> {
+        iota_transaction_builder::ClientMethods::object(&*self.0.read().await, object_id, version)
+            .await
+    }
+
+    async fn objects(
+        &self,
+        type_tag: Option<iota_types::TypeTag>,
+        owner: Option<iota_types::Address>,
+        object_ids: Option<Vec<iota_types::ObjectId>>,
+        ascending: bool,
+        cursor: Option<String>,
+        limit: Option<usize>,
+    ) -> Result<Vec<iota_types::Object>, Self::Error> {
+        iota_transaction_builder::ClientMethods::objects(
+            &*self.0.read().await,
+            type_tag,
+            owner,
+            object_ids,
+            ascending,
+            cursor,
+            limit,
+        )
+        .await
+    }
+
+    async fn transaction(
+        &self,
+        digest: iota_types::Digest,
+    ) -> Result<Option<iota_types::SignedTransaction>, Self::Error> {
+        iota_transaction_builder::ClientMethods::transaction(&*self.0.read().await, digest).await
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: iota_types::Digest,
+    ) -> Result<Option<iota_types::TransactionEffects>, Self::Error> {
+        iota_transaction_builder::ClientMethods::transaction_effects(&*self.0.read().await, digest)
+            .await
+    }
+
+    async fn reference_gas_price(
+        &self,
+        epoch: impl Into<Option<u64>>,
+    ) -> Result<Option<u64>, Self::Error> {
+        iota_transaction_builder::ClientMethods::reference_gas_price(&*self.0.read().await, epoch)
+            .await
+    }
+
+    async fn estimate_tx_budget(
+        &self,
+        tx: &iota_types::Transaction,
+    ) -> Result<Option<u64>, Self::Error> {
+        iota_transaction_builder::ClientMethods::estimate_tx_budget(&*self.0.read().await, tx).await
+    }
+
+    async fn dry_run_tx(
+        &self,
+        tx: &iota_types::Transaction,
+        skip_checks: bool,
+    ) -> Result<iota_types::DryRunEffects, Self::Error> {
+        iota_transaction_builder::ClientMethods::dry_run_tx(&*self.0.read().await, tx, skip_checks)
+            .await
+    }
+
+    async fn execute_tx(
+        &self,
+        signatures: &[iota_types::UserSignature],
+        tx: &iota_types::Transaction,
+    ) -> Result<Option<iota_types::TransactionEffects>, Self::Error> {
+        iota_transaction_builder::ClientMethods::execute_tx(&*self.0.read().await, signatures, tx)
+            .await
+    }
 }

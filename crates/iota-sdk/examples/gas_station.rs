@@ -16,7 +16,7 @@ async fn main() -> Result<()> {
     let keypair = Ed25519PrivateKey::generate(rand::thread_rng());
     let sender = keypair.public_key().derive_address();
 
-    let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
+    let mut builder = TransactionBuilder::new(sender).with_client(&client);
 
     builder
         .move_call(Address::STD_LIB, "u64", "sqrt")

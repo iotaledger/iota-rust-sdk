@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let gas_coin =
         ObjectId::from_str("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
 
-    let mut builder = TransactionBuilder::new(from_address).with_client(client.clone());
+    let mut builder = TransactionBuilder::new(from_address).with_client(&client);
 
     builder
         .send_coins([coin], to_address, 50000000000u64)
