@@ -3,6 +3,40 @@
 
 use crate::{Digest, ObjectId};
 
+/// Rust representation of upgrade policy constants in `iota::package`.
+#[repr(u8)]
+#[derive(derive_more::Display, Debug, Clone, Copy)]
+pub enum UpgradePolicy {
+    #[display("COMPATIBLE")]
+    Compatible = 0,
+    #[display("ADDITIVE")]
+    Additive = 128,
+    #[display("DEP_ONLY")]
+    DepOnly = 192,
+}
+
+impl UpgradePolicy {
+    pub const COMPATIBLE: u8 = Self::Compatible as u8;
+    pub const ADDITIVE: u8 = Self::Additive as u8;
+    pub const DEP_ONLY: u8 = Self::DepOnly as u8;
+
+    pub fn is_valid_policy(policy: &u8) -> bool {
+        Self::try_from(*policy).is_ok()
+    }
+}
+
+impl TryFrom<u8> for UpgradePolicy {
+    type Error = ();
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
+            x if x == Self::Compatible as u8 => Ok(Self::Compatible),
+            x if x == Self::Additive as u8 => Ok(Self::Additive),
+            x if x == Self::DepOnly as u8 => Ok(Self::DepOnly),
+            _ => Err(()),
+        }
+    }
+}
+
 /// Type corresponding to the output of `iota move build
 /// --dump-bytecode-as-base64`
 #[derive(Clone, Debug)]

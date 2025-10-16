@@ -31,7 +31,7 @@ mod tests {
     };
     use iota_types::{
         Address, Digest, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectReference,
-        ObjectType, TransactionEffects,
+        ObjectType, TransactionEffects, UpgradePolicy,
     };
 
     use crate::{TransactionBuilder, error::Error, res};
@@ -329,7 +329,11 @@ mod tests {
 
         // we need this ticket to authorize the upgrade
         tx.move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
-            .arguments((upgrade_cap.unwrap(), 0u8, updated_package.digest))
+            .arguments((
+                upgrade_cap.unwrap(),
+                UpgradePolicy::Additive as u8,
+                updated_package.digest,
+            ))
             .name("ticket");
         // now we can upgrade the package
         let receipt = tx

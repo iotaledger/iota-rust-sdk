@@ -17,8 +17,8 @@ use crate::{
     types::{
         address::Address,
         graphql::DryRunResult,
+        move_package::MovePackageData,
         object::ObjectId,
-        package_data::MovePackageData,
         struct_tag::Identifier,
         transaction::{Argument, Transaction, TransactionEffects},
         type_tag::TypeTag,

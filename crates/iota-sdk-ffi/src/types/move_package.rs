@@ -6,6 +6,31 @@ use std::sync::Arc;
 use crate::{error::Result, types::object::ObjectId};
 
 #[derive(derive_more::From, uniffi::Object)]
+pub struct UpgradePolicy(pub iota_types::UpgradePolicy);
+
+#[uniffi::export]
+impl UpgradePolicy {
+    #[uniffi::constructor]
+    pub fn compatible() -> Self {
+        Self(iota_types::UpgradePolicy::Compatible)
+    }
+
+    #[uniffi::constructor]
+    pub fn additive() -> Self {
+        Self(iota_types::UpgradePolicy::Additive)
+    }
+
+    #[uniffi::constructor]
+    pub fn dep_only() -> Self {
+        Self(iota_types::UpgradePolicy::DepOnly)
+    }
+
+    pub fn as_u8(&self) -> u8 {
+        self.0 as u8
+    }
+}
+
+#[derive(derive_more::From, uniffi::Object)]
 pub struct MovePackageData(pub iota_types::MovePackageData);
 
 #[uniffi::export]

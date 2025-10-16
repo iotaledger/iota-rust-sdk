@@ -120,9 +120,9 @@ mod execution_status;
 pub mod framework;
 mod gas;
 pub mod iota_names;
+mod move_package;
 mod object;
 mod object_id;
-mod package_data;
 mod transaction;
 mod type_tag;
 mod u256;
@@ -155,12 +155,12 @@ pub use execution_status::{
 };
 pub use framework::Coin;
 pub use gas::GasCostSummary;
+pub use move_package::{MovePackageData, UpgradePolicy};
 pub use object::{
     GenesisObject, MovePackage, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
     TypeOrigin, UpgradeInfo, Version,
 };
 pub use object_id::ObjectId;
-pub use package_data::MovePackageData;
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
