@@ -3,7 +3,6 @@
 
 use std::str::FromStr;
 
-use base64ct::Encoding;
 use eyre::Result;
 use iota_graphql_client::Client;
 use iota_transaction_builder::{TransactionBuilder, res, unresolved::Argument};
