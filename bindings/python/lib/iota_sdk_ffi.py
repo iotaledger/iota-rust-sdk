@@ -677,9 +677,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 47450:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 12272:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 63702:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 1733:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3341,14 +3341,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins.restype = ctypes.c_
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
-    _UniffiRustBuffer,
+    ctypes.c_int8,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
     _UniffiRustBuffer,
-    _UniffiRustBuffer,
+    ctypes.c_int8,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field.argtypes = (
@@ -18931,33 +18931,6 @@ class _UniffiConverterOptionalUInt64(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterOptionalBool(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterBool.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterBool.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterBool.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalString(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -27725,7 +27698,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def dry_run_tx(self, tx: "Transaction",skip_checks: "typing.Union[object, typing.Optional[bool]]" = _DEFAULT):
+    def dry_run_tx(self, tx: "Transaction",skip_checks: "typing.Union[object, bool]" = _DEFAULT):
         """
         Dry run a [`Transaction`] and return the transaction effects and dry run
         error (if any).
@@ -27737,7 +27710,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def dry_run_tx_kind(self, tx_kind: "TransactionKind",tx_meta: "TransactionMetadata",skip_checks: "typing.Union[object, typing.Optional[bool]]" = _DEFAULT):
+    def dry_run_tx_kind(self, tx_kind: "TransactionKind",tx_meta: "TransactionMetadata",skip_checks: "typing.Union[object, bool]" = _DEFAULT):
         """
         Dry run a [`TransactionKind`] and return the transaction effects and dry
         run error (if any).
@@ -28377,7 +28350,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def dry_run_tx(self, tx: "Transaction",skip_checks: "typing.Union[object, typing.Optional[bool]]" = _DEFAULT) -> "DryRunResult":
+    async def dry_run_tx(self, tx: "Transaction",skip_checks: "typing.Union[object, bool]" = _DEFAULT) -> "DryRunResult":
         """
         Dry run a [`Transaction`] and return the transaction effects and dry run
         error (if any).
@@ -28391,14 +28364,14 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeTransaction.check_lower(tx)
         
         if skip_checks is _DEFAULT:
-            skip_checks = None
-        _UniffiConverterOptionalBool.check_lower(skip_checks)
+            skip_checks = False
+        _UniffiConverterBool.check_lower(skip_checks)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeTransaction.lower(tx),
-        _UniffiConverterOptionalBool.lower(skip_checks)
+        _UniffiConverterBool.lower(skip_checks)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -28413,7 +28386,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def dry_run_tx_kind(self, tx_kind: "TransactionKind",tx_meta: "TransactionMetadata",skip_checks: "typing.Union[object, typing.Optional[bool]]" = _DEFAULT) -> "DryRunResult":
+    async def dry_run_tx_kind(self, tx_kind: "TransactionKind",tx_meta: "TransactionMetadata",skip_checks: "typing.Union[object, bool]" = _DEFAULT) -> "DryRunResult":
         """
         Dry run a [`TransactionKind`] and return the transaction effects and dry
         run error (if any).
@@ -28431,15 +28404,15 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeTransactionMetadata.check_lower(tx_meta)
         
         if skip_checks is _DEFAULT:
-            skip_checks = None
-        _UniffiConverterOptionalBool.check_lower(skip_checks)
+            skip_checks = False
+        _UniffiConverterBool.check_lower(skip_checks)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeTransactionKind.lower(tx_kind),
         _UniffiConverterTypeTransactionMetadata.lower(tx_meta),
-        _UniffiConverterOptionalBool.lower(skip_checks)
+        _UniffiConverterBool.lower(skip_checks)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,

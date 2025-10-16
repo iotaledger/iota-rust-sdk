@@ -1677,12 +1677,12 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(void* ptr, void* owne
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DRY_RUN_TX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DRY_RUN_TX
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(void* ptr, void* tx, RustBuffer skip_checks
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(void* ptr, void* tx, int8_t skip_checks
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DRY_RUN_TX_KIND
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DRY_RUN_TX_KIND
-uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(void* ptr, void* tx_kind, RustBuffer tx_meta, RustBuffer skip_checks
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(void* ptr, void* tx_kind, RustBuffer tx_meta, int8_t skip_checks
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_DYNAMIC_FIELD

@@ -1334,7 +1334,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx()
 	})
-	if checksum != 12272 {
+	if checksum != 63702 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx: UniFFI API checksum mismatch")
 	}
@@ -1343,7 +1343,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind()
 	})
-	if checksum != 40594 {
+	if checksum != 1733 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind: UniFFI API checksum mismatch")
 	}
@@ -12068,7 +12068,7 @@ type GraphQlClientInterface interface {
 	// prevent access to objects that are owned by addresses other than the
 	// sender, and calling non-public, non-entry functions, and some other
 	// checks. Defaults to false.
-	DryRunTx(tx *Transaction, skipChecks *bool) (DryRunResult, error)
+	DryRunTx(tx *Transaction, skipChecks bool) (DryRunResult, error)
 	// Dry run a [`TransactionKind`] and return the transaction effects and dry
 	// run error (if any).
 	//
@@ -12078,7 +12078,7 @@ type GraphQlClientInterface interface {
 	// checks. Defaults to false.
 	//
 	// `tx_meta` is the transaction metadata.
-	DryRunTxKind(txKind *TransactionKind, txMeta TransactionMetadata, skipChecks *bool) (DryRunResult, error)
+	DryRunTxKind(txKind *TransactionKind, txMeta TransactionMetadata, skipChecks bool) (DryRunResult, error)
 	// Access a dynamic field on an object using its name. Names are arbitrary
 	// Move values whose type have copy, drop, and store, and are specified
 	// using their type, and their BCS contents, Base64 encoded.
@@ -12547,7 +12547,7 @@ func (_self *GraphQlClient) Coins(owner *Address, paginationFilter *PaginationFi
 // prevent access to objects that are owned by addresses other than the
 // sender, and calling non-public, non-entry functions, and some other
 // checks. Defaults to false.
-func (_self *GraphQlClient) DryRunTx(tx *Transaction, skipChecks *bool) (DryRunResult, error) {
+func (_self *GraphQlClient) DryRunTx(tx *Transaction, skipChecks bool) (DryRunResult, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12564,7 +12564,7 @@ func (_self *GraphQlClient) DryRunTx(tx *Transaction, skipChecks *bool) (DryRunR
 			return FfiConverterDryRunResultINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(
-		_pointer,FfiConverterTransactionINSTANCE.Lower(tx), FfiConverterOptionalBoolINSTANCE.Lower(skipChecks)),
+		_pointer,FfiConverterTransactionINSTANCE.Lower(tx), FfiConverterBoolINSTANCE.Lower(skipChecks)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12587,7 +12587,7 @@ func (_self *GraphQlClient) DryRunTx(tx *Transaction, skipChecks *bool) (DryRunR
 // checks. Defaults to false.
 //
 // `tx_meta` is the transaction metadata.
-func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta TransactionMetadata, skipChecks *bool) (DryRunResult, error) {
+func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta TransactionMetadata, skipChecks bool) (DryRunResult, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12604,7 +12604,7 @@ func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta Transac
 			return FfiConverterDryRunResultINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(
-		_pointer,FfiConverterTransactionKindINSTANCE.Lower(txKind), FfiConverterTransactionMetadataINSTANCE.Lower(txMeta), FfiConverterOptionalBoolINSTANCE.Lower(skipChecks)),
+		_pointer,FfiConverterTransactionKindINSTANCE.Lower(txKind), FfiConverterTransactionMetadataINSTANCE.Lower(txMeta), FfiConverterBoolINSTANCE.Lower(skipChecks)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -31435,43 +31435,6 @@ type FfiDestroyerOptionalUint64 struct {}
 func (_ FfiDestroyerOptionalUint64) Destroy(value *uint64) {
 	if value != nil {
 		FfiDestroyerUint64{}.Destroy(*value)
-	}
-}
-
-type FfiConverterOptionalBool struct{}
-
-var FfiConverterOptionalBoolINSTANCE = FfiConverterOptionalBool{}
-
-func (c FfiConverterOptionalBool) Lift(rb RustBufferI) *bool {
-	return LiftFromRustBuffer[*bool](c, rb)
-}
-
-func (_ FfiConverterOptionalBool) Read(reader io.Reader) *bool {
-	if readInt8(reader) == 0 {
-		return nil
-	}
-	temp := FfiConverterBoolINSTANCE.Read(reader)
-	return &temp
-}
-
-func (c FfiConverterOptionalBool) Lower(value *bool) C.RustBuffer {
-	return LowerIntoRustBuffer[*bool](c, value)
-}
-
-func (_ FfiConverterOptionalBool) Write(writer io.Writer, value *bool) {
-	if value == nil {
-		writeInt8(writer, 0)
-	} else {
-		writeInt8(writer, 1)
-		FfiConverterBoolINSTANCE.Write(writer, *value)
-	}
-}
-
-type FfiDestroyerOptionalBool struct {}
-
-func (_ FfiDestroyerOptionalBool) Destroy(value *bool) {
-	if value != nil {
-		FfiDestroyerBool{}.Destroy(*value)
 	}
 }
 
