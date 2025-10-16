@@ -159,9 +159,9 @@
 //! resulting [Transaction](iota_types::Transaction), which can be manually
 //! serialized, executed, etc.
 //!
-//! Additionally, when a client is provided, the builder can directly [dry_run]
-//! (TransactionBuilder::dry_run) or [execute](TransactionBuilder::execute)
-//! the transaction.
+//! Additionally, when a client is provided, the builder can directly
+//! [dry_run](TransactionBuilder::dry_run) or
+//! [execute](TransactionBuilder::execute) the transaction.
 //!
 //! When the transaction is resolved, the builder will try to ensure a valid
 //! state by de-duplicating and converting appropriate inputs into references to
