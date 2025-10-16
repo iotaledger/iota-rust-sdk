@@ -317,14 +317,13 @@ mod type_digest {
         }
 
         /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-        pub fn to_bcs(&self) -> Result<Vec<u8>, bcs::Error> {
-            bcs::to_bytes(self)
+        pub fn to_bcs(&self) -> Vec<u8> {
+            bcs::to_bytes(self).expect("bcs serialization failed")
         }
 
         /// Serialize the transaction as a base64-encoded string.
-        pub fn to_base64(&self) -> Result<String, bcs::Error> {
-            let bytes = self.to_bcs()?;
-            Ok(base64ct::Base64::encode_string(&bytes))
+        pub fn to_base64(&self) -> String {
+            base64ct::Base64::encode_string(&self.to_bcs())
         }
 
         /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
@@ -347,14 +346,13 @@ mod type_digest {
         }
 
         /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-        pub fn to_bcs(&self) -> Result<Vec<u8>, bcs::Error> {
-            bcs::to_bytes(self)
+        pub fn to_bcs(&self) -> Vec<u8> {
+            bcs::to_bytes(self).expect("bcs serialization failed")
         }
 
         /// Serialize the transaction as a base64-encoded string.
-        pub fn to_base64(&self) -> Result<String, bcs::Error> {
-            let bytes = self.to_bcs()?;
-            Ok(base64ct::Base64::encode_string(&bytes))
+        pub fn to_base64(&self) -> String {
+            base64ct::Base64::encode_string(&self.to_bcs())
         }
 
         /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
