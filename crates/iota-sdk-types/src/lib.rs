@@ -122,6 +122,7 @@ mod gas;
 pub mod iota_names;
 mod object;
 mod object_id;
+mod package_data;
 mod transaction;
 mod type_tag;
 mod u256;
@@ -159,6 +160,7 @@ pub use object::{
     TypeOrigin, UpgradeInfo, Version,
 };
 pub use object_id::ObjectId;
+pub use package_data::MovePackageData;
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;

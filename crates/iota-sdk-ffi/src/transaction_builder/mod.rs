@@ -7,8 +7,7 @@ use std::{
     time::Duration,
 };
 
-use iota_transaction_builder::MovePackageData;
-use iota_types::Input;
+use iota_types::{Input, MovePackageData};
 
 use crate::{
     crypto::simple::SimpleKeypair,
@@ -266,11 +265,10 @@ impl TransactionBuilder {
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .publish(MovePackageData {
+                .publish(MovePackageData::new(
                     modules,
-                    dependencies: dependencies.into_iter().map(|o| **o).collect(),
-                    digest: None,
-                })
+                    dependencies.into_iter().map(|o| **o).collect(),
+                ))
                 .upgrade_cap(upgrade_cap_name);
         });
         self
@@ -301,11 +299,7 @@ impl TransactionBuilder {
                 .upgrade(
                     **package,
                     ticket,
-                    MovePackageData {
-                        modules,
-                        dependencies: dependencies.into_iter().map(|o| **o).collect(),
-                        digest: None,
-                    },
+                    MovePackageData::new(modules, dependencies.into_iter().map(|o| **o).collect()),
                 )
                 .name(name);
         });
