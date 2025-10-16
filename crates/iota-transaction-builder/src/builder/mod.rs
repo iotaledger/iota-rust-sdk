@@ -966,10 +966,10 @@ impl<C, L> TransactionBuilder<C, L> {
     /// referenced by follow-up calls using the `result_ref()` method.
     ///
     /// e.g.
-    /// ```rust,nocheck
+    /// ```rust,ignore
     /// builder
     ///     .move_call(iota_names_package_address, "registry", "lookup")
-    ///     .arguments((get_result("iota_names"), get_result("name")))
+    ///     .arguments((result_ref("iota_names"), result_ref("name")))
     ///     .result_refs("name_record_opt");
     /// ```
     pub fn result_refs(&mut self, name: impl NamedResults) -> &mut Self {

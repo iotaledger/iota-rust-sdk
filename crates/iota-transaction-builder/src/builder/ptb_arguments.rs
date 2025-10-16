@@ -264,7 +264,7 @@ pub struct CommandResult(String);
 /// Get the result of a previous command by its name, which was defined
 /// using the `.result_ref()` method.
 ///
-/// ```rust,nocheck
+/// ```rust,ignore
 /// builder
 ///     .move_call(iota_names_package_address, "name", "new")
 ///     .arguments([name])
