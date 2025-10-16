@@ -2398,6 +2398,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2650,6 +2652,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch_total_transaction_bl
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name(
 ): Short
@@ -4462,6 +4466,8 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(`ptr`: Pointer,`filter`: 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(`ptr`: Pointer,`signatures`: RustBuffer.ByValue,`tx`: Pointer,
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(`ptr`: Pointer,`owner`: Pointer,`paginationFilter`: RustBuffer.ByValue,
+): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_default_name(`ptr`: Pointer,`address`: Pointer,`format`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_lookup(`ptr`: Pointer,`name`: RustBuffer.ByValue,
@@ -6270,7 +6276,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 50359.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 47450.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 12272.toShort()) {
@@ -6301,6 +6307,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins() != 24826.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name() != 53764.toShort()) {
@@ -19534,11 +19543,10 @@ public interface GraphQlClientInterface {
     /**
      * Get the list of coins for the specified address.
      *
-     * If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-     * which will return all coins. For IOTA coin, pass in the coin type:
-     * `0x2::coin::Coin<0x2::iota::IOTA>`.
+     * If `coin_type` is not provided, all coins will be returned. For IOTA
+     * coins, pass in the coin type: `0x2::iota::IOTA`.
      */
-    suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter? = null, `coinType`: kotlin.String? = null): CoinPage
+    suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter? = null, `coinType`: StructTag? = null): CoinPage
     
     /**
      * Dry run a [`Transaction`] and return the transaction effects and dry run
@@ -19638,6 +19646,11 @@ public interface GraphQlClientInterface {
      * Execute a transaction.
      */
     suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction): TransactionEffects?
+    
+    /**
+     * Get the list of gas coins for the specified address.
+     */
+    suspend fun `gasCoins`(`owner`: Address, `paginationFilter`: PaginationFilter? = null): CoinPage
     
     /**
      * Get the default name pointing to this address, if one exists.
@@ -20106,18 +20119,17 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     /**
      * Get the list of coins for the specified address.
      *
-     * If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-     * which will return all coins. For IOTA coin, pass in the coin type:
-     * `0x2::coin::Coin<0x2::iota::IOTA>`.
+     * If `coin_type` is not provided, all coins will be returned. For IOTA
+     * coins, pass in the coin type: `0x2::iota::IOTA`.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter?, `coinType`: kotlin.String?) : CoinPage {
+    override suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter?, `coinType`: StructTag?) : CoinPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`owner`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalString.lower(`coinType`),
+                FfiConverterTypeAddress.lower(`owner`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeStructTag.lower(`coinType`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20414,6 +20426,30 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeTransactionEffects.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Get the list of gas coins for the specified address.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `gasCoins`(`owner`: Address, `paginationFilter`: PaginationFilter?) : CoinPage {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(
+                thisPtr,
+                FfiConverterTypeAddress.lower(`owner`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeCoinPage.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )

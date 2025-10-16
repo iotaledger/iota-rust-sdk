@@ -1730,6 +1730,11 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(void* ptr, RustBuffe
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(void* ptr, RustBuffer signatures, void* tx
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_GAS_COINS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_GAS_COINS
+uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(void* ptr, void* owner, RustBuffer pagination_filter
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_IOTA_NAMES_DEFAULT_NAME
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_GRAPHQLCLIENT_IOTA_NAMES_DEFAULT_NAME
 uint64_t uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_default_name(void* ptr, void* address, RustBuffer format
@@ -6147,6 +6152,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_EXECUTE_TX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_EXECUTE_TX
 uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_GAS_COINS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_GRAPHQLCLIENT_GAS_COINS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins(void
     
 );
 #endif
