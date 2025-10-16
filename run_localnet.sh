@@ -32,7 +32,7 @@ if [ "$1" == "start" ]; then
     address="0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa"
 
     echo "Setting keypair in config..."
-    sed -i "s|<keypair>|$keyWithFlag|g" "$CONFIG_PATH"
+    sed -i '' "s|<keypair>|$keyWithFlag|g" "$CONFIG_PATH"
 
     echo "Waiting for network to start and requesting faucet coins..."
     success=false
