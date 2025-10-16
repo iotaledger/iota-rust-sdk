@@ -39,7 +39,6 @@ async fn main() -> Result<()> {
         receipt.sent.iter().map(|coin| coin.amount).sum::<u64>()
     );
 
-    // Get a gas coin id
     let client = Client::new_localnet();
 
     // Build the `publish` PTB, that consists of 2 steps
