@@ -19,7 +19,7 @@ use crate::{
         address::Address,
         object::ObjectId,
         struct_tag::Identifier,
-        transaction::{DryRunResult, Transaction, TransactionEffects},
+        transaction::{Argument, DryRunResult, Transaction, TransactionEffects},
         type_tag::TypeTag,
     },
 };
@@ -311,7 +311,9 @@ impl TransactionBuilder {
 
     /// Convert this builder into a transaction.
     pub async fn finish(&self) -> Result<Transaction> {
-        Ok(self.read(|builder| builder.clone().finish()).await?.into())
+        Ok(Transaction(
+            self.read(|builder| builder.clone().finish()).await?,
+        ))
     }
 
     /// Dry run the transaction.

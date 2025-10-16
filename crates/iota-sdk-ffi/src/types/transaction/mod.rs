@@ -27,6 +27,57 @@ use crate::{
 
 pub mod v1;
 
+/// Transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction = %x00 transaction-v1
+///
+/// transaction-v1 = transaction-kind address gas-payment transaction-expiration
+/// ```
+#[derive(Clone, uniffi::Object)]
+pub struct Transaction(pub iota_types::Transaction);
+
+#[uniffi::export]
+impl Transaction {
+    pub fn as_v1(&self) -> Arc<TransactionV1> {
+        match &self.0 {
+            iota_types::Transaction::V1(tx) => Arc::new(TransactionV1(tx.clone())),
+        }
+    }
+
+    pub fn kind(&self) -> TransactionKind {
+        self.as_v1().kind()
+    }
+
+    pub fn sender(&self) -> Address {
+        self.as_v1().sender()
+    }
+
+    pub fn gas_payment(&self) -> GasPayment {
+        self.as_v1().gas_payment()
+    }
+
+    pub fn expiration(&self) -> TransactionExpiration {
+        self.as_v1().expiration()
+    }
+
+    pub fn digest(&self) -> Digest {
+        self.as_v1().digest()
+    }
+
+    pub fn signing_digest(&self) -> Vec<u8> {
+        self.as_v1().signing_digest()
+    }
+
+    pub fn bcs_serialize(&self) -> Result<Vec<u8>> {
+        self.as_v1().bcs_serialize()
+    }
+}
+
 /// A transaction
 ///
 /// # BCS
@@ -39,10 +90,10 @@ pub mod v1;
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Transaction(pub iota_types::Transaction);
+pub struct TransactionV1(pub iota_types::TransactionV1);
 
 #[uniffi::export]
-impl Transaction {
+impl TransactionV1 {
     #[uniffi::constructor]
     pub fn new(
         kind: &TransactionKind,
@@ -50,7 +101,7 @@ impl Transaction {
         gas_payment: GasPayment,
         expiration: TransactionExpiration,
     ) -> Self {
-        Self(iota_types::Transaction {
+        Self(iota_types::TransactionV1 {
             kind: kind.0.clone(),
             sender: **sender,
             gas_payment: gas_payment.into(),
@@ -96,7 +147,7 @@ pub struct SignedTransaction {
 impl From<iota_types::SignedTransaction> for SignedTransaction {
     fn from(value: iota_types::SignedTransaction) -> Self {
         Self {
-            transaction: Arc::new(value.transaction.into()),
+            transaction: Arc::new(Transaction(value.transaction)),
             signatures: value
                 .signatures
                 .into_iter()

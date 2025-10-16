@@ -170,7 +170,7 @@ pub use transaction::{
     ExecutionTimeObservationKey, ExecutionTimeObservations, GasPayment, GenesisTransaction, Input,
     MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate,
     SenderSignedTransaction, SignedTransaction, SplitCoins, SystemPackage, Transaction,
-    TransactionExpiration, TransactionKind, TransferObjects, Upgrade,
+    TransactionExpiration, TransactionKind, TransactionV1, TransferObjects, Upgrade,
     ValidatorExecutionTimeObservation, VersionAssignment,
 };
 pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag};

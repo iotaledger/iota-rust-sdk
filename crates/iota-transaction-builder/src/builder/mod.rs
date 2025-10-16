@@ -14,7 +14,7 @@ use iota_graphql_client::Client;
 use iota_types::{
     Address, DryRunResult, GasPayment, Identifier, ObjectId, ObjectReference, Owner,
     ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
-    TypeTag,
+    TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -539,7 +539,7 @@ impl<L> TransactionBuilder<(), L> {
             .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
-        Ok(Transaction {
+        Ok(TransactionV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
@@ -552,7 +552,8 @@ impl<L> TransactionBuilder<(), L> {
                 budget: self.data.gas_budget.unwrap_or(0),
             },
             expiration: self.data.expiration,
-        })
+        }
+        .into())
     }
 }
 
@@ -728,7 +729,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 .map_err(Error::client)?
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
-        Ok(Transaction {
+        Ok(TransactionV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
@@ -741,18 +742,21 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 budget: self.data.gas_budget.unwrap_or(0),
             },
             expiration: self.data.expiration,
-        })
+        }
+        .into())
     }
 
     async fn finish_internal(&mut self) -> Result<Transaction, Error> {
         let mut txn = self.resolve_ptb(true).await?;
         if self.data.gas_budget.is_none() {
-            txn.gas_payment.budget = self
+            let budget = self
                 .client
                 .estimate_tx_budget(&txn)
                 .await
                 .map_err(Error::client)?
                 .ok_or(Error::MissingGasBudget)?;
+            let Transaction::V1(txn) = &mut txn;
+            txn.gas_payment.budget = budget
         }
 
         Ok(txn)
@@ -766,10 +770,13 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
-        if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
-            return Err(Error::DryRun(
-                "gas coins were provided without a gas budget".to_owned(),
-            ));
+        {
+            let Transaction::V1(txn) = &txn;
+            if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
+                return Err(Error::DryRun(
+                    "gas coins were provided without a gas budget".to_owned(),
+                ));
+            }
         }
         let res = self
             .client
