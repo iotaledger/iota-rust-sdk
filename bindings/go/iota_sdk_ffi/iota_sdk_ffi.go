@@ -6660,20 +6660,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_base64()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64()
 	})
-	if checksum != 30479 {
+	if checksum != 30255 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_base64: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_bcs()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_bcs()
 	})
-	if checksum != 39370 {
+	if checksum != 33474 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_bcs: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_bcs: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6768,29 +6768,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64()
+	})
+	if checksum != 19681 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_bcs()
+	})
+	if checksum != 46239 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_bcs: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new()
 	})
 	if checksum != 17484 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new_from_base64()
-	})
-	if checksum != 20297 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new_from_base64: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new_from_bcs()
-	})
-	if checksum != 30016 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new_from_bcs: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -21742,9 +21742,9 @@ type Transaction struct {
 
 
 // Deserialize a transaction from a base64-encoded string.
-func TransactionNewFromBase64(base64 string) (*Transaction, error) {
+func TransactionFromBase64(base64 string) (*Transaction, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_base64(FfiConverterStringINSTANCE.Lower(base64),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64(FfiConverterStringINSTANCE.Lower(base64),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Transaction
@@ -21755,9 +21755,9 @@ func TransactionNewFromBase64(base64 string) (*Transaction, error) {
 }
 
 // Deserialize a transaction from a `Vec<u8>` of BCS bytes.
-func TransactionNewFromBcs(bytes []byte) (*Transaction, error) {
+func TransactionFromBcs(bytes []byte) (*Transaction, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_bcs(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_bcs(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Transaction
@@ -22784,9 +22784,9 @@ func NewTransactionV1(kind *TransactionKind, sender *Address, gasPayment GasPaym
 
 
 // Deserialize a transaction from a base64-encoded string.
-func TransactionV1NewFromBase64(bytes string) (*TransactionV1, error) {
+func TransactionV1FromBase64(bytes string) (*TransactionV1, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new_from_base64(FfiConverterStringINSTANCE.Lower(bytes),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64(FfiConverterStringINSTANCE.Lower(bytes),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *TransactionV1
@@ -22797,9 +22797,9 @@ func TransactionV1NewFromBase64(bytes string) (*TransactionV1, error) {
 }
 
 // Deserialize a transaction from a `Vec<u8>` of BCS bytes.
-func TransactionV1NewFromBcs(bytes []byte) (*TransactionV1, error) {
+func TransactionV1FromBcs(bytes []byte) (*TransactionV1, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new_from_bcs(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_bcs(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *TransactionV1

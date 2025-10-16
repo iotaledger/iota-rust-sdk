@@ -1861,9 +1861,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 25070:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_base64() != 30479:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64() != 30255:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_bcs() != 39370:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_bcs() != 33474:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1() != 58632:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1885,11 +1885,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 37051:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64() != 19681:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_bcs() != 46239:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new() != 17484:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new_from_base64() != 20297:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new_from_bcs() != 30016:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new() != 22470:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5918,16 +5918,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transaction.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transaction.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_base64.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_base64.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_bcs.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_bcs.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_bcs.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_v1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6232,6 +6232,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionv1.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionv1.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_bcs.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_bcs.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -6240,16 +6250,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new_from_base64.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new_from_base64.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new_from_bcs.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -9408,12 +9408,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_base64.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_base64.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_bcs.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_bcs.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_from_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_bcs.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1.restype = ctypes.c_uint16
@@ -9444,15 +9444,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programm
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_bcs.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new_from_base64.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new_from_base64.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new_from_bcs.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new.restype = ctypes.c_uint16
@@ -37949,7 +37949,7 @@ class Transaction():
         inst._pointer = pointer
         return inst
     @classmethod
-    def new_from_base64(cls, base64: "str"):
+    def from_base64(cls, base64: "str"):
         """
         Deserialize a transaction from a base64-encoded string.
         """
@@ -37957,12 +37957,12 @@ class Transaction():
         _UniffiConverterString.check_lower(base64)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_base64,
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64,
         _UniffiConverterString.lower(base64))
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_from_bcs(cls, bytes: "bytes"):
+    def from_bcs(cls, bytes: "bytes"):
         """
         Deserialize a transaction from a `Vec<u8>` of BCS bytes.
         """
@@ -37970,7 +37970,7 @@ class Transaction():
         _UniffiConverterBytes.check_lower(bytes)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_bcs,
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_bcs,
         _UniffiConverterBytes.lower(bytes))
         return cls._make_instance_(pointer)
 
@@ -39258,7 +39258,7 @@ class TransactionV1():
         inst._pointer = pointer
         return inst
     @classmethod
-    def new_from_base64(cls, bytes: "str"):
+    def from_base64(cls, bytes: "str"):
         """
         Deserialize a transaction from a base64-encoded string.
         """
@@ -39266,12 +39266,12 @@ class TransactionV1():
         _UniffiConverterString.check_lower(bytes)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new_from_base64,
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64,
         _UniffiConverterString.lower(bytes))
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_from_bcs(cls, bytes: "bytes"):
+    def from_bcs(cls, bytes: "bytes"):
         """
         Deserialize a transaction from a `Vec<u8>` of BCS bytes.
         """
@@ -39279,7 +39279,7 @@ class TransactionV1():
         _UniffiConverterBytes.check_lower(bytes)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new_from_bcs,
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_bcs,
         _UniffiConverterBytes.lower(bytes))
         return cls._make_instance_(pointer)
 

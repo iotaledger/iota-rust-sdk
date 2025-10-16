@@ -90,13 +90,13 @@ impl Transaction {
 
     /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
     #[uniffi::constructor]
-    pub fn new_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+    pub fn from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(Transaction(iota_types::Transaction::from_bcs(&bytes)?))
     }
 
     /// Deserialize a transaction from a base64-encoded string.
     #[uniffi::constructor]
-    pub fn new_from_base64(base64: String) -> Result<Self> {
+    pub fn from_base64(base64: String) -> Result<Self> {
         Ok(Transaction(iota_types::Transaction::from_base64(&base64)?))
     }
 }
@@ -168,13 +168,13 @@ impl TransactionV1 {
 
     /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
     #[uniffi::constructor]
-    pub fn new_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+    pub fn from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(Self(iota_types::TransactionV1::from_bcs(&bytes)?))
     }
 
     /// Deserialize a transaction from a base64-encoded string.
     #[uniffi::constructor]
-    pub fn new_from_base64(bytes: String) -> Result<Self> {
+    pub fn from_base64(bytes: String) -> Result<Self> {
         Ok(Self(iota_types::TransactionV1::from_base64(&bytes)?))
     }
 }
