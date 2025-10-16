@@ -3755,7 +3755,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish()
 	})
-	if checksum != 30595 {
+	if checksum != 22805 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish: UniFFI API checksum mismatch")
 	}
@@ -22166,7 +22166,7 @@ type TransactionBuilderInterface interface {
 	// - `modules`: is the modules' bytecode to be published
 	// - `dependencies`: is the list of IDs of the transitive dependencies of
 	// the package
-	Publish(packageData *MovePackageData, dependencies []*ObjectId, upgradeCapName string) *TransactionBuilder
+	Publish(packageData *MovePackageData, upgradeCapName string) *TransactionBuilder
 	// Transfer some coins to a recipient address. If multiple coins are
 	// provided then they will be merged.
 	SendCoins(coins []*PtbArgument, recipient *Address, amount **PtbArgument) *TransactionBuilder
@@ -22448,12 +22448,12 @@ func (_self *TransactionBuilder) MoveCall(varPackage *Address, module *Identifie
 // - `modules`: is the modules' bytecode to be published
 // - `dependencies`: is the list of IDs of the transitive dependencies of
 // the package
-func (_self *TransactionBuilder) Publish(packageData *MovePackageData, dependencies []*ObjectId, upgradeCapName string) *TransactionBuilder {
+func (_self *TransactionBuilder) Publish(packageData *MovePackageData, upgradeCapName string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(
-		_pointer,FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies), FfiConverterStringINSTANCE.Lower(upgradeCapName),_uniffiStatus)
+		_pointer,FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterStringINSTANCE.Lower(upgradeCapName),_uniffiStatus)
 	}))
 }
 

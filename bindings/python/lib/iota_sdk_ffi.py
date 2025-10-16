@@ -1215,7 +1215,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 30595:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 22805:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6130,7 +6130,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call.restype = 
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
-    _UniffiRustBuffer,
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -38392,7 +38391,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def publish(self, package_data: "MovePackageData",dependencies: "typing.List[ObjectId]",upgrade_cap_name: "str"):
+    def publish(self, package_data: "MovePackageData",upgrade_cap_name: "str"):
         """
         Publish a list of modules with the given dependencies. The result
         assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
@@ -38796,7 +38795,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def publish(self, package_data: "MovePackageData",dependencies: "typing.List[ObjectId]",upgrade_cap_name: "str") -> "TransactionBuilder":
+    def publish(self, package_data: "MovePackageData",upgrade_cap_name: "str") -> "TransactionBuilder":
         """
         Publish a list of modules with the given dependencies. The result
         assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
@@ -38815,14 +38814,11 @@ _UniffiConverterTypeSdkFfiError,
 
         _UniffiConverterTypeMovePackageData.check_lower(package_data)
         
-        _UniffiConverterSequenceTypeObjectId.check_lower(dependencies)
-        
         _UniffiConverterString.check_lower(upgrade_cap_name)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish,self._uniffi_clone_pointer(),
         _UniffiConverterTypeMovePackageData.lower(package_data),
-        _UniffiConverterSequenceTypeObjectId.lower(dependencies),
         _UniffiConverterString.lower(upgrade_cap_name))
         )
 

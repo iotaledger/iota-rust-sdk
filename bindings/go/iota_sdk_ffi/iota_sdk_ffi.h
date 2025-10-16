@@ -4326,7 +4326,7 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(void* ptr, void
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_PUBLISH
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_PUBLISH
-void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(void* ptr, void* package_data, RustBuffer dependencies, RustBuffer upgrade_cap_name, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(void* ptr, void* package_data, RustBuffer upgrade_cap_name, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SEND_COINS

@@ -5582,7 +5582,7 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(`ptr`: Pointer,
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(`ptr`: Pointer,`package`: Pointer,`module`: Pointer,`function`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(`ptr`: Pointer,`packageData`: Pointer,`dependencies`: RustBuffer.ByValue,`upgradeCapName`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(`ptr`: Pointer,`packageData`: Pointer,`upgradeCapName`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(`ptr`: Pointer,`coins`: RustBuffer.ByValue,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7221,7 +7221,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 30595.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 22805.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434.toShort()) {
@@ -38659,7 +38659,7 @@ public interface TransactionBuilderInterface {
      * - `dependencies`: is the list of IDs of the transitive dependencies of
      * the package
      */
-    fun `publish`(`packageData`: MovePackageData, `dependencies`: List<ObjectId>, `upgradeCapName`: kotlin.String): TransactionBuilder
+    fun `publish`(`packageData`: MovePackageData, `upgradeCapName`: kotlin.String): TransactionBuilder
     
     /**
      * Transfer some coins to a recipient address. If multiple coins are
@@ -39024,12 +39024,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      * - `modules`: is the modules' bytecode to be published
      * - `dependencies`: is the list of IDs of the transitive dependencies of
      * the package
-     */override fun `publish`(`packageData`: MovePackageData, `dependencies`: List<ObjectId>, `upgradeCapName`: kotlin.String): TransactionBuilder {
+     */override fun `publish`(`packageData`: MovePackageData, `upgradeCapName`: kotlin.String): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(
-        it, FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),FfiConverterString.lower(`upgradeCapName`),_status)
+        it, FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterString.lower(`upgradeCapName`),_status)
 }
     }
     )

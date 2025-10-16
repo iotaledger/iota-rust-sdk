@@ -261,7 +261,6 @@ impl TransactionBuilder {
     pub fn publish(
         self: Arc<Self>,
         package_data: &MovePackageData,
-        dependencies: Vec<Arc<ObjectId>>,
         upgrade_cap_name: String,
     ) -> Arc<Self> {
         self.write(|builder| {
