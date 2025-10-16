@@ -354,6 +354,10 @@ mod signing_message {
             let digest = signing_digest(INTENT, self);
             digest.into_inner()
         }
+
+        pub fn signing_digest_hex(&self) -> String {
+            hex::encode(self.signing_digest())
+        }
     }
 
     fn signing_digest<T: serde::Serialize + ?Sized>(intent: Intent, ty: &T) -> Digest {
@@ -373,6 +377,10 @@ mod signing_message {
             let digest = signing_digest(INTENT, &self.0);
             digest.into_inner()
         }
+
+        pub fn signing_digest_hex(&self) -> String {
+            hex::encode(self.signing_digest())
+        }
     }
 
     impl crate::CheckpointSummary {
@@ -387,6 +395,10 @@ mod signing_message {
             bcs::serialize_into(&mut message, self).unwrap();
             bcs::serialize_into(&mut message, &self.epoch).unwrap();
             message
+        }
+
+        pub fn signing_message_hex(&self) -> String {
+            hex::encode(self.signing_message())
         }
     }
 }

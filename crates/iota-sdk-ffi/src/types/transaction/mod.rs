@@ -85,7 +85,7 @@ impl Transaction {
     }
 
     pub fn signing_digest_hex(&self) -> String {
-        hex_encode(&self.0.signing_digest())
+        self.0.signing_digest_hex()
     }
 
     pub fn bcs_serialize(&self) -> Result<Vec<u8>> {

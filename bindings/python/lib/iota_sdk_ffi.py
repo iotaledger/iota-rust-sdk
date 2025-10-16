@@ -563,6 +563,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message() != 59962:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex() != 55128:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms() != 62474:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data() != 43828:
@@ -992,6 +994,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() != 347:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() != 39344:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex() != 63754:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands() != 49868:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2560,6 +2564,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_messagehex.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_messagehex.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_timestamp_ms.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4958,6 +4967,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_programmabletransaction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7352,6 +7366,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms.restype = ctypes.c_uint16
@@ -7997,6 +8014,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands.restype = ctypes.c_uint16
@@ -24626,6 +24646,8 @@ class CheckpointSummaryProtocol(typing.Protocol):
         raise NotImplementedError
     def signing_message(self, ):
         raise NotImplementedError
+    def signing_messagehex(self, ):
+        raise NotImplementedError
     def timestamp_ms(self, ):
         """
         Timestamp of the checkpoint - number of milliseconds from the Unix epoch
@@ -24862,6 +24884,15 @@ class CheckpointSummary():
     def signing_message(self, ) -> "bytes":
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def signing_messagehex(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_messagehex,self._uniffi_clone_pointer(),)
         )
 
 
@@ -34134,6 +34165,8 @@ class PersonalMessageProtocol(typing.Protocol):
         raise NotImplementedError
     def signing_digest(self, ):
         raise NotImplementedError
+    def signing_digest_hex(self, ):
+        raise NotImplementedError
 # PersonalMessage is a Rust-only trait - it's a wrapper around a Rust implementation.
 class PersonalMessage():
     _pointer: ctypes.c_void_p
@@ -34174,6 +34207,15 @@ class PersonalMessage():
     def signing_digest(self, ) -> "bytes":
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def signing_digest_hex(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex,self._uniffi_clone_pointer(),)
         )
 
 

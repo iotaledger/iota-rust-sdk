@@ -819,6 +819,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex()
+	})
+	if checksum != 55128 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms()
 	})
 	if checksum != 62474 {
@@ -2750,6 +2759,15 @@ func uniffiCheckChecksums() {
 	if checksum != 39344 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex()
+	})
+	if checksum != 63754 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9149,6 +9167,7 @@ type CheckpointSummaryInterface interface {
 	// The height of this checkpoint.
 	SequenceNumber() uint64
 	SigningMessage() []byte
+	SigningMessagehex() string
 	// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
 	// Checkpoint timestamps are monotonic, but not strongly monotonic -
 	// subsequent checkpoints can have same timestamp if they originate
@@ -9319,6 +9338,17 @@ func (_self *CheckpointSummary) SigningMessage() []byte {
 	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *CheckpointSummary) SigningMessagehex() string {
+	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_messagehex(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -18379,6 +18409,7 @@ func (_ FfiDestroyerPasskeyVerifier) Destroy(value *PasskeyVerifier) {
 type PersonalMessageInterface interface {
 	MessageBytes() []byte
 	SigningDigest() []byte
+	SigningDigestHex() string
 }
 type PersonalMessage struct {
 	ffiObject FfiObject
@@ -18409,6 +18440,17 @@ func (_self *PersonalMessage) SigningDigest() []byte {
 	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *PersonalMessage) SigningDigestHex() string {
+	_pointer := _self.ffiObject.incrementPointer("*PersonalMessage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(
 		_pointer,_uniffiStatus),
 	}
 	}))
