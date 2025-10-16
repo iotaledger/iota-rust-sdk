@@ -563,7 +563,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message() != 59962:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex() != 55128:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex() != 52548:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms() != 62474:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2566,11 +2566,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_messagehex.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message_hex.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_messagehex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message_hex.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_timestamp_ms.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7374,9 +7374,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms.restype = ctypes.c_uint16
@@ -24657,7 +24657,7 @@ class CheckpointSummaryProtocol(typing.Protocol):
         raise NotImplementedError
     def signing_message(self, ):
         raise NotImplementedError
-    def signing_messagehex(self, ):
+    def signing_message_hex(self, ):
         raise NotImplementedError
     def timestamp_ms(self, ):
         """
@@ -24901,9 +24901,9 @@ class CheckpointSummary():
 
 
 
-    def signing_messagehex(self, ) -> "str":
+    def signing_message_hex(self, ) -> "str":
         return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_messagehex,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message_hex,self._uniffi_clone_pointer(),)
         )
 
 

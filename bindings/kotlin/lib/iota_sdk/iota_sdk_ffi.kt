@@ -2517,7 +2517,7 @@ fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex(
+fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms(
 ): Short
@@ -4138,7 +4138,7 @@ fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_sequence_number(`ptr`: Point
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_messagehex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_timestamp_ms(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
@@ -6105,7 +6105,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message() != 59962.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex() != 55128.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex() != 52548.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms() != 62474.toShort()) {
@@ -12795,7 +12795,7 @@ public interface CheckpointSummaryInterface {
     
     fun `signingMessage`(): kotlin.ByteArray
     
-    fun `signingMessagehex`(): kotlin.String
+    fun `signingMessageHex`(): kotlin.String
     
     /**
      * Timestamp of the checkpoint - number of milliseconds from the Unix epoch
@@ -13095,11 +13095,11 @@ open class CheckpointSummary: Disposable, AutoCloseable, CheckpointSummaryInterf
     }
     
 
-    override fun `signingMessagehex`(): kotlin.String {
+    override fun `signingMessageHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_messagehex(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message_hex(
         it, _status)
 }
     }

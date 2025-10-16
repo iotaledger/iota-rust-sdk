@@ -163,7 +163,7 @@ impl CheckpointSummary {
         self.0.signing_message()
     }
 
-    pub fn signing_messagehex(&self) -> String {
+    pub fn signing_message_hex(&self) -> String {
         self.0.signing_message_hex()
     }
 }

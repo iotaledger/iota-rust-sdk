@@ -819,11 +819,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex()
+		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex()
 	})
-	if checksum != 55128 {
+	if checksum != 52548 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_messagehex: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9176,7 +9176,7 @@ type CheckpointSummaryInterface interface {
 	// The height of this checkpoint.
 	SequenceNumber() uint64
 	SigningMessage() []byte
-	SigningMessagehex() string
+	SigningMessageHex() string
 	// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
 	// Checkpoint timestamps are monotonic, but not strongly monotonic -
 	// subsequent checkpoints can have same timestamp if they originate
@@ -9352,12 +9352,12 @@ func (_self *CheckpointSummary) SigningMessage() []byte {
 	}))
 }
 
-func (_self *CheckpointSummary) SigningMessagehex() string {
+func (_self *CheckpointSummary) SigningMessageHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*CheckpointSummary")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_messagehex(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message_hex(
 		_pointer,_uniffiStatus),
 	}
 	}))
