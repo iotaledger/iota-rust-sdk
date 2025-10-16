@@ -36,7 +36,7 @@ async fn main() -> Result<()> {
     // Use named results as arguments
     builder.transfer_objects(sender_address, [res("coin0"), res("coin1")]);
 
-    let tx = builder.to_owned().finish().await?;
+    let tx = builder.finish().await?;
 
     println!("Signing Digest: {}", hex::encode(tx.signing_digest()));
     println!(
