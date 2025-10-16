@@ -38,15 +38,14 @@ func main() {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	txnBytes, err := txn.BcsSerializeBase64()
+	txnBytes, err := txn.ToBase64()
 	if err != nil {
 		log.Fatalf("Failed to serialize transaction: %v", err)
 	}
 	log.Printf("Signing Digest: %v", txn.SigningDigestHex())
 	log.Printf("Txn Bytes: %v", txnBytes)
 
-	skipChecks := bool(false)
-	res, err := client.DryRunTx(txn, &skipChecks)
+	res, err := client.DryRunTx(txn, false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to send gas sponsor tx: %v", err)
 	}

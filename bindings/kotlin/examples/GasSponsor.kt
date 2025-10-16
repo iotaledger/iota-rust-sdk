@@ -39,7 +39,7 @@ fun main() = runBlocking {
         val txn = builder.finish()
 
         println("Signing Digest: ${txn.signingDigestHex()}")
-        println("Txn Bytes: ${txn.bcsSerializeBase64()}")
+        println("Txn Bytes: ${txn.toBase64()}")
 
         val res = client.dryRunTx(txn, false)
 

@@ -37,7 +37,7 @@ async def main():
         txn = await builder.finish()
 
         print("Signing Digest:", txn.signing_digest_hex())
-        print("Txn Bytes:", txn.bcs_serialize_base64())
+        print("Txn Bytes:", txn.to_base64())
 
         res = await client.dry_run_tx(txn)
         if res.error is not None:

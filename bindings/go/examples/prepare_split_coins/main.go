@@ -37,7 +37,7 @@ func main() {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	txnBytes, err := txn.BcsSerializeBase64()
+	txnBytes, err := txn.ToBase64()
 	if err != nil {
 		log.Fatalf("Failed to serialize transaction: %v", err)
 	}
