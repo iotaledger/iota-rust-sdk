@@ -4428,9 +4428,9 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(`ptr`: Pointer,`co
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(`ptr`: Pointer,`owner`: Pointer,`paginationFilter`: RustBuffer.ByValue,`coinType`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(`ptr`: Pointer,`tx`: Pointer,`skipChecks`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(`ptr`: Pointer,`tx`: Pointer,`skipChecks`: Byte,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(`ptr`: Pointer,`txKind`: Pointer,`txMeta`: RustBuffer.ByValue,`skipChecks`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(`ptr`: Pointer,`txKind`: Pointer,`txMeta`: RustBuffer.ByValue,`skipChecks`: Byte,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(`ptr`: Pointer,`address`: Pointer,`typeTag`: Pointer,`name`: RustBuffer.ByValue,
 ): Long
@@ -6252,10 +6252,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 47450.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 12272.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 63702.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 1733.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199.toShort()) {
@@ -19507,7 +19507,7 @@ public interface GraphQlClientInterface {
      * sender, and calling non-public, non-entry functions, and some other
      * checks. Defaults to false.
      */
-    suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean? = null): DryRunResult
+    suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean = false): DryRunResult
     
     /**
      * Dry run a [`TransactionKind`] and return the transaction effects and dry
@@ -19520,7 +19520,7 @@ public interface GraphQlClientInterface {
      *
      * `tx_meta` is the transaction metadata.
      */
-    suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean? = null): DryRunResult
+    suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean = false): DryRunResult
     
     /**
      * Access a dynamic field on an object using its name. Names are arbitrary
@@ -20104,12 +20104,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean?) : DryRunResult {
+    override suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean) : DryRunResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(
                 thisPtr,
-                FfiConverterTypeTransaction.lower(`tx`),FfiConverterOptionalBoolean.lower(`skipChecks`),
+                FfiConverterTypeTransaction.lower(`tx`),FfiConverterBoolean.lower(`skipChecks`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20136,12 +20136,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean?) : DryRunResult {
+    override suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean) : DryRunResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(
                 thisPtr,
-                FfiConverterTypeTransactionKind.lower(`txKind`),FfiConverterTypeTransactionMetadata.lower(`txMeta`),FfiConverterOptionalBoolean.lower(`skipChecks`),
+                FfiConverterTypeTransactionKind.lower(`txKind`),FfiConverterTypeTransactionMetadata.lower(`txMeta`),FfiConverterBoolean.lower(`skipChecks`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -52572,38 +52572,6 @@ public object FfiConverterOptionalULong: FfiConverterRustBuffer<kotlin.ULong?> {
         } else {
             buf.put(1)
             FfiConverterULong.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalBoolean: FfiConverterRustBuffer<kotlin.Boolean?> {
-    override fun read(buf: ByteBuffer): kotlin.Boolean? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterBoolean.read(buf)
-    }
-
-    override fun allocationSize(value: kotlin.Boolean?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterBoolean.allocationSize(value)
-        }
-    }
-
-    override fun write(value: kotlin.Boolean?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterBoolean.write(value, buf)
         }
     }
 }
