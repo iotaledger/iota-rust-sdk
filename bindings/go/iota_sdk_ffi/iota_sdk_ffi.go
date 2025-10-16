@@ -15437,10 +15437,14 @@ func (_ FfiDestroyerMovePackage) Destroy(value *MovePackage) {
 
 
 
+// Type corresponding to the output of `iota move build
+// --dump-bytecode-as-base64`
 type MovePackageDataInterface interface {
 	ToBase64() string
 	ToJson() string
 }
+// Type corresponding to the output of `iota move build
+// --dump-bytecode-as-base64`
 type MovePackageData struct {
 	ffiObject FfiObject
 }
@@ -23757,9 +23761,11 @@ func (_ FfiDestroyerUpgrade) Destroy(value *Upgrade) {
 
 
 
+// Representation of upgrade policy constants in `iota::package`.
 type UpgradePolicyInterface interface {
 	AsU8() uint8
 }
+// Representation of upgrade policy constants in `iota::package`.
 type UpgradePolicy struct {
 	ffiObject FfiObject
 }

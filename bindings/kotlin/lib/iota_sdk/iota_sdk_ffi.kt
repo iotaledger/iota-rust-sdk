@@ -24310,6 +24310,10 @@ public object FfiConverterTypeMovePackage: FfiConverter<MovePackage, Pointer> {
 //
 
 
+/**
+ * Type corresponding to the output of `iota move build
+ * --dump-bytecode-as-base64`
+ */
 public interface MovePackageDataInterface {
     
     fun `toBase64`(): kotlin.String
@@ -24319,6 +24323,10 @@ public interface MovePackageDataInterface {
     companion object
 }
 
+/**
+ * Type corresponding to the output of `iota move build
+ * --dump-bytecode-as-base64`
+ */
 open class MovePackageData: Disposable, AutoCloseable, MovePackageDataInterface
 {
 
@@ -41849,6 +41857,9 @@ public object FfiConverterTypeUpgrade: FfiConverter<Upgrade, Pointer> {
 //
 
 
+/**
+ * Representation of upgrade policy constants in `iota::package`.
+ */
 public interface UpgradePolicyInterface {
     
     fun `asU8`(): kotlin.UByte
@@ -41856,6 +41867,9 @@ public interface UpgradePolicyInterface {
     companion object
 }
 
+/**
+ * Representation of upgrade policy constants in `iota::package`.
+ */
 open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
 {
 

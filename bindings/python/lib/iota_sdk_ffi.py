@@ -31255,12 +31255,22 @@ class _UniffiConverterTypeMovePackage:
     def write(cls, value: MovePackageProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class MovePackageDataProtocol(typing.Protocol):
+    """
+    Type corresponding to the output of `iota move build
+    --dump-bytecode-as-base64`
+    """
+
     def to_base64(self, ):
         raise NotImplementedError
     def to_json(self, ):
         raise NotImplementedError
 # MovePackageData is a Rust-only trait - it's a wrapper around a Rust implementation.
 class MovePackageData():
+    """
+    Type corresponding to the output of `iota move build
+    --dump-bytecode-as-base64`
+    """
+
     _pointer: ctypes.c_void_p
     def __init__(self, modules: "typing.List[bytes]",dependencies: "typing.List[ObjectId]"):
         _UniffiConverterSequenceBytes.check_lower(modules)
@@ -40261,10 +40271,18 @@ class _UniffiConverterTypeUpgrade:
     def write(cls, value: UpgradeProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class UpgradePolicyProtocol(typing.Protocol):
+    """
+    Representation of upgrade policy constants in `iota::package`.
+    """
+
     def as_u8(self, ):
         raise NotImplementedError
 # UpgradePolicy is a Rust-only trait - it's a wrapper around a Rust implementation.
 class UpgradePolicy():
+    """
+    Representation of upgrade policy constants in `iota::package`.
+    """
+
     _pointer: ctypes.c_void_p
     
     def __init__(self, *args, **kwargs):

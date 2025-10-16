@@ -5,6 +5,7 @@ use std::sync::Arc;
 
 use crate::{error::Result, types::object::ObjectId};
 
+/// Representation of upgrade policy constants in `iota::package`.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct UpgradePolicy(pub iota_types::UpgradePolicy);
 
@@ -30,6 +31,8 @@ impl UpgradePolicy {
     }
 }
 
+/// Type corresponding to the output of `iota move build
+/// --dump-bytecode-as-base64`
 #[derive(derive_more::From, uniffi::Object)]
 pub struct MovePackageData(pub iota_types::MovePackageData);
 
