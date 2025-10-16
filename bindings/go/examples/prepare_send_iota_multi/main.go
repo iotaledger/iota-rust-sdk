@@ -55,8 +55,7 @@ func main() {
 	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
 	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
 
-	skipChecks := bool(false)
-	res, err := client.DryRunTx(txn, &skipChecks)
+	res, err := client.DryRunTx(txn, false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run send IOTA: %v", err)
 	}

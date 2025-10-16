@@ -2647,6 +2647,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup(
@@ -3180,6 +3182,20 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1(
 fun uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionevents_events(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_bcs_serialize(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_expiration(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_gas_payment(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_kind(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transferobjects_address(
 ): Short
@@ -3815,6 +3831,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_tr
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_address(
@@ -4436,9 +4454,9 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(`ptr`: Pointer,`co
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(`ptr`: Pointer,`owner`: Pointer,`paginationFilter`: RustBuffer.ByValue,`coinType`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(`ptr`: Pointer,`tx`: Pointer,`skipChecks`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(`ptr`: Pointer,`tx`: Pointer,`skipChecks`: Byte,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(`ptr`: Pointer,`txKind`: Pointer,`txMeta`: RustBuffer.ByValue,`skipChecks`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(`ptr`: Pointer,`txKind`: Pointer,`txMeta`: RustBuffer.ByValue,`skipChecks`: Byte,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(`ptr`: Pointer,`address`: Pointer,`typeTag`: Pointer,`name`: RustBuffer.ByValue,
 ): Long
@@ -4455,6 +4473,8 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_transaction_blocks(`
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(`ptr`: Pointer,`filter`: RustBuffer.ByValue,`paginationFilter`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(`ptr`: Pointer,`signatures`: RustBuffer.ByValue,`tx`: Pointer,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(`ptr`: Pointer,`owner`: Pointer,`paginationFilter`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_default_name(`ptr`: Pointer,`address`: Pointer,`format`: RustBuffer.ByValue,
 ): Long
@@ -5418,7 +5438,7 @@ fun uniffi_iota_sdk_ffi_fn_clone_transaction(`ptr`: Pointer,uniffi_out_err: Unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_transaction_new(`kind`: Pointer,`sender`: Pointer,`gasPayment`: RustBuffer.ByValue,`expiration`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transaction_as_v1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transaction_new_from_base64(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5522,6 +5542,26 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transact
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_clone_transactionv1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_transactionv1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(`kind`: Pointer,`sender`: Pointer,`gasPayment`: RustBuffer.ByValue,`expiration`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_bcs_serialize(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_transferobjects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transferobjects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6261,13 +6301,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 50359.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 47450.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 12272.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 63702.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 1733.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199.toShort()) {
@@ -6292,6 +6332,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins() != 24826.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_default_name() != 53764.toShort()) {
@@ -7093,6 +7136,27 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events() != 36651.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_bcs_serialize() != 43460.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest() != 52708.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_expiration() != 9317.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_gas_payment() != 61676.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_kind() != 56302.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender() != 8513.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest() != 34103.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transferobjects_address() != 37833.toShort()) {
@@ -8044,6 +8108,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 37051.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new() != 17484.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new() != 22470.toShort()) {
@@ -19511,11 +19578,10 @@ public interface GraphQlClientInterface {
     /**
      * Get the list of coins for the specified address.
      *
-     * If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-     * which will return all coins. For IOTA coin, pass in the coin type:
-     * `0x2::coin::Coin<0x2::iota::IOTA>`.
+     * If `coin_type` is not provided, all coins will be returned. For IOTA
+     * coins, pass in the coin type: `0x2::iota::IOTA`.
      */
-    suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter? = null, `coinType`: kotlin.String? = null): CoinPage
+    suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter? = null, `coinType`: StructTag? = null): CoinPage
     
     /**
      * Dry run a [`Transaction`] and return the transaction effects and dry run
@@ -19526,7 +19592,7 @@ public interface GraphQlClientInterface {
      * sender, and calling non-public, non-entry functions, and some other
      * checks. Defaults to false.
      */
-    suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean? = null): DryRunResult
+    suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean = false): DryRunResult
     
     /**
      * Dry run a [`TransactionKind`] and return the transaction effects and dry
@@ -19539,7 +19605,7 @@ public interface GraphQlClientInterface {
      *
      * `tx_meta` is the transaction metadata.
      */
-    suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean? = null): DryRunResult
+    suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean = false): DryRunResult
     
     /**
      * Access a dynamic field on an object using its name. Names are arbitrary
@@ -19615,6 +19681,11 @@ public interface GraphQlClientInterface {
      * Execute a transaction.
      */
     suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction): TransactionEffects?
+    
+    /**
+     * Get the list of gas coins for the specified address.
+     */
+    suspend fun `gasCoins`(`owner`: Address, `paginationFilter`: PaginationFilter? = null): CoinPage
     
     /**
      * Get the default name pointing to this address, if one exists.
@@ -20083,18 +20154,17 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     /**
      * Get the list of coins for the specified address.
      *
-     * If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-     * which will return all coins. For IOTA coin, pass in the coin type:
-     * `0x2::coin::Coin<0x2::iota::IOTA>`.
+     * If `coin_type` is not provided, all coins will be returned. For IOTA
+     * coins, pass in the coin type: `0x2::iota::IOTA`.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter?, `coinType`: kotlin.String?) : CoinPage {
+    override suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter?, `coinType`: StructTag?) : CoinPage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`owner`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalString.lower(`coinType`),
+                FfiConverterTypeAddress.lower(`owner`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeStructTag.lower(`coinType`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20119,12 +20189,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean?) : DryRunResult {
+    override suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean) : DryRunResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(
                 thisPtr,
-                FfiConverterTypeTransaction.lower(`tx`),FfiConverterOptionalBoolean.lower(`skipChecks`),
+                FfiConverterTypeTransaction.lower(`tx`),FfiConverterBoolean.lower(`skipChecks`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20151,12 +20221,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean?) : DryRunResult {
+    override suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean) : DryRunResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(
                 thisPtr,
-                FfiConverterTypeTransactionKind.lower(`txKind`),FfiConverterTypeTransactionMetadata.lower(`txMeta`),FfiConverterOptionalBoolean.lower(`skipChecks`),
+                FfiConverterTypeTransactionKind.lower(`txKind`),FfiConverterTypeTransactionMetadata.lower(`txMeta`),FfiConverterBoolean.lower(`skipChecks`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20391,6 +20461,30 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeTransactionEffects.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Get the list of gas coins for the specified address.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `gasCoins`(`owner`: Address, `paginationFilter`: PaginationFilter?) : CoinPage {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(
+                thisPtr,
+                FfiConverterTypeAddress.lower(`owner`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeCoinPage.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -37628,7 +37722,7 @@ public object FfiConverterTypeSystemPackage: FfiConverter<SystemPackage, Pointer
 
 
 /**
- * A transaction
+ * Transaction
  *
  * # BCS
  *
@@ -37668,7 +37762,7 @@ public interface TransactionInterface {
 }
 
 /**
- * A transaction
+ * Transaction
  *
  * # BCS
  *
@@ -37698,13 +37792,6 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`kind`: TransactionKind, `sender`: Address, `gasPayment`: GasPayment, `expiration`: TransactionExpiration) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_new(
-        FfiConverterTypeTransactionKind.lower(`kind`),FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGasPayment.lower(`gasPayment`),FfiConverterTypeTransactionExpiration.lower(`expiration`),_status)
-}
-    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -39546,6 +39633,360 @@ public object FfiConverterTypeTransactionKind: FfiConverter<TransactionKind, Poi
     override fun allocationSize(value: TransactionKind) = 8UL
 
     override fun write(value: TransactionKind, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * A transaction
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * transaction = %x00 transaction-v1
+ *
+ * transaction-v1 = transaction-kind address gas-payment transaction-expiration
+ * ```
+ */
+public interface TransactionV1Interface {
+    
+    fun `bcsSerialize`(): kotlin.ByteArray
+    
+    fun `digest`(): Digest
+    
+    fun `expiration`(): TransactionExpiration
+    
+    fun `gasPayment`(): GasPayment
+    
+    fun `kind`(): TransactionKind
+    
+    fun `sender`(): Address
+    
+    fun `signingDigest`(): kotlin.ByteArray
+    
+    companion object
+}
+
+/**
+ * A transaction
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * transaction = %x00 transaction-v1
+ *
+ * transaction-v1 = transaction-kind address gas-payment transaction-expiration
+ * ```
+ */
+open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`kind`: TransactionKind, `sender`: Address, `gasPayment`: GasPayment, `expiration`: TransactionExpiration) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(
+        FfiConverterTypeTransactionKind.lower(`kind`),FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGasPayment.lower(`gasPayment`),FfiConverterTypeTransactionExpiration.lower(`expiration`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionv1(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionv1(pointer!!, status)
+        }
+    }
+
+    
+    @Throws(SdkFfiException::class)override fun `bcsSerialize`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_bcs_serialize(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `digest`(): Digest {
+            return FfiConverterTypeDigest.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `expiration`(): TransactionExpiration {
+            return FfiConverterTypeTransactionExpiration.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `gasPayment`(): GasPayment {
+            return FfiConverterTypeGasPayment.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `kind`(): TransactionKind {
+            return FfiConverterTypeTransactionKind.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `sender`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `signingDigest`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTransactionV1: FfiConverter<TransactionV1, Pointer> {
+
+    override fun lower(value: TransactionV1): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): TransactionV1 {
+        return TransactionV1(value)
+    }
+
+    override fun read(buf: ByteBuffer): TransactionV1 {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: TransactionV1) = 8UL
+
+    override fun write(value: TransactionV1, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -52619,38 +53060,6 @@ public object FfiConverterOptionalULong: FfiConverterRustBuffer<kotlin.ULong?> {
         } else {
             buf.put(1)
             FfiConverterULong.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalBoolean: FfiConverterRustBuffer<kotlin.Boolean?> {
-    override fun read(buf: ByteBuffer): kotlin.Boolean? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterBoolean.read(buf)
-    }
-
-    override fun allocationSize(value: kotlin.Boolean?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterBoolean.allocationSize(value)
-        }
-    }
-
-    override fun write(value: kotlin.Boolean?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterBoolean.write(value, buf)
         }
     }
 }

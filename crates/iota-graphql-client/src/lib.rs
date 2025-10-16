@@ -18,8 +18,9 @@ use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::{Error, Kind};
 use futures::Stream;
 use iota_types::{
-    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, MovePackage, Object, ObjectId,
-    SignedTransaction, Transaction, TransactionEffects, TransactionKind, TypeTag, UserSignature,
+    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, IdentifierRef, MovePackage,
+    Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionEffects,
+    TransactionKind, TypeTag, UserSignature,
     framework::Coin,
     iota_names::{NameFormat, NameRegistration, name::Name},
 };
@@ -118,13 +119,12 @@ impl Client {
 
     /// Get the list of coins for the specified address as a stream.
     ///
-    /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-    /// which will return all coins. For IOTA coin, pass in the coin type:
-    /// `0x2::coin::Coin<0x2::iota::IOTA>`.
-    pub async fn coins_stream(
+    /// If `coin_type` is not provided, all coins will be returned. For IOTA
+    /// coins, pass in the coin type: `0x2::iota::IOTA`.
+    pub fn coins_stream(
         &self,
         address: Address,
-        coin_type: impl Into<Option<String>>,
+        coin_type: impl Into<Option<StructTag>>,
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<Coin>> + '_ {
         let coin_type = coin_type.into();
@@ -134,9 +134,21 @@ impl Client {
         )
     }
 
+    /// Get the list of gas coins for the specified address as a stream.
+    pub fn gas_coins_stream(
+        &self,
+        address: Address,
+        streaming_direction: Direction,
+    ) -> impl Stream<Item = Result<Coin>> + '_ {
+        stream_paginated_query(
+            move |filter| self.gas_coins(address, filter),
+            streaming_direction,
+        )
+    }
+
     /// Get a stream of [`CheckpointSummary`]. Note that this will fetch all
     /// checkpoints which may trigger a lot of requests.
-    pub async fn checkpoints_stream(
+    pub fn checkpoints_stream(
         &self,
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<CheckpointSummary>> + '_ {
@@ -145,7 +157,7 @@ impl Client {
 
     /// Get a stream of dynamic fields for the provided address. Note that this
     /// will also fetch dynamic fields on wrapped objects.
-    pub async fn dynamic_fields_stream(
+    pub fn dynamic_fields_stream(
         &self,
         address: Address,
         streaming_direction: Direction,
@@ -167,7 +179,7 @@ impl Client {
     }
 
     /// Return a stream of events based on the (optional) event filter.
-    pub async fn events_stream(
+    pub fn events_stream(
         &self,
         filter: impl Into<Option<EventFilter>>,
         streaming_direction: Direction,
@@ -180,7 +192,7 @@ impl Client {
     }
 
     /// Return a stream of objects based on the (optional) object filter.
-    pub async fn objects_stream(
+    pub fn objects_stream(
         &self,
         filter: impl Into<Option<ObjectFilter>>,
         streaming_direction: Direction,
@@ -196,8 +208,8 @@ impl Client {
     // Dry Run API
     // ===========================================================================
 
-    /// Dry run a [`Transaction`] and return the transaction effects and dry run
-    /// error (if any).
+    /// Dry run a [`Transaction`] and return the transaction effects and dry
+    /// run error (if any).
     ///
     /// The `skip_checks` flag disables the usual verification checks that
     /// prevent access to objects that are owned by addresses other than the
@@ -292,7 +304,7 @@ impl Client {
     }
 
     /// Get a stream of transactions based on the (optional) transaction filter.
-    pub async fn transactions_stream(
+    pub fn transactions_stream(
         &self,
         filter: impl Into<Option<TransactionsFilter>>,
         streaming_direction: Direction,
@@ -306,7 +318,7 @@ impl Client {
 
     /// Get a stream of transactions' effects based on the (optional)
     /// transaction filter.
-    pub async fn transactions_effects_stream(
+    pub fn transactions_effects_stream(
         &self,
         filter: impl Into<Option<TransactionsFilter>>,
         streaming_direction: Direction,
@@ -610,13 +622,12 @@ impl Client {
 
     /// Get the list of coins for the specified address.
     ///
-    /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-    /// which will return all coins. For IOTA coin, pass in the coin type:
-    /// `0x2::coin::Coin<0x2::iota::IOTA>`.
+    /// If `coin_type` is not provided, all coins will be returned. For IOTA
+    /// coins, pass in the coin type: `0x2::iota::IOTA`.
     pub async fn coins(
         &self,
         owner: Address,
-        coin_type: impl Into<Option<String>>,
+        coin_type: impl Into<Option<StructTag>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Coin>> {
         let response = self
@@ -625,7 +636,14 @@ impl Client {
                     type_: Some(
                         coin_type
                             .into()
-                            .unwrap_or_else(|| "0x2::coin::Coin".to_owned()),
+                            .map(StructTag::coin)
+                            .unwrap_or_else(|| StructTag {
+                                address: Address::FRAMEWORK,
+                                module: IdentifierRef::const_new("coin").into(),
+                                name: IdentifierRef::const_new("Coin").into(),
+                                type_params: Default::default(),
+                            })
+                            .to_string(),
                     ),
                     owner: Some(owner),
                     object_ids: None,
@@ -642,6 +660,16 @@ impl Client {
                 .flat_map(Coin::try_from_object)
                 .collect::<Vec<_>>(),
         ))
+    }
+
+    /// Get the list of gas coins for the specified address.
+    pub async fn gas_coins(
+        &self,
+        owner: Address,
+        pagination_filter: PaginationFilter,
+    ) -> Result<Page<Coin>> {
+        self.coins(owner, StructTag::iota(), pagination_filter)
+            .await
     }
 
     /// Get the coin metadata for the coin type.
@@ -2189,9 +2217,7 @@ mod tests {
 
         let mut num_coins = 0;
         for attempt in 0..MAX_RETRIES {
-            let mut stream = client
-                .coins_stream(address, None, Direction::default())
-                .await;
+            let mut stream = client.coins_stream(address, None, Direction::default());
 
             while let Some(result) = stream.next().await {
                 match result {
