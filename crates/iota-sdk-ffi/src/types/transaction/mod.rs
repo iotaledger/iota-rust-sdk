@@ -43,6 +43,11 @@ pub struct Transaction(pub iota_types::Transaction);
 
 #[uniffi::export]
 impl Transaction {
+    #[uniffi::constructor]
+    pub fn new_v1(transaction_v1: &TransactionV1) -> Self {
+        Self(iota_types::Transaction::V1(transaction_v1.0.clone()))
+    }
+
     pub fn as_v1(&self) -> Arc<TransactionV1> {
         match &self.0 {
             iota_types::Transaction::V1(tx) => Arc::new(TransactionV1(tx.clone())),
@@ -73,8 +78,26 @@ impl Transaction {
         self.as_v1().signing_digest()
     }
 
-    pub fn bcs_serialize(&self) -> Result<Vec<u8>> {
-        self.as_v1().bcs_serialize()
+    /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
+    pub fn to_bcs(&self) -> Result<Vec<u8>> {
+        self.as_v1().to_bcs()
+    }
+
+    /// Serialize the transaction as a base64-encoded string.
+    pub fn to_base64(&self) -> Result<String> {
+        self.as_v1().to_base64()
+    }
+
+    /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
+    #[uniffi::constructor]
+    pub fn new_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(Transaction(iota_types::Transaction::from_bcs(&bytes)?))
+    }
+
+    /// Deserialize a transaction from a base64-encoded string.
+    #[uniffi::constructor]
+    pub fn new_from_base64(base64: String) -> Result<Self> {
+        Ok(Transaction(iota_types::Transaction::from_base64(&base64)?))
     }
 }
 
@@ -134,8 +157,8 @@ impl TransactionV1 {
     }
 
     /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-    pub fn to_bytes(&self) -> Result<Vec<u8>> {
-        Ok(self.0.to_bytes()?)
+    pub fn to_bcs(&self) -> Result<Vec<u8>> {
+        Ok(self.0.to_bcs()?)
     }
 
     /// Serialize the transaction as a base64-encoded string.
@@ -145,14 +168,14 @@ impl TransactionV1 {
 
     /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
     #[uniffi::constructor]
-    pub fn new_from_bytes(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(iota_types::Transaction::from_bytes(&bytes)?))
+    pub fn new_from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(Self(iota_types::TransactionV1::from_bcs(&bytes)?))
     }
 
     /// Deserialize a transaction from a base64-encoded string.
     #[uniffi::constructor]
     pub fn new_from_base64(bytes: String) -> Result<Self> {
-        Ok(Self(iota_types::Transaction::from_base64(&bytes)?))
+        Ok(Self(iota_types::TransactionV1::from_base64(&bytes)?))
     }
 }
 

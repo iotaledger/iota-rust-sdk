@@ -18,8 +18,7 @@ func main() {
 		log.Fatalf("Failed to parse transaction: %v", err)
 	}
 
-	skipChecks := false
-	res, err := client.DryRunTx(transaction, &skipChecks)
+	res, err := client.DryRunTx(transaction, false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run transaction: %v", err)
 	}
