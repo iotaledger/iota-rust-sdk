@@ -4,7 +4,7 @@
 use std::sync::Arc;
 
 use iota_transaction_builder::{
-    PureBytes, Receiving, Shared, SharedMut, builder::ptb_arguments::CommandResult, result_ref,
+    PureBytes, Receiving, Shared, SharedMut, builder::ptb_arguments::CommandResultRef, result_ref,
 };
 use primitive_types::U256;
 
@@ -205,7 +205,7 @@ impl iota_transaction_builder::types::MoveArg for &MoveArg {
 pub enum PTBArgument {
     ObjectId(iota_types::ObjectId),
     Move(MoveArg),
-    CommandResult(CommandResult),
+    CommandResult(CommandResultRef),
     Shared(Shared<iota_types::ObjectId>),
     SharedMut(SharedMut<iota_types::ObjectId>),
     Receiving(Receiving<iota_types::ObjectId>),

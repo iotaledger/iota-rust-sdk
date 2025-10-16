@@ -257,30 +257,41 @@ impl PTBArgument for &Receiving<ObjectReference> {
     }
 }
 
-/// The result of a previous command by name.
+/// A reference to a result of a previous command.
 #[derive(Debug, Clone)]
-pub struct CommandResult(String);
+pub struct CommandResultRef(String);
 
 /// Get the result of a previous command by its name, which was defined
 /// using the `.result_ref()` method.
 ///
+/// ### Example
+///
 /// ```rust,ignore
 /// builder
-///     .move_call(iota_names_package_address, "name", "new")
-///     .arguments([name])
-///     .result_ref("name");
+///     .split_coins(coin, [1000u64, 2000, 3000])
+///     .result_refs(("coin1", "coin2", "coin3"))
+///     .transfer_objects(
+///         sender,
+///         (
+///             result_ref("coin1"),
+///             result_ref("coin2"),
+///             result_ref("coin3"),
+///         ),
+///     )
+///     .gas(coin)
+///     .gas_budget(1000000000);
 /// ```
-pub fn result_ref(named_result: impl Into<String>) -> CommandResult {
-    CommandResult(named_result.into())
+pub fn result_ref(result_ref: impl Into<String>) -> CommandResultRef {
+    CommandResultRef(result_ref.into())
 }
 
-impl PTBArgument for CommandResult {
+impl PTBArgument for CommandResultRef {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (&self).arg(ptb)
     }
 }
 
-impl PTBArgument for &CommandResult {
+impl PTBArgument for &CommandResultRef {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         if let Some(arg) = ptb.named_results.get(&self.0) {
             *arg

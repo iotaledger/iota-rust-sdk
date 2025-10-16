@@ -962,15 +962,25 @@ impl<C> TransactionBuilder<C, Publish> {
 }
 
 impl<C, L> TransactionBuilder<C, L> {
-    /// Set a name to the result of the current command, so it can be
+    /// Set names to the results of the current command, so they can be
     /// referenced by follow-up calls using the `result_ref()` method.
     ///
-    /// e.g.
+    /// ### Example
+    ///
     /// ```rust,ignore
     /// builder
-    ///     .move_call(iota_names_package_address, "registry", "lookup")
-    ///     .arguments((result_ref("iota_names"), result_ref("name")))
-    ///     .result_refs("name_record_opt");
+    ///     .split_coins(coin, [1000u64, 2000, 3000])
+    ///     .result_refs(("coin1", "coin2", "coin3"))
+    ///     .transfer_objects(
+    ///         sender,
+    ///         (
+    ///             result_ref("coin1"),
+    ///             result_ref("coin2"),
+    ///             result_ref("coin3"),
+    ///         ),
+    ///     )
+    ///     .gas(coin)
+    ///     .gas_budget(1000000000);
     /// ```
     pub fn result_refs(&mut self, name: impl NamedResults) -> &mut Self {
         name.push_named_results(&mut self.data);
