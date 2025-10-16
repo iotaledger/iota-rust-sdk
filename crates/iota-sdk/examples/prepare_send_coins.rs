@@ -34,7 +34,7 @@ async fn main() -> Result<()> {
 
     let txn = builder.finish().await?;
 
-    println!("Signing Digest: {}", hex::encode(txn.signing_digest()));
+    println!("Signing Digest: {}", txn.signing_digest_hex());
     println!(
         "Txn Bytes: {}",
         base64ct::Base64::encode_string(&bcs::to_bytes(&txn)?)

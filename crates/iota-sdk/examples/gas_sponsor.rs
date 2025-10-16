@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
         .finish()
         .await?;
 
-    println!("Signing Digest: {}", hex::encode(tx.signing_digest()));
+    println!("Signing Digest: {}", tx.signing_digest_hex());
     println!(
         "Tx Bytes: {}",
         base64ct::Base64::encode_string(&bcs::to_bytes(&tx)?)
