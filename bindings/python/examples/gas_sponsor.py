@@ -38,9 +38,9 @@ async def main():
         txn = await builder.finish()
 
         print("Signing Digest:", hex_encode(txn.signing_digest()))
-        print("Txn Bytes:", base64_encode(txn.bcs_serialize()))
+        print("Txn Bytes:", base64_encode(txn.to_bcs()))
 
-        res = await client.dry_run_tx(txn, False)
+        res = await client.dry_run_tx(txn)
         if res.error is not None:
             raise Exception("Failed to send gas sponsor tx:", res.error)
 

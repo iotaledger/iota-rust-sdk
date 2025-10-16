@@ -831,17 +831,13 @@ impl GraphQLClient {
     /// prevent access to objects that are owned by addresses other than the
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks. Defaults to false.
-    #[uniffi::method(default(skip_checks = None))]
-    pub async fn dry_run_tx(
-        &self,
-        tx: &Transaction,
-        skip_checks: Option<bool>,
-    ) -> Result<DryRunResult> {
+    #[uniffi::method(default(skip_checks = false))]
+    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx(&tx.0, skip_checks.unwrap_or(false))
+            .dry_run_tx(&tx.0, skip_checks)
             .await?
             .into())
     }
@@ -855,18 +851,18 @@ impl GraphQLClient {
     /// checks. Defaults to false.
     ///
     /// `tx_meta` is the transaction metadata.
-    #[uniffi::method(default(skip_checks = None))]
+    #[uniffi::method(default(skip_checks = false))]
     pub async fn dry_run_tx_kind(
         &self,
         tx_kind: &TransactionKind,
         tx_meta: TransactionMetadata,
-        skip_checks: Option<bool>,
+        skip_checks: bool,
     ) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx_kind(&tx_kind.0, skip_checks.unwrap_or(false), tx_meta.into())
+            .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.into())
             .await?
             .into())
     }
