@@ -22,7 +22,7 @@ async fn main() -> Result<()> {
         Address::from_str("0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")?;
 
     builder
-        .move_call(Address::TWO, "vec_map", "from_keys_values")
+        .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
         .generics::<(Address, u64)>()
         .arguments((vec![address1, address2], vec![10000000u64, 20000000u64]));
 

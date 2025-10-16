@@ -24,6 +24,7 @@ use crate::{
         iota_names::Name,
         object::{MovePackage, Object, ObjectId},
         signature::UserSignature,
+        struct_tag::StructTag,
         transaction::{SignedTransaction, Transaction, TransactionEffects, TransactionKind},
         type_tag::TypeTag,
     },
@@ -169,21 +170,41 @@ impl GraphQLClient {
 
     /// Get the list of coins for the specified address.
     ///
-    /// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-    /// which will return all coins. For IOTA coin, pass in the coin type:
-    /// `0x2::coin::Coin<0x2::iota::IOTA>`.
+    /// If `coin_type` is not provided, all coins will be returned. For IOTA
+    /// coins, pass in the coin type: `0x2::iota::IOTA`.
     #[uniffi::method(default(pagination_filter = None, coin_type = None))]
     pub async fn coins(
         &self,
         owner: &Address,
         pagination_filter: Option<PaginationFilter>,
-        coin_type: Option<String>,
+        coin_type: Option<Arc<StructTag>>,
     ) -> Result<CoinPage> {
         Ok(self
             .0
             .read()
             .await
-            .coins(**owner, coin_type, pagination_filter.unwrap_or_default())
+            .coins(
+                **owner,
+                coin_type.map(|t| t.0.clone()),
+                pagination_filter.unwrap_or_default(),
+            )
+            .await?
+            .map(Into::into)
+            .into())
+    }
+
+    /// Get the list of gas coins for the specified address.
+    #[uniffi::method(default(pagination_filter = None))]
+    pub async fn gas_coins(
+        &self,
+        owner: &Address,
+        pagination_filter: Option<PaginationFilter>,
+    ) -> Result<CoinPage> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .gas_coins(**owner, pagination_filter.unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -722,7 +743,7 @@ impl GraphQLClient {
     /// ```rust,ignore
     /// 
     /// let client = iota_graphql_client::Client::new_devnet();
-    /// let address = Address::from_str("0x5").unwrap();
+    /// let address = ObjectId::SYSTEM.into();
     /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
     ///
     /// # alternatively, pass in the bcs bytes
@@ -810,17 +831,13 @@ impl GraphQLClient {
     /// prevent access to objects that are owned by addresses other than the
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks. Defaults to false.
-    #[uniffi::method(default(skip_checks = None))]
-    pub async fn dry_run_tx(
-        &self,
-        tx: &Transaction,
-        skip_checks: Option<bool>,
-    ) -> Result<DryRunResult> {
+    #[uniffi::method(default(skip_checks = false))]
+    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx(&tx.0, skip_checks.unwrap_or(false))
+            .dry_run_tx(&tx.0, skip_checks)
             .await?
             .into())
     }
@@ -834,18 +851,18 @@ impl GraphQLClient {
     /// checks. Defaults to false.
     ///
     /// `tx_meta` is the transaction metadata.
-    #[uniffi::method(default(skip_checks = None))]
+    #[uniffi::method(default(skip_checks = false))]
     pub async fn dry_run_tx_kind(
         &self,
         tx_kind: &TransactionKind,
         tx_meta: TransactionMetadata,
-        skip_checks: Option<bool>,
+        skip_checks: bool,
     ) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx_kind(&tx_kind.0, skip_checks.unwrap_or(false), tx_meta.into())
+            .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.into())
             .await?
             .into())
     }

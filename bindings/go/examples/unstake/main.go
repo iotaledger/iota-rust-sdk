@@ -22,9 +22,9 @@ func main() {
 	}
 	stakedIota := stakedIotas.Data[0]
 
-	iotaSystemAddress, _ := sdk.AddressFromHex("0x3")
+	iotaSystemAddress := sdk.AddressSystem()
 
-	iotaSystemId, _ := sdk.ObjectIdFromHex("0x5")
+	iotaSystemId := sdk.ObjectIdSystem()
 
 	iotaSystemModule, _ := sdk.NewIdentifier("iota_system")
 

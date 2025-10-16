@@ -9,7 +9,7 @@ import kotlinx.coroutines.runBlocking
 fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
-        val address = Address.fromHex("0x0")
+        val address = Address.zero()
         val objectFilter = ObjectFilter(owner = address)
         val objectsPage = client.objects(objectFilter)
         println("Owned objects (${objectsPage.data.size}):")
