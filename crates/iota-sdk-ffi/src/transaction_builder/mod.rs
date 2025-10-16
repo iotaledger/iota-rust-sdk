@@ -7,7 +7,7 @@ use std::{
     time::Duration,
 };
 
-use iota_types::{Input, MovePackageData};
+use iota_types::Input;
 
 use crate::{
     crypto::simple::SimpleKeypair,
@@ -18,6 +18,7 @@ use crate::{
         address::Address,
         graphql::DryRunResult,
         object::ObjectId,
+        package_data::MovePackageData,
         struct_tag::Identifier,
         transaction::{Argument, Transaction, TransactionEffects},
         type_tag::TypeTag,
@@ -259,16 +260,13 @@ impl TransactionBuilder {
     ///    the package
     pub fn publish(
         self: Arc<Self>,
-        modules: Vec<Vec<u8>>,
+        package_data: &MovePackageData,
         dependencies: Vec<Arc<ObjectId>>,
         upgrade_cap_name: String,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .publish(MovePackageData::new(
-                    modules,
-                    dependencies.into_iter().map(|o| **o).collect(),
-                ))
+                .publish(package_data.0.clone())
                 .upgrade_cap(upgrade_cap_name);
         });
         self
@@ -288,19 +286,14 @@ impl TransactionBuilder {
     #[uniffi::method(default(name = None))]
     pub fn upgrade(
         self: Arc<Self>,
-        modules: Vec<Vec<u8>>,
-        dependencies: Vec<Arc<ObjectId>>,
+        package_data: &MovePackageData,
         package: &ObjectId,
         ticket: &PTBArgument,
         name: Option<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .upgrade(
-                    **package,
-                    ticket,
-                    MovePackageData::new(modules, dependencies.into_iter().map(|o| **o).collect()),
-                )
+                .upgrade(**package, ticket, package_data.0.clone())
                 .name(name);
         });
         self

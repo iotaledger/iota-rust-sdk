@@ -14,6 +14,7 @@ pub mod gas;
 pub mod graphql;
 pub mod iota_names;
 pub mod object;
+pub mod package_data;
 pub mod signature;
 pub mod struct_tag;
 pub mod transaction;
