@@ -3,7 +3,6 @@
 
 use std::str::FromStr;
 
-use base64ct::Encoding;
 use eyre::Result;
 use iota_graphql_client::Client;
 use iota_transaction_builder::TransactionBuilder;
@@ -31,10 +30,7 @@ async fn main() -> Result<()> {
         .await?;
 
     println!("Signing Digest: {}", tx.signing_digest_hex());
-    println!(
-        "Tx Bytes: {}",
-        base64ct::Base64::encode_string(&bcs::to_bytes(&tx)?)
-    );
+    println!("Tx Bytes: {}", tx.to_base64());
 
     let res = client.dry_run_tx(&tx, false).await?;
 
