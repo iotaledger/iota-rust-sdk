@@ -331,7 +331,7 @@ mod tests {
         tx.move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
             .arguments((
                 upgrade_cap.unwrap(),
-                UpgradePolicy::Additive as u8,
+                UpgradePolicy::Compatible as u8,
                 updated_package.digest,
             ))
             .name("ticket");
