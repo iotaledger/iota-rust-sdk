@@ -3695,7 +3695,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res(
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_result_ref(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared(
 ): Short
@@ -5038,7 +5038,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(`id`: Pointer,uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_result_ref(`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5526,7 +5526,7 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(`ptr`: Pointe
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(`ptr`: Pointer,`coin`: Pointer,`coinsToMerge`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(`ptr`: Pointer,`package`: Pointer,`module`: Pointer,`function`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(`ptr`: Pointer,`package`: Pointer,`module`: Pointer,`function`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`resultRefs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(`ptr`: Pointer,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,`upgradeCapName`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7146,7 +7146,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 15164.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 29250.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833.toShort()) {
@@ -7908,7 +7908,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex() != 48453.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_result_ref() != 61397.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared() != 59619.toShort()) {
@@ -29722,10 +29722,10 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
-         fun `res`(`name`: kotlin.String): PtbArgument {
+         fun `resultRef`(`name`: kotlin.String): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_result_ref(
         FfiConverterString.lower(`name`),_status)
 }
     )
@@ -38269,7 +38269,7 @@ public interface TransactionBuilderInterface {
     /**
      * Call a Move function with the given arguments.
      */
-    fun `moveCall`(`package`: Address, `module`: Identifier, `function`: Identifier, `arguments`: List<PtbArgument> = listOf(), `typeArgs`: List<TypeTag> = listOf(), `names`: List<kotlin.String> = listOf()): TransactionBuilder
+    fun `moveCall`(`package`: Address, `module`: Identifier, `function`: Identifier, `arguments`: List<PtbArgument> = listOf(), `typeArgs`: List<TypeTag> = listOf(), `resultRefs`: List<kotlin.String> = listOf()): TransactionBuilder
     
     /**
      * Publish a list of modules with the given dependencies. The result
@@ -38624,12 +38624,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     /**
      * Call a Move function with the given arguments.
-     */override fun `moveCall`(`package`: Address, `module`: Identifier, `function`: Identifier, `arguments`: List<PtbArgument>, `typeArgs`: List<TypeTag>, `names`: List<kotlin.String>): TransactionBuilder {
+     */override fun `moveCall`(`package`: Address, `module`: Identifier, `function`: Identifier, `arguments`: List<PtbArgument>, `typeArgs`: List<TypeTag>, `resultRefs`: List<kotlin.String>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(
-        it, FfiConverterTypeAddress.lower(`package`),FfiConverterTypeIdentifier.lower(`module`),FfiConverterTypeIdentifier.lower(`function`),FfiConverterSequenceTypePTBArgument.lower(`arguments`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterSequenceString.lower(`names`),_status)
+        it, FfiConverterTypeAddress.lower(`package`),FfiConverterTypeIdentifier.lower(`module`),FfiConverterTypeIdentifier.lower(`function`),FfiConverterSequenceTypePTBArgument.lower(`arguments`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterSequenceString.lower(`resultRefs`),_status)
 }
     }
     )

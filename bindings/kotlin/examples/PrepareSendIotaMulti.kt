@@ -51,7 +51,10 @@ fun main() = runBlocking {
         )
 
         for ((i, r) in recipients.withIndex()) {
-            builder.transferObjects(Address.fromHex(r.first), listOf(PtbArgument.res(labels[i])))
+            builder.transferObjects(
+                    Address.fromHex(r.first),
+                    listOf(PtbArgument.resultRef(labels[i]))
+            )
         }
 
         val txn = builder.finish()

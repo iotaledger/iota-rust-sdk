@@ -3728,7 +3728,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call()
 	})
-	if checksum != 22281 {
+	if checksum != 29250 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call: UniFFI API checksum mismatch")
 	}
@@ -6012,11 +6012,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_result_ref()
 	})
-	if checksum != 47661 {
+	if checksum != 61397 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_result_ref: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -17941,9 +17941,9 @@ func PtbArgumentReceivingFromHex(hex string) (*PtbArgument, error) {
 		}
 }
 
-func PtbArgumentRes(name string) *PtbArgument {
+func PtbArgumentResultRef(name string) *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_result_ref(FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
 	}))
 }
 
@@ -21958,7 +21958,7 @@ type TransactionBuilderInterface interface {
 	// Merge a list of coins into a single coin, without producing any result.
 	MergeCoins(coin *PtbArgument, coinsToMerge []*PtbArgument) *TransactionBuilder
 	// Call a Move function with the given arguments.
-	MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, names []string) *TransactionBuilder
+	MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, resultRefs []string) *TransactionBuilder
 	// Publish a list of modules with the given dependencies. The result
 	// assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
 	// Move type. Note that the upgrade capability needs to be handled
@@ -22232,12 +22232,12 @@ func (_self *TransactionBuilder) MergeCoins(coin *PtbArgument, coinsToMerge []*P
 }
 
 // Call a Move function with the given arguments.
-func (_self *TransactionBuilder) MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, names []string) *TransactionBuilder {
+func (_self *TransactionBuilder) MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, resultRefs []string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(
-		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterIdentifierINSTANCE.Lower(module), FfiConverterIdentifierINSTANCE.Lower(function), FfiConverterSequencePtbArgumentINSTANCE.Lower(arguments), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterSequenceStringINSTANCE.Lower(names),_uniffiStatus)
+		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterIdentifierINSTANCE.Lower(module), FfiConverterIdentifierINSTANCE.Lower(function), FfiConverterSequencePtbArgumentINSTANCE.Lower(arguments), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterSequenceStringINSTANCE.Lower(resultRefs),_uniffiStatus)
 	}))
 }
 

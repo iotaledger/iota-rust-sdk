@@ -6,7 +6,7 @@ use std::str::FromStr;
 use base64ct::Encoding;
 use eyre::Result;
 use iota_graphql_client::Client;
-use iota_transaction_builder::{TransactionBuilder, res};
+use iota_transaction_builder::{TransactionBuilder, result_ref};
 use iota_types::{Address, ObjectId};
 
 #[tokio::main]
@@ -22,8 +22,15 @@ async fn main() -> Result<()> {
 
     builder
         .split_coins(coin, [1000u64, 2000, 3000])
-        .name(("coin1", "coin2", "coin3"))
-        .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")))
+        .result_refs(("coin1", "coin2", "coin3"))
+        .transfer_objects(
+            sender,
+            (
+                result_ref("coin1"),
+                result_ref("coin2"),
+                result_ref("coin3"),
+            ),
+        )
         .gas(coin)
         .gas_budget(1000000000);
 

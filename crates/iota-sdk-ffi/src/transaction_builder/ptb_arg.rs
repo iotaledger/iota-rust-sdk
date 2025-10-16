@@ -4,7 +4,7 @@
 use std::sync::Arc;
 
 use iota_transaction_builder::{
-    PureBytes, Receiving, Shared, SharedMut, builder::ptb_arguments::Res, res,
+    PureBytes, Receiving, Shared, SharedMut, builder::ptb_arguments::CommandResult, result_ref,
 };
 use primitive_types::U256;
 
@@ -205,7 +205,7 @@ impl iota_transaction_builder::types::MoveArg for &MoveArg {
 pub enum PTBArgument {
     ObjectId(iota_types::ObjectId),
     Move(MoveArg),
-    Res(Res),
+    CommandResult(CommandResult),
     Shared(Shared<iota_types::ObjectId>),
     SharedMut(SharedMut<iota_types::ObjectId>),
     Receiving(Receiving<iota_types::ObjectId>),
@@ -215,8 +215,8 @@ pub enum PTBArgument {
 #[uniffi::export]
 impl PTBArgument {
     #[uniffi::constructor]
-    pub fn res(name: String) -> Self {
-        Self::Res(res(name))
+    pub fn result_ref(name: String) -> Self {
+        Self::CommandResult(result_ref(name))
     }
 
     #[uniffi::constructor]
@@ -402,7 +402,7 @@ impl iota_transaction_builder::PTBArgument for &PTBArgument {
         match self {
             PTBArgument::ObjectId(object_id) => object_id.arg(ptb),
             PTBArgument::Move(arg) => arg.arg(ptb),
-            PTBArgument::Res(res) => res.arg(ptb),
+            PTBArgument::CommandResult(res) => res.arg(ptb),
             PTBArgument::Shared(shared) => shared.arg(ptb),
             PTBArgument::SharedMut(shared_mut) => shared_mut.arg(ptb),
             PTBArgument::Receiving(receiving) => receiving.arg(ptb),

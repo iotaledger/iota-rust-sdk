@@ -16,7 +16,7 @@ pub mod unresolved;
 pub use self::{
     builder::{
         TransactionBuilder,
-        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
+        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, result_ref},
     },
     publish_type::MovePackageData,
     types::PureBytes,
@@ -36,7 +36,7 @@ mod tests {
         TransactionEffects,
     };
 
-    use crate::{TransactionBuilder, error::Error, publish_type::MovePackageData, res};
+    use crate::{TransactionBuilder, error::Error, publish_type::MovePackageData, result_ref};
 
     /// This is used to read the json file that contains the modules/deps/digest
     /// generated with iota move build --dump-bytecode-as-base64 on the
@@ -198,9 +198,9 @@ mod tests {
 
         // transfer 1 IOTA from Gas coin
         let gas = tx.get_gas()[0];
-        tx.split_coins(gas, [1_000_000_000u64]).name("coin");
+        tx.split_coins(gas, [1_000_000_000u64]).result_refs("coin");
         let recipient = Address::generate(rand::thread_rng());
-        tx.transfer_objects(recipient, [res("coin")]);
+        tx.transfer_objects(recipient, [result_ref("coin")]);
 
         let effects = tx.execute(&pk.into(), true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -272,7 +272,7 @@ mod tests {
         let package = move_package_data("package_test_example_v1.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, [res("cap")]);
+            .transfer_objects(address, [result_ref("cap")]);
 
         let effects = tx.execute(&pk.into(), true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
@@ -286,7 +286,7 @@ mod tests {
         let package = move_package_data("package_test_example_v2.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, [res("cap")]);
+            .transfer_objects(address, [result_ref("cap")]);
 
         let effects = tx.execute(&key, true).await;
         let mut package_id: Option<ObjectId> = None;
@@ -336,10 +336,10 @@ mod tests {
                 0u8,
                 updated_package.digest.as_ref().unwrap(),
             ))
-            .name("ticket");
+            .result_refs("ticket");
         // now we can upgrade the package
         let receipt = tx
-            .upgrade(package_id.unwrap(), res("ticket"), updated_package)
+            .upgrade(package_id.unwrap(), result_ref("ticket"), updated_package)
             .arg();
 
         // commit the upgrade

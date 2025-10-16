@@ -32,9 +32,9 @@ fun main() = runBlocking {
                 .transferObjects(
                         sender,
                         listOf(
-                                PtbArgument.res("coin1"),
-                                PtbArgument.res("coin2"),
-                                PtbArgument.res("coin3")
+                                PtbArgument.resultRef("coin1"),
+                                PtbArgument.resultRef("coin2"),
+                                PtbArgument.resultRef("coin3")
                         )
                 )
                 .gas(coinId)

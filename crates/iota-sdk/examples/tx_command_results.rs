@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 use eyre::Result;
 use iota_graphql_client::Client;
-use iota_transaction_builder::{TransactionBuilder, res, unresolved::Argument};
+use iota_transaction_builder::{TransactionBuilder, result_ref, unresolved::Argument};
 use iota_types::Address;
 
 #[tokio::main]
@@ -20,20 +20,20 @@ async fn main() -> Result<()> {
         .move_call(Address::STD_LIB, "u64", "max")
         .arguments((0u64, 1000u64))
         // Assign a name to the result of this command
-        .name("res0");
+        .result_refs("res0");
     builder
         .move_call(Address::STD_LIB, "u64", "max")
         .arguments((1000u64, 2000u64))
-        .name("res1");
+        .result_refs("res1");
 
     builder
         // Use the named results of previous commands to use as arguments
-        .split_coins(Argument::Gas, [res("res0"), res("res1")])
+        .split_coins(Argument::Gas, [result_ref("res0"), result_ref("res1")])
         // For nested results, a tuple or vec can be used to name them
-        .name(vec!["coin0", "coin1"]);
+        .result_refs(vec!["coin0", "coin1"]);
 
     // Use named results as arguments
-    builder.transfer_objects(sender_address, [res("coin0"), res("coin1")]);
+    builder.transfer_objects(sender_address, [result_ref("coin0"), result_ref("coin1")]);
 
     let tx = builder.finish().await?;
 

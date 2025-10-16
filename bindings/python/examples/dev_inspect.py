@@ -48,7 +48,7 @@ async def main():
             Identifier("name"),
             Identifier("new"),
             [PtbArgument.string(name)],
-            names=["name"],
+            result_refs=["name"],
         )
 
         # 3. Lookup name record
@@ -56,8 +56,8 @@ async def main():
             iota_names_package_address,
             Identifier("registry"),
             Identifier("lookup"),
-            [PtbArgument.res("iota_names"), PtbArgument.res("name")],
-            names=["name_record_opt"],
+            [PtbArgument.result_ref("iota_names"), PtbArgument.result_ref("name")],
+            result_refs=["name_record_opt"],
         )
 
         # 4. Borrow name record from option
@@ -65,7 +65,7 @@ async def main():
             stdlib_address,
             Identifier("option"),
             Identifier("borrow"),
-            [PtbArgument.res("name_record_opt")],
+            [PtbArgument.result_ref("name_record_opt")],
             [
                 TypeTag.new_struct(
                     StructTag(
@@ -83,8 +83,8 @@ async def main():
             iota_names_package_address,
             Identifier("name_record"),
             Identifier("target_address"),
-            [PtbArgument.res("name_record")],
-            names=["target_address_opt"],
+            [PtbArgument.result_ref("name_record")],
+            result_refs=["target_address_opt"],
         )
 
         # 6. Borrow address from option
@@ -92,7 +92,7 @@ async def main():
             stdlib_address,
             Identifier("option"),
             Identifier("borrow"),
-            [PtbArgument.res("target_address_opt")],
+            [PtbArgument.result_ref("target_address_opt")],
             [TypeTag.new_address()],
             ["target_address"],
         )

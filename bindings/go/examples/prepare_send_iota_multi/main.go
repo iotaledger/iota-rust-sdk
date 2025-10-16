@@ -40,7 +40,7 @@ func main() {
 
 	for idx, r := range recipients {
 		recipient, _ := sdk.AddressFromHex(r.address)
-		builder.TransferObjects(recipient, []*sdk.PtbArgument{sdk.PtbArgumentRes(labels[idx])})
+		builder.TransferObjects(recipient, []*sdk.PtbArgument{sdk.PtbArgumentResultRef(labels[idx])})
 	}
 
 	txn, err := builder.Finish()

@@ -25,7 +25,7 @@ fun main() = runBlocking {
                 functionName,
                 listOf(PtbArgument.u64(0u), PtbArgument.u64(1000u)),
                 // Assign a name to the result of this command
-                names = listOf("res0"),
+                resultRefs = listOf("res0"),
         )
 
         builder.moveCall(
@@ -34,13 +34,13 @@ fun main() = runBlocking {
                 functionName,
                 listOf(PtbArgument.u64(1000u), PtbArgument.u64(2000u)),
                 // Assign a name to the result of this command
-                names = listOf("res1"),
+                resultRefs = listOf("res1"),
         )
 
         builder.splitCoins(
                 PtbArgument.gas(),
                 // Use the named results of previous commands to use as arguments
-                listOf(PtbArgument.res("res0"), PtbArgument.res("res1")),
+                listOf(PtbArgument.resultRef("res0"), PtbArgument.resultRef("res1")),
                 // For nested results, a tuple or vec can be used to name them
                 listOf("coin0", "coin1"),
         )
@@ -48,7 +48,7 @@ fun main() = runBlocking {
         // Use named results as arguments
         builder.transferObjects(
                 sender,
-                listOf(PtbArgument.res("coin0"), PtbArgument.res("coin1")),
+                listOf(PtbArgument.resultRef("coin0"), PtbArgument.resultRef("coin1")),
         )
 
         val txn = builder.finish()

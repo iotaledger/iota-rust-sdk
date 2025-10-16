@@ -136,7 +136,7 @@ impl TransactionBuilder {
     // Commands
 
     /// Call a Move function with the given arguments.
-    #[uniffi::method(default(type_args = [], arguments = [], names = []))]
+    #[uniffi::method(default(type_args = [], arguments = [], result_refs = []))]
     pub fn move_call(
         self: Arc<Self>,
         package: &Address,
@@ -144,14 +144,14 @@ impl TransactionBuilder {
         function: &Identifier,
         arguments: Vec<Arc<PTBArgument>>,
         type_args: Vec<Arc<TypeTag>>,
-        names: Vec<String>,
+        result_refs: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
                 .move_call(**package, &module.as_str(), &function.as_str())
                 .arguments(arguments)
                 .type_tags(type_args.into_iter().map(|v| v.0.clone()))
-                .name(names);
+                .result_refs(result_refs);
         });
         self
     }
@@ -206,7 +206,7 @@ impl TransactionBuilder {
         names: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.split_coins(coin, amounts).name(names);
+            builder.split_coins(coin, amounts).result_refs(names);
         });
         self
     }
@@ -307,7 +307,7 @@ impl TransactionBuilder {
                         digest: None,
                     },
                 )
-                .name(name);
+                .result_refs(name);
         });
         self
     }

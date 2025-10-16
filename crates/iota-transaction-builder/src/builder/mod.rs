@@ -935,7 +935,7 @@ impl TransactionBuilder<(), Publish> {
         let cap = self.arg();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
-            .name(name)
+            .result_refs(name)
             .reset()
     }
 }
@@ -947,7 +947,7 @@ impl TransactionBuilder<Client, Publish> {
         let cap = self.arg();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
-            .name(name)
+            .result_refs(name)
             .reset()
     }
 }
@@ -961,9 +961,18 @@ impl<C> TransactionBuilder<C, Publish> {
     }
 }
 
-impl<C, L: Into<Command>> TransactionBuilder<C, L> {
-    /// Set the name for the last command.
-    pub fn name(&mut self, name: impl NamedResults) -> &mut Self {
+impl<C, L> TransactionBuilder<C, L> {
+    /// Set a name to the result of the current command, so it can be
+    /// referenced by follow-up calls using the `result_ref()` method.
+    ///
+    /// e.g.
+    /// ```rust,nocheck
+    /// builder
+    ///     .move_call(iota_names_package_address, "registry", "lookup")
+    ///     .arguments((get_result("iota_names"), get_result("name")))
+    ///     .result_refs("name_record_opt");
+    /// ```
+    pub fn result_refs(&mut self, name: impl NamedResults) -> &mut Self {
         name.push_named_results(&mut self.data);
         self
     }

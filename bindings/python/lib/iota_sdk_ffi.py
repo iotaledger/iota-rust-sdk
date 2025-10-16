@@ -1209,7 +1209,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 15164:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 29250:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1717,7 +1717,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex() != 48453:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_result_ref() != 61397:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared() != 59619:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4796,11 +4796,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_result_ref.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_result_ref.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -9192,9 +9192,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_result_ref.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_result_ref.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared.restype = ctypes.c_uint16
@@ -34675,11 +34675,11 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def res(cls, name: "str"):
+    def result_ref(cls, name: "str"):
         _UniffiConverterString.check_lower(name)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_result_ref,
         _UniffiConverterString.lower(name))
         return cls._make_instance_(pointer)
 
@@ -38175,7 +38175,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_call(self, package: "Address",module: "Identifier",function: "Identifier",arguments: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT,names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
+    def move_call(self, package: "Address",module: "Identifier",function: "Identifier",arguments: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT,result_refs: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
         Call a Move function with the given arguments.
         """
@@ -38548,7 +38548,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def move_call(self, package: "Address",module: "Identifier",function: "Identifier",arguments: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT,names: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "TransactionBuilder":
+    def move_call(self, package: "Address",module: "Identifier",function: "Identifier",arguments: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT,result_refs: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Call a Move function with the given arguments.
         """
@@ -38567,9 +38567,9 @@ _UniffiConverterTypeSdkFfiError,
             type_args = []
         _UniffiConverterSequenceTypeTypeTag.check_lower(type_args)
         
-        if names is _DEFAULT:
-            names = []
-        _UniffiConverterSequenceString.check_lower(names)
+        if result_refs is _DEFAULT:
+            result_refs = []
+        _UniffiConverterSequenceString.check_lower(result_refs)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call,self._uniffi_clone_pointer(),
@@ -38578,7 +38578,7 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeIdentifier.lower(function),
         _UniffiConverterSequenceTypePtbArgument.lower(arguments),
         _UniffiConverterSequenceTypeTypeTag.lower(type_args),
-        _UniffiConverterSequenceString.lower(names))
+        _UniffiConverterSequenceString.lower(result_refs))
         )
 
 

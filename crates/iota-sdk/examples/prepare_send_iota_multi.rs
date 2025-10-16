@@ -6,7 +6,7 @@ use std::str::FromStr;
 use base64ct::Encoding;
 use eyre::Result;
 use iota_graphql_client::Client;
-use iota_transaction_builder::{TransactionBuilder, res};
+use iota_transaction_builder::{TransactionBuilder, result_ref};
 use iota_types::{Address, ObjectId};
 
 #[tokio::main]
@@ -38,11 +38,13 @@ async fn main() -> Result<()> {
 
     let labels: Vec<String> = (0..recipients.len()).map(|i| format!("coin{i}")).collect();
 
-    builder.split_coins(coin, amounts).name(labels.clone());
+    builder
+        .split_coins(coin, amounts)
+        .result_refs(labels.clone());
 
     // Transfer each split coin to the corresponding recipient
     for (i, (address, _)) in recipients.iter().enumerate() {
-        builder.transfer_objects(Address::from_str(address)?, [res(&labels[i])]);
+        builder.transfer_objects(Address::from_str(address)?, [result_ref(&labels[i])]);
     }
 
     let txn = builder.finish().await?;

@@ -3052,9 +3052,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(void* id, RustCal
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex(RustBuffer hex, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RES
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RES
-void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(RustBuffer name, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RESULT_REF
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RESULT_REF
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_result_ref(RustBuffer name, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_SHARED
@@ -4286,7 +4286,7 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(void* ptr, vo
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_MOVE_CALL
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_MOVE_CALL
-void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(void* ptr, void* package, void* module, void* function, RustBuffer arguments, RustBuffer type_args, RustBuffer names, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(void* ptr, void* package, void* module, void* function, RustBuffer arguments, RustBuffer type_args, RustBuffer result_refs, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_PUBLISH
@@ -9274,9 +9274,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RES
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RES
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RESULT_REF
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RESULT_REF
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_result_ref(void
     
 );
 #endif

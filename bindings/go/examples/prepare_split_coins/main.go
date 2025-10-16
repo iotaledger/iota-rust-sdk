@@ -28,7 +28,7 @@ func main() {
 	)
 	builder.TransferObjects(
 		sender,
-		[]*sdk.PtbArgument{sdk.PtbArgumentRes("coin1"), sdk.PtbArgumentRes("coin2"), sdk.PtbArgumentRes("coin3")},
+		[]*sdk.PtbArgument{sdk.PtbArgumentResultRef("coin1"), sdk.PtbArgumentResultRef("coin2"), sdk.PtbArgumentResultRef("coin3")},
 	)
 	builder.Gas(coinObjId).GasBudget(1000000000)
 

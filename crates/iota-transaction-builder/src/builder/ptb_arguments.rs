@@ -259,20 +259,28 @@ impl PTBArgument for &Receiving<ObjectReference> {
 
 /// The result of a previous command by name.
 #[derive(Debug, Clone)]
-pub struct Res(String);
+pub struct CommandResult(String);
 
-/// Get the result of a previous command by name.
-pub fn res(name: impl Into<String>) -> Res {
-    Res(name.into())
+/// Get the result of a previous command by its name, which was defined
+/// using the `.result_ref()` method.
+///
+/// ```rust,nocheck
+/// builder
+///     .move_call(iota_names_package_address, "name", "new")
+///     .arguments([name])
+///     .result_ref("name");
+/// ```
+pub fn result_ref(named_result: impl Into<String>) -> CommandResult {
+    CommandResult(named_result.into())
 }
 
-impl PTBArgument for Res {
+impl PTBArgument for CommandResult {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (&self).arg(ptb)
     }
 }
 
-impl PTBArgument for &Res {
+impl PTBArgument for &CommandResult {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         if let Some(arg) = ptb.named_results.get(&self.0) {
             *arg

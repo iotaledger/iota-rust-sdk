@@ -42,13 +42,13 @@ func main() {
 	builder.SplitCoins(
 		sdk.PtbArgumentGas(),
 		// Use the named results of previous commands to use as arguments
-		[]*sdk.PtbArgument{sdk.PtbArgumentRes("res0"), sdk.PtbArgumentRes("res1")},
+		[]*sdk.PtbArgument{sdk.PtbArgumentResultRef("res0"), sdk.PtbArgumentResultRef("res1")},
 		// For nested results, a tuple or vec can be used to name them
 		[]string{"coin0", "coin1"},
 	)
 
 	// Use named results as arguments
-	builder.TransferObjects(sender, []*sdk.PtbArgument{sdk.PtbArgumentRes("coin0"), sdk.PtbArgumentRes("coin1")})
+	builder.TransferObjects(sender, []*sdk.PtbArgument{sdk.PtbArgumentResultRef("coin0"), sdk.PtbArgumentResultRef("coin1")})
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
