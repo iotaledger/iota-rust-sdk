@@ -105,7 +105,7 @@ mod serialization {
         use super::*;
 
         pub fn serialize<S: Serializer>(
-            value: &Vec<Vec<u8>>,
+            value: &[Vec<u8>],
             serializer: S,
         ) -> Result<S::Ok, S::Error> {
             value
