@@ -1325,7 +1325,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins()
 	})
-	if checksum != 50359 {
+	if checksum != 47450 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins: UniFFI API checksum mismatch")
 	}
@@ -1418,6 +1418,15 @@ func uniffiCheckChecksums() {
 	if checksum != 41079 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins()
+	})
+	if checksum != 24826 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -12049,10 +12058,9 @@ type GraphQlClientInterface interface {
 	CoinMetadata(coinType string) (*CoinMetadata, error)
 	// Get the list of coins for the specified address.
 	//
-	// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-	// which will return all coins. For IOTA coin, pass in the coin type:
-	// `0x2::coin::Coin<0x2::iota::IOTA>`.
-	Coins(owner *Address, paginationFilter *PaginationFilter, coinType *string) (CoinPage, error)
+	// If `coin_type` is not provided, all coins will be returned. For IOTA
+	// coins, pass in the coin type: `0x2::iota::IOTA`.
+	Coins(owner *Address, paginationFilter *PaginationFilter, coinType **StructTag) (CoinPage, error)
 	// Dry run a [`Transaction`] and return the transaction effects and dry run
 	// error (if any).
 	//
@@ -12122,6 +12130,8 @@ type GraphQlClientInterface interface {
 	Events(filter *EventFilter, paginationFilter *PaginationFilter) (EventPage, error)
 	// Execute a transaction.
 	ExecuteTx(signatures []*UserSignature, tx *Transaction) (**TransactionEffects, error)
+	// Get the list of gas coins for the specified address.
+	GasCoins(owner *Address, paginationFilter *PaginationFilter) (CoinPage, error)
 	// Get the default name pointing to this address, if one exists.
 	IotaNamesDefaultName(address *Address, format *NameFormat) (**Name, error)
 	// Return the resolved address for the given name.
@@ -12497,10 +12507,9 @@ func (_self *GraphQlClient) CoinMetadata(coinType string) (*CoinMetadata, error)
 
 // Get the list of coins for the specified address.
 //
-// If `coin_type` is not provided, it will default to `0x2::coin::Coin`,
-// which will return all coins. For IOTA coin, pass in the coin type:
-// `0x2::coin::Coin<0x2::iota::IOTA>`.
-func (_self *GraphQlClient) Coins(owner *Address, paginationFilter *PaginationFilter, coinType *string) (CoinPage, error) {
+// If `coin_type` is not provided, all coins will be returned. For IOTA
+// coins, pass in the coin type: `0x2::iota::IOTA`.
+func (_self *GraphQlClient) Coins(owner *Address, paginationFilter *PaginationFilter, coinType **StructTag) (CoinPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -12517,7 +12526,7 @@ func (_self *GraphQlClient) Coins(owner *Address, paginationFilter *PaginationFi
 			return FfiConverterCoinPageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(
-		_pointer,FfiConverterAddressINSTANCE.Lower(owner), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalStringINSTANCE.Lower(coinType)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(owner), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter), FfiConverterOptionalStructTagINSTANCE.Lower(coinType)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -12887,6 +12896,38 @@ func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transacti
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
 		_pointer,FfiConverterSequenceUserSignatureINSTANCE.Lower(signatures), FfiConverterTransactionINSTANCE.Lower(tx)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Get the list of gas coins for the specified address.
+func (_self *GraphQlClient) GasCoins(owner *Address, paginationFilter *PaginationFilter) (CoinPage, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) CoinPage {
+			return FfiConverterCoinPageINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(
+		_pointer,FfiConverterAddressINSTANCE.Lower(owner), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
