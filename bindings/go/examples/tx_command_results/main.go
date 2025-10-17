@@ -55,12 +55,8 @@ func main() {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	txnBase64, err := txn.ToBase64()
-	if err != nil {
-		log.Fatalf("Failed to serialize transaction: %v", err)
-	}
 	log.Printf("Signing Digest: %v", txn.SigningDigestHex())
-	log.Printf("Txn Bytes: %v", txnBase64)
+	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
 	res, err := client.DryRunTx(txn, false)
 	if err.(*sdk.SdkFfiError) != nil {
