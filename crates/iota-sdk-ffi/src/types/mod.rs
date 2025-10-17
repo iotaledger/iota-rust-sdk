@@ -40,4 +40,8 @@ impl PersonalMessage {
     pub fn signing_digest(&self) -> Vec<u8> {
         self.0.signing_digest().to_vec()
     }
+
+    pub fn signing_digest_hex(&self) -> String {
+        self.0.signing_digest_hex()
+    }
 }
