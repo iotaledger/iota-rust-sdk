@@ -1908,6 +1908,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_base64()
+	})
+	if checksum != 1835 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_base64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_json()
+	})
+	if checksum != 3153 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_json: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap()
 	})
 	if checksum != 41489 {
@@ -3764,7 +3782,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish()
 	})
-	if checksum != 46833 {
+	if checksum != 22805 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish: UniFFI API checksum mismatch")
 	}
@@ -3818,7 +3836,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade()
 	})
-	if checksum != 34068 {
+	if checksum != 3616 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade: UniFFI API checksum mismatch")
 	}
@@ -4136,6 +4154,15 @@ func uniffiCheckChecksums() {
 	if checksum != 11416 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_upgrade_ticket: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8()
+	})
+	if checksum != 30703 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5688,6 +5715,33 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64()
+	})
+	if checksum != 61420 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_json()
+	})
+	if checksum != 13174 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_json: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_new()
+	})
+	if checksum != 65225 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new()
 	})
 	if checksum != 3396 {
@@ -6944,6 +6998,33 @@ func uniffiCheckChecksums() {
 	if checksum != 61663 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive()
+	})
+	if checksum != 4357 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible()
+	})
+	if checksum != 62706 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only()
+	})
+	if checksum != 53392 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -15404,6 +15485,123 @@ func (_ FfiDestroyerMovePackage) Destroy(value *MovePackage) {
 
 
 
+// Type corresponding to the output of `iota move build
+// --dump-bytecode-as-base64`
+type MovePackageDataInterface interface {
+	ToBase64() string
+	ToJson() string
+}
+// Type corresponding to the output of `iota move build
+// --dump-bytecode-as-base64`
+type MovePackageData struct {
+	ffiObject FfiObject
+}
+func NewMovePackageData(modules [][]byte, dependencies []*ObjectId) *MovePackageData {
+	return FfiConverterMovePackageDataINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_new(FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies),_uniffiStatus)
+	}))
+}
+
+
+func MovePackageDataFromBase64(base64 string) (*MovePackageData, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_from_base64(FfiConverterStringINSTANCE.Lower(base64),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *MovePackageData
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterMovePackageDataINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func MovePackageDataFromJson(json string) (*MovePackageData, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_from_json(FfiConverterStringINSTANCE.Lower(json),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *MovePackageData
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterMovePackageDataINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+
+func (_self *MovePackageData) ToBase64() string {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_base64(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MovePackageData) ToJson() string {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_json(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *MovePackageData) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMovePackageData struct {}
+
+var FfiConverterMovePackageDataINSTANCE = FfiConverterMovePackageData{}
+
+
+func (c FfiConverterMovePackageData) Lift(pointer unsafe.Pointer) *MovePackageData {
+	result := &MovePackageData {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_movepackagedata(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_movepackagedata(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MovePackageData).Destroy)
+	return result
+}
+
+func (c FfiConverterMovePackageData) Read(reader io.Reader) *MovePackageData {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterMovePackageData) Lower(value *MovePackageData) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*MovePackageData")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterMovePackageData) Write(writer io.Writer, value *MovePackageData) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerMovePackageData struct {}
+
+func (_ FfiDestroyerMovePackageData) Destroy(value *MovePackageData) {
+		value.Destroy()
+}
+
+
+
 // Aggregated signature from members of a multisig committee.
 //
 // # BCS
@@ -22036,7 +22234,7 @@ type TransactionBuilderInterface interface {
 	// - `modules`: is the modules' bytecode to be published
 	// - `dependencies`: is the list of IDs of the transitive dependencies of
 	// the package
-	Publish(modules [][]byte, dependencies []*ObjectId, upgradeCapName string) *TransactionBuilder
+	Publish(packageData *MovePackageData, upgradeCapName string) *TransactionBuilder
 	// Transfer some coins to a recipient address. If multiple coins are
 	// provided then they will be merged.
 	SendCoins(coins []*PtbArgument, recipient *Address, amount **PtbArgument) *TransactionBuilder
@@ -22060,7 +22258,7 @@ type TransactionBuilderInterface interface {
 	// To get the ticket, you have to call the
 	// `0x2::package::authorize_upgrade` function, and pass the package
 	// ID, the upgrade policy, and package digest.
-	Upgrade(modules [][]byte, dependencies []*ObjectId, varPackage *ObjectId, ticket *PtbArgument, name *string) *TransactionBuilder
+	Upgrade(packageData *MovePackageData, varPackage *ObjectId, ticket *PtbArgument, name *string) *TransactionBuilder
 }
 // A builder for creating transactions. Use [`finish`](Self::finish) to
 // finalize the transaction data.
@@ -22318,12 +22516,12 @@ func (_self *TransactionBuilder) MoveCall(varPackage *Address, module *Identifie
 // - `modules`: is the modules' bytecode to be published
 // - `dependencies`: is the list of IDs of the transitive dependencies of
 // the package
-func (_self *TransactionBuilder) Publish(modules [][]byte, dependencies []*ObjectId, upgradeCapName string) *TransactionBuilder {
+func (_self *TransactionBuilder) Publish(packageData *MovePackageData, upgradeCapName string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(
-		_pointer,FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies), FfiConverterStringINSTANCE.Lower(upgradeCapName),_uniffiStatus)
+		_pointer,FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterStringINSTANCE.Lower(upgradeCapName),_uniffiStatus)
 	}))
 }
 
@@ -22390,12 +22588,12 @@ func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*
 // To get the ticket, you have to call the
 // `0x2::package::authorize_upgrade` function, and pass the package
 // ID, the upgrade policy, and package digest.
-func (_self *TransactionBuilder) Upgrade(modules [][]byte, dependencies []*ObjectId, varPackage *ObjectId, ticket *PtbArgument, name *string) *TransactionBuilder {
+func (_self *TransactionBuilder) Upgrade(packageData *MovePackageData, varPackage *ObjectId, ticket *PtbArgument, name *string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
-		_pointer,FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies), FfiConverterObjectIdINSTANCE.Lower(varPackage), FfiConverterPtbArgumentINSTANCE.Lower(ticket), FfiConverterOptionalStringINSTANCE.Lower(name),_uniffiStatus)
+		_pointer,FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterObjectIdINSTANCE.Lower(varPackage), FfiConverterPtbArgumentINSTANCE.Lower(ticket), FfiConverterOptionalStringINSTANCE.Lower(name),_uniffiStatus)
 	}))
 }
 func (object *TransactionBuilder) Destroy() {
@@ -23626,6 +23824,96 @@ func (c FfiConverterUpgrade) Write(writer io.Writer, value *Upgrade) {
 type FfiDestroyerUpgrade struct {}
 
 func (_ FfiDestroyerUpgrade) Destroy(value *Upgrade) {
+		value.Destroy()
+}
+
+
+
+// Representation of upgrade policy constants in `iota::package`.
+type UpgradePolicyInterface interface {
+	AsU8() uint8
+}
+// Representation of upgrade policy constants in `iota::package`.
+type UpgradePolicy struct {
+	ffiObject FfiObject
+}
+
+
+func UpgradePolicyAdditive() *UpgradePolicy {
+	return FfiConverterUpgradePolicyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(_uniffiStatus)
+	}))
+}
+
+func UpgradePolicyCompatible() *UpgradePolicy {
+	return FfiConverterUpgradePolicyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(_uniffiStatus)
+	}))
+}
+
+func UpgradePolicyDepOnly() *UpgradePolicy {
+	return FfiConverterUpgradePolicyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *UpgradePolicy) AsU8() uint8 {
+	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint8INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(
+		_pointer,_uniffiStatus)
+	}))
+}
+func (object *UpgradePolicy) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterUpgradePolicy struct {}
+
+var FfiConverterUpgradePolicyINSTANCE = FfiConverterUpgradePolicy{}
+
+
+func (c FfiConverterUpgradePolicy) Lift(pointer unsafe.Pointer) *UpgradePolicy {
+	result := &UpgradePolicy {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*UpgradePolicy).Destroy)
+	return result
+}
+
+func (c FfiConverterUpgradePolicy) Read(reader io.Reader) *UpgradePolicy {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterUpgradePolicy) Lower(value *UpgradePolicy) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*UpgradePolicy")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterUpgradePolicy) Write(writer io.Writer, value *UpgradePolicy) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerUpgradePolicy struct {}
+
+func (_ FfiDestroyerUpgradePolicy) Destroy(value *UpgradePolicy) {
 		value.Destroy()
 }
 

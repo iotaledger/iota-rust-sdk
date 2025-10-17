@@ -8,7 +8,6 @@
 
 pub mod builder;
 pub mod error;
-pub(crate) mod publish_type;
 pub mod types;
 #[allow(missing_docs)]
 pub mod unresolved;
@@ -18,7 +17,6 @@ pub use self::{
         TransactionBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
     },
-    publish_type::MovePackageData,
     types::PureBytes,
 };
 
@@ -32,11 +30,11 @@ mod tests {
         pagination::PaginationFilter,
     };
     use iota_types::{
-        Address, Digest, ExecutionStatus, IdOperation, ObjectId, ObjectReference, ObjectType,
-        TransactionEffects,
+        Address, Digest, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectReference,
+        ObjectType, TransactionEffects, UpgradePolicy,
     };
 
-    use crate::{TransactionBuilder, error::Error, publish_type::MovePackageData, res};
+    use crate::{TransactionBuilder, error::Error, res};
 
     /// This is used to read the json file that contains the modules/deps/digest
     /// generated with iota move build --dump-bytecode-as-base64 on the
@@ -333,8 +331,8 @@ mod tests {
         tx.move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
             .arguments((
                 upgrade_cap.unwrap(),
-                0u8,
-                updated_package.digest.as_ref().unwrap(),
+                UpgradePolicy::Compatible as u8,
+                updated_package.digest,
             ))
             .name("ticket");
         // now we can upgrade the package

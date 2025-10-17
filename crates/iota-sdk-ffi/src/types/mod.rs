@@ -13,6 +13,7 @@ pub mod execution_status;
 pub mod gas;
 pub mod graphql;
 pub mod iota_names;
+pub mod move_package;
 pub mod object;
 pub mod signature;
 pub mod struct_tag;
