@@ -59,7 +59,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to serialize transaction: %v", err)
 	}
-	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
+	log.Printf("Signing Digest: %v", txn.SigningDigestHex())
 	log.Printf("Txn Bytes: %v", txnBase64)
 
 	res, err := client.DryRunTx(txn, false)
