@@ -2424,6 +2424,14 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2540,6 +2548,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_previous_digest(
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms(
 ): Short
@@ -2973,6 +2983,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_inputs(
@@ -3161,6 +3173,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_transaction_sender(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_to_bcs(
@@ -3224,6 +3238,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_kind(
 fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_to_base64(
 ): Short
@@ -4184,6 +4200,8 @@ fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_sequence_number(`ptr`: Point
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_timestamp_ms(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_version_specific_data(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5116,6 +5134,8 @@ fun uniffi_iota_sdk_ffi_fn_method_personalmessage_message_bytes(`ptr`: Pointer,u
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5494,6 +5514,8 @@ fun uniffi_iota_sdk_ffi_fn_method_transaction_sender(`ptr`: Pointer,uniffi_out_e
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transaction_to_bcs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5601,6 +5623,8 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(`ptr`: Pointer,uniffi_out_e
 fun uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -6175,6 +6199,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message() != 59962.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex() != 52548.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms() != 62474.toShort()) {
@@ -6825,6 +6852,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() != 39344.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex() != 63754.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands() != 49868.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7104,13 +7134,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender() != 38190.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest() != 36608.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest() != 21125.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64() != 60127.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex() != 44484.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_to_bcs() != 3192.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64() != 51030.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_to_bcs() != 41090.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138.toShort()) {
@@ -7200,13 +7233,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender() != 8513.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest() != 34103.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest() != 51695.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_to_base64() != 51153.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest_hex() != 21009.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_to_bcs() != 59482.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_to_base64() != 54846.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_to_bcs() != 22592.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transferobjects_address() != 37833.toShort()) {
@@ -12900,6 +12936,8 @@ public interface CheckpointSummaryInterface {
     
     fun `signingMessage`(): kotlin.ByteArray
     
+    fun `signingMessageHex`(): kotlin.String
+    
     /**
      * Timestamp of the checkpoint - number of milliseconds from the Unix epoch
      * Checkpoint timestamps are monotonic, but not strongly monotonic -
@@ -13191,6 +13229,18 @@ open class CheckpointSummary: Disposable, AutoCloseable, CheckpointSummaryInterf
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `signingMessageHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message_hex(
         it, _status)
 }
     }
@@ -30988,6 +31038,8 @@ public interface PersonalMessageInterface {
     
     fun `signingDigest`(): kotlin.ByteArray
     
+    fun `signingDigestHex`(): kotlin.String
+    
     companion object
 }
 
@@ -31097,6 +31149,18 @@ open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `signingDigestHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(
         it, _status)
 }
     }
@@ -37804,7 +37868,15 @@ public interface TransactionInterface {
     
     fun `sender`(): Address
     
+    /**
+     * Get the signing digest.
+     */
     fun `signingDigest`(): kotlin.ByteArray
+    
+    /**
+     * Get the signing digest as a hex string.
+     */
+    fun `signingDigestHex`(): kotlin.String
     
     /**
      * Serialize the transaction as a base64-encoded string.
@@ -37986,7 +38058,10 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
     }
     
 
-    override fun `signingDigest`(): kotlin.ByteArray {
+    
+    /**
+     * Get the signing digest.
+     */override fun `signingDigest`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -38000,12 +38075,26 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
 
     
     /**
-     * Serialize the transaction as a base64-encoded string.
-     */
-    @Throws(SdkFfiException::class)override fun `toBase64`(): kotlin.String {
+     * Get the signing digest as a hex string.
+     */override fun `signingDigestHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
-    uniffiRustCallWithError(SdkFfiException) { _status ->
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Serialize the transaction as a base64-encoded string.
+     */override fun `toBase64`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(
         it, _status)
 }
@@ -38017,11 +38106,10 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
     
     /**
      * Serialize the transaction as a `Vec<u8>` of BCS bytes.
-     */
-    @Throws(SdkFfiException::class)override fun `toBcs`(): kotlin.ByteArray {
+     */override fun `toBcs`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     callWithPointer {
-    uniffiRustCallWithError(SdkFfiException) { _status ->
+    uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_to_bcs(
         it, _status)
 }
@@ -39843,7 +39931,15 @@ public interface TransactionV1Interface {
     
     fun `sender`(): Address
     
+    /**
+     * Get the signing digest.
+     */
     fun `signingDigest`(): kotlin.ByteArray
+    
+    /**
+     * Get the signing digest as a hex string.
+     */
+    fun `signingDigestHex`(): kotlin.String
     
     /**
      * Serialize the transaction as a base64-encoded string.
@@ -40020,7 +40116,10 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
     }
     
 
-    override fun `signingDigest`(): kotlin.ByteArray {
+    
+    /**
+     * Get the signing digest.
+     */override fun `signingDigest`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -40034,12 +40133,26 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
 
     
     /**
-     * Serialize the transaction as a base64-encoded string.
-     */
-    @Throws(SdkFfiException::class)override fun `toBase64`(): kotlin.String {
+     * Get the signing digest as a hex string.
+     */override fun `signingDigestHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
-    uniffiRustCallWithError(SdkFfiException) { _status ->
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Serialize the transaction as a base64-encoded string.
+     */override fun `toBase64`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
         it, _status)
 }
@@ -40051,11 +40164,10 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
     
     /**
      * Serialize the transaction as a `Vec<u8>` of BCS bytes.
-     */
-    @Throws(SdkFfiException::class)override fun `toBcs`(): kotlin.ByteArray {
+     */override fun `toBcs`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     callWithPointer {
-    uniffiRustCallWithError(SdkFfiException) { _status ->
+    uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_bcs(
         it, _status)
 }

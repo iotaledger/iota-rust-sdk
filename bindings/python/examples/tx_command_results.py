@@ -48,7 +48,7 @@ async def main():
 
 		txn = await builder.finish()
 
-		print("Signing Digest:", hex_encode(txn.signing_digest()))
+		print("Signing Digest:", txn.signing_digest_hex())
 		print("Txn Bytes:", txn.to_base64())
 
 		res = await client.dry_run_tx(txn, False)
