@@ -92,6 +92,9 @@ jobs:
 
       - uses: ./.github/actions/start-local-network
 
+      - name: Generate test dependencies
+        run: make package_test_example_v1.json package_test_example_v2.json
+
       - name: Run code coverage (nextest)
         run: |
           set +e
