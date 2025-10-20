@@ -7,7 +7,6 @@ use iota_types::{Jwk, JwkId, ZkLoginClaim};
 
 use crate::{
     error::{Result, SdkFfiError},
-    export_iota_types_bcs_conversion, export_iota_types_objects_bcs_conversion,
     types::{address::Address, signature::SimpleSignature},
 };
 
@@ -432,7 +431,7 @@ pub struct Jwk {
     pub alg: String,
 }
 
-export_iota_types_objects_bcs_conversion!(
+crate::export_iota_types_objects_bcs_conversion!(
     ZkLoginAuthenticator,
     ZkLoginPublicIdentifier,
     ZkLoginProof,
@@ -441,4 +440,4 @@ export_iota_types_objects_bcs_conversion!(
     Bn254FieldElement
 );
 
-export_iota_types_bcs_conversion!(ZkLoginClaim, JwkId, Jwk);
+crate::export_iota_types_bcs_conversion!(ZkLoginClaim, JwkId, Jwk);

@@ -10,7 +10,6 @@ pub type Version = iota_types::Version;
 
 use crate::{
     error::Result,
-    export_iota_types_bcs_conversion, export_iota_types_objects_bcs_conversion,
     types::{
         address::Address,
         digest::Digest,
@@ -653,8 +652,8 @@ impl GenesisObject {
     }
 }
 
-export_iota_types_bcs_conversion!(ObjectReference, TypeOrigin, UpgradeInfo, MoveStruct);
-export_iota_types_objects_bcs_conversion!(
+crate::export_iota_types_bcs_conversion!(ObjectReference, TypeOrigin, UpgradeInfo, MoveStruct);
+crate::export_iota_types_objects_bcs_conversion!(
     ObjectId,
     Object,
     ObjectData,

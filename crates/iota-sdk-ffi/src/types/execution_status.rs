@@ -7,7 +7,6 @@ use iota_types::{CommandArgumentError, Identifier, TypeArgumentError};
 
 use crate::{
     error::Result,
-    export_iota_types_bcs_conversion,
     types::{address::Address, digest::Digest, object::ObjectId},
 };
 
@@ -761,7 +760,7 @@ pub enum TypeArgumentError {
     ConstraintNotSatisfied,
 }
 
-export_iota_types_bcs_conversion!(
+crate::export_iota_types_bcs_conversion!(
     ExecutionStatus,
     ExecutionError,
     MoveLocation,

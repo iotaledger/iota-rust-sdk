@@ -77,11 +77,6 @@ impl Address {
     }
 
     #[uniffi::constructor]
-    pub fn from_bcs(bcs: Vec<u8>) -> Result<Self> {
-        Ok(Self(bcs::from_bytes::<iota_types::Address>(&bcs)?))
-    }
-
-    #[uniffi::constructor]
     pub fn generate() -> Self {
         let mut rng = rand::thread_rng();
         Self(iota_types::Address::generate(&mut rng))
@@ -93,10 +88,6 @@ impl Address {
 
     pub fn to_hex(&self) -> String {
         self.0.to_hex()
-    }
-
-    pub fn to_bcs(&self) -> Result<Vec<u8>> {
-        Ok(bcs::to_bytes(&self.0)?)
     }
 }
 
@@ -115,3 +106,5 @@ macro_rules! named_address {
 }
 
 named_address!(ZERO, STD_LIB, FRAMEWORK, SYSTEM);
+
+crate::export_iota_types_objects_bcs_conversion!(Address);

@@ -7,7 +7,6 @@ use iota_types::GasCostSummary;
 
 use crate::{
     error::Result,
-    export_iota_types_bcs_conversion, export_iota_types_objects_bcs_conversion,
     types::{digest::Digest, signature::UserSignature, validator::ValidatorCommitteeMember},
 };
 
@@ -339,11 +338,11 @@ impl From<EndOfEpochData> for iota_types::EndOfEpochData {
     }
 }
 
-export_iota_types_objects_bcs_conversion!(
+crate::export_iota_types_objects_bcs_conversion!(
     CheckpointSummary,
     CheckpointContents,
     CheckpointTransactionInfo,
     CheckpointCommitment
 );
 
-export_iota_types_bcs_conversion!(EndOfEpochData);
+crate::export_iota_types_bcs_conversion!(EndOfEpochData);

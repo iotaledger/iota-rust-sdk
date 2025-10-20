@@ -5,7 +5,6 @@ use std::sync::Arc;
 
 use crate::{
     error::Result,
-    export_iota_types_objects_bcs_conversion,
     types::{address::Address, type_tag::TypeTag},
 };
 
@@ -108,4 +107,4 @@ impl StructTag {
     }
 }
 
-export_iota_types_objects_bcs_conversion!(Identifier, StructTag);
+crate::export_iota_types_objects_bcs_conversion!(Identifier, StructTag);

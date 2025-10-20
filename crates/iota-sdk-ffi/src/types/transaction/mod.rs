@@ -11,7 +11,7 @@ use iota_types::{
 use crate::{
     base64_encode,
     error::Result,
-    export_iota_types_bcs_conversion, export_iota_types_objects_bcs_conversion, hex_encode,
+    hex_encode,
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
@@ -86,20 +86,9 @@ impl Transaction {
         self.0.signing_digest_hex()
     }
 
-    /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-    pub fn to_bcs(&self) -> Vec<u8> {
-        self.0.to_bcs()
-    }
-
     /// Serialize the transaction as a base64-encoded string.
     pub fn to_base64(&self) -> String {
         self.0.to_base64()
-    }
-
-    /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
-    #[uniffi::constructor]
-    pub fn from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Transaction(iota_types::Transaction::from_bcs(&bytes)?))
     }
 
     /// Deserialize a transaction from a base64-encoded string.
@@ -170,20 +159,9 @@ impl TransactionV1 {
         self.0.signing_digest_hex()
     }
 
-    /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-    pub fn to_bcs(&self) -> Vec<u8> {
-        self.0.to_bcs()
-    }
-
     /// Serialize the transaction as a base64-encoded string.
     pub fn to_base64(&self) -> String {
         self.0.to_base64()
-    }
-
-    /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
-    #[uniffi::constructor]
-    pub fn from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(iota_types::TransactionV1::from_bcs(&bytes)?))
     }
 
     /// Deserialize a transaction from a base64-encoded string.
@@ -1730,8 +1708,9 @@ impl MoveCall {
     }
 }
 
-export_iota_types_objects_bcs_conversion!(
+crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
+    TransactionV1,
     TransactionKind,
     ProgrammableTransaction,
     Input,
@@ -1758,7 +1737,7 @@ export_iota_types_objects_bcs_conversion!(
     Argument,
     MoveCall,
 );
-export_iota_types_bcs_conversion!(
+crate::export_iota_types_bcs_conversion!(
     SignedTransaction,
     AuthenticatorStateExpire,
     AuthenticatorStateUpdateV1,
