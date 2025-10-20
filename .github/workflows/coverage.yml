@@ -75,6 +75,7 @@ jobs:
         uses: actionhippie/swap-space@73376950a0019f8e1f6a3d3d2673fe2aed74ae17 # v1.0.2
         with:
           size: 256G
+      - run: iota --version
 
       - name: Install llvm-tools
         run: |
