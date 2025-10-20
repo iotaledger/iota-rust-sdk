@@ -378,6 +378,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_address_from_bcs()
+	})
+	if checksum != 8229 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_address_from_bcs: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_address_to_bcs()
+	})
+	if checksum != 61852 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_address_to_bcs: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_argument_from_bcs()
 	})
 	if checksum != 3719 {
@@ -1800,6 +1818,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_transaction_v1_from_bcs()
+	})
+	if checksum != 56096 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_transaction_v1_from_bcs: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_transaction_v1_to_bcs()
+	})
+	if checksum != 62454 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_transaction_v1_to_bcs: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_transfer_objects_from_bcs()
 	})
 	if checksum != 34010 {
@@ -2138,15 +2174,6 @@ func uniffiCheckChecksums() {
 	if checksum != 39685 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_bcs()
-	})
-	if checksum != 31502 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_bcs: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5418,15 +5445,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transaction_to_bcs()
-	})
-	if checksum != 41090 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transaction_to_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run()
 	})
 	if checksum != 11138 {
@@ -5711,15 +5729,6 @@ func uniffiCheckChecksums() {
 	if checksum != 54846 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionv1_to_base64: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactionv1_to_bcs()
-	})
-	if checksum != 22592 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionv1_to_bcs: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6431,15 +6440,6 @@ func uniffiCheckChecksums() {
 	if checksum != 52951 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_framework: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bcs()
-	})
-	if checksum != 25179 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_from_bcs: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8523,15 +8523,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_bcs()
-	})
-	if checksum != 33474 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_bcs: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1()
 	})
 	if checksum != 58632 {
@@ -8627,15 +8618,6 @@ func uniffiCheckChecksums() {
 	if checksum != 19681 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_bcs()
-	})
-	if checksum != 46239 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_bcs: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9390,7 +9372,6 @@ func (ffiObject *FfiObject)freeRustArcPtr() {
 // address = 32OCTET
 // ```
 type AddressInterface interface {
-	ToBcs() ([]byte, error)
 	ToBytes() []byte
 	ToHex() string
 }
@@ -9458,18 +9439,6 @@ func AddressFramework() *Address {
 	}))
 }
 
-func AddressFromBcs(bcs []byte) (*Address, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *Address
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterAddressINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
 func AddressFromBytes(bytes []byte) (*Address, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
@@ -9519,23 +9488,6 @@ func AddressZero() *Address {
 }
 
 
-
-func (_self *Address) ToBcs() ([]byte, error) {
-	_pointer := _self.ffiObject.incrementPointer("*Address")
-	defer _self.ffiObject.decrementPointer()
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_bcs(
-		_pointer,_uniffiStatus),
-	}
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue []byte
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
 
 func (_self *Address) ToBytes() []byte {
 	_pointer := _self.ffiObject.incrementPointer("*Address")
@@ -23777,8 +23729,6 @@ type TransactionInterface interface {
 	SigningDigestHex() string
 	// Serialize the transaction as a base64-encoded string.
 	ToBase64() string
-	// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-	ToBcs() []byte
 }
 // Transaction
 //
@@ -23800,19 +23750,6 @@ type Transaction struct {
 func TransactionFromBase64(base64 string) (*Transaction, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64(FfiConverterStringINSTANCE.Lower(base64),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *Transaction
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterTransactionINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
-func TransactionFromBcs(bytes []byte) (*Transaction, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_bcs(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Transaction
@@ -23919,18 +23856,6 @@ func (_self *Transaction) ToBase64() string {
 	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-func (_self *Transaction) ToBcs() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*Transaction")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transaction_to_bcs(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -24818,8 +24743,6 @@ type TransactionV1Interface interface {
 	SigningDigestHex() string
 	// Serialize the transaction as a base64-encoded string.
 	ToBase64() string
-	// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-	ToBcs() []byte
 }
 // A transaction
 //
@@ -24846,19 +24769,6 @@ func NewTransactionV1(kind *TransactionKind, sender *Address, gasPayment GasPaym
 func TransactionV1FromBase64(bytes string) (*TransactionV1, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64(FfiConverterStringINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *TransactionV1
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterTransactionV1INSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
-func TransactionV1FromBcs(bytes []byte) (*TransactionV1, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_bcs(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *TransactionV1
@@ -24950,18 +24860,6 @@ func (_self *TransactionV1) ToBase64() string {
 	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-func (_self *TransactionV1) ToBcs() []byte {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_bcs(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -28462,7 +28360,7 @@ type FfiDestroyerDynamicFieldValue struct {}
 func (_ FfiDestroyerDynamicFieldValue) Destroy(value DynamicFieldValue) {
 	value.Destroy()
 }
-// Data, which when included in a [`CheckpointSummary`], signals the end of an
+// Data which, when included in a [`CheckpointSummary`], signals the end of an
 // `Epoch`.
 //
 // # BCS
@@ -39616,6 +39514,34 @@ func ActiveJwkToBcs(data ActiveJwk) ([]byte, error) {
 }
 
 // Create this type from BCS encoded bytes.
+func AddressFromBcs(bcs []byte) (*Address, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_func_address_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Address
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterAddressINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Convert this type to BCS encoded bytes.
+func AddressToBcs(data *Address) ([]byte, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_func_address_to_bcs(FfiConverterAddressINSTANCE.Lower(data),_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Create this type from BCS encoded bytes.
 func ArgumentFromBcs(bcs []byte) (*Argument, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_func_argument_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
@@ -41851,6 +41777,34 @@ func TransactionToBcs(data *Transaction) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_func_transaction_to_bcs(FfiConverterTransactionINSTANCE.Lower(data),_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue []byte
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Create this type from BCS encoded bytes.
+func TransactionV1FromBcs(bcs []byte) (*TransactionV1, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_func_transaction_v1_from_bcs(FfiConverterBytesINSTANCE.Lower(bcs),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *TransactionV1
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterTransactionV1INSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Convert this type to BCS encoded bytes.
+func TransactionV1ToBcs(data *TransactionV1) ([]byte, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_func_transaction_v1_to_bcs(FfiConverterTransactionV1INSTANCE.Lower(data),_uniffiStatus),
 	}
 	})
 		if _uniffiErr != nil {
