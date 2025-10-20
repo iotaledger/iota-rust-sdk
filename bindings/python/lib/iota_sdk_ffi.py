@@ -465,6 +465,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_base64_encode() != 54791:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_bcs_decode() != 8004:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_bcs_encode() != 60780:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_hex_decode() != 35424:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_hex_encode() != 34343:
@@ -7137,6 +7141,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_base64_encode.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_base64_encode.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bcs_decode.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bcs_decode.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bcs_encode.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bcs_encode.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_hex_decode.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7421,6 +7435,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_base64_decode.restype = ctypes.c_ui
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_base64_encode.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_base64_encode.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bcs_decode.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bcs_decode.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bcs_encode.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bcs_encode.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_hex_decode.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_hex_decode.restype = ctypes.c_uint16
@@ -42514,6 +42534,20 @@ def base64_encode(input: "bytes") -> "str":
         _UniffiConverterBytes.lower(input)))
 
 
+def bcs_decode(input: "bytes") -> "bytes":
+    _UniffiConverterBytes.check_lower(input)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bcs_decode,
+        _UniffiConverterBytes.lower(input)))
+
+
+def bcs_encode(input: "bytes") -> "bytes":
+    _UniffiConverterBytes.check_lower(input)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bcs_encode,
+        _UniffiConverterBytes.lower(input)))
+
+
 def hex_decode(input: "str") -> "bytes":
     _UniffiConverterString.check_lower(input)
     
@@ -42631,6 +42665,8 @@ __all__ = [
     "ZkLoginClaim",
     "base64_decode",
     "base64_encode",
+    "bcs_decode",
+    "bcs_encode",
     "hex_decode",
     "hex_encode",
     "Address",

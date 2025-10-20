@@ -107,6 +107,7 @@
 #![allow(clippy::wrong_self_convention)]
 
 use base64ct::Encoding;
+use serde::Deserialize;
 
 mod crypto;
 mod error;
@@ -136,4 +137,16 @@ pub fn hex_encode(input: &[u8]) -> String {
 #[uniffi::export]
 pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
     Ok(hex::decode(input)?)
+}
+
+/// Converts raw bytes to BCS encoded bytes.
+#[uniffi::export]
+pub fn bcs_encode(input: &[u8]) -> crate::error::Result<Vec<u8>> {
+    Ok(bcs::to_bytes(input)?)
+}
+
+/// Converts BCS encoded bytes to raw bytes.
+#[uniffi::export]
+pub fn bcs_decode(input: &[u8]) -> crate::error::Result<Vec<u8>> {
+    Ok(bcs::from_bytes(input)?)
 }

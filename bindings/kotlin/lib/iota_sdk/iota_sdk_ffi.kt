@@ -2454,6 +2454,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2472,6 +2476,10 @@ internal interface IntegrityCheckingUniffiLib : Library {
     fun uniffi_iota_sdk_ffi_checksum_func_base64_decode(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_base64_encode(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bcs_decode(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bcs_encode(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_hex_decode(
 ): Short
@@ -5984,6 +5992,10 @@ fun uniffi_iota_sdk_ffi_fn_func_base64_decode(`input`: RustBuffer.ByValue,uniffi
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_base64_encode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_bcs_decode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_bcs_encode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_hex_decode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_hex_encode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -6118,6 +6130,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_base64_encode() != 54791.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bcs_decode() != 8004.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bcs_encode() != 60780.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_hex_decode() != 35424.toShort()) {
@@ -58172,6 +58190,26 @@ public typealias FfiConverterTypeValue = FfiConverterString
             return FfiConverterString.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_base64_encode(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+    @Throws(SdkFfiException::class) fun `bcsDecode`(`input`: kotlin.ByteArray): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bcs_decode(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+    @Throws(SdkFfiException::class) fun `bcsEncode`(`input`: kotlin.ByteArray): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bcs_encode(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )

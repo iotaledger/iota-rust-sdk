@@ -5304,6 +5304,16 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_base64_decode(RustBuffer input, RustCallS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_base64_encode(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BCS_DECODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BCS_DECODE
+RustBuffer uniffi_iota_sdk_ffi_fn_func_bcs_decode(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BCS_ENCODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BCS_ENCODE
+RustBuffer uniffi_iota_sdk_ffi_fn_func_bcs_encode(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_HEX_DECODE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_HEX_DECODE
 RustBuffer uniffi_iota_sdk_ffi_fn_func_hex_decode(RustBuffer input, RustCallStatus *out_status
@@ -5603,6 +5613,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_base64_decode(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BASE64_ENCODE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BASE64_ENCODE
 uint16_t uniffi_iota_sdk_ffi_checksum_func_base64_encode(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BCS_DECODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BCS_DECODE
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bcs_decode(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BCS_ENCODE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BCS_ENCODE
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bcs_encode(void
     
 );
 #endif
