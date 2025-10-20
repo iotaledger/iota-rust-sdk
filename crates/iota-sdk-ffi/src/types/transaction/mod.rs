@@ -9,7 +9,9 @@ use iota_types::{
 };
 
 use crate::{
+    base64_encode,
     error::Result,
+    hex_encode,
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
@@ -74,18 +76,24 @@ impl Transaction {
         self.as_v1().digest()
     }
 
+    /// Get the signing digest.
     pub fn signing_digest(&self) -> Vec<u8> {
-        self.as_v1().signing_digest()
+        self.0.signing_digest().to_vec()
+    }
+
+    /// Get the signing digest as a hex string.
+    pub fn signing_digest_hex(&self) -> String {
+        self.0.signing_digest_hex()
     }
 
     /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-    pub fn to_bcs(&self) -> Result<Vec<u8>> {
-        self.as_v1().to_bcs()
+    pub fn to_bcs(&self) -> Vec<u8> {
+        self.0.to_bcs()
     }
 
     /// Serialize the transaction as a base64-encoded string.
-    pub fn to_base64(&self) -> Result<String> {
-        self.as_v1().to_base64()
+    pub fn to_base64(&self) -> String {
+        self.0.to_base64()
     }
 
     /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
@@ -152,18 +160,24 @@ impl TransactionV1 {
         self.0.digest().into()
     }
 
+    /// Get the signing digest.
     pub fn signing_digest(&self) -> Vec<u8> {
         self.0.signing_digest().to_vec()
     }
 
+    /// Get the signing digest as a hex string.
+    pub fn signing_digest_hex(&self) -> String {
+        self.0.signing_digest_hex()
+    }
+
     /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-    pub fn to_bcs(&self) -> Result<Vec<u8>> {
-        Ok(self.0.to_bcs()?)
+    pub fn to_bcs(&self) -> Vec<u8> {
+        self.0.to_bcs()
     }
 
     /// Serialize the transaction as a base64-encoded string.
-    pub fn to_base64(&self) -> Result<String> {
-        Ok(self.0.to_base64()?)
+    pub fn to_base64(&self) -> String {
+        self.0.to_base64()
     }
 
     /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
