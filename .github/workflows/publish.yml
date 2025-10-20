@@ -17,6 +17,7 @@ jobs:
           cargo release \
             publish \
             --workspace \
+            --exclude iota-graphql-client-build \
             --all-features \
             --no-confirm \
             --execute
