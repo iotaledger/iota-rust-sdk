@@ -49,21 +49,6 @@ jobs:
       # from transient network timeouts or other issues.
       CARGO_NET_RETRY: 10
       RUSTUP_MAX_RETRIES: 10
-    # services:
-    #   postgres: # we need this postgres instance for running a local network with indexer and graphql
-    #     image: postgres
-    #     env:
-    #       POSTGRES_USER: postgres
-    #       POSTGRES_PASSWORD: postgrespw
-    #       POSTGRES_DB: iota_indexer_v2
-    #       POSTGRES_HOST_AUTH_METHOD: trust
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-    #     ports:
-    #       - 5432:5432
     steps:
       - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
         with:
