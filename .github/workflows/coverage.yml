@@ -75,7 +75,19 @@ jobs:
         uses: actionhippie/swap-space@73376950a0019f8e1f6a3d3d2673fe2aed74ae17 # v1.0.2
         with:
           size: 256G
-      - run: iota --version
+
+      - name: Get the IOTA testnet binary
+        shell: bash
+        env:
+          IOTA_BINARY_VERSION: "v1.9.1-rc"
+        run: |
+          ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
+          download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
+
+          echo "Downloading testnet binary from $download_url"
+          wget -q $download_url -O iota.tgz
+          tar -zxvf iota.tgz ./iota
+          chmod +x ./iota
 
       - name: Install llvm-tools
         run: |
@@ -95,7 +107,7 @@ jobs:
         run: |
           set +e
 
-          ./run_localnet.sh start
+          ./run_localnet.sh start ./iota
 
           ./run_localnet.sh logs
 
@@ -125,7 +137,7 @@ jobs:
             exit 1
           fi
 
-          ./run_localnet.sh stop
+          ./run_localnet.sh stop ./iota
 
       - name: Create report (lcov.info)
         run: |

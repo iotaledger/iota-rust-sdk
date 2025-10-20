@@ -6,6 +6,7 @@ CONFIG_PATH="./.github/actions/start-local-network/config.yaml"
 COMPOSE_PATH="./.github/actions/start-local-network/gas_station_compose.yml"
 CONFIG_BACKUP="$CONFIG_PATH.backup"
 IOTA_LOG="iota_network.log"
+IOTA_BINARY="${2:-iota}"
 
 if [ "$1" == "start" ]; then
     echo "Starting local IOTA network with gas station..."
@@ -24,7 +25,7 @@ if [ "$1" == "start" ]; then
 
     # Start IOTA network
     echo "Starting IOTA network..."
-    RUST_LOG="info,consensus=warn,iota_core=warn,fastcrypto_tbls=off,iota_indexer=warn,iota_data_ingestion_core=error,iota_graphql_rpc=warn" iota start --force-regenesis --with-faucet --with-indexer --with-graphql >> "$IOTA_LOG" 2>&1 &
+    RUST_LOG="info,consensus=warn,iota_core=warn,fastcrypto_tbls=off,iota_indexer=warn,iota_data_ingestion_core=error,iota_graphql_rpc=warn" $IOTA_BINARY start --force-regenesis --with-faucet --with-indexer --with-graphql >> "$IOTA_LOG" 2>&1 &
     IOTA_PID=$!
 
     # Use all 9's private key for gas station
@@ -38,7 +39,7 @@ if [ "$1" == "start" ]; then
     success=false
     for i in {1..30}; do
         sleep 1
-        if iota client faucet --url http://127.0.0.1:9123/gas --address $address >/dev/null 2>&1; then
+        if $IOTA_BINARY client faucet --url http://127.0.0.1:9123/gas --address $address >/dev/null 2>&1; then
             success=true
             break
         fi
@@ -88,7 +89,7 @@ elif [ "$1" == "stop" ]; then
 
     # Stop IOTA network
     echo "Stopping IOTA network..."
-    pkill -f "iota start" || echo "IOTA process not found or already stopped"
+    pkill -f "$IOTA_BINARY start" || echo "IOTA process not found or already stopped"
 
     # Stop PostgreSQL
     echo "Stopping PostgreSQL..."
