@@ -1211,7 +1211,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() != 48686:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins() != 20903:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins() != 13036:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() != 7437:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -38474,7 +38474,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         raise NotImplementedError
     def gas_coins(self, object_ids: "typing.List[ObjectId]"):
         """
-        Add a gas object to use to pay for the transaction.
+        Add gas objects to pay for the transaction.
         """
 
         raise NotImplementedError
@@ -38794,7 +38794,7 @@ _UniffiConverterTypeSdkFfiError,
 
     def gas_coins(self, object_ids: "typing.List[ObjectId]") -> "TransactionBuilder":
         """
-        Add a gas object to use to pay for the transaction.
+        Add gas objects to pay for the transaction.
         """
 
         _UniffiConverterSequenceTypeObjectId.check_lower(object_ids)

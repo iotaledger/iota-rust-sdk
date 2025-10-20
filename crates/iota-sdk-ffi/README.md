@@ -7,6 +7,7 @@ This crate can generate bindings for various languages using [UniFFI](https://gi
 [IOTA](https://iota.org) is a next-generation smart contract platform with high throughput, low latency, and an asset-oriented programming model powered by the Move programming language. This crate provides type definitions for working with the data that makes up the IOTA blockchain.
 
 ## BCS
+
 [BCS](https://docs.rs/bcs) is the serialization format used to represent the state of the blockchain and is used extensively throughout the IOTA ecosystem. In particular the BCS format is leveraged because it _"guarantees canonical serialization, meaning that for any given data type, there is a one-to-one correspondence between in-memory values and valid byte representations."_
 
 One benefit of this property of having a canonical serialized representation is to allow different entities in the ecosystem to all agree on how a particular type should be interpreted and more importantly define a deterministic representation for hashing and signing.
@@ -16,6 +17,7 @@ This library strives to guarantee that the types defined are fully BCS-compatibl
 See the documentation for the various types defined by this crate for a specification of their BCS serialized representation which will be defined using ABNF notation as described by [RFC-5234](https://datatracker.ietf.org/doc/html/rfc5234). In addition to the format itself, some types have an extra layer of verification and may impose additional restrictions on valid byte representations above and beyond those already provided by BCS. In these instances the documentation for those types will clearly specify these additional restrictions.
 
 Here are some common rules:
+
 ```text
 ; --- BCS Value ---
 bcs-value           = bcs-struct / bcs-enum / bcs-length-prefixed / bcs-fixed-length

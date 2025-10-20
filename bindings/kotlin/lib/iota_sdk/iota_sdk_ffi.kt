@@ -7245,7 +7245,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() != 48686.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins() != 20903.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins() != 13036.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() != 7437.toShort()) {
@@ -38726,7 +38726,7 @@ public interface TransactionBuilderInterface {
     fun `gasBudget`(`budget`: kotlin.ULong): TransactionBuilder
     
     /**
-     * Add a gas object to use to pay for the transaction.
+     * Add gas objects to pay for the transaction.
      */
     fun `gasCoins`(`objectIds`: List<ObjectId>): TransactionBuilder
     
@@ -39047,7 +39047,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Add a gas object to use to pay for the transaction.
+     * Add gas objects to pay for the transaction.
      */override fun `gasCoins`(`objectIds`: List<ObjectId>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
