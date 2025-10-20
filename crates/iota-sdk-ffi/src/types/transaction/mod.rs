@@ -88,12 +88,12 @@ impl Transaction {
 
     /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
     pub fn to_bcs(&self) -> Vec<u8> {
-        self.as_v1().to_bcs()
+        self.0.to_bcs()
     }
 
     /// Serialize the transaction as a base64-encoded string.
     pub fn to_base64(&self) -> String {
-        self.as_v1().to_base64()
+        self.0.to_base64()
     }
 
     /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
