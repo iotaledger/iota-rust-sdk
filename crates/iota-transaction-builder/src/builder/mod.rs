@@ -15,8 +15,9 @@ use iota_graphql_client::{
     query_types::{ObjectFilter, ObjectRef, TransactionMetadata},
 };
 use iota_types::{
-    Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
-    StructTag, Transaction, TransactionEffects, TransactionExpiration, TransactionV1, TypeTag,
+    Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
+    ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
+    TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -29,7 +30,6 @@ use crate::{
         ptb_arguments::PTBArgumentList,
     },
     error::Error,
-    publish_type::PublishType,
     types::{MoveType, MoveTypes},
     unresolved::{
         Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
@@ -309,29 +309,6 @@ impl<C, L> TransactionBuilder<C, L> {
         self.data.get_named_result(name)
     }
 
-    /// Send IOTA to a recipient address.
-    pub fn send_iota<T: PTBArgument>(
-        &mut self,
-        recipient: Address,
-        amount: impl Into<Option<T>>,
-    ) -> &mut TransactionBuilder<C> {
-        let rec_arg = self.pure(recipient);
-        let coin_arg = if let Some(amount) = amount.into() {
-            let amt_arg = self.apply_argument(amount);
-            self.command(Command::SplitCoins(SplitCoins {
-                coin: Argument::Gas,
-                amounts: vec![amt_arg],
-            }))
-        } else {
-            Argument::Gas
-        };
-        self.command(Command::TransferObjects(TransferObjects {
-            objects: vec![coin_arg],
-            address: rec_arg,
-        }));
-        self.reset()
-    }
-
     /// Begin building a move call.
     pub fn move_call(
         &mut self,
@@ -347,18 +324,6 @@ impl<C, L> TransactionBuilder<C, L> {
                 .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
             type_arguments: Default::default(),
             arguments: Default::default(),
-        })
-    }
-
-    /// Publish a move package.
-    pub fn publish(&mut self, kind: impl Into<PublishType>) -> &mut TransactionBuilder<C, Publish> {
-        let module = match kind.into() {
-            PublishType::Path(_path) => todo!("load the package from the path"),
-            PublishType::Compiled(m) => m,
-        };
-        self.cmd_state_change(Publish {
-            modules: module.modules,
-            dependencies: module.dependencies,
         })
     }
 
@@ -424,6 +389,29 @@ impl<C, L> TransactionBuilder<C, L> {
             address: self.pure(recipient),
         });
         self.command(cmd);
+        self.reset()
+    }
+
+    /// Send IOTA to a recipient address.
+    pub fn send_iota<T: PTBArgument>(
+        &mut self,
+        recipient: Address,
+        amount: impl Into<Option<T>>,
+    ) -> &mut TransactionBuilder<C> {
+        let rec_arg = self.pure(recipient);
+        let coin_arg = if let Some(amount) = amount.into() {
+            let amt_arg = self.apply_argument(amount);
+            self.command(Command::SplitCoins(SplitCoins {
+                coin: Argument::Gas,
+                amounts: vec![amt_arg],
+            }))
+        } else {
+            Argument::Gas
+        };
+        self.command(Command::TransferObjects(TransferObjects {
+            objects: vec![coin_arg],
+            address: rec_arg,
+        }));
         self.reset()
     }
 
@@ -498,21 +486,28 @@ impl<C, L> TransactionBuilder<C, L> {
         self.cmd_state_change(SplitCoins { coin, amounts })
     }
 
+    /// Publish a move package.
+    pub fn publish(
+        &mut self,
+        package_data: MovePackageData,
+    ) -> &mut TransactionBuilder<C, Publish> {
+        self.cmd_state_change(Publish {
+            modules: package_data.modules,
+            dependencies: package_data.dependencies,
+        })
+    }
+
     /// Upgrade a move package.
     pub fn upgrade<U: PTBArgument>(
         &mut self,
         package_id: ObjectId,
         upgrade_cap: U,
-        kind: impl Into<PublishType>,
+        package_data: MovePackageData,
     ) -> &mut TransactionBuilder<C, Upgrade> {
-        let module = match kind.into() {
-            PublishType::Path(_path) => todo!("load the package from the path"),
-            PublishType::Compiled(m) => m,
-        };
         let ticket = self.apply_argument(upgrade_cap);
         self.cmd_state_change(Upgrade {
-            modules: module.modules,
-            dependencies: module.dependencies,
+            modules: package_data.modules,
+            dependencies: package_data.dependencies,
             package: package_id,
             ticket,
         })

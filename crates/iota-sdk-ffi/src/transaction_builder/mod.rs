@@ -7,7 +7,6 @@ use std::{
     time::Duration,
 };
 
-use iota_transaction_builder::MovePackageData;
 use iota_types::Input;
 
 use crate::{
@@ -18,6 +17,7 @@ use crate::{
     types::{
         address::Address,
         graphql::DryRunResult,
+        move_package::MovePackageData,
         object::ObjectId,
         struct_tag::Identifier,
         transaction::{Argument, Transaction, TransactionEffects},
@@ -268,17 +268,12 @@ impl TransactionBuilder {
     ///    the package
     pub fn publish(
         self: Arc<Self>,
-        modules: Vec<Vec<u8>>,
-        dependencies: Vec<Arc<ObjectId>>,
+        package_data: &MovePackageData,
         upgrade_cap_name: String,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .publish(MovePackageData {
-                    modules,
-                    dependencies: dependencies.into_iter().map(|o| **o).collect(),
-                    digest: None,
-                })
+                .publish(package_data.0.clone())
                 .upgrade_cap(upgrade_cap_name);
         });
         self
@@ -298,23 +293,14 @@ impl TransactionBuilder {
     #[uniffi::method(default(name = None))]
     pub fn upgrade(
         self: Arc<Self>,
-        modules: Vec<Vec<u8>>,
-        dependencies: Vec<Arc<ObjectId>>,
+        package_data: &MovePackageData,
         package: &ObjectId,
         ticket: &PTBArgument,
         name: Option<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .upgrade(
-                    **package,
-                    ticket,
-                    MovePackageData {
-                        modules,
-                        dependencies: dependencies.into_iter().map(|o| **o).collect(),
-                        digest: None,
-                    },
-                )
+                .upgrade(**package, ticket, package_data.0.clone())
                 .name(name);
         });
         self

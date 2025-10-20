@@ -280,6 +280,8 @@ impl crate::MultisigCommittee {
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod type_digest {
+    use base64ct::Encoding;
+
     use super::Hasher;
     use crate::Digest;
 
@@ -287,6 +289,7 @@ mod type_digest {
         /// Calculate the digest of this `Object`
         ///
         /// This is done by hashing the BCS bytes of this `Object` prefixed
+        /// with a salt.
         pub fn digest(&self) -> Digest {
             const SALT: &str = "Object::";
             type_digest(SALT, self)
@@ -312,12 +315,56 @@ mod type_digest {
             const SALT: &str = "TransactionData::";
             type_digest(SALT, &self)
         }
+
+        /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
+        pub fn to_bcs(&self) -> Vec<u8> {
+            bcs::to_bytes(self).expect("bcs serialization failed")
+        }
+
+        /// Serialize the transaction as a base64-encoded string.
+        pub fn to_base64(&self) -> String {
+            base64ct::Base64::encode_string(&self.to_bcs())
+        }
+
+        /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes::<Self>(bytes)
+        }
+
+        /// Deserialize a transaction from a base64-encoded string.
+        pub fn from_base64(bytes: &str) -> Result<Self, bcs::Error> {
+            let decoded = base64ct::Base64::decode_vec(bytes)
+                .map_err(|e| bcs::Error::Custom(e.to_string()))?;
+            Self::from_bcs(&decoded)
+        }
     }
 
     impl crate::TransactionV1 {
         pub fn digest(&self) -> Digest {
             const SALT: &str = "TransactionData::";
             type_digest(SALT, &crate::Transaction::V1(self.clone()))
+        }
+
+        /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
+        pub fn to_bcs(&self) -> Vec<u8> {
+            bcs::to_bytes(self).expect("bcs serialization failed")
+        }
+
+        /// Serialize the transaction as a base64-encoded string.
+        pub fn to_base64(&self) -> String {
+            base64ct::Base64::encode_string(&self.to_bcs())
+        }
+
+        /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
+            bcs::from_bytes::<Self>(bytes)
+        }
+
+        /// Deserialize a transaction from a base64-encoded string.
+        pub fn from_base64(bytes: &str) -> Result<Self, bcs::Error> {
+            let decoded = base64ct::Base64::decode_vec(bytes)
+                .map_err(|e| bcs::Error::Custom(e.to_string()))?;
+            Self::from_bcs(&decoded)
         }
     }
 
@@ -361,6 +408,10 @@ mod signing_message {
             let digest = signing_digest(INTENT, self);
             digest.into_inner()
         }
+
+        pub fn signing_digest_hex(&self) -> String {
+            hex::encode(self.signing_digest())
+        }
     }
 
     impl TransactionV1 {
@@ -372,6 +423,10 @@ mod signing_message {
             };
             let digest = signing_digest(INTENT, &Transaction::V1(self.clone()));
             digest.into_inner()
+        }
+
+        pub fn signing_digest_hex(&self) -> String {
+            hex::encode(self.signing_digest())
         }
     }
 
@@ -392,6 +447,10 @@ mod signing_message {
             let digest = signing_digest(INTENT, &self.0);
             digest.into_inner()
         }
+
+        pub fn signing_digest_hex(&self) -> String {
+            hex::encode(self.signing_digest())
+        }
     }
 
     impl crate::CheckpointSummary {
@@ -406,6 +465,10 @@ mod signing_message {
             bcs::serialize_into(&mut message, self).unwrap();
             bcs::serialize_into(&mut message, &self.epoch).unwrap();
             message
+        }
+
+        pub fn signing_message_hex(&self) -> String {
+            hex::encode(self.signing_message())
         }
     }
 }
