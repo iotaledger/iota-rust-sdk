@@ -791,7 +791,8 @@ impl GraphQLClient {
     /// Get a page of dynamic fields for the provided address. Note that this
     /// will also fetch dynamic fields on wrapped objects.
     ///
-    /// This returns [`Page`] of [`DynamicFieldOutput`]s.
+    /// This returns a page of
+    /// [`DynamicFieldOutput`s](crate::types::graphql::DynamicFieldOutput).
     #[uniffi::method(default(pagination_filter = None))]
     pub async fn dynamic_fields(
         &self,

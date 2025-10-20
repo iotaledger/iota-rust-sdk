@@ -107,7 +107,7 @@ impl ZkLoginAuthenticator {
 /// address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
 /// ```
 ///
-/// [`Address`]: crate::Address
+/// [`Address`]: crate::types::address::Address
 #[derive(derive_more::From, uniffi::Object)]
 pub struct ZkLoginPublicIdentifier(pub iota_types::ZkLoginPublicIdentifier);
 

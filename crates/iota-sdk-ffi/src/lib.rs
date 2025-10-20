@@ -105,9 +105,10 @@
 //!
 //! # IOTA Transaction Builder
 //!
-//! This crate contains the [TransactionBuilder], which allows for
-//! construction of Programmable Transactions which can be executed on the IOTA
-//! network.
+//! This crate contains the
+//! [TransactionBuilder](transaction_builder::TransactionBuilder), which allows
+//! for construction of Programmable Transactions which can be executed on the
+//! IOTA network.
 //!
 //! ## Methods
 //!
@@ -209,13 +210,13 @@
 
 use base64ct::Encoding;
 
-mod crypto;
-mod error;
-mod faucet;
-mod graphql;
-mod transaction_builder;
-mod types;
-mod uniffi_helpers;
+pub mod crypto;
+pub mod error;
+pub mod faucet;
+pub mod graphql;
+pub mod transaction_builder;
+pub mod types;
+pub mod uniffi_helpers;
 
 uniffi::setup_scaffolding!();
 
