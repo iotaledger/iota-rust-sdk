@@ -3,7 +3,7 @@
 
 use iota_types::GasCostSummary;
 
-use crate::export_record_enum_bcs_conversion;
+use crate::export_iota_types_bcs_conversion;
 
 /// Summary of gas charges.
 ///
@@ -58,4 +58,4 @@ pub struct GasCostSummary {
     pub non_refundable_storage_fee: u64,
 }
 
-export_record_enum_bcs_conversion!(GasCostSummary);
+export_iota_types_bcs_conversion!(GasCostSummary);

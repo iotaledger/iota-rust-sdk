@@ -10,7 +10,7 @@ use iota_types::{
 
 use crate::{
     error::Result,
-    export_object_bcs_conversion, export_record_enum_bcs_conversion,
+    export_iota_object_types_bcs_conversion, export_iota_types_bcs_conversion,
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
@@ -1621,7 +1621,7 @@ impl MoveCall {
     }
 }
 
-export_object_bcs_conversion!(
+export_iota_object_types_bcs_conversion!(
     Transaction,
     TransactionKind,
     ProgrammableTransaction,
@@ -1649,7 +1649,7 @@ export_object_bcs_conversion!(
     Argument,
     MoveCall,
 );
-export_record_enum_bcs_conversion!(
+export_iota_types_bcs_conversion!(
     SignedTransaction,
     AuthenticatorStateExpire,
     AuthenticatorStateUpdateV1,

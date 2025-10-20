@@ -6,7 +6,7 @@ use std::sync::Arc;
 use iota_types::{GasCostSummary, IdOperation};
 
 use crate::{
-    export_record_enum_bcs_conversion,
+    export_iota_types_bcs_conversion,
     types::{
         digest::Digest,
         execution_status::ExecutionStatus,
@@ -417,7 +417,7 @@ pub enum IdOperation {
     Deleted,
 }
 
-export_record_enum_bcs_conversion!(
+export_iota_types_bcs_conversion!(
     TransactionEffectsV1,
     ChangedObject,
     UnchangedSharedObject,
