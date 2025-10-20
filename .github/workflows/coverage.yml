@@ -134,7 +134,7 @@ jobs:
           echo "Creating report (lcov.info)."
           LLVM_PROFILE_FILE="merged.profdata" cargo llvm-cov report \
             --lcov \
-            --output-path lcov.info
+            --output-path lcov.info \
             --ignore-filename-regex "crates/iota-sdk-ffi/*"
 
           echo "Removing absolute path prefix: ${{ github.workspace }} from report."
