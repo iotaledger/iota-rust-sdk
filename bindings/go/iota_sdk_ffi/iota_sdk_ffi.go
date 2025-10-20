@@ -3681,6 +3681,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins()
+	})
+	if checksum != 20903 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price()
 	})
 	if checksum != 7437 {
@@ -21831,6 +21840,8 @@ type TransactionBuilderInterface interface {
 	Gas(objectId *ObjectId) *TransactionBuilder
 	// Set the gas budget for the transaction.
 	GasBudget(budget uint64) *TransactionBuilder
+	// Add a gas object to use to pay for the transaction.
+	GasCoins(objectIds []*ObjectId) *TransactionBuilder
 	// Set the gas price for the transaction.
 	GasPrice(price uint64) *TransactionBuilder
 	// Set the gas station sponsor.
@@ -22070,6 +22081,16 @@ func (_self *TransactionBuilder) GasBudget(budget uint64) *TransactionBuilder {
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
 		_pointer,FfiConverterUint64INSTANCE.Lower(budget),_uniffiStatus)
+	}))
+}
+
+// Add a gas object to use to pay for the transaction.
+func (_self *TransactionBuilder) GasCoins(objectIds []*ObjectId) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins(
+		_pointer,FfiConverterSequenceObjectIdINSTANCE.Lower(objectIds),_uniffiStatus)
 	}))
 }
 

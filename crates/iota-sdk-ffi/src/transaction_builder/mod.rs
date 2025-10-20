@@ -25,7 +25,7 @@ use crate::{
     },
 };
 
-mod ptb_arg;
+pub mod ptb_arg;
 
 /// A builder for creating transactions. Use [`finish`](Self::finish) to
 /// finalize the transaction data.
@@ -70,6 +70,14 @@ impl TransactionBuilder {
     pub fn gas(self: Arc<Self>, object_id: &ObjectId) -> Arc<Self> {
         self.write(|builder| {
             builder.gas(**object_id);
+        });
+        self
+    }
+
+    /// Add a gas object to use to pay for the transaction.
+    pub fn gas_coins(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
+        self.write(|builder| {
+            builder.gas_coins(object_ids.iter().map(|id| ***id));
         });
         self
     }

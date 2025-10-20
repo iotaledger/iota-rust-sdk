@@ -102,6 +102,107 @@
 //!
 //! [BCS]: https://docs.rs/bcs
 //! [RFC-5234]: https://datatracker.ietf.org/doc/html/rfc5234
+//!
+//! # IOTA Transaction Builder
+//!
+//! This crate contains the [TransactionBuilder], which allows for
+//! construction of Programmable Transactions which can be executed on the IOTA
+//! network.
+//!
+//! ## Methods
+//!
+//! The following methods are available:
+//!
+//! ### Commands
+//!
+//! Each command method adds one or more commands to the final transaction. Some
+//! commands have optional follow-up methods. Most command results can be
+//! named, which allows them to be used later in the transaction via
+//! the [PTBArgument::Res][transaction_builder::ptb_arg::PTBArgument::Res]
+//! variant. When a single name is provided, the result will be named, and when
+//! a list of names is provided, the names will be used for the individual
+//! nested results.
+//!
+//! - [move_call](transaction_builder::TransactionBuilder::move_call): Call a
+//!   move function.
+//! - [send_iota](transaction_builder::TransactionBuilder::send_iota): Send IOTA
+//!   coins to a recipient address.
+//! - [send_coins](transaction_builder::TransactionBuilder::send_coins): Send
+//!   coins of any type to a recipient address.
+//! - [merge_coins](transaction_builder::TransactionBuilder::merge_coins): Merge
+//!   a list of coins into a single primary coin.
+//! - [split_coins](transaction_builder::TransactionBuilder::split_coins): Split
+//!   a coin into coins of various amounts.
+//! - [transfer_objects](transaction_builder::TransactionBuilder::transfer_objects): Send objects to
+//!   a recipient address.
+//! - [publish](transaction_builder::TransactionBuilder::publish): Publish a
+//!   move package.
+//! - [upgrade](transaction_builder::TransactionBuilder::upgrade): Upgrade a
+//!   move package.
+//! - [make_move_vec](transaction_builder::TransactionBuilder::make_move_vec):
+//!   Create a move `vector`.
+//!
+//! ### Metadata
+//!
+//! These methods set various metadata which may be needed for the execution.
+//!
+//! - [gas](transaction_builder::TransactionBuilder::gas): Add a gas coin to pay
+//!   for the execution.
+//! - [gas_coins](transaction_builder::TransactionBuilder::gas_coins): Add gas
+//!   coins to pay for the execution.
+//! - [gas_budget](transaction_builder::TransactionBuilder::gas_budget): Set the
+//!   maximum gas budget to spend.
+//! - [gas_price](transaction_builder::TransactionBuilder::gas_price): Set the
+//!   gas price.
+//! - [sponsor](transaction_builder::TransactionBuilder::sponsor): Set the gas
+//!   sponsor address.
+//! - [gas_station_sponsor](transaction_builder::TransactionBuilder::gas_station_sponsor): Set the
+//!   gas station URL. See [Gas Station](crate#gas-station) for more info.
+//! - [expiration](transaction_builder::TransactionBuilder::expiration): Set the
+//!   transaction expiration epoch.
+//!
+//! ## Finalization and Execution
+//!
+//! There are several ways to finish the builder. First, the
+//! [finish](transaction_builder::TransactionBuilder::finish) method can be used
+//! to return the resulting [Transaction](iota_types::Transaction), which can be
+//! manually serialized, executed, etc.
+//!
+//! Additionally, the builder can directly
+//! [dry_run](transaction_builder::TransactionBuilder::dry_run) or
+//! [execute](transaction_builder::TransactionBuilder::execute) the transaction.
+//!
+//! When the transaction is resolved, the builder will try to ensure a valid
+//! state by de-duplicating and converting appropriate inputs into references to
+//! the gas coin. This means that the same input can be passed multiple times
+//! and the final transaction will only contain one instance. However, in some
+//! cases an invalid state can still be reached. For instance, if a coin is used
+//! both for gas and as part of a group of coins, i.e. when transferring
+//! objects, the transaction can not possibly be valid.
+//!
+//! ### Defaults
+//!
+//! The builder can set some values by default. The
+//! following are the default behaviors for each metadata value.
+//!
+//! - Gas: One page of coins owned by the sender.
+//! - Gas Budget: A dry run will be used to estimate.
+//! - Gas Price: The current reference gas price.
+//!
+//! ## Gas Station
+//!
+//! The Transaction Builder supports executing via a
+//! [Gas Station](https://github.com/iotaledger/gas-station). To do so, the URL, duration,
+//! and headers must be provided via
+//! [gas_station_sponsor](transaction_builder::TransactionBuilder::gas_station_sponsor).
+//!
+//! By default the request will contain the header `Content-Type:
+//! application/json`
+//!
+//! When this data has been set, calling
+//! [execute](transaction_builder::TransactionBuilder::execute) will request gas
+//! from and send the resulting transaction to this endpoint instead of using
+//! the GraphQL client.
 
 #![expect(unused)]
 #![allow(clippy::wrong_self_convention)]

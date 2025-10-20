@@ -98,7 +98,8 @@
 //!
 //! Each command method adds one or more commands to the final transaction. Some
 //! commands have optional follow-up methods. All command results can be named
-//! via [name](TransactionBuilder::name);
+//! via [name](TransactionBuilder::name). Naming a command allows them to be
+//! used later in the transaction via the [res][crate::res] method.
 //!
 //! - [move_call](TransactionBuilder::move_call): Call a move function.
 //!     - `arguments`: Add arguments to the move call.

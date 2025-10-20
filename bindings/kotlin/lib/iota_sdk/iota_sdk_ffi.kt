@@ -2410,6 +2410,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3162,6 +3164,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish(
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price(
 ): Short
@@ -5482,6 +5486,8 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(`ptr`: Pointer,`objectI
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(`ptr`: Pointer,`budget`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins(`ptr`: Pointer,`objectIds`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(`ptr`: Pointer,`price`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor(`ptr`: Pointer,`url`: RustBuffer.ByValue,`duration`: RustBuffer.ByValue,`headers`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -7087,6 +7093,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() != 48686.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins() != 20903.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() != 7437.toShort()) {
@@ -38117,6 +38126,11 @@ public interface TransactionBuilderInterface {
     fun `gasBudget`(`budget`: kotlin.ULong): TransactionBuilder
     
     /**
+     * Add a gas object to use to pay for the transaction.
+     */
+    fun `gasCoins`(`objectIds`: List<ObjectId>): TransactionBuilder
+    
+    /**
      * Set the gas price for the transaction.
      */
     fun `gasPrice`(`price`: kotlin.ULong): TransactionBuilder
@@ -38425,6 +38439,21 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
         it, FfiConverterULong.lower(`budget`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Add a gas object to use to pay for the transaction.
+     */override fun `gasCoins`(`objectIds`: List<ObjectId>): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins(
+        it, FfiConverterSequenceTypeObjectId.lower(`objectIds`),_status)
 }
     }
     )
