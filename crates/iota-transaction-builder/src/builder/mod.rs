@@ -15,8 +15,9 @@ use iota_graphql_client::{
     query_types::{ObjectFilter, ObjectRef, TransactionMetadata},
 };
 use iota_types::{
-    Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
-    StructTag, Transaction, TransactionEffects, TransactionExpiration, TypeTag,
+    Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
+    ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
+    TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -29,7 +30,6 @@ use crate::{
         ptb_arguments::PTBArgumentList,
     },
     error::Error,
-    publish_type::PublishType,
     types::{MoveType, MoveTypes},
     unresolved::{
         Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
@@ -309,6 +309,39 @@ impl<C, L> TransactionBuilder<C, L> {
         self.data.get_named_result(name)
     }
 
+    /// Begin building a move call.
+    pub fn move_call(
+        &mut self,
+        package_id: impl Into<ObjectId>,
+        module: &str,
+        function: &str,
+    ) -> &mut TransactionBuilder<C, MoveCall> {
+        self.cmd_state_change(MoveCall {
+            package: package_id.into(),
+            module: Identifier::new(module)
+                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
+            function: Identifier::new(function)
+                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
+            type_arguments: Default::default(),
+            arguments: Default::default(),
+        })
+    }
+
+    /// Transfer objects to a recipient address.
+    pub fn transfer_objects<U: PTBArgumentList>(
+        &mut self,
+        recipient: Address,
+        objects: U,
+    ) -> &mut TransactionBuilder<C> {
+        let objects = self.apply_arguments(objects);
+        let cmd = Command::TransferObjects(TransferObjects {
+            objects,
+            address: self.pure(recipient),
+        });
+        self.command(cmd);
+        self.reset()
+    }
+
     /// Send IOTA to a recipient address.
     pub fn send_iota<T: PTBArgument>(
         &mut self,
@@ -329,51 +362,6 @@ impl<C, L> TransactionBuilder<C, L> {
             objects: vec![coin_arg],
             address: rec_arg,
         }));
-        self.reset()
-    }
-
-    /// Begin building a move call.
-    pub fn move_call(
-        &mut self,
-        package_id: impl Into<ObjectId>,
-        module: &str,
-        function: &str,
-    ) -> &mut TransactionBuilder<C, MoveCall> {
-        self.cmd_state_change(MoveCall {
-            package: package_id.into(),
-            module: Identifier::new(module)
-                .unwrap_or_else(|_| panic!("invalid identifier: {module}")),
-            function: Identifier::new(function)
-                .unwrap_or_else(|_| panic!("invalid identifier: {function}")),
-            type_arguments: Default::default(),
-            arguments: Default::default(),
-        })
-    }
-
-    /// Publish a move package.
-    pub fn publish(&mut self, kind: impl Into<PublishType>) -> &mut TransactionBuilder<C, Publish> {
-        let module = match kind.into() {
-            PublishType::Path(_path) => todo!("load the package from the path"),
-            PublishType::Compiled(m) => m,
-        };
-        self.cmd_state_change(Publish {
-            modules: module.modules,
-            dependencies: module.dependencies,
-        })
-    }
-
-    /// Transfer objects to a recipient address.
-    pub fn transfer_objects<U: PTBArgumentList>(
-        &mut self,
-        recipient: Address,
-        objects: U,
-    ) -> &mut TransactionBuilder<C> {
-        let objects = self.apply_arguments(objects);
-        let cmd = Command::TransferObjects(TransferObjects {
-            objects,
-            address: self.pure(recipient),
-        });
-        self.command(cmd);
         self.reset()
     }
 
@@ -448,21 +436,28 @@ impl<C, L> TransactionBuilder<C, L> {
         self.cmd_state_change(SplitCoins { coin, amounts })
     }
 
+    /// Publish a move package.
+    pub fn publish(
+        &mut self,
+        package_data: MovePackageData,
+    ) -> &mut TransactionBuilder<C, Publish> {
+        self.cmd_state_change(Publish {
+            modules: package_data.modules,
+            dependencies: package_data.dependencies,
+        })
+    }
+
     /// Upgrade a move package.
     pub fn upgrade<U: PTBArgument>(
         &mut self,
         package_id: ObjectId,
         upgrade_cap: U,
-        kind: impl Into<PublishType>,
+        package_data: MovePackageData,
     ) -> &mut TransactionBuilder<C, Upgrade> {
-        let module = match kind.into() {
-            PublishType::Path(_path) => todo!("load the package from the path"),
-            PublishType::Compiled(m) => m,
-        };
         let ticket = self.apply_argument(upgrade_cap);
         self.cmd_state_change(Upgrade {
-            modules: module.modules,
-            dependencies: module.dependencies,
+            modules: package_data.modules,
+            dependencies: package_data.dependencies,
             package: package_id,
             ticket,
         })
@@ -540,7 +535,7 @@ impl<L> TransactionBuilder<(), L> {
             .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
-        Ok(Transaction {
+        Ok(TransactionV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
@@ -553,7 +548,8 @@ impl<L> TransactionBuilder<(), L> {
                 budget: self.data.gas_budget.unwrap_or(0),
             },
             expiration: self.data.expiration,
-        })
+        }
+        .into())
     }
 }
 
@@ -721,7 +717,7 @@ impl<L> TransactionBuilder<Client, L> {
                 .map_err(Error::Client)?
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
-        Ok(Transaction {
+        Ok(TransactionV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
@@ -734,13 +730,15 @@ impl<L> TransactionBuilder<Client, L> {
                 budget: self.data.gas_budget.unwrap_or(0),
             },
             expiration: self.data.expiration,
-        })
+        }
+        .into())
     }
 
     /// Convert this builder into a transaction.
     pub async fn finish(mut self) -> Result<Transaction, Error> {
         let mut txn = self.resolve_ptb(true).await?;
         if self.data.gas_budget.is_none() {
+            let Transaction::V1(txn) = &mut txn;
             let res = self
                 .client
                 .dry_run_tx_kind(&txn.kind, true, Default::default())
@@ -749,6 +747,7 @@ impl<L> TransactionBuilder<Client, L> {
             if let Some(err) = res.error {
                 return Err(Error::DryRun(err));
             }
+
             txn.gas_payment.budget = res
                 .effects
                 .ok_or_else(|| Error::MissingGasBudget)?
@@ -762,6 +761,7 @@ impl<L> TransactionBuilder<Client, L> {
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
+        let Transaction::V1(txn) = &txn;
         if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
             return Err(Error::DryRun(
                 "gas coins were provided without a gas budget".to_owned(),
@@ -928,7 +928,7 @@ impl TransactionBuilder<(), Publish> {
     /// commands.
     pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder {
         let cap = self.arg();
-        self.move_call(Address::TWO, "package", "upgrade_package")
+        self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
             .name(name)
             .reset()
@@ -940,7 +940,7 @@ impl TransactionBuilder<Client, Publish> {
     /// commands.
     pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder<Client> {
         let cap = self.arg();
-        self.move_call(Address::TWO, "package", "upgrade_package")
+        self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
             .name(name)
             .reset()

@@ -13,10 +13,7 @@ import (
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	address, err := sdk.AddressFromHex("0x0")
-	if err != nil {
-		log.Fatalf("Failed to parse address: %v", err)
-	}
+	address := sdk.AddressZero()
 
 	objectFilter := sdk.ObjectFilter{
 		Owner: &address,

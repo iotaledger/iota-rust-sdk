@@ -162,6 +162,10 @@ impl CheckpointSummary {
     pub fn signing_message(&self) -> Vec<u8> {
         self.0.signing_message()
     }
+
+    pub fn signing_message_hex(&self) -> String {
+        self.0.signing_message_hex()
+    }
 }
 
 /// The committed to contents of a checkpoint.

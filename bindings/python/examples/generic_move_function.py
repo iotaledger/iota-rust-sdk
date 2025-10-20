@@ -23,7 +23,7 @@ async def main():
     )
 
     builder.move_call(
-        Address.from_hex("0x2"),
+        Address.framework(),
         Identifier("vec_map"),
         Identifier("from_keys_values"),
         [

@@ -402,12 +402,12 @@ pub struct StructTag {
 }
 
 impl StructTag {
-    pub fn coin(type_tag: TypeTag) -> Self {
+    pub fn coin(type_tag: impl Into<TypeTag>) -> Self {
         Self {
-            address: Address::TWO,
-            module: Identifier::new("coin").unwrap(),
-            name: Identifier::new("Coin").unwrap(),
-            type_params: vec![type_tag],
+            address: Address::FRAMEWORK,
+            module: IdentifierRef::const_new("coin").into(),
+            name: IdentifierRef::const_new("Coin").into(),
+            type_params: vec![type_tag.into()],
         }
     }
 
@@ -420,7 +420,10 @@ impl StructTag {
             type_params,
         } = self;
 
-        if address == &Address::TWO && module == "coin" && name == "Coin" && type_params.len() == 1
+        if address == &Address::FRAMEWORK
+            && module == "coin"
+            && name == "Coin"
+            && type_params.len() == 1
         {
             type_params.first()
         } else {
@@ -433,31 +436,33 @@ impl StructTag {
         self.coin_type_opt().expect("not a coin")
     }
 
-    pub fn gas_coin() -> Self {
-        let iota = Self {
-            address: Address::TWO,
-            module: Identifier::new("iota").unwrap(),
-            name: Identifier::new("IOTA").unwrap(),
+    pub fn iota() -> Self {
+        Self {
+            address: Address::FRAMEWORK,
+            module: IdentifierRef::const_new("iota").into(),
+            name: IdentifierRef::const_new("IOTA").into(),
             type_params: vec![],
-        };
+        }
+    }
 
-        Self::coin(TypeTag::Struct(Box::new(iota)))
+    pub fn gas_coin() -> Self {
+        Self::coin(Self::iota())
     }
 
     pub fn staked_iota() -> Self {
         Self {
-            address: Address::THREE,
-            module: Identifier::new("staking_pool").unwrap(),
-            name: Identifier::new("StakedIota").unwrap(),
+            address: Address::SYSTEM,
+            module: IdentifierRef::const_new("staking_pool").into(),
+            name: IdentifierRef::const_new("StakedIota").into(),
             type_params: vec![],
         }
     }
 
     pub fn timelocked_staked_iota() -> Self {
         Self {
-            address: Address::THREE,
-            module: Identifier::new("timelocked_staking").unwrap(),
-            name: Identifier::new("TimelockedStakedIota").unwrap(),
+            address: Address::SYSTEM,
+            module: IdentifierRef::const_new("timelocked_staking").into(),
+            name: IdentifierRef::const_new("TimelockedStakedIota").into(),
             type_params: vec![],
         }
     }
