@@ -18,6 +18,7 @@ jobs:
             publish \
             --workspace \
             --exclude iota-graphql-client-build \
+            --exclude iota-sdk-ffi \
             --all-features \
             --no-confirm \
             --execute
