@@ -139,14 +139,23 @@ pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
     Ok(hex::decode(input)?)
 }
 
-/// Converts raw bytes to BCS encoded bytes.
-#[uniffi::export]
-pub fn bcs_encode(input: &[u8]) -> crate::error::Result<Vec<u8>> {
-    Ok(bcs::to_bytes(input)?)
+macro_rules! export_basic_types_bcs_conversion {
+    ($($name:ty),+ $(,)?) => {
+        paste::paste! {$(
+            /// Convert from BCS encoded bytes.
+            #[uniffi::export]
+            pub fn [< $name:lower _from_bcs >](input: &[u8]) -> crate::error::Result<$name> {
+                Ok(bcs::from_bytes(input)?)
+            }
+
+            /// Convert to BCS encoded bytes.
+            #[uniffi::export]
+            pub fn [< $name:lower _to_bcs >](input: $name) -> crate::error::Result<Vec<u8>> {
+                Ok(bcs::to_bytes(&input)?)
+
+            }
+        )+}
+    };
 }
 
-/// Converts BCS encoded bytes to raw bytes.
-#[uniffi::export]
-pub fn bcs_decode(input: &[u8]) -> crate::error::Result<Vec<u8>> {
-    Ok(bcs::from_bytes(input)?)
-}
+export_basic_types_bcs_conversion!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
