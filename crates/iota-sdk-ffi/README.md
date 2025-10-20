@@ -6,18 +6,6 @@ This crate can generate bindings for various languages using [UniFFI](https://gi
 
 [IOTA](https://iota.org) is a next-generation smart contract platform with high throughput, low latency, and an asset-oriented programming model powered by the Move programming language. This crate provides type definitions for working with the data that makes up the IOTA blockchain.
 
-## Feature flags
-This library uses a set of [feature flags](https://doc.rust-lang.org/cargo/reference/manifest.html#the-features-section) to reduce the number of dependencies and amount of compiled code. By default, no features are enabled which allows one to enable a subset specifically for their use case. Below is a list of the available feature flags.
-- `schemars`: Enables JSON schema generation using the [schemars](https://docs.rs/schemars) library.
-- `serde`: Enables support for serializing and deserializing types to/from
-  BCS utilizing [serde](https://docs.rs/serde) library.
-- `rand`: Enables support for generating random instances of a number of
-  types via the [rand](https://docs.rs/rand) library.
-- `hash`: Enables support for hashing, which is required for deriving
-  addresses and calculating digests for various types.
-- `proptest`: Enables support for the [proptest](https://docs.rs/proptest) library by providing
-  implementations of [proptest::arbitrary::Arbitrary](https://docs.rs/proptest/latest/proptest/arbitrary/trait.Arbitrary.html) for many types.
-
 ## BCS
 [BCS](https://docs.rs/bcs) is the serialization format used to represent the state of the blockchain and is used extensively throughout the IOTA ecosystem. In particular the BCS format is leveraged because it _"guarantees canonical serialization, meaning that for any given data type, there is a one-to-one correspondence between in-memory values and valid byte representations."_
 
