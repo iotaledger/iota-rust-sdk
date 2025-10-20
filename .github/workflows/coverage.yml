@@ -1,6 +1,10 @@
 name: Code Coverage (llvm-cov)
 
 on:
+  push:
+    branches: [develop, sdk-bindings]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   schedule:
     - cron: "0 1 * * *" # every day at 1am (UTC)
   workflow_dispatch:
