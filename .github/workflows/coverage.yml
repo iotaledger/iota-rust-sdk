@@ -90,14 +90,13 @@ jobs:
             exit 1
           fi
 
-      - name: Generate test dependencies
-        run: make package_test_example_v1.json package_test_example_v2.json
-
       - name: Run code coverage (nextest)
         run: |
           set +e
 
           ./run_localnet.sh start
+
+          make package_test_example_v1.json package_test_example_v2.json
 
           echo "Generating coverage data (.profraw files)."
           cargo llvm-cov --ignore-run-fail --no-report nextest
