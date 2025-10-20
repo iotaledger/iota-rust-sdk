@@ -142,15 +142,15 @@ pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
 macro_rules! export_basic_types_bcs_conversion {
     ($($name:ty),+ $(,)?) => {
         paste::paste! {$(
-            /// Convert from BCS encoded bytes.
+            /// Create this type from BCS encoded bytes.
             #[uniffi::export]
-            pub fn [< $name:lower _from_bcs >](input: &[u8]) -> crate::error::Result<$name> {
+            pub fn [< $name:snake _from_bcs >](input: &[u8]) -> crate::error::Result<$name> {
                 Ok(bcs::from_bytes(input)?)
             }
 
-            /// Convert to BCS encoded bytes.
+            /// Convert this type to BCS encoded bytes.
             #[uniffi::export]
-            pub fn [< $name:lower _to_bcs >](input: $name) -> crate::error::Result<Vec<u8>> {
+            pub fn [< $name:snake _to_bcs >](input: $name) -> crate::error::Result<Vec<u8>> {
                 Ok(bcs::to_bytes(&input)?)
 
             }
