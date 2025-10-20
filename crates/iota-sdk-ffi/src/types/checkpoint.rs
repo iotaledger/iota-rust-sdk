@@ -279,7 +279,7 @@ impl CheckpointCommitment {
     }
 }
 
-/// Data, which when included in a [`CheckpointSummary`], signals the end of an
+/// Data which, when included in a [`CheckpointSummary`], signals the end of an
 /// `Epoch`.
 ///
 /// # BCS
