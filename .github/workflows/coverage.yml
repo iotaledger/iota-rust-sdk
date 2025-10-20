@@ -49,21 +49,21 @@ jobs:
       # from transient network timeouts or other issues.
       CARGO_NET_RETRY: 10
       RUSTUP_MAX_RETRIES: 10
-    services:
-      postgres: # we need this postgres instance for running a local network with indexer and graphql
-        image: postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgrespw
-          POSTGRES_DB: iota_indexer_v2
-          POSTGRES_HOST_AUTH_METHOD: trust
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+    # services:
+    #   postgres: # we need this postgres instance for running a local network with indexer and graphql
+    #     image: postgres
+    #     env:
+    #       POSTGRES_USER: postgres
+    #       POSTGRES_PASSWORD: postgrespw
+    #       POSTGRES_DB: iota_indexer_v2
+    #       POSTGRES_HOST_AUTH_METHOD: trust
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    #     ports:
+    #       - 5432:5432
     steps:
       - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
         with:
@@ -90,14 +90,14 @@ jobs:
             exit 1
           fi
 
-      - uses: ./.github/actions/start-local-network
-
       - name: Generate test dependencies
         run: make package_test_example_v1.json package_test_example_v2.json
 
       - name: Run code coverage (nextest)
         run: |
           set +e
+
+          ./run_localnet.sh start
 
           echo "Generating coverage data (.profraw files)."
           cargo llvm-cov --ignore-run-fail --no-report nextest
@@ -122,6 +122,8 @@ jobs:
             echo "🚨 Error 🚨: Collecting nexttest coverage failed."
             exit 1
           fi
+
+          ./run_localnet.sh stop
 
       - name: Create report (lcov.info)
         run: |
