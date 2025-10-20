@@ -3,7 +3,6 @@
 
 use std::{
     collections::{BTreeMap, HashMap},
-    str::FromStr,
     sync::Arc,
 };
 
@@ -11,7 +10,7 @@ pub type Version = iota_types::Version;
 
 use crate::{
     error::Result,
-    export_iota_object_types_bcs_conversion, export_iota_types_bcs_conversion,
+    export_iota_types_bcs_conversion, export_iota_types_objects_bcs_conversion,
     types::{
         address::Address,
         digest::Digest,
@@ -53,7 +52,7 @@ impl ObjectId {
 
     #[uniffi::constructor]
     pub fn from_hex(hex: &str) -> Result<Self> {
-        Ok(Self(iota_types::ObjectId::from_str(hex)?))
+        Ok(Self(iota_types::ObjectId::from_hex(hex)?))
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -84,6 +83,22 @@ impl ObjectId {
             .into()
     }
 }
+
+macro_rules! named_object_id {
+    ($($constant:ident),+ $(,)?) => {
+        paste::paste! {
+            #[uniffi::export]
+            impl ObjectId {$(
+                #[uniffi::constructor]
+                pub const fn [< $constant:lower >]() -> Self {
+                    Self(iota_types::ObjectId::$constant)
+                }
+            )+}
+        }
+    }
+}
+
+named_object_id!(ZERO, SYSTEM, CLOCK);
 
 /// Reference to an object
 ///
@@ -639,7 +654,7 @@ impl GenesisObject {
 }
 
 export_iota_types_bcs_conversion!(ObjectReference, TypeOrigin, UpgradeInfo, MoveStruct);
-export_iota_object_types_bcs_conversion!(
+export_iota_types_objects_bcs_conversion!(
     ObjectId,
     Object,
     ObjectData,

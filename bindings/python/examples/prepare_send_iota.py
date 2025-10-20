@@ -19,12 +19,12 @@ async def main():
         )
 
         builder = await TransactionBuilder.init(from_address, client)
-        builder.send_iota(to_address, 5000000000)
+        builder.send_iota(to_address, PtbArgument.u64(5000000000))
 
         txn = await builder.finish()
 
-        print("Signing Digest:", hex_encode(txn.signing_digest()))
-        print("Txn Bytes:", base64_encode(txn.bcs_serialize()))
+        print("Signing Digest:", txn.signing_digest_hex())
+        print("Txn Bytes:", txn.to_base64())
 
         res = await client.dry_run_tx(txn)
         if res.error is not None:

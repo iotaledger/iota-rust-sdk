@@ -6,7 +6,7 @@ use std::sync::Arc;
 use iota_types::SignatureScheme;
 
 use crate::{
-    export_iota_object_types_bcs_conversion,
+    export_iota_types_objects_bcs_conversion,
     types::{
         address::Address,
         crypto::{
@@ -414,7 +414,7 @@ impl MultisigMember {
     }
 }
 
-export_iota_object_types_bcs_conversion!(
+export_iota_types_objects_bcs_conversion!(
     MultisigMemberSignature,
     MultisigMemberPublicKey,
     MultisigAggregatedSignature,

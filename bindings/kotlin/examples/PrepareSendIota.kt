@@ -22,13 +22,13 @@ fun main() = runBlocking {
 
         builder.sendIota(
                 toAddress,
-                5000000000uL,
+                PtbArgument.u64(5000000000uL),
         )
 
         val txn = builder.finish()
 
-        println("Signing Digest: ${hexEncode(txn.signingDigest())}")
-        println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")
+        println("Signing Digest: ${txn.signingDigestHex()}")
+        println("Txn Bytes: ${txn.toBase64()}")
 
         val res = builder.dryRun()
 

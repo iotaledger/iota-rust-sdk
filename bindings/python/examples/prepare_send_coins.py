@@ -19,25 +19,21 @@ async def main():
 
         # This is a coin of type
         # 0x3358bea865960fea2a1c6844b6fc365f662463dd1821f619838eb2e606a53b6a::cert::CERT
-        coin_id = ObjectId.from_hex(
+        coin_id = PtbArgument.object_id_from_hex(
             "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9"
-        )
-        gas_coin_id = ObjectId.from_hex(
-            "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
         )
 
         builder = await TransactionBuilder.init(from_address, client)
         builder.send_coins(
             [coin_id],
             to_address,
-            50000000000,
+            PtbArgument.u64(50000000000),
         )
-        builder.gas(gas_coin_id).gas_budget(1000000000)
 
         txn = await builder.finish()
 
-        print("Signing Digest:", hex_encode(txn.signing_digest()))
-        print("Txn Bytes:", base64_encode(txn.bcs_serialize()))
+        print("Signing Digest:", txn.signing_digest_hex())
+        print("Txn Bytes:", txn.to_base64())
 
         res = await builder.dry_run()
         if res.error is not None:

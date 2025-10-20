@@ -9,8 +9,9 @@ use iota_types::{
 };
 
 use crate::{
+    base64_encode,
     error::Result,
-    export_iota_object_types_bcs_conversion, export_iota_types_bcs_conversion,
+    export_iota_types_bcs_conversion, export_iota_types_objects_bcs_conversion, hex_encode,
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
@@ -28,6 +29,86 @@ use crate::{
 
 pub mod v1;
 
+/// Transaction
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// transaction = %x00 transaction-v1
+///
+/// transaction-v1 = transaction-kind address gas-payment transaction-expiration
+/// ```
+#[derive(Clone, uniffi::Object)]
+pub struct Transaction(pub iota_types::Transaction);
+
+#[uniffi::export]
+impl Transaction {
+    #[uniffi::constructor]
+    pub fn new_v1(transaction_v1: &TransactionV1) -> Self {
+        Self(iota_types::Transaction::V1(transaction_v1.0.clone()))
+    }
+
+    pub fn as_v1(&self) -> Arc<TransactionV1> {
+        match &self.0 {
+            iota_types::Transaction::V1(tx) => Arc::new(TransactionV1(tx.clone())),
+        }
+    }
+
+    pub fn kind(&self) -> TransactionKind {
+        self.as_v1().kind()
+    }
+
+    pub fn sender(&self) -> Address {
+        self.as_v1().sender()
+    }
+
+    pub fn gas_payment(&self) -> GasPayment {
+        self.as_v1().gas_payment()
+    }
+
+    pub fn expiration(&self) -> TransactionExpiration {
+        self.as_v1().expiration()
+    }
+
+    pub fn digest(&self) -> Digest {
+        self.as_v1().digest()
+    }
+
+    /// Get the signing digest.
+    pub fn signing_digest(&self) -> Vec<u8> {
+        self.0.signing_digest().to_vec()
+    }
+
+    /// Get the signing digest as a hex string.
+    pub fn signing_digest_hex(&self) -> String {
+        self.0.signing_digest_hex()
+    }
+
+    /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
+    pub fn to_bcs(&self) -> Vec<u8> {
+        self.0.to_bcs()
+    }
+
+    /// Serialize the transaction as a base64-encoded string.
+    pub fn to_base64(&self) -> String {
+        self.0.to_base64()
+    }
+
+    /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
+    #[uniffi::constructor]
+    pub fn from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(Transaction(iota_types::Transaction::from_bcs(&bytes)?))
+    }
+
+    /// Deserialize a transaction from a base64-encoded string.
+    #[uniffi::constructor]
+    pub fn from_base64(base64: String) -> Result<Self> {
+        Ok(Transaction(iota_types::Transaction::from_base64(&base64)?))
+    }
+}
+
 /// A transaction
 ///
 /// # BCS
@@ -40,10 +121,10 @@ pub mod v1;
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Transaction(pub iota_types::Transaction);
+pub struct TransactionV1(pub iota_types::TransactionV1);
 
 #[uniffi::export]
-impl Transaction {
+impl TransactionV1 {
     #[uniffi::constructor]
     pub fn new(
         kind: &TransactionKind,
@@ -51,7 +132,7 @@ impl Transaction {
         gas_payment: GasPayment,
         expiration: TransactionExpiration,
     ) -> Self {
-        Self(iota_types::Transaction {
+        Self(iota_types::TransactionV1 {
             kind: kind.0.clone(),
             sender: **sender,
             gas_payment: gas_payment.into(),
@@ -79,8 +160,36 @@ impl Transaction {
         self.0.digest().into()
     }
 
+    /// Get the signing digest.
     pub fn signing_digest(&self) -> Vec<u8> {
         self.0.signing_digest().to_vec()
+    }
+
+    /// Get the signing digest as a hex string.
+    pub fn signing_digest_hex(&self) -> String {
+        self.0.signing_digest_hex()
+    }
+
+    /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
+    pub fn to_bcs(&self) -> Vec<u8> {
+        self.0.to_bcs()
+    }
+
+    /// Serialize the transaction as a base64-encoded string.
+    pub fn to_base64(&self) -> String {
+        self.0.to_base64()
+    }
+
+    /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
+    #[uniffi::constructor]
+    pub fn from_bcs(bytes: Vec<u8>) -> Result<Self> {
+        Ok(Self(iota_types::TransactionV1::from_bcs(&bytes)?))
+    }
+
+    /// Deserialize a transaction from a base64-encoded string.
+    #[uniffi::constructor]
+    pub fn from_base64(bytes: String) -> Result<Self> {
+        Ok(Self(iota_types::TransactionV1::from_base64(&bytes)?))
     }
 }
 
@@ -93,7 +202,7 @@ pub struct SignedTransaction {
 impl From<iota_types::SignedTransaction> for SignedTransaction {
     fn from(value: iota_types::SignedTransaction) -> Self {
         Self {
-            transaction: Arc::new(value.transaction.into()),
+            transaction: Arc::new(Transaction(value.transaction)),
             signatures: value
                 .signatures
                 .into_iter()
@@ -1621,7 +1730,7 @@ impl MoveCall {
     }
 }
 
-export_iota_object_types_bcs_conversion!(
+export_iota_types_objects_bcs_conversion!(
     Transaction,
     TransactionKind,
     ProgrammableTransaction,

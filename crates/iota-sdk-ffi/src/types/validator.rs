@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::{
     error::Result,
-    export_iota_object_types_bcs_conversion, export_iota_types_bcs_conversion,
+    export_iota_types_bcs_conversion, export_iota_types_objects_bcs_conversion,
     types::{
         checkpoint::EpochId,
         crypto::{Bls12381PublicKey, Bls12381Signature},
@@ -170,4 +170,4 @@ impl ValidatorAggregatedSignature {
 }
 
 export_iota_types_bcs_conversion!(ValidatorCommittee, ValidatorCommitteeMember);
-export_iota_object_types_bcs_conversion!(ValidatorSignature, ValidatorAggregatedSignature);
+export_iota_types_objects_bcs_conversion!(ValidatorSignature, ValidatorAggregatedSignature);

@@ -99,3 +99,19 @@ impl Address {
         Ok(bcs::to_bytes(&self.0)?)
     }
 }
+
+macro_rules! named_address {
+    ($($constant:ident),+ $(,)?) => {
+        paste::paste! {
+            #[uniffi::export]
+            impl Address {$(
+                #[uniffi::constructor]
+                pub const fn [< $constant:lower >]() -> Self {
+                    Self(iota_types::Address::$constant)
+                }
+            )+}
+        }
+    }
+}
+
+named_address!(ZERO, STD_LIB, FRAMEWORK, SYSTEM);

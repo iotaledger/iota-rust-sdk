@@ -17,7 +17,15 @@ func main() {
 	coinObjId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 
 	builder := sdk.TransactionBuilderInit(sender, client)
-	builder.SplitCoins(coinObjId, []uint64{1000, 2000, 3000}, []string{"coin1", "coin2", "coin3"})
+	builder.SplitCoins(
+		sdk.PtbArgumentObjectId(coinObjId),
+		[]*sdk.PtbArgument{
+			sdk.PtbArgumentU64(1000),
+			sdk.PtbArgumentU64(2000),
+			sdk.PtbArgumentU64(3000),
+		},
+		[]string{"coin1", "coin2", "coin3"},
+	)
 	builder.TransferObjects(
 		sender,
 		[]*sdk.PtbArgument{sdk.PtbArgumentRes("coin1"), sdk.PtbArgumentRes("coin2"), sdk.PtbArgumentRes("coin3")},
@@ -29,12 +37,8 @@ func main() {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	txnBytes, err := txn.BcsSerialize()
-	if err != nil {
-		log.Fatalf("Failed to serialize transaction: %v", err)
-	}
-	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
-	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
+	log.Printf("Signing Digest: %v", txn.SigningDigestHex())
+	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
 	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {

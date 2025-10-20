@@ -21,7 +21,9 @@ async def main():
         builder = await TransactionBuilder.init(sender, client)
 
         builder.split_coins(
-            coin_id, [1000, 2000, 3000], ["coin1", "coin2", "coin3"]
+            PtbArgument.object_id(coin_id),
+            [PtbArgument.u64(1000), PtbArgument.u64(2000), PtbArgument.u64(3000)],
+            ["coin1", "coin2", "coin3"],
         ).transfer_objects(
             sender,
             [
@@ -37,8 +39,8 @@ async def main():
 
         txn = await builder.finish()
 
-        print("Signing Digest:", hex_encode(txn.signing_digest()))
-        print("Txn Bytes:", base64_encode(txn.bcs_serialize()))
+        print("Signing Digest:", txn.signing_digest_hex())
+        print("Txn Bytes:", txn.to_base64())
 
         res = await builder.dry_run()
         if res.error is not None:

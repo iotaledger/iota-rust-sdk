@@ -112,9 +112,12 @@ mod crypto;
 mod error;
 mod faucet;
 mod graphql;
+mod macros;
 mod transaction_builder;
 mod types;
 mod uniffi_helpers;
+
+pub(crate) use macros::*;
 
 uniffi::setup_scaffolding!();
 
@@ -136,44 +139,4 @@ pub fn hex_encode(input: &[u8]) -> String {
 #[uniffi::export]
 pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
     Ok(hex::decode(input)?)
-}
-
-#[macro_export]
-macro_rules! export_iota_types_bcs_conversion {
-    ($($name:ty),+ $(,)?) => {
-        paste::paste! {$(
-            /// Create this type from BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _from_bcs >](bcs: Vec<u8>) -> crate::error::Result<$name> {
-                let data = bcs::from_bytes::<iota_types::$name>(&bcs)?;
-                Ok(data.into())
-            }
-
-            /// Convert this type to BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_bcs >](data: $name) -> crate::error::Result<Vec<u8>> {
-                let data: iota_types::$name = data.into();
-                Ok(bcs::to_bytes(&data)?)
-            }
-        )+}
-    }
-}
-
-#[macro_export]
-macro_rules! export_iota_object_types_bcs_conversion {
-    ($($name:ty),+ $(,)?) => {
-        paste::paste! {$(
-            /// Create this type from BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _from_bcs >](bcs: Vec<u8>) -> crate::error::Result<$name> {
-                Ok($name(bcs::from_bytes::<iota_types::$name>(&bcs)?))
-            }
-
-            /// Convert this type to BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_bcs >](data: std::sync::Arc<$name>) -> crate::error::Result<Vec<u8>> {
-                Ok(bcs::to_bytes(&data.0)?)
-            }
-        )+}
-    }
 }

@@ -7,7 +7,7 @@ use iota_types::GasCostSummary;
 
 use crate::{
     error::Result,
-    export_iota_object_types_bcs_conversion, export_iota_types_bcs_conversion,
+    export_iota_types_bcs_conversion, export_iota_types_objects_bcs_conversion,
     types::{digest::Digest, signature::UserSignature, validator::ValidatorCommitteeMember},
 };
 
@@ -165,6 +165,10 @@ impl CheckpointSummary {
 
     pub fn signing_message(&self) -> Vec<u8> {
         self.0.signing_message()
+    }
+
+    pub fn signing_message_hex(&self) -> String {
+        self.0.signing_message_hex()
     }
 }
 
@@ -335,7 +339,7 @@ impl From<EndOfEpochData> for iota_types::EndOfEpochData {
     }
 }
 
-export_iota_object_types_bcs_conversion!(
+export_iota_types_objects_bcs_conversion!(
     CheckpointSummary,
     CheckpointContents,
     CheckpointTransactionInfo,

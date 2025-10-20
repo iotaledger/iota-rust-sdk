@@ -28,15 +28,15 @@ func main() {
 	builder := sdk.TransactionBuilderInit(sender, client)
 
 	// Prepare amounts and labels
-	var amounts []uint64
+	var amounts []*sdk.PtbArgument
 	var labels []string
 	for idx, r := range recipients {
 		labels = append(labels, fmt.Sprintf("coin%v", idx))
-		amounts = append(amounts, r.amount)
+		amounts = append(amounts, sdk.PtbArgumentU64(r.amount))
 	}
 
 	// Split a coin into multiple coins
-	builder.SplitCoins(coinId, amounts, labels)
+	builder.SplitCoins(sdk.PtbArgumentObjectId(coinId), amounts, labels)
 
 	for idx, r := range recipients {
 		recipient, _ := sdk.AddressFromHex(r.address)
@@ -48,15 +48,10 @@ func main() {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	txnBytes, err := txn.BcsSerialize()
-	if err != nil {
-		log.Fatalf("Failed to serialize transaction: %v", err)
-	}
-	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
-	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
+	log.Printf("Signing Digest: %v", txn.SigningDigestHex())
+	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
-	skipChecks := bool(false)
-	res, err := client.DryRunTx(txn, &skipChecks)
+	res, err := client.DryRunTx(txn, false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run send IOTA: %v", err)
 	}

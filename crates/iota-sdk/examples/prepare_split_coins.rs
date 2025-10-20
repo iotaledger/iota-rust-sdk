@@ -3,7 +3,6 @@
 
 use std::str::FromStr;
 
-use base64ct::Encoding;
 use eyre::Result;
 use iota_graphql_client::Client;
 use iota_transaction_builder::{TransactionBuilder, res};
@@ -21,7 +20,7 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
 
     builder
-        .split_coins(coin, [1000, 2000, 3000])
+        .split_coins(coin, [1000u64, 2000, 3000])
         .name(("coin1", "coin2", "coin3"))
         .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")))
         .gas(coin)
@@ -29,11 +28,8 @@ async fn main() -> Result<()> {
 
     let txn = builder.finish().await?;
 
-    println!("Signing Digest: {}", hex::encode(txn.signing_digest()));
-    println!(
-        "Txn Bytes: {}",
-        base64ct::Base64::encode_string(&bcs::to_bytes(&txn)?)
-    );
+    println!("Signing Digest: {}", txn.signing_digest_hex());
+    println!("Txn Bytes: {}", txn.to_base64());
 
     let res = client.dry_run_tx(&txn, false).await?;
 

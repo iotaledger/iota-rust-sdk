@@ -26,19 +26,19 @@ async def main():
         ),
     ]
 
-    amounts = [r[1] for r in recipients]
+    amounts = [PtbArgument.u64(r[1]) for r in recipients]
     labels = [f"coin{i}" for i in range(len(recipients))]
 
     builder = await TransactionBuilder.init(sender, client)
 
-    builder.split_coins(coin_id, amounts, labels)
+    builder.split_coins(PtbArgument.object_id(coin_id), amounts, labels)
     for i, r in enumerate(recipients):
         builder.transfer_objects(Address.from_hex(r[0]), [PtbArgument.res(labels[i])])
 
     txn = await builder.finish()
 
-    print("Signing Digest:", hex_encode(txn.signing_digest()))
-    print("Txn Bytes:", base64_encode(txn.bcs_serialize()))
+    print("Signing Digest:", txn.signing_digest_hex())
+    print("Txn Bytes:", txn.to_base64())
 
     res = await client.dry_run_tx(txn)
 

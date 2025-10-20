@@ -11,7 +11,7 @@ use iota_types::{Identifier, StructTag};
 
 use crate::{
     error::Result,
-    export_iota_object_types_bcs_conversion, export_iota_types_bcs_conversion,
+    export_iota_types_bcs_conversion, export_iota_types_objects_bcs_conversion,
     types::{address::Address, digest::Digest, object::ObjectId},
 };
 
@@ -147,4 +147,4 @@ impl TransactionEvents {
 }
 
 export_iota_types_bcs_conversion!(Event);
-export_iota_object_types_bcs_conversion!(TransactionEvents);
+export_iota_types_objects_bcs_conversion!(TransactionEvents);

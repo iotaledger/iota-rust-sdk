@@ -42,10 +42,10 @@ fun main() = runBlocking {
         val builder = TransactionBuilder.init(sender, client)
 
         val labels = recipients.indices.map { "coin${it}" }
-        val amounts = recipients.map { it.second }
+        val amounts = recipients.map { PtbArgument.u64(it.second) }
 
         builder.splitCoins(
-                coinId,
+                PtbArgument.objectId(coinId),
                 amounts,
                 labels,
         )
@@ -56,8 +56,8 @@ fun main() = runBlocking {
 
         val txn = builder.finish()
 
-        println("Signing Digest: ${hexEncode(txn.signingDigest())}")
-        println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")
+        println("Signing Digest: ${txn.signingDigestHex()}")
+        println("Txn Bytes: ${txn.toBase64()}")
 
         val res = builder.dryRun()
 

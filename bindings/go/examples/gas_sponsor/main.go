@@ -17,7 +17,7 @@ func main() {
 
 	builder := sdk.TransactionBuilderInit(sender, client)
 
-	packageAddr, _ := sdk.AddressFromHex("0x1")
+	packageAddr := sdk.AddressStdLib()
 	moduleName, _ := sdk.NewIdentifier("u8")
 	functionName, _ := sdk.NewIdentifier("max")
 
@@ -38,15 +38,10 @@ func main() {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	txnBytes, err := txn.BcsSerialize()
-	if err != nil {
-		log.Fatalf("Failed to serialize transaction: %v", err)
-	}
-	log.Printf("Signing Digest: %v", sdk.HexEncode(txn.SigningDigest()))
-	log.Printf("Txn Bytes: %v", sdk.Base64Encode(txnBytes))
+	log.Printf("Signing Digest: %v", txn.SigningDigestHex())
+	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
-	skipChecks := bool(false)
-	res, err := client.DryRunTx(txn, &skipChecks)
+	res, err := client.DryRunTx(txn, false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to send gas sponsor tx: %v", err)
 	}

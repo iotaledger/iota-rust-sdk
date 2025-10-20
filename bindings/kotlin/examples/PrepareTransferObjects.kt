@@ -18,20 +18,14 @@ fun main() = runBlocking {
                 )
         val objsToTransfer =
                 listOf(
-                        PtbArgument.objectId(
-                                ObjectId.fromHex(
-                                        "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
-                                )
+                        PtbArgument.objectIdFromHex(
+                                "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
                         ),
-                        PtbArgument.objectId(
-                                ObjectId.fromHex(
-                                        "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
-                                )
+                        PtbArgument.objectIdFromHex(
+                                "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
                         ),
-                        PtbArgument.objectId(
-                                ObjectId.fromHex(
-                                        "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9"
-                                )
+                        PtbArgument.objectIdFromHex(
+                                "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9"
                         )
                 )
 
@@ -41,8 +35,8 @@ fun main() = runBlocking {
 
         val txn = builder.finish()
 
-        println("Signing Digest: ${hexEncode(txn.signingDigest())}")
-        println("Txn Bytes: ${base64Encode(txn.bcsSerialize())}")
+        println("Signing Digest: ${txn.signingDigestHex()}")
+        println("Txn Bytes: ${txn.toBase64()}")
 
         val res = builder.dryRun()
 
