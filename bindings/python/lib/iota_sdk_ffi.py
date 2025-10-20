@@ -685,7 +685,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 6963:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 32922:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 47284:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -28088,7 +28088,8 @@ class GraphQlClientProtocol(typing.Protocol):
         Get a page of dynamic fields for the provided address. Note that this
         will also fetch dynamic fields on wrapped objects.
 
-        This returns [`Page`] of [`DynamicFieldOutput`]s.
+        This returns a page of
+        [`DynamicFieldOutput`s](crate::types::graphql::DynamicFieldOutput).
         """
 
         raise NotImplementedError
@@ -28816,7 +28817,8 @@ _UniffiConverterTypeSdkFfiError,
         Get a page of dynamic fields for the provided address. Note that this
         will also fetch dynamic fields on wrapped objects.
 
-        This returns [`Page`] of [`DynamicFieldOutput`]s.
+        This returns a page of
+        [`DynamicFieldOutput`s](crate::types::graphql::DynamicFieldOutput).
         """
 
         _UniffiConverterTypeAddress.check_lower(address)
@@ -42122,7 +42124,7 @@ class ZkLoginPublicIdentifierProtocol(typing.Protocol):
     address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
     ```
 
-    [`Address`]: crate::Address
+    [`Address`]: crate::types::address::Address
     """
 
     def address_seed(self, ):
@@ -42218,7 +42220,7 @@ class ZkLoginPublicIdentifier():
     address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
     ```
 
-    [`Address`]: crate::Address
+    [`Address`]: crate::types::address::Address
     """
 
     _pointer: ctypes.c_void_p

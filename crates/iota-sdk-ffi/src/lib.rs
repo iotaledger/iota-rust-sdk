@@ -2,7 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #![expect(unused)]
-#![allow(clippy::wrong_self_convention)]
+#![allow(
+    clippy::wrong_self_convention,
+    clippy::should_implement_trait,
+    clippy::new_without_default
+)]
 
 use base64ct::Encoding;
 

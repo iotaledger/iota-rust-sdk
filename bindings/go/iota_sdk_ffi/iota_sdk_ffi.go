@@ -1370,7 +1370,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields()
 	})
-	if checksum != 6963 {
+	if checksum != 32922 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields: UniFFI API checksum mismatch")
 	}
@@ -12376,7 +12376,8 @@ type GraphQlClientInterface interface {
 	// Get a page of dynamic fields for the provided address. Note that this
 	// will also fetch dynamic fields on wrapped objects.
 	//
-	// This returns [`Page`] of [`DynamicFieldOutput`]s.
+	// This returns a page of
+	// [`DynamicFieldOutput`s](crate::types::graphql::DynamicFieldOutput).
 	DynamicFields(address *Address, paginationFilter *PaginationFilter) (DynamicFieldOutputPage, error)
 	// Access a dynamic object field on an object using its name. Names are
 	// arbitrary Move values whose type have copy, drop, and store, and are
@@ -12945,7 +12946,8 @@ func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, nam
 // Get a page of dynamic fields for the provided address. Note that this
 // will also fetch dynamic fields on wrapped objects.
 //
-// This returns [`Page`] of [`DynamicFieldOutput`]s.
+// This returns a page of
+// [`DynamicFieldOutput`s](crate::types::graphql::DynamicFieldOutput).
 func (_self *GraphQlClient) DynamicFields(address *Address, paginationFilter *PaginationFilter) (DynamicFieldOutputPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -25528,7 +25530,7 @@ func (_ FfiDestroyerZkLoginProof) Destroy(value *ZkLoginProof) {
 // address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
 // ```
 //
-// [`Address`]: crate::Address
+// [`Address`]: crate::types::address::Address
 type ZkLoginPublicIdentifierInterface interface {
 	AddressSeed() *Bn254FieldElement
 	// Provides an iterator over the addresses that correspond to this zklogin
@@ -25607,7 +25609,7 @@ type ZkLoginPublicIdentifierInterface interface {
 // address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
 // ```
 //
-// [`Address`]: crate::Address
+// [`Address`]: crate::types::address::Address
 type ZkLoginPublicIdentifier struct {
 	ffiObject FfiObject
 }

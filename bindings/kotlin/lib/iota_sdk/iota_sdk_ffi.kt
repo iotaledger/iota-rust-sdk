@@ -6456,7 +6456,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 6963.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 32922.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 47284.toShort()) {
@@ -19843,7 +19843,8 @@ public interface GraphQlClientInterface {
      * Get a page of dynamic fields for the provided address. Note that this
      * will also fetch dynamic fields on wrapped objects.
      *
-     * This returns [`Page`] of [`DynamicFieldOutput`]s.
+     * This returns a page of
+     * [`DynamicFieldOutput`s](crate::types::graphql::DynamicFieldOutput).
      */
     suspend fun `dynamicFields`(`address`: Address, `paginationFilter`: PaginationFilter? = null): DynamicFieldOutputPage
     
@@ -20495,7 +20496,8 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      * Get a page of dynamic fields for the provided address. Note that this
      * will also fetch dynamic fields on wrapped objects.
      *
-     * This returns [`Page`] of [`DynamicFieldOutput`]s.
+     * This returns a page of
+     * [`DynamicFieldOutput`s](crate::types::graphql::DynamicFieldOutput).
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -45837,7 +45839,7 @@ public object FfiConverterTypeZkLoginProof: FfiConverter<ZkLoginProof, Pointer> 
  * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
  * ```
  *
- * [`Address`]: crate::Address
+ * [`Address`]: crate::types::address::Address
  */
 public interface ZkLoginPublicIdentifierInterface {
     
@@ -45932,7 +45934,7 @@ public interface ZkLoginPublicIdentifierInterface {
  * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
  * ```
  *
- * [`Address`]: crate::Address
+ * [`Address`]: crate::types::address::Address
  */
 open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIdentifierInterface
 {
