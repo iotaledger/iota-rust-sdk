@@ -109,8 +109,6 @@ jobs:
 
           ./run_localnet.sh start ./iota
 
-          ./run_localnet.sh logs
-
           make package_test_example_v1.json package_test_example_v2.json
 
           echo "Generating coverage data (.profraw files)."
