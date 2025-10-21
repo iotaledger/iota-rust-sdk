@@ -58,7 +58,7 @@ iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features 
 
 [dev-dependencies]
 base64ct = { version = "1.6.0", features = ["alloc", "std"] }
-bcs = "0.1.4"
+bcs.workspace = true
 cynic = "3.7.3"
 eyre = "0.6"
 hex = "0.4.3"

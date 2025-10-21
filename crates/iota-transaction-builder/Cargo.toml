@@ -8,7 +8,7 @@ description = "Transaction API for the IOTA Blockchain Rust SDK"
 
 [dependencies]
 base64ct = { version = "1.6", features = ["std"] }
-bcs = "0.1"
+bcs.workspace = true
 derive_more = { version = "2.0", features = ["from"] }
 iota-crypto = { package = "iota-crypto", path = "../iota-crypto", features = ["ed25519"] }
 iota-graphql-client = { package = "iota-graphql-client", path = "../iota-graphql-client" }

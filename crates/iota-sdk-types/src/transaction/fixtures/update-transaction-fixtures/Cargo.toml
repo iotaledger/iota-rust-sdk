@@ -6,7 +6,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bcs = "0.1.4"
+bcs.workspace = true
 eyre = "0.6"
 fastcrypto = { git = "https://github.com/MystenLabs/fastcrypto", rev = "5f2c63266a065996d53f98156f0412782b468597" }
 futures = "0.3.28"
