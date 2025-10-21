@@ -570,7 +570,44 @@ impl<L> TransactionBuilder<(), L> {
     }
 
     /// Add multiple gas coins that will be consumed. Optional.
-    pub fn gas_coins(&mut self, obj_refs: impl IntoIterator<Item = ObjectReference>) -> &mut Self {
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use std::str::FromStr;
+    /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
+    /// # use iota_transaction_builder::{TransactionBuilder, res, unresolved};
+    ///
+    /// let sender =
+    ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender);
+    ///
+    /// let gas_coin1 = ObjectReference {
+    ///     object_id: ObjectId::from_str(
+    ///         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
+    ///     )?,
+    ///     digest: Digest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
+    ///     version: 473053811,
+    /// };
+    /// let gas_coin2 = ObjectReference {
+    ///     object_id: ObjectId::from_str(
+    ///         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+    ///     )?,
+    ///     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
+    ///     version: 473053810,
+    /// };
+    ///
+    /// builder
+    ///     .split_coins(unresolved::Argument::Gas, [1000u64])
+    ///     .gas_multi([gas_coin1, gas_coin2])
+    ///     .gas_budget(1000000000)
+    ///     .gas_price(100);
+    ///
+    /// let txn: Transaction = builder.finish()?;
+    /// # Result::<_, eyre::Error>::Ok(())
+    /// ```
+    pub fn gas_multi(&mut self, obj_refs: impl IntoIterator<Item = ObjectReference>) -> &mut Self {
         for obj_ref in obj_refs {
             self.gas(obj_ref);
         }
@@ -674,7 +711,36 @@ impl<L> TransactionBuilder<Client, L> {
     }
 
     /// Add multiple gas coins that will be consumed. Optional.
-    pub fn gas_coins(&mut self, obj_ids: impl IntoIterator<Item = ObjectId>) -> &mut Self {
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use std::str::FromStr;
+    /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
+    /// # use iota_transaction_builder::{TransactionBuilder, res, unresolved};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = iota_graphql_client::Client::new_devnet();
+    /// let sender =
+    ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///
+    /// let gas_coin1 =
+    ///     ObjectId::from_str("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+    /// let gas_coin2 =
+    ///     ObjectId::from_str("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?;
+    ///
+    /// builder
+    ///     .split_coins(unresolved::Argument::Gas, [1000u64])
+    ///     .gas_multi([gas_coin1, gas_coin2]);
+    ///
+    /// let txn: Transaction = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn gas_multi(&mut self, obj_ids: impl IntoIterator<Item = ObjectId>) -> &mut Self {
         for id in obj_ids {
             self.gas(id);
         }

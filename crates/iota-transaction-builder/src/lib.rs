@@ -128,7 +128,7 @@
 //! These methods set various metadata which may be needed for the execution.
 //!
 //! - [gas](TransactionBuilder::gas): Add a gas coin to pay for the execution.
-//! - [gas_coins](TransactionBuilder::gas_coins): Add gas coins to pay for the
+//! - [gas_multi](TransactionBuilder::gas_multi): Add gas coins to pay for the
 //!   execution.
 //! - [gas_budget](TransactionBuilder::gas_budget): Set the maximum gas budget
 //!   to spend.
