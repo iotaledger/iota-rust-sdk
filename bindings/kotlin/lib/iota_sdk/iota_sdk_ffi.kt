@@ -2456,6 +2456,12 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2636,6 +2642,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address(
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes(
 ): Short
@@ -3047,6 +3055,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple(
@@ -3090,6 +3100,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address(
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes(
 ): Short
@@ -4396,6 +4408,8 @@ fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme(`ptr`: Pointer,uniffi_
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ed25519signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5264,6 +5278,8 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme(`ptr`: Pointer,uniff
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_secp256k1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256k1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5357,6 +5373,8 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(`ptr`: Point
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6363,10 +6381,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() != 37757.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 141.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 3041.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes() != 16656.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes() != 62359.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() != 31911.toShort()) {
@@ -6978,10 +6999,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() != 48490.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 798.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 60874.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes() != 49170.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes() != 46673.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes() != 49705.toShort()) {
@@ -7044,10 +7068,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() != 27344.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 12227.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 48083.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() != 21066.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes() != 14205.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() != 64948.toShort()) {
@@ -16369,11 +16396,16 @@ public interface Ed25519PublicKeyInterface {
     fun `deriveAddress`(): Address
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */
     fun `scheme`(): SignatureScheme
     
     fun `toBytes`(): kotlin.ByteArray
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */
+    fun `toFlaggedBytes`(): kotlin.ByteArray
     
     companion object
 }
@@ -16493,7 +16525,7 @@ open class Ed25519PublicKey: Disposable, AutoCloseable, Ed25519PublicKeyInterfac
 
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */override fun `scheme`(): SignatureScheme {
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
@@ -16511,6 +16543,21 @@ open class Ed25519PublicKey: Disposable, AutoCloseable, Ed25519PublicKeyInterfac
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */override fun `toFlaggedBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -32734,11 +32781,16 @@ public interface Secp256k1PublicKeyInterface {
     fun `deriveAddress`(): Address
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */
     fun `scheme`(): SignatureScheme
     
     fun `toBytes`(): kotlin.ByteArray
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */
+    fun `toFlaggedBytes`(): kotlin.ByteArray
     
     companion object
 }
@@ -32859,7 +32911,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
 
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */override fun `scheme`(): SignatureScheme {
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
@@ -32877,6 +32929,21 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */override fun `toFlaggedBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -34464,11 +34531,16 @@ public interface Secp256r1PublicKeyInterface {
     fun `deriveAddress`(): Address
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */
     fun `scheme`(): SignatureScheme
     
     fun `toBytes`(): kotlin.ByteArray
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended
+     */
+    fun `toFlaggedBytes`(): kotlin.ByteArray
     
     companion object
 }
@@ -34589,7 +34661,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
 
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */override fun `scheme`(): SignatureScheme {
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
@@ -34607,6 +34679,21 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended
+     */override fun `toFlaggedBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(
         it, _status)
 }
     }

@@ -1275,6 +1275,11 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme(void* ptr, Rust
 RustBuffer uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PUBLICKEY_TO_FLAGGED_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519PUBLICKEY_TO_FLAGGED_BYTES
+RustBuffer uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ED25519SIGNATURE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ED25519SIGNATURE
 void* uniffi_iota_sdk_ffi_fn_clone_ed25519signature(void* ptr, RustCallStatus *out_status
@@ -3470,6 +3475,11 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme(void* ptr, Ru
 RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256K1PUBLICKEY_TO_FLAGGED_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256K1PUBLICKEY_TO_FLAGGED_BYTES
+RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SECP256K1SIGNATURE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SECP256K1SIGNATURE
 void* uniffi_iota_sdk_ffi_fn_clone_secp256k1signature(void* ptr, RustCallStatus *out_status
@@ -3707,6 +3717,11 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(void* ptr, Ru
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1PUBLICKEY_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1PUBLICKEY_TO_BYTES
 RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1PUBLICKEY_TO_FLAGGED_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SECP256R1PUBLICKEY_TO_FLAGGED_BYTES
+RustBuffer uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SECP256R1SIGNATURE
@@ -6097,6 +6112,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519PUBLICKEY_TO_FLAGGED_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519PUBLICKEY_TO_FLAGGED_BYTES
+uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519SIGNATURE_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519SIGNATURE_TO_BYTES
 uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes(void
@@ -7327,6 +7348,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256K1PUBLICKEY_TO_FLAGGED_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256K1PUBLICKEY_TO_FLAGGED_BYTES
+uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256K1SIGNATURE_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256K1SIGNATURE_TO_BYTES
 uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes(void
@@ -7456,6 +7483,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1PUBLICKEY_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1PUBLICKEY_TO_BYTES
 uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1PUBLICKEY_TO_FLAGGED_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SECP256R1PUBLICKEY_TO_FLAGGED_BYTES
+uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes(void
     
 );
 #endif
