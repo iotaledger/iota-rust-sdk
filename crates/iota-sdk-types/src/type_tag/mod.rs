@@ -380,12 +380,10 @@ impl ToOwned for IdentifierRef {
     }
 }
 
-// NOTE: we can't use it for all uppercase structs, e.g. IOTA as it will produce
-// `i_o_t_a` as the function name
 macro_rules! add_struct_tag_ctor {
     ($address:ident, $module:literal, $name:literal) => {
         paste::paste! {
-            pub fn [< $name:snake >]() -> Self {
+            pub fn [< new_ $name:snake >]() -> Self {
                 Self {
                     address: Address::$address,
                     module: IdentifierRef::const_new($module).into(),
@@ -397,7 +395,7 @@ macro_rules! add_struct_tag_ctor {
     };
     ($address:ident, $module:literal, $name:literal, "from_struct_tag") => {
         paste::paste! {
-            pub fn [< $name:snake >](struct_tag: impl Into<StructTag>) -> Self {
+            pub fn [< new_ $name:snake >](struct_tag: impl Into<StructTag>) -> Self {
                 Self {
                     address: Address::$address,
                     module: IdentifierRef::const_new($module).into(),
@@ -409,7 +407,7 @@ macro_rules! add_struct_tag_ctor {
     };
     ($address:ident, $module:literal, $name:literal, "from_type_tag") => {
         paste::paste! {
-            pub fn [< $name:snake >](type_tag: impl Into<TypeTag>) -> Self {
+            pub fn [< new_ $name:snake >](type_tag: impl Into<TypeTag>) -> Self {
                 Self {
                     address: Address::$address,
                     module: IdentifierRef::const_new($module).into(),
@@ -444,7 +442,7 @@ pub struct StructTag {
 }
 
 impl StructTag {
-    pub fn iota() -> Self {
+    pub fn new_iota() -> Self {
         Self {
             address: Address::FRAMEWORK,
             module: IdentifierRef::const_new("iota").into(),
@@ -453,11 +451,11 @@ impl StructTag {
         }
     }
 
-    pub fn gas_coin() -> Self {
-        Self::coin(Self::iota())
+    pub fn new_gas_coin() -> Self {
+        Self::new_coin(Self::new_iota())
     }
 
-    pub fn id() -> Self {
+    pub fn new_id() -> Self {
         Self {
             address: Address::FRAMEWORK,
             module: IdentifierRef::const_new("object").into(),
@@ -466,7 +464,7 @@ impl StructTag {
         }
     }
 
-    pub fn uid() -> Self {
+    pub fn new_uid() -> Self {
         Self {
             address: Address::FRAMEWORK,
             module: IdentifierRef::const_new("object").into(),
@@ -475,7 +473,7 @@ impl StructTag {
         }
     }
 
-    pub fn name(address: Address) -> Self {
+    pub fn new_name(address: Address) -> Self {
         Self {
             address,
             module: IdentifierRef::const_new("name").into(),
@@ -530,8 +528,24 @@ impl StructTag {
     pub fn coin_type(&self) -> &TypeTag {
         self.coin_type_opt().expect("not a coin")
     }
+    /// Returns the address part of a `StructTag`
     pub fn address(&self) -> Address {
         self.address
+    }
+
+    /// Returns the module part of a `StructTag`
+    pub fn module(&self) -> &Identifier {
+        &self.module
+    }
+
+    /// Returns the struct name part of a `StructTag`
+    pub fn name(&self) -> &Identifier {
+        &self.name
+    }
+
+    /// Returns the type params part of a `StructTag`
+    pub fn type_params(&self) -> &[TypeTag] {
+        &self.type_params
     }
 }
 

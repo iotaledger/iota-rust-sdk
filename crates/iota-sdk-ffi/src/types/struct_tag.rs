@@ -75,7 +75,7 @@ impl StructTag {
 
     #[uniffi::constructor]
     pub fn coin(type_tag: &TypeTag) -> Self {
-        Self(iota_types::StructTag::coin(type_tag.0.clone()))
+        Self(iota_types::StructTag::new_coin(type_tag.0.clone()))
     }
 
     /// Checks if this is a Coin type
@@ -94,15 +94,37 @@ impl StructTag {
 
     #[uniffi::constructor]
     pub fn gas_coin() -> Self {
-        Self(iota_types::StructTag::gas_coin())
+        Self(iota_types::StructTag::new_gas_coin())
     }
 
     #[uniffi::constructor]
     pub fn staked_iota() -> Self {
-        Self(iota_types::StructTag::staked_iota())
+        Self(iota_types::StructTag::new_staked_iota())
     }
 
+    /// Returns the address part of a `StructTag`
     pub fn address(&self) -> Address {
         self.0.address().into()
+    }
+
+    /// Returns the module part of a `StructTag`
+    pub fn module(&self) -> Identifier {
+        self.0.module().clone().into()
+    }
+
+    /// Returns the struct name part of a `StructTag`
+    pub fn name(&self) -> Identifier {
+        self.0.name().clone().into()
+    }
+
+    /// Returns the type params part of a `StructTag`
+    pub fn type_args(&self) -> Vec<Arc<TypeTag>> {
+        self.0
+            .type_params()
+            .iter()
+            .cloned()
+            .map(TypeTag::from)
+            .map(Arc::new)
+            .collect()
     }
 }
