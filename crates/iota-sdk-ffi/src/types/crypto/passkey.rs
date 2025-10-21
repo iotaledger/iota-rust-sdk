@@ -27,7 +27,7 @@ use crate::{
 /// client-data-json = string ; valid json
 /// ```
 ///
-/// See https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata for
+/// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
 /// the required json-schema for the `client-data-json` rule. In addition, IOTA
 /// currently requires that the `CollectedClientData.type` field is required to
 /// be `webauthn.get`.
@@ -44,7 +44,7 @@ pub struct PasskeyAuthenticator(pub iota_types::PasskeyAuthenticator);
 impl PasskeyAuthenticator {
     /// Opaque authenticator data for this passkey signature.
     ///
-    /// See https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data
+    /// See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
     /// for more information on this field.
     pub fn authenticator_data(&self) -> Vec<u8> {
         self.0.authenticator_data().to_vec()
@@ -52,7 +52,7 @@ impl PasskeyAuthenticator {
 
     /// Structured, unparsed, JSON for this passkey signature.
     ///
-    /// See https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata
+    /// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
     /// for more information on this field.
     pub fn client_data_json(&self) -> String {
         self.0.client_data_json().to_owned()

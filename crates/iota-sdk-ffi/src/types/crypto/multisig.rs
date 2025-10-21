@@ -222,7 +222,7 @@ impl MultisigMemberPublicKey {
 ///                         ; roaring bitmaps
 /// ```
 ///
-/// See https://github.com/RoaringBitmap/RoaringFormatSpec for the specification for the
+/// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 /// serialized format of RoaringBitmaps.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct MultisigAggregatedSignature(pub iota_types::MultisigAggregatedSignature);
