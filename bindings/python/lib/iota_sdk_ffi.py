@@ -1165,11 +1165,17 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_splitcoins_coin() != 17278:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 18393:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 20393:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 37745:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_module() != 28022:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_name() != 23898:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args() != 48594:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies() != 25411:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5943,6 +5949,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_module.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_module.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_name.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_name.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_type_args.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_type_args.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8480,6 +8501,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type.restype = cty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_module.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_module.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_name.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_name.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies.restype = ctypes.c_uint16
@@ -37867,6 +37897,10 @@ class StructTagProtocol(typing.Protocol):
     """
 
     def address(self, ):
+        """
+        Returns the address part of a `StructTag`
+        """
+
         raise NotImplementedError
     def coin_type(self, ):
         """
@@ -37877,6 +37911,24 @@ class StructTagProtocol(typing.Protocol):
     def coin_type_opt(self, ):
         """
         Checks if this is a Coin type
+        """
+
+        raise NotImplementedError
+    def module(self, ):
+        """
+        Returns the module part of a `StructTag`
+        """
+
+        raise NotImplementedError
+    def name(self, ):
+        """
+        Returns the struct name part of a `StructTag`
+        """
+
+        raise NotImplementedError
+    def type_args(self, ):
+        """
+        Returns the type params part of a `StructTag`
         """
 
         raise NotImplementedError
@@ -37956,6 +38008,10 @@ class StructTag():
 
 
     def address(self, ) -> "Address":
+        """
+        Returns the address part of a `StructTag`
+        """
+
         return _UniffiConverterTypeAddress.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_address,self._uniffi_clone_pointer(),)
         )
@@ -37984,6 +38040,45 @@ class StructTag():
 
         return _UniffiConverterOptionalTypeTypeTag.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def module(self, ) -> "Identifier":
+        """
+        Returns the module part of a `StructTag`
+        """
+
+        return _UniffiConverterTypeIdentifier.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_module,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def name(self, ) -> "Identifier":
+        """
+        Returns the struct name part of a `StructTag`
+        """
+
+        return _UniffiConverterTypeIdentifier.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_name,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def type_args(self, ) -> "typing.List[TypeTag]":
+        """
+        Returns the type params part of a `StructTag`
+        """
+
+        return _UniffiConverterSequenceTypeTypeTag.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_type_args,self._uniffi_clone_pointer(),)
         )
 
 

@@ -3530,7 +3530,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_address()
 	})
-	if checksum != 18393 {
+	if checksum != 20393 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_address: UniFFI API checksum mismatch")
 	}
@@ -3551,6 +3551,33 @@ func uniffiCheckChecksums() {
 	if checksum != 65306 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_module()
+	})
+	if checksum != 28022 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_name()
+	})
+	if checksum != 23898 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_name: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args()
+	})
+	if checksum != 48594 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_type_args: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -21695,11 +21722,18 @@ func (_ FfiDestroyerSplitCoins) Destroy(value *SplitCoins) {
 // (vector type-tag)  ; type parameters
 // ```
 type StructTagInterface interface {
+	// Returns the address part of a `StructTag`
 	Address() *Address
 	// Checks if this is a Coin type
 	CoinType() *TypeTag
 	// Checks if this is a Coin type
 	CoinTypeOpt() **TypeTag
+	// Returns the module part of a `StructTag`
+	Module() *Identifier
+	// Returns the struct name part of a `StructTag`
+	Name() *Identifier
+	// Returns the type params part of a `StructTag`
+	TypeArgs() []*TypeTag
 }
 // Type information for a move struct
 //
@@ -21743,6 +21777,7 @@ func StructTagStakedIota() *StructTag {
 
 
 
+// Returns the address part of a `StructTag`
 func (_self *StructTag) Address() *Address {
 	_pointer := _self.ffiObject.incrementPointer("*StructTag")
 	defer _self.ffiObject.decrementPointer()
@@ -21769,6 +21804,38 @@ func (_self *StructTag) CoinTypeOpt() **TypeTag {
 	return FfiConverterOptionalTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the module part of a `StructTag`
+func (_self *StructTag) Module() *Identifier {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_module(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the struct name part of a `StructTag`
+func (_self *StructTag) Name() *Identifier {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_name(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the type params part of a `StructTag`
+func (_self *StructTag) TypeArgs() []*TypeTag {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_structtag_type_args(
 		_pointer,_uniffiStatus),
 	}
 	}))

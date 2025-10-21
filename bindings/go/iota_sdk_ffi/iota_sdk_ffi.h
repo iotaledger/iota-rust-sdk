@@ -4154,6 +4154,21 @@ void* uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(void* ptr, RustCallStatu
 RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_MODULE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_MODULE
+void* uniffi_iota_sdk_ffi_fn_method_structtag_module(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_NAME
+void* uniffi_iota_sdk_ffi_fn_method_structtag_name(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_TYPE_ARGS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_TYPE_ARGS
+RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_type_args(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_UNIFFI_TRAIT_DISPLAY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_UNIFFI_TRAIT_DISPLAY
 RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(void* ptr, RustCallStatus *out_status
@@ -7721,6 +7736,24 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_COIN_TYPE_OPT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_COIN_TYPE_OPT
 uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_MODULE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_MODULE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_module(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_NAME
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_name(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_TYPE_ARGS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_TYPE_ARGS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_type_args(void
     
 );
 #endif

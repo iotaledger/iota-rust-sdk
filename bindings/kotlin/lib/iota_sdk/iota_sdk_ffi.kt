@@ -2454,6 +2454,12 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3178,6 +3184,12 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_address(
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_type_args(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies(
 ): Short
@@ -5530,6 +5542,12 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(`ptr`: Pointer,uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_structtag_module(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_structtag_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_structtag_type_args(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7170,13 +7188,22 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_splitcoins_coin() != 17278.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 18393.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 20393.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 37745.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_module() != 28022.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_name() != 23898.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args() != 48594.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies() != 25411.toShort()) {
@@ -37588,6 +37615,9 @@ public object FfiConverterTypeSplitCoins: FfiConverter<SplitCoins, Pointer> {
  */
 public interface StructTagInterface {
     
+    /**
+     * Returns the address part of a `StructTag`
+     */
     fun `address`(): Address
     
     /**
@@ -37599,6 +37629,21 @@ public interface StructTagInterface {
      * Checks if this is a Coin type
      */
     fun `coinTypeOpt`(): TypeTag?
+    
+    /**
+     * Returns the module part of a `StructTag`
+     */
+    fun `module`(): Identifier
+    
+    /**
+     * Returns the struct name part of a `StructTag`
+     */
+    fun `name`(): Identifier
+    
+    /**
+     * Returns the type params part of a `StructTag`
+     */
+    fun `typeArgs`(): List<TypeTag>
     
     companion object
 }
@@ -37706,7 +37751,10 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         }
     }
 
-    override fun `address`(): Address {
+    
+    /**
+     * Returns the address part of a `StructTag`
+     */override fun `address`(): Address {
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -37741,6 +37789,51 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the module part of a `StructTag`
+     */override fun `module`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_module(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the struct name part of a `StructTag`
+     */override fun `name`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_name(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the type params part of a `StructTag`
+     */override fun `typeArgs`(): List<TypeTag> {
+            return FfiConverterSequenceTypeTypeTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_type_args(
         it, _status)
 }
     }
