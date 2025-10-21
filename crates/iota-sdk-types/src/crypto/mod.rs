@@ -153,11 +153,13 @@ impl_base64_helper!(Base64Array64, Base64Display64, Base64FromStr64, test64, 64)
 impl_base64_helper!(Base64Array96, Base64Display96, Base64FromStr96, test96, 96);
 
 pub trait PublicKeyExt: Sized {
-    // Returns the public key as bytes.
+    type FromBytesErr;
+
+    /// Returns the public key as bytes.
     fn as_bytes(&self) -> &[u8];
 
     /// Tries to create a PublicKey from bytes.
-    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError>;
+    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr>;
 
     /// Returns the signature scheme for this public key.
     fn scheme(&self) -> SignatureScheme;

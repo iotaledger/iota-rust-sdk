@@ -61,13 +61,15 @@ impl Ed25519PublicKey {
 }
 
 impl PublicKeyExt for Ed25519PublicKey {
-    // Returns the public key as bytes.
+    type FromBytesErr = std::array::TryFromSliceError;
+
+    /// Returns the public key as bytes.
     fn as_bytes(&self) -> &[u8] {
         &self.0
     }
 
     /// Tries to create an Ed25519PublicKey from bytes.
-    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
+    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 
