@@ -11,43 +11,30 @@ use crate::error::Result;
 /// is a valid IOTA address:
 /// `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
 ///
-/// ```
-/// use iota_types::Address;
-///
-/// let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
-/// let address = Address::from_hex(hex).unwrap();
-/// println!("Address: {}", address);
-/// assert_eq!(hex, address.to_string());
-/// ```
-///
 /// # Deriving an Address
 ///
 /// Addresses are cryptographically derived from a number of user account
 /// authenticators, the simplest of which is an
-/// [`Ed25519PublicKey`](iota_types::Ed25519PublicKey).
+/// `Ed25519PublicKey`.
 ///
 /// Deriving an address consists of the Blake2b256 hash of the sequence of bytes
 /// of its corresponding authenticator, prefixed with a domain-separator (except
 /// ed25519, for compatibility reasons). For each other authenticator, this
 /// domain-separator is the single byte-value of its
-/// [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
-/// schema flag || authenticator bytes)`.
+/// `SignatureScheme` flag. E.g. `hash(signature schema flag || authenticator
+/// bytes)`.
 ///
 /// Each authenticator has a method for deriving its `Address` as well as
 /// documentation for the specifics of how the derivation is done. See
-/// [`Ed25519PublicKey::derive_address`] for an example.
-///
-/// [`Ed25519PublicKey::derive_address`]: iota_types::Ed25519PublicKey::derive_address
+/// `Ed25519PublicKey::derive_address` for an example.
 ///
 /// ## Relationship to ObjectIds
 ///
-/// [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but
+/// `ObjectId`s and `Address`es share the same 32-byte addressable space but
 /// are derived leveraging different domain-separator values to ensure that,
 /// cryptographically, there won't be any overlap, e.g. there can't be a
 /// valid `Object` who's `ObjectId` is equal to that of the `Address` of a user
 /// account.
-///
-/// [`ObjectId`]: iota_types::ObjectId
 ///
 /// # BCS
 ///
