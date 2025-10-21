@@ -14,7 +14,7 @@ pub struct FaucetClient(iota_graphql_client::faucet::FaucetClient);
 #[uniffi::export(async_runtime = "tokio")]
 impl FaucetClient {
     /// Construct a new `FaucetClient` with the given faucet service URL. This
-    /// [`FaucetClient`] expects that the service provides two endpoints:
+    /// `FaucetClient` expects that the service provides two endpoints:
     /// /v1/gas and /v1/status. As such, do not provide the request
     /// endpoint, just the top level service endpoint.
     ///
@@ -68,7 +68,7 @@ impl FaucetClient {
 
     /// Check the faucet request status.
     ///
-    /// Possible statuses are defined in: [`BatchSendStatusType`]
+    /// Possible statuses are defined in: `BatchSendStatusType`
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>> {
         Ok(self
             .0

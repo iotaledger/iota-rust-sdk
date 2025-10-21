@@ -7,7 +7,6 @@ use std::{
     time::Duration,
 };
 
-use iota_transaction_builder::MovePackageData;
 use iota_types::Input;
 
 use crate::{
@@ -18,17 +17,18 @@ use crate::{
     types::{
         address::Address,
         graphql::DryRunResult,
+        move_package::MovePackageData,
         object::ObjectId,
         struct_tag::Identifier,
-        transaction::{Transaction, TransactionEffects},
+        transaction::{Argument, Transaction, TransactionEffects},
         type_tag::TypeTag,
     },
 };
 
-mod ptb_arg;
+pub mod ptb_arg;
 
-/// A builder for creating transactions. Use [`finish`](Self::finish) to
-/// finalize the transaction data.
+/// A builder for creating transactions. Use `finish` to finalize the
+/// transaction data.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct TransactionBuilder(
     RwLock<iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>>,
@@ -70,6 +70,14 @@ impl TransactionBuilder {
     pub fn gas(self: Arc<Self>, object_id: &ObjectId) -> Arc<Self> {
         self.write(|builder| {
             builder.gas(**object_id);
+        });
+        self
+    }
+
+    /// Add gas objects to pay for the transaction.
+    pub fn gas_coins(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
+        self.write(|builder| {
+            builder.gas_coins(object_ids.iter().map(|id| ***id));
         });
         self
     }
@@ -266,17 +274,12 @@ impl TransactionBuilder {
     ///    the package
     pub fn publish(
         self: Arc<Self>,
-        modules: Vec<Vec<u8>>,
-        dependencies: Vec<Arc<ObjectId>>,
+        package_data: &MovePackageData,
         upgrade_cap_name: String,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .publish(MovePackageData {
-                    modules,
-                    dependencies: dependencies.into_iter().map(|o| **o).collect(),
-                    digest: None,
-                })
+                .publish(package_data.0.clone())
                 .upgrade_cap(upgrade_cap_name);
         });
         self
@@ -296,23 +299,14 @@ impl TransactionBuilder {
     #[uniffi::method(default(name = None))]
     pub fn upgrade(
         self: Arc<Self>,
-        modules: Vec<Vec<u8>>,
-        dependencies: Vec<Arc<ObjectId>>,
+        package_data: &MovePackageData,
         package: &ObjectId,
         ticket: &PTBArgument,
         name: Option<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .upgrade(
-                    **package,
-                    ticket,
-                    MovePackageData {
-                        modules,
-                        dependencies: dependencies.into_iter().map(|o| **o).collect(),
-                        digest: None,
-                    },
-                )
+                .upgrade(**package, ticket, package_data.0.clone())
                 .name(name);
         });
         self
@@ -320,7 +314,9 @@ impl TransactionBuilder {
 
     /// Convert this builder into a transaction.
     pub async fn finish(&self) -> Result<Transaction> {
-        Ok(self.read(|builder| builder.clone().finish()).await?.into())
+        Ok(Transaction(
+            self.read(|builder| builder.clone().finish()).await?,
+        ))
     }
 
     /// Dry run the transaction.

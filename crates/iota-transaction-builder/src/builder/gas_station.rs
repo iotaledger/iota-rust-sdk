@@ -356,24 +356,36 @@ impl GasStationData {
         keypair: &SimpleKeypair,
     ) -> Result<Digest, Error> {
         let client = reqwest::Client::new();
-        let reservation = self.reserve_gas(txn.gas_payment.budget, &client).await?;
-        txn.gas_payment.owner = reservation.sponsor_address;
-        txn.gas_payment.objects = reservation
-            .gas_coins
-            .into_iter()
-            .map(|obj_ref| ObjectReference {
-                object_id: obj_ref.object_id,
-                version: obj_ref.version as _,
-                digest: obj_ref.digest,
-            })
-            .collect();
+        let reservation_id = match txn {
+            Transaction::V1(ref mut inner_txn) => {
+                let reservation = self
+                    .reserve_gas(inner_txn.gas_payment.budget, &client)
+                    .await?;
+                let GasReservation {
+                    sponsor_address,
+                    reservation_id,
+                    gas_coins,
+                } = reservation;
+                inner_txn.gas_payment.owner = sponsor_address;
+                let objects: Vec<_> = gas_coins
+                    .into_iter()
+                    .map(|obj_ref| ObjectReference {
+                        object_id: obj_ref.object_id,
+                        version: obj_ref.version as _,
+                        digest: obj_ref.digest,
+                    })
+                    .collect();
+                inner_txn.gas_payment.objects = objects;
+                reservation_id
+            }
+        };
 
         let url = self
             .url
             .join(GasStationRequestKind::ExecuteTx.as_path())
             .map_err(Error::InvalidUrl)?;
 
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(txn).map_err(Error::Bcs)?);
+        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);
 
         let user_sig = keypair
             .sign_transaction(txn)
@@ -384,7 +396,7 @@ impl GasStationData {
             .request(reqwest::Method::POST, url.clone())
             .headers(self.headers)
             .json(&ExecuteTxRequest {
-                reservation_id: reservation.reservation_id,
+                reservation_id,
                 tx_bytes,
                 user_sig,
                 request_type: "waitForLocalExecution".to_owned(),

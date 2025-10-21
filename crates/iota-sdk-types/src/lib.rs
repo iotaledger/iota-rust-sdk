@@ -120,6 +120,7 @@ mod execution_status;
 pub mod framework;
 mod gas;
 pub mod iota_names;
+mod move_package;
 mod object;
 mod object_id;
 mod transaction;
@@ -138,7 +139,7 @@ pub use crypto::{
     Ed25519Signature, Intent, IntentAppId, IntentScope, IntentVersion, InvalidSignatureScheme,
     InvalidZkLoginAuthenticatorError, Jwk, JwkId, MultisigAggregatedSignature, MultisigCommittee,
     MultisigMember, MultisigMemberPublicKey, MultisigMemberSignature, PasskeyAuthenticator,
-    PasskeyPublicKey, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
+    PasskeyPublicKey, PublicKeyExt, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
     Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature, ZkLoginAuthenticator,
     ZkLoginClaim, ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
 };
@@ -154,6 +155,7 @@ pub use execution_status::{
 };
 pub use framework::Coin;
 pub use gas::GasCostSummary;
+pub use move_package::{MovePackageData, UpgradePolicy};
 pub use object::{
     GenesisObject, MovePackage, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
     TypeOrigin, UpgradeInfo, Version,
@@ -169,7 +171,7 @@ pub use transaction::{
     ExecutionTimeObservationKey, ExecutionTimeObservations, GasPayment, GenesisTransaction, Input,
     MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate,
     SenderSignedTransaction, SignedTransaction, SplitCoins, SystemPackage, Transaction,
-    TransactionExpiration, TransactionKind, TransferObjects, Upgrade,
+    TransactionExpiration, TransactionKind, TransactionV1, TransferObjects, Upgrade,
     ValidatorExecutionTimeObservation, VersionAssignment,
 };
 pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag};

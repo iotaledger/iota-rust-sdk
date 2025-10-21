@@ -41,7 +41,7 @@ func main() {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	dryRunResult, err := client.DryRunTx(txn, nil)
+	dryRunResult, err := client.DryRunTx(txn, false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run: %v", err)
 	}
