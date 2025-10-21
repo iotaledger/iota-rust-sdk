@@ -222,7 +222,7 @@ impl MultisigMemberPublicKey {
 ///                         ; roaring bitmaps
 /// ```
 ///
-/// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+/// See https://github.com/RoaringBitmap/RoaringFormatSpec for the specification for the
 /// serialized format of RoaringBitmaps.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct MultisigAggregatedSignature(pub iota_types::MultisigAggregatedSignature);
@@ -357,13 +357,10 @@ impl MultisigCommittee {
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.
     ///
-    /// When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+    /// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
     /// refers to the same input used when deriving the address using the
-    /// [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+    /// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
     /// full 32-byte `address_seed` value).
-    ///
-    /// [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
-    /// [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
     pub fn derive_address(&self) -> Address {
         self.0.derive_address().into()
     }

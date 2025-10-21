@@ -27,8 +27,8 @@ use crate::{
 
 pub mod ptb_arg;
 
-/// A builder for creating transactions. Use [`finish`](Self::finish) to
-/// finalize the transaction data.
+/// A builder for creating transactions. Use `finish` to finalize the
+/// transaction data.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct TransactionBuilder(
     RwLock<iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>>,
