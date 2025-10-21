@@ -25,10 +25,10 @@ use crate::{
     },
 };
 
-mod ptb_arg;
+pub mod ptb_arg;
 
-/// A builder for creating transactions. Use [`finish`](Self::finish) to
-/// finalize the transaction data.
+/// A builder for creating transactions. Use `finish` to finalize the
+/// transaction data.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct TransactionBuilder(
     RwLock<iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>>,
@@ -70,6 +70,14 @@ impl TransactionBuilder {
     pub fn gas(self: Arc<Self>, object_id: &ObjectId) -> Arc<Self> {
         self.write(|builder| {
             builder.gas(**object_id);
+        });
+        self
+    }
+
+    /// Add gas objects to pay for the transaction.
+    pub fn gas_coins(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
+        self.write(|builder| {
+            builder.gas_coins(object_ids.iter().map(|id| ***id));
         });
         self
     }
