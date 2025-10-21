@@ -37,6 +37,42 @@ impl Identifier {
     }
 }
 
+macro_rules! export_struct_tag_ctors {
+    ($($name:ident),+ $(,)?) => { paste::paste! {
+        #[uniffi::export]
+        impl StructTag {$(
+            #[uniffi::constructor]
+            pub fn [< new_ $name:snake >]() -> Self {
+                Self(iota_types::StructTag::[< new_ $name:snake >]())
+            }
+        )+}
+    } }
+}
+
+macro_rules! export_struct_tag_from_type_tag_ctors {
+    ($($name:ident),+ $(,)?) => { paste::paste! {
+        #[uniffi::export]
+        impl StructTag {$(
+            #[uniffi::constructor]
+            pub fn [< new_ $name:snake >](type_tag: &TypeTag) -> Self {
+                Self(iota_types::StructTag::[< new_ $name:snake >](type_tag.0.clone()))
+            }
+        )+}
+    } }
+}
+
+macro_rules! export_struct_tag_from_struct_tag_ctors {
+    ($($name:ident),+ $(,)?) => { paste::paste! {
+        #[uniffi::export]
+        impl StructTag {$(
+            #[uniffi::constructor]
+            pub fn [< new_ $name:snake >](struct_tag: &StructTag) -> Self {
+                Self(iota_types::StructTag::[< new_ $name:snake >](struct_tag.0.clone()))
+            }
+        )+}
+    } }
+}
+
 /// Type information for a move struct
 ///
 /// # BCS
@@ -73,11 +109,6 @@ impl StructTag {
         })
     }
 
-    #[uniffi::constructor]
-    pub fn coin(type_tag: &TypeTag) -> Self {
-        Self(iota_types::StructTag::new_coin(type_tag.0.clone()))
-    }
-
     /// Checks if this is a Coin type
     pub fn coin_type_opt(&self) -> Option<Arc<TypeTag>> {
         self.0
@@ -90,16 +121,6 @@ impl StructTag {
     /// Checks if this is a Coin type
     pub fn coin_type(&self) -> TypeTag {
         self.0.coin_type().clone().into()
-    }
-
-    #[uniffi::constructor]
-    pub fn gas_coin() -> Self {
-        Self(iota_types::StructTag::new_gas_coin())
-    }
-
-    #[uniffi::constructor]
-    pub fn staked_iota() -> Self {
-        Self(iota_types::StructTag::new_staked_iota())
     }
 
     /// Returns the address part of a `StructTag`
@@ -128,3 +149,30 @@ impl StructTag {
             .collect()
     }
 }
+
+export_struct_tag_ctors!(
+    GasCoin,
+    Clock,
+    Config,
+    ConfigKey,
+    AddressKey,
+    GlobalPauseKey,
+    IotaTreasuryCap,
+    UpgradeCap,
+    UpgradeTicket,
+    UpgradeReceipt,
+    IotaSystemAdminCap,
+    IotaSystemState,
+    StakedIota,
+    TimelockedStakedIota
+);
+
+export_struct_tag_from_type_tag_ctors!(Coin, Balance, TimeLock);
+
+export_struct_tag_from_struct_tag_ctors!(
+    CoinMetadata,
+    TreasuryCap,
+    CoinManager,
+    VersionUpdated,
+    DisplayCreated
+);
