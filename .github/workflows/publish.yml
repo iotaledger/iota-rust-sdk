@@ -15,10 +15,10 @@ jobs:
       - name: Cargo release publish
         run: |-
           cargo release \
-            publish \
             --workspace \
             --exclude iota-graphql-client-build \
             --exclude iota-sdk-ffi \
             --all-features \
+            --allow-branch develop,sdk-bindings
             --no-confirm \
             --execute
