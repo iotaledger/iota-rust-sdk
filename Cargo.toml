@@ -6,3 +6,4 @@ members = ["crates/*"]
 base64ct = "1.6.0"
 bcs = "0.1.6"
 derive_more  = "2.0"
+hex = "0.4.3"

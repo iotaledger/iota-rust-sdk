@@ -17,7 +17,7 @@ crate-type = ["lib", "cdylib"]
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from", "deref", "display"] }
-hex = "0.4.3"
+hex.workspace = true
 paste = "1.0"
 primitive-types = { version = "0.14", features = ["impl-serde"] }
 rand = "0.8"
