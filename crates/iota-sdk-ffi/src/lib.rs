@@ -152,7 +152,6 @@ macro_rules! export_basic_types_bcs_conversion {
             #[uniffi::export]
             pub fn [< $name:snake _to_bcs >](input: $name) -> crate::error::Result<Vec<u8>> {
                 Ok(bcs::to_bytes(&input)?)
-
             }
         )+}
     };
