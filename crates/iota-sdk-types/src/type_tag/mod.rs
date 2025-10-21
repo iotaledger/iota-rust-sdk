@@ -331,8 +331,9 @@ impl IdentifierRef {
         //     already guarantees the transmute is safe (RefCast checks that
         //     IdentStr(str) is #[repr(transparent)]).
         // (3) both in and out lifetimes are 'static, so we're not widening the
-        // lifetime. (4) we've just asserted that the IdentStr passes the
-        // is_valid check.
+        //     lifetime.
+        // (4) we've just asserted that the IdentStr passes the
+        //     is_valid check.
         unsafe { std::mem::transmute::<&'static str, &'static Self>(s) }
     }
 
@@ -379,6 +380,47 @@ impl ToOwned for IdentifierRef {
     }
 }
 
+// NOTE: we can't use it for all uppercase structs, e.g. IOTA as it will produce
+// `i_o_t_a` as the function name
+macro_rules! add_struct_tag_ctor {
+    ($address:ident, $module:literal, $name:literal) => {
+        paste::paste! {
+            pub fn [< $name:snake >]() -> Self {
+                Self {
+                    address: Address::$address,
+                    module: IdentifierRef::const_new($module).into(),
+                    name: IdentifierRef::const_new($name).into(),
+                    type_params: vec![],
+                }
+            }
+        }
+    };
+    ($address:ident, $module:literal, $name:literal, "from_struct_tag") => {
+        paste::paste! {
+            pub fn [< $name:snake >](struct_tag: impl Into<StructTag>) -> Self {
+                Self {
+                    address: Address::$address,
+                    module: IdentifierRef::const_new($module).into(),
+                    name: IdentifierRef::const_new($name).into(),
+                    type_params: vec![TypeTag::Struct(Box::new(struct_tag.into()))],
+                }
+            }
+        }
+    };
+    ($address:ident, $module:literal, $name:literal, "from_type_tag") => {
+        paste::paste! {
+            pub fn [< $name:snake >](type_tag: impl Into<TypeTag>) -> Self {
+                Self {
+                    address: Address::$address,
+                    module: IdentifierRef::const_new($module).into(),
+                    name: IdentifierRef::const_new($name).into(),
+                    type_params: vec![type_tag.into()],
+                }
+            }
+        }
+    };
+}
+
 /// Type information for a move struct
 ///
 /// # BCS
@@ -402,14 +444,67 @@ pub struct StructTag {
 }
 
 impl StructTag {
-    pub fn coin(type_tag: impl Into<TypeTag>) -> Self {
+    pub fn iota() -> Self {
         Self {
             address: Address::FRAMEWORK,
-            module: IdentifierRef::const_new("coin").into(),
-            name: IdentifierRef::const_new("Coin").into(),
-            type_params: vec![type_tag.into()],
+            module: IdentifierRef::const_new("iota").into(),
+            name: IdentifierRef::const_new("IOTA").into(),
+            type_params: vec![],
         }
     }
+
+    pub fn gas_coin() -> Self {
+        Self::coin(Self::iota())
+    }
+
+    pub fn id() -> Self {
+        Self {
+            address: Address::FRAMEWORK,
+            module: IdentifierRef::const_new("object").into(),
+            name: IdentifierRef::const_new("ID").into(),
+            type_params: vec![],
+        }
+    }
+
+    pub fn uid() -> Self {
+        Self {
+            address: Address::FRAMEWORK,
+            module: IdentifierRef::const_new("object").into(),
+            name: IdentifierRef::const_new("UID").into(),
+            type_params: vec![],
+        }
+    }
+
+    pub fn name(address: Address) -> Self {
+        Self {
+            address,
+            module: IdentifierRef::const_new("name").into(),
+            name: IdentifierRef::const_new("Name").into(),
+            type_params: vec![],
+        }
+    }
+
+    add_struct_tag_ctor!(FRAMEWORK, "coin", "Coin", "from_type_tag");
+    add_struct_tag_ctor!(FRAMEWORK, "coin", "CoinMetadata", "from_struct_tag");
+    add_struct_tag_ctor!(FRAMEWORK, "coin", "TreasuryCap", "from_struct_tag");
+    add_struct_tag_ctor!(FRAMEWORK, "coin_manager", "CoinManager", "from_struct_tag");
+    add_struct_tag_ctor!(FRAMEWORK, "clock", "Clock");
+    add_struct_tag_ctor!(FRAMEWORK, "balance", "Balance", "from_type_tag");
+    add_struct_tag_ctor!(FRAMEWORK, "config", "Config");
+    add_struct_tag_ctor!(FRAMEWORK, "deny_list", "ConfigKey");
+    add_struct_tag_ctor!(FRAMEWORK, "deny_list", "AddressKey");
+    add_struct_tag_ctor!(FRAMEWORK, "deny_list", "GlobalPauseKey");
+    add_struct_tag_ctor!(FRAMEWORK, "display", "VersionUpdated", "from_struct_tag");
+    add_struct_tag_ctor!(FRAMEWORK, "display", "DisplayCreated", "from_struct_tag");
+    add_struct_tag_ctor!(FRAMEWORK, "iota", "IotaTreasuryCap");
+    add_struct_tag_ctor!(FRAMEWORK, "package", "UpgradeCap");
+    add_struct_tag_ctor!(FRAMEWORK, "package", "UpgradeTicket");
+    add_struct_tag_ctor!(FRAMEWORK, "package", "UpgradeReceipt");
+    add_struct_tag_ctor!(FRAMEWORK, "system_admin_cap", "IotaSystemAdminCap");
+    add_struct_tag_ctor!(FRAMEWORK, "timelock", "TimeLock", "from_type_tag");
+    add_struct_tag_ctor!(SYSTEM, "iota_system", "IotaSystemState");
+    add_struct_tag_ctor!(SYSTEM, "staking_pool", "StakedIota");
+    add_struct_tag_ctor!(SYSTEM, "timelocked_staking", "TimelockedStakedIota");
 
     /// Checks if this is a Coin type
     pub fn coin_type_opt(&self) -> Option<&crate::TypeTag> {
@@ -435,38 +530,6 @@ impl StructTag {
     pub fn coin_type(&self) -> &TypeTag {
         self.coin_type_opt().expect("not a coin")
     }
-
-    pub fn iota() -> Self {
-        Self {
-            address: Address::FRAMEWORK,
-            module: IdentifierRef::const_new("iota").into(),
-            name: IdentifierRef::const_new("IOTA").into(),
-            type_params: vec![],
-        }
-    }
-
-    pub fn gas_coin() -> Self {
-        Self::coin(Self::iota())
-    }
-
-    pub fn staked_iota() -> Self {
-        Self {
-            address: Address::SYSTEM,
-            module: IdentifierRef::const_new("staking_pool").into(),
-            name: IdentifierRef::const_new("StakedIota").into(),
-            type_params: vec![],
-        }
-    }
-
-    pub fn timelocked_staked_iota() -> Self {
-        Self {
-            address: Address::SYSTEM,
-            module: IdentifierRef::const_new("timelocked_staking").into(),
-            name: IdentifierRef::const_new("TimelockedStakedIota").into(),
-            type_params: vec![],
-        }
-    }
-
     pub fn address(&self) -> Address {
         self.address
     }
