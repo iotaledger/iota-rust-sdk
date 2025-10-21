@@ -263,27 +263,6 @@ impl SignatureScheme {
     }
 }
 
-impl Ed25519PublicKey {
-    /// Return the flag for this signature scheme
-    pub fn scheme(&self) -> SignatureScheme {
-        SignatureScheme::Ed25519
-    }
-}
-
-impl Secp256k1PublicKey {
-    /// Return the flag for this signature scheme
-    pub fn scheme(&self) -> SignatureScheme {
-        SignatureScheme::Secp256k1
-    }
-}
-
-impl Secp256r1PublicKey {
-    /// Return the flag for this signature scheme
-    pub fn scheme(&self) -> SignatureScheme {
-        SignatureScheme::Secp256r1
-    }
-}
-
 impl super::ZkLoginPublicIdentifier {
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {

@@ -4,6 +4,8 @@
 
 //! Implementation of ed25519 public-key cryptogrophy.
 
+use crate::crypto::{PublicKeyExt, SignatureScheme};
+
 /// An ed25519 public key.
 ///
 /// # BCS
@@ -56,22 +58,22 @@ impl Ed25519PublicKey {
     pub const fn inner(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
+}
 
-    pub const fn as_bytes(&self) -> &[u8] {
+impl PublicKeyExt for Ed25519PublicKey {
+    // Returns the public key as bytes.
+    fn as_bytes(&self) -> &[u8] {
         &self.0
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
+    /// Tries to create an Ed25519PublicKey from bytes.
+    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 
-    /// Returns the bytes with signature scheme flag prepended
-    pub fn to_flagged_bytes(&self) -> Vec<u8> {
-        let key_bytes = self.as_bytes();
-        let mut bytes = Vec::with_capacity(1 + key_bytes.len());
-        bytes.push(self.scheme().to_u8());
-        bytes.extend_from_slice(key_bytes);
-        bytes
+    /// Returns the flag for this signature scheme.
+    fn scheme(&self) -> SignatureScheme {
+        SignatureScheme::Ed25519
     }
 }
 

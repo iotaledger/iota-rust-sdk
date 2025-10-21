@@ -4,7 +4,7 @@
 
 use blake2::Digest as DigestTrait;
 
-use crate::{Address, Digest};
+use crate::{Address, Digest, PublicKeyExt};
 
 type Blake2b256 = blake2::Blake2b<blake2::digest::consts::U32>;
 

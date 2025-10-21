@@ -151,3 +151,23 @@ impl_base64_helper!(Base64Array34, Base64Display34, Base64FromStr34, test34, 34)
 impl_base64_helper!(Base64Array48, Base64Display48, Base64FromStr48, test48, 48);
 impl_base64_helper!(Base64Array64, Base64Display64, Base64FromStr64, test64, 64);
 impl_base64_helper!(Base64Array96, Base64Display96, Base64FromStr96, test96, 96);
+
+pub trait PublicKeyExt: Sized {
+    // Returns the public key as bytes.
+    fn as_bytes(&self) -> &[u8];
+
+    /// Tries to create a PublicKey from bytes.
+    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError>;
+
+    /// Returns the flag for this signature scheme.
+    fn scheme(&self) -> SignatureScheme;
+
+    /// Returns the bytes with signature scheme flag prepended
+    fn to_flagged_bytes(&self) -> Vec<u8> {
+        let key_bytes = self.as_bytes();
+        let mut bytes = Vec::with_capacity(1 + key_bytes.len());
+        bytes.push(self.scheme().to_u8());
+        bytes.extend_from_slice(key_bytes);
+        bytes
+    }
+}

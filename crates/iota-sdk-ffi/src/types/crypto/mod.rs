@@ -7,7 +7,7 @@ pub mod zklogin;
 
 use std::sync::Arc;
 
-use iota_types::SignatureScheme;
+use iota_types::{PublicKeyExt, SignatureScheme};
 
 use crate::{
     error::Result,
