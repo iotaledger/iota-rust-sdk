@@ -111,7 +111,7 @@ The Transaction Builder supports executing via a [Gas Station](https://github.co
 
 By default the request will contain the header `Content-Type: application/json` When this data has been set, calling [execute](transaction_builder::TransactionBuilder::execute) will request gas from and send the resulting transaction to this endpoint instead of using the GraphQL client.
 
-### Supported languages
+## Supported languages
 
 - [Go](../../bindings/go)
 - [Kotlin](../../bindings/kotlin)
