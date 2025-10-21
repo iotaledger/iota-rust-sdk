@@ -3,4 +3,5 @@ resolver = "2"
 members = ["crates/*"]
 
 [workspace.dependencies]
+base64ct = "1.6.0"
 bcs = "0.1.6"

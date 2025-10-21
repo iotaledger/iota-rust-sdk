@@ -57,7 +57,7 @@ iota-transaction-builder = { path = "../iota-transaction-builder", optional = tr
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["rand"], optional = true }
 
 [dev-dependencies]
-base64ct = { version = "1.6.0", features = ["alloc", "std"] }
+base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 cynic = "3.7.3"
 eyre = "0.6"

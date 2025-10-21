@@ -7,7 +7,7 @@ license = "Apache-2.0"
 description = "Transaction API for the IOTA Blockchain Rust SDK"
 
 [dependencies]
-base64ct = { version = "1.6", features = ["std"] }
+base64ct = { workspace = true, features = ["std"] }
 bcs.workspace = true
 derive_more = { version = "2.0", features = ["from"] }
 iota-crypto = { package = "iota-crypto", path = "../iota-crypto", features = ["ed25519"] }

@@ -9,7 +9,7 @@ repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "GraphQL RPC Client for the IOTA Blockchain"
 
 [dependencies]
-base64ct = { version = "1.6.0", features = ["alloc", "std"] }
+base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 chrono = "0.4.26"
 cynic = "3.7.3"
