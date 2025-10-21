@@ -87,12 +87,12 @@ impl Ed25519PublicKey {
         self.0.derive_address().into()
     }
 
-    /// Return the flag for this signature scheme
+    /// Returns the signature scheme for this public key.
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
     }
 
-    /// Returns the bytes with signature scheme flag prepended
+    /// Returns the bytes with signature scheme flag prepended.
     pub fn to_flagged_bytes(&self) -> Vec<u8> {
         self.0.to_flagged_bytes()
     }
@@ -124,12 +124,12 @@ impl Secp256k1PublicKey {
         self.0.derive_address().into()
     }
 
-    /// Return the flag for this signature scheme
+    /// Returns the signature scheme for this public key.
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
     }
 
-    /// Returns the bytes with signature scheme flag prepended
+    /// Returns the bytes with signature scheme flag prepended.
     pub fn to_flagged_bytes(&self) -> Vec<u8> {
         self.0.to_flagged_bytes()
     }
@@ -161,7 +161,7 @@ impl Secp256r1PublicKey {
         self.0.derive_address().into()
     }
 
-    /// Return the flag for this signature scheme
+    /// Returns the signature scheme for this public key.
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
     }
