@@ -60,9 +60,9 @@ iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features 
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 cynic = "3.7.3"
-eyre = "0.6"
+eyre.workspace = true
 hex.workspace = true
-rand = "0.8.5"
+rand.workspace = true
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
 serde_json = { version = "1.0.95" }
 tokio = { version = "1.40.0", features = ["full"] }

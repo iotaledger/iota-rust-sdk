@@ -54,9 +54,9 @@ winnow = "0.7"
 # Serialization and Deserialization support
 bcs = { workspace = true, optional = true }
 itertools = { version = "0.13.0", optional = true }
-serde = { version = "1.0.210", optional = true }
+serde = { workspace = true, optional = true }
 serde_derive = { version = "1.0.210", optional = true }
-serde_json = { version = "1.0.128", optional = true }
+serde_json = { workspace = true, optional = true }
 serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
 
 # JsonSchema definitions for types, useful for generating an OpenAPI Specificaiton.
@@ -77,7 +77,7 @@ bcs.workspace = true
 jsonschema = { version = "0.20", default-features = false }
 num-bigint = "0.4.6"
 paste = "1.0.15"
-serde_json = "1.0.128"
+serde_json.workspace = true
 
 [target.wasm32-unknown-unknown.dev-dependencies]
 wasm-bindgen-test = "0.3"

@@ -7,10 +7,11 @@ edition = "2021"
 
 [dependencies]
 bcs.workspace = true
-eyre = "0.6"
+eyre.workspace = true
 fastcrypto = { git = "https://github.com/MystenLabs/fastcrypto", rev = "5f2c63266a065996d53f98156f0412782b468597" }
 futures = "0.3.28"
+tokio = "1.39.2"
+
 iota-json-rpc-types = { path = "../../../../../../../iota/crates/iota-json-rpc-types" }
 iota-types = { path = "../../../../../../../iota/crates/iota-types" }
 test-cluster = { path = "../../../../../../../iota/crates/test-cluster" }
-tokio = "1.39.2"

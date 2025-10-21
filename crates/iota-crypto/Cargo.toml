@@ -84,9 +84,9 @@ ark-std = { version = "0.4.0", optional = true }
 base64ct = { workspace = true, features = ["alloc"], optional = true }
 bnum = { version = "0.12.0", optional = true }
 itertools = { version = "0.13.0", optional = true }
-serde = { version = "1.0.210", optional = true }
+serde = { workspace = true, optional = true }
 serde_derive = { version = "1.0.210", optional = true }
-serde_json = { version = "1.0.128", optional = true }
+serde_json = { workspace = true, optional = true }
 
 # pkcs8 der and pem support
 pem-rfc7468 = { version = "0.7", optional = true, features = ["std"] }
@@ -102,8 +102,8 @@ bech32 = { version = "0.11.0", optional = true }
 [dev-dependencies]
 bcs.workspace = true
 hex.workspace = true
-rand = "0.8.5"
-serde_json = { version = "1.0.128" }
+rand.workspace = true
+serde_json.workspace = true
 
 # proptest support in tests
 iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = ["proptest"] }
