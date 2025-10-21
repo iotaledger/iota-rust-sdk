@@ -159,7 +159,7 @@ pub trait PublicKeyExt: Sized {
     /// Tries to create a PublicKey from bytes.
     fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError>;
 
-    /// Returns the flag for this signature scheme.
+    /// Returns the signature scheme for this public key.
     fn scheme(&self) -> SignatureScheme;
 
     /// Returns the bytes with signature scheme flag prepended

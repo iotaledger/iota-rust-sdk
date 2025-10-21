@@ -73,7 +73,7 @@ impl PublicKeyExt for Secp256r1PublicKey {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
     }
 
-    /// Returns the flag for this signature scheme.
+    /// Returns the signature scheme for this public key.
     fn scheme(&self) -> SignatureScheme {
         SignatureScheme::Secp256r1
     }
