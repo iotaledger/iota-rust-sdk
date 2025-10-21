@@ -4329,6 +4329,11 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(void* ptr, void* obje
 void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(void* ptr, uint64_t budget, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_GAS_COINS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_GAS_COINS
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins(void* ptr, RustBuffer object_ids, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_GAS_PRICE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_GAS_PRICE
 void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(void* ptr, uint64_t price, RustCallStatus *out_status
@@ -7874,6 +7879,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_GAS_BUDGET
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_GAS_BUDGET
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_GAS_COINS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_GAS_COINS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins(void
     
 );
 #endif

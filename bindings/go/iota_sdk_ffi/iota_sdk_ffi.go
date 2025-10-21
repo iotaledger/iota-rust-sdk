@@ -1217,7 +1217,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status()
 	})
-	if checksum != 31173 {
+	if checksum != 48258 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status: UniFFI API checksum mismatch")
 	}
@@ -1316,7 +1316,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint()
 	})
-	if checksum != 11584 {
+	if checksum != 9094 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint: UniFFI API checksum mismatch")
 	}
@@ -1325,7 +1325,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints()
 	})
-	if checksum != 44363 {
+	if checksum != 36867 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints: UniFFI API checksum mismatch")
 	}
@@ -1352,7 +1352,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx()
 	})
-	if checksum != 63702 {
+	if checksum != 7552 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx: UniFFI API checksum mismatch")
 	}
@@ -1361,7 +1361,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind()
 	})
-	if checksum != 1733 {
+	if checksum != 37663 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind: UniFFI API checksum mismatch")
 	}
@@ -1370,7 +1370,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field()
 	})
-	if checksum != 17199 {
+	if checksum != 28380 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field: UniFFI API checksum mismatch")
 	}
@@ -1379,7 +1379,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields()
 	})
-	if checksum != 6963 {
+	if checksum != 14745 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields: UniFFI API checksum mismatch")
 	}
@@ -1388,7 +1388,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field()
 	})
-	if checksum != 47284 {
+	if checksum != 28336 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field: UniFFI API checksum mismatch")
 	}
@@ -1532,7 +1532,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object()
 	})
-	if checksum != 51508 {
+	if checksum != 27424 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object: UniFFI API checksum mismatch")
 	}
@@ -1541,7 +1541,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs()
 	})
-	if checksum != 1970 {
+	if checksum != 29653 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs: UniFFI API checksum mismatch")
 	}
@@ -1550,7 +1550,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects()
 	})
-	if checksum != 14004 {
+	if checksum != 64679 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects: UniFFI API checksum mismatch")
 	}
@@ -2000,7 +2000,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address()
 	})
-	if checksum != 12725 {
+	if checksum != 26282 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address: UniFFI API checksum mismatch")
 	}
@@ -2711,7 +2711,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data()
 	})
-	if checksum != 55474 {
+	if checksum != 36642 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data: UniFFI API checksum mismatch")
 	}
@@ -2729,7 +2729,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json()
 	})
-	if checksum != 20272 {
+	if checksum != 26196 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json: UniFFI API checksum mismatch")
 	}
@@ -3758,6 +3758,15 @@ func uniffiCheckChecksums() {
 	if checksum != 48686 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins()
+	})
+	if checksum != 13036 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5339,7 +5348,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new()
 	})
-	if checksum != 13557 {
+	if checksum != 4619 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new: UniFFI API checksum mismatch")
 	}
@@ -7607,43 +7616,30 @@ func (ffiObject *FfiObject)freeRustArcPtr() {
 // is a valid IOTA address:
 // `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
 //
-// ```
-// use iota_types::Address;
-//
-// let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
-// let address = Address::from_hex(hex).unwrap();
-// println!("Address: {}", address);
-// assert_eq!(hex, address.to_string());
-// ```
-//
 // # Deriving an Address
 //
 // Addresses are cryptographically derived from a number of user account
 // authenticators, the simplest of which is an
-// [`Ed25519PublicKey`](iota_types::Ed25519PublicKey).
+// `Ed25519PublicKey`.
 //
 // Deriving an address consists of the Blake2b256 hash of the sequence of bytes
 // of its corresponding authenticator, prefixed with a domain-separator (except
 // ed25519, for compatibility reasons). For each other authenticator, this
 // domain-separator is the single byte-value of its
-// [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
-// schema flag || authenticator bytes)`.
+// `SignatureScheme` flag. E.g. `hash(signature schema flag || authenticator
+// bytes)`.
 //
 // Each authenticator has a method for deriving its `Address` as well as
 // documentation for the specifics of how the derivation is done. See
-// [`Ed25519PublicKey::derive_address`] for an example.
-//
-// [`Ed25519PublicKey::derive_address`]: iota_types::Ed25519PublicKey::derive_address
+// `Ed25519PublicKey::derive_address` for an example.
 //
 // ## Relationship to ObjectIds
 //
-// [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but
+// `ObjectId`s and `Address`es share the same 32-byte addressable space but
 // are derived leveraging different domain-separator values to ensure that,
 // cryptographically, there won't be any overlap, e.g. there can't be a
 // valid `Object` who's `ObjectId` is equal to that of the `Address` of a user
 // account.
-//
-// [`ObjectId`]: iota_types::ObjectId
 //
 // # BCS
 //
@@ -7664,43 +7660,30 @@ type AddressInterface interface {
 // is a valid IOTA address:
 // `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
 //
-// ```
-// use iota_types::Address;
-//
-// let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
-// let address = Address::from_hex(hex).unwrap();
-// println!("Address: {}", address);
-// assert_eq!(hex, address.to_string());
-// ```
-//
 // # Deriving an Address
 //
 // Addresses are cryptographically derived from a number of user account
 // authenticators, the simplest of which is an
-// [`Ed25519PublicKey`](iota_types::Ed25519PublicKey).
+// `Ed25519PublicKey`.
 //
 // Deriving an address consists of the Blake2b256 hash of the sequence of bytes
 // of its corresponding authenticator, prefixed with a domain-separator (except
 // ed25519, for compatibility reasons). For each other authenticator, this
 // domain-separator is the single byte-value of its
-// [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
-// schema flag || authenticator bytes)`.
+// `SignatureScheme` flag. E.g. `hash(signature schema flag || authenticator
+// bytes)`.
 //
 // Each authenticator has a method for deriving its `Address` as well as
 // documentation for the specifics of how the derivation is done. See
-// [`Ed25519PublicKey::derive_address`] for an example.
-//
-// [`Ed25519PublicKey::derive_address`]: iota_types::Ed25519PublicKey::derive_address
+// `Ed25519PublicKey::derive_address` for an example.
 //
 // ## Relationship to ObjectIds
 //
-// [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but
+// `ObjectId`s and `Address`es share the same 32-byte addressable space but
 // are derived leveraging different domain-separator values to ensure that,
 // cryptographically, there won't be any overlap, e.g. there can't be a
 // valid `Object` who's `ObjectId` is equal to that of the `Address` of a user
 // account.
-//
-// [`ObjectId`]: iota_types::ObjectId
 //
 // # BCS
 //
@@ -11895,14 +11878,14 @@ type FaucetClientInterface interface {
 	RequestAndWait(address *Address) (*FaucetReceipt, error)
 	// Check the faucet request status.
 	//
-	// Possible statuses are defined in: [`BatchSendStatusType`]
+	// Possible statuses are defined in: `BatchSendStatusType`
 	RequestStatus(id string) (*BatchSendStatus, error)
 }
 type FaucetClient struct {
 	ffiObject FfiObject
 }
 // Construct a new `FaucetClient` with the given faucet service URL. This
-// [`FaucetClient`] expects that the service provides two endpoints:
+// `FaucetClient` expects that the service provides two endpoints:
 // /v1/gas and /v1/status. As such, do not provide the request
 // endpoint, just the top level service endpoint.
 //
@@ -12012,7 +11995,7 @@ func (_self *FaucetClient) RequestAndWait(address *Address) (*FaucetReceipt, err
 
 // Check the faucet request status.
 //
-// Possible statuses are defined in: [`BatchSendStatusType`]
+// Possible statuses are defined in: `BatchSendStatusType`
 func (_self *FaucetClient) RequestStatus(id string) (*BatchSendStatus, error) {
 	_pointer := _self.ffiObject.incrementPointer("*FaucetClient")
 	defer _self.ffiObject.decrementPointer()
@@ -12353,11 +12336,11 @@ type GraphQlClientInterface interface {
 	Balance(address *Address, coinType *string) (*uint64, error)
 	// Get the chain identifier.
 	ChainId() (string, error)
-	// Get the [`CheckpointSummary`] for a given checkpoint digest or
+	// Get the `CheckpointSummary` for a given checkpoint digest or
 	// checkpoint id. If none is provided, it will use the last known
 	// checkpoint id.
 	Checkpoint(digest **Digest, seqNum *uint64) (**CheckpointSummary, error)
-	// Get a page of [`CheckpointSummary`] for the provided parameters.
+	// Get a page of `CheckpointSummary` for the provided parameters.
 	Checkpoints(paginationFilter *PaginationFilter) (CheckpointSummaryPage, error)
 	// Get the coin metadata for the coin type.
 	CoinMetadata(coinType string) (*CoinMetadata, error)
@@ -12366,7 +12349,7 @@ type GraphQlClientInterface interface {
 	// If `coin_type` is not provided, all coins will be returned. For IOTA
 	// coins, pass in the coin type: `0x2::iota::IOTA`.
 	Coins(owner *Address, paginationFilter *PaginationFilter, coinType **StructTag) (CoinPage, error)
-	// Dry run a [`Transaction`] and return the transaction effects and dry run
+	// Dry run a `Transaction` and return the transaction effects and dry run
 	// error (if any).
 	//
 	// `skipChecks` optional flag disables the usual verification checks that
@@ -12374,7 +12357,7 @@ type GraphQlClientInterface interface {
 	// sender, and calling non-public, non-entry functions, and some other
 	// checks. Defaults to false.
 	DryRunTx(tx *Transaction, skipChecks bool) (DryRunResult, error)
-	// Dry run a [`TransactionKind`] and return the transaction effects and dry
+	// Dry run a `TransactionKind` and return the transaction effects and dry
 	// run error (if any).
 	//
 	// `skipChecks` optional flag disables the usual verification checks that
@@ -12390,7 +12373,7 @@ type GraphQlClientInterface interface {
 	//
 	// The `name` argument is a json serialized type.
 	//
-	// This returns [`DynamicFieldOutput`] which contains the name, the value
+	// This returns `DynamicFieldOutput` which contains the name, the value
 	// as json, and object.
 	//
 	// # Example
@@ -12408,7 +12391,7 @@ type GraphQlClientInterface interface {
 	// Get a page of dynamic fields for the provided address. Note that this
 	// will also fetch dynamic fields on wrapped objects.
 	//
-	// This returns [`Page`] of [`DynamicFieldOutput`]s.
+	// This returns a page of `DynamicFieldOutput`s.
 	DynamicFields(address *Address, paginationFilter *PaginationFilter) (DynamicFieldOutputPage, error)
 	// Access a dynamic object field on an object using its name. Names are
 	// arbitrary Move values whose type have copy, drop, and store, and are
@@ -12416,7 +12399,7 @@ type GraphQlClientInterface interface {
 	//
 	// The `name` argument is a json serialized type.
 	//
-	// This returns [`DynamicFieldOutput`] which contains the name, the value
+	// This returns `DynamicFieldOutput` which contains the name, the value
 	// as json, and object.
 	DynamicObjectField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error)
 	// Return the epoch information for the provided epoch. If no epoch is
@@ -12465,18 +12448,18 @@ type GraphQlClientInterface interface {
 	NormalizedMoveFunction(varPackage *Address, module string, function string, version *uint64) (**MoveFunction, error)
 	// Return the normalized Move module data for the provided module.
 	NormalizedMoveModule(varPackage *Address, module string, version *uint64, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error)
-	// Return an object based on the provided [`Address`].
+	// Return an object based on the provided `Address`.
 	//
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
 	Object(objectId *ObjectId, version *uint64) (**Object, error)
-	// Return the object's bcs content [`Vec<u8>`] based on the provided
-	// [`Address`].
+	// Return the object's bcs content `Vec<u8>` based on the provided
+	// `Address`.
 	ObjectBcs(objectId *ObjectId) (*[]byte, error)
 	// Return a page of objects based on the provided parameters.
 	//
-	// Use this function together with the [`ObjectFilter::owner`] to get the
+	// Use this function together with the `ObjectFilter::owner` to get the
 	// objects owned by an address.
 	//
 	// # Example
@@ -12712,7 +12695,7 @@ func (_self *GraphQlClient) ChainId() (string, error) {
 	return res, err 
 }
 
-// Get the [`CheckpointSummary`] for a given checkpoint digest or
+// Get the `CheckpointSummary` for a given checkpoint digest or
 // checkpoint id. If none is provided, it will use the last known
 // checkpoint id.
 func (_self *GraphQlClient) Checkpoint(digest **Digest, seqNum *uint64) (**CheckpointSummary, error) {
@@ -12746,7 +12729,7 @@ func (_self *GraphQlClient) Checkpoint(digest **Digest, seqNum *uint64) (**Check
 	return res, err 
 }
 
-// Get a page of [`CheckpointSummary`] for the provided parameters.
+// Get a page of `CheckpointSummary` for the provided parameters.
 func (_self *GraphQlClient) Checkpoints(paginationFilter *PaginationFilter) (CheckpointSummaryPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -12845,7 +12828,7 @@ func (_self *GraphQlClient) Coins(owner *Address, paginationFilter *PaginationFi
 	return res, err 
 }
 
-// Dry run a [`Transaction`] and return the transaction effects and dry run
+// Dry run a `Transaction` and return the transaction effects and dry run
 // error (if any).
 //
 // `skipChecks` optional flag disables the usual verification checks that
@@ -12883,7 +12866,7 @@ func (_self *GraphQlClient) DryRunTx(tx *Transaction, skipChecks bool) (DryRunRe
 	return res, err 
 }
 
-// Dry run a [`TransactionKind`] and return the transaction effects and dry
+// Dry run a `TransactionKind` and return the transaction effects and dry
 // run error (if any).
 //
 // `skipChecks` optional flag disables the usual verification checks that
@@ -12929,7 +12912,7 @@ func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta Transac
 //
 // The `name` argument is a json serialized type.
 //
-// This returns [`DynamicFieldOutput`] which contains the name, the value
+// This returns `DynamicFieldOutput` which contains the name, the value
 // as json, and object.
 //
 // # Example
@@ -12977,7 +12960,7 @@ func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, nam
 // Get a page of dynamic fields for the provided address. Note that this
 // will also fetch dynamic fields on wrapped objects.
 //
-// This returns [`Page`] of [`DynamicFieldOutput`]s.
+// This returns a page of `DynamicFieldOutput`s.
 func (_self *GraphQlClient) DynamicFields(address *Address, paginationFilter *PaginationFilter) (DynamicFieldOutputPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -13015,7 +12998,7 @@ func (_self *GraphQlClient) DynamicFields(address *Address, paginationFilter *Pa
 //
 // The `name` argument is a json serialized type.
 //
-// This returns [`DynamicFieldOutput`] which contains the name, the value
+// This returns `DynamicFieldOutput` which contains the name, the value
 // as json, and object.
 func (_self *GraphQlClient) DynamicObjectField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
@@ -13542,7 +13525,7 @@ func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module str
 	return res, err 
 }
 
-// Return an object based on the provided [`Address`].
+// Return an object based on the provided `Address`.
 //
 // If the object does not exist (e.g., due to pruning), this will return
 // `Ok(None)`. Similarly, if this is not an object but an address, it
@@ -13578,8 +13561,8 @@ func (_self *GraphQlClient) Object(objectId *ObjectId, version *uint64) (**Objec
 	return res, err 
 }
 
-// Return the object's bcs content [`Vec<u8>`] based on the provided
-// [`Address`].
+// Return the object's bcs content `Vec<u8>` based on the provided
+// `Address`.
 func (_self *GraphQlClient) ObjectBcs(objectId *ObjectId) (*[]byte, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -13613,7 +13596,7 @@ func (_self *GraphQlClient) ObjectBcs(objectId *ObjectId) (*[]byte, error) {
 
 // Return a page of objects based on the provided parameters.
 //
-// Use this function together with the [`ObjectFilter::owner`] to get the
+// Use this function together with the `ObjectFilter::owner` to get the
 // objects owned by an address.
 //
 // # Example
@@ -15666,7 +15649,7 @@ func (_ FfiDestroyerMovePackageData) Destroy(value *MovePackageData) {
 // ; roaring bitmaps
 // ```
 //
-// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 // serialized format of RoaringBitmaps.
 type MultisigAggregatedSignatureInterface interface {
 	// The bitmap that indicates which committee members provided their
@@ -15699,7 +15682,7 @@ type MultisigAggregatedSignatureInterface interface {
 // ; roaring bitmaps
 // ```
 //
-// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 // serialized format of RoaringBitmaps.
 type MultisigAggregatedSignature struct {
 	ffiObject FfiObject
@@ -15960,13 +15943,10 @@ type MultisigCommitteeInterface interface {
 	// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
 	// || ... || flag_n || pk_n || weight_n)`.
 	//
-	// When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+	// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
 	// refers to the same input used when deriving the address using the
-	// [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+	// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
 	// full 32-byte `address_seed` value).
-	//
-	// [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
-	// [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
 	DeriveAddress() *Address
 	// Checks if the Committee is valid.
 	//
@@ -16036,13 +16016,10 @@ func NewMultisigCommittee(members []*MultisigMember, threshold uint16) *Multisig
 // `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
 // || ... || flag_n || pk_n || weight_n)`.
 //
-// When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+// When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
 // refers to the same input used when deriving the address using the
-// [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+// `ZkLoginPublicIdentifier::derive_address_padded` method (using the
 // full 32-byte `address_seed` value).
-//
-// [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
-// [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
 func (_self *MultisigCommittee) DeriveAddress() *Address {
 	_pointer := _self.ffiObject.incrementPointer("*MultisigCommittee")
 	defer _self.ffiObject.decrementPointer()
@@ -17521,7 +17498,7 @@ func (_ FfiDestroyerObjectData) Destroy(value *ObjectData) {
 //
 // ## Relationship to Address
 //
-// [`Address`]es and [`ObjectId`]s share the same 32-byte addressable space but
+// `Address`es and `ObjectId`s share the same 32-byte addressable space but
 // are derived leveraging different domain-separator values to ensure,
 // cryptographically, that there won't be any overlap, e.g. there can't be a
 // valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
@@ -17548,7 +17525,7 @@ type ObjectIdInterface interface {
 //
 // ## Relationship to Address
 //
-// [`Address`]es and [`ObjectId`]s share the same 32-byte addressable space but
+// `Address`es and `ObjectId`s share the same 32-byte addressable space but
 // are derived leveraging different domain-separator values to ensure,
 // cryptographically, that there won't be any overlap, e.g. there can't be a
 // valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
@@ -18442,7 +18419,7 @@ func (_ FfiDestroyerPtbArgument) Destroy(value *PtbArgument) {
 // client-data-json = string ; valid json
 // ```
 //
-// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
 // the required json-schema for the `client-data-json` rule. In addition, IOTA
 // currently requires that the `CollectedClientData.type` field is required to
 // be `webauthn.get`.
@@ -18455,8 +18432,8 @@ func (_ FfiDestroyerPtbArgument) Destroy(value *PtbArgument) {
 type PasskeyAuthenticatorInterface interface {
 	// Opaque authenticator data for this passkey signature.
 	//
-	// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-	// more information on this field.
+	// See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
+	// for more information on this field.
 	AuthenticatorData() []byte
 	// The parsed challenge message for this passkey signature.
 	//
@@ -18465,7 +18442,7 @@ type PasskeyAuthenticatorInterface interface {
 	Challenge() []byte
 	// Structured, unparsed, JSON for this passkey signature.
 	//
-	// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
+	// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
 	// for more information on this field.
 	ClientDataJson() string
 	// The passkey public key
@@ -18490,7 +18467,7 @@ type PasskeyAuthenticatorInterface interface {
 // client-data-json = string ; valid json
 // ```
 //
-// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
 // the required json-schema for the `client-data-json` rule. In addition, IOTA
 // currently requires that the `CollectedClientData.type` field is required to
 // be `webauthn.get`.
@@ -18509,8 +18486,8 @@ type PasskeyAuthenticator struct {
 
 // Opaque authenticator data for this passkey signature.
 //
-// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-// more information on this field.
+// See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
+// for more information on this field.
 func (_self *PasskeyAuthenticator) AuthenticatorData() []byte {
 	_pointer := _self.ffiObject.incrementPointer("*PasskeyAuthenticator")
 	defer _self.ffiObject.decrementPointer()
@@ -18539,7 +18516,7 @@ func (_self *PasskeyAuthenticator) Challenge() []byte {
 
 // Structured, unparsed, JSON for this passkey signature.
 //
-// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
+// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
 // for more information on this field.
 func (_self *PasskeyAuthenticator) ClientDataJson() string {
 	_pointer := _self.ffiObject.incrementPointer("*PasskeyAuthenticator")
@@ -22262,8 +22239,8 @@ func (_ FfiDestroyerTransaction) Destroy(value *Transaction) {
 
 
 
-// A builder for creating transactions. Use [`finish`](Self::finish) to
-// finalize the transaction data.
+// A builder for creating transactions. Use `finish` to finalize the
+// transaction data.
 type TransactionBuilderInterface interface {
 	// Dry run the transaction.
 	DryRun(skipChecks bool) (DryRunResult, error)
@@ -22279,6 +22256,8 @@ type TransactionBuilderInterface interface {
 	Gas(objectId *ObjectId) *TransactionBuilder
 	// Set the gas budget for the transaction.
 	GasBudget(budget uint64) *TransactionBuilder
+	// Add gas objects to pay for the transaction.
+	GasCoins(objectIds []*ObjectId) *TransactionBuilder
 	// Set the gas price for the transaction.
 	GasPrice(price uint64) *TransactionBuilder
 	// Set the gas station sponsor.
@@ -22329,8 +22308,8 @@ type TransactionBuilderInterface interface {
 	// ID, the upgrade policy, and package digest.
 	Upgrade(packageData *MovePackageData, varPackage *ObjectId, ticket *PtbArgument, name *string) *TransactionBuilder
 }
-// A builder for creating transactions. Use [`finish`](Self::finish) to
-// finalize the transaction data.
+// A builder for creating transactions. Use `finish` to finalize the
+// transaction data.
 type TransactionBuilder struct {
 	ffiObject FfiObject
 }
@@ -22518,6 +22497,16 @@ func (_self *TransactionBuilder) GasBudget(budget uint64) *TransactionBuilder {
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
 		_pointer,FfiConverterUint64INSTANCE.Lower(budget),_uniffiStatus)
+	}))
+}
+
+// Add gas objects to pay for the transaction.
+func (_self *TransactionBuilder) GasCoins(objectIds []*ObjectId) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins(
+		_pointer,FfiConverterSequenceObjectIdINSTANCE.Lower(objectIds),_uniffiStatus)
 	}))
 }
 
@@ -24416,7 +24405,7 @@ func (_ FfiDestroyerUserSignatureVerifier) Destroy(value *UserSignatureVerifier)
 // ; roaring bitmaps
 // ```
 //
-// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 // serialized format of RoaringBitmaps.
 type ValidatorAggregatedSignatureInterface interface {
 	BitmapBytes() ([]byte, error)
@@ -24438,7 +24427,7 @@ type ValidatorAggregatedSignatureInterface interface {
 // ; roaring bitmaps
 // ```
 //
-// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 // serialized format of RoaringBitmaps.
 type ValidatorAggregatedSignature struct {
 	ffiObject FfiObject
@@ -25529,7 +25518,7 @@ func (_ FfiDestroyerZkLoginProof) Destroy(value *ZkLoginProof) {
 //
 // A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
 // account authenticators, and contains the information required to derive the
-// onchain account [`Address`] for a Zklogin authenticator.
+// onchain account `Address` for a Zklogin authenticator.
 //
 // ## Note
 //
@@ -25575,8 +25564,6 @@ func (_ FfiDestroyerZkLoginProof) Destroy(value *ZkLoginProof) {
 // ; with any leading zero bytes stripped
 // address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
 // ```
-//
-// [`Address`]: crate::Address
 type ZkLoginPublicIdentifierInterface interface {
 	AddressSeed() *Bn254FieldElement
 	// Provides an iterator over the addresses that correspond to this zklogin
@@ -25608,7 +25595,7 @@ type ZkLoginPublicIdentifierInterface interface {
 //
 // A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
 // account authenticators, and contains the information required to derive the
-// onchain account [`Address`] for a Zklogin authenticator.
+// onchain account `Address` for a Zklogin authenticator.
 //
 // ## Note
 //
@@ -25654,8 +25641,6 @@ type ZkLoginPublicIdentifierInterface interface {
 // ; with any leading zero bytes stripped
 // address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
 // ```
-//
-// [`Address`]: crate::Address
 type ZkLoginPublicIdentifier struct {
 	ffiObject FfiObject
 }
