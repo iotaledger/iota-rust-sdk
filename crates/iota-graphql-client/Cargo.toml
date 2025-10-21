@@ -13,7 +13,7 @@ base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 chrono = "0.4.26"
 cynic = "3.7.3"
-derive_more = { version = "2.0", features = ["from"] }
+derive_more = { workspace = true, features = ["from"] }
 eyre = "0.6"
 futures = "0.3.29"
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde"] }
