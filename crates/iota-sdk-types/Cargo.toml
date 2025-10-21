@@ -42,20 +42,20 @@ proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 [dependencies]
 anyhow = "1.0"
 base64ct = { workspace = true, features = ["alloc"] }
-bnum = "0.12.0"
+bnum.workspace = true
 bs58 = "0.5.1"
 derive_more = { workspace = true, features = ["display"] }
 hex.workspace = true
-paste = "1.0"
-roaring = { version = "0.11.2", default-features = false }
-thiserror = "2.0"
+paste.workspace = true
+roaring.workspace = true
+thiserror.workspace = true
 winnow = "0.7"
 
 # Serialization and Deserialization support
 bcs = { workspace = true, optional = true }
-itertools = { version = "0.13.0", optional = true }
+itertools = { workspace = true, optional = true }
 serde = { workspace = true, optional = true }
-serde_derive = { version = "1.0.210", optional = true }
+serde_derive = { workspace = true, optional = true }
 serde_json = { workspace = true, optional = true }
 serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
 
@@ -63,20 +63,20 @@ serde_with = { version = "3.9", default-features = false, features = ["alloc"], 
 schemars = { version = "0.8.21", optional = true }
 
 # RNG support
-rand_core = { version = "0.6.4", optional = true }
+rand_core = { workspace = true, optional = true }
 
 # Hash support
 blake2 = { version = "0.10.6", optional = true }
 
 # proptest support
-proptest = { version = "1.6.0", default-features = false, features = ["std"], optional = true }
-test-strategy = { version = "0.4", optional = true }
+proptest = { workspace = true, default-features = false, features = ["std"], optional = true }
+test-strategy = { workspace = true, optional = true }
 
 [dev-dependencies]
 bcs.workspace = true
 jsonschema = { version = "0.20", default-features = false }
 num-bigint = "0.4.6"
-paste = "1.0.15"
+paste.workspace = true
 serde_json.workspace = true
 
 [target.wasm32-unknown-unknown.dev-dependencies]

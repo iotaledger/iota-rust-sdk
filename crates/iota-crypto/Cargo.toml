@@ -58,10 +58,10 @@ bls12381 = ["dep:blst", "dep:rand_core", "dep:roaring", "signature/std"]
 [dependencies]
 iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
 signature = "2.2"
-thiserror = "2.0"
+thiserror.workspace = true
 
 # RNG support
-rand_core = { version = "0.6.4", optional = true }
+rand_core = { workspace = true, optional = true }
 
 # ed25519 support
 ed25519-dalek = { version = "2.1.1", optional = true }
@@ -82,10 +82,10 @@ ark-groth16 = { version = "0.4.0", default-features = false, optional = true }
 ark-snark = { version = "0.4.0", optional = true }
 ark-std = { version = "0.4.0", optional = true }
 base64ct = { workspace = true, features = ["alloc"], optional = true }
-bnum = { version = "0.12.0", optional = true }
-itertools = { version = "0.13.0", optional = true }
+bnum = { workspace = true, optional = true }
+itertools = { workspace = true, optional = true }
 serde = { workspace = true, optional = true }
-serde_derive = { version = "1.0.210", optional = true }
+serde_derive = { workspace = true, optional = true }
 serde_json = { workspace = true, optional = true }
 
 # pkcs8 der and pem support
@@ -94,7 +94,7 @@ pkcs8 = { version = "0.10", optional = true, features = ["std"] }
 
 # bls12381 support
 blst = { version = "0.3.13", optional = true }
-roaring = { version = "0.11.2", optional = true }
+roaring = { workspace = true, optional = true }
 
 # bech32 encoding support
 bech32 = { version = "0.11.0", optional = true }
@@ -107,8 +107,8 @@ serde_json.workspace = true
 
 # proptest support in tests
 iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = ["proptest"] }
-proptest = { version = "1.6.0", default-features = false, features = ["std"] }
-test-strategy = "0.4.0"
+proptest = { workspace = true, default-features = false, features = ["std"] }
+test-strategy.workspace = true
 
 [target.wasm32-unknown-unknown.dev-dependencies]
 wasm-bindgen-test = "0.3"

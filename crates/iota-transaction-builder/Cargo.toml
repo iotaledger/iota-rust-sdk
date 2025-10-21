@@ -11,10 +11,10 @@ base64ct = { workspace = true, features = ["std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 primitive-types.workspace = true
-reqwest = "0.12"
-serde = "1.0"
+reqwest.workspace = true
+serde.workspace = true
 serde_json.workspace = true
-thiserror = "2.0"
+thiserror.workspace = true
 variadics_please = "1.1"
 
 iota-crypto = { package = "iota-crypto", path = "../iota-crypto", features = ["ed25519"] }
@@ -23,10 +23,10 @@ iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features 
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.2", features = ["js"] }
-tokio = { version = "1.0", features = ["macros", "rt"] }
+tokio = { workspace = true, features = ["macros", "rt"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-tokio = { version = "1.0", features = ["full"] }
+tokio = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
 eyre.workspace = true
