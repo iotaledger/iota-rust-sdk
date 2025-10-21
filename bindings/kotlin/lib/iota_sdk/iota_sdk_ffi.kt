@@ -2454,6 +2454,14 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2634,6 +2642,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address(
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes(
 ): Short
@@ -3045,6 +3055,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple(
@@ -3088,6 +3100,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address(
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes(
 ): Short
@@ -3218,6 +3232,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish(
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price(
 ): Short
@@ -4392,6 +4408,8 @@ fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme(`ptr`: Pointer,uniffi_
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ed25519signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5260,6 +5278,8 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme(`ptr`: Pointer,uniff
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_secp256k1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256k1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5353,6 +5373,8 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(`ptr`: Point
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5593,6 +5615,8 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(`ptr`: Pointer,
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(`ptr`: Pointer,`objectId`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(`ptr`: Pointer,`budget`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins(`ptr`: Pointer,`objectIds`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(`ptr`: Pointer,`price`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6357,10 +6381,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() != 37757.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 141.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 3041.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes() != 16656.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes() != 62359.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() != 31911.toShort()) {
@@ -6396,7 +6423,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 22484.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 31173.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 48258.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_data() != 26598.toShort()) {
@@ -6429,10 +6456,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_chain_id() != 45619.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint() != 11584.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint() != 9094.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 44363.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 36867.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872.toShort()) {
@@ -6441,19 +6468,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 47450.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 63702.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 7552.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 1733.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 37663.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 28380.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 6963.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 14745.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 47284.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 28336.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch() != 62805.toShort()) {
@@ -6501,13 +6528,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 51508.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 1970.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14004.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 64679.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913.toShort()) {
@@ -6657,7 +6684,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier() != 10820.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 12725.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 26282.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid() != 45468.toShort()) {
@@ -6894,13 +6921,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 6506.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 55474.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 36642.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_challenge() != 28147.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() != 20272.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() != 26196.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key() != 18555.toShort()) {
@@ -6972,10 +6999,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() != 48490.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 798.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 60874.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes() != 49170.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes() != 46673.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes() != 49705.toShort()) {
@@ -7038,10 +7068,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() != 27344.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 12227.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 48083.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() != 21066.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes() != 14205.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() != 64948.toShort()) {
@@ -7237,6 +7270,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() != 48686.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins() != 13036.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() != 7437.toShort()) {
@@ -7764,7 +7800,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() != 19098.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 13557.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 4619.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 41429.toShort()) {
@@ -8963,43 +8999,30 @@ public object FfiConverterDuration: FfiConverterRustBuffer<java.time.Duration> {
  * is a valid IOTA address:
  * `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
  *
- * ```
- * use iota_types::Address;
- *
- * let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
- * let address = Address::from_hex(hex).unwrap();
- * println!("Address: {}", address);
- * assert_eq!(hex, address.to_string());
- * ```
- *
  * # Deriving an Address
  *
  * Addresses are cryptographically derived from a number of user account
  * authenticators, the simplest of which is an
- * [`Ed25519PublicKey`](iota_types::Ed25519PublicKey).
+ * `Ed25519PublicKey`.
  *
  * Deriving an address consists of the Blake2b256 hash of the sequence of bytes
  * of its corresponding authenticator, prefixed with a domain-separator (except
  * ed25519, for compatibility reasons). For each other authenticator, this
  * domain-separator is the single byte-value of its
- * [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
- * schema flag || authenticator bytes)`.
+ * `SignatureScheme` flag. E.g. `hash(signature schema flag || authenticator
+ * bytes)`.
  *
  * Each authenticator has a method for deriving its `Address` as well as
  * documentation for the specifics of how the derivation is done. See
- * [`Ed25519PublicKey::derive_address`] for an example.
- *
- * [`Ed25519PublicKey::derive_address`]: iota_types::Ed25519PublicKey::derive_address
+ * `Ed25519PublicKey::derive_address` for an example.
  *
  * ## Relationship to ObjectIds
  *
- * [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but
+ * `ObjectId`s and `Address`es share the same 32-byte addressable space but
  * are derived leveraging different domain-separator values to ensure that,
  * cryptographically, there won't be any overlap, e.g. there can't be a
  * valid `Object` who's `ObjectId` is equal to that of the `Address` of a user
  * account.
- *
- * [`ObjectId`]: iota_types::ObjectId
  *
  * # BCS
  *
@@ -9027,43 +9050,30 @@ public interface AddressInterface {
  * is a valid IOTA address:
  * `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
  *
- * ```
- * use iota_types::Address;
- *
- * let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
- * let address = Address::from_hex(hex).unwrap();
- * println!("Address: {}", address);
- * assert_eq!(hex, address.to_string());
- * ```
- *
  * # Deriving an Address
  *
  * Addresses are cryptographically derived from a number of user account
  * authenticators, the simplest of which is an
- * [`Ed25519PublicKey`](iota_types::Ed25519PublicKey).
+ * `Ed25519PublicKey`.
  *
  * Deriving an address consists of the Blake2b256 hash of the sequence of bytes
  * of its corresponding authenticator, prefixed with a domain-separator (except
  * ed25519, for compatibility reasons). For each other authenticator, this
  * domain-separator is the single byte-value of its
- * [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
- * schema flag || authenticator bytes)`.
+ * `SignatureScheme` flag. E.g. `hash(signature schema flag || authenticator
+ * bytes)`.
  *
  * Each authenticator has a method for deriving its `Address` as well as
  * documentation for the specifics of how the derivation is done. See
- * [`Ed25519PublicKey::derive_address`] for an example.
- *
- * [`Ed25519PublicKey::derive_address`]: iota_types::Ed25519PublicKey::derive_address
+ * `Ed25519PublicKey::derive_address` for an example.
  *
  * ## Relationship to ObjectIds
  *
- * [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but
+ * `ObjectId`s and `Address`es share the same 32-byte addressable space but
  * are derived leveraging different domain-separator values to ensure that,
  * cryptographically, there won't be any overlap, e.g. there can't be a
  * valid `Object` who's `ObjectId` is equal to that of the `Address` of a user
  * account.
- *
- * [`ObjectId`]: iota_types::ObjectId
  *
  * # BCS
  *
@@ -16386,11 +16396,16 @@ public interface Ed25519PublicKeyInterface {
     fun `deriveAddress`(): Address
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */
     fun `scheme`(): SignatureScheme
     
     fun `toBytes`(): kotlin.ByteArray
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */
+    fun `toFlaggedBytes`(): kotlin.ByteArray
     
     companion object
 }
@@ -16510,7 +16525,7 @@ open class Ed25519PublicKey: Disposable, AutoCloseable, Ed25519PublicKeyInterfac
 
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */override fun `scheme`(): SignatureScheme {
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
@@ -16528,6 +16543,21 @@ open class Ed25519PublicKey: Disposable, AutoCloseable, Ed25519PublicKeyInterfac
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */override fun `toFlaggedBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -18765,7 +18795,7 @@ public interface FaucetClientInterface {
     /**
      * Check the faucet request status.
      *
-     * Possible statuses are defined in: [`BatchSendStatusType`]
+     * Possible statuses are defined in: `BatchSendStatusType`
      */
     suspend fun `requestStatus`(`id`: kotlin.String): BatchSendStatus?
     
@@ -18792,7 +18822,7 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
     }
     /**
      * Construct a new `FaucetClient` with the given faucet service URL. This
-     * [`FaucetClient`] expects that the service provides two endpoints:
+     * `FaucetClient` expects that the service provides two endpoints:
      * /v1/gas and /v1/status. As such, do not provide the request
      * endpoint, just the top level service endpoint.
      *
@@ -18930,7 +18960,7 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
     /**
      * Check the faucet request status.
      *
-     * Possible statuses are defined in: [`BatchSendStatusType`]
+     * Possible statuses are defined in: `BatchSendStatusType`
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -19758,14 +19788,14 @@ public interface GraphQlClientInterface {
     suspend fun `chainId`(): kotlin.String
     
     /**
-     * Get the [`CheckpointSummary`] for a given checkpoint digest or
+     * Get the `CheckpointSummary` for a given checkpoint digest or
      * checkpoint id. If none is provided, it will use the last known
      * checkpoint id.
      */
     suspend fun `checkpoint`(`digest`: Digest? = null, `seqNum`: kotlin.ULong? = null): CheckpointSummary?
     
     /**
-     * Get a page of [`CheckpointSummary`] for the provided parameters.
+     * Get a page of `CheckpointSummary` for the provided parameters.
      */
     suspend fun `checkpoints`(`paginationFilter`: PaginationFilter? = null): CheckpointSummaryPage
     
@@ -19783,7 +19813,7 @@ public interface GraphQlClientInterface {
     suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter? = null, `coinType`: StructTag? = null): CoinPage
     
     /**
-     * Dry run a [`Transaction`] and return the transaction effects and dry run
+     * Dry run a `Transaction` and return the transaction effects and dry run
      * error (if any).
      *
      * `skipChecks` optional flag disables the usual verification checks that
@@ -19794,7 +19824,7 @@ public interface GraphQlClientInterface {
     suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean = false): DryRunResult
     
     /**
-     * Dry run a [`TransactionKind`] and return the transaction effects and dry
+     * Dry run a `TransactionKind` and return the transaction effects and dry
      * run error (if any).
      *
      * `skipChecks` optional flag disables the usual verification checks that
@@ -19813,7 +19843,7 @@ public interface GraphQlClientInterface {
      *
      * The `name` argument is a json serialized type.
      *
-     * This returns [`DynamicFieldOutput`] which contains the name, the value
+     * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
      *
      * # Example
@@ -19834,7 +19864,7 @@ public interface GraphQlClientInterface {
      * Get a page of dynamic fields for the provided address. Note that this
      * will also fetch dynamic fields on wrapped objects.
      *
-     * This returns [`Page`] of [`DynamicFieldOutput`]s.
+     * This returns a page of `DynamicFieldOutput`s.
      */
     suspend fun `dynamicFields`(`address`: Address, `paginationFilter`: PaginationFilter? = null): DynamicFieldOutputPage
     
@@ -19845,7 +19875,7 @@ public interface GraphQlClientInterface {
      *
      * The `name` argument is a json serialized type.
      *
-     * This returns [`DynamicFieldOutput`] which contains the name, the value
+     * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
      */
     suspend fun `dynamicObjectField`(`address`: Address, `typeTag`: TypeTag, `name`: Value): DynamicFieldOutput?
@@ -19942,7 +19972,7 @@ public interface GraphQlClientInterface {
     suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
     
     /**
-     * Return an object based on the provided [`Address`].
+     * Return an object based on the provided `Address`.
      *
      * If the object does not exist (e.g., due to pruning), this will return
      * `Ok(None)`. Similarly, if this is not an object but an address, it
@@ -19951,15 +19981,15 @@ public interface GraphQlClientInterface {
     suspend fun `object`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): Object?
     
     /**
-     * Return the object's bcs content [`Vec<u8>`] based on the provided
-     * [`Address`].
+     * Return the object's bcs content `Vec<u8>` based on the provided
+     * `Address`.
      */
     suspend fun `objectBcs`(`objectId`: ObjectId): kotlin.ByteArray?
     
     /**
      * Return a page of objects based on the provided parameters.
      *
-     * Use this function together with the [`ObjectFilter::owner`] to get the
+     * Use this function together with the `ObjectFilter::owner` to get the
      * objects owned by an address.
      *
      * # Example
@@ -20277,7 +20307,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Get the [`CheckpointSummary`] for a given checkpoint digest or
+     * Get the `CheckpointSummary` for a given checkpoint digest or
      * checkpoint id. If none is provided, it will use the last known
      * checkpoint id.
      */
@@ -20303,7 +20333,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Get a page of [`CheckpointSummary`] for the provided parameters.
+     * Get a page of `CheckpointSummary` for the provided parameters.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -20378,7 +20408,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Dry run a [`Transaction`] and return the transaction effects and dry run
+     * Dry run a `Transaction` and return the transaction effects and dry run
      * error (if any).
      *
      * `skipChecks` optional flag disables the usual verification checks that
@@ -20408,7 +20438,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Dry run a [`TransactionKind`] and return the transaction effects and dry
+     * Dry run a `TransactionKind` and return the transaction effects and dry
      * run error (if any).
      *
      * `skipChecks` optional flag disables the usual verification checks that
@@ -20446,7 +20476,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      *
      * The `name` argument is a json serialized type.
      *
-     * This returns [`DynamicFieldOutput`] which contains the name, the value
+     * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
      *
      * # Example
@@ -20486,7 +20516,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      * Get a page of dynamic fields for the provided address. Note that this
      * will also fetch dynamic fields on wrapped objects.
      *
-     * This returns [`Page`] of [`DynamicFieldOutput`]s.
+     * This returns a page of `DynamicFieldOutput`s.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -20516,7 +20546,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      *
      * The `name` argument is a json serialized type.
      *
-     * This returns [`DynamicFieldOutput`] which contains the name, the value
+     * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
      */
     @Throws(SdkFfiException::class)
@@ -20917,7 +20947,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Return an object based on the provided [`Address`].
+     * Return an object based on the provided `Address`.
      *
      * If the object does not exist (e.g., due to pruning), this will return
      * `Ok(None)`. Similarly, if this is not an object but an address, it
@@ -20945,8 +20975,8 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Return the object's bcs content [`Vec<u8>`] based on the provided
-     * [`Address`].
+     * Return the object's bcs content `Vec<u8>` based on the provided
+     * `Address`.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -20972,7 +21002,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     /**
      * Return a page of objects based on the provided parameters.
      *
-     * Use this function together with the [`ObjectFilter::owner`] to get the
+     * Use this function together with the `ObjectFilter::owner` to get the
      * objects owned by an address.
      *
      * # Example
@@ -24672,7 +24702,7 @@ public object FfiConverterTypeMovePackageData: FfiConverter<MovePackageData, Poi
  * ; roaring bitmaps
  * ```
  *
- * See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+ * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
  * serialized format of RoaringBitmaps.
  */
 public interface MultisigAggregatedSignatureInterface {
@@ -24717,7 +24747,7 @@ public interface MultisigAggregatedSignatureInterface {
  * ; roaring bitmaps
  * ```
  *
- * See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+ * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
  * serialized format of RoaringBitmaps.
  */
 open class MultisigAggregatedSignature: Disposable, AutoCloseable, MultisigAggregatedSignatureInterface
@@ -25334,13 +25364,10 @@ public interface MultisigCommitteeInterface {
      * `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
      * || ... || flag_n || pk_n || weight_n)`.
      *
-     * When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+     * When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
      * refers to the same input used when deriving the address using the
-     * [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+     * `ZkLoginPublicIdentifier::derive_address_padded` method (using the
      * full 32-byte `address_seed` value).
-     *
-     * [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
-     * [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
      */
     fun `deriveAddress`(): Address
     
@@ -25509,13 +25536,10 @@ open class MultisigCommittee: Disposable, AutoCloseable, MultisigCommitteeInterf
      * `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
      * || ... || flag_n || pk_n || weight_n)`.
      *
-     * When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+     * When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
      * refers to the same input used when deriving the address using the
-     * [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+     * `ZkLoginPublicIdentifier::derive_address_padded` method (using the
      * full 32-byte `address_seed` value).
-     *
-     * [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
-     * [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
      */override fun `deriveAddress`(): Address {
             return FfiConverterTypeAddress.lift(
     callWithPointer {
@@ -28725,7 +28749,7 @@ public object FfiConverterTypeObjectData: FfiConverter<ObjectData, Pointer> {
  *
  * ## Relationship to Address
  *
- * [`Address`]es and [`ObjectId`]s share the same 32-byte addressable space but
+ * `Address`es and `ObjectId`s share the same 32-byte addressable space but
  * are derived leveraging different domain-separator values to ensure,
  * cryptographically, that there won't be any overlap, e.g. there can't be a
  * valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
@@ -28763,7 +28787,7 @@ public interface ObjectIdInterface {
  *
  * ## Relationship to Address
  *
- * [`Address`]es and [`ObjectId`]s share the same 32-byte addressable space but
+ * `Address`es and `ObjectId`s share the same 32-byte addressable space but
  * are derived leveraging different domain-separator values to ensure,
  * cryptographically, that there won't be any overlap, e.g. there can't be a
  * valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
@@ -30489,7 +30513,7 @@ public object FfiConverterTypePTBArgument: FfiConverter<PtbArgument, Pointer> {
  * client-data-json = string ; valid json
  * ```
  *
- * See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+ * See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
  * the required json-schema for the `client-data-json` rule. In addition, IOTA
  * currently requires that the `CollectedClientData.type` field is required to
  * be `webauthn.get`.
@@ -30505,8 +30529,8 @@ public interface PasskeyAuthenticatorInterface {
     /**
      * Opaque authenticator data for this passkey signature.
      *
-     * See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-     * more information on this field.
+     * See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
+     * for more information on this field.
      */
     fun `authenticatorData`(): kotlin.ByteArray
     
@@ -30521,7 +30545,7 @@ public interface PasskeyAuthenticatorInterface {
     /**
      * Structured, unparsed, JSON for this passkey signature.
      *
-     * See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
+     * See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
      * for more information on this field.
      */
     fun `clientDataJson`(): kotlin.String
@@ -30557,7 +30581,7 @@ public interface PasskeyAuthenticatorInterface {
  * client-data-json = string ; valid json
  * ```
  *
- * See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+ * See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
  * the required json-schema for the `client-data-json` rule. In addition, IOTA
  * currently requires that the `CollectedClientData.type` field is required to
  * be `webauthn.get`.
@@ -30654,8 +30678,8 @@ open class PasskeyAuthenticator: Disposable, AutoCloseable, PasskeyAuthenticator
     /**
      * Opaque authenticator data for this passkey signature.
      *
-     * See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-     * more information on this field.
+     * See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
+     * for more information on this field.
      */override fun `authenticatorData`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     callWithPointer {
@@ -30690,7 +30714,7 @@ open class PasskeyAuthenticator: Disposable, AutoCloseable, PasskeyAuthenticator
     /**
      * Structured, unparsed, JSON for this passkey signature.
      *
-     * See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
+     * See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
      * for more information on this field.
      */override fun `clientDataJson`(): kotlin.String {
             return FfiConverterString.lift(
@@ -32757,11 +32781,16 @@ public interface Secp256k1PublicKeyInterface {
     fun `deriveAddress`(): Address
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */
     fun `scheme`(): SignatureScheme
     
     fun `toBytes`(): kotlin.ByteArray
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */
+    fun `toFlaggedBytes`(): kotlin.ByteArray
     
     companion object
 }
@@ -32882,7 +32911,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
 
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */override fun `scheme`(): SignatureScheme {
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
@@ -32900,6 +32929,21 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */override fun `toFlaggedBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -34487,11 +34531,16 @@ public interface Secp256r1PublicKeyInterface {
     fun `deriveAddress`(): Address
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */
     fun `scheme`(): SignatureScheme
     
     fun `toBytes`(): kotlin.ByteArray
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended
+     */
+    fun `toFlaggedBytes`(): kotlin.ByteArray
     
     companion object
 }
@@ -34612,7 +34661,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
 
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */override fun `scheme`(): SignatureScheme {
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
@@ -34630,6 +34679,21 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended
+     */override fun `toFlaggedBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -38674,8 +38738,8 @@ public object FfiConverterTypeTransaction: FfiConverter<Transaction, Pointer> {
 
 
 /**
- * A builder for creating transactions. Use [`finish`](Self::finish) to
- * finalize the transaction data.
+ * A builder for creating transactions. Use `finish` to finalize the
+ * transaction data.
  */
 public interface TransactionBuilderInterface {
     
@@ -38713,6 +38777,11 @@ public interface TransactionBuilderInterface {
      * Set the gas budget for the transaction.
      */
     fun `gasBudget`(`budget`: kotlin.ULong): TransactionBuilder
+    
+    /**
+     * Add gas objects to pay for the transaction.
+     */
+    fun `gasCoins`(`objectIds`: List<ObjectId>): TransactionBuilder
     
     /**
      * Set the gas price for the transaction.
@@ -38803,8 +38872,8 @@ public interface TransactionBuilderInterface {
 }
 
 /**
- * A builder for creating transactions. Use [`finish`](Self::finish) to
- * finalize the transaction data.
+ * A builder for creating transactions. Use `finish` to finalize the
+ * transaction data.
  */
 open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInterface
 {
@@ -39023,6 +39092,21 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
         it, FfiConverterULong.lower(`budget`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Add gas objects to pay for the transaction.
+     */override fun `gasCoins`(`objectIds`: List<ObjectId>): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins(
+        it, FfiConverterSequenceTypeObjectId.lower(`objectIds`),_status)
 }
     }
     )
@@ -43078,7 +43162,7 @@ public object FfiConverterTypeUserSignatureVerifier: FfiConverter<UserSignatureV
  * ; roaring bitmaps
  * ```
  *
- * See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+ * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
  * serialized format of RoaringBitmaps.
  */
 public interface ValidatorAggregatedSignatureInterface {
@@ -43108,7 +43192,7 @@ public interface ValidatorAggregatedSignatureInterface {
  * ; roaring bitmaps
  * ```
  *
- * See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+ * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
  * serialized format of RoaringBitmaps.
  */
 open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAggregatedSignatureInterface
@@ -45761,7 +45845,7 @@ public object FfiConverterTypeZkLoginProof: FfiConverter<ZkLoginProof, Pointer> 
  *
  * A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
  * account authenticators, and contains the information required to derive the
- * onchain account [`Address`] for a Zklogin authenticator.
+ * onchain account `Address` for a Zklogin authenticator.
  *
  * ## Note
  *
@@ -45807,8 +45891,6 @@ public object FfiConverterTypeZkLoginProof: FfiConverter<ZkLoginProof, Pointer> 
  * ; with any leading zero bytes stripped
  * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
  * ```
- *
- * [`Address`]: crate::Address
  */
 public interface ZkLoginPublicIdentifierInterface {
     
@@ -45856,7 +45938,7 @@ public interface ZkLoginPublicIdentifierInterface {
  *
  * A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
  * account authenticators, and contains the information required to derive the
- * onchain account [`Address`] for a Zklogin authenticator.
+ * onchain account `Address` for a Zklogin authenticator.
  *
  * ## Note
  *
@@ -45902,8 +45984,6 @@ public interface ZkLoginPublicIdentifierInterface {
  * ; with any leading zero bytes stripped
  * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
  * ```
- *
- * [`Address`]: crate::Address
  */
 open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIdentifierInterface
 {
