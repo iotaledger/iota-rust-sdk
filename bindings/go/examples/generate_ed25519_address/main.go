@@ -16,13 +16,11 @@ func main() {
 		panic(err)
 	}
 	publicKey := privateKey.PublicKey()
+	flaggedPublicKey := publicKey.ToFlaggedBytes()
 	address := publicKey.DeriveAddress()
-	publicKeyBytes := publicKey.ToBytes()
-
-	flaggedPublicKey := append([]byte{byte(sdk.SignatureSchemeEd25519)}, publicKeyBytes...)
 
 	fmt.Println("Private Key:", privateKeyBech32)
-	fmt.Println("Public Key:", sdk.Base64Encode(publicKeyBytes))
+	fmt.Println("Public Key:", sdk.Base64Encode(publicKey.ToBytes()))
 	fmt.Println("Public Key With Flag:", sdk.Base64Encode(flaggedPublicKey))
 	fmt.Println("Address:", address.ToHex())
 }

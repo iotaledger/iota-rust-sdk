@@ -134,7 +134,7 @@ kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example exa
 %:
 	@true
 kotlin-example:
-	@printf "\nRunning Kotlin example \"$(word 2,$(MAKECMDGOALS))" \n \"
+	@printf "\nRunning Kotlin example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/kotlin; \
 	./gradlew build clean || exit $$?; \
 	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q || exit $$?; \

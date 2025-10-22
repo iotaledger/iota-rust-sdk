@@ -1019,9 +1019,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() != 37757:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 141:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 3041:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes() != 16656:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes() != 62359:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() != 31911:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1045,7 +1047,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 22484:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 31173:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 48258:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_data() != 26598:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1067,23 +1069,23 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_chain_id() != 45619:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint() != 11584:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint() != 9094:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 44363:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 36867:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 47450:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 63702:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 7552:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 1733:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 37663:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 28380:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 6963:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 14745:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 47284:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 28336:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch() != 62805:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1115,11 +1117,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 51508:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 1970:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14004:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 64679:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1219,7 +1221,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier() != 10820:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 12725:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 26282:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid() != 45468:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1377,11 +1379,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 6506:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 55474:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 36642:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_challenge() != 28147:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() != 20272:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() != 26196:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key() != 18555:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1429,9 +1431,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() != 48490:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 798:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 60874:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes() != 49170:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes() != 46673:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes() != 49705:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1473,9 +1477,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() != 27344:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 12227:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 48083:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() != 21066:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes() != 14205:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() != 64948:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1604,6 +1610,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 43178:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() != 48686:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins() != 13036:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() != 7437:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1953,7 +1961,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() != 19098:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 13557:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 4619:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 41429:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3396,6 +3404,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5630,6 +5643,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256k1signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5874,6 +5892,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6488,6 +6511,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget.argtypes 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint64,
@@ -9616,6 +9645,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes.restype = ctypes.c_uint16
@@ -10231,6 +10263,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme.restype
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes.restype = ctypes.c_uint16
@@ -10297,6 +10332,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme.restype
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes.restype = ctypes.c_uint16
@@ -10489,6 +10527,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas.restype = 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price.restype = ctypes.c_uint16
@@ -24868,43 +24909,30 @@ class AddressProtocol(typing.Protocol):
     is a valid IOTA address:
     `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
 
-    ```
-    use iota_types::Address;
-
-    let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
-    let address = Address::from_hex(hex).unwrap();
-    println!("Address: {}", address);
-    assert_eq!(hex, address.to_string());
-    ```
-
     # Deriving an Address
 
     Addresses are cryptographically derived from a number of user account
     authenticators, the simplest of which is an
-    [`Ed25519PublicKey`](iota_types::Ed25519PublicKey).
+    `Ed25519PublicKey`.
 
     Deriving an address consists of the Blake2b256 hash of the sequence of bytes
     of its corresponding authenticator, prefixed with a domain-separator (except
     ed25519, for compatibility reasons). For each other authenticator, this
     domain-separator is the single byte-value of its
-    [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
-    schema flag || authenticator bytes)`.
+    `SignatureScheme` flag. E.g. `hash(signature schema flag || authenticator
+    bytes)`.
 
     Each authenticator has a method for deriving its `Address` as well as
     documentation for the specifics of how the derivation is done. See
-    [`Ed25519PublicKey::derive_address`] for an example.
-
-    [`Ed25519PublicKey::derive_address`]: iota_types::Ed25519PublicKey::derive_address
+    `Ed25519PublicKey::derive_address` for an example.
 
     ## Relationship to ObjectIds
 
-    [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but
+    `ObjectId`s and `Address`es share the same 32-byte addressable space but
     are derived leveraging different domain-separator values to ensure that,
     cryptographically, there won't be any overlap, e.g. there can't be a
     valid `Object` who's `ObjectId` is equal to that of the `Address` of a user
     account.
-
-    [`ObjectId`]: iota_types::ObjectId
 
     # BCS
 
@@ -24930,43 +24958,30 @@ class Address():
     is a valid IOTA address:
     `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
 
-    ```
-    use iota_types::Address;
-
-    let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
-    let address = Address::from_hex(hex).unwrap();
-    println!("Address: {}", address);
-    assert_eq!(hex, address.to_string());
-    ```
-
     # Deriving an Address
 
     Addresses are cryptographically derived from a number of user account
     authenticators, the simplest of which is an
-    [`Ed25519PublicKey`](iota_types::Ed25519PublicKey).
+    `Ed25519PublicKey`.
 
     Deriving an address consists of the Blake2b256 hash of the sequence of bytes
     of its corresponding authenticator, prefixed with a domain-separator (except
     ed25519, for compatibility reasons). For each other authenticator, this
     domain-separator is the single byte-value of its
-    [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
-    schema flag || authenticator bytes)`.
+    `SignatureScheme` flag. E.g. `hash(signature schema flag || authenticator
+    bytes)`.
 
     Each authenticator has a method for deriving its `Address` as well as
     documentation for the specifics of how the derivation is done. See
-    [`Ed25519PublicKey::derive_address`] for an example.
-
-    [`Ed25519PublicKey::derive_address`]: iota_types::Ed25519PublicKey::derive_address
+    `Ed25519PublicKey::derive_address` for an example.
 
     ## Relationship to ObjectIds
 
-    [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but
+    `ObjectId`s and `Address`es share the same 32-byte addressable space but
     are derived leveraging different domain-separator values to ensure that,
     cryptographically, there won't be any overlap, e.g. there can't be a
     valid `Object` who's `ObjectId` is equal to that of the `Address` of a user
     account.
-
-    [`ObjectId`]: iota_types::ObjectId
 
     # BCS
 
@@ -28497,11 +28512,17 @@ class Ed25519PublicKeyProtocol(typing.Protocol):
         raise NotImplementedError
     def scheme(self, ):
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         raise NotImplementedError
     def to_bytes(self, ):
+        raise NotImplementedError
+    def to_flagged_bytes(self, ):
+        """
+        Returns the bytes with signature scheme flag prepended.
+        """
+
         raise NotImplementedError
 # Ed25519PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Ed25519PublicKey():
@@ -28585,7 +28606,7 @@ class Ed25519PublicKey():
 
     def scheme(self, ) -> "SignatureScheme":
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         return _UniffiConverterTypeSignatureScheme.lift(
@@ -28599,6 +28620,19 @@ class Ed25519PublicKey():
     def to_bytes(self, ) -> "bytes":
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_flagged_bytes(self, ) -> "bytes":
+        """
+        Returns the bytes with signature scheme flag prepended.
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes,self._uniffi_clone_pointer(),)
         )
 
 
@@ -29484,7 +29518,7 @@ class FaucetClientProtocol(typing.Protocol):
         """
         Check the faucet request status.
 
-        Possible statuses are defined in: [`BatchSendStatusType`]
+        Possible statuses are defined in: `BatchSendStatusType`
         """
 
         raise NotImplementedError
@@ -29494,7 +29528,7 @@ class FaucetClient():
     def __init__(self, faucet_url: "str"):
         """
         Construct a new `FaucetClient` with the given faucet service URL. This
-        [`FaucetClient`] expects that the service provides two endpoints:
+        `FaucetClient` expects that the service provides two endpoints:
         /v1/gas and /v1/status. As such, do not provide the request
         endpoint, just the top level service endpoint.
 
@@ -29617,7 +29651,7 @@ _UniffiConverterTypeSdkFfiError,
         """
         Check the faucet request status.
 
-        Possible statuses are defined in: [`BatchSendStatusType`]
+        Possible statuses are defined in: `BatchSendStatusType`
         """
 
         _UniffiConverterString.check_lower(id)
@@ -29949,7 +29983,7 @@ class GraphQlClientProtocol(typing.Protocol):
         raise NotImplementedError
     def checkpoint(self, digest: "typing.Union[object, typing.Optional[Digest]]" = _DEFAULT,seq_num: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
         """
-        Get the [`CheckpointSummary`] for a given checkpoint digest or
+        Get the `CheckpointSummary` for a given checkpoint digest or
         checkpoint id. If none is provided, it will use the last known
         checkpoint id.
         """
@@ -29957,7 +29991,7 @@ class GraphQlClientProtocol(typing.Protocol):
         raise NotImplementedError
     def checkpoints(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
-        Get a page of [`CheckpointSummary`] for the provided parameters.
+        Get a page of `CheckpointSummary` for the provided parameters.
         """
 
         raise NotImplementedError
@@ -29978,7 +30012,7 @@ class GraphQlClientProtocol(typing.Protocol):
         raise NotImplementedError
     def dry_run_tx(self, tx: "Transaction",skip_checks: "typing.Union[object, bool]" = _DEFAULT):
         """
-        Dry run a [`Transaction`] and return the transaction effects and dry run
+        Dry run a `Transaction` and return the transaction effects and dry run
         error (if any).
 
         `skipChecks` optional flag disables the usual verification checks that
@@ -29990,7 +30024,7 @@ class GraphQlClientProtocol(typing.Protocol):
         raise NotImplementedError
     def dry_run_tx_kind(self, tx_kind: "TransactionKind",tx_meta: "TransactionMetadata",skip_checks: "typing.Union[object, bool]" = _DEFAULT):
         """
-        Dry run a [`TransactionKind`] and return the transaction effects and dry
+        Dry run a `TransactionKind` and return the transaction effects and dry
         run error (if any).
 
         `skipChecks` optional flag disables the usual verification checks that
@@ -30010,7 +30044,7 @@ class GraphQlClientProtocol(typing.Protocol):
 
         The `name` argument is a json serialized type.
 
-        This returns [`DynamicFieldOutput`] which contains the name, the value
+        This returns `DynamicFieldOutput` which contains the name, the value
         as json, and object.
 
         # Example
@@ -30032,7 +30066,7 @@ class GraphQlClientProtocol(typing.Protocol):
         Get a page of dynamic fields for the provided address. Note that this
         will also fetch dynamic fields on wrapped objects.
 
-        This returns [`Page`] of [`DynamicFieldOutput`]s.
+        This returns a page of `DynamicFieldOutput`s.
         """
 
         raise NotImplementedError
@@ -30044,7 +30078,7 @@ class GraphQlClientProtocol(typing.Protocol):
 
         The `name` argument is a json serialized type.
 
-        This returns [`DynamicFieldOutput`] which contains the name, the value
+        This returns `DynamicFieldOutput` which contains the name, the value
         as json, and object.
         """
 
@@ -30157,7 +30191,7 @@ class GraphQlClientProtocol(typing.Protocol):
         raise NotImplementedError
     def object(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
         """
-        Return an object based on the provided [`Address`].
+        Return an object based on the provided `Address`.
 
         If the object does not exist (e.g., due to pruning), this will return
         `Ok(None)`. Similarly, if this is not an object but an address, it
@@ -30167,8 +30201,8 @@ class GraphQlClientProtocol(typing.Protocol):
         raise NotImplementedError
     def object_bcs(self, object_id: "ObjectId"):
         """
-        Return the object's bcs content [`Vec<u8>`] based on the provided
-        [`Address`].
+        Return the object's bcs content `Vec<u8>` based on the provided
+        `Address`.
         """
 
         raise NotImplementedError
@@ -30176,7 +30210,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
         Return a page of objects based on the provided parameters.
 
-        Use this function together with the [`ObjectFilter::owner`] to get the
+        Use this function together with the `ObjectFilter::owner` to get the
         objects owned by an address.
 
         # Example
@@ -30506,7 +30540,7 @@ _UniffiConverterTypeSdkFfiError,
 
     async def checkpoint(self, digest: "typing.Union[object, typing.Optional[Digest]]" = _DEFAULT,seq_num: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[CheckpointSummary]":
         """
-        Get the [`CheckpointSummary`] for a given checkpoint digest or
+        Get the `CheckpointSummary` for a given checkpoint digest or
         checkpoint id. If none is provided, it will use the last known
         checkpoint id.
         """
@@ -30540,7 +30574,7 @@ _UniffiConverterTypeSdkFfiError,
 
     async def checkpoints(self, pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "CheckpointSummaryPage":
         """
-        Get a page of [`CheckpointSummary`] for the provided parameters.
+        Get a page of `CheckpointSummary` for the provided parameters.
         """
 
         if pagination_filter is _DEFAULT:
@@ -30630,7 +30664,7 @@ _UniffiConverterTypeSdkFfiError,
 
     async def dry_run_tx(self, tx: "Transaction",skip_checks: "typing.Union[object, bool]" = _DEFAULT) -> "DryRunResult":
         """
-        Dry run a [`Transaction`] and return the transaction effects and dry run
+        Dry run a `Transaction` and return the transaction effects and dry run
         error (if any).
 
         `skipChecks` optional flag disables the usual verification checks that
@@ -30666,7 +30700,7 @@ _UniffiConverterTypeSdkFfiError,
 
     async def dry_run_tx_kind(self, tx_kind: "TransactionKind",tx_meta: "TransactionMetadata",skip_checks: "typing.Union[object, bool]" = _DEFAULT) -> "DryRunResult":
         """
-        Dry run a [`TransactionKind`] and return the transaction effects and dry
+        Dry run a `TransactionKind` and return the transaction effects and dry
         run error (if any).
 
         `skipChecks` optional flag disables the usual verification checks that
@@ -30713,7 +30747,7 @@ _UniffiConverterTypeSdkFfiError,
 
         The `name` argument is a json serialized type.
 
-        This returns [`DynamicFieldOutput`] which contains the name, the value
+        This returns `DynamicFieldOutput` which contains the name, the value
         as json, and object.
 
         # Example
@@ -30760,7 +30794,7 @@ _UniffiConverterTypeSdkFfiError,
         Get a page of dynamic fields for the provided address. Note that this
         will also fetch dynamic fields on wrapped objects.
 
-        This returns [`Page`] of [`DynamicFieldOutput`]s.
+        This returns a page of `DynamicFieldOutput`s.
         """
 
         _UniffiConverterTypeAddress.check_lower(address)
@@ -30796,7 +30830,7 @@ _UniffiConverterTypeSdkFfiError,
 
         The `name` argument is a json serialized type.
 
-        This returns [`DynamicFieldOutput`] which contains the name, the value
+        This returns `DynamicFieldOutput` which contains the name, the value
         as json, and object.
         """
 
@@ -31289,7 +31323,7 @@ _UniffiConverterTypeSdkFfiError,
 
     async def object(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[Object]":
         """
-        Return an object based on the provided [`Address`].
+        Return an object based on the provided `Address`.
 
         If the object does not exist (e.g., due to pruning), this will return
         `Ok(None)`. Similarly, if this is not an object but an address, it
@@ -31323,8 +31357,8 @@ _UniffiConverterTypeSdkFfiError,
 
     async def object_bcs(self, object_id: "ObjectId") -> "typing.Optional[bytes]":
         """
-        Return the object's bcs content [`Vec<u8>`] based on the provided
-        [`Address`].
+        Return the object's bcs content `Vec<u8>` based on the provided
+        `Address`.
         """
 
         _UniffiConverterTypeObjectId.check_lower(object_id)
@@ -31351,7 +31385,7 @@ _UniffiConverterTypeSdkFfiError,
         """
         Return a page of objects based on the provided parameters.
 
-        Use this function together with the [`ObjectFilter::owner`] to get the
+        Use this function together with the `ObjectFilter::owner` to get the
         objects owned by an address.
 
         # Example
@@ -33395,7 +33429,7 @@ class MultisigAggregatedSignatureProtocol(typing.Protocol):
     ; roaring bitmaps
     ```
 
-    See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+    See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
     serialized format of RoaringBitmaps.
     """
 
@@ -33440,7 +33474,7 @@ class MultisigAggregatedSignature():
     ; roaring bitmaps
     ```
 
-    See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+    See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
     serialized format of RoaringBitmaps.
     """
 
@@ -33717,13 +33751,10 @@ class MultisigCommitteeProtocol(typing.Protocol):
         `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
         || ... || flag_n || pk_n || weight_n)`.
 
-        When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+        When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
         refers to the same input used when deriving the address using the
-        [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+        `ZkLoginPublicIdentifier::derive_address_padded` method (using the
         full 32-byte `address_seed` value).
-
-        [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
-        [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
         """
 
         raise NotImplementedError
@@ -33837,13 +33868,10 @@ class MultisigCommittee():
         `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
         || ... || flag_n || pk_n || weight_n)`.
 
-        When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+        When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
         refers to the same input used when deriving the address using the
-        [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+        `ZkLoginPublicIdentifier::derive_address_padded` method (using the
         full 32-byte `address_seed` value).
-
-        [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
-        [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
         """
 
         return _UniffiConverterTypeAddress.lift(
@@ -35504,7 +35532,7 @@ class ObjectIdProtocol(typing.Protocol):
 
     ## Relationship to Address
 
-    [`Address`]es and [`ObjectId`]s share the same 32-byte addressable space but
+    `Address`es and `ObjectId`s share the same 32-byte addressable space but
     are derived leveraging different domain-separator values to ensure,
     cryptographically, that there won't be any overlap, e.g. there can't be a
     valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
@@ -35541,7 +35569,7 @@ class ObjectId():
 
     ## Relationship to Address
 
-    [`Address`]es and [`ObjectId`]s share the same 32-byte addressable space but
+    `Address`es and `ObjectId`s share the same 32-byte addressable space but
     are derived leveraging different domain-separator values to ensure,
     cryptographically, that there won't be any overlap, e.g. there can't be a
     valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
@@ -36109,7 +36137,7 @@ class PasskeyAuthenticatorProtocol(typing.Protocol):
     client-data-json = string ; valid json
     ```
 
-    See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+    See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
     the required json-schema for the `client-data-json` rule. In addition, IOTA
     currently requires that the `CollectedClientData.type` field is required to
     be `webauthn.get`.
@@ -36125,8 +36153,8 @@ class PasskeyAuthenticatorProtocol(typing.Protocol):
         """
         Opaque authenticator data for this passkey signature.
 
-        See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-        more information on this field.
+        See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
+        for more information on this field.
         """
 
         raise NotImplementedError
@@ -36143,7 +36171,7 @@ class PasskeyAuthenticatorProtocol(typing.Protocol):
         """
         Structured, unparsed, JSON for this passkey signature.
 
-        See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
+        See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
         for more information on this field.
         """
 
@@ -36180,7 +36208,7 @@ class PasskeyAuthenticator():
     client-data-json = string ; valid json
     ```
 
-    See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+    See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
     the required json-schema for the `client-data-json` rule. In addition, IOTA
     currently requires that the `CollectedClientData.type` field is required to
     be `webauthn.get`.
@@ -36220,8 +36248,8 @@ class PasskeyAuthenticator():
         """
         Opaque authenticator data for this passkey signature.
 
-        See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-        more information on this field.
+        See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
+        for more information on this field.
         """
 
         return _UniffiConverterBytes.lift(
@@ -36252,7 +36280,7 @@ class PasskeyAuthenticator():
         """
         Structured, unparsed, JSON for this passkey signature.
 
-        See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
+        See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
         for more information on this field.
         """
 
@@ -37511,11 +37539,17 @@ class Secp256k1PublicKeyProtocol(typing.Protocol):
         raise NotImplementedError
     def scheme(self, ):
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         raise NotImplementedError
     def to_bytes(self, ):
+        raise NotImplementedError
+    def to_flagged_bytes(self, ):
+        """
+        Returns the bytes with signature scheme flag prepended.
+        """
+
         raise NotImplementedError
 # Secp256k1PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Secp256k1PublicKey():
@@ -37600,7 +37634,7 @@ class Secp256k1PublicKey():
 
     def scheme(self, ) -> "SignatureScheme":
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         return _UniffiConverterTypeSignatureScheme.lift(
@@ -37614,6 +37648,19 @@ class Secp256k1PublicKey():
     def to_bytes(self, ) -> "bytes":
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_flagged_bytes(self, ) -> "bytes":
+        """
+        Returns the bytes with signature scheme flag prepended.
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes,self._uniffi_clone_pointer(),)
         )
 
 
@@ -38348,11 +38395,17 @@ class Secp256r1PublicKeyProtocol(typing.Protocol):
         raise NotImplementedError
     def scheme(self, ):
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         raise NotImplementedError
     def to_bytes(self, ):
+        raise NotImplementedError
+    def to_flagged_bytes(self, ):
+        """
+        Returns the bytes with signature scheme flag prepended
+        """
+
         raise NotImplementedError
 # Secp256r1PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Secp256r1PublicKey():
@@ -38437,7 +38490,7 @@ class Secp256r1PublicKey():
 
     def scheme(self, ) -> "SignatureScheme":
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         return _UniffiConverterTypeSignatureScheme.lift(
@@ -38451,6 +38504,19 @@ class Secp256r1PublicKey():
     def to_bytes(self, ) -> "bytes":
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_flagged_bytes(self, ) -> "bytes":
+        """
+        Returns the bytes with signature scheme flag prepended
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes,self._uniffi_clone_pointer(),)
         )
 
 
@@ -40336,8 +40402,8 @@ class _UniffiConverterTypeTransaction:
         buf.write_u64(cls.lower(value))
 class TransactionBuilderProtocol(typing.Protocol):
     """
-    A builder for creating transactions. Use [`finish`](Self::finish) to
-    finalize the transaction data.
+    A builder for creating transactions. Use `finish` to finalize the
+    transaction data.
     """
 
     def dry_run(self, skip_checks: "typing.Union[object, bool]" = _DEFAULT):
@@ -40379,6 +40445,12 @@ class TransactionBuilderProtocol(typing.Protocol):
     def gas_budget(self, budget: "int"):
         """
         Set the gas budget for the transaction.
+        """
+
+        raise NotImplementedError
+    def gas_coins(self, object_ids: "typing.List[ObjectId]"):
+        """
+        Add gas objects to pay for the transaction.
         """
 
         raise NotImplementedError
@@ -40482,8 +40554,8 @@ class TransactionBuilderProtocol(typing.Protocol):
 # TransactionBuilder is a Rust-only trait - it's a wrapper around a Rust implementation.
 class TransactionBuilder():
     """
-    A builder for creating transactions. Use [`finish`](Self::finish) to
-    finalize the transaction data.
+    A builder for creating transactions. Use `finish` to finalize the
+    transaction data.
     """
 
     _pointer: ctypes.c_void_p
@@ -40690,6 +40762,22 @@ _UniffiConverterTypeSdkFfiError,
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget,self._uniffi_clone_pointer(),
         _UniffiConverterUInt64.lower(budget))
+        )
+
+
+
+
+
+    def gas_coins(self, object_ids: "typing.List[ObjectId]") -> "TransactionBuilder":
+        """
+        Add gas objects to pay for the transaction.
+        """
+
+        _UniffiConverterSequenceTypeObjectId.check_lower(object_ids)
+        
+        return _UniffiConverterTypeTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins,self._uniffi_clone_pointer(),
+        _UniffiConverterSequenceTypeObjectId.lower(object_ids))
         )
 
 
@@ -42815,7 +42903,7 @@ class ValidatorAggregatedSignatureProtocol(typing.Protocol):
     ; roaring bitmaps
     ```
 
-    See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+    See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
     serialized format of RoaringBitmaps.
     """
 
@@ -42843,7 +42931,7 @@ class ValidatorAggregatedSignature():
     ; roaring bitmaps
     ```
 
-    See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+    See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
     serialized format of RoaringBitmaps.
     """
 
@@ -43933,7 +44021,7 @@ class ZkLoginPublicIdentifierProtocol(typing.Protocol):
 
     A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
     account authenticators, and contains the information required to derive the
-    onchain account [`Address`] for a Zklogin authenticator.
+    onchain account `Address` for a Zklogin authenticator.
 
     ## Note
 
@@ -43979,8 +44067,6 @@ class ZkLoginPublicIdentifierProtocol(typing.Protocol):
     ; with any leading zero bytes stripped
     address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
     ```
-
-    [`Address`]: crate::Address
     """
 
     def address_seed(self, ):
@@ -44029,7 +44115,7 @@ class ZkLoginPublicIdentifier():
 
     A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
     account authenticators, and contains the information required to derive the
-    onchain account [`Address`] for a Zklogin authenticator.
+    onchain account `Address` for a Zklogin authenticator.
 
     ## Note
 
@@ -44075,8 +44161,6 @@ class ZkLoginPublicIdentifier():
     ; with any leading zero bytes stripped
     address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
     ```
-
-    [`Address`]: crate::Address
     """
 
     _pointer: ctypes.c_void_p

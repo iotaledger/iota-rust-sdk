@@ -137,7 +137,7 @@ impl ValidatorSignature {
 ///                         ; roaring bitmaps
 /// ```
 ///
-/// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+/// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 /// serialized format of RoaringBitmaps.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct ValidatorAggregatedSignature(pub iota_types::ValidatorAggregatedSignature);
