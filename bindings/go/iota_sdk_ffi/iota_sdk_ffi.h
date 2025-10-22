@@ -4371,7 +4371,7 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(void* ptr, Rus
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SEND_IOTA
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SEND_IOTA
-void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(void* ptr, void* recipient, RustBuffer amount, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(void* ptr, void* recipient, void* amount, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SPLIT_COINS
