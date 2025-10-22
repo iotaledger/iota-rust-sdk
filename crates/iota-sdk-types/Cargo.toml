@@ -40,11 +40,11 @@ hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
 [dependencies]
-anyhow = "1.0"
 base64ct = { workspace = true, features = ["alloc"] }
 bnum.workspace = true
 bs58 = "0.5.1"
 derive_more = { workspace = true, features = ["display"] }
+eyre.workspace = true
 hex.workspace = true
 paste.workspace = true
 roaring.workspace = true
