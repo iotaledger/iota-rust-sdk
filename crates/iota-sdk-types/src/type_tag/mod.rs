@@ -528,6 +528,7 @@ impl StructTag {
     pub fn coin_type(&self) -> &TypeTag {
         self.coin_type_opt().expect("not a coin")
     }
+
     /// Returns the address part of a `StructTag`
     pub fn address(&self) -> Address {
         self.address
