@@ -165,14 +165,9 @@ impl TransactionBuilder {
     }
 
     /// Send IOTA to a recipient address.
-    #[uniffi::method(default(amount = None))]
-    pub fn send_iota(
-        self: Arc<Self>,
-        recipient: &Address,
-        amount: Option<Arc<PTBArgument>>,
-    ) -> Arc<Self> {
+    pub fn send_iota(self: Arc<Self>, recipient: &Address, amount: &PTBArgument) -> Arc<Self> {
         self.write(|builder| {
-            builder.send_iota::<&PTBArgument>(**recipient, amount.as_deref());
+            builder.send_iota(**recipient, amount);
         });
         self
     }
