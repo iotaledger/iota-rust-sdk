@@ -280,7 +280,7 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
     use crate::types::transaction::{
-        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV4,
+        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
         EndOfEpochTransactionKind,
     };
 
@@ -289,6 +289,7 @@ mod end_of_epoch {
     enum ReadableEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
+        ChangeEpochV3(&'a ChangeEpochV3),
         ChangeEpochV4(&'a ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
@@ -299,6 +300,7 @@ mod end_of_epoch {
     enum ReadableEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
+        ChangeEpochV3(ChangeEpochV3),
         ChangeEpochV4(ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
@@ -308,6 +310,7 @@ mod end_of_epoch {
     enum BinaryEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
+        ChangeEpochV3(&'a ChangeEpochV3),
         ChangeEpochV4(&'a ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
@@ -317,6 +320,7 @@ mod end_of_epoch {
     enum BinaryEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
+        ChangeEpochV3(ChangeEpochV3),
         ChangeEpochV4(ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
@@ -333,6 +337,9 @@ mod end_of_epoch {
                     Self::ChangeEpochV2(k) => {
                         ReadableEndOfEpochTransactionKindRef::ChangeEpochV2(k)
                     }
+                    Self::ChangeEpochV3(k) => {
+                        ReadableEndOfEpochTransactionKindRef::ChangeEpochV3(k)
+                    }
                     Self::ChangeEpochV4(k) => {
                         ReadableEndOfEpochTransactionKindRef::ChangeEpochV4(k)
                     }
@@ -348,6 +355,7 @@ mod end_of_epoch {
                 let binary = match self {
                     Self::ChangeEpoch(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpoch(k),
                     Self::ChangeEpochV2(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV2(k),
+                    Self::ChangeEpochV3(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV3(k),
                     Self::ChangeEpochV4(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV4(k),
 
                     Self::AuthenticatorStateCreate => {
@@ -374,6 +382,9 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::ChangeEpochV2(k) => {
                             Self::ChangeEpochV2(k)
                         }
+                        ReadableEndOfEpochTransactionKind::ChangeEpochV3(k) => {
+                            Self::ChangeEpochV3(k)
+                        }
                         ReadableEndOfEpochTransactionKind::ChangeEpochV4(k) => {
                             Self::ChangeEpochV4(k)
                         }
@@ -390,6 +401,7 @@ mod end_of_epoch {
                     |binary| match binary {
                         BinaryEndOfEpochTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV2(k) => Self::ChangeEpochV2(k),
+                        BinaryEndOfEpochTransactionKind::ChangeEpochV3(k) => Self::ChangeEpochV3(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV4(k) => Self::ChangeEpochV4(k),
 
                         BinaryEndOfEpochTransactionKind::AuthenticatorStateCreate => {
