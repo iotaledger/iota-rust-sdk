@@ -623,9 +623,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() != 37757:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 141:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 3041:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes() != 16656:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes() != 62359:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() != 31911:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1033,9 +1035,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() != 48490:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 798:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 60874:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes() != 49170:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes() != 46673:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes() != 49705:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1077,9 +1081,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() != 27344:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 12227:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 48083:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() != 21066:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes() != 14205:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() != 64948:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1173,7 +1179,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_module() != 28022:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_name() != 23898:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_name() != 62865:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args() != 48594:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3054,6 +3060,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5288,6 +5299,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256k1signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5532,6 +5548,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7814,6 +7835,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes.restype = ctypes.c_uint16
@@ -8429,6 +8453,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme.restype
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes.restype = ctypes.c_uint16
@@ -8495,6 +8522,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme.restype
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes.restype = ctypes.c_uint16
@@ -26735,11 +26765,17 @@ class Ed25519PublicKeyProtocol(typing.Protocol):
         raise NotImplementedError
     def scheme(self, ):
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         raise NotImplementedError
     def to_bytes(self, ):
+        raise NotImplementedError
+    def to_flagged_bytes(self, ):
+        """
+        Returns the bytes with signature scheme flag prepended.
+        """
+
         raise NotImplementedError
 # Ed25519PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Ed25519PublicKey():
@@ -26823,7 +26859,7 @@ class Ed25519PublicKey():
 
     def scheme(self, ) -> "SignatureScheme":
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         return _UniffiConverterTypeSignatureScheme.lift(
@@ -26837,6 +26873,19 @@ class Ed25519PublicKey():
     def to_bytes(self, ) -> "bytes":
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_flagged_bytes(self, ) -> "bytes":
+        """
+        Returns the bytes with signature scheme flag prepended.
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes,self._uniffi_clone_pointer(),)
         )
 
 
@@ -35743,11 +35792,17 @@ class Secp256k1PublicKeyProtocol(typing.Protocol):
         raise NotImplementedError
     def scheme(self, ):
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         raise NotImplementedError
     def to_bytes(self, ):
+        raise NotImplementedError
+    def to_flagged_bytes(self, ):
+        """
+        Returns the bytes with signature scheme flag prepended.
+        """
+
         raise NotImplementedError
 # Secp256k1PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Secp256k1PublicKey():
@@ -35832,7 +35887,7 @@ class Secp256k1PublicKey():
 
     def scheme(self, ) -> "SignatureScheme":
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         return _UniffiConverterTypeSignatureScheme.lift(
@@ -35846,6 +35901,19 @@ class Secp256k1PublicKey():
     def to_bytes(self, ) -> "bytes":
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_flagged_bytes(self, ) -> "bytes":
+        """
+        Returns the bytes with signature scheme flag prepended.
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes,self._uniffi_clone_pointer(),)
         )
 
 
@@ -36580,11 +36648,17 @@ class Secp256r1PublicKeyProtocol(typing.Protocol):
         raise NotImplementedError
     def scheme(self, ):
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         raise NotImplementedError
     def to_bytes(self, ):
+        raise NotImplementedError
+    def to_flagged_bytes(self, ):
+        """
+        Returns the bytes with signature scheme flag prepended
+        """
+
         raise NotImplementedError
 # Secp256r1PublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Secp256r1PublicKey():
@@ -36669,7 +36743,7 @@ class Secp256r1PublicKey():
 
     def scheme(self, ) -> "SignatureScheme":
         """
-        Return the flag for this signature scheme
+        Returns the signature scheme for this public key.
         """
 
         return _UniffiConverterTypeSignatureScheme.lift(
@@ -36683,6 +36757,19 @@ class Secp256r1PublicKey():
     def to_bytes(self, ) -> "bytes":
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_flagged_bytes(self, ) -> "bytes":
+        """
+        Returns the bytes with signature scheme flag prepended
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes,self._uniffi_clone_pointer(),)
         )
 
 
@@ -38079,7 +38166,7 @@ class StructTagProtocol(typing.Protocol):
         raise NotImplementedError
     def name(self, ):
         """
-        Returns the struct name part of a `StructTag`
+        Returns the name part of a `StructTag`
         """
 
         raise NotImplementedError
@@ -38353,7 +38440,7 @@ class StructTag():
 
     def name(self, ) -> "Identifier":
         """
-        Returns the struct name part of a `StructTag`
+        Returns the name part of a `StructTag`
         """
 
         return _UniffiConverterTypeIdentifier.lift(

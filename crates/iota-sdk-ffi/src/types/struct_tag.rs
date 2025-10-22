@@ -133,7 +133,7 @@ impl StructTag {
         self.0.module().clone().into()
     }
 
-    /// Returns the struct name part of a `StructTag`
+    /// Returns the name part of a `StructTag`
     pub fn name(&self) -> Identifier {
         self.0.name().clone().into()
     }
