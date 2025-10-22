@@ -519,7 +519,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// ```
     /// # use std::str::FromStr;
-    /// # use iota_transaction_builder::TransactionBuilder;
+    /// # use iota_transaction_builder::{TransactionBuilder, res};
     /// # use iota_types::{Address, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
