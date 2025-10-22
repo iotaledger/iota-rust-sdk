@@ -1,24 +1,8 @@
 name: Publish
 
 on:
-  workflow_dispatch:
-    inputs:
-      level:
-        type: string
-        description: |
-          The level of version bump to make.
-
-          Possible values:
-          - major:   Increase the major version (x.0.0)
-          - minor:   Increase the minor version (x.y.0)
-          - patch:   Increase the patch version (x.y.z)
-          - release: Remove the pre-version (x.y.z)
-          - rc:      Increase the rc pre-version (x.y.z-rc.M)
-          - beta:    Increase the beta pre-version (x.y.z-beta.M)
-          - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
-      package:
-        type: string
-        description: The package to publish. If not provided, all packages will be bumped and published.
+  release:
+    types: [published]
 
 jobs:
   publish:
@@ -32,18 +16,13 @@ jobs:
 
       - name: Cargo release publish
         run: |
-          cmd="cargo release \
-            --workspace \
-            --exclude iota-graphql-client-build \
-            --exclude iota-sdk-ffi \
+          pkg=$(echo "${{github.event.release.tag_name}}" | sed -nr 's|(.*)-v.*|\1|p'
+          version=$(echo "${{github.event.release.tag_name}}" | sed -nr 's|.*-v(.*)|\1|p'
+
+          echo "Publishing $pkg at version $version"
+          eval "cargo release publish \
+            -p $pkg \
             --all-features \
-            --allow-branch develop,sdk-bindings
+            --allow-branch develop,sdk-bindings \
             --no-confirm \
             --execute"
-          if [ -n ${{inputs.package}} ]; then
-            cmd="$cmd -p ${{inputs.package}}"
-          fi
-          if [ -n ${{inputs.level}} ]; then
-            cmd="$cmd ${{inputs.level}}"
-          fi
-          eval "$cmd"

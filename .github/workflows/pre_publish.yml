@@ -1,0 +1,53 @@
+name: Pre-publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        type: string
+        required: true
+        description: |
+          The level of version bump to make.
+
+          Possible values:
+          - major:   Increase the major version (x.0.0)
+          - minor:   Increase the minor version (x.y.0)
+          - patch:   Increase the patch version (x.y.z)
+          - release: Remove the pre-version (x.y.z)
+          - rc:      Increase the rc pre-version (x.y.z-rc.M)
+          - beta:    Increase the beta pre-version (x.y.z-beta.M)
+          - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
+      package:
+        type: string
+        required: true
+        description: The package to publish.
+
+jobs:
+  publish:
+    name: Publish to crates.io
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - run: cargo install cargo-release
+
+      - name: Cargo release publish
+        run: |
+          pkg_args="-p ${{inputs.package}}"
+          args="--allow-branch develop,sdk-bindings --no-confirm --execute"
+
+          echo "Commits since last tag:"
+          eval "cargo release changes"
+
+          echo "Bumping versions"
+          eval "cargo release version $pkg_args $args ${{inputs.level}}"
+
+          echo "Committing packages"
+          eval "cargo release commit $args"
+
+          echo "Tagging the commit"
+          eval "cargo release tag $pkg_args $args --tag-prefix '${{inputs.package}}-'"
+
+          echo "Pushing commit"
+          eval "cargo release push $pkg_args $args"
