@@ -167,3 +167,6 @@ impl ValidatorAggregatedSignature {
         Ok(bytes)
     }
 }
+
+crate::export_iota_types_bcs_conversion!(ValidatorCommittee, ValidatorCommitteeMember);
+crate::export_iota_types_objects_bcs_conversion!(ValidatorSignature, ValidatorAggregatedSignature);

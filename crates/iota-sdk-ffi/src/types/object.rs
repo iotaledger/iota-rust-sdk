@@ -651,3 +651,13 @@ impl GenesisObject {
         self.0.data().clone().into()
     }
 }
+
+crate::export_iota_types_bcs_conversion!(ObjectReference, TypeOrigin, UpgradeInfo, MoveStruct);
+crate::export_iota_types_objects_bcs_conversion!(
+    ObjectId,
+    Object,
+    ObjectData,
+    MovePackage,
+    Owner,
+    GenesisObject
+);
