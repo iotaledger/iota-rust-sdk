@@ -1,23 +1,36 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! This example requires running a localnet.
+//! This example requires you to compile a Move package first.
+//!
+//! ```bash
+//! cd /path/to/your/move/package/Move.toml
+//!
+//! export COMPILED_PACKAGE=$(iota move build --dump-bytecode-as-base64)
 //! ```
-//! iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
+//!
+//! ```fish
+//! cd /path/to/your/move/package/Move.toml
+//!
+//! set -x COMPILED_PACKAGE (iota move build --dump-bytecode-as-base64)
 //! ```
+
+use std::env::var;
 
 use eyre::{Result, bail};
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
 use iota_graphql_client::{Client, faucet::FaucetClient};
-use iota_transaction_builder::{MovePackageData, TransactionBuilder, res};
-use iota_types::{Address, Input, ObjectId, ObjectOut, StructTag};
+use iota_transaction_builder::{MovePackageData, TransactionBuilder, builder::UpgradePolicy, res};
+use iota_types::{Address, ObjectId, ObjectOut, StructTag};
 use rand::rngs::OsRng;
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let compiled_package = var("COMPILED_PACKAGE")?;
+
     // Parse the compiled `first_package` example from the monorepo created with
     // `iota move build --dump-bytecode-as-base64`
-    let data = serde_json::from_str::<MovePackageData>(SERIALIZED_FIRST_PACKAGE)?;
+    let data = serde_json::from_str::<MovePackageData>(&compiled_package)?;
     let Some(compiled_package_digest) = data.digest else {
         bail!("Missing compiled package digest");
     };
@@ -25,12 +38,11 @@ async fn main() -> Result<()> {
 
     // Create a random private key to derive a sender address and for signing
     let private_key = Ed25519PrivateKey::generate(OsRng);
-    let public_key = private_key.public_key();
-    let sender = public_key.derive_address();
+    let sender = private_key.public_key().derive_address();
     println!("Sender: {sender}");
 
     // Fund the sender address for gas payment
-    let faucet = FaucetClient::new_localnet();
+    let faucet = FaucetClient::new_devnet();
     let Some(receipt) = faucet.request_and_wait(sender).await? else {
         bail!("Failed to request coins from faucet");
     };
@@ -39,21 +51,20 @@ async fn main() -> Result<()> {
         receipt.sent.iter().map(|coin| coin.amount).sum::<u64>()
     );
 
-    let client = Client::new_localnet();
+    let client = Client::new_devnet();
 
-    // Build the `publish` PTB, that consists of 2 steps
-    let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
-
-    // 1. Create the upgrade cap
-    builder.publish(data.clone()).name("upgrade_cap");
-
+    // Build the `publish` PTB, that consists of 2 steps;
+    // 1. Publish the package and receive the upgrade cap in return
     // 2. Transfer the upgrade cap to the sender address
-    builder.transfer_objects(sender, [res("upgrade_cap")]);
+    let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
+    builder
+        .publish(data.clone())
+        .name("upgrade_cap")
+        .transfer_objects(sender, [res("upgrade_cap")]);
 
-    // Finalize the PTB
     let tx = builder.finish().await?;
 
-    // Perform a dry-run to check if everything is fine
+    // Perform a dry-run first
     let result = client.dry_run_tx(&tx, false).await?;
     if let Some(err) = result.error {
         bail!("Dry run failed: {err}");
@@ -77,7 +88,6 @@ async fn main() -> Result<()> {
     // Resolve UpgradeCap and PackageId via the client
     let mut upgrade_cap = None::<ObjectId>;
     let mut package_id = None::<ObjectId>;
-
     for changed_obj in effects.as_v1().changed_objects.iter() {
         match changed_obj.output_state {
             ObjectOut::ObjectWrite { owner, .. } => {
@@ -108,40 +118,23 @@ async fn main() -> Result<()> {
         bail!("Missing package id");
     };
 
-    let Some(upgrade_cap_ref) = client
-        .object(upgrade_cap_id, None)
-        .await?
-        .map(|obj| obj.object_ref())
-    else {
-        bail!("Missing upgrade cap object");
-    };
-
     // Build the `upgrade` PTB, that consists of 3 steps
-    let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
-
-    let upgrade_cap_arg = builder.input(Input::ImmutableOrOwned(upgrade_cap_ref));
-    let upgrade_policy_arg = builder.pure(0u8);
-    let compiled_package_digest_arg = builder.pure(compiled_package_digest);
-
     // 1. Create the upgrade ticket
+    // 2. Get the upgrade receipt
+    // 3. Finalize the upgrade
+    let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
     builder
         .move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
-        .arguments([
-            upgrade_cap_arg,
-            upgrade_policy_arg,
-            compiled_package_digest_arg,
-        ])
-        .name("upgrade_ticket");
-
-    // 2. Get the upgrade receipt
-    builder
+        .arguments((
+            upgrade_cap_id,
+            UpgradePolicy::Compatible as u8,
+            compiled_package_digest,
+        ))
+        .name("upgrade_ticket")
         .upgrade(package_id, res("upgrade_ticket"), data)
-        .name("upgrade_receipt");
-
-    // 3. Finalize the upgrade
-    builder
+        .name("upgrade_receipt")
         .move_call(Address::FRAMEWORK, "package", "commit_upgrade")
-        .arguments((upgrade_cap_arg, res("upgrade_receipt")));
+        .arguments((upgrade_cap_id, res("upgrade_receipt")));
 
     // Finalize the PTB
     let tx = builder.finish().await?;
@@ -181,6 +174,3 @@ async fn main() -> Result<()> {
 
     Ok(())
 }
-
-// Compiled `first_package` example
-const SERIALIZED_FIRST_PACKAGE: &str = r#"{"modules":["oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJACqIDGgy8A5cBDdMEBgAKAQ0BEwEUAAIMAAABCAAAAAgAAQQEAAMDAgAACAABAAAJAgMAABACAwAAEgQDAAAMBQYAAAYHAQAAEQgBAAAFCQoAAQsACwACDg8BAQwCEw8BAQgDDwwNAAoOCgYJBgEHCAQAAQYIAAEDAQYIAQQHCAEDAwcIBAEIAAQDAwUHCAQDCAAFBwgEAgMHCAQBCAIBCAMBBggEAQUBCAECCQAFBkNvbmZpZwVGb3JnZQVTd29yZAlUeENvbnRleHQDVUlEDWNyZWF0ZV9jb25maWcMY3JlYXRlX3N3b3JkAmlkBGluaXQFbWFnaWMJbXlfbW9kdWxlA25ldwluZXdfc3dvcmQGb2JqZWN0D3B1YmxpY190cmFuc2ZlcgZzZW5kZXIIc3RyZW5ndGgOc3dvcmRfdHJhbnNmZXIOc3dvcmRzX2NyZWF0ZWQIdHJhbnNmZXIKdHhfY29udGV4dAV2YWx1ZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAgMHCAMJAxADAQICBwgDEgMCAgIHCAMVAwAAAAABCQoAEQgGAAAAAAAAAAASAQsALhELOAACAQEAAAEECwAQABQCAgEAAAEECwAQARQCAwEAAAEECwAQAhQCBAEAAAEOCgAQAhQGAQAAAAAAAAAWCwAPAhULAxEICwELAhIAAgUBAAABCAsDEQgLAAsBEgALAjgBAgYBAAABBAsACwE4AgIHAQAAAQULAREICwASAgIAAQACAQEA"],"dependencies":["0x0000000000000000000000000000000000000000000000000000000000000002","0x0000000000000000000000000000000000000000000000000000000000000001"],"digest":[246,127,102,77,186,19,68,12,161,181,56,248,210,0,91,211,245,251,165,152,0,197,250,135,171,37,177,240,133,76,122,124]}"#;
