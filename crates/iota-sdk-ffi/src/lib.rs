@@ -45,7 +45,7 @@ pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
     Ok(hex::decode(input)?)
 }
 
-macro_rules! export_basic_types_bcs_conversion {
+macro_rules! export_primitive_types_bcs_conversion {
     ($($name:ty),+ $(,)?) => {
         paste::paste! {$(
             /// Create this type from BCS encoded bytes.
@@ -63,4 +63,4 @@ macro_rules! export_basic_types_bcs_conversion {
     };
 }
 
-export_basic_types_bcs_conversion!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
+export_primitive_types_bcs_conversion!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
