@@ -6404,7 +6404,7 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(`ptr`: Pointer,`pac
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(`ptr`: Pointer,`coins`: RustBuffer.ByValue,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(`ptr`: Pointer,`coin`: Pointer,`amounts`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9051,7 +9051,11 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+<<<<<<< HEAD
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 9208.toShort()) {
+=======
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 38983.toShort()) {
+>>>>>>> sdk-bindings
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747.toShort()) {
@@ -40553,7 +40557,7 @@ public interface TransactionBuilderInterface {
      * sent.
      * If `amount` is `None`, the entire gas coin is transferred.
      */
-    fun `sendIota`(`recipient`: Address, `amount`: PtbArgument? = null): TransactionBuilder
+    fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): TransactionBuilder
     
     /**
      * Split a coin by the provided amounts.
@@ -40953,6 +40957,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     /**
      * Send IOTA to a recipient address.
+<<<<<<< HEAD
      *
      * The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
      * equals 1_000_000_000 NANOS.
@@ -40960,11 +40965,14 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      * sent.
      * If `amount` is `None`, the entire gas coin is transferred.
      */override fun `sendIota`(`recipient`: Address, `amount`: PtbArgument?): TransactionBuilder {
+=======
+     */override fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): TransactionBuilder {
+>>>>>>> sdk-bindings
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
-        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalTypePTBArgument.lower(`amount`),_status)
+        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterTypePTBArgument.lower(`amount`),_status)
 }
     }
     )

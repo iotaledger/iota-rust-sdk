@@ -1627,7 +1627,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+<<<<<<< HEAD
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 9208:
+=======
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 38983:
+>>>>>>> sdk-bindings
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6575,7 +6579,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
-    _UniffiRustBuffer,
+    ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota.restype = ctypes.c_void_p
@@ -40510,7 +40514,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT):
+    def send_iota(self, recipient: "Address",amount: "PtbArgument"):
         """
         Send IOTA to a recipient address.
 
@@ -40967,7 +40971,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT) -> "TransactionBuilder":
+    def send_iota(self, recipient: "Address",amount: "PtbArgument") -> "TransactionBuilder":
         """
         Send IOTA to a recipient address.
 
@@ -40980,14 +40984,12 @@ _UniffiConverterTypeSdkFfiError,
 
         _UniffiConverterTypeAddress.check_lower(recipient)
         
-        if amount is _DEFAULT:
-            amount = None
-        _UniffiConverterOptionalTypePtbArgument.check_lower(amount)
+        _UniffiConverterTypePtbArgument.check_lower(amount)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota,self._uniffi_clone_pointer(),
         _UniffiConverterTypeAddress.lower(recipient),
-        _UniffiConverterOptionalTypePtbArgument.lower(amount))
+        _UniffiConverterTypePtbArgument.lower(amount))
         )
 
 

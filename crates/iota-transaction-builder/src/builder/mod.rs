@@ -395,10 +395,8 @@ impl<C, L> TransactionBuilder<C, L> {
     /// Send IOTA to a recipient address.
     ///
     /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
-    /// equals 1_000_000_000 NANOS.
-    /// If `amount` is provided, that amount is split from the gas coin and
+    /// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
     /// sent.
-    /// If `amount` is `None`, the entire gas coin is transferred.
     ///
     /// # Example
     ///
@@ -426,18 +424,14 @@ impl<C, L> TransactionBuilder<C, L> {
     pub fn send_iota<T: PTBArgument>(
         &mut self,
         recipient: Address,
-        amount: impl Into<Option<T>>,
+        amount: T,
     ) -> &mut TransactionBuilder<C> {
         let rec_arg = self.pure(recipient);
-        let coin_arg = if let Some(amount) = amount.into() {
-            let amt_arg = self.apply_argument(amount);
-            self.command(Command::SplitCoins(SplitCoins {
-                coin: Argument::Gas,
-                amounts: vec![amt_arg],
-            }))
-        } else {
-            Argument::Gas
-        };
+        let amt_arg = self.apply_argument(amount);
+        let coin_arg = self.command(Command::SplitCoins(SplitCoins {
+            coin: Argument::Gas,
+            amounts: vec![amt_arg],
+        }));
         self.command(Command::TransferObjects(TransferObjects {
             objects: vec![coin_arg],
             address: rec_arg,
