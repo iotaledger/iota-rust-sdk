@@ -418,7 +418,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///     )?;
     ///
     ///     let mut builder = TransactionBuilder::new(from_address).with_client(client);
-    ///     builder.send_iota::<u64>(to_address, 5000000000u64);
+    ///     builder.send_iota(to_address, 5000000000u64);
     ///     let txn = builder.finish().await?;
     ///     Ok(())
     /// }
