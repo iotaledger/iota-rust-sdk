@@ -539,7 +539,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///     .name("addresses")
     ///     .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
     ///     .generics::<(Address, u64)>()
-    ///     .arguments([res("addresses"), [10000000u64, 20000000u64]]);
+    ///     .arguments((res("addresses"), [10000000u64, 20000000u64]));
     ///
     /// let txn: Transaction = builder.finish().await?;
     /// # Ok(())
