@@ -407,3 +407,11 @@ impl MultisigMember {
         self.0.weight()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(
+    MultisigMemberSignature,
+    MultisigMemberPublicKey,
+    MultisigAggregatedSignature,
+    MultisigCommittee,
+    MultisigMember
+);

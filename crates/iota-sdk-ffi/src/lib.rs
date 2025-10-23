@@ -10,6 +10,8 @@
 
 use base64ct::Encoding;
 
+mod macros;
+
 pub mod crypto;
 pub mod error;
 pub mod faucet;
@@ -17,6 +19,8 @@ pub mod graphql;
 pub mod transaction_builder;
 pub mod types;
 pub mod uniffi_helpers;
+
+pub(crate) use macros::*;
 
 uniffi::setup_scaffolding!();
 
