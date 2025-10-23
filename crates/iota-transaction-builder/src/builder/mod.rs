@@ -396,18 +396,14 @@ impl<C, L> TransactionBuilder<C, L> {
     pub fn send_iota<T: PTBArgument>(
         &mut self,
         recipient: Address,
-        amount: impl Into<Option<T>>,
+        amount: T,
     ) -> &mut TransactionBuilder<C> {
         let rec_arg = self.pure(recipient);
-        let coin_arg = if let Some(amount) = amount.into() {
-            let amt_arg = self.apply_argument(amount);
-            self.command(Command::SplitCoins(SplitCoins {
-                coin: Argument::Gas,
-                amounts: vec![amt_arg],
-            }))
-        } else {
-            Argument::Gas
-        };
+        let amt_arg = self.apply_argument(amount);
+        let coin_arg = self.command(Command::SplitCoins(SplitCoins {
+            coin: Argument::Gas,
+            amounts: vec![amt_arg],
+        }));
         self.command(Command::TransferObjects(TransferObjects {
             objects: vec![coin_arg],
             address: rec_arg,
