@@ -2850,6 +2850,46 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2900,6 +2940,10 @@ fun uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_bcs(
 fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs(
 ): Short
@@ -3016,6 +3060,22 @@ fun uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_to_bcs(
 fun uniffi_iota_sdk_ffi_checksum_func_hex_decode(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_hex_encode(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i16_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i32_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i32_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i64_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i64_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i8_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_id_operation_from_bcs(
 ): Short
@@ -3157,6 +3217,10 @@ fun uniffi_iota_sdk_ffi_checksum_func_split_coins_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_split_coins_to_bcs(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_func_string_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_string_to_bcs(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_struct_tag_to_bcs(
@@ -3208,6 +3272,22 @@ fun uniffi_iota_sdk_ffi_checksum_func_type_origin_to_bcs(
 fun uniffi_iota_sdk_ffi_checksum_func_type_tag_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_type_tag_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs(
 ): Short
@@ -6808,6 +6888,10 @@ fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(`bcs`: RustBuffer.B
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(`input`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6923,6 +7007,22 @@ fun uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_bcs(`data`: Pointer,uniff
 fun uniffi_iota_sdk_ffi_fn_func_hex_decode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_hex_encode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Short
+fun uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(`input`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Int
+fun uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(`input`: Int,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(`input`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(`input`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_id_operation_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -7064,6 +7164,10 @@ fun uniffi_iota_sdk_ffi_fn_func_split_coins_from_bcs(`bcs`: RustBuffer.ByValue,u
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_split_coins_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_string_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_string_to_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_struct_tag_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_struct_tag_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7115,6 +7219,22 @@ fun uniffi_iota_sdk_ffi_fn_func_type_origin_to_bcs(`data`: RustBuffer.ByValue,un
 fun uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Short
+fun uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(`input`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Int
+fun uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(`input`: Int,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(`input`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(`input`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -7356,6 +7476,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs() != 3863.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs() != 591.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs() != 11338.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs() != 3386.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7528,6 +7654,30 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_hex_encode() != 34343.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs() != 10273.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i16_to_bcs() != 28969.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i32_from_bcs() != 7849.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i32_to_bcs() != 52773.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i64_from_bcs() != 17714.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i64_to_bcs() != 38028.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i8_from_bcs() != 21810.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs() != 57592.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_id_operation_from_bcs() != 10384.toShort()) {
@@ -7740,6 +7890,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_func_split_coins_to_bcs() != 30667.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs() != 53853.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs() != 54804.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_bcs() != 24910.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7816,6 +7972,30 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_type_tag_to_bcs() != 57365.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs() != 3653.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs() != 13254.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs() != 335.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs() != 36384.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs() != 63829.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs() != 2947.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs() != 34764.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs() != 59020.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs() != 6308.toShort()) {
@@ -10385,6 +10565,29 @@ public object FfiConverterUByte: FfiConverter<UByte, Byte> {
 /**
  * @suppress
  */
+public object FfiConverterByte: FfiConverter<Byte, Byte> {
+    override fun lift(value: Byte): Byte {
+        return value
+    }
+
+    override fun read(buf: ByteBuffer): Byte {
+        return buf.get()
+    }
+
+    override fun lower(value: Byte): Byte {
+        return value
+    }
+
+    override fun allocationSize(value: Byte) = 1UL
+
+    override fun write(value: Byte, buf: ByteBuffer) {
+        buf.put(value)
+    }
+}
+
+/**
+ * @suppress
+ */
 public object FfiConverterUShort: FfiConverter<UShort, Short> {
     override fun lift(value: Short): UShort {
         return value.toUShort()
@@ -10402,6 +10605,29 @@ public object FfiConverterUShort: FfiConverter<UShort, Short> {
 
     override fun write(value: UShort, buf: ByteBuffer) {
         buf.putShort(value.toShort())
+    }
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterShort: FfiConverter<Short, Short> {
+    override fun lift(value: Short): Short {
+        return value
+    }
+
+    override fun read(buf: ByteBuffer): Short {
+        return buf.getShort()
+    }
+
+    override fun lower(value: Short): Short {
+        return value
+    }
+
+    override fun allocationSize(value: Short) = 2UL
+
+    override fun write(value: Short, buf: ByteBuffer) {
+        buf.putShort(value)
     }
 }
 
@@ -60177,6 +60403,32 @@ public typealias FfiConverterTypeValue = FfiConverterString
     
 
         /**
+         * Create a bool from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `boolFromBcs`(`input`: kotlin.ByteArray): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this bool to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `boolToBcs`(`input`: kotlin.Boolean): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(
+        FfiConverterBoolean.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
          * Create this type from BCS encoded bytes.
          */
     @Throws(SdkFfiException::class) fun `cancelledTransactionFromBcs`(`bcs`: kotlin.ByteArray): CancelledTransaction {
@@ -60918,6 +61170,110 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_hex_encode(
         FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a i16 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i16FromBcs`(`input`: kotlin.ByteArray): kotlin.Short {
+            return FfiConverterShort.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this i16 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i16ToBcs`(`input`: kotlin.Short): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(
+        FfiConverterShort.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a i32 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i32FromBcs`(`input`: kotlin.ByteArray): kotlin.Int {
+            return FfiConverterInt.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this i32 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i32ToBcs`(`input`: kotlin.Int): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(
+        FfiConverterInt.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a i64 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i64FromBcs`(`input`: kotlin.ByteArray): kotlin.Long {
+            return FfiConverterLong.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this i64 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i64ToBcs`(`input`: kotlin.Long): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(
+        FfiConverterLong.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a i8 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i8FromBcs`(`input`: kotlin.ByteArray): kotlin.Byte {
+            return FfiConverterByte.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this i8 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i8ToBcs`(`input`: kotlin.Byte): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(
+        FfiConverterByte.lower(`input`),_status)
 }
     )
     }
@@ -61834,6 +62190,32 @@ public typealias FfiConverterTypeValue = FfiConverterString
     
 
         /**
+         * Create a String from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `stringFromBcs`(`input`: kotlin.ByteArray): kotlin.String {
+            return FfiConverterString.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_string_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this String to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `stringToBcs`(`input`: kotlin.String): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_string_to_bcs(
+        FfiConverterString.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
          * Create this type from BCS encoded bytes.
          */
     @Throws(SdkFfiException::class) fun `structTagFromBcs`(`bcs`: kotlin.ByteArray): StructTag {
@@ -62166,6 +62548,110 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(
         FfiConverterTypeTypeTag.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a u16 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u16FromBcs`(`input`: kotlin.ByteArray): kotlin.UShort {
+            return FfiConverterUShort.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this u16 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u16ToBcs`(`input`: kotlin.UShort): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(
+        FfiConverterUShort.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a u32 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u32FromBcs`(`input`: kotlin.ByteArray): kotlin.UInt {
+            return FfiConverterUInt.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this u32 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u32ToBcs`(`input`: kotlin.UInt): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(
+        FfiConverterUInt.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a u64 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u64FromBcs`(`input`: kotlin.ByteArray): kotlin.ULong {
+            return FfiConverterULong.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this u64 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u64ToBcs`(`input`: kotlin.ULong): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(
+        FfiConverterULong.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a u8 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u8FromBcs`(`input`: kotlin.ByteArray): kotlin.UByte {
+            return FfiConverterUByte.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this u8 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u8ToBcs`(`input`: kotlin.UByte): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(
+        FfiConverterUByte.lower(`input`),_status)
 }
     )
     }

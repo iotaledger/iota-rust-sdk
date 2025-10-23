@@ -9,6 +9,7 @@
 )]
 
 use base64ct::Encoding;
+use serde::Deserialize;
 
 mod macros;
 
@@ -43,3 +44,23 @@ pub fn hex_encode(input: &[u8]) -> String {
 pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
     Ok(hex::decode(input)?)
 }
+
+macro_rules! export_primitive_types_bcs_conversion {
+    ($($name:ty),+ $(,)?) => {
+        paste::paste!{$(
+        #[doc = "Create a " $name " from BCS encoded bytes."]
+        #[uniffi::export]
+        pub fn [< $name:snake _from_bcs >](input: &[u8]) -> crate::error::Result<$name> {
+            Ok(bcs::from_bytes(input)?)
+        }
+
+        #[doc = "Convert this " $name " to BCS encoded bytes."]
+        #[uniffi::export]
+        pub fn [< $name:snake _to_bcs >](input: $name) -> crate::error::Result<Vec<u8>> {
+            Ok(bcs::to_bytes(&input)?)
+        }
+        )+}
+    };
+}
+
+export_primitive_types_bcs_conversion!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
