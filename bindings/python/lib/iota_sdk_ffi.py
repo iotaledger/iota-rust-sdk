@@ -1207,7 +1207,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 64922:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 15164:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 136:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -38169,9 +38169,14 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def merge_coins(self, coin: "PtbArgument",coins_to_merge: "typing.List[PtbArgument]"):
+    def merge_coins(self, primary_coin: "PtbArgument",consumed_coins: "typing.List[PtbArgument]"):
         """
-        Merge a list of coins into a single coin, without producing any result.
+        Merge multiple coins into one.
+
+        This method combines the balances of multiple coins of the same coin
+        type into a single coin. The `primary_coin` will receive the balances
+        from all `consumed_coins`. After merging, the `consumed_coins` will
+        be consumed and no longer exist.
         """
 
         raise NotImplementedError
@@ -38529,19 +38534,24 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def merge_coins(self, coin: "PtbArgument",coins_to_merge: "typing.List[PtbArgument]") -> "TransactionBuilder":
+    def merge_coins(self, primary_coin: "PtbArgument",consumed_coins: "typing.List[PtbArgument]") -> "TransactionBuilder":
         """
-        Merge a list of coins into a single coin, without producing any result.
+        Merge multiple coins into one.
+
+        This method combines the balances of multiple coins of the same coin
+        type into a single coin. The `primary_coin` will receive the balances
+        from all `consumed_coins`. After merging, the `consumed_coins` will
+        be consumed and no longer exist.
         """
 
-        _UniffiConverterTypePtbArgument.check_lower(coin)
+        _UniffiConverterTypePtbArgument.check_lower(primary_coin)
         
-        _UniffiConverterSequenceTypePtbArgument.check_lower(coins_to_merge)
+        _UniffiConverterSequenceTypePtbArgument.check_lower(consumed_coins)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins,self._uniffi_clone_pointer(),
-        _UniffiConverterTypePtbArgument.lower(coin),
-        _UniffiConverterSequenceTypePtbArgument.lower(coins_to_merge))
+        _UniffiConverterTypePtbArgument.lower(primary_coin),
+        _UniffiConverterSequenceTypePtbArgument.lower(consumed_coins))
         )
 
 

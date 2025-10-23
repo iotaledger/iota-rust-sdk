@@ -3719,7 +3719,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins()
 	})
-	if checksum != 15164 {
+	if checksum != 136 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins: UniFFI API checksum mismatch")
 	}
@@ -21955,8 +21955,13 @@ type TransactionBuilderInterface interface {
 	// Make a move vector from a list of elements. The elements must all be of
 	// the type indicated by `type_tag`.
 	MakeMoveVec(elements []*MoveArg, typeTag *TypeTag, name string) *TransactionBuilder
-	// Merge a list of coins into a single coin, without producing any result.
-	MergeCoins(coin *PtbArgument, coinsToMerge []*PtbArgument) *TransactionBuilder
+	// Merge multiple coins into one.
+	//
+	// This method combines the balances of multiple coins of the same coin
+	// type into a single coin. The `primary_coin` will receive the balances
+	// from all `consumed_coins`. After merging, the `consumed_coins` will
+	// be consumed and no longer exist.
+	MergeCoins(primaryCoin *PtbArgument, consumedCoins []*PtbArgument) *TransactionBuilder
 	// Call a Move function with the given arguments.
 	MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, names []string) *TransactionBuilder
 	// Publish a list of modules with the given dependencies. The result
@@ -22221,13 +22226,18 @@ func (_self *TransactionBuilder) MakeMoveVec(elements []*MoveArg, typeTag *TypeT
 	}))
 }
 
-// Merge a list of coins into a single coin, without producing any result.
-func (_self *TransactionBuilder) MergeCoins(coin *PtbArgument, coinsToMerge []*PtbArgument) *TransactionBuilder {
+// Merge multiple coins into one.
+//
+// This method combines the balances of multiple coins of the same coin
+// type into a single coin. The `primary_coin` will receive the balances
+// from all `consumed_coins`. After merging, the `consumed_coins` will
+// be consumed and no longer exist.
+func (_self *TransactionBuilder) MergeCoins(primaryCoin *PtbArgument, consumedCoins []*PtbArgument) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
-		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(coin), FfiConverterSequencePtbArgumentINSTANCE.Lower(coinsToMerge),_uniffiStatus)
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(primaryCoin), FfiConverterSequencePtbArgumentINSTANCE.Lower(consumedCoins),_uniffiStatus)
 	}))
 }
 

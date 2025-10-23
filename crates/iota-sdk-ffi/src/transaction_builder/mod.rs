@@ -211,14 +211,19 @@ impl TransactionBuilder {
         self
     }
 
-    /// Merge a list of coins into a single coin, without producing any result.
+    /// Merge multiple coins into one.
+    ///
+    /// This method combines the balances of multiple coins of the same coin
+    /// type into a single coin. The `primary_coin` will receive the balances
+    /// from all `consumed_coins`. After merging, the `consumed_coins` will
+    /// be consumed and no longer exist.
     pub fn merge_coins(
         self: Arc<Self>,
-        coin: &PTBArgument,
-        coins_to_merge: Vec<Arc<PTBArgument>>,
+        primary_coin: &PTBArgument,
+        consumed_coins: Vec<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.merge_coins(coin, coins_to_merge);
+            builder.merge_coins(primary_coin, consumed_coins);
         });
         self
     }
