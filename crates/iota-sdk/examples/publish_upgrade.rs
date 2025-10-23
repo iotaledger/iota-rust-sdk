@@ -20,8 +20,8 @@ use std::env::var;
 use eyre::{Result, bail};
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
 use iota_graphql_client::{Client, faucet::FaucetClient};
-use iota_transaction_builder::{MovePackageData, TransactionBuilder, builder::UpgradePolicy, res};
-use iota_types::{Address, ObjectId, ObjectOut, StructTag};
+use iota_transaction_builder::{MovePackageData, TransactionBuilder, res};
+use iota_types::{Address, ObjectId, ObjectOut, StructTag, UpgradePolicy};
 use rand::rngs::OsRng;
 
 #[tokio::main]
@@ -53,13 +53,13 @@ async fn main() -> Result<()> {
 
     let client = Client::new_devnet();
 
-    // Build the `publish` PTB, that consists of 2 steps;
-    // 1. Publish the package and receive the upgrade cap in return
-    // 2. Transfer the upgrade cap to the sender address
+    // Build the `publish` PTB
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
     builder
+        // Publish the package and receive the upgrade cap
         .publish(data.clone())
         .name("upgrade_cap")
+        // Transfer the upgrade cap to the sender address
         .transfer_objects(sender, [res("upgrade_cap")]);
 
     let tx = builder.finish().await?;
@@ -118,12 +118,11 @@ async fn main() -> Result<()> {
         bail!("Missing package id");
     };
 
-    // Build the `upgrade` PTB, that consists of 3 steps
-    // 1. Create the upgrade ticket
-    // 2. Get the upgrade receipt
-    // 3. Finalize the upgrade
+    // Build the `upgrade` PTB
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
     builder
+        // Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
+        // ticket
         .move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
         .arguments((
             upgrade_cap_id,
@@ -131,8 +130,10 @@ async fn main() -> Result<()> {
             compiled_package_digest,
         ))
         .name("upgrade_ticket")
+        // Upgrade the package
         .upgrade(package_id, res("upgrade_ticket"), data)
         .name("upgrade_receipt")
+        // Commit the upgrade
         .move_call(Address::FRAMEWORK, "package", "commit_upgrade")
         .arguments((upgrade_cap_id, res("upgrade_receipt")));
 
