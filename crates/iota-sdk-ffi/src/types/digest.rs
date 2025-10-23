@@ -46,3 +46,5 @@ impl Digest {
         self.0.to_base58()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(Digest);

@@ -413,3 +413,13 @@ pub enum IdOperation {
     Created,
     Deleted,
 }
+
+crate::export_iota_types_bcs_conversion!(
+    TransactionEffectsV1,
+    ChangedObject,
+    UnchangedSharedObject,
+    UnchangedSharedKind,
+    ObjectIn,
+    ObjectOut,
+    IdOperation
+);

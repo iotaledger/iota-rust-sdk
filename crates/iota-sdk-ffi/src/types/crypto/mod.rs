@@ -7,7 +7,7 @@ pub mod zklogin;
 
 use std::sync::Arc;
 
-use iota_types::SignatureScheme;
+use iota_types::{PublicKeyExt, SignatureScheme};
 
 use crate::{
     error::Result,
@@ -87,9 +87,14 @@ impl Ed25519PublicKey {
         self.0.derive_address().into()
     }
 
-    /// Return the flag for this signature scheme
+    /// Returns the signature scheme for this public key.
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
+    }
+
+    /// Returns the bytes with signature scheme flag prepended.
+    pub fn to_flagged_bytes(&self) -> Vec<u8> {
+        self.0.to_flagged_bytes()
     }
 }
 
@@ -119,9 +124,14 @@ impl Secp256k1PublicKey {
         self.0.derive_address().into()
     }
 
-    /// Return the flag for this signature scheme
+    /// Returns the signature scheme for this public key.
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
+    }
+
+    /// Returns the bytes with signature scheme flag prepended.
+    pub fn to_flagged_bytes(&self) -> Vec<u8> {
+        self.0.to_flagged_bytes()
     }
 }
 
@@ -151,9 +161,14 @@ impl Secp256r1PublicKey {
         self.0.derive_address().into()
     }
 
-    /// Return the flag for this signature scheme
+    /// Returns the signature scheme for this public key.
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme()
+    }
+
+    /// Returns the bytes with signature scheme flag prepended
+    pub fn to_flagged_bytes(&self) -> Vec<u8> {
+        self.0.to_flagged_bytes()
     }
 }
 
@@ -209,4 +224,15 @@ impl_crypto_object!(
     /// secp256r1-public-key = 33OCTECT
     /// ```
     Secp256r1Signature
+);
+
+crate::export_iota_types_objects_bcs_conversion!(
+    Ed25519PublicKey,
+    Bls12381PublicKey,
+    Secp256k1PublicKey,
+    Secp256r1PublicKey,
+    Ed25519Signature,
+    Bls12381Signature,
+    Secp256k1Signature,
+    Secp256r1Signature,
 );

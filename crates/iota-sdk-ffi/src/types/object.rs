@@ -23,7 +23,7 @@ use crate::{
 ///
 /// ## Relationship to Address
 ///
-/// [`Address`]es and [`ObjectId`]s share the same 32-byte addressable space but
+/// `Address`es and `ObjectId`s share the same 32-byte addressable space but
 /// are derived leveraging different domain-separator values to ensure,
 /// cryptographically, that there won't be any overlap, e.g. there can't be a
 /// valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
@@ -651,3 +651,13 @@ impl GenesisObject {
         self.0.data().clone().into()
     }
 }
+
+crate::export_iota_types_bcs_conversion!(ObjectReference, TypeOrigin, UpgradeInfo, MoveStruct);
+crate::export_iota_types_objects_bcs_conversion!(
+    ObjectId,
+    Object,
+    ObjectData,
+    MovePackage,
+    Owner,
+    GenesisObject
+);

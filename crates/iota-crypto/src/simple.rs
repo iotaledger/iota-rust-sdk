@@ -78,7 +78,7 @@ pub use keypair::{SimpleKeypair, SimpleVerifyingKey};
 )]
 mod keypair {
     use iota_sdk_types::{
-        MultisigMemberPublicKey, SignatureScheme, SimpleSignature, UserSignature,
+        MultisigMemberPublicKey, PublicKeyExt, SignatureScheme, SimpleSignature, UserSignature,
     };
     use signature::{Signer, Verifier};
 

@@ -277,7 +277,7 @@ impl PTBArgument for &Res {
         if let Some(arg) = ptb.named_results.get(&self.0) {
             *arg
         } else {
-            panic!("no command named `{}` exists", self.0)
+            panic!("no command result named `{}` exists", self.0)
         }
     }
 }
