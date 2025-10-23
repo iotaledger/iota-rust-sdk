@@ -1627,11 +1627,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-<<<<<<< HEAD
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 9208:
-=======
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 38983:
->>>>>>> sdk-bindings
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -40519,10 +40515,8 @@ class TransactionBuilderProtocol(typing.Protocol):
         Send IOTA to a recipient address.
 
         The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
-        equals 1_000_000_000 NANOS.
-        If `amount` is provided, that amount is split from the gas coin and
+        equals 1_000_000_000 NANOS. That amount is split from the gas coin and
         sent.
-        If `amount` is `None`, the entire gas coin is transferred.
         """
 
         raise NotImplementedError
@@ -40976,10 +40970,8 @@ _UniffiConverterTypeSdkFfiError,
         Send IOTA to a recipient address.
 
         The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
-        equals 1_000_000_000 NANOS.
-        If `amount` is provided, that amount is split from the gas coin and
+        equals 1_000_000_000 NANOS. That amount is split from the gas coin and
         sent.
-        If `amount` is `None`, the entire gas coin is transferred.
         """
 
         _UniffiConverterTypeAddress.check_lower(recipient)
