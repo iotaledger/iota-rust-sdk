@@ -538,6 +538,41 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Make a move vector from a list of elements.
+    ///
+    /// Often it is possible (and more efficient) to pass a rust slice or `Vec`
+    /// instead of calling this function, which will serialize the bytes into a
+    /// move vector pure argument.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use std::str::FromStr;
+    /// # use iota_transaction_builder::{TransactionBuilder, res};
+    /// # use iota_types::{Address, Transaction};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = iota_graphql_client::Client::new_devnet();
+    /// let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///
+    /// let address1 =
+    ///     Address::from_str("0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e")?;
+    /// let address2 =
+    ///     Address::from_str("0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")?;
+    ///
+    /// builder
+    ///     .make_move_vec([address1, address2])
+    ///     .name("addresses")
+    ///     .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
+    ///     .generics::<(Address, u64)>()
+    ///     .arguments((res("addresses"), [10000000u64, 20000000u64]));
+    ///
+    /// let txn: Transaction = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
     pub fn make_move_vec<T: PTBArgument + MoveType>(
         &mut self,
         elements: impl IntoIterator<Item = T>,
