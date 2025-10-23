@@ -113,3 +113,5 @@ impl PasskeyPublicKey {
         self.0.derive_address().into()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(PasskeyAuthenticator);
