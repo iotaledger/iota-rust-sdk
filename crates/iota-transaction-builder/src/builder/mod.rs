@@ -530,46 +530,7 @@ impl<C, L> TransactionBuilder<C, L> {
 }
 
 impl<L> TransactionBuilder<(), L> {
-    /// Add a gas coin that will be consumed. Optional.
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// # use std::str::FromStr;
-    /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
-    /// # use iota_transaction_builder::{TransactionBuilder, res, unresolved};
-    ///
-    /// let sender =
-    ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
-    ///
-    /// let mut builder = TransactionBuilder::new(sender);
-    ///
-    /// let gas_coin = ObjectReference {
-    ///     object_id: ObjectId::from_str(
-    ///         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
-    ///     )?,
-    ///     digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
-    ///     version: 435090179,
-    /// };
-    ///
-    /// builder
-    ///     .split_coins(unresolved::Argument::Gas, [1000u64])
-    ///     .gas(gas_coin)
-    ///     .gas_budget(1000000000)
-    ///     .gas_price(100);
-    ///
-    /// let txn: Transaction = builder.finish()?;
-    /// # Result::<_, eyre::Error>::Ok(())
-    /// ```
-    pub fn gas(&mut self, obj_ref: ObjectReference) -> &mut Self {
-        self.set_input(
-            InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
-            true,
-        );
-        self
-    }
-
-    /// Add multiple gas coins that will be consumed. Optional.
+    /// Add gas coins that will be consumed. Optional.
     ///
     /// # Example
     ///
@@ -600,16 +561,19 @@ impl<L> TransactionBuilder<(), L> {
     ///
     /// builder
     ///     .split_coins(unresolved::Argument::Gas, [1000u64])
-    ///     .gas_multi([gas_coin1, gas_coin2])
+    ///     .gas([gas_coin1, gas_coin2])
     ///     .gas_budget(1000000000)
     ///     .gas_price(100);
     ///
     /// let txn: Transaction = builder.finish()?;
     /// # Result::<_, eyre::Error>::Ok(())
     /// ```
-    pub fn gas_multi(&mut self, obj_refs: impl IntoIterator<Item = ObjectReference>) -> &mut Self {
+    pub fn gas(&mut self, obj_refs: impl IntoIterator<Item = ObjectReference>) -> &mut Self {
         for obj_ref in obj_refs {
-            self.gas(obj_ref);
+            self.set_input(
+                InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                true,
+            );
         }
         self
     }
@@ -676,41 +640,7 @@ impl<L> TransactionBuilder<Client, L> {
         &self.client
     }
 
-    /// Add a gas coin that will be consumed. If no gas coins are provided, the
-    /// client will set a default list owned by the sender.
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// # use std::str::FromStr;
-    /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
-    /// # use iota_transaction_builder::{TransactionBuilder, res, unresolved};
-    ///
-    /// # #[tokio::main(flavor = "current_thread")]
-    /// # async fn main() -> eyre::Result<()> {
-    /// let client = iota_graphql_client::Client::new_devnet();
-    /// let sender =
-    ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
-    ///
-    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
-    ///
-    /// let gas_coin =
-    ///     ObjectId::from_str("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?;
-    ///
-    /// builder
-    ///     .split_coins(unresolved::Argument::Gas, [1000u64])
-    ///     .gas(gas_coin);
-    ///
-    /// let txn: Transaction = builder.finish().await?;
-    /// # Ok(())
-    /// # }
-    /// ```
-    pub fn gas(&mut self, object_id: ObjectId) -> &mut Self {
-        self.set_input(InputKind::ImmutableOrOwned(object_id), true);
-        self
-    }
-
-    /// Add multiple gas coins that will be consumed. Optional.
+    /// Add gas coins that will be consumed. Optional.
     ///
     /// # Example
     ///
@@ -734,15 +664,15 @@ impl<L> TransactionBuilder<Client, L> {
     ///
     /// builder
     ///     .split_coins(unresolved::Argument::Gas, [1000u64])
-    ///     .gas_multi([gas_coin1, gas_coin2]);
+    ///     .gas([gas_coin1, gas_coin2]);
     ///
     /// let txn: Transaction = builder.finish().await?;
     /// # Ok(())
     /// # }
     /// ```
-    pub fn gas_multi(&mut self, obj_ids: impl IntoIterator<Item = ObjectId>) -> &mut Self {
+    pub fn gas(&mut self, obj_ids: impl IntoIterator<Item = ObjectId>) -> &mut Self {
         for id in obj_ids {
-            self.gas(id);
+            self.set_input(InputKind::ImmutableOrOwned(id), true);
         }
         self
     }

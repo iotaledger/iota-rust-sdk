@@ -30,11 +30,7 @@ fun main() = runBlocking {
                 listOf(PtbArgument.u8(0u), PtbArgument.u8(1u)),
         )
 
-        val gasObjId =
-                ObjectId.fromHex(
-                        "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
-                )
-        builder.gas(gasObjId).sponsor(sponsor)
+        builder.sponsor(sponsor)
 
         val txn = builder.finish()
 

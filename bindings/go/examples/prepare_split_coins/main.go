@@ -30,7 +30,6 @@ func main() {
 		sender,
 		[]*sdk.PtbArgument{sdk.PtbArgumentRes("coin1"), sdk.PtbArgumentRes("coin2"), sdk.PtbArgumentRes("coin3")},
 	)
-	builder.Gas(coinObjId).GasBudget(1000000000)
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {

@@ -364,7 +364,7 @@ mod tests {
         wait_for_tx(&client, tx_digest).await;
 
         let gas = coins.last().unwrap().id;
-        tx.gas(gas);
+        tx.gas([gas]);
 
         (tx, address, pk, coins)
     }
@@ -411,7 +411,7 @@ mod tests {
         assert!(result.is_err());
 
         tx.transfer_objects(recipient, vec![coin]);
-        tx.gas(ObjectReference::new(
+        tx.gas([ObjectReference::new(
             "0xd8792bce2743e002673752902c0e7348dfffd78638cb5367b0b85857bceb9821"
                 .parse()
                 .unwrap(),
@@ -419,7 +419,7 @@ mod tests {
             "2ZigdvsZn5BMeszscPQZq9z8ebnS2FpmAuRbAi9ednCk"
                 .parse()
                 .unwrap(),
-        ));
+        )]);
         tx.gas_price(1000);
 
         tx.finish().unwrap();
@@ -615,7 +615,7 @@ mod tests {
         tx.move_call(Address::FRAMEWORK, "package", "commit_upgrade")
             .arguments((upgrade_cap.unwrap(), receipt));
 
-        tx.gas(coins.last().unwrap().id);
+        tx.gas([coins.last().unwrap().id]);
 
         let effects = tx.execute(&key, true).await;
         wait_for_tx_and_check_effects_status_success(effects).await;
