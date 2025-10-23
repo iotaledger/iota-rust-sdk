@@ -4,7 +4,7 @@
 
 use blake2::Digest as DigestTrait;
 
-use crate::{Address, Digest};
+use crate::{Address, Digest, PublicKeyExt};
 
 type Blake2b256 = blake2::Blake2b<blake2::digest::consts::U32>;
 
@@ -317,14 +317,13 @@ mod type_digest {
         }
 
         /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-        pub fn to_bcs(&self) -> Result<Vec<u8>, bcs::Error> {
-            bcs::to_bytes(self)
+        pub fn to_bcs(&self) -> Vec<u8> {
+            bcs::to_bytes(self).expect("bcs serialization failed")
         }
 
         /// Serialize the transaction as a base64-encoded string.
-        pub fn to_base64(&self) -> Result<String, bcs::Error> {
-            let bytes = self.to_bcs()?;
-            Ok(base64ct::Base64::encode_string(&bytes))
+        pub fn to_base64(&self) -> String {
+            base64ct::Base64::encode_string(&self.to_bcs())
         }
 
         /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
@@ -347,14 +346,13 @@ mod type_digest {
         }
 
         /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-        pub fn to_bcs(&self) -> Result<Vec<u8>, bcs::Error> {
-            bcs::to_bytes(self)
+        pub fn to_bcs(&self) -> Vec<u8> {
+            bcs::to_bytes(self).expect("bcs serialization failed")
         }
 
         /// Serialize the transaction as a base64-encoded string.
-        pub fn to_base64(&self) -> Result<String, bcs::Error> {
-            let bytes = self.to_bcs()?;
-            Ok(base64ct::Base64::encode_string(&bytes))
+        pub fn to_base64(&self) -> String {
+            base64ct::Base64::encode_string(&self.to_bcs())
         }
 
         /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
@@ -410,6 +408,10 @@ mod signing_message {
             let digest = signing_digest(INTENT, self);
             digest.into_inner()
         }
+
+        pub fn signing_digest_hex(&self) -> String {
+            hex::encode(self.signing_digest())
+        }
     }
 
     impl TransactionV1 {
@@ -421,6 +423,10 @@ mod signing_message {
             };
             let digest = signing_digest(INTENT, &Transaction::V1(self.clone()));
             digest.into_inner()
+        }
+
+        pub fn signing_digest_hex(&self) -> String {
+            hex::encode(self.signing_digest())
         }
     }
 
@@ -441,6 +447,10 @@ mod signing_message {
             let digest = signing_digest(INTENT, &self.0);
             digest.into_inner()
         }
+
+        pub fn signing_digest_hex(&self) -> String {
+            hex::encode(self.signing_digest())
+        }
     }
 
     impl crate::CheckpointSummary {
@@ -455,6 +465,10 @@ mod signing_message {
             bcs::serialize_into(&mut message, self).unwrap();
             bcs::serialize_into(&mut message, &self.epoch).unwrap();
             message
+        }
+
+        pub fn signing_message_hex(&self) -> String {
+            hex::encode(self.signing_message())
         }
     }
 }

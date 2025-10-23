@@ -60,7 +60,7 @@ impl ZkLoginAuthenticator {
 ///
 /// A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
 /// account authenticators, and contains the information required to derive the
-/// onchain account [`Address`] for a Zklogin authenticator.
+/// onchain account `Address` for a Zklogin authenticator.
 ///
 /// ## Note
 ///
@@ -106,8 +106,6 @@ impl ZkLoginAuthenticator {
 /// ; with any leading zero bytes stripped
 /// address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
 /// ```
-///
-/// [`Address`]: crate::Address
 #[derive(derive_more::From, uniffi::Object)]
 pub struct ZkLoginPublicIdentifier(pub iota_types::ZkLoginPublicIdentifier);
 
@@ -430,3 +428,14 @@ pub struct Jwk {
     /// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
     pub alg: String,
 }
+
+crate::export_iota_types_objects_bcs_conversion!(
+    ZkLoginAuthenticator,
+    ZkLoginPublicIdentifier,
+    ZkLoginProof,
+    CircomG1,
+    CircomG2,
+    Bn254FieldElement
+);
+
+crate::export_iota_types_bcs_conversion!(ZkLoginClaim, JwkId, Jwk);

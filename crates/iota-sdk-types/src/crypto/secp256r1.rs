@@ -4,6 +4,8 @@
 
 //! Implementation of secp256r1 public-key cryptogrophy.
 
+use crate::crypto::{PublicKeyExt, SignatureScheme};
+
 /// A secp256r1 public key.
 ///
 /// # BCS
@@ -58,13 +60,24 @@ impl Secp256r1PublicKey {
     pub const fn inner(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
+}
 
-    pub const fn as_bytes(&self) -> &[u8] {
+impl PublicKeyExt for Secp256r1PublicKey {
+    type FromBytesErr = std::array::TryFromSliceError;
+
+    /// Returns the public key as bytes.
+    fn as_bytes(&self) -> &[u8] {
         &self.0
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
+    /// Tries to create a Secp256r1PublicKey from bytes.
+    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
+    }
+
+    /// Returns the signature scheme for this public key.
+    fn scheme(&self) -> SignatureScheme {
+        SignatureScheme::Secp256r1
     }
 }
 

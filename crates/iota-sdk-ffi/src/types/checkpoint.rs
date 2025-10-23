@@ -5,7 +5,10 @@ use std::sync::Arc;
 
 use iota_types::GasCostSummary;
 
-use crate::types::{digest::Digest, signature::UserSignature, validator::ValidatorCommitteeMember};
+use crate::{
+    error::Result,
+    types::{digest::Digest, signature::UserSignature, validator::ValidatorCommitteeMember},
+};
 
 pub type CheckpointSequenceNumber = u64;
 pub type CheckpointTimestamp = u64;
@@ -162,6 +165,10 @@ impl CheckpointSummary {
     pub fn signing_message(&self) -> Vec<u8> {
         self.0.signing_message()
     }
+
+    pub fn signing_message_hex(&self) -> String {
+        self.0.signing_message_hex()
+    }
 }
 
 /// The committed to contents of a checkpoint.
@@ -272,6 +279,18 @@ impl CheckpointCommitment {
     }
 }
 
+/// Data which, when included in a [`CheckpointSummary`], signals the end of an
+/// `Epoch`.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
+///                     u64                                 ; next_epoch_protocol_version
+///                     (vector checkpoint-commitment)      ; epoch_commitments
+/// ```
 #[derive(uniffi::Record)]
 pub struct EndOfEpochData {
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
@@ -318,3 +337,12 @@ impl From<EndOfEpochData> for iota_types::EndOfEpochData {
         }
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(
+    CheckpointSummary,
+    CheckpointContents,
+    CheckpointTransactionInfo,
+    CheckpointCommitment
+);
+
+crate::export_iota_types_bcs_conversion!(EndOfEpochData);
