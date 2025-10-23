@@ -4341,7 +4341,7 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(void* ptr, 
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_MERGE_COINS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_MERGE_COINS
-void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(void* ptr, void* coin, RustBuffer coins_to_merge, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(void* ptr, void* primary_coin, RustBuffer consumed_coins, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_MOVE_CALL

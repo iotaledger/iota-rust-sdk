@@ -485,6 +485,39 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Merge multiple coins into one.
+    ///
+    /// This method combines the balances of multiple coins of the same coin
+    /// type into a single coin. The `primary_coin` will receive the balances
+    /// from all `consumed_coins`. After merging, the `consumed_coins` will
+    /// be consumed and no longer exist.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use iota_graphql_client::Client;
+    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// #[tokio::main(flavor = "current_thread")]
+    /// async fn main() -> eyre::Result<()> {
+    ///     let client = Client::new_devnet();
+    ///     let sender = Address::from_hex(
+    ///         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c",
+    ///     )?;
+    ///
+    ///     let coin_0 = ObjectId::from_hex(
+    ///         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
+    ///     )?;
+    ///     let coin_1 = ObjectId::from_hex(
+    ///         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+    ///     )?;
+    ///
+    ///     let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///     builder.merge_coins(coin_0, [coin_1]);
+    ///     let txn = builder.finish().await?;
+    ///     Ok(())
+    /// }
+    /// ```
     pub fn merge_coins<T: PTBArgument, U: PTBArgumentList>(
         &mut self,
         primary_coin: T,

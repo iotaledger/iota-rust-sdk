@@ -6396,7 +6396,7 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor(`ptr`: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(`ptr`: Pointer,`elements`: RustBuffer.ByValue,`typeTag`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(`ptr`: Pointer,`coin`: Pointer,`coinsToMerge`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(`ptr`: Pointer,`primaryCoin`: Pointer,`consumedCoins`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(`ptr`: Pointer,`package`: Pointer,`module`: Pointer,`function`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9039,7 +9039,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 64922.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 15164.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 136.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281.toShort()) {
@@ -40512,9 +40512,14 @@ public interface TransactionBuilderInterface {
     fun `makeMoveVec`(`elements`: List<MoveArg>, `typeTag`: TypeTag, `name`: kotlin.String): TransactionBuilder
     
     /**
-     * Merge a list of coins into a single coin, without producing any result.
+     * Merge multiple coins into one.
+     *
+     * This method combines the balances of multiple coins of the same coin
+     * type into a single coin. The `primary_coin` will receive the balances
+     * from all `consumed_coins`. After merging, the `consumed_coins` will
+     * be consumed and no longer exist.
      */
-    fun `mergeCoins`(`coin`: PtbArgument, `coinsToMerge`: List<PtbArgument>): TransactionBuilder
+    fun `mergeCoins`(`primaryCoin`: PtbArgument, `consumedCoins`: List<PtbArgument>): TransactionBuilder
     
     /**
      * Call a Move function with the given arguments.
@@ -40877,13 +40882,18 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Merge a list of coins into a single coin, without producing any result.
-     */override fun `mergeCoins`(`coin`: PtbArgument, `coinsToMerge`: List<PtbArgument>): TransactionBuilder {
+     * Merge multiple coins into one.
+     *
+     * This method combines the balances of multiple coins of the same coin
+     * type into a single coin. The `primary_coin` will receive the balances
+     * from all `consumed_coins`. After merging, the `consumed_coins` will
+     * be consumed and no longer exist.
+     */override fun `mergeCoins`(`primaryCoin`: PtbArgument, `consumedCoins`: List<PtbArgument>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
-        it, FfiConverterTypePTBArgument.lower(`coin`),FfiConverterSequenceTypePTBArgument.lower(`coinsToMerge`),_status)
+        it, FfiConverterTypePTBArgument.lower(`primaryCoin`),FfiConverterSequenceTypePTBArgument.lower(`consumedCoins`),_status)
 }
     }
     )
