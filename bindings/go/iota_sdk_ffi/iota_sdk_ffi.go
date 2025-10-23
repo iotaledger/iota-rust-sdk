@@ -524,7 +524,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs()
 	})
-	if checksum != 42415 {
+	if checksum != 591 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs: UniFFI API checksum mismatch")
 	}
@@ -533,7 +533,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs()
 	})
-	if checksum != 47515 {
+	if checksum != 11338 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs: UniFFI API checksum mismatch")
 	}
@@ -1064,7 +1064,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs()
 	})
-	if checksum != 14302 {
+	if checksum != 10273 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs: UniFFI API checksum mismatch")
 	}
@@ -1073,7 +1073,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_i16_to_bcs()
 	})
-	if checksum != 45469 {
+	if checksum != 28969 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_i16_to_bcs: UniFFI API checksum mismatch")
 	}
@@ -1082,7 +1082,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_i32_from_bcs()
 	})
-	if checksum != 33128 {
+	if checksum != 7849 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_i32_from_bcs: UniFFI API checksum mismatch")
 	}
@@ -1091,7 +1091,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_i32_to_bcs()
 	})
-	if checksum != 31869 {
+	if checksum != 52773 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_i32_to_bcs: UniFFI API checksum mismatch")
 	}
@@ -1100,7 +1100,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_i64_from_bcs()
 	})
-	if checksum != 25820 {
+	if checksum != 17714 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_i64_from_bcs: UniFFI API checksum mismatch")
 	}
@@ -1109,7 +1109,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_i64_to_bcs()
 	})
-	if checksum != 22076 {
+	if checksum != 38028 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_i64_to_bcs: UniFFI API checksum mismatch")
 	}
@@ -1118,7 +1118,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_i8_from_bcs()
 	})
-	if checksum != 62386 {
+	if checksum != 21810 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_i8_from_bcs: UniFFI API checksum mismatch")
 	}
@@ -1127,7 +1127,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs()
 	})
-	if checksum != 56317 {
+	if checksum != 57592 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs: UniFFI API checksum mismatch")
 	}
@@ -1766,7 +1766,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs()
 	})
-	if checksum != 52391 {
+	if checksum != 53853 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_string_from_bcs: UniFFI API checksum mismatch")
 	}
@@ -1775,7 +1775,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs()
 	})
-	if checksum != 42634 {
+	if checksum != 54804 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_string_to_bcs: UniFFI API checksum mismatch")
 	}
@@ -2018,7 +2018,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs()
 	})
-	if checksum != 47119 {
+	if checksum != 3653 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs: UniFFI API checksum mismatch")
 	}
@@ -2027,7 +2027,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs()
 	})
-	if checksum != 14262 {
+	if checksum != 13254 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs: UniFFI API checksum mismatch")
 	}
@@ -2036,7 +2036,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs()
 	})
-	if checksum != 60513 {
+	if checksum != 335 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs: UniFFI API checksum mismatch")
 	}
@@ -2045,7 +2045,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs()
 	})
-	if checksum != 21506 {
+	if checksum != 36384 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs: UniFFI API checksum mismatch")
 	}
@@ -2054,7 +2054,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs()
 	})
-	if checksum != 25859 {
+	if checksum != 63829 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs: UniFFI API checksum mismatch")
 	}
@@ -2063,7 +2063,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs()
 	})
-	if checksum != 48761 {
+	if checksum != 2947 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs: UniFFI API checksum mismatch")
 	}
@@ -2072,7 +2072,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs()
 	})
-	if checksum != 56856 {
+	if checksum != 34764 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs: UniFFI API checksum mismatch")
 	}
@@ -2081,7 +2081,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs()
 	})
-	if checksum != 52104 {
+	if checksum != 59020 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs: UniFFI API checksum mismatch")
 	}
@@ -40017,7 +40017,7 @@ func Bn254FieldElementToBcs(data *Bn254FieldElement) ([]byte, error) {
 		}
 }
 
-// Create this type from BCS encoded bytes.
+// Create a bool from BCS encoded bytes.
 func BoolFromBcs(input []byte) (bool, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus)
@@ -40030,7 +40030,7 @@ func BoolFromBcs(input []byte) (bool, error) {
 		}
 }
 
-// Convert this type to BCS encoded bytes.
+// Convert this bool to BCS encoded bytes.
 func BoolToBcs(input bool) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
@@ -40867,7 +40867,7 @@ func HexEncode(input []byte) string {
 	}))
 }
 
-// Create this type from BCS encoded bytes.
+// Create a i16 from BCS encoded bytes.
 func I16FromBcs(input []byte) (int16, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.int16_t {
 		return C.uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus)
@@ -40880,7 +40880,7 @@ func I16FromBcs(input []byte) (int16, error) {
 		}
 }
 
-// Convert this type to BCS encoded bytes.
+// Convert this i16 to BCS encoded bytes.
 func I16ToBcs(input int16) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
@@ -40895,7 +40895,7 @@ func I16ToBcs(input int16) ([]byte, error) {
 		}
 }
 
-// Create this type from BCS encoded bytes.
+// Create a i32 from BCS encoded bytes.
 func I32FromBcs(input []byte) (int32, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.int32_t {
 		return C.uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus)
@@ -40908,7 +40908,7 @@ func I32FromBcs(input []byte) (int32, error) {
 		}
 }
 
-// Convert this type to BCS encoded bytes.
+// Convert this i32 to BCS encoded bytes.
 func I32ToBcs(input int32) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
@@ -40923,7 +40923,7 @@ func I32ToBcs(input int32) ([]byte, error) {
 		}
 }
 
-// Create this type from BCS encoded bytes.
+// Create a i64 from BCS encoded bytes.
 func I64FromBcs(input []byte) (int64, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.int64_t {
 		return C.uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus)
@@ -40936,7 +40936,7 @@ func I64FromBcs(input []byte) (int64, error) {
 		}
 }
 
-// Convert this type to BCS encoded bytes.
+// Convert this i64 to BCS encoded bytes.
 func I64ToBcs(input int64) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
@@ -40951,7 +40951,7 @@ func I64ToBcs(input int64) ([]byte, error) {
 		}
 }
 
-// Create this type from BCS encoded bytes.
+// Create a i8 from BCS encoded bytes.
 func I8FromBcs(input []byte) (int8, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus)
@@ -40964,7 +40964,7 @@ func I8FromBcs(input []byte) (int8, error) {
 		}
 }
 
-// Convert this type to BCS encoded bytes.
+// Convert this i8 to BCS encoded bytes.
 func I8ToBcs(input int8) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
@@ -41981,7 +41981,7 @@ func SplitCoinsToBcs(data *SplitCoins) ([]byte, error) {
 		}
 }
 
-// Create this type from BCS encoded bytes.
+// Create a String from BCS encoded bytes.
 func StringFromBcs(input []byte) (string, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
@@ -41996,7 +41996,7 @@ func StringFromBcs(input []byte) (string, error) {
 		}
 }
 
-// Convert this type to BCS encoded bytes.
+// Convert this String to BCS encoded bytes.
 func StringToBcs(input string) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
@@ -42383,7 +42383,7 @@ func TypeTagToBcs(data *TypeTag) ([]byte, error) {
 		}
 }
 
-// Create this type from BCS encoded bytes.
+// Create a u16 from BCS encoded bytes.
 func U16FromBcs(input []byte) (uint16, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus)
@@ -42396,7 +42396,7 @@ func U16FromBcs(input []byte) (uint16, error) {
 		}
 }
 
-// Convert this type to BCS encoded bytes.
+// Convert this u16 to BCS encoded bytes.
 func U16ToBcs(input uint16) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
@@ -42411,7 +42411,7 @@ func U16ToBcs(input uint16) ([]byte, error) {
 		}
 }
 
-// Create this type from BCS encoded bytes.
+// Create a u32 from BCS encoded bytes.
 func U32FromBcs(input []byte) (uint32, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.uint32_t {
 		return C.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus)
@@ -42424,7 +42424,7 @@ func U32FromBcs(input []byte) (uint32, error) {
 		}
 }
 
-// Convert this type to BCS encoded bytes.
+// Convert this u32 to BCS encoded bytes.
 func U32ToBcs(input uint32) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
@@ -42439,7 +42439,7 @@ func U32ToBcs(input uint32) ([]byte, error) {
 		}
 }
 
-// Create this type from BCS encoded bytes.
+// Create a u64 from BCS encoded bytes.
 func U64FromBcs(input []byte) (uint64, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
 		return C.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus)
@@ -42452,7 +42452,7 @@ func U64FromBcs(input []byte) (uint64, error) {
 		}
 }
 
-// Convert this type to BCS encoded bytes.
+// Convert this u64 to BCS encoded bytes.
 func U64ToBcs(input uint64) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
@@ -42467,7 +42467,7 @@ func U64ToBcs(input uint64) ([]byte, error) {
 		}
 }
 
-// Create this type from BCS encoded bytes.
+// Create a u8 from BCS encoded bytes.
 func U8FromBcs(input []byte) (uint8, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) C.uint8_t {
 		return C.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(FfiConverterBytesINSTANCE.Lower(input),_uniffiStatus)
@@ -42480,7 +42480,7 @@ func U8FromBcs(input []byte) (uint8, error) {
 		}
 }
 
-// Convert this type to BCS encoded bytes.
+// Convert this u8 to BCS encoded bytes.
 func U8ToBcs(input uint8) ([]byte, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {

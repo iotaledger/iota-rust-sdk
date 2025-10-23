@@ -497,9 +497,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs() != 3863:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs() != 42415:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs() != 591:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs() != 47515:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs() != 11338:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs() != 3386:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -617,21 +617,21 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_hex_encode() != 34343:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs() != 14302:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs() != 10273:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_i16_to_bcs() != 45469:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_i16_to_bcs() != 28969:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_i32_from_bcs() != 33128:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_i32_from_bcs() != 7849:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_i32_to_bcs() != 31869:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_i32_to_bcs() != 52773:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_i64_from_bcs() != 25820:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_i64_from_bcs() != 17714:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_i64_to_bcs() != 22076:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_i64_to_bcs() != 38028:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_i8_from_bcs() != 62386:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_i8_from_bcs() != 21810:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs() != 56317:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs() != 57592:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_id_operation_from_bcs() != 10384:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -773,9 +773,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_split_coins_to_bcs() != 30667:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs() != 52391:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs() != 53853:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs() != 42634:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs() != 54804:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_bcs() != 24910:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -829,21 +829,21 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_type_tag_to_bcs() != 57365:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs() != 47119:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs() != 3653:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs() != 14262:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs() != 13254:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs() != 60513:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs() != 335:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs() != 21506:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs() != 36384:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs() != 25859:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs() != 63829:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs() != 48761:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs() != 2947:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs() != 56856:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs() != 34764:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs() != 52104:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs() != 59020:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs() != 6308:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -44893,7 +44893,7 @@ def bn254_field_element_to_bcs(data: "Bn254FieldElement") -> "bytes":
 
 def bool_from_bcs(input: "bytes") -> "bool":
     """
-    Create this type from BCS encoded bytes.
+    Create a bool from BCS encoded bytes.
     """
 
     _UniffiConverterBytes.check_lower(input)
@@ -44904,7 +44904,7 @@ def bool_from_bcs(input: "bytes") -> "bool":
 
 def bool_to_bcs(input: "bool") -> "bytes":
     """
-    Convert this type to BCS encoded bytes.
+    Convert this bool to BCS encoded bytes.
     """
 
     _UniffiConverterBool.check_lower(input)
@@ -45545,7 +45545,7 @@ def hex_encode(input: "bytes") -> "str":
 
 def i16_from_bcs(input: "bytes") -> "int":
     """
-    Create this type from BCS encoded bytes.
+    Create a i16 from BCS encoded bytes.
     """
 
     _UniffiConverterBytes.check_lower(input)
@@ -45556,7 +45556,7 @@ def i16_from_bcs(input: "bytes") -> "int":
 
 def i16_to_bcs(input: "int") -> "bytes":
     """
-    Convert this type to BCS encoded bytes.
+    Convert this i16 to BCS encoded bytes.
     """
 
     _UniffiConverterInt16.check_lower(input)
@@ -45567,7 +45567,7 @@ def i16_to_bcs(input: "int") -> "bytes":
 
 def i32_from_bcs(input: "bytes") -> "int":
     """
-    Create this type from BCS encoded bytes.
+    Create a i32 from BCS encoded bytes.
     """
 
     _UniffiConverterBytes.check_lower(input)
@@ -45578,7 +45578,7 @@ def i32_from_bcs(input: "bytes") -> "int":
 
 def i32_to_bcs(input: "int") -> "bytes":
     """
-    Convert this type to BCS encoded bytes.
+    Convert this i32 to BCS encoded bytes.
     """
 
     _UniffiConverterInt32.check_lower(input)
@@ -45589,7 +45589,7 @@ def i32_to_bcs(input: "int") -> "bytes":
 
 def i64_from_bcs(input: "bytes") -> "int":
     """
-    Create this type from BCS encoded bytes.
+    Create a i64 from BCS encoded bytes.
     """
 
     _UniffiConverterBytes.check_lower(input)
@@ -45600,7 +45600,7 @@ def i64_from_bcs(input: "bytes") -> "int":
 
 def i64_to_bcs(input: "int") -> "bytes":
     """
-    Convert this type to BCS encoded bytes.
+    Convert this i64 to BCS encoded bytes.
     """
 
     _UniffiConverterInt64.check_lower(input)
@@ -45611,7 +45611,7 @@ def i64_to_bcs(input: "int") -> "bytes":
 
 def i8_from_bcs(input: "bytes") -> "int":
     """
-    Create this type from BCS encoded bytes.
+    Create a i8 from BCS encoded bytes.
     """
 
     _UniffiConverterBytes.check_lower(input)
@@ -45622,7 +45622,7 @@ def i8_from_bcs(input: "bytes") -> "int":
 
 def i8_to_bcs(input: "int") -> "bytes":
     """
-    Convert this type to BCS encoded bytes.
+    Convert this i8 to BCS encoded bytes.
     """
 
     _UniffiConverterInt8.check_lower(input)
@@ -46403,7 +46403,7 @@ def split_coins_to_bcs(data: "SplitCoins") -> "bytes":
 
 def string_from_bcs(input: "bytes") -> "str":
     """
-    Create this type from BCS encoded bytes.
+    Create a String from BCS encoded bytes.
     """
 
     _UniffiConverterBytes.check_lower(input)
@@ -46414,7 +46414,7 @@ def string_from_bcs(input: "bytes") -> "str":
 
 def string_to_bcs(input: "str") -> "bytes":
     """
-    Convert this type to BCS encoded bytes.
+    Convert this String to BCS encoded bytes.
     """
 
     _UniffiConverterString.check_lower(input)
@@ -46711,7 +46711,7 @@ def type_tag_to_bcs(data: "TypeTag") -> "bytes":
 
 def u16_from_bcs(input: "bytes") -> "int":
     """
-    Create this type from BCS encoded bytes.
+    Create a u16 from BCS encoded bytes.
     """
 
     _UniffiConverterBytes.check_lower(input)
@@ -46722,7 +46722,7 @@ def u16_from_bcs(input: "bytes") -> "int":
 
 def u16_to_bcs(input: "int") -> "bytes":
     """
-    Convert this type to BCS encoded bytes.
+    Convert this u16 to BCS encoded bytes.
     """
 
     _UniffiConverterUInt16.check_lower(input)
@@ -46733,7 +46733,7 @@ def u16_to_bcs(input: "int") -> "bytes":
 
 def u32_from_bcs(input: "bytes") -> "int":
     """
-    Create this type from BCS encoded bytes.
+    Create a u32 from BCS encoded bytes.
     """
 
     _UniffiConverterBytes.check_lower(input)
@@ -46744,7 +46744,7 @@ def u32_from_bcs(input: "bytes") -> "int":
 
 def u32_to_bcs(input: "int") -> "bytes":
     """
-    Convert this type to BCS encoded bytes.
+    Convert this u32 to BCS encoded bytes.
     """
 
     _UniffiConverterUInt32.check_lower(input)
@@ -46755,7 +46755,7 @@ def u32_to_bcs(input: "int") -> "bytes":
 
 def u64_from_bcs(input: "bytes") -> "int":
     """
-    Create this type from BCS encoded bytes.
+    Create a u64 from BCS encoded bytes.
     """
 
     _UniffiConverterBytes.check_lower(input)
@@ -46766,7 +46766,7 @@ def u64_from_bcs(input: "bytes") -> "int":
 
 def u64_to_bcs(input: "int") -> "bytes":
     """
-    Convert this type to BCS encoded bytes.
+    Convert this u64 to BCS encoded bytes.
     """
 
     _UniffiConverterUInt64.check_lower(input)
@@ -46777,7 +46777,7 @@ def u64_to_bcs(input: "int") -> "bytes":
 
 def u8_from_bcs(input: "bytes") -> "int":
     """
-    Create this type from BCS encoded bytes.
+    Create a u8 from BCS encoded bytes.
     """
 
     _UniffiConverterBytes.check_lower(input)
@@ -46788,7 +46788,7 @@ def u8_from_bcs(input: "bytes") -> "int":
 
 def u8_to_bcs(input: "int") -> "bytes":
     """
-    Convert this type to BCS encoded bytes.
+    Convert this u8 to BCS encoded bytes.
     """
 
     _UniffiConverterUInt8.check_lower(input)
