@@ -515,6 +515,10 @@ impl<C, L> TransactionBuilder<C, L> {
 
     /// Make a move vector from a list of elements.
     ///
+    /// Often it is possible (and more efficient) to pass a rust slice or `Vec`
+    /// instead of calling this function, which will serialize the bytes into a
+    /// move vector pure argument.
+    ///
     /// # Example
     ///
     /// ```
@@ -535,13 +539,11 @@ impl<C, L> TransactionBuilder<C, L> {
     ///     Address::from_str("0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")?;
     ///
     /// builder
-    ///     .make_move_vec::<Address>([address1, address2])
+    ///     .make_move_vec([address1, address2])
     ///     .name("addresses")
-    ///     .make_move_vec::<u64>([10_000_000u64, 20_000_000u64])
-    ///     .name("amounts")
     ///     .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
     ///     .generics::<(Address, u64)>()
-    ///     .arguments([res("addresses"), res("amounts")]);
+    ///     .arguments([res("addresses"), [10000000u64, 20000000u64]]);
     ///
     /// let txn: Transaction = builder.finish().await?;
     /// # Ok(())

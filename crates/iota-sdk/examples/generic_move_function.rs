@@ -5,7 +5,7 @@ use core::str::FromStr;
 
 use eyre::Result;
 use iota_graphql_client::Client;
-use iota_transaction_builder::{TransactionBuilder, res};
+use iota_transaction_builder::TransactionBuilder;
 use iota_types::Address;
 
 #[tokio::main]
@@ -22,13 +22,9 @@ async fn main() -> Result<()> {
         Address::from_str("0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")?;
 
     builder
-        .make_move_vec::<Address>([address1, address2])
-        .name("addresses")
-        .make_move_vec::<u64>([10_000_000u64, 20_000_000u64])
-        .name("amounts")
         .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
         .generics::<(Address, u64)>()
-        .arguments([res("addresses"), res("amounts")]);
+        .arguments(([address1, address2], [10000000u64, 20000000u64]));
 
     let res = builder.dry_run(false).await?;
 
