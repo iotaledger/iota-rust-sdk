@@ -428,3 +428,14 @@ pub struct Jwk {
     /// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
     pub alg: String,
 }
+
+crate::export_iota_types_objects_bcs_conversion!(
+    ZkLoginAuthenticator,
+    ZkLoginPublicIdentifier,
+    ZkLoginProof,
+    CircomG1,
+    CircomG2,
+    Bn254FieldElement
+);
+
+crate::export_iota_types_bcs_conversion!(ZkLoginClaim, JwkId, Jwk);

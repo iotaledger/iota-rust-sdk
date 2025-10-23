@@ -180,3 +180,5 @@ impl TypeTag {
         Self(iota_types::TypeTag::Struct(Box::new(struct_tag.0.clone())))
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(TypeTag);
