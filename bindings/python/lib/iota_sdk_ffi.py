@@ -1625,7 +1625,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 16395:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6567,7 +6567,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
-    _UniffiRustBuffer,
+    ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota.restype = ctypes.c_void_p
@@ -40493,9 +40493,13 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT):
+    def send_iota(self, recipient: "Address",amount: "PtbArgument"):
         """
         Send IOTA to a recipient address.
+
+        The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+        equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+        sent.
         """
 
         raise NotImplementedError
@@ -40928,21 +40932,23 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def send_iota(self, recipient: "Address",amount: "typing.Union[object, typing.Optional[PtbArgument]]" = _DEFAULT) -> "TransactionBuilder":
+    def send_iota(self, recipient: "Address",amount: "PtbArgument") -> "TransactionBuilder":
         """
         Send IOTA to a recipient address.
+
+        The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+        equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+        sent.
         """
 
         _UniffiConverterTypeAddress.check_lower(recipient)
         
-        if amount is _DEFAULT:
-            amount = None
-        _UniffiConverterOptionalTypePtbArgument.check_lower(amount)
+        _UniffiConverterTypePtbArgument.check_lower(amount)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota,self._uniffi_clone_pointer(),
         _UniffiConverterTypeAddress.lower(recipient),
-        _UniffiConverterOptionalTypePtbArgument.lower(amount))
+        _UniffiConverterTypePtbArgument.lower(amount))
         )
 
 

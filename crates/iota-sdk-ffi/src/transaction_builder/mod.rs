@@ -157,14 +157,13 @@ impl TransactionBuilder {
     }
 
     /// Send IOTA to a recipient address.
-    #[uniffi::method(default(amount = None))]
-    pub fn send_iota(
-        self: Arc<Self>,
-        recipient: &Address,
-        amount: Option<Arc<PTBArgument>>,
-    ) -> Arc<Self> {
+    ///
+    /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+    /// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+    /// sent.
+    pub fn send_iota(self: Arc<Self>, recipient: &Address, amount: &PTBArgument) -> Arc<Self> {
         self.write(|builder| {
-            builder.send_iota::<&PTBArgument>(**recipient, amount.as_deref());
+            builder.send_iota(**recipient, amount);
         });
         self
     }

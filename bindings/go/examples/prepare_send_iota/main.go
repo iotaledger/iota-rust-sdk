@@ -15,10 +15,9 @@ func main() {
 	fromAddress, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
 	toAddress, _ := sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
-	amount := sdk.PtbArgumentU64(5000000000)
 
 	builder := sdk.TransactionBuilderInit(fromAddress, client)
-	builder.SendIota(toAddress, &amount)
+	builder.SendIota(toAddress, sdk.PtbArgumentU64(5000000000))
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {

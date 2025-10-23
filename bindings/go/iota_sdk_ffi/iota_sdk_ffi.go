@@ -5600,7 +5600,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota()
 	})
-	if checksum != 16395 {
+	if checksum != 2185 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota: UniFFI API checksum mismatch")
 	}
@@ -23995,7 +23995,11 @@ type TransactionBuilderInterface interface {
 	// provided then they will be merged.
 	SendCoins(coins []*PtbArgument, recipient *Address, amount **PtbArgument) *TransactionBuilder
 	// Send IOTA to a recipient address.
-	SendIota(recipient *Address, amount **PtbArgument) *TransactionBuilder
+	//
+	// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+	// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+	// sent.
+	SendIota(recipient *Address, amount *PtbArgument) *TransactionBuilder
 	// Split a coin by the provided amounts.
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
@@ -24293,12 +24297,16 @@ func (_self *TransactionBuilder) SendCoins(coins []*PtbArgument, recipient *Addr
 }
 
 // Send IOTA to a recipient address.
-func (_self *TransactionBuilder) SendIota(recipient *Address, amount **PtbArgument) *TransactionBuilder {
+//
+// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+// sent.
+func (_self *TransactionBuilder) SendIota(recipient *Address, amount *PtbArgument) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
-		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterOptionalPtbArgumentINSTANCE.Lower(amount),_uniffiStatus)
+		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterPtbArgumentINSTANCE.Lower(amount),_uniffiStatus)
 	}))
 }
 
