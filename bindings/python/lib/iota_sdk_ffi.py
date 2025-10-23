@@ -485,11 +485,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_base64_encode() != 54791:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-<<<<<<< HEAD
-    if lib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs() != 42415:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs() != 47515:
-=======
     if lib.uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_from_bcs() != 27639:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_to_bcs() != 45714:
@@ -501,6 +496,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs() != 13721:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs() != 3863:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs() != 42415:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs() != 47515:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs() != 3386:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -613,13 +612,11 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_from_bcs() != 21010:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_to_bcs() != 17884:
->>>>>>> sdk-bindings
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_hex_decode() != 35424:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_hex_encode() != 34343:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-<<<<<<< HEAD
     if lib.uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs() != 14302:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_i16_to_bcs() != 45469:
@@ -636,26 +633,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs() != 56317:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs() != 52391:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs() != 42634:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs() != 47119:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs() != 14262:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs() != 60513:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs() != 21506:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs() != 25859:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs() != 48761:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs() != 56856:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs() != 52104:
-=======
     if lib.uniffi_iota_sdk_ffi_checksum_func_id_operation_from_bcs() != 10384:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_id_operation_to_bcs() != 62670:
@@ -796,6 +773,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_split_coins_to_bcs() != 30667:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs() != 52391:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs() != 42634:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_bcs() != 24910:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_struct_tag_to_bcs() != 23529:
@@ -847,6 +828,22 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_func_type_tag_from_bcs() != 31167:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_type_tag_to_bcs() != 57365:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs() != 47119:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs() != 14262:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs() != 60513:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs() != 21506:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs() != 25859:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs() != 48761:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs() != 56856:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs() != 52104:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs() != 6308:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -907,7 +904,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs() != 35391:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs() != 39685:
->>>>>>> sdk-bindings
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -7628,18 +7624,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_base64_encode.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_base64_encode.restype = _UniffiRustBuffer
-<<<<<<< HEAD
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_to_bcs.argtypes = (
-    ctypes.c_int8,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_to_bcs.restype = _UniffiRustBuffer
-=======
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7670,6 +7654,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_to_bcs.argtypes = (
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_to_bcs.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7950,7 +7944,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_bcs.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_bcs.restype = _UniffiRustBuffer
->>>>>>> sdk-bindings
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_hex_decode.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7961,7 +7954,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_hex_encode.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_hex_encode.restype = _UniffiRustBuffer
-<<<<<<< HEAD
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_i16_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8002,57 +7994,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_i8_to_bcs.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_i8_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_from_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_to_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_to_bcs.argtypes = (
-    ctypes.c_uint16,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs.restype = ctypes.c_uint32
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_to_bcs.argtypes = (
-    ctypes.c_uint32,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_to_bcs.argtypes = (
-    ctypes.c_uint64,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs.restype = ctypes.c_uint8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_to_bcs.argtypes = (
-    ctypes.c_uint8,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_to_bcs.restype = _UniffiRustBuffer
-=======
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_id_operation_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8403,6 +8344,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_split_coins_to_bcs.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_split_coins_to_bcs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_from_bcs.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_from_bcs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_to_bcs.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_to_bcs.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_struct_tag_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8533,6 +8484,46 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_to_bcs.argtypes = (
+    ctypes.c_uint16,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_to_bcs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs.restype = ctypes.c_uint32
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_to_bcs.argtypes = (
+    ctypes.c_uint32,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_to_bcs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_to_bcs.argtypes = (
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_to_bcs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs.restype = ctypes.c_uint8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_to_bcs.argtypes = (
+    ctypes.c_uint8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_to_bcs.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8683,7 +8674,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs.argtype
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs.restype = _UniffiRustBuffer
->>>>>>> sdk-bindings
 _UniffiLib.ffi_iota_sdk_ffi_rustbuffer_alloc.argtypes = (
     ctypes.c_uint64,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8988,14 +8978,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_base64_decode.restype = ctypes.c_ui
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_base64_encode.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_base64_encode.restype = ctypes.c_uint16
-<<<<<<< HEAD
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs.restype = ctypes.c_uint16
-=======
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_from_bcs.restype = ctypes.c_uint16
@@ -9014,6 +8996,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs.restype = ctypes.c_uint16
@@ -9182,14 +9170,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_from_bcs.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_to_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_to_bcs.restype = ctypes.c_uint16
->>>>>>> sdk-bindings
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_hex_decode.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_hex_decode.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_hex_encode.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_hex_encode.restype = ctypes.c_uint16
-<<<<<<< HEAD
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs.restype = ctypes.c_uint16
@@ -9214,37 +9200,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_i8_from_bcs.restype = ctypes.c_uint
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs.restype = ctypes.c_uint16
-=======
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_id_operation_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_id_operation_from_bcs.restype = ctypes.c_uint16
@@ -9455,6 +9410,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_split_coins_from_bcs.restype = ctyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_split_coins_to_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_split_coins_to_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_bcs.restype = ctypes.c_uint16
@@ -9533,6 +9494,30 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_type_tag_from_bcs.restype = ctypes.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_type_tag_to_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_type_tag_to_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs.restype = ctypes.c_uint16
@@ -9623,7 +9608,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs.restype = ctypes.c_uint16
->>>>>>> sdk-bindings
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.restype = ctypes.c_uint16
@@ -44841,24 +44825,11 @@ def base64_encode(input: "bytes") -> "str":
         _UniffiConverterBytes.lower(input)))
 
 
-<<<<<<< HEAD
-def bool_from_bcs(input: "bytes") -> "bool":
-=======
 def bls12381_public_key_from_bcs(bcs: "bytes") -> "Bls12381PublicKey":
->>>>>>> sdk-bindings
     """
     Create this type from BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterBytes.check_lower(input)
-    
-    return _UniffiConverterBool.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs,
-        _UniffiConverterBytes.lower(input)))
-
-
-def bool_to_bcs(input: "bool") -> "bytes":
-=======
     _UniffiConverterBytes.check_lower(bcs)
     
     return _UniffiConverterTypeBls12381PublicKey.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_from_bcs,
@@ -44866,17 +44837,10 @@ def bool_to_bcs(input: "bool") -> "bytes":
 
 
 def bls12381_public_key_to_bcs(data: "Bls12381PublicKey") -> "bytes":
->>>>>>> sdk-bindings
     """
     Convert this type to BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterBool.check_lower(input)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_to_bcs,
-        _UniffiConverterBool.lower(input)))
-=======
     _UniffiConverterTypeBls12381PublicKey.check_lower(data)
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_to_bcs,
@@ -44925,6 +44889,28 @@ def bn254_field_element_to_bcs(data: "Bn254FieldElement") -> "bytes":
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs,
         _UniffiConverterTypeBn254FieldElement.lower(data)))
+
+
+def bool_from_bcs(input: "bytes") -> "bool":
+    """
+    Create this type from BCS encoded bytes.
+    """
+
+    _UniffiConverterBytes.check_lower(input)
+    
+    return _UniffiConverterBool.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs,
+        _UniffiConverterBytes.lower(input)))
+
+
+def bool_to_bcs(input: "bool") -> "bytes":
+    """
+    Convert this type to BCS encoded bytes.
+    """
+
+    _UniffiConverterBool.check_lower(input)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_bool_to_bcs,
+        _UniffiConverterBool.lower(input)))
 
 
 def cancelled_transaction_from_bcs(bcs: "bytes") -> "CancelledTransaction":
@@ -45541,7 +45527,6 @@ def genesis_transaction_to_bcs(data: "GenesisTransaction") -> "bytes":
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_bcs,
         _UniffiConverterTypeGenesisTransaction.lower(data)))
->>>>>>> sdk-bindings
 
 
 def hex_decode(input: "str") -> "bytes":
@@ -45558,16 +45543,11 @@ def hex_encode(input: "bytes") -> "str":
         _UniffiConverterBytes.lower(input)))
 
 
-<<<<<<< HEAD
 def i16_from_bcs(input: "bytes") -> "int":
-=======
-def id_operation_from_bcs(bcs: "bytes") -> "IdOperation":
->>>>>>> sdk-bindings
     """
     Create this type from BCS encoded bytes.
     """
 
-<<<<<<< HEAD
     _UniffiConverterBytes.check_lower(input)
     
     return _UniffiConverterInt16.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_i16_from_bcs,
@@ -45575,20 +45555,10 @@ def id_operation_from_bcs(bcs: "bytes") -> "IdOperation":
 
 
 def i16_to_bcs(input: "int") -> "bytes":
-=======
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeIdOperation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_id_operation_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def id_operation_to_bcs(data: "IdOperation") -> "bytes":
->>>>>>> sdk-bindings
     """
     Convert this type to BCS encoded bytes.
     """
 
-<<<<<<< HEAD
     _UniffiConverterInt16.check_lower(input)
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_i16_to_bcs,
@@ -45596,20 +45566,10 @@ def id_operation_to_bcs(data: "IdOperation") -> "bytes":
 
 
 def i32_from_bcs(input: "bytes") -> "int":
-=======
-    _UniffiConverterTypeIdOperation.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_id_operation_to_bcs,
-        _UniffiConverterTypeIdOperation.lower(data)))
-
-
-def identifier_from_bcs(bcs: "bytes") -> "Identifier":
->>>>>>> sdk-bindings
     """
     Create this type from BCS encoded bytes.
     """
 
-<<<<<<< HEAD
     _UniffiConverterBytes.check_lower(input)
     
     return _UniffiConverterInt32.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_i32_from_bcs,
@@ -45617,20 +45577,10 @@ def identifier_from_bcs(bcs: "bytes") -> "Identifier":
 
 
 def i32_to_bcs(input: "int") -> "bytes":
-=======
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeIdentifier.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_identifier_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def identifier_to_bcs(data: "Identifier") -> "bytes":
->>>>>>> sdk-bindings
     """
     Convert this type to BCS encoded bytes.
     """
 
-<<<<<<< HEAD
     _UniffiConverterInt32.check_lower(input)
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_i32_to_bcs,
@@ -45638,20 +45588,10 @@ def identifier_to_bcs(data: "Identifier") -> "bytes":
 
 
 def i64_from_bcs(input: "bytes") -> "int":
-=======
-    _UniffiConverterTypeIdentifier.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_identifier_to_bcs,
-        _UniffiConverterTypeIdentifier.lower(data)))
-
-
-def input_from_bcs(bcs: "bytes") -> "Input":
->>>>>>> sdk-bindings
     """
     Create this type from BCS encoded bytes.
     """
 
-<<<<<<< HEAD
     _UniffiConverterBytes.check_lower(input)
     
     return _UniffiConverterInt64.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_i64_from_bcs,
@@ -45659,20 +45599,10 @@ def input_from_bcs(bcs: "bytes") -> "Input":
 
 
 def i64_to_bcs(input: "int") -> "bytes":
-=======
-    _UniffiConverterBytes.check_lower(bcs)
-    
-    return _UniffiConverterTypeInput.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_input_from_bcs,
-        _UniffiConverterBytes.lower(bcs)))
-
-
-def input_to_bcs(data: "Input") -> "bytes":
->>>>>>> sdk-bindings
     """
     Convert this type to BCS encoded bytes.
     """
 
-<<<<<<< HEAD
     _UniffiConverterInt64.check_lower(input)
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_i64_to_bcs,
@@ -45680,20 +45610,10 @@ def input_to_bcs(data: "Input") -> "bytes":
 
 
 def i8_from_bcs(input: "bytes") -> "int":
-=======
-    _UniffiConverterTypeInput.check_lower(data)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_input_to_bcs,
-        _UniffiConverterTypeInput.lower(data)))
-
-
-def jwk_from_bcs(bcs: "bytes") -> "Jwk":
->>>>>>> sdk-bindings
     """
     Create this type from BCS encoded bytes.
     """
 
-<<<<<<< HEAD
     _UniffiConverterBytes.check_lower(input)
     
     return _UniffiConverterInt8.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_i8_from_bcs,
@@ -45711,8 +45631,77 @@ def i8_to_bcs(input: "int") -> "bytes":
         _UniffiConverterInt8.lower(input)))
 
 
-def string_from_bcs(input: "bytes") -> "str":
-=======
+def id_operation_from_bcs(bcs: "bytes") -> "IdOperation":
+    """
+    Create this type from BCS encoded bytes.
+    """
+
+    _UniffiConverterBytes.check_lower(bcs)
+    
+    return _UniffiConverterTypeIdOperation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_id_operation_from_bcs,
+        _UniffiConverterBytes.lower(bcs)))
+
+
+def id_operation_to_bcs(data: "IdOperation") -> "bytes":
+    """
+    Convert this type to BCS encoded bytes.
+    """
+
+    _UniffiConverterTypeIdOperation.check_lower(data)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_id_operation_to_bcs,
+        _UniffiConverterTypeIdOperation.lower(data)))
+
+
+def identifier_from_bcs(bcs: "bytes") -> "Identifier":
+    """
+    Create this type from BCS encoded bytes.
+    """
+
+    _UniffiConverterBytes.check_lower(bcs)
+    
+    return _UniffiConverterTypeIdentifier.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_identifier_from_bcs,
+        _UniffiConverterBytes.lower(bcs)))
+
+
+def identifier_to_bcs(data: "Identifier") -> "bytes":
+    """
+    Convert this type to BCS encoded bytes.
+    """
+
+    _UniffiConverterTypeIdentifier.check_lower(data)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_identifier_to_bcs,
+        _UniffiConverterTypeIdentifier.lower(data)))
+
+
+def input_from_bcs(bcs: "bytes") -> "Input":
+    """
+    Create this type from BCS encoded bytes.
+    """
+
+    _UniffiConverterBytes.check_lower(bcs)
+    
+    return _UniffiConverterTypeInput.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_input_from_bcs,
+        _UniffiConverterBytes.lower(bcs)))
+
+
+def input_to_bcs(data: "Input") -> "bytes":
+    """
+    Convert this type to BCS encoded bytes.
+    """
+
+    _UniffiConverterTypeInput.check_lower(data)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_input_to_bcs,
+        _UniffiConverterTypeInput.lower(data)))
+
+
+def jwk_from_bcs(bcs: "bytes") -> "Jwk":
+    """
+    Create this type from BCS encoded bytes.
+    """
+
     _UniffiConverterBytes.check_lower(bcs)
     
     return _UniffiConverterTypeJwk.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs,
@@ -45720,20 +45709,10 @@ def string_from_bcs(input: "bytes") -> "str":
 
 
 def jwk_id_from_bcs(bcs: "bytes") -> "JwkId":
->>>>>>> sdk-bindings
     """
     Create this type from BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterBytes.check_lower(input)
-    
-    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_from_bcs,
-        _UniffiConverterBytes.lower(input)))
-
-
-def string_to_bcs(input: "str") -> "bytes":
-=======
     _UniffiConverterBytes.check_lower(bcs)
     
     return _UniffiConverterTypeJwkId.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs,
@@ -45741,20 +45720,10 @@ def string_to_bcs(input: "str") -> "bytes":
 
 
 def jwk_id_to_bcs(data: "JwkId") -> "bytes":
->>>>>>> sdk-bindings
     """
     Convert this type to BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterString.check_lower(input)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_to_bcs,
-        _UniffiConverterString.lower(input)))
-
-
-def u16_from_bcs(input: "bytes") -> "int":
-=======
     _UniffiConverterTypeJwkId.check_lower(data)
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs,
@@ -45773,20 +45742,10 @@ def jwk_to_bcs(data: "Jwk") -> "bytes":
 
 
 def make_move_vector_from_bcs(bcs: "bytes") -> "MakeMoveVector":
->>>>>>> sdk-bindings
     """
     Create this type from BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterBytes.check_lower(input)
-    
-    return _UniffiConverterUInt16.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs,
-        _UniffiConverterBytes.lower(input)))
-
-
-def u16_to_bcs(input: "int") -> "bytes":
-=======
     _UniffiConverterBytes.check_lower(bcs)
     
     return _UniffiConverterTypeMakeMoveVector.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_make_move_vector_from_bcs,
@@ -45794,20 +45753,10 @@ def u16_to_bcs(input: "int") -> "bytes":
 
 
 def make_move_vector_to_bcs(data: "MakeMoveVector") -> "bytes":
->>>>>>> sdk-bindings
     """
     Convert this type to BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterUInt16.check_lower(input)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_to_bcs,
-        _UniffiConverterUInt16.lower(input)))
-
-
-def u32_from_bcs(input: "bytes") -> "int":
-=======
     _UniffiConverterTypeMakeMoveVector.check_lower(data)
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_make_move_vector_to_bcs,
@@ -45815,20 +45764,10 @@ def u32_from_bcs(input: "bytes") -> "int":
 
 
 def merge_coins_from_bcs(bcs: "bytes") -> "MergeCoins":
->>>>>>> sdk-bindings
     """
     Create this type from BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterBytes.check_lower(input)
-    
-    return _UniffiConverterUInt32.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs,
-        _UniffiConverterBytes.lower(input)))
-
-
-def u32_to_bcs(input: "int") -> "bytes":
-=======
     _UniffiConverterBytes.check_lower(bcs)
     
     return _UniffiConverterTypeMergeCoins.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_merge_coins_from_bcs,
@@ -45836,20 +45775,10 @@ def u32_to_bcs(input: "int") -> "bytes":
 
 
 def merge_coins_to_bcs(data: "MergeCoins") -> "bytes":
->>>>>>> sdk-bindings
     """
     Convert this type to BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterUInt32.check_lower(input)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_to_bcs,
-        _UniffiConverterUInt32.lower(input)))
-
-
-def u64_from_bcs(input: "bytes") -> "int":
-=======
     _UniffiConverterTypeMergeCoins.check_lower(data)
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_merge_coins_to_bcs,
@@ -45857,20 +45786,10 @@ def u64_from_bcs(input: "bytes") -> "int":
 
 
 def move_call_from_bcs(bcs: "bytes") -> "MoveCall":
->>>>>>> sdk-bindings
     """
     Create this type from BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterBytes.check_lower(input)
-    
-    return _UniffiConverterUInt64.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs,
-        _UniffiConverterBytes.lower(input)))
-
-
-def u64_to_bcs(input: "int") -> "bytes":
-=======
     _UniffiConverterBytes.check_lower(bcs)
     
     return _UniffiConverterTypeMoveCall.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_move_call_from_bcs,
@@ -45878,20 +45797,10 @@ def u64_to_bcs(input: "int") -> "bytes":
 
 
 def move_call_to_bcs(data: "MoveCall") -> "bytes":
->>>>>>> sdk-bindings
     """
     Convert this type to BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterUInt64.check_lower(input)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_to_bcs,
-        _UniffiConverterUInt64.lower(input)))
-
-
-def u8_from_bcs(input: "bytes") -> "int":
-=======
     _UniffiConverterTypeMoveCall.check_lower(data)
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_move_call_to_bcs,
@@ -45899,20 +45808,10 @@ def u8_from_bcs(input: "bytes") -> "int":
 
 
 def move_location_from_bcs(bcs: "bytes") -> "MoveLocation":
->>>>>>> sdk-bindings
     """
     Create this type from BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterBytes.check_lower(input)
-    
-    return _UniffiConverterUInt8.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs,
-        _UniffiConverterBytes.lower(input)))
-
-
-def u8_to_bcs(input: "int") -> "bytes":
-=======
     _UniffiConverterBytes.check_lower(bcs)
     
     return _UniffiConverterTypeMoveLocation.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_move_location_from_bcs,
@@ -45920,17 +45819,10 @@ def u8_to_bcs(input: "int") -> "bytes":
 
 
 def move_location_to_bcs(data: "MoveLocation") -> "bytes":
->>>>>>> sdk-bindings
     """
     Convert this type to BCS encoded bytes.
     """
 
-<<<<<<< HEAD
-    _UniffiConverterUInt8.check_lower(input)
-    
-    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_to_bcs,
-        _UniffiConverterUInt8.lower(input)))
-=======
     _UniffiConverterTypeMoveLocation.check_lower(data)
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_move_location_to_bcs,
@@ -46509,6 +46401,28 @@ def split_coins_to_bcs(data: "SplitCoins") -> "bytes":
         _UniffiConverterTypeSplitCoins.lower(data)))
 
 
+def string_from_bcs(input: "bytes") -> "str":
+    """
+    Create this type from BCS encoded bytes.
+    """
+
+    _UniffiConverterBytes.check_lower(input)
+    
+    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_from_bcs,
+        _UniffiConverterBytes.lower(input)))
+
+
+def string_to_bcs(input: "str") -> "bytes":
+    """
+    Convert this type to BCS encoded bytes.
+    """
+
+    _UniffiConverterString.check_lower(input)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_string_to_bcs,
+        _UniffiConverterString.lower(input)))
+
+
 def struct_tag_from_bcs(bcs: "bytes") -> "StructTag":
     """
     Create this type from BCS encoded bytes.
@@ -46793,6 +46707,94 @@ def type_tag_to_bcs(data: "TypeTag") -> "bytes":
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs,
         _UniffiConverterTypeTypeTag.lower(data)))
+
+
+def u16_from_bcs(input: "bytes") -> "int":
+    """
+    Create this type from BCS encoded bytes.
+    """
+
+    _UniffiConverterBytes.check_lower(input)
+    
+    return _UniffiConverterUInt16.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs,
+        _UniffiConverterBytes.lower(input)))
+
+
+def u16_to_bcs(input: "int") -> "bytes":
+    """
+    Convert this type to BCS encoded bytes.
+    """
+
+    _UniffiConverterUInt16.check_lower(input)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u16_to_bcs,
+        _UniffiConverterUInt16.lower(input)))
+
+
+def u32_from_bcs(input: "bytes") -> "int":
+    """
+    Create this type from BCS encoded bytes.
+    """
+
+    _UniffiConverterBytes.check_lower(input)
+    
+    return _UniffiConverterUInt32.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs,
+        _UniffiConverterBytes.lower(input)))
+
+
+def u32_to_bcs(input: "int") -> "bytes":
+    """
+    Convert this type to BCS encoded bytes.
+    """
+
+    _UniffiConverterUInt32.check_lower(input)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u32_to_bcs,
+        _UniffiConverterUInt32.lower(input)))
+
+
+def u64_from_bcs(input: "bytes") -> "int":
+    """
+    Create this type from BCS encoded bytes.
+    """
+
+    _UniffiConverterBytes.check_lower(input)
+    
+    return _UniffiConverterUInt64.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs,
+        _UniffiConverterBytes.lower(input)))
+
+
+def u64_to_bcs(input: "int") -> "bytes":
+    """
+    Convert this type to BCS encoded bytes.
+    """
+
+    _UniffiConverterUInt64.check_lower(input)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u64_to_bcs,
+        _UniffiConverterUInt64.lower(input)))
+
+
+def u8_from_bcs(input: "bytes") -> "int":
+    """
+    Create this type from BCS encoded bytes.
+    """
+
+    _UniffiConverterBytes.check_lower(input)
+    
+    return _UniffiConverterUInt8.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs,
+        _UniffiConverterBytes.lower(input)))
+
+
+def u8_to_bcs(input: "int") -> "bytes":
+    """
+    Convert this type to BCS encoded bytes.
+    """
+
+    _UniffiConverterUInt8.check_lower(input)
+    
+    return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_u8_to_bcs,
+        _UniffiConverterUInt8.lower(input)))
 
 
 def unchanged_shared_kind_from_bcs(bcs: "bytes") -> "UnchangedSharedKind":
@@ -47123,7 +47125,6 @@ def zk_login_public_identifier_to_bcs(data: "ZkLoginPublicIdentifier") -> "bytes
     
     return _UniffiConverterBytes.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs,
         _UniffiConverterTypeZkLoginPublicIdentifier.lower(data)))
->>>>>>> sdk-bindings
 
 
 __all__ = [
@@ -47239,36 +47240,14 @@ __all__ = [
     "authenticator_state_update_v1_to_bcs",
     "base64_decode",
     "base64_encode",
-<<<<<<< HEAD
-    "bool_from_bcs",
-    "bool_to_bcs",
-    "hex_decode",
-    "hex_encode",
-    "i16_from_bcs",
-    "i16_to_bcs",
-    "i32_from_bcs",
-    "i32_to_bcs",
-    "i64_from_bcs",
-    "i64_to_bcs",
-    "i8_from_bcs",
-    "i8_to_bcs",
-    "string_from_bcs",
-    "string_to_bcs",
-    "u16_from_bcs",
-    "u16_to_bcs",
-    "u32_from_bcs",
-    "u32_to_bcs",
-    "u64_from_bcs",
-    "u64_to_bcs",
-    "u8_from_bcs",
-    "u8_to_bcs",
-=======
     "bls12381_public_key_from_bcs",
     "bls12381_public_key_to_bcs",
     "bls12381_signature_from_bcs",
     "bls12381_signature_to_bcs",
     "bn254_field_element_from_bcs",
     "bn254_field_element_to_bcs",
+    "bool_from_bcs",
+    "bool_to_bcs",
     "cancelled_transaction_from_bcs",
     "cancelled_transaction_to_bcs",
     "change_epoch_from_bcs",
@@ -47327,6 +47306,14 @@ __all__ = [
     "genesis_transaction_to_bcs",
     "hex_decode",
     "hex_encode",
+    "i16_from_bcs",
+    "i16_to_bcs",
+    "i32_from_bcs",
+    "i32_to_bcs",
+    "i64_from_bcs",
+    "i64_to_bcs",
+    "i8_from_bcs",
+    "i8_to_bcs",
     "id_operation_from_bcs",
     "id_operation_to_bcs",
     "identifier_from_bcs",
@@ -47397,6 +47384,8 @@ __all__ = [
     "simple_signature_to_bcs",
     "split_coins_from_bcs",
     "split_coins_to_bcs",
+    "string_from_bcs",
+    "string_to_bcs",
     "struct_tag_from_bcs",
     "struct_tag_to_bcs",
     "system_package_from_bcs",
@@ -47423,6 +47412,14 @@ __all__ = [
     "type_origin_to_bcs",
     "type_tag_from_bcs",
     "type_tag_to_bcs",
+    "u16_from_bcs",
+    "u16_to_bcs",
+    "u32_from_bcs",
+    "u32_to_bcs",
+    "u64_from_bcs",
+    "u64_to_bcs",
+    "u8_from_bcs",
+    "u8_to_bcs",
     "unchanged_shared_kind_from_bcs",
     "unchanged_shared_kind_to_bcs",
     "unchanged_shared_object_from_bcs",
@@ -47453,7 +47450,6 @@ __all__ = [
     "zk_login_proof_to_bcs",
     "zk_login_public_identifier_from_bcs",
     "zk_login_public_identifier_to_bcs",
->>>>>>> sdk-bindings
     "Address",
     "Argument",
     "Bls12381PrivateKey",

@@ -5354,16 +5354,6 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_base64_decode(RustBuffer input, RustCallS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_base64_encode(RustBuffer input, RustCallStatus *out_status
 );
 #endif
-<<<<<<< HEAD
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_FROM_BCS
-int8_t uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(RustBuffer input, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_TO_BCS
-RustBuffer uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(int8_t input, RustCallStatus *out_status
-=======
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_PUBLIC_KEY_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_PUBLIC_KEY_FROM_BCS
 void* uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_from_bcs(RustBuffer bcs, RustCallStatus *out_status
@@ -5392,6 +5382,16 @@ void* uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(RustBuffer bcs, R
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BN254_FIELD_ELEMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BN254_FIELD_ELEMENT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_FROM_BCS
+int8_t uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_TO_BCS
+RustBuffer uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(int8_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CANCELLED_TRANSACTION_FROM_BCS
@@ -5672,7 +5672,6 @@ void* uniffi_iota_sdk_ffi_fn_func_genesis_transaction_from_bcs(RustBuffer bcs, R
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_TRANSACTION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_bcs(void* data, RustCallStatus *out_status
->>>>>>> sdk-bindings
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_HEX_DECODE
@@ -5685,7 +5684,6 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_hex_decode(RustBuffer input, RustCallStat
 RustBuffer uniffi_iota_sdk_ffi_fn_func_hex_encode(RustBuffer input, RustCallStatus *out_status
 );
 #endif
-<<<<<<< HEAD
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I16_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I16_FROM_BCS
 int16_t uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(RustBuffer input, RustCallStatus *out_status
@@ -5726,55 +5724,6 @@ int8_t uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(RustBuffer input, RustCallStatus 
 RustBuffer uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(int8_t input, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_FROM_BCS
-RustBuffer uniffi_iota_sdk_ffi_fn_func_string_from_bcs(RustBuffer input, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_TO_BCS
-RustBuffer uniffi_iota_sdk_ffi_fn_func_string_to_bcs(RustBuffer input, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_FROM_BCS
-uint16_t uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(RustBuffer input, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_TO_BCS
-RustBuffer uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(uint16_t input, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_FROM_BCS
-uint32_t uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(RustBuffer input, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_TO_BCS
-RustBuffer uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(uint32_t input, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_FROM_BCS
-uint64_t uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(RustBuffer input, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_TO_BCS
-RustBuffer uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(uint64_t input, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_FROM_BCS
-uint8_t uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(RustBuffer input, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_TO_BCS
-RustBuffer uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(uint8_t input, RustCallStatus *out_status
-=======
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ID_OPERATION_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ID_OPERATION_FROM_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_id_operation_from_bcs(RustBuffer bcs, RustCallStatus *out_status
@@ -6125,6 +6074,16 @@ void* uniffi_iota_sdk_ffi_fn_func_split_coins_from_bcs(RustBuffer bcs, RustCallS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_split_coins_to_bcs(void* data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_FROM_BCS
+RustBuffer uniffi_iota_sdk_ffi_fn_func_string_from_bcs(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_TO_BCS
+RustBuffer uniffi_iota_sdk_ffi_fn_func_string_to_bcs(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRUCT_TAG_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRUCT_TAG_FROM_BCS
 void* uniffi_iota_sdk_ffi_fn_func_struct_tag_from_bcs(RustBuffer bcs, RustCallStatus *out_status
@@ -6253,6 +6212,46 @@ void* uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(RustBuffer bcs, RustCallStat
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_TAG_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_TAG_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_FROM_BCS
+uint16_t uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_TO_BCS
+RustBuffer uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(uint16_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_FROM_BCS
+uint32_t uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_TO_BCS
+RustBuffer uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(uint32_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_FROM_BCS
+uint64_t uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_TO_BCS
+RustBuffer uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(uint64_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_FROM_BCS
+uint8_t uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_TO_BCS
+RustBuffer uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(uint8_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_KIND_FROM_BCS
@@ -6403,7 +6402,6 @@ void* uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(RustBuffer
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(void* data, RustCallStatus *out_status
->>>>>>> sdk-bindings
 );
 #endif
 #ifndef UNIFFI_FFIDEF_FFI_IOTA_SDK_FFI_RUSTBUFFER_ALLOC
@@ -6758,17 +6756,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_base64_encode(void
     
 );
 #endif
-<<<<<<< HEAD
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_FROM_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_TO_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs(void
-=======
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_PUBLIC_KEY_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_PUBLIC_KEY_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_from_bcs(void
@@ -6802,6 +6789,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BN254_FIELD_ELEMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BN254_FIELD_ELEMENT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_FROM_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_TO_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs(void
     
 );
 #endif
@@ -7138,7 +7137,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_from_bcs(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_TRANSACTION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_to_bcs(void
->>>>>>> sdk-bindings
     
 );
 #endif
@@ -7154,7 +7152,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_hex_encode(void
     
 );
 #endif
-<<<<<<< HEAD
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I16_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I16_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs(void
@@ -7203,64 +7200,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_FROM_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_string_from_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_TO_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_string_to_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_FROM_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_TO_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_FROM_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_TO_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_FROM_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_TO_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_FROM_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_FROM_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_TO_BCS
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_TO_BCS
-uint16_t uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs(void
-=======
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ID_OPERATION_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ID_OPERATION_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_id_operation_from_bcs(void
@@ -7681,6 +7620,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_split_coins_to_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_FROM_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_string_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_TO_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_string_to_bcs(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRUCT_TAG_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRUCT_TAG_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_bcs(void
@@ -7834,6 +7785,54 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_type_tag_from_bcs(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_TAG_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_TAG_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_type_tag_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_FROM_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_TO_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_FROM_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_TO_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_FROM_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_TO_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_FROM_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_FROM_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_TO_BCS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_TO_BCS
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs(void
     
 );
 #endif
@@ -8014,7 +8013,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs(v
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs(void
->>>>>>> sdk-bindings
     
 );
 #endif
