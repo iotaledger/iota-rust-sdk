@@ -47,18 +47,18 @@ pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
 
 macro_rules! export_primitive_types_bcs_conversion {
     ($($name:ty),+ $(,)?) => {
-        paste::paste! {$(
-            /// Create this type from BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _from_bcs >](input: &[u8]) -> crate::error::Result<$name> {
-                Ok(bcs::from_bytes(input)?)
-            }
+        paste::paste!{$(
+        #[doc = "Create a " $name " from BCS encoded bytes."]
+        #[uniffi::export]
+        pub fn [< $name:snake _from_bcs >](input: &[u8]) -> crate::error::Result<$name> {
+            Ok(bcs::from_bytes(input)?)
+        }
 
-            /// Convert this type to BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_bcs >](input: $name) -> crate::error::Result<Vec<u8>> {
-                Ok(bcs::to_bytes(&input)?)
-            }
+        #[doc = "Convert this " $name " to BCS encoded bytes."]
+        #[uniffi::export]
+        pub fn [< $name:snake _to_bcs >](input: $name) -> crate::error::Result<Vec<u8>> {
+            Ok(bcs::to_bytes(&input)?)
+        }
         )+}
     };
 }
