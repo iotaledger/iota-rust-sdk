@@ -5838,6 +5838,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_systempackage.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -18834,6 +18846,73 @@ class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
             _UniffiConverterUInt64.write(value.version, buf)
         if value.is_PER_EPOCH_CONFIG():
             buf.write_i32(5)
+
+
+
+
+
+
+
+class UpgradePolicy(enum.Enum):
+    """
+    Rust representation of upgrade policy constants in `iota::package`.
+    """
+
+    COMPATIBLE = 0
+    """
+    The least restrictive policy. Permits changes to all function
+    implementations, the removal of ability constraints on generic type
+    parameters in function signatures, and modifications to private,
+    public(friend), and entry function signatures. However, public function
+    signatures and existing types cannot be changed.
+    """
+
+    
+    ADDITIVE = 128
+    """
+    Allows adding new functionalities (e.g., new public functions or
+    structs) but restricts changes to existing functionalities.
+    """
+
+    
+    DEP_ONLY = 192
+    """
+    Limits modifications to the package’s dependencies only.
+    """
+
+    
+
+
+class _UniffiConverterTypeUpgradePolicy(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return UpgradePolicy.COMPATIBLE
+        if variant == 2:
+            return UpgradePolicy.ADDITIVE
+        if variant == 3:
+            return UpgradePolicy.DEP_ONLY
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == UpgradePolicy.COMPATIBLE:
+            return
+        if value == UpgradePolicy.ADDITIVE:
+            return
+        if value == UpgradePolicy.DEP_ONLY:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == UpgradePolicy.COMPATIBLE:
+            buf.write_i32(1)
+        if value == UpgradePolicy.ADDITIVE:
+            buf.write_i32(2)
+        if value == UpgradePolicy.DEP_ONLY:
+            buf.write_i32(3)
 
 
 
@@ -37535,6 +37614,19 @@ class StructTag():
 
 
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, StructTag):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeStructTag.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, StructTag):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeStructTag.lower(other)))
 
 
 
@@ -41662,6 +41754,7 @@ __all__ = [
     "TransactionExpiration",
     "TypeArgumentError",
     "UnchangedSharedKind",
+    "UpgradePolicy",
     "ActiveJwk",
     "AuthenticatorStateExpire",
     "AuthenticatorStateUpdateV1",
