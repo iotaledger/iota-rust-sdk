@@ -1,6 +1,22 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// This example requires you to run a localnet:
+//
+//   iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
+//
+// Furthermore, it allows you to publish any Move package by compiling it
+// first using the `iota` binary. For demonstration purposes this example
+// immediately upgrades the package after publishing it.
+//
+// bash:
+//	 cd /path/to/your/move/package/Move.toml
+//   export COMPILED_PACKAGE=$(iota move build --dump-bytecode-as-base64)
+//
+// fish:
+//   cd /path/to/your/move/package/Move.toml
+//   set -x COMPILED_PACKAGE (iota move build --dump-bytecode-as-base64)
+
 package main
 
 import (
@@ -30,16 +46,17 @@ func main() {
 		panic(err)
 	}
 
-	modules := compiledPackage.Modules
-	modulesBytes := make([][]byte, len(modules))
-	for idx, module := range modules {
-		modulesBytes[idx] = []byte(module)
+	modulesDeser := compiledPackage.Modules
+	modules := make([][]byte, len(modulesDeser))
+	for idx, module := range modulesDeser {
+		modules[idx] = []byte(module)
 	}
 	dependenciesDeser := compiledPackage.Dependencies
 	dependencies := make([]*sdk.ObjectId, len(dependenciesDeser))
 	for idx, objectIdDeser := range dependenciesDeser {
 		dependencies[idx] = objectIdDeser.ObjectId
 	}
+	data := sdk.NewMovePackageData(modules, dependencies)
 
 	compiledPackageDigest, err := sdk.DigestFromBytes(compiledPackage.Digest)
 	if err != nil {
@@ -63,14 +80,13 @@ func main() {
 	for _, coin := range faucetReceipt.Sent {
 		totalBalance += coin.Amount
 	}
-	fmt.Printf("Available Balance: %d\n", totalBalance)
 
 	client := sdk.GraphQlClientNewLocalnet()
 
 	// Build the `publish` PTB
 	builderPublish := sdk.TransactionBuilderInit(sender, client)
 	// Publish the package and receive the upgrade cap in return
-	builderPublish.Publish(modulesBytes, dependencies, "upgrade_cap")
+	builderPublish.Publish(data, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
 	builderPublish.TransferObjects(sender, []*sdk.PtbArgument{sdk.PtbArgumentRes("upgrade_cap")})
 	txPublish, err := builderPublish.Finish()
@@ -80,7 +96,7 @@ func main() {
 
 	// Perform a dry-run first to check if everything is correct
 	fmt.Println("> Publishing package (dry run):")
-	resultPublish, err := client.DryRunTx(txPublish, nil)
+	resultPublish, err := client.DryRunTx(txPublish, false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
@@ -156,7 +172,7 @@ func main() {
 	packageIdent, _ := sdk.NewIdentifier("package")
 	authorizeUpgrade, _ := sdk.NewIdentifier("authorize_upgrade")
 	upgradeCapArg := sdk.PtbArgumentObjectId(upgradeCap)
-	upgradePolicy := sdk.PtbArgumentU8(sdk.UpgradePolicyCompatible().Value())
+	upgradePolicy := sdk.PtbArgumentU8(sdk.UpgradePolicyCompatible().AsU8())
 	builderUpgrade.MoveCall(
 		sdk.AddressFramework(),
 		packageIdent,
@@ -168,7 +184,7 @@ func main() {
 
 	// Upgrade the package to receive an upgrade receipt
 	upgradeReceiptName := "upgrade_receipt"
-	builderUpgrade.Upgrade(modulesBytes, dependencies, packageId, sdk.PtbArgumentRes("upgrade_ticket"), &upgradeReceiptName)
+	builderUpgrade.Upgrade(data, packageId, sdk.PtbArgumentRes("upgrade_ticket"), &upgradeReceiptName)
 
 	// Commit the upgrade using the receipt
 	commitUpgrade, _ := sdk.NewIdentifier("commit_upgrade")
@@ -188,7 +204,7 @@ func main() {
 
 	// Perform a dry-run first to check if everything is correct
 	fmt.Println("> Upgrading package (dry run):")
-	resultUpgrade, err := client.DryRunTx(txUpgrade, nil)
+	resultUpgrade, err := client.DryRunTx(txUpgrade, false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}

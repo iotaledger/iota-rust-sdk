@@ -26,10 +26,10 @@ async def main():
         client = GraphQlClient.new_localnet()
 
         builder = await TransactionBuilder.init(sender_address, client)
-        builder.send_iota(recipient_address, [PtbArgument.u64(amount)])
+        builder.send_iota(recipient_address, PtbArgument.u64(amount))
         txn = await builder.finish()
 
-        dry_run_result = await client.dry_run_tx(txn, False)
+        dry_run_result = await client.dry_run_tx(txn)
         if dry_run_result.error is not None:
             raise Exception(f"Dry run failed: {dry_run_result.error}")
 

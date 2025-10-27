@@ -15,8 +15,9 @@ use iota_graphql_client::{
     query_types::{ObjectFilter, ObjectRef, TransactionMetadata},
 };
 use iota_types::{
-    Address, GasPayment, Identifier, ObjectId, ObjectReference, Owner, ProgrammableTransaction,
-    StructTag, Transaction, TransactionEffects, TransactionExpiration, TypeTag,
+    Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
+    ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
+    TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -29,7 +30,6 @@ use crate::{
         ptb_arguments::PTBArgumentList,
     },
     error::Error,
-    publish_type::PublishType,
     types::{MoveType, MoveTypes},
     unresolved::{
         Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
@@ -309,29 +309,6 @@ impl<C, L> TransactionBuilder<C, L> {
         self.data.get_named_result(name)
     }
 
-    /// Send IOTA to a recipient address.
-    pub fn send_iota<T: PTBArgument>(
-        &mut self,
-        recipient: Address,
-        amount: impl Into<Option<T>>,
-    ) -> &mut TransactionBuilder<C> {
-        let rec_arg = self.pure(recipient);
-        let coin_arg = if let Some(amount) = amount.into() {
-            let amt_arg = self.apply_argument(amount);
-            self.command(Command::SplitCoins(SplitCoins {
-                coin: Argument::Gas,
-                amounts: vec![amt_arg],
-            }))
-        } else {
-            Argument::Gas
-        };
-        self.command(Command::TransferObjects(TransferObjects {
-            objects: vec![coin_arg],
-            address: rec_arg,
-        }));
-        self.reset()
-    }
-
     /// Begin building a move call.
     pub fn move_call(
         &mut self,
@@ -350,19 +327,57 @@ impl<C, L> TransactionBuilder<C, L> {
         })
     }
 
-    /// Publish a move package.
-    pub fn publish(&mut self, kind: impl Into<PublishType>) -> &mut TransactionBuilder<C, Publish> {
-        let module = match kind.into() {
-            PublishType::Path(_path) => todo!("load the package from the path"),
-            PublishType::Compiled(m) => m,
-        };
-        self.cmd_state_change(Publish {
-            modules: module.modules,
-            dependencies: module.dependencies,
-        })
-    }
-
     /// Transfer objects to a recipient address.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use std::str::FromStr;
+    /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
+    /// # use iota_transaction_builder::{TransactionBuilder, res};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    ///
+    /// let client = iota_graphql_client::Client::new_devnet();
+    /// let sender =
+    ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///
+    /// # builder
+    /// #     .split_coins(
+    /// #         ObjectId::from_str(
+    /// #             "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
+    /// #         )?,
+    /// #         [1000u64],
+    /// #     )
+    /// #     .name(("coin"));
+    ///
+    /// builder.transfer_objects(
+    ///     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?,
+    ///     (
+    ///         // ObjectIds can be passed when a client is provided
+    ///         ObjectId::from_str(
+    ///             "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+    ///         )?,
+    ///         // ObjectReferences are always allowed, though they must be correct
+    ///         ObjectReference {
+    ///             object_id: ObjectId::from_str(
+    ///                 "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
+    ///             )?,
+    ///             digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
+    ///             version: 435090179,
+    ///         },
+    ///         // The result of a previous command can also be used
+    ///         res("coin"),
+    ///     ),
+    /// );
+    ///
+    /// let txn: Transaction = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
     pub fn transfer_objects<U: PTBArgumentList>(
         &mut self,
         recipient: Address,
@@ -374,6 +389,53 @@ impl<C, L> TransactionBuilder<C, L> {
             address: self.pure(recipient),
         });
         self.command(cmd);
+        self.reset()
+    }
+
+    /// Send IOTA to a recipient address.
+    ///
+    /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+    /// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+    /// sent.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use iota_graphql_client::Client;
+    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_types::Address;
+    ///
+    /// #[tokio::main(flavor = "current_thread")]
+    /// async fn main() -> eyre::Result<()> {
+    ///     let client = Client::new_devnet();
+    ///     let from_address = Address::from_hex(
+    ///         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c",
+    ///     )?;
+    ///     let to_address = Address::from_hex(
+    ///         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
+    ///     )?;
+    ///
+    ///     let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    ///     builder.send_iota(to_address, 5000000000u64);
+    ///     let txn = builder.finish().await?;
+    ///     Ok(())
+    /// }
+    /// ```
+    pub fn send_iota<T: PTBArgument>(
+        &mut self,
+        recipient: Address,
+        amount: T,
+    ) -> &mut TransactionBuilder<C> {
+        let rec_arg = self.pure(recipient);
+        let amt_arg = self.apply_argument(amount);
+        let coin_arg = self.command(Command::SplitCoins(SplitCoins {
+            coin: Argument::Gas,
+            amounts: vec![amt_arg],
+        }));
+        self.command(Command::TransferObjects(TransferObjects {
+            objects: vec![coin_arg],
+            address: rec_arg,
+        }));
         self.reset()
     }
 
@@ -423,6 +485,39 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Merge multiple coins into one.
+    ///
+    /// This method combines the balances of multiple coins of the same coin
+    /// type into a single coin. The `primary_coin` will receive the balances
+    /// from all `consumed_coins`. After merging, the `consumed_coins` will
+    /// be consumed and no longer exist.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use iota_graphql_client::Client;
+    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// #[tokio::main(flavor = "current_thread")]
+    /// async fn main() -> eyre::Result<()> {
+    ///     let client = Client::new_devnet();
+    ///     let sender = Address::from_hex(
+    ///         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c",
+    ///     )?;
+    ///
+    ///     let coin_0 = ObjectId::from_hex(
+    ///         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
+    ///     )?;
+    ///     let coin_1 = ObjectId::from_hex(
+    ///         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+    ///     )?;
+    ///
+    ///     let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///     builder.merge_coins(coin_0, [coin_1]);
+    ///     let txn = builder.finish().await?;
+    ///     Ok(())
+    /// }
+    /// ```
     pub fn merge_coins<T: PTBArgument, U: PTBArgumentList>(
         &mut self,
         primary_coin: T,
@@ -448,27 +543,69 @@ impl<C, L> TransactionBuilder<C, L> {
         self.cmd_state_change(SplitCoins { coin, amounts })
     }
 
+    /// Publish a move package.
+    pub fn publish(
+        &mut self,
+        package_data: MovePackageData,
+    ) -> &mut TransactionBuilder<C, Publish> {
+        self.cmd_state_change(Publish {
+            modules: package_data.modules,
+            dependencies: package_data.dependencies,
+        })
+    }
+
     /// Upgrade a move package.
     pub fn upgrade<U: PTBArgument>(
         &mut self,
         package_id: ObjectId,
         upgrade_ticket: U,
-        kind: impl Into<PublishType>,
+        package_data: MovePackageData,
     ) -> &mut TransactionBuilder<C, Upgrade> {
-        let module = match kind.into() {
-            PublishType::Path(_path) => todo!("load the package from the path"),
-            PublishType::Compiled(m) => m,
-        };
         let ticket = self.apply_argument(upgrade_ticket);
         self.cmd_state_change(Upgrade {
-            modules: module.modules,
-            dependencies: module.dependencies,
+            modules: package_data.modules,
+            dependencies: package_data.dependencies,
             package: package_id,
             ticket,
         })
     }
 
     /// Make a move vector from a list of elements.
+    ///
+    /// Often it is possible (and more efficient) to pass a rust slice or `Vec`
+    /// instead of calling this function, which will serialize the bytes into a
+    /// move vector pure argument.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use std::str::FromStr;
+    /// # use iota_transaction_builder::{TransactionBuilder, res};
+    /// # use iota_types::{Address, Transaction};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = iota_graphql_client::Client::new_devnet();
+    /// let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///
+    /// let address1 =
+    ///     Address::from_str("0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e")?;
+    /// let address2 =
+    ///     Address::from_str("0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")?;
+    ///
+    /// builder
+    ///     .make_move_vec([address1, address2])
+    ///     .name("addresses")
+    ///     .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
+    ///     .generics::<(Address, u64)>()
+    ///     .arguments((res("addresses"), [10000000u64, 20000000u64]));
+    ///
+    /// let txn: Transaction = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
     pub fn make_move_vec<T: PTBArgument + MoveType>(
         &mut self,
         elements: impl IntoIterator<Item = T>,
@@ -486,6 +623,36 @@ impl<C, L> TransactionBuilder<C, L> {
 
 impl<L> TransactionBuilder<(), L> {
     /// Add a gas coin that will be consumed. Optional.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use std::str::FromStr;
+    /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
+    /// # use iota_transaction_builder::{TransactionBuilder, res, unresolved};
+    ///
+    /// let sender =
+    ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender);
+    ///
+    /// let gas_coin = ObjectReference {
+    ///     object_id: ObjectId::from_str(
+    ///         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
+    ///     )?,
+    ///     digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
+    ///     version: 435090179,
+    /// };
+    ///
+    /// builder
+    ///     .split_coins(unresolved::Argument::Gas, [1000u64])
+    ///     .gas(gas_coin)
+    ///     .gas_budget(1000000000)
+    ///     .gas_price(100);
+    ///
+    /// let txn: Transaction = builder.finish()?;
+    /// # Result::<_, eyre::Error>::Ok(())
+    /// ```
     pub fn gas(&mut self, obj_ref: ObjectReference) -> &mut Self {
         self.set_input(
             InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
@@ -540,7 +707,7 @@ impl<L> TransactionBuilder<(), L> {
             .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
-        Ok(Transaction {
+        Ok(TransactionV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
@@ -553,7 +720,8 @@ impl<L> TransactionBuilder<(), L> {
                 budget: self.data.gas_budget.unwrap_or(0),
             },
             expiration: self.data.expiration,
-        })
+        }
+        .into())
     }
 }
 
@@ -563,7 +731,35 @@ impl<L> TransactionBuilder<Client, L> {
         &self.client
     }
 
-    /// Add a gas coin that will be consumed. Optional.
+    /// Add a gas coin that will be consumed. If no gas coins are provided, the
+    /// client will set a default list owned by the sender.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use std::str::FromStr;
+    /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
+    /// # use iota_transaction_builder::{TransactionBuilder, res, unresolved};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = iota_graphql_client::Client::new_devnet();
+    /// let sender =
+    ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///
+    /// let gas_coin =
+    ///     ObjectId::from_str("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?;
+    ///
+    /// builder
+    ///     .split_coins(unresolved::Argument::Gas, [1000u64])
+    ///     .gas(gas_coin);
+    ///
+    /// let txn: Transaction = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
     pub fn gas(&mut self, object_id: ObjectId) -> &mut Self {
         self.set_input(InputKind::ImmutableOrOwned(object_id), true);
         self
@@ -721,7 +917,7 @@ impl<L> TransactionBuilder<Client, L> {
                 .map_err(Error::Client)?
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
-        Ok(Transaction {
+        Ok(TransactionV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
@@ -734,13 +930,15 @@ impl<L> TransactionBuilder<Client, L> {
                 budget: self.data.gas_budget.unwrap_or(0),
             },
             expiration: self.data.expiration,
-        })
+        }
+        .into())
     }
 
     /// Convert this builder into a transaction.
     pub async fn finish(mut self) -> Result<Transaction, Error> {
         let mut txn = self.resolve_ptb(true).await?;
         if self.data.gas_budget.is_none() {
+            let Transaction::V1(txn) = &mut txn;
             let res = self
                 .client
                 .dry_run_tx_kind(&txn.kind, true, Default::default())
@@ -749,6 +947,7 @@ impl<L> TransactionBuilder<Client, L> {
             if let Some(err) = res.error {
                 return Err(Error::DryRun(err));
             }
+
             txn.gas_payment.budget = res
                 .effects
                 .ok_or_else(|| Error::MissingGasBudget)?
@@ -762,6 +961,7 @@ impl<L> TransactionBuilder<Client, L> {
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
+        let Transaction::V1(txn) = &txn;
         if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
             return Err(Error::DryRun(
                 "gas coins were provided without a gas budget".to_owned(),

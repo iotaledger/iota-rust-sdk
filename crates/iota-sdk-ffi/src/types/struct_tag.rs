@@ -106,3 +106,5 @@ impl StructTag {
         self.0.address().into()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(Identifier, StructTag);

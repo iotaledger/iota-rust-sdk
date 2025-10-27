@@ -13,8 +13,8 @@ pub mod execution_status;
 pub mod gas;
 pub mod graphql;
 pub mod iota_names;
+pub mod move_package;
 pub mod object;
-pub mod package;
 pub mod signature;
 pub mod struct_tag;
 pub mod transaction;
@@ -39,5 +39,9 @@ impl PersonalMessage {
 
     pub fn signing_digest(&self) -> Vec<u8> {
         self.0.signing_digest().to_vec()
+    }
+
+    pub fn signing_digest_hex(&self) -> String {
+        self.0.signing_digest_hex()
     }
 }

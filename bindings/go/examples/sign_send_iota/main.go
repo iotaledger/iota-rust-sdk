@@ -10,8 +10,6 @@ import (
 )
 
 func main() {
-	// Amount to send in nanos
-	amount := sdk.PtbArgumentU64(1000)
 	recipientAddress, err := sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 	if err != nil {
 		log.Fatalf("Failed to parse recipient address: %v", err)
@@ -35,13 +33,13 @@ func main() {
 	client := sdk.GraphQlClientNewLocalnet()
 
 	builder := sdk.TransactionBuilderInit(senderAddress, client)
-	builder.SendIota(recipientAddress, &amount)
+	builder.SendIota(recipientAddress, sdk.PtbArgumentU64(1000))
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	dryRunResult, err := client.DryRunTx(txn, nil)
+	dryRunResult, err := client.DryRunTx(txn, false)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run: %v", err)
 	}

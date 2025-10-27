@@ -50,6 +50,7 @@ async def main():
         print(f"Dependencies: {len(dependencies)}")
         compiled_package_digest = bytes(compiled_package["digest"])
         print(f"Compiled Package Digest: {Digest.from_bytes(compiled_package_digest).to_base58()}")
+        data = MovePackageData(modules, dependencies)
 
         # Create a random private key to derive a sender address and for signing
         private_key = Ed25519PrivateKey.generate()
@@ -61,14 +62,13 @@ async def main():
         faucet_receipt = await faucet.request_and_wait(sender)
         if faucet_receipt is None:
             raise Exception("Failed to request coins from faucet")
-        print(f"Available Balance: {sum(coin.amount for coin in faucet_receipt.sent)}")
 
         client = GraphQlClient.new_localnet()
 
         # Build the `publish` PTB
         builder = await TransactionBuilder.init(sender, client)
         # Publish the package and receive the upgrade cap in return
-        builder.publish(modules, dependencies, "upgrade_cap")
+        builder.publish(data, "upgrade_cap")
         # Transfer the upgrade cap to the sender address
         builder.transfer_objects(sender, [PtbArgument.res("upgrade_cap")])
         tx = await builder.finish()
@@ -80,7 +80,7 @@ async def main():
             raise Exception(f"Dry run failed: {result.error}")
         if result.effects is None:
             raise Exception("Dry run failed: no effects")
-        print(f"{result.effects.as_v1().status}")
+        print("Success")
 
         # Sign and execute the transaction (publish the package)
         print("> Publishing package:")
@@ -88,7 +88,7 @@ async def main():
         effects = await client.execute_tx([sig], tx)
         if effects is None:
             raise Exception("Transaction failed: no effects")
-        print(f"{effects.as_v1().status}")
+        print("Success")
 
         # Wait some time for the indexer to process the tx
         await asyncio.sleep(3)
@@ -131,7 +131,7 @@ async def main():
             Identifier("authorize_upgrade"),
             [
                 PtbArgument.object_id(upgrade_cap),
-                PtbArgument.u8(UpgradePolicy.compatible().value()),
+                PtbArgument.u8(UpgradePolicy.compatible().as_u8()),
                 PtbArgument.u8_vec(compiled_package_digest),
             ],
             names=["upgrade_ticket"],
@@ -139,8 +139,7 @@ async def main():
 
         # Upgrade the package to receive an upgrade receipt
         builder.upgrade(
-            modules,
-            dependencies,
+            data,
             package_id,
             PtbArgument.res("upgrade_ticket"),
             "upgrade_receipt",
@@ -163,7 +162,7 @@ async def main():
             raise Exception(f"Dry run failed: {result.error}")
         if result.effects is None:
             raise Exception("Dry run failed: no effects")
-        print(f"{result.effects.as_v1().status}")
+        print("Success")
 
         # Sign and execute the transaction (upgrade the package)
         print("> Upgrading package:")
@@ -172,7 +171,7 @@ async def main():
         effects = await client.execute_tx([sig], tx)
         if effects is None:
             raise Exception("Transaction failed: no effects")
-        print(f"{effects.as_v1().status}")
+        print("Success")
 
         # Wait some time for the indexer to process the tx
         await asyncio.sleep(3)

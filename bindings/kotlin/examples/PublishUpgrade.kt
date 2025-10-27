@@ -26,6 +26,7 @@ fun main() = runBlocking {
         val compiledPackageDigest =
                 compiledPackage.digest.map { (it and 0xFF).toByte() }.toByteArray()
         println("Compiled Package Digest: ${Digest.fromBytes(compiledPackageDigest).toBase58()}")
+        val data = MovePackageData(modules, dependencies)
 
         // Create a random private key to derive a sender address and for signing
         val privateKey = Ed25519PrivateKey.generate()
@@ -37,15 +38,13 @@ fun main() = runBlocking {
         val faucetReceipt =
                 faucet.requestAndWait(sender)
                         ?: throw Exception("Failed to request coins from faucet")
-        val totalBalance = faucetReceipt.sent.sumOf { it.amount.toLong() }
-        println("Available Balance: $totalBalance")
 
         val client = GraphQlClient.newLocalnet()
 
         // Build the `publish` PTB
         val builderPublish = TransactionBuilder.init(sender, client)
         // Publish the package and receive the upgrade cap in return
-        builderPublish.publish(modules, dependencies, "upgrade_cap")
+        builderPublish.publish(data, "upgrade_cap")
         // Transfer the upgrade cap to the sender address
         builderPublish.transferObjects(sender, listOf(PtbArgument.res("upgrade_cap")))
         val txPublish = builderPublish.finish()
@@ -113,7 +112,7 @@ fun main() = runBlocking {
         // Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
         // ticket
         val upgradeCapArg = PtbArgument.objectId(upgradeCap)
-        val upgradePolicyArg = PtbArgument.u8(UpgradePolicy.compatible().value())
+        val upgradePolicyArg = PtbArgument.u8(UpgradePolicy.compatible().asU8())
         val compiledPackageDigestArg = PtbArgument.u8Vec(compiledPackageDigest)
         builderUpgrade.moveCall(
                 `package` = Address.framework(),
@@ -125,8 +124,7 @@ fun main() = runBlocking {
 
         // Upgrade the package to receive an upgrade receipt
         builderUpgrade.upgrade(
-                modules = modules,
-                dependencies = dependencies,
+                packageData = data,
                 `package` = packageId,
                 ticket = PtbArgument.res("upgrade_ticket"),
                 name = "upgrade_receipt"

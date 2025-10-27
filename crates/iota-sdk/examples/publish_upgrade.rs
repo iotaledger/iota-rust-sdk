@@ -27,24 +27,24 @@ use std::env::var;
 use eyre::{Result, bail};
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
 use iota_graphql_client::{Client, faucet::FaucetClient};
-use iota_transaction_builder::{MovePackageData, TransactionBuilder, res};
-use iota_types::{Address, ObjectId, ObjectOut, StructTag, UpgradePolicy};
+use iota_transaction_builder::{TransactionBuilder, res};
+use iota_types::{Address, MovePackageData, ObjectId, ObjectOut, StructTag, UpgradePolicy};
 use rand::rngs::OsRng;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     // Read and parse the compiled package
-    let compiled_package = if let Ok(compiled_package) = var("COMPILED_PACKAGE") {
+    let compiled_package_json = if let Ok(compiled_package) = var("COMPILED_PACKAGE") {
         println!("Using custom Move package found in env var.");
         compiled_package
     } else {
         println!("No compiled package found in env var. Using default.");
         PRECOMPILED_PACKAGE.to_string()
     };
-    let data = serde_json::from_str::<MovePackageData>(&compiled_package)?;
-    let Some(compiled_package_digest) = data.digest else {
-        bail!("Missing compiled package digest");
-    };
+    let compiled_package = serde_json::from_str::<MovePackageData>(&compiled_package_json)?;
+    println!("Modules: {}", compiled_package.modules.len());
+    println!("Dependencies: {}", compiled_package.dependencies.len());
+    let compiled_package_digest = compiled_package.digest;
     println!("Compiled Package Digest: {compiled_package_digest}");
 
     // Create a random private key to derive a sender address and for signing
@@ -54,13 +54,9 @@ async fn main() -> Result<()> {
 
     // Fund the sender address for gas payment
     let faucet = FaucetClient::new_localnet();
-    let Some(receipt) = faucet.request_and_wait(sender).await? else {
+    if faucet.request_and_wait(sender).await?.is_none() {
         bail!("Failed to request coins from faucet");
     };
-    println!(
-        "Available Balance: {}",
-        receipt.sent.iter().map(|coin| coin.amount).sum::<u64>()
-    );
 
     let client = Client::new_localnet();
 
@@ -68,7 +64,7 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
     builder
         // Publish the package and receive the upgrade cap
-        .publish(data.clone())
+        .publish(compiled_package.clone())
         .name("upgrade_cap")
         // Transfer the upgrade cap to the sender address
         .transfer_objects(sender, [res("upgrade_cap")]);
@@ -143,7 +139,7 @@ async fn main() -> Result<()> {
         ))
         .name("upgrade_ticket")
         // Upgrade the package to receive an upgrade receipt
-        .upgrade(package_id, res("upgrade_ticket"), data)
+        .upgrade(package_id, res("upgrade_ticket"), compiled_package)
         .name("upgrade_receipt")
         // Commit the upgrade using the receipt
         .move_call(Address::FRAMEWORK, "package", "commit_upgrade")
