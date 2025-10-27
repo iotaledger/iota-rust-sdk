@@ -208,8 +208,8 @@ impl Client {
     // Dry Run API
     // ===========================================================================
 
-    /// Dry run a [`Transaction`] and return the transaction effects and dry run
-    /// error (if any).
+    /// Dry run a [`Transaction`] and return the transaction effects and dry
+    /// run error (if any).
     ///
     /// The `skip_checks` flag disables the usual verification checks that
     /// prevent access to objects that are owned by addresses other than the

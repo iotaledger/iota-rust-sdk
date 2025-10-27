@@ -9,7 +9,10 @@ use iota_graphql_client::query_types::{
 };
 use iota_types::{Identifier, StructTag};
 
-use crate::types::{address::Address, digest::Digest, object::ObjectId};
+use crate::{
+    error::Result,
+    types::{address::Address, digest::Digest, object::ObjectId},
+};
 
 /// An event
 ///
@@ -141,3 +144,6 @@ impl TransactionEvents {
         self.0.digest().into()
     }
 }
+
+crate::export_iota_types_bcs_conversion!(Event);
+crate::export_iota_types_objects_bcs_conversion!(TransactionEvents);

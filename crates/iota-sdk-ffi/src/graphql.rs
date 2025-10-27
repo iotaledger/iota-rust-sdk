@@ -230,7 +230,7 @@ impl GraphQLClient {
     // Checkpoints API
     // ===========================================================================
 
-    /// Get the [`CheckpointSummary`] for a given checkpoint digest or
+    /// Get the `CheckpointSummary` for a given checkpoint digest or
     /// checkpoint id. If none is provided, it will use the last known
     /// checkpoint id.
     #[uniffi::method(default(digest = None, seq_num = None))]
@@ -249,7 +249,7 @@ impl GraphQLClient {
             .map(Arc::new))
     }
 
-    /// Get a page of [`CheckpointSummary`] for the provided parameters.
+    /// Get a page of `CheckpointSummary` for the provided parameters.
     #[uniffi::method(default(pagination_filter = None))]
     pub async fn checkpoints(
         &self,
@@ -339,7 +339,7 @@ impl GraphQLClient {
     // Objects API
     // ===========================================================================
 
-    /// Return an object based on the provided [`Address`].
+    /// Return an object based on the provided `Address`.
     ///
     /// If the object does not exist (e.g., due to pruning), this will return
     /// `Ok(None)`. Similarly, if this is not an object but an address, it
@@ -362,7 +362,7 @@ impl GraphQLClient {
 
     /// Return a page of objects based on the provided parameters.
     ///
-    /// Use this function together with the [`ObjectFilter::owner`] to get the
+    /// Use this function together with the `ObjectFilter::owner` to get the
     /// objects owned by an address.
     ///
     /// # Example
@@ -395,8 +395,8 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Return the object's bcs content [`Vec<u8>`] based on the provided
-    /// [`Address`].
+    /// Return the object's bcs content `Vec<u8>` based on the provided
+    /// `Address`.
     pub async fn object_bcs(&self, object_id: &ObjectId) -> Result<Option<Vec<u8>>> {
         Ok(self.0.read().await.object_bcs(**object_id).await?)
     }
@@ -736,7 +736,7 @@ impl GraphQLClient {
     ///
     /// The `name` argument is a json serialized type.
     ///
-    /// This returns [`DynamicFieldOutput`] which contains the name, the value
+    /// This returns `DynamicFieldOutput` which contains the name, the value
     /// as json, and object.
     ///
     /// # Example
@@ -771,7 +771,7 @@ impl GraphQLClient {
     ///
     /// The `name` argument is a json serialized type.
     ///
-    /// This returns [`DynamicFieldOutput`] which contains the name, the value
+    /// This returns `DynamicFieldOutput` which contains the name, the value
     /// as json, and object.
     pub async fn dynamic_object_field(
         &self,
@@ -791,7 +791,7 @@ impl GraphQLClient {
     /// Get a page of dynamic fields for the provided address. Note that this
     /// will also fetch dynamic fields on wrapped objects.
     ///
-    /// This returns [`Page`] of [`DynamicFieldOutput`]s.
+    /// This returns a page of `DynamicFieldOutput`s.
     #[uniffi::method(default(pagination_filter = None))]
     pub async fn dynamic_fields(
         &self,
@@ -824,29 +824,25 @@ impl GraphQLClient {
     // Dry Run API
     // ===========================================================================
 
-    /// Dry run a [`Transaction`] and return the transaction effects and dry run
+    /// Dry run a `Transaction` and return the transaction effects and dry run
     /// error (if any).
     ///
     /// `skipChecks` optional flag disables the usual verification checks that
     /// prevent access to objects that are owned by addresses other than the
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks. Defaults to false.
-    #[uniffi::method(default(skip_checks = None))]
-    pub async fn dry_run_tx(
-        &self,
-        tx: &Transaction,
-        skip_checks: Option<bool>,
-    ) -> Result<DryRunResult> {
+    #[uniffi::method(default(skip_checks = false))]
+    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx(&tx.0, skip_checks.unwrap_or(false))
+            .dry_run_tx(&tx.0, skip_checks)
             .await?
             .into())
     }
 
-    /// Dry run a [`TransactionKind`] and return the transaction effects and dry
+    /// Dry run a `TransactionKind` and return the transaction effects and dry
     /// run error (if any).
     ///
     /// `skipChecks` optional flag disables the usual verification checks that
@@ -855,18 +851,18 @@ impl GraphQLClient {
     /// checks. Defaults to false.
     ///
     /// `tx_meta` is the transaction metadata.
-    #[uniffi::method(default(skip_checks = None))]
+    #[uniffi::method(default(skip_checks = false))]
     pub async fn dry_run_tx_kind(
         &self,
         tx_kind: &TransactionKind,
         tx_meta: TransactionMetadata,
-        skip_checks: Option<bool>,
+        skip_checks: bool,
     ) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx_kind(&tx_kind.0, skip_checks.unwrap_or(false), tx_meta.into())
+            .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.into())
             .await?
             .into())
     }

@@ -162,6 +162,7 @@ serialization_test!(SignedTransaction);
 serialization_test!(SplitCoins);
 serialization_test!(SystemPackage);
 serialization_test!(Transaction);
+serialization_test!(TransactionV1);
 serialization_test!(TransactionExpiration);
 serialization_test!(TransactionKind);
 serialization_test!(TransferObjects);
