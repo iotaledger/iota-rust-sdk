@@ -8412,7 +8412,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 37663.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 28380.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 12346.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 14745.toShort()) {
@@ -8472,7 +8472,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 64679.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913.toShort()) {
@@ -21817,18 +21817,6 @@ public interface GraphQlClientInterface {
      *
      * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
-     *
-     * # Example
-     * ```rust,ignore
-     *
-     * let client = iota_graphql_client::Client::new_devnet();
-     * let address = ObjectId::SYSTEM.into();
-     * let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-     *
-     * # alternatively, pass in the bcs bytes
-     * let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-     * let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-     * ```
      */
     suspend fun `dynamicField`(`address`: Address, `typeTag`: TypeTag, `name`: Value): DynamicFieldOutput?
     
@@ -21963,18 +21951,6 @@ public interface GraphQlClientInterface {
      *
      * Use this function together with the `ObjectFilter::owner` to get the
      * objects owned by an address.
-     *
-     * # Example
-     *
-     * ```rust,ignore
-     * let filter = ObjectFilter {
-     * type_tag: None,
-     * owner: Some(Address::from_str("test").unwrap().into()),
-     * object_ids: None,
-     * };
-     *
-     * let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-     * ```
      */
     suspend fun `objects`(`filter`: ObjectFilter? = null, `paginationFilter`: PaginationFilter? = null): ObjectPage
     
@@ -22450,18 +22426,6 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      *
      * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
-     *
-     * # Example
-     * ```rust,ignore
-     *
-     * let client = iota_graphql_client::Client::new_devnet();
-     * let address = ObjectId::SYSTEM.into();
-     * let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-     *
-     * # alternatively, pass in the bcs bytes
-     * let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-     * let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-     * ```
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -22976,18 +22940,6 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      *
      * Use this function together with the `ObjectFilter::owner` to get the
      * objects owned by an address.
-     *
-     * # Example
-     *
-     * ```rust,ignore
-     * let filter = ObjectFilter {
-     * type_tag: None,
-     * owner: Some(Address::from_str("test").unwrap().into()),
-     * object_ids: None,
-     * };
-     *
-     * let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-     * ```
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -54540,7 +54492,7 @@ public object FfiConverterTypeExecutionError : FfiConverterRustBuffer<ExecutionE
  * execution-status = success / failure
  * success = %x00
  * failure = %x01 execution-error (option u64)
- * ```xx
+ * ```
  */
 sealed class ExecutionStatus: Disposable  {
     
