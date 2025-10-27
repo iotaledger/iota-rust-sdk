@@ -668,7 +668,7 @@ impl Client {
         owner: Address,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Coin>> {
-        self.coins(owner, StructTag::new_iota(), pagination_filter)
+        self.coins(owner, StructTag::new_iota_coin(), pagination_filter)
             .await
     }
 

@@ -109,6 +109,11 @@ impl StructTag {
         })
     }
 
+    #[uniffi::constructor]
+    pub fn new_name(address: &Address) -> Self {
+        Self(iota_types::StructTag::new_name(address.0))
+    }
+
     /// Checks if this is a Coin type
     pub fn coin_type_opt(&self) -> Option<Arc<TypeTag>> {
         self.0
@@ -151,28 +156,31 @@ impl StructTag {
 }
 
 export_struct_tag_ctors!(
-    GasCoin,
+    AddressKey,
     Clock,
     Config,
     ConfigKey,
-    AddressKey,
+    GasCoin,
     GlobalPauseKey,
+    Id,
+    IotaCoin,
+    IotaSystemAdminCap,
+    IotaSystemState,
     IotaTreasuryCap,
     UpgradeCap,
     UpgradeTicket,
     UpgradeReceipt,
-    IotaSystemAdminCap,
-    IotaSystemState,
     StakedIota,
-    TimelockedStakedIota
+    TimelockedStakedIota,
+    Uid,
 );
 
-export_struct_tag_from_type_tag_ctors!(Coin, Balance, TimeLock);
+export_struct_tag_from_type_tag_ctors!(Balance, Coin, TimeLock);
 
 export_struct_tag_from_struct_tag_ctors!(
-    CoinMetadata,
-    TreasuryCap,
     CoinManager,
+    CoinMetadata,
+    DisplayCreated,
+    TreasuryCap,
     VersionUpdated,
-    DisplayCreated
 );
