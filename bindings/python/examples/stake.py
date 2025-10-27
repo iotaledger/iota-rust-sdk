@@ -21,13 +21,9 @@ async def main():
 
         print("Staking to validator", validator.name or "with no name")
 
-        coin_id = ObjectId.from_hex(
-            "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
-        )
-
         builder = await TransactionBuilder.init(my_address, client)
 
-        builder.stake(PtbArgument.object_id(coin_id), validator.address)
+        builder.stake(PtbArgument.u64(1000000000), validator.address)
 
         res = await builder.dry_run()
         if res.error is not None:

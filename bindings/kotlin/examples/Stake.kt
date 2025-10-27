@@ -3,7 +3,6 @@
 
 import iota_sdk.Address
 import iota_sdk.GraphQlClient
-import iota_sdk.ObjectId
 import iota_sdk.PtbArgument
 import iota_sdk.TransactionBuilder
 import kotlinx.coroutines.runBlocking
@@ -25,14 +24,9 @@ fun main() = runBlocking {
 
         println("Staking to validator ${validator.name ?: "with no name"}")
 
-        val coinId =
-                ObjectId.fromHex(
-                        "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
-                )
-
         val builder = TransactionBuilder.init(myAddress, client)
 
-        builder.stake(PtbArgument.objectId(coinId), validator.address)
+        builder.stake(PtbArgument.u64(1000000000uL), validator.address)
 
         val res = builder.dryRun()
 

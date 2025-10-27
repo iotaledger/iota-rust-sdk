@@ -32,11 +32,9 @@ func main() {
 	}
 	log.Printf("Staking to validator %v", validatorName)
 
-	coinObjId, _ := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
-
 	builder := sdk.TransactionBuilderInit(myAddress, client)
 
-	builder.Stake(sdk.PtbArgumentObjectId(coinObjId), validator.Address)
+	builder.Stake(sdk.PtbArgumentU64(1000000000), validator.Address)
 
 	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {

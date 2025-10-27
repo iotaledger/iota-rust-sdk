@@ -571,6 +571,9 @@ impl<C, L> TransactionBuilder<C, L> {
 
     /// Add stake to a validator's staking pool.
     ///
+    /// This is a high-level function which will split the provided stake amount
+    /// from the gas coin and then stake using the resulting coin.
+    ///
     /// # Example
     ///
     /// ```rust
@@ -583,20 +586,23 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let client = Client::new_devnet();
     /// let sender =
     ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
-    /// let coin =
-    ///     ObjectId::from_hex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
     /// let validator_address =
     ///     Address::from_hex("0x6f0202b12cd398166bdd3716c9aa3f0b6218ba125491f7ea2bc660fdd5e57ff8")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
-    /// builder.stake(coin, validator_address);
+    /// builder.stake(100000000u64, validator_address);
     /// let txn = builder.finish().await?;
     /// # Ok(())
     /// # }
     /// ```
-    pub fn stake<S: PTBArgument>(&mut self, stake: S, validator_address: Address) -> &mut Self {
+    pub fn stake<S: PTBArgument>(
+        &mut self,
+        stake_amount: S,
+        validator_address: Address,
+    ) -> &mut Self {
+        let coin = self.split_coins(Argument::Gas, [stake_amount]).arg();
         self.move_call(Address::SYSTEM, IOTA_SYSTEM_MODULE, REQUEST_ADD_STAKE_FN)
-            .arguments((SharedMut(ObjectId::SYSTEM), stake, validator_address))
+            .arguments((SharedMut(ObjectId::SYSTEM), coin, validator_address))
             .state_change()
     }
 
