@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # This example requires you to run a localnet:
+#
 # ```sh
-#   iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
+# iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
 # ```
 #
 # Furthermore, it allows you to publish any Move package by compiling it
@@ -11,14 +12,12 @@
 # immediately upgrades the package after publishing it.
 #
 # ```bash
-# cd /path/to/your/move/package/Move.toml
-#
+# cd /path/to/your/move/package
 # export COMPILED_PACKAGE=$(iota move build --dump-bytecode-as-base64)
 # ```
 #
 # ```fish
-# cd /path/to/your/move/package/Move.toml
-#
+# cd /path/to/your/move/package
 # set -x COMPILED_PACKAGE (iota move build --dump-bytecode-as-base64)
 # ```
 

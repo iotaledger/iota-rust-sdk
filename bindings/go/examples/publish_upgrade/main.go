@@ -10,11 +10,11 @@
 // immediately upgrades the package after publishing it.
 //
 // bash:
-//	 cd /path/to/your/move/package/Move.toml
+//	 cd /path/to/your/move/package
 //   export COMPILED_PACKAGE=$(iota move build --dump-bytecode-as-base64)
 //
 // fish:
-//   cd /path/to/your/move/package/Move.toml
+//   cd /path/to/your/move/package
 //   set -x COMPILED_PACKAGE (iota move build --dump-bytecode-as-base64)
 
 package main

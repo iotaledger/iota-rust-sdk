@@ -1,6 +1,29 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * This example requires you to run a localnet:
+ *
+ * ```sh
+ * iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
+ * ```
+ *
+ * Furthermore, it allows you to publish any Move package by compiling it first using the `iota`
+ * binary. For demonstration purposes this example immediately upgrades the package after publishing
+ * it.
+ *
+ * bash:
+ * ```
+ * cd /path/to/your/move/package
+ * export COMPILED_PACKAGE=$(iota move build --dump-bytecode-as-base64)
+ * ```
+ *
+ * fish:
+ * ```
+ * cd /path/to/your/move/package
+ * set -x COMPILED_PACKAGE (iota move build --dump-bytecode-as-base64)
+ * ```
+ */
 import iota_sdk.*
 import java.util.Base64
 import kotlinx.coroutines.runBlocking
@@ -35,9 +58,7 @@ fun main() = runBlocking {
 
         // Fund the sender address for gas payment
         val faucet = FaucetClient.newLocalnet()
-        val faucetReceipt =
-                faucet.requestAndWait(sender)
-                        ?: throw Exception("Failed to request coins from faucet")
+        faucet.requestAndWait(sender) ?: throw Exception("Failed to request coins from faucet")
 
         val client = GraphQlClient.newLocalnet()
 
