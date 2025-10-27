@@ -27,7 +27,7 @@ serde_json.workspace = true
 tokio = { workspace = true, features = ["time"] }
 uniffi = { version = "0.29", features = ["cli", "tokio"] }
 
-iota-crypto = { path = "../iota-crypto", features = ["bls12381", "ed25519", "secp256r1", "passkey", "secp256k1", "zklogin", "pem", "bech32"] }
+iota-crypto = { path = "../iota-crypto", features = ["bls12381", "ed25519", "secp256r1", "passkey", "secp256k1", "zklogin", "pem", "bech32", "mnemonic"] }
 iota-graphql-client = { path = "../iota-graphql-client" }
 iota-transaction-builder = { path = "../iota-transaction-builder" }
 iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["hash", "rand"] }

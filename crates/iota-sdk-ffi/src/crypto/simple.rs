@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_crypto::{PrivateKeyExt, Signer, Verifier};
+use iota_crypto::{Signer, ToBytes, ToFromBech32, Verifier};
 use iota_types::SignatureScheme;
 
 use crate::{
@@ -110,6 +110,13 @@ impl SimpleKeypair {
     /// Serialize this private key as DER-encoded PKCS#8
     pub fn to_pem(&self) -> Result<String> {
         Ok(self.0.to_pem()?)
+    }
+
+    /// Construct the private key from a mnemonic phrase and the signature
+    /// scheme
+    #[uniffi::constructor]
+    pub fn from_mnemonic(phrase: &str, scheme: SignatureScheme) -> Result<Self> {
+        Ok(iota_crypto::simple::SimpleKeypair::from_mnemonic(phrase, scheme)?.into())
     }
 
     fn try_sign(&self, message: &[u8]) -> Result<SimpleSignature> {

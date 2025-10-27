@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_crypto::PrivateKeyExt;
+use iota_crypto::{FromMnemonic, ToBytes, ToFromBech32};
 use iota_types::SignatureScheme;
 use rand::rngs::OsRng;
 
@@ -83,6 +83,12 @@ impl Secp256k1PrivateKey {
     #[uniffi::constructor]
     pub fn from_bech32(value: &str) -> Result<Self> {
         Ok(iota_crypto::secp256k1::Secp256k1PrivateKey::from_bech32(value)?.into())
+    }
+
+    /// Construct the private key from a mnemonic phrase
+    #[uniffi::constructor]
+    pub fn from_mnemonic(phrase: &str) -> Result<Self> {
+        Ok(iota_crypto::secp256k1::Secp256k1PrivateKey::from_mnemonic(phrase)?.into())
     }
 
     pub fn try_sign(&self, message: &[u8]) -> Result<Secp256k1Signature> {

@@ -16,6 +16,8 @@ default = [
   "zklogin",
   "pem",
   "bls12381",
+  "bech32",
+  "mnemonic",
   "graphql",
   "txn-builder",
   "types",
@@ -35,6 +37,8 @@ secp256k1 = ["crypto", "iota-crypto/secp256k1"]
 zklogin = ["crypto", "iota-crypto/zklogin"]
 pem = ["crypto", "iota-crypto/pem"]
 bls12381 = ["crypto", "iota-crypto/bls12381"]
+bech32 = ["crypto", "iota-crypto/bech32"]
+mnemonic = ["crypto", "iota-crypto/mnemonic"]
 
 # GraphQL
 graphql = ["dep:iota-graphql-client"]

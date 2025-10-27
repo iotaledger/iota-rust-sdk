@@ -111,15 +111,17 @@ impl Ed25519PrivateKey {
     }
 }
 
-impl crate::PrivateKeyExt for Ed25519PrivateKey {
-    const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
-
+impl crate::ToBytes for Ed25519PrivateKey {
     /// Return the raw 32-byte private key
     fn to_bytes(&self) -> Vec<u8> {
         self.0.to_bytes().to_vec()
     }
+}
 
-    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
+impl crate::FromBytes for Ed25519PrivateKey {
+    type Error = crate::PrivateKeyError;
+
+    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {
         if bytes.len() != Self::LENGTH {
             return Err(crate::PrivateKeyError::InvalidScheme(
                 "invalid ed25519 key length".to_string(),
@@ -129,6 +131,30 @@ impl crate::PrivateKeyExt for Ed25519PrivateKey {
         let mut arr = [0u8; Self::LENGTH];
         arr.copy_from_slice(bytes);
         Ok(Self::new(arr))
+    }
+}
+
+impl crate::ConstPrivateKeyScheme for Ed25519PrivateKey {
+    const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
+}
+
+#[cfg(feature = "mnemonic")]
+impl crate::FromMnemonic for Ed25519PrivateKey {
+    type Error = crate::PrivateKeyError;
+
+    fn from_mnemonic(phrase: &str) -> Result<Self, Self::Error> {
+        let mnemonic = bip32::Mnemonic::new(phrase, bip32::Language::English)?;
+        let seed = mnemonic.to_seed("");
+        Ok(Self::new(slip10_ed25519::derive_ed25519_private_key(
+            seed.as_bytes(),
+            &[
+                crate::DERIVATION_PATH_PURPOSE_ED25519,
+                crate::DERIVATION_PATH_COIN_TYPE,
+                0,
+                0,
+                0,
+            ],
+        )))
     }
 }
 

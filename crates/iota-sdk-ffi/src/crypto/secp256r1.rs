@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_crypto::{PrivateKeyExt, Signer, Verifier};
+use iota_crypto::{FromMnemonic, Signer, ToBytes, ToFromBech32, Verifier};
 use iota_types::SignatureScheme;
 use rand::rngs::OsRng;
 
@@ -105,6 +105,12 @@ impl Secp256r1PrivateKey {
     #[uniffi::constructor]
     pub fn from_bech32(value: &str) -> Result<Self> {
         Ok(iota_crypto::secp256r1::Secp256r1PrivateKey::from_bech32(value)?.into())
+    }
+
+    /// Construct the private key from a mnemonic phrase
+    #[uniffi::constructor]
+    pub fn from_mnemonic(phrase: &str) -> Result<Self> {
+        Ok(iota_crypto::secp256r1::Secp256r1PrivateKey::from_mnemonic(phrase)?.into())
     }
 }
 

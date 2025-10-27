@@ -116,14 +116,17 @@ impl Secp256r1PrivateKey {
     }
 }
 
-impl crate::PrivateKeyExt for Secp256r1PrivateKey {
-    const SCHEME: SignatureScheme = SignatureScheme::Secp256r1;
-
+impl crate::ToBytes for Secp256r1PrivateKey {
+    /// Return the raw 32-byte private key
     fn to_bytes(&self) -> Vec<u8> {
         self.0.to_bytes().to_vec()
     }
+}
 
-    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
+impl crate::FromBytes for Secp256r1PrivateKey {
+    type Error = crate::PrivateKeyError;
+
+    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {
         if bytes.len() != Self::LENGTH {
             return Err(crate::PrivateKeyError::InvalidScheme(
                 "invalid secp256r1 key length".to_string(),
@@ -133,6 +136,31 @@ impl crate::PrivateKeyExt for Secp256r1PrivateKey {
         let mut arr = [0u8; Self::LENGTH];
         arr.copy_from_slice(bytes);
         Ok(Self::new(arr))
+    }
+}
+
+impl crate::ConstPrivateKeyScheme for Secp256r1PrivateKey {
+    const SCHEME: SignatureScheme = SignatureScheme::Secp256r1;
+}
+
+#[cfg(feature = "mnemonic")]
+impl crate::FromMnemonic for Secp256r1PrivateKey {
+    type Error = crate::PrivateKeyError;
+
+    fn from_mnemonic(phrase: &str) -> Result<Self, Self::Error> {
+        use std::str::FromStr;
+
+        use crate::FromBytes;
+
+        let mnemonic = bip32::Mnemonic::new(phrase, bip32::Language::English)?;
+        let seed = mnemonic.to_seed("");
+        let path = bip32::DerivationPath::from_str(&format!(
+            "m/{}'/{}'/0'/0'/0'",
+            crate::DERIVATION_PATH_PURPOSE_SECP256R1,
+            crate::DERIVATION_PATH_COIN_TYPE
+        ))?;
+        let child_xprv = bip32::XPrv::derive_from_path(seed, &path)?;
+        Ok(Self::from_bytes(&child_xprv.private_key().to_bytes())?)
     }
 }
 

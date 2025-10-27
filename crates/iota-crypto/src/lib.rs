@@ -23,6 +23,9 @@ pub enum PrivateKeyError {
     /// HRP (Human Readable Part) error
     #[error("bech32 HRP error: {0}")]
     Bech32Hrp(String),
+    #[cfg(feature = "mnemonic")]
+    #[error("mnemonic error: {0}")]
+    Bip32(#[from] bip32::Error),
 }
 
 #[cfg(feature = "bls12381")]
@@ -182,23 +185,66 @@ impl<T: Verifier<UserSignature>> IotaVerifier for T {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
 pub const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
 
-/// Extension trait for private key types
-pub trait PrivateKeyExt {
-    /// The signature scheme for this key type
-    const SCHEME: iota_sdk_types::SignatureScheme;
+#[cfg(feature = "mnemonic")]
+pub const DERIVATION_PATH_COIN_TYPE: u32 = 4218;
+#[cfg(feature = "mnemonic")]
+pub const DERIVATION_PATH_PURPOSE_ED25519: u32 = 44;
+#[cfg(feature = "mnemonic")]
+pub const DERIVATION_PATH_PURPOSE_SECP256K1: u32 = 54;
+#[cfg(feature = "mnemonic")]
+pub const DERIVATION_PATH_PURPOSE_SECP256R1: u32 = 74;
 
+/// Defines a type which can be converted to bytes
+pub trait ToBytes {
+    /// Returns the raw bytes of this type.
+    fn to_bytes(&self) -> Vec<u8>;
+}
+
+/// Defines a type which can be constructed from bytes
+pub trait FromBytes {
+    type Error;
+
+    /// Create an instance from raw bytes
+    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error>
+    where
+        Self: Sized;
+}
+
+/// Defines the const scheme of a private key
+pub trait ConstPrivateKeyScheme {
+    const SCHEME: iota_sdk_types::SignatureScheme;
+}
+
+/// Defines the scheme of a private key
+pub trait PrivateKeyScheme {
     /// Returns the signature scheme for this private key
+    fn scheme(&self) -> iota_sdk_types::SignatureScheme;
+}
+
+impl<T: ConstPrivateKeyScheme> PrivateKeyScheme for T {
     fn scheme(&self) -> iota_sdk_types::SignatureScheme {
         Self::SCHEME
     }
+}
 
-    /// Returns the raw bytes of this private key
-    fn to_bytes(&self) -> Vec<u8>;
+/// Defines a type that can be converted to and from flagged bytes, i.e. bytes
+/// prepended by some variant indicator flag
+pub trait ToFromFlaggedBytes {
+    type Error;
 
-    /// Creates an instance from raw key bytes (without scheme flag)
-    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, PrivateKeyError>
+    /// Returns the bytes with the flag prepended
+    fn to_flagged_bytes(&self) -> Vec<u8>;
+
+    /// Creates an instance from bytes that include the flag
+    fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, Self::Error>
     where
         Self: Sized;
+}
+
+impl<T: ToBytes + FromBytes<Error = PrivateKeyError> + ConstPrivateKeyScheme> ToFromFlaggedBytes
+    for T
+{
+    type Error = PrivateKeyError;
 
     /// Returns the bytes with signature scheme flag prepended
     fn to_flagged_bytes(&self) -> Vec<u8> {
@@ -209,8 +255,7 @@ pub trait PrivateKeyExt {
         bytes
     }
 
-    /// Creates an instance from bytes that include the signature scheme flag
-    fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, PrivateKeyError>
+    fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, Self::Error>
     where
         Self: Sized,
     {
@@ -229,12 +274,30 @@ pub trait PrivateKeyExt {
         }
 
         let key_bytes = &bytes[1..];
-        Self::from_raw_bytes(key_bytes)
+        Self::from_bytes(key_bytes)
     }
+}
+
+/// Defines a type which can be converted to and from bech32 strings
+#[cfg(feature = "bech32")]
+pub trait ToFromBech32 {
+    type Error;
 
     /// Encode this private key in Bech32 format with "iotaprivkey" prefix
+    fn to_bech32(&self) -> Result<String, Self::Error>;
+
+    /// Decode a private key from Bech32 format with "iotaprivkey" prefix
+    fn from_bech32(value: &str) -> Result<Self, Self::Error>
+    where
+        Self: Sized;
+}
+
+#[cfg(feature = "bech32")]
+impl<T: ToFromFlaggedBytes<Error = PrivateKeyError>> ToFromBech32 for T {
+    type Error = PrivateKeyError;
+
     #[cfg(feature = "bech32")]
-    fn to_bech32(&self) -> Result<String, PrivateKeyError> {
+    fn to_bech32(&self) -> Result<String, Self::Error> {
         use bech32::Hrp;
 
         let hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
@@ -246,12 +309,8 @@ pub trait PrivateKeyExt {
             .map_err(|e| PrivateKeyError::Bech32(format!("encoding failed: {e}")))
     }
 
-    /// Decode a private key from Bech32 format with "iotaprivkey" prefix
     #[cfg(feature = "bech32")]
-    fn from_bech32(value: &str) -> Result<Self, PrivateKeyError>
-    where
-        Self: Sized,
-    {
+    fn from_bech32(value: &str) -> Result<Self, Self::Error> {
         use bech32::Hrp;
 
         let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
@@ -272,4 +331,15 @@ pub trait PrivateKeyExt {
 
         Self::from_flagged_bytes(&data)
     }
+}
+
+/// Defines a type which can be constructed from a mnemonic phrase
+#[cfg(feature = "mnemonic")]
+pub trait FromMnemonic {
+    type Error;
+
+    /// Create an instance from a mnemonic phrase
+    fn from_mnemonic(phrase: &str) -> Result<Self, Self::Error>
+    where
+        Self: Sized;
 }

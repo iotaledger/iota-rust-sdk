@@ -54,6 +54,7 @@ pem = [
   "k256?/pem",
 ]
 bls12381 = ["dep:blst", "dep:rand_core", "dep:roaring", "signature/std"]
+mnemonic = ["dep:bip32", "dep:slip10_ed25519"]
 
 [dependencies]
 iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
@@ -98,6 +99,10 @@ roaring = { workspace = true, optional = true }
 
 # bech32 encoding support
 bech32 = { version = "0.11.0", optional = true }
+
+# mnemonic support
+bip32 = { version = "0.5.3", optional = true }
+slip10_ed25519 = { version = "0.1.3", optional = true }
 
 [dev-dependencies]
 bcs.workspace = true
