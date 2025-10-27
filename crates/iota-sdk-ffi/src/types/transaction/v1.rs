@@ -408,6 +408,7 @@ impl From<ObjectOut> for iota_types::ObjectOut {
 /// id-operation-deleted    = %x02
 /// ```
 #[uniffi::remote(Enum)]
+#[repr(u8)]
 pub enum IdOperation {
     None,
     Created,

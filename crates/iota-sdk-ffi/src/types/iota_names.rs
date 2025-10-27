@@ -93,6 +93,7 @@ impl Name {
 /// Two different view options for a name.
 /// `At` -> `test@example` | `Dot` -> `test.example.iota`
 #[uniffi::remote(Enum)]
+#[repr(u8)]
 pub enum NameFormat {
     At,
     Dot,

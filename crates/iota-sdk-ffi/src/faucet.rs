@@ -80,6 +80,7 @@ impl FaucetClient {
 }
 
 #[derive(uniffi::Enum)]
+#[repr(u8)]
 pub enum BatchSendStatusType {
     InProgress,
     Succeeded,
