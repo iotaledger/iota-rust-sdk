@@ -9,6 +9,14 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
+func identifier(ident string) *sdk.Identifier {
+	identifier, err := sdk.NewIdentifier(ident)
+	if err != nil {
+		log.Fatalf("Failed to parse identifier: %v", err)
+	}
+	return identifier
+}
+
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
@@ -26,9 +34,9 @@ func main() {
 
 	iotaSystemId := sdk.ObjectIdSystem()
 
-	iotaSystemModule, _ := sdk.NewIdentifier("iota_system")
+	iotaSystemModule := identifier("iota_system")
 
-	requestAddStakeFn, _ := sdk.NewIdentifier("request_withdraw_stake")
+	requestAddStakeFn := identifier("request_withdraw_stake")
 
 	builder := sdk.TransactionBuilderInit(stakedIota.Owner().AsAddress(), client)
 	builder.MoveCall(
