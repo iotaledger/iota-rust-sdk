@@ -54646,11 +54646,11 @@ public object FfiConverterTypeFeature: FfiConverterRustBuffer<Feature> {
  * ```
  */
 
-enum class IdOperation {
+enum class IdOperation(val value: kotlin.UByte) {
     
-    NONE,
-    CREATED,
-    DELETED;
+    NONE(0u),
+    CREATED(1u),
+    DELETED(2u);
     companion object
 }
 
