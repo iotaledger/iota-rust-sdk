@@ -24,9 +24,6 @@ async fn main() -> Result<()> {
         .next()
         .ok_or_eyre("no staked iota found")?;
 
-    println!("{}", staked_iota.object_id());
-    println!("{}", *staked_iota.owner().as_address());
-
     let mut builder =
         TransactionBuilder::new(*staked_iota.owner().as_address()).with_client(client);
 
