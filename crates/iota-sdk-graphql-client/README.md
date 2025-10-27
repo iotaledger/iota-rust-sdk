@@ -1,8 +1,8 @@
-# iota-graphql-client
+# iota-sdk-graphql-client
 
-[![iota-graphql-client on crates.io](https://img.shields.io/crates/v/iota-graphql-client)](https://crates.io/crates/iota-graphql-client)
-[![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-graphql-client)
-[![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota-graphql-client/)
+[![iota-sdk-graphql-client on crates.io](https://img.shields.io/crates/v/iota-sdk-graphql-client)](https://crates.io/crates/iota-sdk-graphql-client)
+[![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-graphql-client)
+[![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota-sdk-graphql-client/)
 
 The IOTA GraphQL client is a client for interacting with the IOTA blockchain via GraphQL.
 It provides a set of APIs for querying the blockchain for information such as chain identifier,
@@ -123,7 +123,7 @@ query CustomQuery($id: UInt53) {
 }
 ```
 
-When using `cynic` and `iota-graphql-client`, you will need to register the schema by calling `iota-graphql-client-build::register_schema` in a `build.rs` file. See [iota-graphql-client-build](https://github.com/iotaledger/iota-rust-sdk/tree/develop/crates/iota-graphql-client-build) for more information.
+When using `cynic` and `iota-sdk-graphql-client`, you will need to register the schema by calling `iota-sdk-graphql-client-build::register_schema` in a `build.rs` file. See [iota-sdk-graphql-client-build](https://github.com/iotaledger/iota-rust-sdk/tree/develop/crates/iota-sdk-graphql-client-build) for more information.
 
 The generated query types are defined below. Note that the `id` variable is optional (to make it mandatory change the schema to $id: Uint53! -- note the ! character which indicates a mandatory field). That means that if the `id` variable is not provided, the query will return the data for the last known epoch.
 Note that instead of using `Uint53`, the scalar is mapped to `u64` in the library using `impl_scalar(u64, schema::Uint53)`, thus all references to `Uint53` in the schema are replaced with `u64` in the code below.

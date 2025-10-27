@@ -9,7 +9,7 @@ this function in a `build.rs` file in your crate if you need to build custom que
 
 ```toml
 [build-dependencies]
-iota-graphql-client-build = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-graphql-client-build", branch = "develop" }
+iota-sdk-graphql-client-build = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-sdk-graphql-client-build", branch = "develop" }
 ```
 
 2. Add a `build.rs` file in your crate root directory and call the `register_schema` function in it.
@@ -22,17 +22,17 @@ fn main() {
 }
 ```
 
-3. Add the `cynic` and `iota-graphql-client` dependencies in your `Cargo.toml` file. You should have something like this.
+3. Add the `cynic` and `iota-sdk-graphql-client` dependencies in your `Cargo.toml` file. You should have something like this.
 
 ```toml
 # Cargo.toml
 # ...
 [dependencies]
 cynic = "3.8.0"
-iota-graphql-client = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-graphql-client", branch = "develop" }
+iota-sdk-graphql-client = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-sdk-graphql-client", branch = "develop" }
 
 [build-dependencies]
-iota-graphql-client-build = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-graphql-client-build", branch = "develop" }
+iota-sdk-graphql-client-build = { git = "https://github.com/iotaledger/iota-rust-sdk", package = "iota-sdk-graphql-client-build", branch = "develop" }
 ```
 
 4. If using `cynic`, use the cynic generator to generate the Rust types from the GraphQL schema.\
@@ -62,6 +62,6 @@ async fn main() {
 }
 ```
 
-6. For `UInt53`, you can use `u64` type directly as the `iota-graphql-client`'s schema implements the `impl_scalar`. Similarly for other types (Base64, DateTime). See more available types here: <https://github.com/iotaledger/iota-rust-sdk/blob/02639f6b09375fe03fa2243868be17bec1dfa33c/crates/iota-graphql-client/src/query_types/mod.rs?plain=1#L124-L126>
+6. For `UInt53`, you can use `u64` type directly as the `iota-sdk-graphql-client`'s schema implements the `impl_scalar`. Similarly for other types (Base64, DateTime). See more available types here: <https://github.com/iotaledger/iota-rust-sdk/blob/02639f6b09375fe03fa2243868be17bec1dfa33c/crates/iota-sdk-graphql-client/src/query_types/mod.rs?plain=1#L124-L126>
 
 7. Read the `cynic` [documentation](https://cynic-rs.dev/) to learn how to work with it, particularly when it comes to passing arguments to the query.

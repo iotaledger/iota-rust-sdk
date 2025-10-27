@@ -1,5 +1,5 @@
 [package]
-name = "iota-crypto"
+name = "iota-sdk-crypto"
 version = "0.0.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
@@ -56,7 +56,7 @@ pem = [
 bls12381 = ["dep:blst", "dep:rand_core", "dep:roaring", "signature/std"]
 
 [dependencies]
-iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
+iota-types = { version = "0.0.1", package = "iota-sdk-types", path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
 signature = "2.2"
 thiserror.workspace = true
 
@@ -106,8 +106,8 @@ rand.workspace = true
 serde_json.workspace = true
 
 # proptest support in tests
-iota-sdk-types = { path = "../iota-sdk-types", default-features = false, features = ["proptest"] }
-proptest = { workspace = true, default-features = false, features = ["std"] }
+iota-types = { workspace = true, features = ["proptest"] }
+proptest = { workspace = true, features = ["std"] }
 test-strategy.workspace = true
 
 [target.wasm32-unknown-unknown.dev-dependencies]

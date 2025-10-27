@@ -312,7 +312,7 @@ mod tests {
     /// `test_example_v1 and test_example_v2` projects in the tests
     /// directory. The json files are generated automatically when running
     /// `make test-with-localnet` in the root of the
-    /// iota-transaction-builder crate.
+    /// iota-sdk-transaction-builder crate.
     fn move_package_data(file: &str) -> MovePackageData {
         let data = std::fs::read_to_string(file)
             .with_context(|| {

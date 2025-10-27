@@ -1,8 +1,10 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_crypto::{PrivateKeyExt, Signer, Verifier};
-use iota_types::SignatureScheme;
+use iota_sdk::{
+    crypto::{PrivateKeyExt, Signer, Verifier},
+    types::SignatureScheme,
+};
 
 use crate::{
     crypto::{
@@ -12,13 +14,13 @@ use crate::{
     types::{crypto::multisig::MultisigMemberPublicKey, signature::SimpleSignature},
 };
 #[derive(derive_more::From, uniffi::Object)]
-pub struct SimpleVerifier(iota_crypto::simple::SimpleVerifier);
+pub struct SimpleVerifier(iota_sdk::crypto::simple::SimpleVerifier);
 
 #[uniffi::export]
 impl SimpleVerifier {
     #[uniffi::constructor]
     pub fn new() -> Self {
-        Self(iota_crypto::simple::SimpleVerifier)
+        Self(iota_sdk::crypto::simple::SimpleVerifier)
     }
 
     pub fn verify(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
@@ -27,27 +29,27 @@ impl SimpleVerifier {
 }
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct SimpleKeypair(pub iota_crypto::simple::SimpleKeypair);
+pub struct SimpleKeypair(pub iota_sdk::crypto::simple::SimpleKeypair);
 
 #[uniffi::export]
 impl SimpleKeypair {
     #[uniffi::constructor]
     pub fn from_ed25519(keypair: &Ed25519PrivateKey) -> Self {
-        Self(iota_crypto::simple::SimpleKeypair::from(
+        Self(iota_sdk::crypto::simple::SimpleKeypair::from(
             (**keypair).clone(),
         ))
     }
 
     #[uniffi::constructor]
     pub fn from_secp256k1(keypair: &Secp256k1PrivateKey) -> Self {
-        Self(iota_crypto::simple::SimpleKeypair::from(
+        Self(iota_sdk::crypto::simple::SimpleKeypair::from(
             (**keypair).clone(),
         ))
     }
 
     #[uniffi::constructor]
     pub fn from_secp256r1(keypair: &Secp256r1PrivateKey) -> Self {
-        Self(iota_crypto::simple::SimpleKeypair::from(
+        Self(iota_sdk::crypto::simple::SimpleKeypair::from(
             (**keypair).clone(),
         ))
     }
@@ -72,7 +74,7 @@ impl SimpleKeypair {
     /// Decode a SimpleKeypair from `flag || privkey` bytes
     #[uniffi::constructor]
     pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
-        Ok(iota_crypto::simple::SimpleKeypair::from_bytes(bytes)?.into())
+        Ok(iota_sdk::crypto::simple::SimpleKeypair::from_bytes(bytes)?.into())
     }
 
     /// Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
@@ -86,14 +88,14 @@ impl SimpleKeypair {
     /// the private key bytes.
     #[uniffi::constructor]
     pub fn from_bech32(value: &str) -> Result<Self> {
-        Ok(iota_crypto::simple::SimpleKeypair::from_bech32(value)?.into())
+        Ok(iota_sdk::crypto::simple::SimpleKeypair::from_bech32(value)?.into())
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
     /// format).
     #[uniffi::constructor]
     pub fn from_der(bytes: &[u8]) -> Result<Self> {
-        Ok(iota_crypto::simple::SimpleKeypair::from_der(bytes)?.into())
+        Ok(iota_sdk::crypto::simple::SimpleKeypair::from_der(bytes)?.into())
     }
 
     /// Serialize this private key as DER-encoded PKCS#8
@@ -104,7 +106,7 @@ impl SimpleKeypair {
     /// Deserialize PKCS#8-encoded private key from PEM.
     #[uniffi::constructor]
     pub fn from_pem(s: &str) -> Result<Self> {
-        Ok(iota_crypto::simple::SimpleKeypair::from_pem(s)?.into())
+        Ok(iota_sdk::crypto::simple::SimpleKeypair::from_pem(s)?.into())
     }
 
     /// Serialize this private key as DER-encoded PKCS#8
@@ -113,12 +115,12 @@ impl SimpleKeypair {
     }
 
     fn try_sign(&self, message: &[u8]) -> Result<SimpleSignature> {
-        Ok(Signer::<iota_types::SimpleSignature>::try_sign(&self.0, message)?.into())
+        Ok(Signer::<iota_sdk::types::SimpleSignature>::try_sign(&self.0, message)?.into())
     }
 }
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct SimpleVerifyingKey(iota_crypto::simple::SimpleVerifyingKey);
+pub struct SimpleVerifyingKey(iota_sdk::crypto::simple::SimpleVerifyingKey);
 
 #[uniffi::export]
 impl SimpleVerifyingKey {
@@ -134,7 +136,7 @@ impl SimpleVerifyingKey {
     /// format).
     #[uniffi::constructor]
     pub fn from_der(bytes: &[u8]) -> Result<Self> {
-        Ok(iota_crypto::simple::SimpleVerifyingKey::from_der(bytes)?.into())
+        Ok(iota_sdk::crypto::simple::SimpleVerifyingKey::from_der(bytes)?.into())
     }
 
     /// Serialize this private key as DER-encoded PKCS#8
@@ -145,7 +147,7 @@ impl SimpleVerifyingKey {
     /// Deserialize PKCS#8-encoded private key from PEM.
     #[uniffi::constructor]
     pub fn from_pem(s: &str) -> Result<Self> {
-        Ok(iota_crypto::simple::SimpleVerifyingKey::from_pem(s)?.into())
+        Ok(iota_sdk::crypto::simple::SimpleVerifyingKey::from_pem(s)?.into())
     }
 
     /// Serialize this private key as DER-encoded PKCS#8

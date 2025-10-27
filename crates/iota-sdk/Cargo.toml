@@ -4,6 +4,8 @@ version = "3.0.0"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
+readme = "../../README.md"
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "The official SDK for IOTA"
 
 [features]
@@ -51,10 +53,10 @@ proptest = ["types", "iota-types/proptest"]
 schemars = ["types", "iota-types/schemars"]
 
 [dependencies]
-iota-crypto = { path = "../iota-crypto", features = ["ed25519"], optional = true }
-iota-graphql-client = { path = "../iota-graphql-client", optional = true }
-iota-transaction-builder = { path = "../iota-transaction-builder", optional = true }
-iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["rand"], optional = true }
+iota-crypto = { workspace = true, features = ["ed25519"], optional = true }
+iota-graphql-client = { workspace = true, optional = true }
+iota-transaction-builder = { workspace = true, optional = true }
+iota-types = { workspace = true, features = ["rand"], optional = true }
 
 [dev-dependencies]
 base64ct = { workspace = true, features = ["alloc", "std"] }
@@ -68,4 +70,4 @@ serde_json.workspace = true
 tokio = { workspace = true, features = ["full"] }
 
 [build-dependencies]
-iota-graphql-client-build = { path = "../iota-graphql-client-build" }
+iota-graphql-client-build.workspace = true
