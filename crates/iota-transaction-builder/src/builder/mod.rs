@@ -613,12 +613,13 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # async fn main() -> eyre::Result<()> {
     /// let client = Client::new_devnet();
     /// let sender =
-    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
-    /// let staked_coin =
-    ///     ObjectId::from_hex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+    ///     Address::from_hex("0x6f0202b12cd398166bdd3716c9aa3f0b6218ba125491f7ea2bc660fdd5e57ff8")?;
+    /// // This is a 0x3::staking_pool::StakedIota owned by the sender
+    /// let staked_iota =
+    ///     ObjectId::from_hex("0x00030af99878926cd11f8bdf4d2f67c4aa753a4afc249d776c8ed2cc88d7b8d5")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
-    /// builder.unstake(staked_coin);
+    /// builder.unstake(staked_iota);
     /// let txn = builder.finish().await?;
     /// # Ok(())
     /// # }
