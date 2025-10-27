@@ -15,6 +15,7 @@ crate-type = ["lib", "cdylib"]
 
 [dependencies]
 base64ct = { workspace = true, features = ["alloc", "std"] }
+bcs.workspace = true
 derive_more = { workspace = true, features = ["from", "deref", "display"] }
 hex.workspace = true
 paste.workspace = true
