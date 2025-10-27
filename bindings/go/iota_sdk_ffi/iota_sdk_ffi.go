@@ -3332,7 +3332,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field()
 	})
-	if checksum != 28380 {
+	if checksum != 43486 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field: UniFFI API checksum mismatch")
 	}
@@ -14353,7 +14353,7 @@ type GraphQlClientInterface interface {
 	// # Example
 	// ```rust,ignore
 	//
-	// let client = iota_graphql_client::Client::new_devnet();
+	// let client = iota_sdk::graphql_client::Client::new_devnet();
 	// let address = ObjectId::SYSTEM.into();
 	// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
 	//
@@ -14892,7 +14892,7 @@ func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta Transac
 // # Example
 // ```rust,ignore
 //
-// let client = iota_graphql_client::Client::new_devnet();
+// let client = iota_sdk::graphql_client::Client::new_devnet();
 // let address = ObjectId::SYSTEM.into();
 // let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
 //
