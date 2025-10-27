@@ -4618,6 +4618,54 @@ void* uniffi_iota_sdk_ffi_fn_method_upgrade_package(void* ptr, RustCallStatus *o
 void* uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_UPGRADEPOLICY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_UPGRADEPOLICY
+void* uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_UPGRADEPOLICY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_UPGRADEPOLICY
+void uniffi_iota_sdk_ffi_fn_free_upgradepolicy(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UPGRADEPOLICY_ADDITIVE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UPGRADEPOLICY_ADDITIVE
+void* uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UPGRADEPOLICY_COMPATIBLE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UPGRADEPOLICY_COMPATIBLE
+void* uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UPGRADEPOLICY_DEP_ONLY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_UPGRADEPOLICY_DEP_ONLY
+void* uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_VALUE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_VALUE
+uint8_t uniffi_iota_sdk_ffi_fn_method_upgradepolicy_value(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_DISPLAY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_DISPLAY
+RustBuffer uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_EQ_EQ
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_EQ_EQ
+int8_t uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_EQ_NE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_EQ_NE
+int8_t uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_ne(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_USERSIGNATURE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_USERSIGNATURE
 void* uniffi_iota_sdk_ffi_fn_clone_usersignature(void* ptr, RustCallStatus *out_status
@@ -7856,6 +7904,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_upgrade_ticket(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_UPGRADEPOLICY_VALUE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_UPGRADEPOLICY_VALUE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_value(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_USERSIGNATURE_AS_MULTISIG
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_USERSIGNATURE_AS_MULTISIG
 uint16_t uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig(void
@@ -9695,6 +9749,24 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_vector(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UPGRADE_NEW
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UPGRADE_NEW
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UPGRADEPOLICY_ADDITIVE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UPGRADEPOLICY_ADDITIVE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UPGRADEPOLICY_COMPATIBLE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UPGRADEPOLICY_COMPATIBLE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UPGRADEPOLICY_DEP_ONLY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_UPGRADEPOLICY_DEP_ONLY
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only(void
     
 );
 #endif

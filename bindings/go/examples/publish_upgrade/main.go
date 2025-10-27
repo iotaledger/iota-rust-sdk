@@ -5,33 +5,47 @@ package main
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	sdk "bindings/iota_sdk_ffi"
 )
 
 func main() {
-	// Hardcoded values from the JSON
-	modules := [][]byte{
-		func() []byte {
-			b, _ := base64.StdEncoding.DecodeString("oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJACqIDGgy8A5cBDdMEBgAKAQ0BEwEUAAIMAAABCAAAAAgAAQQEAAMDAgAACAABAAAJAgMAABACAwAAEgQDAAAMBQYAAAYHAQAAEQgBAAAFCQoAAQsACwACDg8BAQwCEw8BAQgDDwwNAAoOCgYJBgEHCAQAAQYIAAEDAQYIAQQHCAEDAwcIBAEIAAQDAwUHCAQDCAAFBwgEAgMHCAQBCAIBCAMBBggEAQUBCAECCQAFBkNvbmZpZwVGb3JnZQVTd29yZAlUeENvbnRleHQDVUlEDWNyZWF0ZV9jb25maWcMY3JlYXRlX3N3b3JkAmlkBGluaXQFbWFnaWMJbXlfbW9kdWxlA25ldwluZXdfc3dvcmQGb2JqZWN0D3B1YmxpY190cmFuc2ZlcgZzZW5kZXIIc3RyZW5ndGgOc3dvcmRfdHJhbnNmZXIOc3dvcmRzX2NyZWF0ZWQIdHJhbnNmZXIKdHhfY29udGV4dAV2YWx1ZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAgMHCAMJAxADAQICBwgDEgMCAgIHCAMVAwAAAAABCQoAEQgGAAAAAAAAAAASAQsALhELOAACAQEAAAEECwAQABQCAgEAAAEECwAQARQCAwEAAAEECwAQAhQCBAEAAAEOCgAQAhQGAQAAAAAAAAAWCwAPAhULAxEICwELAhIAAgUBAAABCAsDEQgLAAsBEgALAjgBAgYBAAABBAsACwE4AgIHAQAAAQULAREICwASAgIAAQACAQEA")
-			return b
-		}(),
+	// Read and parse the compiled package, or use the default package
+	compiledPackageString := os.Getenv("COMPILED_PACKAGE")
+	if compiledPackageString == "" {
+		fmt.Println("No compiled package found in env var. Using default.")
+		compiledPackageString = PRECOMPILED_PACKAGE
+	} else {
+		fmt.Println("Using custom Move package found in env var.")
 	}
-	dependencies := []*sdk.ObjectId{
-		func() *sdk.ObjectId {
-			id, _ := sdk.ObjectIdFromHex("0x0000000000000000000000000000000000000000000000000000000000000002")
-			return id
-		}(),
-		func() *sdk.ObjectId {
-			id, _ := sdk.ObjectIdFromHex("0x0000000000000000000000000000000000000000000000000000000000000001")
-			return id
-		}(),
+
+	var compiledPackage CompiledPackage
+	err := json.Unmarshal([]byte(PRECOMPILED_PACKAGE), &compiledPackage)
+	if err != nil {
+		panic(err)
 	}
-	compiledPackageDigest := []byte{246, 127, 102, 77, 186, 19, 68, 12, 161, 181, 56, 248, 210, 0, 91, 211, 245, 251, 165, 152, 0, 197, 250, 135, 171, 37, 177, 240, 133, 76, 122, 124}
-	fmt.Printf("Compiled Package Digest: %x\n", compiledPackageDigest)
+
+	modules := compiledPackage.Modules
+	modulesBytes := make([][]byte, len(modules))
+	for idx, module := range modules {
+		modulesBytes[idx] = []byte(module)
+	}
+	dependenciesDeser := compiledPackage.Dependencies
+	dependencies := make([]*sdk.ObjectId, len(dependenciesDeser))
+	for idx, objectIdDeser := range dependenciesDeser {
+		dependencies[idx] = objectIdDeser.ObjectId
+	}
+
+	compiledPackageDigest, err := sdk.DigestFromBytes(compiledPackage.Digest)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Compiled Package Digest: %s\n", compiledPackageDigest.ToBase58())
 
 	// Create a random private key to derive a sender address and for signing
 	privateKey := sdk.Ed25519PrivateKeyGenerate()
@@ -53,59 +67,55 @@ func main() {
 
 	client := sdk.GraphQlClientNewLocalnet()
 
-	// Build the `publish` PTB, that consists of 2 steps
-	builder := sdk.TransactionBuilderInit(sender, client)
-
-	// 1. Create the upgrade cap
-	builder.Publish(modules, dependencies, "upgrade_cap")
-
-	// 2. Transfer the upgrade cap to the sender address
-	builder.TransferObjects(sender, []*sdk.PtbArgument{sdk.PtbArgumentRes("upgrade_cap")})
-
-	// Finalize the PTB
-	tx, err := builder.Finish()
+	// Build the `publish` PTB
+	builderPublish := sdk.TransactionBuilderInit(sender, client)
+	// Publish the package and receive the upgrade cap in return
+	builderPublish.Publish(modulesBytes, dependencies, "upgrade_cap")
+	// Transfer the upgrade cap to the sender address
+	builderPublish.TransferObjects(sender, []*sdk.PtbArgument{sdk.PtbArgumentRes("upgrade_cap")})
+	txPublish, err := builderPublish.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to finish transaction: %v", err)
 	}
 
-	// Perform a dry-run to check if everything is fine
-	result, err := client.DryRunTx(tx, nil)
+	// Perform a dry-run first to check if everything is correct
+	fmt.Println("> Publishing package (dry run):")
+	resultPublish, err := client.DryRunTx(txPublish, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
-	if result.Error != nil {
-		log.Fatalf("Dry run failed: %v", *result.Error)
+	if resultPublish.Error != nil {
+		log.Fatalf("Dry run failed: %v", *resultPublish.Error)
 	}
-	if result.Effects == nil {
+	if resultPublish.Effects == nil {
 		log.Fatal("Dry run failed: no effects")
 	}
-	fmt.Printf("Effects status (dry run): %s\n", (*result.Effects).AsV1().Status)
+	fmt.Println("Success")
 
 	// Sign and execute the transaction (publish the package)
-	fmt.Println("Publishing package")
-	signature, err := privateKey.TrySignSimple(tx.SigningDigest())
+	fmt.Println("> Publishing package:")
+	sigPublish, err := privateKey.TrySignSimple(txPublish.SigningDigest())
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	userSignature := sdk.UserSignatureNewSimple(signature)
-	effects, err := client.ExecuteTx([]*sdk.UserSignature{userSignature}, tx)
+	userSigPublish := sdk.UserSignatureNewSimple(sigPublish)
+	effectsPublish, err := client.ExecuteTx([]*sdk.UserSignature{userSigPublish}, txPublish)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}
-	if effects == nil {
+	if effectsPublish == nil {
 		log.Fatal("Transaction failed: no effects")
 	}
-	fmt.Printf("Effects status (publish): %s\n", (*effects).AsV1().Status)
+	fmt.Println("Success")
 
 	// Wait some time for the indexer to process the tx
-	time.Sleep(10 * time.Second)
+	time.Sleep(3 * time.Second)
 
 	// Resolve UpgradeCap and PackageId via the client
 	var upgradeCap *sdk.ObjectId
 	var packageId *sdk.ObjectId
-
-	for _, changedObj := range (*effects).AsV1().ChangedObjects {
-		if _, ok := changedObj.OutputState.(sdk.ObjectOutObjectWrite); ok {
+	for _, changedObj := range (*effectsPublish).AsV1().ChangedObjects {
+		if objectWrite, ok := changedObj.OutputState.(sdk.ObjectOutObjectWrite); ok {
 			objectId := changedObj.ObjectId
 			objPtr, err := client.Object(objectId, nil)
 			if err.(*sdk.SdkFfiError) != nil {
@@ -113,22 +123,24 @@ func main() {
 			}
 			obj := *objPtr
 			if obj.AsStructOpt() != nil {
-				structType := obj.AsStructOpt().StructType
+				structType := obj.AsStruct().StructType
 				packageIdent, _ := sdk.NewIdentifier("package")
 				upgradeCapIdent, _ := sdk.NewIdentifier("UpgradeCap")
 				upgradeCapType := sdk.NewStructTag(sdk.AddressFramework(), packageIdent, upgradeCapIdent, []*sdk.TypeTag{})
-				if structType.String() == upgradeCapType.String() {
+				if structType.Eq(upgradeCapType) {
+					fmt.Printf("UpgradeCap: %s\n", objectId.ToHex())
+					fmt.Printf("UpgradeCapOwner: %s\n", objectWrite.Owner.AsAddress().ToHex())
 					upgradeCap = objectId
 				}
 			}
 		} else if _, ok := changedObj.OutputState.(sdk.ObjectOutPackageWrite); ok {
 			pkgId := changedObj.ObjectId
-			if packageId == nil {
-				packageId = pkgId
-			}
+			fmt.Printf("Package ID: %s\n", pkgId.ToHex())
+			version := changedObj.OutputState.(sdk.ObjectOutPackageWrite).Version
+			fmt.Printf("Package version: %d\n", version)
+			packageId = pkgId
 		}
 	}
-
 	if upgradeCap == nil {
 		log.Fatal("Missing upgrade cap")
 	}
@@ -136,39 +148,31 @@ func main() {
 		log.Fatal("Missing package id")
 	}
 
-	// Build the `upgrade` PTB, that consists of 3 steps
-	builder2 := sdk.TransactionBuilderInit(sender, client)
+	// Build the `upgrade` PTB
+	builderUpgrade := sdk.TransactionBuilderInit(sender, client)
 
+	// Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
+	// ticket
+	packageIdent, _ := sdk.NewIdentifier("package")
+	authorizeUpgrade, _ := sdk.NewIdentifier("authorize_upgrade")
 	upgradeCapArg := sdk.PtbArgumentObjectId(upgradeCap)
-
-	// 1. Create the upgrade ticket
-	authorizeUpgrade, err := sdk.NewIdentifier("authorize_upgrade")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	packageIdent, err := sdk.NewIdentifier("package")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	builder2.MoveCall(
+	upgradePolicy := sdk.PtbArgumentU8(sdk.UpgradePolicyCompatible().Value())
+	builderUpgrade.MoveCall(
 		sdk.AddressFramework(),
 		packageIdent,
 		authorizeUpgrade,
-		[]*sdk.PtbArgument{upgradeCapArg, sdk.PtbArgumentU8(0), sdk.PtbArgumentU8Vec(compiledPackageDigest)},
+		[]*sdk.PtbArgument{upgradeCapArg, upgradePolicy, sdk.PtbArgumentU8Vec(compiledPackageDigest.ToBytes())},
 		nil,
 		[]string{"upgrade_ticket"},
 	)
 
-	// 2. Get the upgrade receipt
+	// Upgrade the package to receive an upgrade receipt
 	upgradeReceiptName := "upgrade_receipt"
-	builder2.Upgrade(modules, dependencies, packageId, sdk.PtbArgumentRes("upgrade_ticket"), &upgradeReceiptName)
+	builderUpgrade.Upgrade(modulesBytes, dependencies, packageId, sdk.PtbArgumentRes("upgrade_ticket"), &upgradeReceiptName)
 
-	// 3. Finalize the upgrade
-	commitUpgrade, err := sdk.NewIdentifier("commit_upgrade")
-	if err != nil {
-		log.Fatalf("Failed to create identifier: %v", err)
-	}
-	builder2.MoveCall(
+	// Commit the upgrade using the receipt
+	commitUpgrade, _ := sdk.NewIdentifier("commit_upgrade")
+	builderUpgrade.MoveCall(
 		sdk.AddressFramework(),
 		packageIdent,
 		commitUpgrade,
@@ -177,51 +181,91 @@ func main() {
 		nil,
 	)
 
-	// Finalize the PTB
-	tx2, err := builder2.Finish()
+	txUpgrade, err := builderUpgrade.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to finish transaction: %v", err)
 	}
 
-	// Perform a dry-run to check if everything is fine
-	result2, err := client.DryRunTx(tx2, nil)
+	// Perform a dry-run first to check if everything is correct
+	fmt.Println("> Upgrading package (dry run):")
+	resultUpgrade, err := client.DryRunTx(txUpgrade, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
-	if result2.Error != nil {
-		log.Fatalf("Dry run failed: %v", *result2.Error)
+	if resultUpgrade.Error != nil {
+		log.Fatalf("Dry run failed: %v", *resultUpgrade.Error)
 	}
-	if result2.Effects == nil {
+	if resultUpgrade.Effects == nil {
 		log.Fatal("Dry run failed: no effects")
 	}
-	fmt.Printf("Effects status (dry run): %s\n", (*result2.Effects).AsV1().Status)
+	fmt.Println("Success")
 
 	// Sign and execute the transaction (upgrade the package)
-	fmt.Println("Upgrading package")
-	signature2, err := privateKey.TrySignSimple(tx2.SigningDigest())
+	fmt.Println("> Upgrading package:")
+	sigUpgrade, err := privateKey.TrySignSimple(txUpgrade.SigningDigest())
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	userSignature2 := sdk.UserSignatureNewSimple(signature2)
-	effects2, err := client.ExecuteTx([]*sdk.UserSignature{userSignature2}, tx2)
+	userSigUpgrade := sdk.UserSignatureNewSimple(sigUpgrade)
+	effectsUpgrade, err := client.ExecuteTx([]*sdk.UserSignature{userSigUpgrade}, txUpgrade)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}
-	if effects2 == nil {
+	if effectsUpgrade == nil {
 		log.Fatal("Transaction failed: no effects")
 	}
-	fmt.Printf("Effects status (upgrade): %s\n", (*effects2).AsV1().Status)
+	fmt.Println("Success")
 
 	// Wait some time for the indexer to process the tx
-	time.Sleep(10 * time.Second)
+	time.Sleep(3 * time.Second)
 
 	// Print the new package version (should now be 2)
-	for _, changedObj := range (*effects2).AsV1().ChangedObjects {
+	for _, changedObj := range (*effectsUpgrade).AsV1().ChangedObjects {
 		if _, ok := changedObj.OutputState.(sdk.ObjectOutPackageWrite); ok {
 			pkgId := changedObj.ObjectId
+			fmt.Printf("New Package ID: %s\n", pkgId.ToHex())
 			version := changedObj.OutputState.(sdk.ObjectOutPackageWrite).Version
-			fmt.Printf("PackageId: %s\n", pkgId.ToHex())
-			fmt.Printf("Package version: %d\n", version)
+			fmt.Printf("New Package version: %d\n", version)
 		}
 	}
 }
+
+type ModulesDeser []byte
+type ObjectIdDeser struct {
+	*sdk.ObjectId
+}
+
+type CompiledPackage struct {
+	Modules      []ModulesDeser  `json:"modules"`
+	Dependencies []ObjectIdDeser `json:"dependencies"`
+	Digest       []byte          `json:"digest"`
+}
+
+func (m *ModulesDeser) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	moduleBytes, err := base64.StdEncoding.DecodeString(s)
+	if err != nil {
+		return err
+	}
+	*m = moduleBytes
+	return nil
+}
+
+func (o *ObjectIdDeser) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	objectId, err := sdk.ObjectIdFromHex(s)
+	if err != nil {
+		return err
+	}
+	o.ObjectId = objectId
+	return nil
+}
+
+// Pre-compiled `first_package` example
+const PRECOMPILED_PACKAGE = `{"modules":["oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJACqIDGgy8A5cBDdMEBgAKAQ0BEwEUAAIMAAABCAAAAAgAAQQEAAMDAgAACAABAAAJAgMAABACAwAAEgQDAAAMBQYAAAYHAQAAEQgBAAAFCQoAAQsACwACDg8BAQwCEw8BAQgDDwwNAAoOCgYJBgEHCAQAAQYIAAEDAQYIAQQHCAEDAwcIBAEIAAQDAwUHCAQDCAAFBwgEAgMHCAQBCAIBCAMBBggEAQUBCAECCQAFBkNvbmZpZwVGb3JnZQVTd29yZAlUeENvbnRleHQDVUlEDWNyZWF0ZV9jb25maWcMY3JlYXRlX3N3b3JkAmlkBGluaXQFbWFnaWMJbXlfbW9kdWxlA25ldwluZXdfc3dvcmQGb2JqZWN0D3B1YmxpY190cmFuc2ZlcgZzZW5kZXIIc3RyZW5ndGgOc3dvcmRfdHJhbnNmZXIOc3dvcmRzX2NyZWF0ZWQIdHJhbnNmZXIKdHhfY29udGV4dAV2YWx1ZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAgMHCAMJAxADAQICBwgDEgMCAgIHCAMVAwAAAAABCQoAEQgGAAAAAAAAAAASAQsALhELOAACAQEAAAEECwAQABQCAgEAAAEECwAQARQCAwEAAAEECwAQAhQCBAEAAAEOCgAQAhQGAQAAAAAAAAAWCwAPAhULAxEICwELAhIAAgUBAAABCAsDEQgLAAsBEgALAjgBAgYBAAABBAsACwE4AgIHAQAAAQULAREICwASAgIAAQACAQEA"],"dependencies":["0x0000000000000000000000000000000000000000000000000000000000000002","0x0000000000000000000000000000000000000000000000000000000000000001"],"digest":[246,127,102,77,186,19,68,12,161,181,56,248,210,0,91,211,245,251,165,152,0,197,250,135,171,37,177,240,133,76,122,124]}`

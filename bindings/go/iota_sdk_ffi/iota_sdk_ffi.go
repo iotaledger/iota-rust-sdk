@@ -4005,6 +4005,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_value()
+	})
+	if checksum != 9324 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_value: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig()
 	})
 	if checksum != 36332 {
@@ -6764,6 +6773,33 @@ func uniffiCheckChecksums() {
 	if checksum != 61663 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive()
+	})
+	if checksum != 63459 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible()
+	})
+	if checksum != 63292 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only()
+	})
+	if checksum != 44371 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -23129,6 +23165,139 @@ func (_ FfiDestroyerUpgrade) Destroy(value *Upgrade) {
 
 
 
+// Rust representation of upgrade policy constants in `iota::package`.
+type UpgradePolicyInterface interface {
+	// Returns the internal value.
+	Value() uint8
+}
+// Rust representation of upgrade policy constants in `iota::package`.
+type UpgradePolicy struct {
+	ffiObject FfiObject
+}
+
+
+// Allows adding new functionalities (e.g., new public functions or
+// structs) but restricts changes to existing functionalities.
+func UpgradePolicyAdditive() *UpgradePolicy {
+	return FfiConverterUpgradePolicyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(_uniffiStatus)
+	}))
+}
+
+// The least restrictive policy. Permits changes to all function
+// implementations, the removal of ability constraints on generic type
+// parameters in function signatures, and modifications to private,
+// public(friend), and entry function signatures. However, public function
+// signatures and existing types cannot be changed.
+func UpgradePolicyCompatible() *UpgradePolicy {
+	return FfiConverterUpgradePolicyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(_uniffiStatus)
+	}))
+}
+
+// Limits modifications to the package’s dependencies only.
+func UpgradePolicyDepOnly() *UpgradePolicy {
+	return FfiConverterUpgradePolicyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(_uniffiStatus)
+	}))
+}
+
+
+
+// Returns the internal value.
+func (_self *UpgradePolicy) Value() uint8 {
+	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint8INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_value(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *UpgradePolicy) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *UpgradePolicy) Eq(other *UpgradePolicy) bool {
+	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
+		_pointer,FfiConverterUpgradePolicyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *UpgradePolicy) Ne(other *UpgradePolicy) bool {
+	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_ne(
+		_pointer,FfiConverterUpgradePolicyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+func (object *UpgradePolicy) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterUpgradePolicy struct {}
+
+var FfiConverterUpgradePolicyINSTANCE = FfiConverterUpgradePolicy{}
+
+
+func (c FfiConverterUpgradePolicy) Lift(pointer unsafe.Pointer) *UpgradePolicy {
+	result := &UpgradePolicy {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*UpgradePolicy).Destroy)
+	return result
+}
+
+func (c FfiConverterUpgradePolicy) Read(reader io.Reader) *UpgradePolicy {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterUpgradePolicy) Lower(value *UpgradePolicy) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*UpgradePolicy")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterUpgradePolicy) Write(writer io.Writer, value *UpgradePolicy) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerUpgradePolicy struct {}
+
+func (_ FfiDestroyerUpgradePolicy) Destroy(value *UpgradePolicy) {
+		value.Destroy()
+}
+
+
+
 // A signature from a user
 //
 // A `UserSignature` is most commonly used to authorize the execution and
@@ -31304,49 +31473,6 @@ type FfiDestroyerUnchangedSharedKind struct {}
 
 func (_ FfiDestroyerUnchangedSharedKind) Destroy(value UnchangedSharedKind) {
 	value.Destroy()
-}
-
-
-// Rust representation of upgrade policy constants in `iota::package`.
-type UpgradePolicy uint
-
-const (
-	// The least restrictive policy. Permits changes to all function
-	// implementations, the removal of ability constraints on generic type
-	// parameters in function signatures, and modifications to private,
-	// public(friend), and entry function signatures. However, public function
-	// signatures and existing types cannot be changed.
-	UpgradePolicyCompatible UpgradePolicy = 1
-	// Allows adding new functionalities (e.g., new public functions or
-	// structs) but restricts changes to existing functionalities.
-	UpgradePolicyAdditive UpgradePolicy = 2
-	// Limits modifications to the package’s dependencies only.
-	UpgradePolicyDepOnly UpgradePolicy = 3
-)
-
-type FfiConverterUpgradePolicy struct {}
-
-var FfiConverterUpgradePolicyINSTANCE = FfiConverterUpgradePolicy{}
-
-func (c FfiConverterUpgradePolicy) Lift(rb RustBufferI) UpgradePolicy {
-	return LiftFromRustBuffer[UpgradePolicy](c, rb)
-}
-
-func (c FfiConverterUpgradePolicy) Lower(value UpgradePolicy) C.RustBuffer {
-	return LowerIntoRustBuffer[UpgradePolicy](c, value)
-}
-func (FfiConverterUpgradePolicy) Read(reader io.Reader) UpgradePolicy {
-	id := readInt32(reader)
-	return UpgradePolicy(id)
-}
-
-func (FfiConverterUpgradePolicy) Write(writer io.Writer, value UpgradePolicy) {
-	writeInt32(writer, int32(value))
-}
-
-type FfiDestroyerUpgradePolicy struct {}
-
-func (_ FfiDestroyerUpgradePolicy) Destroy(value UpgradePolicy) {
 }
 
 type FfiConverterOptionalUint32 struct{}

@@ -1,16 +1,23 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! This example requires you to compile a Move package first.
+//! This example requires you to run a localnet:
+//! ```sh
+//!   iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
+//! ```
+//!
+//! Furthermore, it allows you to publish any Move package by compiling it
+//! first using the `iota` binary. For demonstration purposes this example
+//! immediately upgrades the package after publishing it.
 //!
 //! ```bash
-//! cd /path/to/your/move/package/Move.toml
+//! cd /path/to/your/move/package
 //!
 //! export COMPILED_PACKAGE=$(iota move build --dump-bytecode-as-base64)
 //! ```
 //!
 //! ```fish
-//! cd /path/to/your/move/package/Move.toml
+//! cd /path/to/your/move/package
 //!
 //! set -x COMPILED_PACKAGE (iota move build --dump-bytecode-as-base64)
 //! ```
@@ -26,10 +33,14 @@ use rand::rngs::OsRng;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let compiled_package = var("COMPILED_PACKAGE")?;
-
-    // Parse the compiled `first_package` example from the monorepo created with
-    // `iota move build --dump-bytecode-as-base64`
+    // Read and parse the compiled package
+    let compiled_package = if let Ok(compiled_package) = var("COMPILED_PACKAGE") {
+        println!("Using custom Move package found in env var.");
+        compiled_package
+    } else {
+        println!("No compiled package found in env var. Using default.");
+        PRECOMPILED_PACKAGE.to_string()
+    };
     let data = serde_json::from_str::<MovePackageData>(&compiled_package)?;
     let Some(compiled_package_digest) = data.digest else {
         bail!("Missing compiled package digest");
@@ -42,7 +53,7 @@ async fn main() -> Result<()> {
     println!("Sender: {sender}");
 
     // Fund the sender address for gas payment
-    let faucet = FaucetClient::new_devnet();
+    let faucet = FaucetClient::new_localnet();
     let Some(receipt) = faucet.request_and_wait(sender).await? else {
         bail!("Failed to request coins from faucet");
     };
@@ -51,7 +62,7 @@ async fn main() -> Result<()> {
         receipt.sent.iter().map(|coin| coin.amount).sum::<u64>()
     );
 
-    let client = Client::new_devnet();
+    let client = Client::new_localnet();
 
     // Build the `publish` PTB
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
@@ -64,7 +75,8 @@ async fn main() -> Result<()> {
 
     let tx = builder.finish().await?;
 
-    // Perform a dry-run first
+    // Perform a dry-run first to check if everything is correct
+    println!("> Publishing package (dry run):");
     let result = client.dry_run_tx(&tx, false).await?;
     if let Some(err) = result.error {
         bail!("Dry run failed: {err}");
@@ -72,15 +84,15 @@ async fn main() -> Result<()> {
     let Some(effects) = result.effects else {
         bail!("Dry run failed: no effects");
     };
-    println!("Effects status (dry run): {:?}", effects.status());
+    println!("{:?}", effects.status());
 
     // Sign and execute the transaction (publish the package)
-    println!("Publishing package");
+    println!("> Publishing package:");
     let sig = private_key.sign_transaction(&tx)?;
     let Some(effects) = client.execute_tx(&[sig], &tx).await? else {
         bail!("Transaction failed: no effects");
     };
-    println!("Effects status (publish): {:?}", effects.status());
+    println!("{:?}", effects.status());
 
     // Wait some time for the indexer to process the tx
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
@@ -103,7 +115,7 @@ async fn main() -> Result<()> {
             }
             ObjectOut::PackageWrite { version, .. } => {
                 let pkg_id = changed_obj.object_id;
-                println!("PackageId: {pkg_id}");
+                println!("Package ID: {pkg_id}");
                 println!("Package version: {version}");
                 package_id.replace(pkg_id);
             }
@@ -130,17 +142,17 @@ async fn main() -> Result<()> {
             compiled_package_digest,
         ))
         .name("upgrade_ticket")
-        // Upgrade the package
+        // Upgrade the package to receive an upgrade receipt
         .upgrade(package_id, res("upgrade_ticket"), data)
         .name("upgrade_receipt")
-        // Commit the upgrade
+        // Commit the upgrade using the receipt
         .move_call(Address::FRAMEWORK, "package", "commit_upgrade")
         .arguments((upgrade_cap_id, res("upgrade_receipt")));
 
-    // Finalize the PTB
     let tx = builder.finish().await?;
 
-    // Perform a dry-run to check if everything is fine
+    // Perform a dry-run first to check if everything is correct
+    println!("> Upgrading package (dry run):");
     let result = client.dry_run_tx(&tx, false).await?;
     if let Some(err) = result.error {
         bail!("Dry run failed: {err}");
@@ -148,15 +160,15 @@ async fn main() -> Result<()> {
     let Some(effects) = result.effects else {
         bail!("Dry run failed: no effects");
     };
-    println!("Effects status (dry run): {:?}", effects.status());
+    println!("{:?}", effects.status());
 
     // Sign and execute the transaction (upgrade the package)
-    println!("Upgrading package");
+    println!("> Upgrading package:");
     let sig = private_key.sign_transaction(&tx)?;
     let Some(effects) = client.execute_tx(&[sig], &tx).await? else {
         bail!("Transaction failed: no effects");
     };
-    println!("Effects status (upgrade): {:?}", effects.status());
+    println!("{:?}", effects.status());
 
     // Wait some time for the indexer to process the tx
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
@@ -166,8 +178,8 @@ async fn main() -> Result<()> {
         match changed_obj.output_state {
             ObjectOut::PackageWrite { version, .. } => {
                 let pkg_id = changed_obj.object_id;
-                println!("PackageId: {pkg_id}");
-                println!("Package version: {version}")
+                println!("New Package ID: {pkg_id}");
+                println!("New Package version: {version}")
             }
             _ => continue,
         }
@@ -175,3 +187,6 @@ async fn main() -> Result<()> {
 
     Ok(())
 }
+
+// Pre-compiled `first_package` example
+const PRECOMPILED_PACKAGE: &str = r#"{"modules":["oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJACqIDGgy8A5cBDdMEBgAKAQ0BEwEUAAIMAAABCAAAAAgAAQQEAAMDAgAACAABAAAJAgMAABACAwAAEgQDAAAMBQYAAAYHAQAAEQgBAAAFCQoAAQsACwACDg8BAQwCEw8BAQgDDwwNAAoOCgYJBgEHCAQAAQYIAAEDAQYIAQQHCAEDAwcIBAEIAAQDAwUHCAQDCAAFBwgEAgMHCAQBCAIBCAMBBggEAQUBCAECCQAFBkNvbmZpZwVGb3JnZQVTd29yZAlUeENvbnRleHQDVUlEDWNyZWF0ZV9jb25maWcMY3JlYXRlX3N3b3JkAmlkBGluaXQFbWFnaWMJbXlfbW9kdWxlA25ldwluZXdfc3dvcmQGb2JqZWN0D3B1YmxpY190cmFuc2ZlcgZzZW5kZXIIc3RyZW5ndGgOc3dvcmRfdHJhbnNmZXIOc3dvcmRzX2NyZWF0ZWQIdHJhbnNmZXIKdHhfY29udGV4dAV2YWx1ZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAgMHCAMJAxADAQICBwgDEgMCAgIHCAMVAwAAAAABCQoAEQgGAAAAAAAAAAASAQsALhELOAACAQEAAAEECwAQABQCAgEAAAEECwAQARQCAwEAAAEECwAQAhQCBAEAAAEOCgAQAhQGAQAAAAAAAAAWCwAPAhULAxEICwELAhIAAgUBAAABCAsDEQgLAAsBEgALAjgBAgYBAAABBAsACwE4AgIHAQAAAQULAREICwASAgIAAQACAQEA"],"dependencies":["0x0000000000000000000000000000000000000000000000000000000000000002","0x0000000000000000000000000000000000000000000000000000000000000001"],"digest":[246,127,102,77,186,19,68,12,161,181,56,248,210,0,91,211,245,251,165,152,0,197,250,135,171,37,177,240,133,76,122,124]}"#;

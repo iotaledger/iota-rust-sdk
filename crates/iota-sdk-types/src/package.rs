@@ -3,7 +3,7 @@
 
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UpgradePolicy {
     /// The least restrictive policy. Permits changes to all function
     /// implementations, the removal of ability constraints on generic type
@@ -16,4 +16,14 @@ pub enum UpgradePolicy {
     Additive = 128,
     /// Limits modifications to the package’s dependencies only.
     DepOnly = 192,
+}
+
+impl core::fmt::Display for UpgradePolicy {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Compatible => f.write_str("COMPATIBLE"),
+            Self::Additive => f.write_str("ADDITIVE"),
+            Self::DepOnly => f.write_str("DEP_ONLY"),
+        }
+    }
 }

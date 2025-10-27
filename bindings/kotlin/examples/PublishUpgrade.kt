@@ -4,34 +4,32 @@
 import iota_sdk.*
 import java.util.Base64
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 fun main() = runBlocking {
     try {
-        // Hardcoded values
-        val dataString =
-                "oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJACqIDGgy8A5cBDdMEBgAKAQ0BEwEUAAIMAAABCAAAAAgAAQQEAAMDAgAACAABAAAJAgMAABACAwAAEgQDAAAMBQYAAAYHAQAAEQgBAAAFCQoAAQsACwACDg8BAQwCEw8BAQgDDwwNAAoOCgYJBgEHCAQAAQYIAAEDAQYIAQQHCAEDAwcIBAEIAAQDAwUHCAQDCAAFBwgEAgMHCAQBCAIBCAMBBggEAQUBCAECCQAFBkNvbmZpZwVGb3JnZQVTd29yZAlUeENvbnRleHQDVUlEDWNyZWF0ZV9jb25maWcMY3JlYXRlX3N3b3JkAmlkBGluaXQFbWFnaWMJbXlfbW9kdWxlA25ldwluZXdfc3dvcmQGb2JqZWN0D3B1YmxpY190cmFuc2ZlcgZzZW5kZXIIc3RyZW5ndGgOc3dvcmRfdHJhbnNmZXIOc3dvcmRzX2NyZWF0ZWQIdHJhbnNmZXIKdHhfY29udGV4dAV2YWx1ZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAgMHCAMJAxADAQICBwgDEgMCAgIHCAMVAwAAAAABCQoAEQgGAAAAAAAAAAASAQsALhELOAACAQEAAAEECwAQABQCAgEAAAEECwAQARQCAwEAAAEECwAQAhQCBAEAAAEOCgAQAhQGAQAAAAAAAAAWCwAPAhULAxEICwELAhIAAgUBAAABCAsDEQgLAAsBEgALAjgBAgYBAAABBAsACwE4AgIHAQAAAQULAREICwASAgIAAQACAQEA|f67f664dba13440ca1b538f8d2005bd3f5fba59800c5fa87ab25b1f0854c7a7c"
-        val parts = dataString.split("|")
-        val modulesBase64 = parts[0]
-        val digestHex = parts[1]
-        val modules = listOf(Base64.getDecoder().decode(modulesBase64))
-        val dependencies =
-                listOf(
-                        ObjectId.fromHex(
-                                "0x0000000000000000000000000000000000000000000000000000000000000002"
-                        ),
-                        ObjectId.fromHex(
-                                "0x0000000000000000000000000000000000000000000000000000000000000001"
-                        )
-                )
-        val compiledPackageDigest = digestHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
-        println(
-                "Compiled Package Digest: ${compiledPackageDigest.joinToString("") { "%02x".format(it) }}"
-        )
+        var compiledPackageJson: String? = System.getenv("COMPILED_PACKAGE")
+        if (compiledPackageJson == null) {
+            println("No compiled package found in env var. Using default.")
+            compiledPackageJson = PRECOMPILED_PACKAGE.toString()
+        } else {
+            println("Using custom Move package found in env var.")
+        }
+
+        val compiledPackage = Json.decodeFromString<CompiledPackage>(compiledPackageJson)
+        val modules: List<ByteArray> =
+                compiledPackage.modules.map { Base64.getDecoder().decode(it) }
+        println("Modules: ${modules.size}")
+        val dependencies: List<ObjectId> = compiledPackage.dependencies.map { ObjectId.fromHex(it) }
+        println("Dependencies: ${dependencies.size}")
+        val compiledPackageDigest =
+                compiledPackage.digest.map { (it and 0xFF).toByte() }.toByteArray()
+        println("Compiled Package Digest: ${Digest.fromBytes(compiledPackageDigest).toBase58()}")
 
         // Create a random private key to derive a sender address and for signing
         val privateKey = Ed25519PrivateKey.generate()
-        val publicKey = privateKey.publicKey()
-        val sender = publicKey.deriveAddress()
+        val sender = privateKey.publicKey().deriveAddress()
         println("Sender: ${sender.toHex()}")
 
         // Fund the sender address for gas payment
@@ -44,32 +42,29 @@ fun main() = runBlocking {
 
         val client = GraphQlClient.newLocalnet()
 
-        // Build the `publish` PTB, that consists of 2 steps
-        val builder = TransactionBuilder.init(sender, client)
+        // Build the `publish` PTB
+        val builderPublish = TransactionBuilder.init(sender, client)
+        // Publish the package and receive the upgrade cap in return
+        builderPublish.publish(modules, dependencies, "upgrade_cap")
+        // Transfer the upgrade cap to the sender address
+        builderPublish.transferObjects(sender, listOf(PtbArgument.res("upgrade_cap")))
+        val txPublish = builderPublish.finish()
 
-        // 1. Create the upgrade cap
-        builder.publish(modules, dependencies, "upgrade_cap")
-
-        // 2. Transfer the upgrade cap to the sender address
-        builder.transferObjects(sender, listOf(PtbArgument.res("upgrade_cap")))
-
-        // Finalize the PTB
-        val tx = builder.finish()
-
-        // Perform a dry-run to check if everything is fine
-        val result = client.dryRunTx(tx, false)
-        result.error?.let { throw Exception("Dry run failed: $it") }
-        val effectsPublish = result.effects ?: throw Exception("Dry run failed: no effects")
-        println("Effects status (dry run): ${effectsPublish.asV1().status}")
+        // Perform a dry-run first to check if everything is correct
+        println("> Publishing package (dry run):")
+        val resultPublish = client.dryRunTx(txPublish, false)
+        resultPublish.error?.let { throw Exception("Dry run failed: $it") }
+        resultPublish.effects ?: throw Exception("Dry run failed: no effects")
+        println("Success")
 
         // Sign and execute the transaction (publish the package)
-        println("Publishing package")
-        val signature = privateKey.trySignSimple(tx.signingDigest())
-        val userSignature = UserSignature.newSimple(signature)
-        val effects =
-                client.executeTx(listOf(userSignature), tx)
+        println("> Publishing package:")
+        val sigPublish =
+                UserSignature.newSimple(privateKey.trySignSimple(txPublish.signingDigest()))
+        val effectsPublish =
+                client.executeTx(listOf(sigPublish), txPublish)
                         ?: throw Exception("Transaction failed: no effects")
-        println("Effects status (publish): ${effects.asV1().status}")
+        println("Success")
 
         // Wait some time for the indexer to process the tx
         kotlinx.coroutines.delay(3000)
@@ -77,12 +72,12 @@ fun main() = runBlocking {
         // Resolve UpgradeCap and PackageId via the client
         var upgradeCap: ObjectId? = null
         var packageId: ObjectId? = null
-
-        for (changedObj in effects.asV1().changedObjects) {
+        for (changedObj in effectsPublish.asV1().changedObjects) {
             if (changedObj.outputState is ObjectOut.ObjectWrite) {
+                val objectId = changedObj.objectId
                 val obj: Object =
-                        client.`object`(changedObj.objectId, null)
-                                ?: throw Exception("Missing object ${changedObj.objectId.toHex()}")
+                        client.`object`(objectId, null)
+                                ?: throw Exception("Missing object ${objectId.toHex()}")
                 val upgradeCapType =
                         StructTag(
                                 address = Address.framework(),
@@ -90,90 +85,103 @@ fun main() = runBlocking {
                                 name = Identifier("UpgradeCap"),
                                 typeParams = emptyList<TypeTag>()
                         )
-                if (obj.asStruct().structType.toString() == upgradeCapType.toString()) {
-                    upgradeCap = changedObj.objectId
+                if (obj.asStruct().structType == upgradeCapType) {
+                    println("UpgradeCap: ${objectId.toHex()}")
+                    println(
+                            "UpgradeCapOwner: ${(changedObj.outputState as ObjectOut.ObjectWrite).owner.asAddress().toHex()}"
+                    )
+                    upgradeCap = objectId
                 }
             } else if (changedObj.outputState is ObjectOut.PackageWrite) {
-                if (packageId == null) {
-                    packageId = changedObj.objectId
-                }
+                val pkgId = changedObj.objectId
+                println("Package ID: ${pkgId.toHex()}")
+                val version = (changedObj.outputState as ObjectOut.PackageWrite).version
+                println("Package version: ${version}")
+                packageId = pkgId
             }
         }
-
-        upgradeCap ?: throw Exception("Missing upgrade cap")
-        packageId ?: throw Exception("Missing package id")
+        if (upgradeCap == null) {
+            throw Exception("Missing upgrade cap")
+        }
+        if (packageId == null) {
+            throw Exception("Missing package id")
+        }
 
         // Build the `upgrade` PTB, that consists of 3 steps
-        val builder2 = TransactionBuilder.init(sender, client)
+        val builderUpgrade = TransactionBuilder.init(sender, client)
 
-        val packageIdent = Identifier("package")
-        val authorizeUpgrade = Identifier("authorize_upgrade")
-        val commitUpgrade = Identifier("commit_upgrade")
-
+        // Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
+        // ticket
         val upgradeCapArg = PtbArgument.objectId(upgradeCap)
-        val upgradePolicyArg = PtbArgument.u8(0u)
+        val upgradePolicyArg = PtbArgument.u8(UpgradePolicy.compatible().value())
         val compiledPackageDigestArg = PtbArgument.u8Vec(compiledPackageDigest)
-
-        // 1. Create the upgrade ticket
-        builder2.moveCall(
+        builderUpgrade.moveCall(
                 `package` = Address.framework(),
-                module = packageIdent,
-                function = authorizeUpgrade,
+                module = Identifier("package"),
+                function = Identifier("authorize_upgrade"),
                 arguments = listOf(upgradeCapArg, upgradePolicyArg, compiledPackageDigestArg),
-                typeArgs = listOf(),
                 names = listOf("upgrade_ticket")
         )
 
-        // 2. Get the upgrade receipt
-        builder2.upgrade(
-                modules,
-                dependencies,
-                packageId,
-                PtbArgument.res("upgrade_ticket"),
-                "upgrade_receipt"
+        // Upgrade the package to receive an upgrade receipt
+        builderUpgrade.upgrade(
+                modules = modules,
+                dependencies = dependencies,
+                `package` = packageId,
+                ticket = PtbArgument.res("upgrade_ticket"),
+                name = "upgrade_receipt"
         )
 
-        // 3. Finalize the upgrade
-        builder2.moveCall(
+        // Commit the upgrade using the receipt
+        builderUpgrade.moveCall(
                 `package` = Address.framework(),
-                module = packageIdent,
-                function = commitUpgrade,
+                module = Identifier("package"),
+                function = Identifier("commit_upgrade"),
                 arguments = listOf(upgradeCapArg, PtbArgument.res("upgrade_receipt")),
-                typeArgs = listOf(),
-                names = listOf()
         )
 
         // Finalize the PTB
-        val tx2 = builder2.finish()
+        val txUpgrade = builderUpgrade.finish()
 
         // Perform a dry-run to check if everything is fine
-        val result2 = client.dryRunTx(tx, false)
-        result2.error?.let { throw Exception("Dry run failed: $it") }
-        val effectsUpgrade = result2.effects ?: throw Exception("Dry run failed: no effects")
-        println("Effects status (dry run): ${effectsUpgrade.asV1().status}")
+        println("> Upgrading package (dry run):")
+        val resultUpgrade = client.dryRunTx(txUpgrade, false)
+        resultUpgrade.error?.let { throw Exception("Dry run failed: $it") }
+        resultUpgrade.effects ?: throw Exception("Dry run failed: no effects")
+        println("Success")
 
         // Sign and execute the transaction (upgrade the package)
-        println("Upgrading package")
-        val signature2 = privateKey.trySignSimple(tx2.signingDigest())
-        val userSignature2 = UserSignature.newSimple(signature2)
-        val effectsUpgrade2 =
-                client.executeTx(listOf(userSignature2), tx2)
+        println("> Upgrading package:")
+        val sigUpgrade =
+                UserSignature.newSimple(privateKey.trySignSimple(txUpgrade.signingDigest()))
+        val effectsUpgrade =
+                client.executeTx(listOf(sigUpgrade), txUpgrade)
                         ?: throw Exception("Transaction failed: no effects")
-        println("Effects status (upgrade): ${effectsUpgrade2.asV1().status}")
+        println("Success")
 
         // Wait some time for the indexer to process the tx
         kotlinx.coroutines.delay(3000)
 
         // Print the new package version (should now be 2)
-        for (changedObj in effectsUpgrade2.asV1().changedObjects) {
+        for (changedObj in effectsUpgrade.asV1().changedObjects) {
             if (changedObj.outputState is ObjectOut.PackageWrite) {
                 val pkgId = changedObj.objectId
+                println("New Package ID: ${pkgId.toHex()}")
                 val version = (changedObj.outputState as ObjectOut.PackageWrite).version
-                println("PackageId: ${pkgId.toHex()}")
-                println("Package version: $version")
+                println("New Package version: $version")
             }
         }
     } catch (e: Exception) {
         e.printStackTrace()
     }
 }
+
+const val PRECOMPILED_PACKAGE =
+        """{"modules":["oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJACqIDGgy8A5cBDdMEBgAKAQ0BEwEUAAIMAAABCAAAAAgAAQQEAAMDAgAACAABAAAJAgMAABACAwAAEgQDAAAMBQYAAAYHAQAAEQgBAAAFCQoAAQsACwACDg8BAQwCEw8BAQgDDwwNAAoOCgYJBgEHCAQAAQYIAAEDAQYIAQQHCAEDAwcIBAEIAAQDAwUHCAQDCAAFBwgEAgMHCAQBCAIBCAMBBggEAQUBCAECCQAFBkNvbmZpZwVGb3JnZQVTd29yZAlUeENvbnRleHQDVUlEDWNyZWF0ZV9jb25maWcMY3JlYXRlX3N3b3JkAmlkBGluaXQFbWFnaWMJbXlfbW9kdWxlA25ldwluZXdfc3dvcmQGb2JqZWN0D3B1YmxpY190cmFuc2ZlcgZzZW5kZXIIc3RyZW5ndGgOc3dvcmRfdHJhbnNmZXIOc3dvcmRzX2NyZWF0ZWQIdHJhbnNmZXIKdHhfY29udGV4dAV2YWx1ZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAgMHCAMJAxADAQICBwgDEgMCAgIHCAMVAwAAAAABCQoAEQgGAAAAAAAAAAASAQsALhELOAACAQEAAAEECwAQABQCAgEAAAEECwAQARQCAwEAAAEECwAQAhQCBAEAAAEOCgAQAhQGAQAAAAAAAAAWCwAPAhULAxEICwELAhIAAgUBAAABCAsDEQgLAAsBEgALAjgBAgYBAAABBAsACwE4AgIHAQAAAQULAREICwASAgIAAQACAQEA"],"dependencies":["0x0000000000000000000000000000000000000000000000000000000000000002","0x0000000000000000000000000000000000000000000000000000000000000001"],"digest":[246,127,102,77,186,19,68,12,161,181,56,248,210,0,91,211,245,251,165,152,0,197,250,135,171,37,177,240,133,76,122,124]}"""
+
+@Serializable
+data class CompiledPackage(
+        val modules: List<String>,
+        val dependencies: List<String>,
+        val digest: List<Int>,
+)

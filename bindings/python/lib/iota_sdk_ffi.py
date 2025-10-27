@@ -1271,6 +1271,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_upgrade_ticket() != 11416:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_value() != 9324:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 36332:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 21895:
@@ -1884,6 +1886,12 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_vector() != 2453:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new() != 61663:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive() != 63459:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible() != 63292:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only() != 44371:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64() != 8029:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6379,6 +6387,50 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_upgradepolicy.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_upgradepolicy.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_value.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_value.restype = ctypes.c_uint8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_usersignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8412,6 +8464,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_upgrade_package.restype = ctypes.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_upgrade_ticket.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_upgrade_ticket.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_value.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_value.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig.restype = ctypes.c_uint16
@@ -9333,6 +9388,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_vector.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64.restype = ctypes.c_uint16
@@ -9576,6 +9640,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -18846,73 +18912,6 @@ class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
             _UniffiConverterUInt64.write(value.version, buf)
         if value.is_PER_EPOCH_CONFIG():
             buf.write_i32(5)
-
-
-
-
-
-
-
-class UpgradePolicy(enum.Enum):
-    """
-    Rust representation of upgrade policy constants in `iota::package`.
-    """
-
-    COMPATIBLE = 0
-    """
-    The least restrictive policy. Permits changes to all function
-    implementations, the removal of ability constraints on generic type
-    parameters in function signatures, and modifications to private,
-    public(friend), and entry function signatures. However, public function
-    signatures and existing types cannot be changed.
-    """
-
-    
-    ADDITIVE = 128
-    """
-    Allows adding new functionalities (e.g., new public functions or
-    structs) but restricts changes to existing functionalities.
-    """
-
-    
-    DEP_ONLY = 192
-    """
-    Limits modifications to the package’s dependencies only.
-    """
-
-    
-
-
-class _UniffiConverterTypeUpgradePolicy(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        variant = buf.read_i32()
-        if variant == 1:
-            return UpgradePolicy.COMPATIBLE
-        if variant == 2:
-            return UpgradePolicy.ADDITIVE
-        if variant == 3:
-            return UpgradePolicy.DEP_ONLY
-        raise InternalError("Raw enum value doesn't match any cases")
-
-    @staticmethod
-    def check_lower(value):
-        if value == UpgradePolicy.COMPATIBLE:
-            return
-        if value == UpgradePolicy.ADDITIVE:
-            return
-        if value == UpgradePolicy.DEP_ONLY:
-            return
-        raise ValueError(value)
-
-    @staticmethod
-    def write(value, buf):
-        if value == UpgradePolicy.COMPATIBLE:
-            buf.write_i32(1)
-        if value == UpgradePolicy.ADDITIVE:
-            buf.write_i32(2)
-        if value == UpgradePolicy.DEP_ONLY:
-            buf.write_i32(3)
 
 
 
@@ -39682,6 +39681,145 @@ class _UniffiConverterTypeUpgrade:
     @classmethod
     def write(cls, value: UpgradeProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class UpgradePolicyProtocol(typing.Protocol):
+    """
+    Rust representation of upgrade policy constants in `iota::package`.
+    """
+
+    def value(self, ):
+        """
+        Returns the internal value.
+        """
+
+        raise NotImplementedError
+# UpgradePolicy is a Rust-only trait - it's a wrapper around a Rust implementation.
+class UpgradePolicy():
+    """
+    Rust representation of upgrade policy constants in `iota::package`.
+    """
+
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_upgradepolicy, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def additive(cls, ):
+        """
+        Allows adding new functionalities (e.g., new public functions or
+        structs) but restricts changes to existing functionalities.
+        """
+
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def compatible(cls, ):
+        """
+        The least restrictive policy. Permits changes to all function
+        implementations, the removal of ability constraints on generic type
+        parameters in function signatures, and modifications to private,
+        public(friend), and entry function signatures. However, public function
+        signatures and existing types cannot be changed.
+        """
+
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def dep_only(cls, ):
+        """
+        Limits modifications to the package’s dependencies only.
+        """
+
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only,)
+        return cls._make_instance_(pointer)
+
+
+
+    def value(self, ) -> "int":
+        """
+        Returns the internal value.
+        """
+
+        return _UniffiConverterUInt8.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_value,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, UpgradePolicy):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeUpgradePolicy.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, UpgradePolicy):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeUpgradePolicy.lower(other)))
+
+
+
+class _UniffiConverterTypeUpgradePolicy:
+
+    @staticmethod
+    def lift(value: int):
+        return UpgradePolicy._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: UpgradePolicy):
+        if not isinstance(value, UpgradePolicy):
+            raise TypeError("Expected UpgradePolicy instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: UpgradePolicyProtocol):
+        if not isinstance(value, UpgradePolicy):
+            raise TypeError("Expected UpgradePolicy instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: UpgradePolicyProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class UserSignatureProtocol(typing.Protocol):
     """
     A signature from a user
@@ -41754,7 +41892,6 @@ __all__ = [
     "TransactionExpiration",
     "TypeArgumentError",
     "UnchangedSharedKind",
-    "UpgradePolicy",
     "ActiveJwk",
     "AuthenticatorStateExpire",
     "AuthenticatorStateUpdateV1",
@@ -41926,6 +42063,7 @@ __all__ = [
     "TransferObjects",
     "TypeTag",
     "Upgrade",
+    "UpgradePolicy",
     "UserSignature",
     "UserSignatureVerifier",
     "ValidatorAggregatedSignature",
