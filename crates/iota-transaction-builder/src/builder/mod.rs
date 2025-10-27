@@ -586,11 +586,18 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let client = Client::new_devnet();
     /// let sender =
     ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
-    /// let validator_address =
-    ///     Address::from_hex("0x6f0202b12cd398166bdd3716c9aa3f0b6218ba125491f7ea2bc660fdd5e57ff8")?;
+    /// let validator_address = client
+    ///     .active_validators(None, Default::default())
+    ///     .await?
+    ///     .data
+    ///     .into_iter()
+    ///     .next()
+    ///     .ok_or_else(|| eyre::eyre!("no validators found"))?
+    ///     .address
+    ///     .address;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
-    /// builder.stake(100000000u64, validator_address);
+    /// builder.stake(1000000000u64, validator_address);
     /// let txn = builder.finish().await?;
     /// # Ok(())
     /// # }
