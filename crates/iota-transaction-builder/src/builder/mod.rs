@@ -393,21 +393,45 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Send IOTA to a recipient address.
+    ///
+    /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+    /// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+    /// sent.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use iota_graphql_client::Client;
+    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_types::Address;
+    ///
+    /// #[tokio::main(flavor = "current_thread")]
+    /// async fn main() -> eyre::Result<()> {
+    ///     let client = Client::new_devnet();
+    ///     let from_address = Address::from_hex(
+    ///         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c",
+    ///     )?;
+    ///     let to_address = Address::from_hex(
+    ///         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
+    ///     )?;
+    ///
+    ///     let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    ///     builder.send_iota(to_address, 5000000000u64);
+    ///     let txn = builder.finish().await?;
+    ///     Ok(())
+    /// }
+    /// ```
     pub fn send_iota<T: PTBArgument>(
         &mut self,
         recipient: Address,
-        amount: impl Into<Option<T>>,
+        amount: T,
     ) -> &mut TransactionBuilder<C> {
         let rec_arg = self.pure(recipient);
-        let coin_arg = if let Some(amount) = amount.into() {
-            let amt_arg = self.apply_argument(amount);
-            self.command(Command::SplitCoins(SplitCoins {
-                coin: Argument::Gas,
-                amounts: vec![amt_arg],
-            }))
-        } else {
-            Argument::Gas
-        };
+        let amt_arg = self.apply_argument(amount);
+        let coin_arg = self.command(Command::SplitCoins(SplitCoins {
+            coin: Argument::Gas,
+            amounts: vec![amt_arg],
+        }));
         self.command(Command::TransferObjects(TransferObjects {
             objects: vec![coin_arg],
             address: rec_arg,
@@ -461,6 +485,39 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Merge multiple coins into one.
+    ///
+    /// This method combines the balances of multiple coins of the same coin
+    /// type into a single coin. The `primary_coin` will receive the balances
+    /// from all `consumed_coins`. After merging, the `consumed_coins` will
+    /// be consumed and no longer exist.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use iota_graphql_client::Client;
+    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// #[tokio::main(flavor = "current_thread")]
+    /// async fn main() -> eyre::Result<()> {
+    ///     let client = Client::new_devnet();
+    ///     let sender = Address::from_hex(
+    ///         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c",
+    ///     )?;
+    ///
+    ///     let coin_0 = ObjectId::from_hex(
+    ///         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
+    ///     )?;
+    ///     let coin_1 = ObjectId::from_hex(
+    ///         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+    ///     )?;
+    ///
+    ///     let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///     builder.merge_coins(coin_0, [coin_1]);
+    ///     let txn = builder.finish().await?;
+    ///     Ok(())
+    /// }
+    /// ```
     pub fn merge_coins<T: PTBArgument, U: PTBArgumentList>(
         &mut self,
         primary_coin: T,
@@ -514,6 +571,41 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Make a move vector from a list of elements.
+    ///
+    /// Often it is possible (and more efficient) to pass a rust slice or `Vec`
+    /// instead of calling this function, which will serialize the bytes into a
+    /// move vector pure argument.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use std::str::FromStr;
+    /// # use iota_transaction_builder::{TransactionBuilder, res};
+    /// # use iota_types::{Address, Transaction};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = iota_graphql_client::Client::new_devnet();
+    /// let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    ///
+    /// let address1 =
+    ///     Address::from_str("0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e")?;
+    /// let address2 =
+    ///     Address::from_str("0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")?;
+    ///
+    /// builder
+    ///     .make_move_vec([address1, address2])
+    ///     .name("addresses")
+    ///     .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
+    ///     .generics::<(Address, u64)>()
+    ///     .arguments((res("addresses"), [10000000u64, 20000000u64]));
+    ///
+    /// let txn: Transaction = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
     pub fn make_move_vec<T: PTBArgument + MoveType>(
         &mut self,
         elements: impl IntoIterator<Item = T>,
