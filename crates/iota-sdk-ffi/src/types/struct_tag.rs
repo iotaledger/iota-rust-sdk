@@ -49,7 +49,7 @@ impl Identifier {
 ///              identifier         ; name of the type
 ///              (vector type-tag)  ; type parameters
 /// ```
-#[derive(derive_more::From, derive_more::Display, uniffi::Object, PartialEq)]
+#[derive(derive_more::From, derive_more::Display, uniffi::Object, PartialEq, Eq)]
 #[uniffi::export(Display, Eq)]
 pub struct StructTag(pub iota_types::StructTag);
 
