@@ -27,16 +27,7 @@ async def main():
 
         builder = await TransactionBuilder.init(my_address, client)
 
-        builder.move_call(
-            Address.system(),
-            Identifier("iota_system"),
-            Identifier("request_add_stake"),
-            [
-                PtbArgument.shared_mut(ObjectId.system()),
-                PtbArgument.object_id(coin_id),
-                PtbArgument.address(validator.address),
-            ],
-        )
+        builder.stake(PtbArgument.object_id(coin_id), validator.address)
 
         res = await builder.dry_run()
         if res.error is not None:

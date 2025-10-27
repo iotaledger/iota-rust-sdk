@@ -34,28 +34,9 @@ func main() {
 
 	coinObjId, _ := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
 
-	iotaSystemAddress := sdk.AddressSystem()
-
-	iotaSystemId := sdk.ObjectIdSystem()
-
-	iotaSystemModule, _ := sdk.NewIdentifier("iota_system")
-
-	requestAddStakeFn, _ := sdk.NewIdentifier("request_add_stake")
-
 	builder := sdk.TransactionBuilderInit(myAddress, client)
 
-	builder.MoveCall(
-		iotaSystemAddress,
-		iotaSystemModule,
-		requestAddStakeFn,
-		[]*sdk.PtbArgument{
-			sdk.PtbArgumentSharedMut(iotaSystemId),
-			sdk.PtbArgumentObjectId(coinObjId),
-			sdk.PtbArgumentAddress(validator.Address),
-		},
-		nil,
-		nil,
-	)
+	builder.Stake(sdk.PtbArgumentObjectId(coinObjId), validator.Address)
 
 	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {

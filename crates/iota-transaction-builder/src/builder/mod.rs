@@ -23,7 +23,7 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    PTBArgument,
+    PTBArgument, SharedMut,
     builder::{
         gas_station::GasStationData,
         named_results::{NamedResult, NamedResults},
@@ -41,6 +41,10 @@ pub(crate) mod gas_station;
 mod named_results;
 /// Argument types for PTBs
 pub mod ptb_arguments;
+
+const IOTA_SYSTEM_MODULE: &str = "iota_system";
+const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
+const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Debug, Clone)]
@@ -405,21 +409,19 @@ impl<C, L> TransactionBuilder<C, L> {
     /// use iota_transaction_builder::TransactionBuilder;
     /// use iota_types::Address;
     ///
-    /// #[tokio::main(flavor = "current_thread")]
-    /// async fn main() -> eyre::Result<()> {
-    ///     let client = Client::new_devnet();
-    ///     let from_address = Address::from_hex(
-    ///         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c",
-    ///     )?;
-    ///     let to_address = Address::from_hex(
-    ///         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
-    ///     )?;
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = Client::new_devnet();
+    /// let from_address =
+    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    /// let to_address =
+    ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
     ///
-    ///     let mut builder = TransactionBuilder::new(from_address).with_client(client);
-    ///     builder.send_iota(to_address, 5000000000u64);
-    ///     let txn = builder.finish().await?;
-    ///     Ok(())
-    /// }
+    /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    /// builder.send_iota(to_address, 5000000000u64);
+    /// let txn = builder.finish().await?;
+    /// # Ok(())
+    /// # }
     /// ```
     pub fn send_iota<T: PTBArgument>(
         &mut self,
@@ -498,25 +500,22 @@ impl<C, L> TransactionBuilder<C, L> {
     /// use iota_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
-    /// #[tokio::main(flavor = "current_thread")]
-    /// async fn main() -> eyre::Result<()> {
-    ///     let client = Client::new_devnet();
-    ///     let sender = Address::from_hex(
-    ///         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c",
-    ///     )?;
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = Client::new_devnet();
+    /// let sender =
+    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     ///
-    ///     let coin_0 = ObjectId::from_hex(
-    ///         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
-    ///     )?;
-    ///     let coin_1 = ObjectId::from_hex(
-    ///         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
-    ///     )?;
+    /// let coin_0 =
+    ///     ObjectId::from_hex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+    /// let coin_1 =
+    ///     ObjectId::from_hex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?;
     ///
-    ///     let mut builder = TransactionBuilder::new(sender).with_client(client);
-    ///     builder.merge_coins(coin_0, [coin_1]);
-    ///     let txn = builder.finish().await?;
-    ///     Ok(())
-    /// }
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// builder.merge_coins(coin_0, [coin_1]);
+    /// let txn = builder.finish().await?;
+    /// # Ok(())
+    /// # }
     /// ```
     pub fn merge_coins<T: PTBArgument, U: PTBArgumentList>(
         &mut self,
@@ -568,6 +567,70 @@ impl<C, L> TransactionBuilder<C, L> {
             package: package_id,
             ticket,
         })
+    }
+
+    /// Add stake to a validator's staking pool.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use iota_graphql_client::Client;
+    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = Client::new_devnet();
+    /// let sender =
+    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    /// let coin =
+    ///     ObjectId::from_hex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+    /// let validator_address =
+    ///     Address::from_hex("0x6f0202b12cd398166bdd3716c9aa3f0b6218ba125491f7ea2bc660fdd5e57ff8")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// builder.stake(coin, validator_address);
+    /// let txn = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn stake<S: PTBArgument>(&mut self, stake: S, validator_address: Address) -> &mut Self {
+        self.move_call(Address::SYSTEM, IOTA_SYSTEM_MODULE, REQUEST_ADD_STAKE_FN)
+            .arguments((SharedMut(ObjectId::SYSTEM), stake, validator_address))
+            .state_change()
+    }
+
+    /// Withdraw stake from a validator's staking pool.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use iota_graphql_client::Client;
+    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = Client::new_devnet();
+    /// let sender =
+    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    /// let staked_coin =
+    ///     ObjectId::from_hex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// builder.unstake(staked_coin);
+    /// let txn = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn unstake<S: PTBArgument>(&mut self, staked_iota: S) -> &mut Self {
+        self.move_call(
+            Address::SYSTEM,
+            IOTA_SYSTEM_MODULE,
+            REQUEST_WITHDRAW_STAKE_FN,
+        )
+        .arguments((SharedMut(ObjectId::SYSTEM), staked_iota))
+        .state_change()
     }
 
     /// Make a move vector from a list of elements.
@@ -1080,18 +1143,7 @@ impl<L> TransactionBuilder<Client, L> {
     }
 }
 
-impl TransactionBuilder<(), MoveCall> {
-    /// Set the call params. Optional.
-    pub fn arguments(&mut self, params: impl IntoIterator<Item = Argument>) -> &mut Self {
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.arguments = params.into_iter().collect();
-        self
-    }
-}
-
-impl TransactionBuilder<Client, MoveCall> {
+impl<C> TransactionBuilder<C, MoveCall> {
     /// Set the call params. Optional.
     pub fn arguments<U: PTBArgumentList>(&mut self, params: U) -> &mut Self {
         let args = self.apply_arguments(params);

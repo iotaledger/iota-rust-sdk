@@ -22,23 +22,8 @@ func main() {
 	}
 	stakedIota := stakedIotas.Data[0]
 
-	iotaSystemAddress := sdk.AddressSystem()
-
-	iotaSystemId := sdk.ObjectIdSystem()
-
-	iotaSystemModule, _ := sdk.NewIdentifier("iota_system")
-
-	requestAddStakeFn, _ := sdk.NewIdentifier("request_withdraw_stake")
-
 	builder := sdk.TransactionBuilderInit(stakedIota.Owner().AsAddress(), client)
-	builder.MoveCall(
-		iotaSystemAddress,
-		iotaSystemModule,
-		requestAddStakeFn,
-		[]*sdk.PtbArgument{sdk.PtbArgumentSharedMut(iotaSystemId), sdk.PtbArgumentObjectId(stakedIota.ObjectId())},
-		nil,
-		nil,
-	)
+	builder.Unstake(sdk.PtbArgumentObjectId(stakedIota.ObjectId()))
 
 	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {

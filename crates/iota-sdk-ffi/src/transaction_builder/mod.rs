@@ -310,6 +310,22 @@ impl TransactionBuilder {
         self
     }
 
+    /// Stake IOTA coins to a validator.
+    pub fn stake(self: Arc<Self>, stake: &PTBArgument, validator_address: &Address) -> Arc<Self> {
+        self.write(|builder| {
+            builder.stake(stake, **validator_address);
+        });
+        self
+    }
+
+    /// Unstake IOTA coins from their assigned validator.
+    pub fn unstake(self: Arc<Self>, staked_iota: &PTBArgument) -> Arc<Self> {
+        self.write(|builder| {
+            builder.unstake(staked_iota);
+        });
+        self
+    }
+
     /// Convert this builder into a transaction.
     pub async fn finish(&self) -> Result<Transaction> {
         Ok(Transaction(

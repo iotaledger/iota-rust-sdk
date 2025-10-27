@@ -21,15 +21,7 @@ async def main():
             staked_iota.owner().as_address(), client
         )
 
-        builder.move_call(
-            Address.system(),
-            Identifier("iota_system"),
-            Identifier("request_withdraw_stake"),
-            [
-                PtbArgument.shared_mut(ObjectId.system()),
-                PtbArgument.object_id(staked_iota.object_id()),
-            ],
-        )
+        builder.unstake(PtbArgument.object_id(staked_iota.object_id()))
 
         res = await builder.dry_run()
         if res.error is not None:

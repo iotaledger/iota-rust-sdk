@@ -3,7 +3,6 @@
 
 import iota_sdk.Address
 import iota_sdk.GraphQlClient
-import iota_sdk.Identifier
 import iota_sdk.ObjectId
 import iota_sdk.PtbArgument
 import iota_sdk.TransactionBuilder
@@ -33,16 +32,7 @@ fun main() = runBlocking {
 
         val builder = TransactionBuilder.init(myAddress, client)
 
-        builder.moveCall(
-                Address.system(),
-                Identifier("iota_system"),
-                Identifier("request_add_stake"),
-                listOf(
-                        PtbArgument.sharedMut(ObjectId.system()),
-                        PtbArgument.objectId(coinId),
-                        PtbArgument.address(validator.address)
-                ),
-        )
+        builder.stake(PtbArgument.objectId(coinId), validator.address)
 
         val res = builder.dryRun()
 

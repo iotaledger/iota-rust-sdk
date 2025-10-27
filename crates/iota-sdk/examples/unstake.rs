@@ -3,8 +3,7 @@
 
 use eyre::{OptionExt, Result};
 use iota_graphql_client::{Client, query_types::ObjectFilter};
-use iota_transaction_builder::{SharedMut, TransactionBuilder};
-use iota_types::{Address, ObjectId};
+use iota_transaction_builder::TransactionBuilder;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -27,9 +26,7 @@ async fn main() -> Result<()> {
     let mut builder =
         TransactionBuilder::new(*staked_iota.owner().as_address()).with_client(client);
 
-    builder
-        .move_call(Address::SYSTEM, "iota_system", "request_withdraw_stake")
-        .arguments((SharedMut(ObjectId::SYSTEM), staked_iota.object_id()));
+    builder.unstake(staked_iota.object_id());
 
     let res = builder.dry_run(false).await?;
 

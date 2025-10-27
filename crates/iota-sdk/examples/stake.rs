@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 use eyre::{OptionExt, Result};
 use iota_graphql_client::Client;
-use iota_transaction_builder::{SharedMut, TransactionBuilder};
+use iota_transaction_builder::TransactionBuilder;
 use iota_types::{Address, ObjectId};
 
 #[tokio::main]
@@ -30,15 +30,10 @@ async fn main() -> Result<()> {
 
     let mut builder = TransactionBuilder::new(my_address).with_client(client);
 
-    builder
-        .move_call(Address::SYSTEM, "iota_system", "request_add_stake")
-        .arguments((
-            SharedMut(ObjectId::SYSTEM),
-            ObjectId::from_str(
-                "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
-            )?,
-            &validator.address.address,
-        ));
+    builder.stake(
+        ObjectId::from_str("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?,
+        validator.address.address,
+    );
 
     let res = builder.dry_run(false).await?;
 
