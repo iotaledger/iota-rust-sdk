@@ -9252,13 +9252,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake() != 55725.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake() != 41361.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 65513.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 30530.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 3616.toShort()) {
@@ -40813,7 +40813,10 @@ public interface TransactionBuilderInterface {
     fun `sponsor`(`sponsor`: Address): TransactionBuilder
     
     /**
-     * Stake IOTA coins to a validator.
+     * Add stake to a validator's staking pool.
+     *
+     * This is a high-level function which will split the provided stake amount
+     * from the gas coin and then stake using the resulting coin.
      */
     fun `stake`(`stake`: PtbArgument, `validatorAddress`: Address): TransactionBuilder
     
@@ -40824,7 +40827,7 @@ public interface TransactionBuilderInterface {
     fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): TransactionBuilder
     
     /**
-     * Unstake IOTA coins from their assigned validator.
+     * Withdraw stake from a validator's staking pool.
      */
     fun `unstake`(`stakedIota`: PtbArgument): TransactionBuilder
     
@@ -41263,7 +41266,10 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Stake IOTA coins to a validator.
+     * Add stake to a validator's staking pool.
+     *
+     * This is a high-level function which will split the provided stake amount
+     * from the gas coin and then stake using the resulting coin.
      */override fun `stake`(`stake`: PtbArgument, `validatorAddress`: Address): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
@@ -41294,7 +41300,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Unstake IOTA coins from their assigned validator.
+     * Withdraw stake from a validator's staking pool.
      */override fun `unstake`(`stakedIota`: PtbArgument): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {

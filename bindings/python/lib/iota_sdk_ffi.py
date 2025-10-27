@@ -1673,11 +1673,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake() != 55725:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake() != 41361:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 65513:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 30530:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 3616:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -40788,7 +40788,10 @@ class TransactionBuilderProtocol(typing.Protocol):
         raise NotImplementedError
     def stake(self, stake: "PtbArgument",validator_address: "Address"):
         """
-        Stake IOTA coins to a validator.
+        Add stake to a validator's staking pool.
+
+        This is a high-level function which will split the provided stake amount
+        from the gas coin and then stake using the resulting coin.
         """
 
         raise NotImplementedError
@@ -40801,7 +40804,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         raise NotImplementedError
     def unstake(self, staked_iota: "PtbArgument"):
         """
-        Unstake IOTA coins from their assigned validator.
+        Withdraw stake from a validator's staking pool.
         """
 
         raise NotImplementedError
@@ -41301,7 +41304,10 @@ _UniffiConverterTypeSdkFfiError,
 
     def stake(self, stake: "PtbArgument",validator_address: "Address") -> "TransactionBuilder":
         """
-        Stake IOTA coins to a validator.
+        Add stake to a validator's staking pool.
+
+        This is a high-level function which will split the provided stake amount
+        from the gas coin and then stake using the resulting coin.
         """
 
         _UniffiConverterTypePtbArgument.check_lower(stake)
@@ -41340,7 +41346,7 @@ _UniffiConverterTypeSdkFfiError,
 
     def unstake(self, staked_iota: "PtbArgument") -> "TransactionBuilder":
         """
-        Unstake IOTA coins from their assigned validator.
+        Withdraw stake from a validator's staking pool.
         """
 
         _UniffiConverterTypePtbArgument.check_lower(staked_iota)
