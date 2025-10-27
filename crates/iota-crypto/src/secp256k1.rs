@@ -160,7 +160,7 @@ impl crate::FromMnemonic for Secp256k1PrivateKey {
             crate::DERIVATION_PATH_COIN_TYPE
         ))?;
         let child_xprv = bip32::XPrv::derive_from_path(seed, &path)?;
-        Ok(Self::from_bytes(&child_xprv.private_key().to_bytes())?)
+        Self::from_bytes(&child_xprv.private_key().to_bytes())
     }
 }
 
