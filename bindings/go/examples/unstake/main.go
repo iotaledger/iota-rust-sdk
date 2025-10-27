@@ -12,7 +12,7 @@ import (
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	stakedIotaType := "0x3::staking_pool::StakedIota"
+	stakedIotaType := sdk.StructTagStakedIota().String()
 	stakedIotas, err := client.Objects(&sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get staked iota: %v", err)

@@ -4,6 +4,7 @@
 import iota_sdk.GraphQlClient
 import iota_sdk.ObjectFilter
 import iota_sdk.PtbArgument
+import iota_sdk.StructTag
 import iota_sdk.TransactionBuilder
 import kotlinx.coroutines.runBlocking
 
@@ -11,7 +12,7 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
 
-        val stakedIotas = client.objects(ObjectFilter(typeTag = "0x3::staking_pool::StakedIota"))
+        val stakedIotas = client.objects(ObjectFilter(typeTag = StructTag.stakedIota().toString()))
         if (stakedIotas.data.isEmpty()) {
             throw Exception("no validators found")
         }

@@ -11,7 +11,7 @@ async def main():
         client = GraphQlClient.new_devnet()
 
         staked_iotas = await client.objects(
-            filter=ObjectFilter(type_tag="0x3::staking_pool::StakedIota")
+            filter=ObjectFilter(type_tag=str(StructTag.staked_iota()))
         )
         if len(staked_iotas.data) == 0:
             raise Exception("no staked iotas found")
