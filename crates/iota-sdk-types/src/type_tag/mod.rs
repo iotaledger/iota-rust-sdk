@@ -393,7 +393,10 @@ macro_rules! add_struct_tag_ctor {
             }
         }
     };
-    ($address:ident, $module:literal, $name:literal, "from_struct_tag") => {
+}
+
+macro_rules! add_struct_tag_ctor_from_struct_tag {
+    ($address:ident, $module:literal, $name:literal) => {
         paste::paste! {
             pub fn [< new_ $name:snake >](struct_tag: impl Into<StructTag>) -> Self {
                 Self {
@@ -405,7 +408,10 @@ macro_rules! add_struct_tag_ctor {
             }
         }
     };
-    ($address:ident, $module:literal, $name:literal, "from_type_tag") => {
+}
+
+macro_rules! add_struct_tag_ctor_from_type_tag {
+    ($address:ident, $module:literal, $name:literal) => {
         paste::paste! {
             pub fn [< new_ $name:snake >](type_tag: impl Into<TypeTag>) -> Self {
                 Self {
@@ -482,27 +488,27 @@ impl StructTag {
         }
     }
 
-    add_struct_tag_ctor!(FRAMEWORK, "coin", "Coin", "from_type_tag");
-    add_struct_tag_ctor!(FRAMEWORK, "coin", "CoinMetadata", "from_struct_tag");
-    add_struct_tag_ctor!(FRAMEWORK, "coin", "TreasuryCap", "from_struct_tag");
-    add_struct_tag_ctor!(FRAMEWORK, "coin_manager", "CoinManager", "from_struct_tag");
     add_struct_tag_ctor!(FRAMEWORK, "clock", "Clock");
-    add_struct_tag_ctor!(FRAMEWORK, "balance", "Balance", "from_type_tag");
     add_struct_tag_ctor!(FRAMEWORK, "config", "Config");
     add_struct_tag_ctor!(FRAMEWORK, "deny_list", "ConfigKey");
     add_struct_tag_ctor!(FRAMEWORK, "deny_list", "AddressKey");
     add_struct_tag_ctor!(FRAMEWORK, "deny_list", "GlobalPauseKey");
-    add_struct_tag_ctor!(FRAMEWORK, "display", "VersionUpdated", "from_struct_tag");
-    add_struct_tag_ctor!(FRAMEWORK, "display", "DisplayCreated", "from_struct_tag");
     add_struct_tag_ctor!(FRAMEWORK, "iota", "IotaTreasuryCap");
     add_struct_tag_ctor!(FRAMEWORK, "package", "UpgradeCap");
     add_struct_tag_ctor!(FRAMEWORK, "package", "UpgradeTicket");
     add_struct_tag_ctor!(FRAMEWORK, "package", "UpgradeReceipt");
     add_struct_tag_ctor!(FRAMEWORK, "system_admin_cap", "IotaSystemAdminCap");
-    add_struct_tag_ctor!(FRAMEWORK, "timelock", "TimeLock", "from_type_tag");
     add_struct_tag_ctor!(SYSTEM, "iota_system", "IotaSystemState");
     add_struct_tag_ctor!(SYSTEM, "staking_pool", "StakedIota");
     add_struct_tag_ctor!(SYSTEM, "timelocked_staking", "TimelockedStakedIota");
+    add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "coin", "CoinMetadata");
+    add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "coin", "TreasuryCap");
+    add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "coin_manager", "CoinManager");
+    add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "display", "VersionUpdated");
+    add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "display", "DisplayCreated");
+    add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "coin", "Coin");
+    add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "balance", "Balance");
+    add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "timelock", "TimeLock");
 
     /// Checks if this is a Coin type
     pub fn coin_type_opt(&self) -> Option<&crate::TypeTag> {
