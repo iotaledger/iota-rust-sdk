@@ -24,7 +24,7 @@
 //! ```
 //! # use std::str::FromStr;
 //! use iota_graphql_client::Client;
-//! use iota_transaction_builder::TransactionBuilder;
+//! use iota_sdk_transaction_builder::TransactionBuilder;
 //! use iota_types::{Address, ObjectId, Transaction};
 //!
 //! # #[tokio::main(flavor = "current_thread")]
@@ -51,7 +51,7 @@
 //!
 //! ```
 //! # use std::str::FromStr;
-//! use iota_transaction_builder::TransactionBuilder;
+//! use iota_sdk_transaction_builder::TransactionBuilder;
 //! use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
 //!
 //! let sender =
@@ -253,7 +253,7 @@
 //!
 //! ```
 //! # use std::str::FromStr;
-//! # use iota_transaction_builder::types::{MoveArg, MoveType, PureBytes};
+//! # use iota_sdk_transaction_builder::types::{MoveArg, MoveType, PureBytes};
 //! # use iota_types::TypeTag;
 //! #[derive(serde::Serialize)]
 //! struct MyStruct {

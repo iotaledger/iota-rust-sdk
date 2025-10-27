@@ -334,7 +334,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// ```
     /// # use std::str::FromStr;
     /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
-    /// # use iota_transaction_builder::{TransactionBuilder, res};
+    /// # use iota_sdk_transaction_builder::{TransactionBuilder, res};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
@@ -402,7 +402,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// ```rust
     /// use iota_graphql_client::Client;
-    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::Address;
     ///
     /// #[tokio::main(flavor = "current_thread")]
@@ -495,7 +495,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// ```rust
     /// use iota_graphql_client::Client;
-    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// #[tokio::main(flavor = "current_thread")]
@@ -580,7 +580,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// ```
     /// # use std::str::FromStr;
-    /// # use iota_transaction_builder::{TransactionBuilder, res};
+    /// # use iota_sdk_transaction_builder::{TransactionBuilder, res};
     /// # use iota_types::{Address, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
@@ -629,7 +629,7 @@ impl<L> TransactionBuilder<(), L> {
     /// ```
     /// # use std::str::FromStr;
     /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
-    /// # use iota_transaction_builder::{TransactionBuilder, res, unresolved};
+    /// # use iota_sdk_transaction_builder::{TransactionBuilder, res, unresolved};
     ///
     /// let sender =
     ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
@@ -739,7 +739,7 @@ impl<L> TransactionBuilder<Client, L> {
     /// ```
     /// # use std::str::FromStr;
     /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
-    /// # use iota_transaction_builder::{TransactionBuilder, res, unresolved};
+    /// # use iota_sdk_transaction_builder::{TransactionBuilder, res, unresolved};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
