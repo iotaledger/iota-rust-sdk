@@ -1009,37 +1009,28 @@ impl<L> TransactionBuilder<Client, L> {
 
         let res = if let Some(gas_station_data) = gas_station_data {
             let digest = gas_station_data.execute_txn(&mut txn, keypair).await?;
-            client
-                .transaction_effects(digest)
-                .await
-                .map_err(Error::Client)?
+            if wait_for_finalization {
+                client
+                    .wait_for_tx_finalization(digest, None)
+                    .await
+                    .map_err(Error::Client)?
+            } else {
+                client
+                    .transaction_effects(digest)
+                    .await
+                    .map_err(Error::Client)?
+            }
         } else {
             client
                 .execute_tx(
                     &[keypair.sign_transaction(&txn).map_err(Error::Signature)?],
                     &txn,
+                    wait_for_finalization,
                 )
                 .await
                 .map_err(Error::Client)?
         };
 
-        let mut retries_left = 100;
-        if wait_for_finalization {
-            let digest = txn.digest();
-            while retries_left > 0
-                && client
-                    .transaction(digest)
-                    .await
-                    .map_err(Error::Client)?
-                    .is_none()
-            {
-                if retries_left == 1 {
-                    return Err(Error::FinalizationTimeout(digest));
-                }
-                tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
-                retries_left -= 1;
-            }
-        }
         Ok(res)
     }
 
@@ -1062,20 +1053,10 @@ impl<L> TransactionBuilder<Client, L> {
         );
 
         let res = client
-            .execute_tx(&signatures, &txn)
+            .execute_tx(&signatures, &txn, wait_for_finalization)
             .await
             .map_err(Error::Client)?;
 
-        if wait_for_finalization {
-            while client
-                .transaction(txn.digest())
-                .await
-                .map_err(Error::Client)?
-                .is_none()
-            {
-                tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
-            }
-        }
         Ok(res)
     }
 }

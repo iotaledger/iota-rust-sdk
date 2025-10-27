@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{str::FromStr, sync::Arc};
+use std::{str::FromStr, sync::Arc, time::Duration};
 
 use iota_graphql_client::{
     pagination::PaginationFilter,
@@ -613,10 +613,12 @@ impl GraphQLClient {
     }
 
     /// Execute a transaction.
+    #[uniffi::method(default(wait_for_finalization = false))]
     pub async fn execute_tx(
         &self,
         signatures: Vec<Arc<UserSignature>>,
         tx: &Transaction,
+        wait_for_finalization: bool,
     ) -> Result<Option<Arc<TransactionEffects>>> {
         Ok(self
             .0
@@ -628,7 +630,24 @@ impl GraphQLClient {
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
                 &tx.0,
+                wait_for_finalization,
             )
+            .await?
+            .map(Into::into)
+            .map(Arc::new))
+    }
+
+    #[uniffi::method(default(timeout = None))]
+    pub async fn wait_for_tx_finalization(
+        &self,
+        digest: &Digest,
+        timeout: Option<Duration>,
+    ) -> Result<Option<Arc<TransactionEffects>>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .wait_for_tx_finalization(**digest, timeout)
             .await?
             .map(Into::into)
             .map(Arc::new))

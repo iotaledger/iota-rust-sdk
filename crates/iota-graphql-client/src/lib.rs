@@ -11,7 +11,7 @@ pub mod pagination;
 pub mod query_types;
 pub mod streams;
 
-use std::str::FromStr;
+use std::{str::FromStr, time::Duration};
 
 use base64ct::Encoding;
 use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
@@ -1460,6 +1460,7 @@ impl Client {
         &self,
         signatures: &[UserSignature],
         tx: &Transaction,
+        wait_for_finalization: bool,
     ) -> Result<Option<TransactionEffects>> {
         let operation = ExecuteTransactionQuery::build(ExecuteTransactionArgs {
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
@@ -1477,10 +1478,39 @@ impl Client {
             let bcs = base64ct::Base64::decode_vec(result.effects.bcs.0.as_str())?;
             let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
 
+            if wait_for_finalization {
+                self.wait_for_tx_finalization(tx.digest(), None).await?;
+            }
+
             Ok(Some(effects))
         } else {
             Ok(None)
         }
+    }
+
+    pub async fn wait_for_tx_finalization(
+        &self,
+        digest: Digest,
+        timeout: impl Into<Option<Duration>>,
+    ) -> Result<Option<TransactionEffects>> {
+        let mut res = None;
+        tokio::time::timeout(
+            timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
+            async {
+                loop {
+                    res = self.transaction_effects(digest).await?;
+                    if res.is_none() {
+                        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+                    } else {
+                        break;
+                    }
+                }
+                Result::<_>::Ok(())
+            },
+        )
+        .await
+        .map_err(|e| Error::from_error(Kind::Other, e))??;
+        Ok(res)
     }
 
     // ===========================================================================
