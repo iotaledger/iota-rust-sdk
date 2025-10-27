@@ -30,12 +30,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - run: cargo install cargo-release
+      - run: cargo install cargo-release --version 0.25.20
 
       - name: Cargo release publish
         run: |
           pkg_args="-p ${{inputs.package}}"
-          args="--allow-branch develop,sdk-bindings --no-confirm --execute"
+          args="--allow-branch develop,sdk-bindings --no-confirm"
+
+          echo "Dry-running publish"
+          eval "cargo release $pkg_args $args --all-features"
 
           echo "Commits since last tag:"
           eval "cargo release changes"
