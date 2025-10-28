@@ -2892,6 +2892,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4121,7 +4125,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade(
 ): Short
@@ -6496,7 +6504,11 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(`ptr`: Pointer,
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(`ptr`: Pointer,`stake`: Pointer,`validatorAddress`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(`ptr`: Pointer,`recipient`: Pointer,`objects`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(`ptr`: Pointer,`stakedIota`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(`ptr`: Pointer,`packageData`: Pointer,`package`: Pointer,`ticket`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8439,7 +8451,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 20245.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 6738.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 48020.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins() != 24826.toShort()) {
@@ -8538,7 +8550,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization() != 22865.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization() != 39301.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815.toShort()) {
@@ -9198,10 +9210,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 27688.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 44127.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 53109.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 47784.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328.toShort()) {
@@ -9249,7 +9261,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake() != 41361.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 30530.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 3616.toShort()) {
@@ -21878,7 +21896,7 @@ public interface GraphQlClientInterface {
     /**
      * Execute a transaction.
      */
-    suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects?
+    suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects
     
     /**
      * Get the list of gas coins for the specified address.
@@ -22088,7 +22106,7 @@ public interface GraphQlClientInterface {
      */
     suspend fun `transactionsEffects`(`filter`: TransactionsFilter? = null, `paginationFilter`: PaginationFilter? = null): TransactionEffectsPage
     
-    suspend fun `waitForTxFinalization`(`digest`: Digest, `timeout`: java.time.Duration? = null): TransactionEffects?
+    suspend fun `waitForTxFinalization`(`digest`: Digest, `timeout`: java.time.Duration? = null): TransactionEffects
     
     companion object
 }
@@ -22624,7 +22642,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction, `waitForFinalization`: kotlin.Boolean) : TransactionEffects? {
+    override suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction, `waitForFinalization`: kotlin.Boolean) : TransactionEffects {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
@@ -22632,11 +22650,11 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterSequenceTypeUserSignature.lower(`signatures`),FfiConverterTypeTransaction.lower(`tx`),FfiConverterBoolean.lower(`waitForFinalization`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
         // lift function
-        { FfiConverterOptionalTypeTransactionEffects.lift(it) },
+        { FfiConverterTypeTransactionEffects.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -23462,7 +23480,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `waitForTxFinalization`(`digest`: Digest, `timeout`: java.time.Duration?) : TransactionEffects? {
+    override suspend fun `waitForTxFinalization`(`digest`: Digest, `timeout`: java.time.Duration?) : TransactionEffects {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx_finalization(
@@ -23470,11 +23488,11 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeDigest.lower(`digest`),FfiConverterOptionalDuration.lower(`timeout`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
         // lift function
-        { FfiConverterOptionalTypeTransactionEffects.lift(it) },
+        { FfiConverterTypeTransactionEffects.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -40673,12 +40691,12 @@ public interface TransactionBuilderInterface {
     /**
      * Execute the transaction and optionally wait for finalization.
      */
-    suspend fun `execute`(`keypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects?
+    suspend fun `execute`(`keypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects
     
     /**
      * Execute the transaction and optionally wait for finalization.
      */
-    suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects?
+    suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects
     
     /**
      * Set the expiration of the transaction to be a specific epoch.
@@ -40779,10 +40797,23 @@ public interface TransactionBuilderInterface {
     fun `sponsor`(`sponsor`: Address): TransactionBuilder
     
     /**
+     * Add stake to a validator's staking pool.
+     *
+     * This is a high-level function which will split the provided stake amount
+     * from the gas coin and then stake using the resulting coin.
+     */
+    fun `stake`(`stake`: PtbArgument, `validatorAddress`: Address): TransactionBuilder
+    
+    /**
      * Transfer a list of objects to the given address, without producing any
      * result.
      */
     fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): TransactionBuilder
+    
+    /**
+     * Withdraw stake from a validator's staking pool.
+     */
+    fun `unstake`(`stakedIota`: PtbArgument): TransactionBuilder
     
     /**
      * Upgrade a Move package.
@@ -40918,7 +40949,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `execute`(`keypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean) : TransactionEffects? {
+    override suspend fun `execute`(`keypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean) : TransactionEffects {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
@@ -40926,11 +40957,11 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
                 FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterBoolean.lower(`waitForFinalization`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
         // lift function
-        { FfiConverterOptionalTypeTransactionEffects.lift(it) },
+        { FfiConverterTypeTransactionEffects.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -40942,7 +40973,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean) : TransactionEffects? {
+    override suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean) : TransactionEffects {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(
@@ -40950,11 +40981,11 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
                 FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterTypeSimpleKeypair.lower(`sponsorKeypair`),FfiConverterBoolean.lower(`waitForFinalization`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
         // lift function
-        { FfiConverterOptionalTypeTransactionEffects.lift(it) },
+        { FfiConverterTypeTransactionEffects.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -41219,6 +41250,24 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
+     * Add stake to a validator's staking pool.
+     *
+     * This is a high-level function which will split the provided stake amount
+     * from the gas coin and then stake using the resulting coin.
+     */override fun `stake`(`stake`: PtbArgument, `validatorAddress`: Address): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
+        it, FfiConverterTypePTBArgument.lower(`stake`),FfiConverterTypeAddress.lower(`validatorAddress`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Transfer a list of objects to the given address, without producing any
      * result.
      */override fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): TransactionBuilder {
@@ -41227,6 +41276,21 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
         it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterSequenceTypePTBArgument.lower(`objects`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Withdraw stake from a validator's staking pool.
+     */override fun `unstake`(`stakedIota`: PtbArgument): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
+        it, FfiConverterTypePTBArgument.lower(`stakedIota`),_status)
 }
     }
     )

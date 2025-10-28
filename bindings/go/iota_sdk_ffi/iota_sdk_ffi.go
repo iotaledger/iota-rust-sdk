@@ -3395,7 +3395,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx()
 	})
-	if checksum != 6738 {
+	if checksum != 48020 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx: UniFFI API checksum mismatch")
 	}
@@ -3692,7 +3692,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization()
 	})
-	if checksum != 22865 {
+	if checksum != 39301 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization: UniFFI API checksum mismatch")
 	}
@@ -5672,7 +5672,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute()
 	})
-	if checksum != 27688 {
+	if checksum != 44127 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute: UniFFI API checksum mismatch")
 	}
@@ -5681,7 +5681,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor()
 	})
-	if checksum != 53109 {
+	if checksum != 47784 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor: UniFFI API checksum mismatch")
 	}
@@ -5823,11 +5823,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake()
+	})
+	if checksum != 41361 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects()
 	})
 	if checksum != 16313 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake()
+	})
+	if checksum != 30530 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -14388,7 +14406,7 @@ type GraphQlClientInterface interface {
 	// (optional) event filter.
 	Events(filter *EventFilter, paginationFilter *PaginationFilter) (EventPage, error)
 	// Execute a transaction.
-	ExecuteTx(signatures []*UserSignature, tx *Transaction, waitForFinalization bool) (**TransactionEffects, error)
+	ExecuteTx(signatures []*UserSignature, tx *Transaction, waitForFinalization bool) (*TransactionEffects, error)
 	// Get the list of gas coins for the specified address.
 	GasCoins(owner *Address, paginationFilter *PaginationFilter) (CoinPage, error)
 	// Get the default name pointing to this address, if one exists.
@@ -14501,7 +14519,7 @@ type GraphQlClientInterface interface {
 	TransactionsDataEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionDataEffectsPage, error)
 	// Get a page of transactions' effects based on the provided filters.
 	TransactionsEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionEffectsPage, error)
-	WaitForTxFinalization(digest *Digest, timeout *time.Duration) (**TransactionEffects, error)
+	WaitForTxFinalization(digest *Digest, timeout *time.Duration) (*TransactionEffects, error)
 }
 // The GraphQL client for interacting with the IOTA blockchain.
 type GraphQlClient struct {
@@ -15114,31 +15132,29 @@ func (_self *GraphQlClient) Events(filter *EventFilter, paginationFilter *Pagina
 }
 
 // Execute a transaction.
-func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transaction, waitForFinalization bool) (**TransactionEffects, error) {
+func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transaction, waitForFinalization bool) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
-			return GoRustBuffer {
-		inner: res,
-	}
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
 		},
 		// liftFn
-		func(ffi RustBufferI) **TransactionEffects {
-			return FfiConverterOptionalTransactionEffectsINSTANCE.Lift(ffi)
+		func(ffi unsafe.Pointer) *TransactionEffects {
+			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
 		_pointer,FfiConverterSequenceUserSignatureINSTANCE.Lower(signatures), FfiConverterTransactionINSTANCE.Lower(tx), FfiConverterBoolINSTANCE.Lower(waitForFinalization)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
 		},
 	)
 
@@ -16211,31 +16227,29 @@ func (_self *GraphQlClient) TransactionsEffects(filter *TransactionsFilter, pagi
 	return res, err 
 }
 
-func (_self *GraphQlClient) WaitForTxFinalization(digest *Digest, timeout *time.Duration) (**TransactionEffects, error) {
+func (_self *GraphQlClient) WaitForTxFinalization(digest *Digest, timeout *time.Duration) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
-			return GoRustBuffer {
-		inner: res,
-	}
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
 		},
 		// liftFn
-		func(ffi RustBufferI) **TransactionEffects {
-			return FfiConverterOptionalTransactionEffectsINSTANCE.Lift(ffi)
+		func(ffi unsafe.Pointer) *TransactionEffects {
+			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx_finalization(
 		_pointer,FfiConverterDigestINSTANCE.Lower(digest), FfiConverterOptionalDurationINSTANCE.Lower(timeout)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
 		},
 	)
 
@@ -24185,9 +24199,9 @@ type TransactionBuilderInterface interface {
 	// Dry run the transaction.
 	DryRun(skipChecks bool) (DryRunResult, error)
 	// Execute the transaction and optionally wait for finalization.
-	Execute(keypair *SimpleKeypair, waitForFinalization bool) (**TransactionEffects, error)
+	Execute(keypair *SimpleKeypair, waitForFinalization bool) (*TransactionEffects, error)
 	// Execute the transaction and optionally wait for finalization.
-	ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitForFinalization bool) (**TransactionEffects, error)
+	ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitForFinalization bool) (*TransactionEffects, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *TransactionBuilder
 	// Convert this builder into a transaction.
@@ -24241,9 +24255,16 @@ type TransactionBuilderInterface interface {
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
 	Sponsor(sponsor *Address) *TransactionBuilder
+	// Add stake to a validator's staking pool.
+	//
+	// This is a high-level function which will split the provided stake amount
+	// from the gas coin and then stake using the resulting coin.
+	Stake(stake *PtbArgument, validatorAddress *Address) *TransactionBuilder
 	// Transfer a list of objects to the given address, without producing any
 	// result.
 	TransferObjects(recipient *Address, objects []*PtbArgument) *TransactionBuilder
+	// Withdraw stake from a validator's staking pool.
+	Unstake(stakedIota *PtbArgument) *TransactionBuilder
 	// Upgrade a Move package.
 	//
 	// - `modules`: is the modules' bytecode for the modules to be published
@@ -24326,31 +24347,29 @@ func (_self *TransactionBuilder) DryRun(skipChecks bool) (DryRunResult, error) {
 }
 
 // Execute the transaction and optionally wait for finalization.
-func (_self *TransactionBuilder) Execute(keypair *SimpleKeypair, waitForFinalization bool) (**TransactionEffects, error) {
+func (_self *TransactionBuilder) Execute(keypair *SimpleKeypair, waitForFinalization bool) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
-			return GoRustBuffer {
-		inner: res,
-	}
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
 		},
 		// liftFn
-		func(ffi RustBufferI) **TransactionEffects {
-			return FfiConverterOptionalTransactionEffectsINSTANCE.Lift(ffi)
+		func(ffi unsafe.Pointer) *TransactionEffects {
+			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
 		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterBoolINSTANCE.Lower(waitForFinalization)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
 		},
 	)
 
@@ -24358,31 +24377,29 @@ func (_self *TransactionBuilder) Execute(keypair *SimpleKeypair, waitForFinaliza
 }
 
 // Execute the transaction and optionally wait for finalization.
-func (_self *TransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitForFinalization bool) (**TransactionEffects, error) {
+func (_self *TransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitForFinalization bool) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
-			return GoRustBuffer {
-		inner: res,
-	}
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
 		},
 		// liftFn
-		func(ffi RustBufferI) **TransactionEffects {
-			return FfiConverterOptionalTransactionEffectsINSTANCE.Lift(ffi)
+		func(ffi unsafe.Pointer) *TransactionEffects {
+			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(
 		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterSimpleKeypairINSTANCE.Lower(sponsorKeypair), FfiConverterBoolINSTANCE.Lower(waitForFinalization)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
 		},
 	)
 
@@ -24582,6 +24599,19 @@ func (_self *TransactionBuilder) Sponsor(sponsor *Address) *TransactionBuilder {
 	}))
 }
 
+// Add stake to a validator's staking pool.
+//
+// This is a high-level function which will split the provided stake amount
+// from the gas coin and then stake using the resulting coin.
+func (_self *TransactionBuilder) Stake(stake *PtbArgument, validatorAddress *Address) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(stake), FfiConverterAddressINSTANCE.Lower(validatorAddress),_uniffiStatus)
+	}))
+}
+
 // Transfer a list of objects to the given address, without producing any
 // result.
 func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*PtbArgument) *TransactionBuilder {
@@ -24590,6 +24620,16 @@ func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
 		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterSequencePtbArgumentINSTANCE.Lower(objects),_uniffiStatus)
+	}))
+}
+
+// Withdraw stake from a validator's staking pool.
+func (_self *TransactionBuilder) Unstake(stakedIota *PtbArgument) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(stakedIota),_uniffiStatus)
 	}))
 }
 

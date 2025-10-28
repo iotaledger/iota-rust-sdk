@@ -1135,7 +1135,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 20245:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 6738:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 48020:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins() != 24826:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1201,7 +1201,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization() != 22865:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization() != 39301:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1641,9 +1641,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 27688:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 44127:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 53109:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 47784:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1675,7 +1675,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake() != 41361:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 30530:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 3616:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6642,6 +6646,13 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -6649,6 +6660,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -10772,9 +10789,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade.restype = ctypes.c_uint16
@@ -31183,7 +31206,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "typing.Optional[TransactionEffects]":
+    async def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "TransactionEffects":
         """
         Execute a transaction.
         """
@@ -31203,11 +31226,11 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeTransaction.lower(tx),
         _UniffiConverterBool.lower(wait_for_finalization)
             ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
             # lift function
-            _UniffiConverterOptionalTypeTransactionEffects.lift,
+            _UniffiConverterTypeTransactionEffects.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -32183,7 +32206,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def wait_for_tx_finalization(self, digest: "Digest",timeout: "typing.Union[object, typing.Optional[Duration]]" = _DEFAULT) -> "typing.Optional[TransactionEffects]":
+    async def wait_for_tx_finalization(self, digest: "Digest",timeout: "typing.Union[object, typing.Optional[Duration]]" = _DEFAULT) -> "TransactionEffects":
         _UniffiConverterTypeDigest.check_lower(digest)
         
         if timeout is _DEFAULT:
@@ -32196,11 +32219,11 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeDigest.lower(digest),
         _UniffiConverterOptionalDuration.lower(timeout)
             ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
             # lift function
-            _UniffiConverterOptionalTypeTransactionEffects.lift,
+            _UniffiConverterTypeTransactionEffects.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -40760,10 +40783,25 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def stake(self, stake: "PtbArgument",validator_address: "Address"):
+        """
+        Add stake to a validator's staking pool.
+
+        This is a high-level function which will split the provided stake amount
+        from the gas coin and then stake using the resulting coin.
+        """
+
+        raise NotImplementedError
     def transfer_objects(self, recipient: "Address",objects: "typing.List[PtbArgument]"):
         """
         Transfer a list of objects to the given address, without producing any
         result.
+        """
+
+        raise NotImplementedError
+    def unstake(self, staked_iota: "PtbArgument"):
+        """
+        Withdraw stake from a validator's staking pool.
         """
 
         raise NotImplementedError
@@ -40866,7 +40904,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute(self, keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "typing.Optional[TransactionEffects]":
+    async def execute(self, keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "TransactionEffects":
         """
         Execute the transaction and optionally wait for finalization.
         """
@@ -40883,11 +40921,11 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeSimpleKeypair.lower(keypair),
         _UniffiConverterBool.lower(wait_for_finalization)
             ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
             # lift function
-            _UniffiConverterOptionalTypeTransactionEffects.lift,
+            _UniffiConverterTypeTransactionEffects.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -40896,7 +40934,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute_with_sponsor(self, keypair: "SimpleKeypair",sponsor_keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "typing.Optional[TransactionEffects]":
+    async def execute_with_sponsor(self, keypair: "SimpleKeypair",sponsor_keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "TransactionEffects":
         """
         Execute the transaction and optionally wait for finalization.
         """
@@ -40916,11 +40954,11 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeSimpleKeypair.lower(sponsor_keypair),
         _UniffiConverterBool.lower(wait_for_finalization)
             ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
             # lift function
-            _UniffiConverterOptionalTypeTransactionEffects.lift,
+            _UniffiConverterTypeTransactionEffects.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -41261,6 +41299,28 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
+    def stake(self, stake: "PtbArgument",validator_address: "Address") -> "TransactionBuilder":
+        """
+        Add stake to a validator's staking pool.
+
+        This is a high-level function which will split the provided stake amount
+        from the gas coin and then stake using the resulting coin.
+        """
+
+        _UniffiConverterTypePtbArgument.check_lower(stake)
+        
+        _UniffiConverterTypeAddress.check_lower(validator_address)
+        
+        return _UniffiConverterTypeTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePtbArgument.lower(stake),
+        _UniffiConverterTypeAddress.lower(validator_address))
+        )
+
+
+
+
+
     def transfer_objects(self, recipient: "Address",objects: "typing.List[PtbArgument]") -> "TransactionBuilder":
         """
         Transfer a list of objects to the given address, without producing any
@@ -41275,6 +41335,22 @@ _UniffiConverterTypeSdkFfiError,
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects,self._uniffi_clone_pointer(),
         _UniffiConverterTypeAddress.lower(recipient),
         _UniffiConverterSequenceTypePtbArgument.lower(objects))
+        )
+
+
+
+
+
+    def unstake(self, staked_iota: "PtbArgument") -> "TransactionBuilder":
+        """
+        Withdraw stake from a validator's staking pool.
+        """
+
+        _UniffiConverterTypePtbArgument.check_lower(staked_iota)
+        
+        return _UniffiConverterTypeTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePtbArgument.lower(staked_iota))
         )
 
 
