@@ -1243,11 +1243,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 22970:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() != 13125:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() != 61113:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest() != 63793:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest() != 31652:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules() != 137:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules() != 63377:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_base64() != 1835:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1685,7 +1685,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 30530:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 59371:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 14493:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -33562,19 +33562,19 @@ class MovePackageDataProtocol(typing.Protocol):
 
     def dependencies(self, ):
         """
-        Return the package dependencies.
+        Returns the package dependencies.
         """
 
         raise NotImplementedError
     def digest(self, ):
         """
-        Return the package digest.
+        Returns the package digest.
         """
 
         raise NotImplementedError
     def modules(self, ):
         """
-        Return the package modules.
+        Returns the package modules.
         """
 
         raise NotImplementedError
@@ -33638,7 +33638,7 @@ class MovePackageData():
 
     def dependencies(self, ) -> "typing.List[ObjectId]":
         """
-        Return the package dependencies.
+        Returns the package dependencies.
         """
 
         return _UniffiConverterSequenceTypeObjectId.lift(
@@ -33651,7 +33651,7 @@ class MovePackageData():
 
     def digest(self, ) -> "Digest":
         """
-        Return the package digest.
+        Returns the package digest.
         """
 
         return _UniffiConverterTypeDigest.lift(
@@ -33664,7 +33664,7 @@ class MovePackageData():
 
     def modules(self, ) -> "typing.List[bytes]":
         """
-        Return the package modules.
+        Returns the package modules.
         """
 
         return _UniffiConverterSequenceBytes.lift(
@@ -40889,7 +40889,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def upgrade(self, package_data: "MovePackageData",package_id: "ObjectId",upgrade_ticket: "PtbArgument",name: "typing.Union[object, typing.Optional[str]]" = _DEFAULT):
+    def upgrade(self, package_id: "ObjectId",package_data: "MovePackageData",upgrade_ticket: "PtbArgument",name: "typing.Union[object, typing.Optional[str]]" = _DEFAULT):
         """
         Upgrade a Move package.
 
@@ -41441,7 +41441,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def upgrade(self, package_data: "MovePackageData",package_id: "ObjectId",upgrade_ticket: "PtbArgument",name: "typing.Union[object, typing.Optional[str]]" = _DEFAULT) -> "TransactionBuilder":
+    def upgrade(self, package_id: "ObjectId",package_data: "MovePackageData",upgrade_ticket: "PtbArgument",name: "typing.Union[object, typing.Optional[str]]" = _DEFAULT) -> "TransactionBuilder":
         """
         Upgrade a Move package.
 
@@ -41456,9 +41456,9 @@ _UniffiConverterTypeSdkFfiError,
         ID, the upgrade policy, and package digest.
         """
 
-        _UniffiConverterTypeMovePackageData.check_lower(package_data)
-        
         _UniffiConverterTypeObjectId.check_lower(package_id)
+        
+        _UniffiConverterTypeMovePackageData.check_lower(package_data)
         
         _UniffiConverterTypePtbArgument.check_lower(upgrade_ticket)
         
@@ -41468,8 +41468,8 @@ _UniffiConverterTypeSdkFfiError,
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeMovePackageData.lower(package_data),
         _UniffiConverterTypeObjectId.lower(package_id),
+        _UniffiConverterTypeMovePackageData.lower(package_data),
         _UniffiConverterTypePtbArgument.lower(upgrade_ticket),
         _UniffiConverterOptionalString.lower(name))
         )

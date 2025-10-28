@@ -139,8 +139,8 @@ fun main() = runBlocking {
 
         // Upgrade the package to receive an upgrade receipt
         builderUpgrade.upgrade(
-                packageData = packageData,
                 packageId = packageId,
+                packageData = packageData,
                 upgradeTicket = PtbArgument.res("upgrade_ticket"),
                 name = "upgrade_receipt"
         )

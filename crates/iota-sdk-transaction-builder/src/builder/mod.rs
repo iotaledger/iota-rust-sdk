@@ -556,8 +556,8 @@ impl<C, L> TransactionBuilder<C, L> {
     /// Upgrade a move package.
     pub fn upgrade<U: PTBArgument>(
         &mut self,
-        package_data: MovePackageData,
         package_id: ObjectId,
+        package_data: MovePackageData,
         upgrade_ticket: U,
     ) -> &mut TransactionBuilder<C, Upgrade> {
         let ticket = self.apply_argument(upgrade_ticket);

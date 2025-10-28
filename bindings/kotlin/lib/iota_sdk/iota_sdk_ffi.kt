@@ -6531,7 +6531,7 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(`ptr`: Poi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(`ptr`: Pointer,`stakedIota`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(`ptr`: Pointer,`packageData`: Pointer,`packageId`: Pointer,`upgradeTicket`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(`ptr`: Pointer,`packageId`: Pointer,`packageData`: Pointer,`upgradeTicket`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_transactioneffects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8640,13 +8640,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 22970.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() != 13125.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() != 61113.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest() != 63793.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest() != 31652.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules() != 137.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules() != 63377.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_base64() != 1835.toShort()) {
@@ -9303,7 +9303,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 30530.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 59371.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 14493.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710.toShort()) {
@@ -26381,17 +26381,17 @@ public object FfiConverterTypeMovePackage: FfiConverter<MovePackage, Pointer> {
 public interface MovePackageDataInterface {
     
     /**
-     * Return the package dependencies.
+     * Returns the package dependencies.
      */
     fun `dependencies`(): List<ObjectId>
     
     /**
-     * Return the package digest.
+     * Returns the package digest.
      */
     fun `digest`(): Digest
     
     /**
-     * Return the package modules.
+     * Returns the package modules.
      */
     fun `modules`(): List<kotlin.ByteArray>
     
@@ -26497,7 +26497,7 @@ open class MovePackageData: Disposable, AutoCloseable, MovePackageDataInterface
 
     
     /**
-     * Return the package dependencies.
+     * Returns the package dependencies.
      */override fun `dependencies`(): List<ObjectId> {
             return FfiConverterSequenceTypeObjectId.lift(
     callWithPointer {
@@ -26512,7 +26512,7 @@ open class MovePackageData: Disposable, AutoCloseable, MovePackageDataInterface
 
     
     /**
-     * Return the package digest.
+     * Returns the package digest.
      */override fun `digest`(): Digest {
             return FfiConverterTypeDigest.lift(
     callWithPointer {
@@ -26527,7 +26527,7 @@ open class MovePackageData: Disposable, AutoCloseable, MovePackageDataInterface
 
     
     /**
-     * Return the package modules.
+     * Returns the package modules.
      */override fun `modules`(): List<kotlin.ByteArray> {
             return FfiConverterSequenceByteArray.lift(
     callWithPointer {
@@ -40912,7 +40912,7 @@ public interface TransactionBuilderInterface {
      * `0x2::package::authorize_upgrade` function, and pass the package
      * ID, the upgrade policy, and package digest.
      */
-    fun `upgrade`(`packageData`: MovePackageData, `packageId`: ObjectId, `upgradeTicket`: PtbArgument, `name`: kotlin.String? = null): TransactionBuilder
+    fun `upgrade`(`packageId`: ObjectId, `packageData`: MovePackageData, `upgradeTicket`: PtbArgument, `name`: kotlin.String? = null): TransactionBuilder
     
     companion object
 }
@@ -41394,12 +41394,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      * To get the ticket, you have to call the
      * `0x2::package::authorize_upgrade` function, and pass the package
      * ID, the upgrade policy, and package digest.
-     */override fun `upgrade`(`packageData`: MovePackageData, `packageId`: ObjectId, `upgradeTicket`: PtbArgument, `name`: kotlin.String?): TransactionBuilder {
+     */override fun `upgrade`(`packageId`: ObjectId, `packageData`: MovePackageData, `upgradeTicket`: PtbArgument, `name`: kotlin.String?): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
-        it, FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterTypeObjectId.lower(`packageId`),FfiConverterTypePTBArgument.lower(`upgradeTicket`),FfiConverterOptionalString.lower(`name`),_status)
+        it, FfiConverterTypeObjectId.lower(`packageId`),FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterTypePTBArgument.lower(`upgradeTicket`),FfiConverterOptionalString.lower(`name`),_status)
 }
     }
     )

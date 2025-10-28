@@ -3881,7 +3881,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies()
 	})
-	if checksum != 13125 {
+	if checksum != 61113 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies: UniFFI API checksum mismatch")
 	}
@@ -3890,7 +3890,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest()
 	})
-	if checksum != 63793 {
+	if checksum != 31652 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest: UniFFI API checksum mismatch")
 	}
@@ -3899,7 +3899,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules()
 	})
-	if checksum != 137 {
+	if checksum != 63377 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules: UniFFI API checksum mismatch")
 	}
@@ -5870,7 +5870,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade()
 	})
-	if checksum != 59371 {
+	if checksum != 14493 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade: UniFFI API checksum mismatch")
 	}
@@ -17483,11 +17483,11 @@ func (_ FfiDestroyerMovePackage) Destroy(value *MovePackage) {
 // Type corresponding to the output of `iota move build
 // --dump-bytecode-as-base64`
 type MovePackageDataInterface interface {
-	// Return the package dependencies.
+	// Returns the package dependencies.
 	Dependencies() []*ObjectId
-	// Return the package digest.
+	// Returns the package digest.
 	Digest() *Digest
-	// Return the package modules.
+	// Returns the package modules.
 	Modules() [][]byte
 	ToBase64() string
 	ToJson() string
@@ -17530,7 +17530,7 @@ func MovePackageDataFromJson(json string) (*MovePackageData, error) {
 
 
 
-// Return the package dependencies.
+// Returns the package dependencies.
 func (_self *MovePackageData) Dependencies() []*ObjectId {
 	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
 	defer _self.ffiObject.decrementPointer()
@@ -17542,7 +17542,7 @@ func (_self *MovePackageData) Dependencies() []*ObjectId {
 	}))
 }
 
-// Return the package digest.
+// Returns the package digest.
 func (_self *MovePackageData) Digest() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
 	defer _self.ffiObject.decrementPointer()
@@ -17552,7 +17552,7 @@ func (_self *MovePackageData) Digest() *Digest {
 	}))
 }
 
-// Return the package modules.
+// Returns the package modules.
 func (_self *MovePackageData) Modules() [][]byte {
 	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
 	defer _self.ffiObject.decrementPointer()
@@ -24326,7 +24326,7 @@ type TransactionBuilderInterface interface {
 	// To get the ticket, you have to call the
 	// `0x2::package::authorize_upgrade` function, and pass the package
 	// ID, the upgrade policy, and package digest.
-	Upgrade(packageData *MovePackageData, packageId *ObjectId, upgradeTicket *PtbArgument, name *string) *TransactionBuilder
+	Upgrade(packageId *ObjectId, packageData *MovePackageData, upgradeTicket *PtbArgument, name *string) *TransactionBuilder
 }
 // A builder for creating transactions. Use `finish` to finalize the
 // transaction data.
@@ -24698,12 +24698,12 @@ func (_self *TransactionBuilder) Unstake(stakedIota *PtbArgument) *TransactionBu
 // To get the ticket, you have to call the
 // `0x2::package::authorize_upgrade` function, and pass the package
 // ID, the upgrade policy, and package digest.
-func (_self *TransactionBuilder) Upgrade(packageData *MovePackageData, packageId *ObjectId, upgradeTicket *PtbArgument, name *string) *TransactionBuilder {
+func (_self *TransactionBuilder) Upgrade(packageId *ObjectId, packageData *MovePackageData, upgradeTicket *PtbArgument, name *string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
-		_pointer,FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterObjectIdINSTANCE.Lower(packageId), FfiConverterPtbArgumentINSTANCE.Lower(upgradeTicket), FfiConverterOptionalStringINSTANCE.Lower(name),_uniffiStatus)
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(packageId), FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterPtbArgumentINSTANCE.Lower(upgradeTicket), FfiConverterOptionalStringINSTANCE.Lower(name),_uniffiStatus)
 	}))
 }
 func (object *TransactionBuilder) Destroy() {

@@ -133,8 +133,8 @@ async def main():
 
         # Upgrade the package to receive an upgrade receipt
         builder.upgrade(
-            package_data,
             package_id,
+            package_data,
             PtbArgument.res("upgrade_ticket"),
             "upgrade_receipt",
         )

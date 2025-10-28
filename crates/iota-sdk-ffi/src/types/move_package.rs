@@ -77,12 +77,12 @@ impl MovePackageData {
         Ok(Self(serde_json::from_str(json)?))
     }
 
-    /// Return the package modules.
+    /// Returns the package modules.
     pub fn modules(&self) -> Vec<Vec<u8>> {
         self.0.modules.clone()
     }
 
-    /// Return the package dependencies.
+    /// Returns the package dependencies.
     pub fn dependencies(&self) -> Vec<Arc<ObjectId>> {
         self.0
             .dependencies
@@ -93,7 +93,7 @@ impl MovePackageData {
             .collect()
     }
 
-    /// Return the package digest.
+    /// Returns the package digest.
     pub fn digest(&self) -> Digest {
         self.0.digest.into()
     }

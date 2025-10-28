@@ -170,7 +170,7 @@ func main() {
 
 	// Upgrade the package to receive an upgrade receipt
 	upgradeReceiptName := "upgrade_receipt"
-	builderUpgrade.Upgrade(packageData, packageId, sdk.PtbArgumentRes(upgradeTicketName), &upgradeReceiptName)
+	builderUpgrade.Upgrade(packageId, packageData, sdk.PtbArgumentRes(upgradeTicketName), &upgradeReceiptName)
 
 	// Commit the upgrade using the receipt
 	commitUpgrade, _ := sdk.NewIdentifier("commit_upgrade")

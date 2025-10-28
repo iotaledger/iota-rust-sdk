@@ -4416,7 +4416,7 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(void* ptr, void* 
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UPGRADE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UPGRADE
-void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(void* ptr, void* package_data, void* package_id, void* upgrade_ticket, RustBuffer name, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(void* ptr, void* package_id, void* package_data, void* upgrade_ticket, RustBuffer name, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONEFFECTS

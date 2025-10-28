@@ -144,7 +144,7 @@ async fn main() -> Result<()> {
         ))
         .name("upgrade_ticket")
         // Upgrade the package to receive an upgrade receipt
-        .upgrade(package_data, package_id, res("upgrade_ticket"))
+        .upgrade(package_id, package_data, res("upgrade_ticket"))
         .name("upgrade_receipt")
         // Commit the upgrade using the receipt
         .move_call(Address::FRAMEWORK, "package", "commit_upgrade")
