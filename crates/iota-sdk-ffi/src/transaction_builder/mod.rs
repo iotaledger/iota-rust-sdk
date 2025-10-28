@@ -332,12 +332,11 @@ impl TransactionBuilder {
         &self,
         keypair: &SimpleKeypair,
         wait_for_finalization: bool,
-    ) -> Result<Option<Arc<TransactionEffects>>> {
+    ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| builder.clone().execute(&keypair.0, wait_for_finalization))
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .into())
     }
 
     /// Execute the transaction and optionally wait for finalization.

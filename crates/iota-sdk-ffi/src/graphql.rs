@@ -642,15 +642,14 @@ impl GraphQLClient {
         &self,
         digest: &Digest,
         timeout: Option<Duration>,
-    ) -> Result<Option<Arc<TransactionEffects>>> {
+    ) -> Result<TransactionEffects> {
         Ok(self
             .0
             .read()
             .await
             .wait_for_tx_finalization(**digest, timeout)
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .into())
     }
 
     // ===========================================================================

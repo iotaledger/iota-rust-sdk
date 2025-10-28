@@ -1002,7 +1002,7 @@ impl<L> TransactionBuilder<Client, L> {
         mut self,
         keypair: &SimpleKeypair,
         wait_for_finalization: bool,
-    ) -> Result<Option<TransactionEffects>, Error> {
+    ) -> Result<TransactionEffects, Error> {
         let gas_station_data = self.data.gas_station_data.take();
         let client = self.client.clone();
         let mut txn = self.finish().await?;
@@ -1019,8 +1019,10 @@ impl<L> TransactionBuilder<Client, L> {
                     .transaction_effects(digest)
                     .await
                     .map_err(Error::Client)?
+                    .ok_or_else(|| Error::MissingTransaction(digest))?
             }
         } else {
+            let digest = txn.digest();
             client
                 .execute_tx(
                     &[keypair.sign_transaction(&txn).map_err(Error::Signature)?],
@@ -1029,6 +1031,7 @@ impl<L> TransactionBuilder<Client, L> {
                 )
                 .await
                 .map_err(Error::Client)?
+                .ok_or_else(|| Error::MissingTransaction(digest))?
         };
 
         Ok(res)

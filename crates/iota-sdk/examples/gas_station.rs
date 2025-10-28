@@ -27,11 +27,9 @@ async fn main() -> Result<()> {
             HeaderValue::from_str(&format!("Bearer {gas_station_auth_token}"))?,
         );
 
-    let res = builder.execute(&keypair.into(), true).await?;
+    let effects = builder.execute(&keypair.into(), true).await?;
 
-    if let Some(effects) = res {
-        println!("{effects:#?}");
-    }
+    println!("{effects:#?}");
 
     println!("Sponsored transaction was successful!");
 

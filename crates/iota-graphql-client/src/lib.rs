@@ -1489,31 +1489,27 @@ impl Client {
     }
 
     /// Wait for the finalization of a transaction by its digest. An optional
-    /// timeout can be provided, which, if exceeded, will return an error.
-    /// Returns the [`TransactionEffects`].
+    /// timeout can be provided, which, if exceeded, will return an error
+    /// (default 60s). Returns the [`TransactionEffects`].
     pub async fn wait_for_tx_finalization(
         &self,
         digest: Digest,
         timeout: impl Into<Option<Duration>>,
-    ) -> Result<Option<TransactionEffects>> {
-        let mut res = None;
+    ) -> Result<TransactionEffects> {
         tokio::time::timeout(
             timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
             async {
                 loop {
-                    res = self.transaction_effects(digest).await?;
-                    if res.is_none() {
-                        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+                    if let Some(effects) = self.transaction_effects(digest).await? {
+                        break Ok(effects);
                     } else {
-                        break;
+                        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
                     }
                 }
-                Result::<_>::Ok(())
             },
         )
         .await
-        .map_err(|e| Error::from_error(Kind::Other, e))??;
-        Ok(res)
+        .map_err(|e| Error::from_error(Kind::Other, e))?
     }
 
     // ===========================================================================
