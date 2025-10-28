@@ -80,4 +80,4 @@ jobs:
           make test-docs
       - name: rustdoc
         run: |
-          cargo doc --all-features --workspace --no-deps
+          make build-docs
