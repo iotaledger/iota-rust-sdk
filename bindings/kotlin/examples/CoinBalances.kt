@@ -13,6 +13,7 @@ fun main() = runBlocking {
                         "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f",
                 )
 
+        error("panic")
         val coins = client.coins(address)
         for (coin in coins.data) {
             println("Coin = 0x${coin.id().toHex()}, Coin Type = ${coin.coinType().asStructTag()}, Balance = ${coin.balance()}")
@@ -22,6 +23,6 @@ fun main() = runBlocking {
         println("Total Balance = $balance")
     } catch (e: Exception) {
         e.printStackTrace()
-        kotlin.system.exitProcess(1)
+        throw e
     }
 }
