@@ -40,25 +40,27 @@ func main() {
 		fmt.Println("Using custom Move package found in env var.")
 	}
 
-	var compiledPackage CompiledPackage
-	err := json.Unmarshal([]byte(PRECOMPILED_PACKAGE), &compiledPackage)
+	var compiledPackageDeser CompiledPackageDeser
+	err := json.Unmarshal([]byte(compiledPackageString), &compiledPackageDeser)
 	if err != nil {
 		panic(err)
 	}
 
-	modulesDeser := compiledPackage.Modules
+	modulesDeser := compiledPackageDeser.Modules
 	modules := make([][]byte, len(modulesDeser))
 	for idx, module := range modulesDeser {
 		modules[idx] = []byte(module)
 	}
-	dependenciesDeser := compiledPackage.Dependencies
+	fmt.Printf("Modules: %d\n", len(modules))
+	dependenciesDeser := compiledPackageDeser.Dependencies
 	dependencies := make([]*sdk.ObjectId, len(dependenciesDeser))
 	for idx, objectIdDeser := range dependenciesDeser {
 		dependencies[idx] = objectIdDeser.ObjectId
 	}
+	fmt.Printf("Dependencies: %d\n", len(dependencies))
 	data := sdk.NewMovePackageData(modules, dependencies)
 
-	compiledPackageDigest, err := sdk.DigestFromBytes(compiledPackage.Digest)
+	compiledPackageDigest, err := sdk.DigestFromBytes(compiledPackageDeser.Digest)
 	if err != nil {
 		panic(err)
 	}
@@ -169,6 +171,7 @@ func main() {
 
 	// Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
 	// ticket
+	upgradeTicketName := "upgrade_ticket"
 	packageIdent, _ := sdk.NewIdentifier("package")
 	authorizeUpgrade, _ := sdk.NewIdentifier("authorize_upgrade")
 	upgradeCapArg := sdk.PtbArgumentObjectId(upgradeCap)
@@ -179,12 +182,12 @@ func main() {
 		authorizeUpgrade,
 		[]*sdk.PtbArgument{upgradeCapArg, upgradePolicy, sdk.PtbArgumentU8Vec(compiledPackageDigest.ToBytes())},
 		nil,
-		[]string{"upgrade_ticket"},
+		[]string{upgradeTicketName},
 	)
 
 	// Upgrade the package to receive an upgrade receipt
 	upgradeReceiptName := "upgrade_receipt"
-	builderUpgrade.Upgrade(data, packageId, sdk.PtbArgumentRes("upgrade_ticket"), &upgradeReceiptName)
+	builderUpgrade.Upgrade(data, packageId, sdk.PtbArgumentRes(upgradeTicketName), &upgradeReceiptName)
 
 	// Commit the upgrade using the receipt
 	commitUpgrade, _ := sdk.NewIdentifier("commit_upgrade")
@@ -192,7 +195,7 @@ func main() {
 		sdk.AddressFramework(),
 		packageIdent,
 		commitUpgrade,
-		[]*sdk.PtbArgument{upgradeCapArg, sdk.PtbArgumentRes("upgrade_receipt")},
+		[]*sdk.PtbArgument{upgradeCapArg, sdk.PtbArgumentRes(upgradeReceiptName)},
 		nil,
 		nil,
 	)
@@ -251,7 +254,7 @@ type ObjectIdDeser struct {
 	*sdk.ObjectId
 }
 
-type CompiledPackage struct {
+type CompiledPackageDeser struct {
 	Modules      []ModulesDeser  `json:"modules"`
 	Dependencies []ObjectIdDeser `json:"dependencies"`
 	Digest       []byte          `json:"digest"`
