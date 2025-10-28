@@ -2898,6 +2898,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4125,7 +4129,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade(
 ): Short
@@ -5238,7 +5246,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(`value`: Ru
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,`password`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6110,7 +6118,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(`value`: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,`password`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6208,7 +6216,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(`value`: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,`password`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6310,7 +6318,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(`bytes`: RustBuffe
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(`keypair`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_mnemonic(`phrase`: RustBuffer.ByValue,`scheme`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_mnemonic(`scheme`: RustBuffer.ByValue,`phrase`: RustBuffer.ByValue,`password`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6514,7 +6522,11 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(`ptr`: Pointer,
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(`ptr`: Pointer,`stake`: Pointer,`validatorAddress`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(`ptr`: Pointer,`recipient`: Pointer,`objects`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(`ptr`: Pointer,`stakedIota`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(`ptr`: Pointer,`packageData`: Pointer,`package`: Pointer,`ticket`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8436,7 +8448,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 37663.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 28380.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 12346.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 14745.toShort()) {
@@ -8496,7 +8508,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 64679.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913.toShort()) {
@@ -9264,7 +9276,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake() != 41361.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 30530.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 3616.toShort()) {
@@ -9681,7 +9699,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der() != 42838.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic() != 8176.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic() != 52060.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem() != 53776.toShort()) {
@@ -10098,7 +10116,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der() != 45448.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic() != 1434.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic() != 27698.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem() != 20937.toShort()) {
@@ -10146,7 +10164,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der() != 63595.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic() != 18331.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic() != 62413.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem() != 28166.toShort()) {
@@ -10200,7 +10218,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519() != 22142.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_mnemonic() != 10138.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_mnemonic() != 10406.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem() != 2041.toShort()) {
@@ -18228,11 +18246,11 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
     /**
      * Construct the private key from a mnemonic phrase
      */
-    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String): Ed25519PrivateKey {
+    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `password`: kotlin.String? = null, `path`: kotlin.String? = null): Ed25519PrivateKey {
             return FfiConverterTypeEd25519PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(
-        FfiConverterString.lower(`phrase`),_status)
+        FfiConverterString.lower(`phrase`),FfiConverterOptionalString.lower(`password`),FfiConverterOptionalString.lower(`path`),_status)
 }
     )
     }
@@ -21867,18 +21885,6 @@ public interface GraphQlClientInterface {
      *
      * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
-     *
-     * # Example
-     * ```rust,ignore
-     *
-     * let client = iota_graphql_client::Client::new_devnet();
-     * let address = ObjectId::SYSTEM.into();
-     * let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-     *
-     * # alternatively, pass in the bcs bytes
-     * let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-     * let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-     * ```
      */
     suspend fun `dynamicField`(`address`: Address, `typeTag`: TypeTag, `name`: Value): DynamicFieldOutput?
     
@@ -22013,18 +22019,6 @@ public interface GraphQlClientInterface {
      *
      * Use this function together with the `ObjectFilter::owner` to get the
      * objects owned by an address.
-     *
-     * # Example
-     *
-     * ```rust,ignore
-     * let filter = ObjectFilter {
-     * type_tag: None,
-     * owner: Some(Address::from_str("test").unwrap().into()),
-     * object_ids: None,
-     * };
-     *
-     * let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-     * ```
      */
     suspend fun `objects`(`filter`: ObjectFilter? = null, `paginationFilter`: PaginationFilter? = null): ObjectPage
     
@@ -22500,18 +22494,6 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      *
      * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
-     *
-     * # Example
-     * ```rust,ignore
-     *
-     * let client = iota_graphql_client::Client::new_devnet();
-     * let address = ObjectId::SYSTEM.into();
-     * let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-     *
-     * # alternatively, pass in the bcs bytes
-     * let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-     * let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-     * ```
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -23026,18 +23008,6 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      *
      * Use this function together with the `ObjectFilter::owner` to get the
      * objects owned by an address.
-     *
-     * # Example
-     *
-     * ```rust,ignore
-     * let filter = ObjectFilter {
-     * type_tag: None,
-     * owner: Some(Address::from_str("test").unwrap().into()),
-     * object_ids: None,
-     * };
-     *
-     * let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-     * ```
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -34626,11 +34596,11 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     /**
      * Construct the private key from a mnemonic phrase
      */
-    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String): Secp256k1PrivateKey {
+    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `password`: kotlin.String? = null, `path`: kotlin.String? = null): Secp256k1PrivateKey {
             return FfiConverterTypeSecp256k1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(
-        FfiConverterString.lower(`phrase`),_status)
+        FfiConverterString.lower(`phrase`),FfiConverterOptionalString.lower(`password`),FfiConverterOptionalString.lower(`path`),_status)
 }
     )
     }
@@ -36387,11 +36357,11 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     /**
      * Construct the private key from a mnemonic phrase
      */
-    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String): Secp256r1PrivateKey {
+    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `password`: kotlin.String? = null, `path`: kotlin.String? = null): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
-        FfiConverterString.lower(`phrase`),_status)
+        FfiConverterString.lower(`phrase`),FfiConverterOptionalString.lower(`password`),FfiConverterOptionalString.lower(`path`),_status)
 }
     )
     }
@@ -38116,11 +38086,11 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
      * Construct the private key from a mnemonic phrase and the signature
      * scheme
      */
-    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `scheme`: SignatureScheme): SimpleKeypair {
+    @Throws(SdkFfiException::class) fun `fromMnemonic`(`scheme`: SignatureScheme, `phrase`: kotlin.String, `password`: kotlin.String? = null, `path`: kotlin.String? = null): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_mnemonic(
-        FfiConverterString.lower(`phrase`),FfiConverterTypeSignatureScheme.lower(`scheme`),_status)
+        FfiConverterTypeSignatureScheme.lower(`scheme`),FfiConverterString.lower(`phrase`),FfiConverterOptionalString.lower(`password`),FfiConverterOptionalString.lower(`path`),_status)
 }
     )
     }
@@ -40888,10 +40858,23 @@ public interface TransactionBuilderInterface {
     fun `sponsor`(`sponsor`: Address): TransactionBuilder
     
     /**
+     * Add stake to a validator's staking pool.
+     *
+     * This is a high-level function which will split the provided stake amount
+     * from the gas coin and then stake using the resulting coin.
+     */
+    fun `stake`(`stake`: PtbArgument, `validatorAddress`: Address): TransactionBuilder
+    
+    /**
      * Transfer a list of objects to the given address, without producing any
      * result.
      */
     fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): TransactionBuilder
+    
+    /**
+     * Withdraw stake from a validator's staking pool.
+     */
+    fun `unstake`(`stakedIota`: PtbArgument): TransactionBuilder
     
     /**
      * Upgrade a Move package.
@@ -41328,6 +41311,24 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
+     * Add stake to a validator's staking pool.
+     *
+     * This is a high-level function which will split the provided stake amount
+     * from the gas coin and then stake using the resulting coin.
+     */override fun `stake`(`stake`: PtbArgument, `validatorAddress`: Address): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
+        it, FfiConverterTypePTBArgument.lower(`stake`),FfiConverterTypeAddress.lower(`validatorAddress`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Transfer a list of objects to the given address, without producing any
      * result.
      */override fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): TransactionBuilder {
@@ -41336,6 +41337,21 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
         it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterSequenceTypePTBArgument.lower(`objects`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Withdraw stake from a validator's staking pool.
+     */override fun `unstake`(`stakedIota`: PtbArgument): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
+        it, FfiConverterTypePTBArgument.lower(`stakedIota`),_status)
 }
     }
     )
@@ -54633,7 +54649,7 @@ public object FfiConverterTypeExecutionError : FfiConverterRustBuffer<ExecutionE
  * execution-status = success / failure
  * success = %x00
  * failure = %x01 execution-error (option u64)
- * ```xx
+ * ```
  */
 sealed class ExecutionStatus: Disposable  {
     

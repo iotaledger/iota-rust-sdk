@@ -1121,7 +1121,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 37663:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 28380:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 12346:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 14745:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1161,7 +1161,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 64679:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1673,7 +1673,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake() != 41361:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 30530:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 3616:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1951,7 +1955,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der() != 42838:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic() != 8176:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic() != 52060:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem() != 53776:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2229,7 +2233,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der() != 45448:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic() != 1434:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic() != 27698:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem() != 20937:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2261,7 +2265,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der() != 63595:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic() != 18331:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic() != 62413:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem() != 28166:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2297,7 +2301,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519() != 22142:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_mnemonic() != 10138:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_mnemonic() != 10406:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem() != 2041:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3347,6 +3351,8 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der.argtype
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -5592,6 +5598,8 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der.argty
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic.argtypes = (
     _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic.restype = ctypes.c_void_p
@@ -5845,6 +5853,8 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der.argty
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -6109,6 +6119,8 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519.argtype
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_mnemonic.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
     _UniffiRustBuffer,
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6662,6 +6674,13 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -6669,6 +6688,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -10789,9 +10814,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade.restype = ctypes.c_uint16
@@ -19668,7 +19699,7 @@ class ExecutionStatus:
     execution-status = success / failure
     success = %x00
     failure = %x01 execution-error (option u64)
-    ```xx
+    ```
     """
 
     def __init__(self):
@@ -28589,16 +28620,26 @@ class Ed25519PrivateKey():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def from_mnemonic(cls, phrase: "str"):
+    def from_mnemonic(cls, phrase: "str",password: "typing.Union[object, typing.Optional[str]]" = _DEFAULT,path: "typing.Union[object, typing.Optional[str]]" = _DEFAULT):
         """
         Construct the private key from a mnemonic phrase
         """
 
         _UniffiConverterString.check_lower(phrase)
         
+        if password is _DEFAULT:
+            password = None
+        _UniffiConverterOptionalString.check_lower(password)
+        
+        if path is _DEFAULT:
+            path = None
+        _UniffiConverterOptionalString.check_lower(path)
+        
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic,
-        _UniffiConverterString.lower(phrase))
+        _UniffiConverterString.lower(phrase),
+        _UniffiConverterOptionalString.lower(password),
+        _UniffiConverterOptionalString.lower(path))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -30326,18 +30367,6 @@ class GraphQlClientProtocol(typing.Protocol):
 
         This returns `DynamicFieldOutput` which contains the name, the value
         as json, and object.
-
-        # Example
-        ```rust,ignore
-
-        let client = iota_graphql_client::Client::new_devnet();
-        let address = ObjectId::SYSTEM.into();
-        let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-
-        # alternatively, pass in the bcs bytes
-        let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-        let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-        ```
         """
 
         raise NotImplementedError
@@ -30492,18 +30521,6 @@ class GraphQlClientProtocol(typing.Protocol):
 
         Use this function together with the `ObjectFilter::owner` to get the
         objects owned by an address.
-
-        # Example
-
-        ```rust,ignore
-        let filter = ObjectFilter {
-        type_tag: None,
-        owner: Some(Address::from_str("test").unwrap().into()),
-        object_ids: None,
-        };
-
-        let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-        ```
         """
 
         raise NotImplementedError
@@ -31029,18 +31046,6 @@ _UniffiConverterTypeSdkFfiError,
 
         This returns `DynamicFieldOutput` which contains the name, the value
         as json, and object.
-
-        # Example
-        ```rust,ignore
-
-        let client = iota_graphql_client::Client::new_devnet();
-        let address = ObjectId::SYSTEM.into();
-        let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-
-        # alternatively, pass in the bcs bytes
-        let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-        let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-        ```
         """
 
         _UniffiConverterTypeAddress.check_lower(address)
@@ -31667,18 +31672,6 @@ _UniffiConverterTypeSdkFfiError,
 
         Use this function together with the `ObjectFilter::owner` to get the
         objects owned by an address.
-
-        # Example
-
-        ```rust,ignore
-        let filter = ObjectFilter {
-        type_tag: None,
-        owner: Some(Address::from_str("test").unwrap().into()),
-        object_ids: None,
-        };
-
-        let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-        ```
         """
 
         if filter is _DEFAULT:
@@ -37628,16 +37621,26 @@ class Secp256k1PrivateKey():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def from_mnemonic(cls, phrase: "str"):
+    def from_mnemonic(cls, phrase: "str",password: "typing.Union[object, typing.Optional[str]]" = _DEFAULT,path: "typing.Union[object, typing.Optional[str]]" = _DEFAULT):
         """
         Construct the private key from a mnemonic phrase
         """
 
         _UniffiConverterString.check_lower(phrase)
         
+        if password is _DEFAULT:
+            password = None
+        _UniffiConverterOptionalString.check_lower(password)
+        
+        if path is _DEFAULT:
+            path = None
+        _UniffiConverterOptionalString.check_lower(path)
+        
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic,
-        _UniffiConverterString.lower(phrase))
+        _UniffiConverterString.lower(phrase),
+        _UniffiConverterOptionalString.lower(password),
+        _UniffiConverterOptionalString.lower(path))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -38477,16 +38480,26 @@ class Secp256r1PrivateKey():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def from_mnemonic(cls, phrase: "str"):
+    def from_mnemonic(cls, phrase: "str",password: "typing.Union[object, typing.Optional[str]]" = _DEFAULT,path: "typing.Union[object, typing.Optional[str]]" = _DEFAULT):
         """
         Construct the private key from a mnemonic phrase
         """
 
         _UniffiConverterString.check_lower(phrase)
         
+        if password is _DEFAULT:
+            password = None
+        _UniffiConverterOptionalString.check_lower(password)
+        
+        if path is _DEFAULT:
+            path = None
+        _UniffiConverterOptionalString.check_lower(path)
+        
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic,
-        _UniffiConverterString.lower(phrase))
+        _UniffiConverterString.lower(phrase),
+        _UniffiConverterOptionalString.lower(password),
+        _UniffiConverterOptionalString.lower(path))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -39347,20 +39360,30 @@ class SimpleKeypair():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def from_mnemonic(cls, phrase: "str",scheme: "SignatureScheme"):
+    def from_mnemonic(cls, scheme: "SignatureScheme",phrase: "str",password: "typing.Union[object, typing.Optional[str]]" = _DEFAULT,path: "typing.Union[object, typing.Optional[str]]" = _DEFAULT):
         """
         Construct the private key from a mnemonic phrase and the signature
         scheme
         """
 
+        _UniffiConverterTypeSignatureScheme.check_lower(scheme)
+        
         _UniffiConverterString.check_lower(phrase)
         
-        _UniffiConverterTypeSignatureScheme.check_lower(scheme)
+        if password is _DEFAULT:
+            password = None
+        _UniffiConverterOptionalString.check_lower(password)
+        
+        if path is _DEFAULT:
+            path = None
+        _UniffiConverterOptionalString.check_lower(path)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_mnemonic,
+        _UniffiConverterTypeSignatureScheme.lower(scheme),
         _UniffiConverterString.lower(phrase),
-        _UniffiConverterTypeSignatureScheme.lower(scheme))
+        _UniffiConverterOptionalString.lower(password),
+        _UniffiConverterOptionalString.lower(path))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -40860,10 +40883,25 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def stake(self, stake: "PtbArgument",validator_address: "Address"):
+        """
+        Add stake to a validator's staking pool.
+
+        This is a high-level function which will split the provided stake amount
+        from the gas coin and then stake using the resulting coin.
+        """
+
+        raise NotImplementedError
     def transfer_objects(self, recipient: "Address",objects: "typing.List[PtbArgument]"):
         """
         Transfer a list of objects to the given address, without producing any
         result.
+        """
+
+        raise NotImplementedError
+    def unstake(self, staked_iota: "PtbArgument"):
+        """
+        Withdraw stake from a validator's staking pool.
         """
 
         raise NotImplementedError
@@ -41361,6 +41399,28 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
+    def stake(self, stake: "PtbArgument",validator_address: "Address") -> "TransactionBuilder":
+        """
+        Add stake to a validator's staking pool.
+
+        This is a high-level function which will split the provided stake amount
+        from the gas coin and then stake using the resulting coin.
+        """
+
+        _UniffiConverterTypePtbArgument.check_lower(stake)
+        
+        _UniffiConverterTypeAddress.check_lower(validator_address)
+        
+        return _UniffiConverterTypeTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePtbArgument.lower(stake),
+        _UniffiConverterTypeAddress.lower(validator_address))
+        )
+
+
+
+
+
     def transfer_objects(self, recipient: "Address",objects: "typing.List[PtbArgument]") -> "TransactionBuilder":
         """
         Transfer a list of objects to the given address, without producing any
@@ -41375,6 +41435,22 @@ _UniffiConverterTypeSdkFfiError,
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects,self._uniffi_clone_pointer(),
         _UniffiConverterTypeAddress.lower(recipient),
         _UniffiConverterSequenceTypePtbArgument.lower(objects))
+        )
+
+
+
+
+
+    def unstake(self, staked_iota: "PtbArgument") -> "TransactionBuilder":
+        """
+        Withdraw stake from a validator's staking pool.
+        """
+
+        _UniffiConverterTypePtbArgument.check_lower(staked_iota)
+        
+        return _UniffiConverterTypeTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePtbArgument.lower(staked_iota))
         )
 
 

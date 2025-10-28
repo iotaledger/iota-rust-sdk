@@ -3332,7 +3332,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field()
 	})
-	if checksum != 28380 {
+	if checksum != 12346 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field: UniFFI API checksum mismatch")
 	}
@@ -3512,7 +3512,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects()
 	})
-	if checksum != 64679 {
+	if checksum != 14040 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects: UniFFI API checksum mismatch")
 	}
@@ -5814,11 +5814,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake()
+	})
+	if checksum != 41361 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects()
 	})
 	if checksum != 16313 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake()
+	})
+	if checksum != 30530 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7067,7 +7085,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic()
 	})
-	if checksum != 8176 {
+	if checksum != 52060 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic: UniFFI API checksum mismatch")
 	}
@@ -8318,7 +8336,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic()
 	})
-	if checksum != 1434 {
+	if checksum != 27698 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic: UniFFI API checksum mismatch")
 	}
@@ -8462,7 +8480,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic()
 	})
-	if checksum != 18331 {
+	if checksum != 62413 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic: UniFFI API checksum mismatch")
 	}
@@ -8624,7 +8642,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_mnemonic()
 	})
-	if checksum != 10138 {
+	if checksum != 10406 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_mnemonic: UniFFI API checksum mismatch")
 	}
@@ -12677,9 +12695,9 @@ func Ed25519PrivateKeyFromDer(bytes []byte) (*Ed25519PrivateKey, error) {
 }
 
 // Construct the private key from a mnemonic phrase
-func Ed25519PrivateKeyFromMnemonic(phrase string) (*Ed25519PrivateKey, error) {
+func Ed25519PrivateKeyFromMnemonic(phrase string, password *string, path *string) (*Ed25519PrivateKey, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(FfiConverterStringINSTANCE.Lower(phrase),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(FfiConverterStringINSTANCE.Lower(phrase), FfiConverterOptionalStringINSTANCE.Lower(password), FfiConverterOptionalStringINSTANCE.Lower(path),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Ed25519PrivateKey
@@ -14398,18 +14416,6 @@ type GraphQlClientInterface interface {
 	//
 	// This returns `DynamicFieldOutput` which contains the name, the value
 	// as json, and object.
-	//
-	// # Example
-	// ```rust,ignore
-	//
-	// let client = iota_graphql_client::Client::new_devnet();
-	// let address = ObjectId::SYSTEM.into();
-	// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-	//
-	// # alternatively, pass in the bcs bytes
-	// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-	// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-	// ```
 	DynamicField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error)
 	// Get a page of dynamic fields for the provided address. Note that this
 	// will also fetch dynamic fields on wrapped objects.
@@ -14484,18 +14490,6 @@ type GraphQlClientInterface interface {
 	//
 	// Use this function together with the `ObjectFilter::owner` to get the
 	// objects owned by an address.
-	//
-	// # Example
-	//
-	// ```rust,ignore
-	// let filter = ObjectFilter {
-	// type_tag: None,
-	// owner: Some(Address::from_str("test").unwrap().into()),
-	// object_ids: None,
-	// };
-	//
-	// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-	// ```
 	Objects(filter *ObjectFilter, paginationFilter *PaginationFilter) (ObjectPage, error)
 	// The package corresponding to the given address (at the optionally given
 	// version). When no version is given, the package is loaded directly
@@ -14937,18 +14931,6 @@ func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta Transac
 //
 // This returns `DynamicFieldOutput` which contains the name, the value
 // as json, and object.
-//
-// # Example
-// ```rust,ignore
-//
-// let client = iota_graphql_client::Client::new_devnet();
-// let address = ObjectId::SYSTEM.into();
-// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-//
-// # alternatively, pass in the bcs bytes
-// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-// ```
 func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -15621,18 +15603,6 @@ func (_self *GraphQlClient) ObjectBcs(objectId *ObjectId) (*[]byte, error) {
 //
 // Use this function together with the `ObjectFilter::owner` to get the
 // objects owned by an address.
-//
-// # Example
-//
-// ```rust,ignore
-// let filter = ObjectFilter {
-// type_tag: None,
-// owner: Some(Address::from_str("test").unwrap().into()),
-// object_ids: None,
-// };
-//
-// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-// ```
 func (_self *GraphQlClient) Objects(filter *ObjectFilter, paginationFilter *PaginationFilter) (ObjectPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -21216,9 +21186,9 @@ func Secp256k1PrivateKeyFromDer(bytes []byte) (*Secp256k1PrivateKey, error) {
 }
 
 // Construct the private key from a mnemonic phrase
-func Secp256k1PrivateKeyFromMnemonic(phrase string) (*Secp256k1PrivateKey, error) {
+func Secp256k1PrivateKeyFromMnemonic(phrase string, password *string, path *string) (*Secp256k1PrivateKey, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(FfiConverterStringINSTANCE.Lower(phrase),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(FfiConverterStringINSTANCE.Lower(phrase), FfiConverterOptionalStringINSTANCE.Lower(password), FfiConverterOptionalStringINSTANCE.Lower(path),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Secp256k1PrivateKey
@@ -22071,9 +22041,9 @@ func Secp256r1PrivateKeyFromDer(bytes []byte) (*Secp256r1PrivateKey, error) {
 }
 
 // Construct the private key from a mnemonic phrase
-func Secp256r1PrivateKeyFromMnemonic(phrase string) (*Secp256r1PrivateKey, error) {
+func Secp256r1PrivateKeyFromMnemonic(phrase string, password *string, path *string) (*Secp256r1PrivateKey, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(FfiConverterStringINSTANCE.Lower(phrase),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(FfiConverterStringINSTANCE.Lower(phrase), FfiConverterOptionalStringINSTANCE.Lower(password), FfiConverterOptionalStringINSTANCE.Lower(path),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Secp256r1PrivateKey
@@ -22935,9 +22905,9 @@ func SimpleKeypairFromEd25519(keypair *Ed25519PrivateKey) *SimpleKeypair {
 
 // Construct the private key from a mnemonic phrase and the signature
 // scheme
-func SimpleKeypairFromMnemonic(phrase string, scheme SignatureScheme) (*SimpleKeypair, error) {
+func SimpleKeypairFromMnemonic(scheme SignatureScheme, phrase string, password *string, path *string) (*SimpleKeypair, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_mnemonic(FfiConverterStringINSTANCE.Lower(phrase), FfiConverterSignatureSchemeINSTANCE.Lower(scheme),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_mnemonic(FfiConverterSignatureSchemeINSTANCE.Lower(scheme), FfiConverterStringINSTANCE.Lower(phrase), FfiConverterOptionalStringINSTANCE.Lower(password), FfiConverterOptionalStringINSTANCE.Lower(path),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *SimpleKeypair
@@ -24337,9 +24307,16 @@ type TransactionBuilderInterface interface {
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
 	Sponsor(sponsor *Address) *TransactionBuilder
+	// Add stake to a validator's staking pool.
+	//
+	// This is a high-level function which will split the provided stake amount
+	// from the gas coin and then stake using the resulting coin.
+	Stake(stake *PtbArgument, validatorAddress *Address) *TransactionBuilder
 	// Transfer a list of objects to the given address, without producing any
 	// result.
 	TransferObjects(recipient *Address, objects []*PtbArgument) *TransactionBuilder
+	// Withdraw stake from a validator's staking pool.
+	Unstake(stakedIota *PtbArgument) *TransactionBuilder
 	// Upgrade a Move package.
 	//
 	// - `modules`: is the modules' bytecode for the modules to be published
@@ -24678,6 +24655,19 @@ func (_self *TransactionBuilder) Sponsor(sponsor *Address) *TransactionBuilder {
 	}))
 }
 
+// Add stake to a validator's staking pool.
+//
+// This is a high-level function which will split the provided stake amount
+// from the gas coin and then stake using the resulting coin.
+func (_self *TransactionBuilder) Stake(stake *PtbArgument, validatorAddress *Address) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(stake), FfiConverterAddressINSTANCE.Lower(validatorAddress),_uniffiStatus)
+	}))
+}
+
 // Transfer a list of objects to the given address, without producing any
 // result.
 func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*PtbArgument) *TransactionBuilder {
@@ -24686,6 +24676,16 @@ func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
 		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterSequencePtbArgumentINSTANCE.Lower(objects),_uniffiStatus)
+	}))
+}
+
+// Withdraw stake from a validator's staking pool.
+func (_self *TransactionBuilder) Unstake(stakedIota *PtbArgument) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(stakedIota),_uniffiStatus)
 	}))
 }
 
@@ -33059,7 +33059,7 @@ func (_ FfiDestroyerExecutionError) Destroy(value ExecutionError) {
 // execution-status = success / failure
 // success = %x00
 // failure = %x01 execution-error (option u64)
-// ```xx
+// ```
 type ExecutionStatus interface {
 	Destroy()
 }
