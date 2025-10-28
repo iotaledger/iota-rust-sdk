@@ -45,5 +45,6 @@ fun main() = runBlocking {
         println("Effects: ${effects.asV1()}")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

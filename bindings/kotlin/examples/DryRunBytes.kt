@@ -22,5 +22,6 @@ fun main() = runBlocking {
         println("Dry run result: $res")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

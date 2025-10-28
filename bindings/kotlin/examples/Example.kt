@@ -42,5 +42,6 @@ fun main() = runBlocking {
                         )
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

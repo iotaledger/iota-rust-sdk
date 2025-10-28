@@ -30,8 +30,6 @@ fun main() = runBlocking {
                 )
         )
 
-        error("panic")
-
         builder.gasStationSponsor(
                 gasStationUrl,
                 headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken"))
