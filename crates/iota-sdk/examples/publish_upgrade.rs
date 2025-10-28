@@ -102,7 +102,14 @@ async fn main() -> Result<()> {
                 let Some(obj) = client.object(object_id, None).await? else {
                     bail!("Missing object {object_id}");
                 };
-                if obj.as_struct().type_ == StructTag::upgrade_cap() {
+                if obj.as_struct().type_
+                    == (StructTag {
+                        address: Address::FRAMEWORK,
+                        module: iota_types::IdentifierRef::const_new("package").into(),
+                        name: iota_types::IdentifierRef::const_new("UpgradeCap").into(),
+                        type_params: vec![],
+                    })
+                {
                     println!("UpgradeCap: {object_id}");
                     println!("UpgradeCapOwner: {}", owner.into_address());
                     upgrade_cap.replace(object_id);

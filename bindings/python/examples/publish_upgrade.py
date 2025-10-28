@@ -31,7 +31,6 @@ import os
 # Pre-compiled `first_package` example
 PRECOMPILED_PACKAGE = '{"modules":["oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJACqIDGgy8A5cBDdMEBgAKAQ0BEwEUAAIMAAABCAAAAAgAAQQEAAMDAgAACAABAAAJAgMAABACAwAAEgQDAAAMBQYAAAYHAQAAEQgBAAAFCQoAAQsACwACDg8BAQwCEw8BAQgDDwwNAAoOCgYJBgEHCAQAAQYIAAEDAQYIAQQHCAEDAwcIBAEIAAQDAwUHCAQDCAAFBwgEAgMHCAQBCAIBCAMBBggEAQUBCAECCQAFBkNvbmZpZwVGb3JnZQVTd29yZAlUeENvbnRleHQDVUlEDWNyZWF0ZV9jb25maWcMY3JlYXRlX3N3b3JkAmlkBGluaXQFbWFnaWMJbXlfbW9kdWxlA25ldwluZXdfc3dvcmQGb2JqZWN0D3B1YmxpY190cmFuc2ZlcgZzZW5kZXIIc3RyZW5ndGgOc3dvcmRfdHJhbnNmZXIOc3dvcmRzX2NyZWF0ZWQIdHJhbnNmZXIKdHhfY29udGV4dAV2YWx1ZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAgMHCAMJAxADAQICBwgDEgMCAgIHCAMVAwAAAAABCQoAEQgGAAAAAAAAAAASAQsALhELOAACAQEAAAEECwAQABQCAgEAAAEECwAQARQCAwEAAAEECwAQAhQCBAEAAAEOCgAQAhQGAQAAAAAAAAAWCwAPAhULAxEICwELAhIAAgUBAAABCAsDEQgLAAsBEgALAjgBAgYBAAABBAsACwE4AgIHAQAAAQULAREICwASAgIAAQACAQEA"],"dependencies":["0x0000000000000000000000000000000000000000000000000000000000000002","0x0000000000000000000000000000000000000000000000000000000000000001"],"digest":[246,127,102,77,186,19,68,12,161,181,56,248,210,0,91,211,245,251,165,152,0,197,250,135,171,37,177,240,133,76,122,124]}'
 
-
 async def main():
     try:
         # Read and parse the compiled package, or use the default package
@@ -42,14 +41,13 @@ async def main():
         else:
             print("Using custom Move package found in env var.");
 
-        compiled_package = json.loads(compiled_package_json)
-        modules = [base64.b64decode(module) for module in compiled_package["modules"]]
+        compiled_package = MovePackageData.from_json(compiled_package_json)
+        modules = compiled_package.modules()
         print(f"Modules: {len(modules)}")
-        dependencies = [ObjectId.from_hex(dep) for dep in compiled_package["dependencies"]]
+        dependencies = compiled_package.dependencies()
         print(f"Dependencies: {len(dependencies)}")
-        compiled_package_digest = bytes(compiled_package["digest"])
-        print(f"Compiled Package Digest: {Digest.from_bytes(compiled_package_digest).to_base58()}")
-        data = MovePackageData(modules, dependencies)
+        digest = compiled_package.digest()
+        print(f"Digest: {digest.to_base58()}")
 
         # Create a random private key to derive a sender address and for signing
         private_key = Ed25519PrivateKey.generate()
@@ -67,7 +65,7 @@ async def main():
         # Build the `publish` PTB
         builder = await TransactionBuilder.init(sender, client)
         # Publish the package and receive the upgrade cap in return
-        builder.publish(data, "upgrade_cap")
+        builder.publish(compiled_package, "upgrade_cap")
         # Transfer the upgrade cap to the sender address
         builder.transfer_objects(sender, [PtbArgument.res("upgrade_cap")])
         tx = await builder.finish()
@@ -131,14 +129,14 @@ async def main():
             [
                 PtbArgument.object_id(upgrade_cap),
                 PtbArgument.u8(UpgradePolicy.compatible().as_u8()),
-                PtbArgument.u8_vec(compiled_package_digest),
+                PtbArgument.u8_vec(digest.to_bytes()),
             ],
             names=["upgrade_ticket"],
         )
 
         # Upgrade the package to receive an upgrade receipt
         builder.upgrade(
-            data,
+            compiled_package,
             package_id,
             PtbArgument.res("upgrade_ticket"),
             "upgrade_receipt",

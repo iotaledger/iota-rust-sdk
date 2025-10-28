@@ -3879,6 +3879,33 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies()
+	})
+	if checksum != 13125 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest()
+	})
+	if checksum != 63793 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules()
+	})
+	if checksum != 137 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_base64()
 	})
 	if checksum != 1835 {
@@ -17456,6 +17483,12 @@ func (_ FfiDestroyerMovePackage) Destroy(value *MovePackage) {
 // Type corresponding to the output of `iota move build
 // --dump-bytecode-as-base64`
 type MovePackageDataInterface interface {
+	// Return the package dependencies.
+	Dependencies() []*ObjectId
+	// Return the package digest.
+	Digest() *Digest
+	// Return the package modules.
+	Modules() [][]byte
 	ToBase64() string
 	ToJson() string
 }
@@ -17496,6 +17529,40 @@ func MovePackageDataFromJson(json string) (*MovePackageData, error) {
 }
 
 
+
+// Return the package dependencies.
+func (_self *MovePackageData) Dependencies() []*ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_movepackagedata_dependencies(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Return the package digest.
+func (_self *MovePackageData) Digest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_movepackagedata_digest(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Return the package modules.
+func (_self *MovePackageData) Modules() [][]byte {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_movepackagedata_modules(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 
 func (_self *MovePackageData) ToBase64() string {
 	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")

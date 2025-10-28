@@ -20,8 +20,6 @@
 package main
 
 import (
-	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -40,31 +38,16 @@ func main() {
 		fmt.Println("Using custom Move package found in env var.")
 	}
 
-	var compiledPackageDeser CompiledPackageDeser
-	err := json.Unmarshal([]byte(compiledPackageString), &compiledPackageDeser)
+	compiledPackage, err := sdk.MovePackageDataFromJson(compiledPackageString)
 	if err != nil {
 		panic(err)
 	}
-
-	modulesDeser := compiledPackageDeser.Modules
-	modules := make([][]byte, len(modulesDeser))
-	for idx, module := range modulesDeser {
-		modules[idx] = []byte(module)
-	}
+	modules := compiledPackage.Modules()
 	fmt.Printf("Modules: %d\n", len(modules))
-	dependenciesDeser := compiledPackageDeser.Dependencies
-	dependencies := make([]*sdk.ObjectId, len(dependenciesDeser))
-	for idx, objectIdDeser := range dependenciesDeser {
-		dependencies[idx] = objectIdDeser.ObjectId
-	}
+	dependencies := compiledPackage.Dependencies()
 	fmt.Printf("Dependencies: %d\n", len(dependencies))
-	data := sdk.NewMovePackageData(modules, dependencies)
-
-	compiledPackageDigest, err := sdk.DigestFromBytes(compiledPackageDeser.Digest)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Compiled Package Digest: %s\n", compiledPackageDigest.ToBase58())
+	digest := compiledPackage.Digest()
+	fmt.Printf("Digest: %s\n", digest.ToBase58())
 
 	// Create a random private key to derive a sender address and for signing
 	privateKey := sdk.Ed25519PrivateKeyGenerate()
@@ -88,7 +71,7 @@ func main() {
 	// Build the `publish` PTB
 	builderPublish := sdk.TransactionBuilderInit(sender, client)
 	// Publish the package and receive the upgrade cap in return
-	builderPublish.Publish(data, "upgrade_cap")
+	builderPublish.Publish(compiledPackage, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
 	builderPublish.TransferObjects(sender, []*sdk.PtbArgument{sdk.PtbArgumentRes("upgrade_cap")})
 	txPublish, err := builderPublish.Finish()
@@ -180,14 +163,14 @@ func main() {
 		sdk.AddressFramework(),
 		packageIdent,
 		authorizeUpgrade,
-		[]*sdk.PtbArgument{upgradeCapArg, upgradePolicy, sdk.PtbArgumentU8Vec(compiledPackageDigest.ToBytes())},
+		[]*sdk.PtbArgument{upgradeCapArg, upgradePolicy, sdk.PtbArgumentU8Vec(digest.ToBytes())},
 		nil,
 		[]string{upgradeTicketName},
 	)
 
 	// Upgrade the package to receive an upgrade receipt
 	upgradeReceiptName := "upgrade_receipt"
-	builderUpgrade.Upgrade(data, packageId, sdk.PtbArgumentRes(upgradeTicketName), &upgradeReceiptName)
+	builderUpgrade.Upgrade(compiledPackage, packageId, sdk.PtbArgumentRes(upgradeTicketName), &upgradeReceiptName)
 
 	// Commit the upgrade using the receipt
 	commitUpgrade, _ := sdk.NewIdentifier("commit_upgrade")
@@ -247,43 +230,6 @@ func main() {
 			fmt.Printf("New Package version: %d\n", version)
 		}
 	}
-}
-
-type ModulesDeser []byte
-type ObjectIdDeser struct {
-	*sdk.ObjectId
-}
-
-type CompiledPackageDeser struct {
-	Modules      []ModulesDeser  `json:"modules"`
-	Dependencies []ObjectIdDeser `json:"dependencies"`
-	Digest       []byte          `json:"digest"`
-}
-
-func (m *ModulesDeser) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
-		return err
-	}
-	moduleBytes, err := base64.StdEncoding.DecodeString(s)
-	if err != nil {
-		return err
-	}
-	*m = moduleBytes
-	return nil
-}
-
-func (o *ObjectIdDeser) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
-		return err
-	}
-	objectId, err := sdk.ObjectIdFromHex(s)
-	if err != nil {
-		return err
-	}
-	o.ObjectId = objectId
-	return nil
 }
 
 // Pre-compiled `first_package` example

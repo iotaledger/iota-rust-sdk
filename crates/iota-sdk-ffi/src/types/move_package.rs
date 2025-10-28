@@ -3,7 +3,10 @@
 
 use std::sync::Arc;
 
-use crate::{error::Result, types::object::ObjectId};
+use crate::{
+    error::Result,
+    types::{digest::Digest, object::ObjectId},
+};
 
 /// Representation of upgrade policy constants in `iota::package`.
 #[derive(derive_more::From, derive_more::Display, uniffi::Object, PartialEq, Eq)]
@@ -72,5 +75,26 @@ impl MovePackageData {
     #[uniffi::constructor]
     pub fn from_json(json: &str) -> Result<Self> {
         Ok(Self(serde_json::from_str(json)?))
+    }
+
+    /// Return the package modules.
+    pub fn modules(&self) -> Vec<Vec<u8>> {
+        self.0.modules.clone()
+    }
+
+    /// Return the package dependencies.
+    pub fn dependencies(&self) -> Vec<Arc<ObjectId>> {
+        self.0
+            .dependencies
+            .iter()
+            .copied()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+
+    /// Return the package digest.
+    pub fn digest(&self) -> Digest {
+        self.0.digest.into()
     }
 }

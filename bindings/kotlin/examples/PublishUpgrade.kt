@@ -25,10 +25,7 @@
  * ```
  */
 import iota_sdk.*
-import java.util.Base64
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 fun main() = runBlocking {
     try {
@@ -40,16 +37,13 @@ fun main() = runBlocking {
             println("Using custom Move package found in env var.")
         }
 
-        val compiledPackage = Json.decodeFromString<CompiledPackage>(compiledPackageJson)
-        val modules: List<ByteArray> =
-                compiledPackage.modules.map { Base64.getDecoder().decode(it) }
+        val compiledPackage = MovePackageData.fromJson(compiledPackageJson)
+        val modules = compiledPackage.modules()
         println("Modules: ${modules.size}")
-        val dependencies: List<ObjectId> = compiledPackage.dependencies.map { ObjectId.fromHex(it) }
+        val dependencies = compiledPackage.dependencies()
         println("Dependencies: ${dependencies.size}")
-        val compiledPackageDigest =
-                compiledPackage.digest.map { (it and 0xFF).toByte() }.toByteArray()
-        println("Compiled Package Digest: ${Digest.fromBytes(compiledPackageDigest).toBase58()}")
-        val data = MovePackageData(modules, dependencies)
+        val digest = compiledPackage.digest()
+        println("Digest: ${digest.toBase58()}")
 
         // Create a random private key to derive a sender address and for signing
         val privateKey = Ed25519PrivateKey.generate()
@@ -65,7 +59,7 @@ fun main() = runBlocking {
         // Build the `publish` PTB
         val builderPublish = TransactionBuilder.init(sender, client)
         // Publish the package and receive the upgrade cap in return
-        builderPublish.publish(data, "upgrade_cap")
+        builderPublish.publish(compiledPackage, "upgrade_cap")
         // Transfer the upgrade cap to the sender address
         builderPublish.transferObjects(sender, listOf(PtbArgument.res("upgrade_cap")))
         val txPublish = builderPublish.finish()
@@ -134,7 +128,7 @@ fun main() = runBlocking {
         // ticket
         val upgradeCapArg = PtbArgument.objectId(upgradeCap)
         val upgradePolicyArg = PtbArgument.u8(UpgradePolicy.compatible().asU8())
-        val compiledPackageDigestArg = PtbArgument.u8Vec(compiledPackageDigest)
+        val compiledPackageDigestArg = PtbArgument.u8Vec(digest.toBytes())
         builderUpgrade.moveCall(
                 `package` = Address.framework(),
                 module = Identifier("package"),
@@ -145,7 +139,7 @@ fun main() = runBlocking {
 
         // Upgrade the package to receive an upgrade receipt
         builderUpgrade.upgrade(
-                packageData = data,
+                packageData = compiledPackage,
                 `package` = packageId,
                 ticket = PtbArgument.res("upgrade_ticket"),
                 name = "upgrade_receipt"
@@ -198,10 +192,3 @@ fun main() = runBlocking {
 
 const val PRECOMPILED_PACKAGE =
         """{"modules":["oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJACqIDGgy8A5cBDdMEBgAKAQ0BEwEUAAIMAAABCAAAAAgAAQQEAAMDAgAACAABAAAJAgMAABACAwAAEgQDAAAMBQYAAAYHAQAAEQgBAAAFCQoAAQsACwACDg8BAQwCEw8BAQgDDwwNAAoOCgYJBgEHCAQAAQYIAAEDAQYIAQQHCAEDAwcIBAEIAAQDAwUHCAQDCAAFBwgEAgMHCAQBCAIBCAMBBggEAQUBCAECCQAFBkNvbmZpZwVGb3JnZQVTd29yZAlUeENvbnRleHQDVUlEDWNyZWF0ZV9jb25maWcMY3JlYXRlX3N3b3JkAmlkBGluaXQFbWFnaWMJbXlfbW9kdWxlA25ldwluZXdfc3dvcmQGb2JqZWN0D3B1YmxpY190cmFuc2ZlcgZzZW5kZXIIc3RyZW5ndGgOc3dvcmRfdHJhbnNmZXIOc3dvcmRzX2NyZWF0ZWQIdHJhbnNmZXIKdHhfY29udGV4dAV2YWx1ZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAgMHCAMJAxADAQICBwgDEgMCAgIHCAMVAwAAAAABCQoAEQgGAAAAAAAAAAASAQsALhELOAACAQEAAAEECwAQABQCAgEAAAEECwAQARQCAwEAAAEECwAQAhQCBAEAAAEOCgAQAhQGAQAAAAAAAAAWCwAPAhULAxEICwELAhIAAgUBAAABCAsDEQgLAAsBEgALAjgBAgYBAAABBAsACwE4AgIHAQAAAQULAREICwASAgIAAQACAQEA"],"dependencies":["0x0000000000000000000000000000000000000000000000000000000000000002","0x0000000000000000000000000000000000000000000000000000000000000001"],"digest":[246,127,102,77,186,19,68,12,161,181,56,248,210,0,91,211,245,251,165,152,0,197,250,135,171,37,177,240,133,76,122,124]}"""
-
-@Serializable
-data class CompiledPackage(
-        val modules: List<String>,
-        val dependencies: List<String>,
-        val digest: List<Int>,
-)
