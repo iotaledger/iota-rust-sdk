@@ -1488,6 +1488,9 @@ impl Client {
         }
     }
 
+    /// Wait for the finalization of a transaction by its digest. An optional
+    /// timeout can be provided, which, if exceeded, will return an error.
+    /// Returns the [`TransactionEffects`].
     pub async fn wait_for_tx_finalization(
         &self,
         digest: Digest,
