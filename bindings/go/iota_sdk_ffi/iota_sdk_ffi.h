@@ -4143,6 +4143,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_address_key(RustCallStatu
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_ASCII_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_ASCII_STRING
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_BALANCE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_BALANCE
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(void* type_tag, RustCallStatus *out_status
@@ -4198,6 +4204,18 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_global_pause_key(RustCall
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_ID
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_NAME
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_name(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_SYSTEM_ADMIN_CAP
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_SYSTEM_ADMIN_CAP
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(RustCallStatus *out_status
@@ -4216,9 +4234,20 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(RustCal
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_NAME
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(void* address, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_STAKED_IOTA
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_STAKED_IOTA
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_STRING
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_string(RustCallStatus *out_status
     
 );
 #endif
@@ -4236,6 +4265,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_timelocked_staked_iota(Ru
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_TREASURY_CAP
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_TREASURY_CAP
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(void* struct_tag, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_UID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_UID
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(RustCallStatus *out_status
+    
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_UPGRADE_CAP
@@ -10020,6 +10055,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_address_key(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_ASCII_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_ASCII_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_BALANCE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_BALANCE
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance(void
@@ -10080,6 +10121,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_global_pause_key
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_ID
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_NAME
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_name(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_SYSTEM_ADMIN_CAP
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_SYSTEM_ADMIN_CAP
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap(void
@@ -10098,9 +10151,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_ca
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_NAME
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_STAKED_IOTA
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_STAKED_IOTA
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_string(void
     
 );
 #endif
@@ -10119,6 +10184,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_timelocked_stake
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_TREASURY_CAP
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_TREASURY_CAP
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_UID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_UID
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid(void
     
 );
 #endif

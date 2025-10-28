@@ -157,13 +157,14 @@ impl StructTag {
 
 export_struct_tag_ctors!(
     AddressKey,
+    AsciiString,
     Clock,
     Config,
     ConfigKey,
     GasCoin,
     GlobalPauseKey,
     Id,
-    IotaCoin,
+    IotaCoinName,
     IotaSystemAdminCap,
     IotaSystemState,
     IotaTreasuryCap,
@@ -171,6 +172,7 @@ export_struct_tag_ctors!(
     UpgradeTicket,
     UpgradeReceipt,
     StakedIota,
+    String,
     TimelockedStakedIota,
     Uid,
 );
