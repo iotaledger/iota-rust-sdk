@@ -56,6 +56,7 @@ func main() {
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to call generic Move function: %v", err)
 	}
+
 	if res.Error != nil {
 		log.Fatalf("Failed to call generic Move function: %v", *res.Error)
 	}
