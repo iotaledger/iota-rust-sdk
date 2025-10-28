@@ -1461,7 +1461,7 @@ impl Client {
         signatures: &[UserSignature],
         tx: &Transaction,
         wait_for_finalization: bool,
-    ) -> Result<Option<TransactionEffects>> {
+    ) -> Result<TransactionEffects> {
         let operation = ExecuteTransactionQuery::build(ExecuteTransactionArgs {
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
             tx_bytes: base64ct::Base64::encode_string(bcs::to_bytes(tx).unwrap().as_ref()),
@@ -1482,9 +1482,12 @@ impl Client {
                 self.wait_for_tx_finalization(tx.digest(), None).await?;
             }
 
-            Ok(Some(effects))
+            Ok(effects)
         } else {
-            Ok(None)
+            Err(Error::from_message(
+                Kind::Missing,
+                format!("transaction for digest {}", tx.digest()),
+            ))
         }
     }
 

@@ -1007,7 +1007,7 @@ impl<L> TransactionBuilder<Client, L> {
         let client = self.client.clone();
         let mut txn = self.finish().await?;
 
-        let res = if let Some(gas_station_data) = gas_station_data {
+        Ok(if let Some(gas_station_data) = gas_station_data {
             let digest = gas_station_data.execute_txn(&mut txn, keypair).await?;
             if wait_for_finalization {
                 client
@@ -1022,7 +1022,6 @@ impl<L> TransactionBuilder<Client, L> {
                     .ok_or_else(|| Error::MissingTransaction(digest))?
             }
         } else {
-            let digest = txn.digest();
             client
                 .execute_tx(
                     &[keypair.sign_transaction(&txn).map_err(Error::Signature)?],
@@ -1031,10 +1030,7 @@ impl<L> TransactionBuilder<Client, L> {
                 )
                 .await
                 .map_err(Error::Client)?
-                .ok_or_else(|| Error::MissingTransaction(digest))?
-        };
-
-        Ok(res)
+        })
     }
 
     /// Execute the transaction with a sponsor keypair and optionally wait for
@@ -1044,7 +1040,7 @@ impl<L> TransactionBuilder<Client, L> {
         keypair: &SimpleKeypair,
         sponsor_keypair: &SimpleKeypair,
         wait_for_finalization: bool,
-    ) -> Result<Option<TransactionEffects>, Error> {
+    ) -> Result<TransactionEffects, Error> {
         let client = self.client.clone();
         let txn = self.finish().await?;
 
@@ -1055,12 +1051,10 @@ impl<L> TransactionBuilder<Client, L> {
                 .map_err(Error::Signature)?,
         );
 
-        let res = client
+        Ok(client
             .execute_tx(&signatures, &txn, wait_for_finalization)
             .await
-            .map_err(Error::Client)?;
-
-        Ok(res)
+            .map_err(Error::Client)?)
     }
 }
 

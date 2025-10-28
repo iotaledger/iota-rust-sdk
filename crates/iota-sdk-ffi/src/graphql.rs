@@ -619,7 +619,7 @@ impl GraphQLClient {
         signatures: Vec<Arc<UserSignature>>,
         tx: &Transaction,
         wait_for_finalization: bool,
-    ) -> Result<Option<Arc<TransactionEffects>>> {
+    ) -> Result<TransactionEffects> {
         Ok(self
             .0
             .read()
@@ -633,8 +633,7 @@ impl GraphQLClient {
                 wait_for_finalization,
             )
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .into())
     }
 
     #[uniffi::method(default(timeout = None))]

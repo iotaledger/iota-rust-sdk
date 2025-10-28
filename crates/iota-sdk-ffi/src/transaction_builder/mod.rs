@@ -346,7 +346,7 @@ impl TransactionBuilder {
         keypair: &SimpleKeypair,
         sponsor_keypair: &SimpleKeypair,
         wait_for_finalization: bool,
-    ) -> Result<Option<Arc<TransactionEffects>>> {
+    ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| {
                 builder.clone().execute_with_sponsor(
@@ -356,7 +356,6 @@ impl TransactionBuilder {
                 )
             })
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .into())
     }
 }
