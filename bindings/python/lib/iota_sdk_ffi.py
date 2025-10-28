@@ -1121,7 +1121,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 37663:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 28380:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 12346:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 14745:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1161,7 +1161,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 64679:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -19650,7 +19650,7 @@ class ExecutionStatus:
     execution-status = success / failure
     success = %x00
     failure = %x01 execution-error (option u64)
-    ```xx
+    ```
     """
 
     def __init__(self):
@@ -30295,18 +30295,6 @@ class GraphQlClientProtocol(typing.Protocol):
 
         This returns `DynamicFieldOutput` which contains the name, the value
         as json, and object.
-
-        # Example
-        ```rust,ignore
-
-        let client = iota_graphql_client::Client::new_devnet();
-        let address = ObjectId::SYSTEM.into();
-        let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-
-        # alternatively, pass in the bcs bytes
-        let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-        let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-        ```
         """
 
         raise NotImplementedError
@@ -30461,18 +30449,6 @@ class GraphQlClientProtocol(typing.Protocol):
 
         Use this function together with the `ObjectFilter::owner` to get the
         objects owned by an address.
-
-        # Example
-
-        ```rust,ignore
-        let filter = ObjectFilter {
-        type_tag: None,
-        owner: Some(Address::from_str("test").unwrap().into()),
-        object_ids: None,
-        };
-
-        let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-        ```
         """
 
         raise NotImplementedError
@@ -30998,18 +30974,6 @@ _UniffiConverterTypeSdkFfiError,
 
         This returns `DynamicFieldOutput` which contains the name, the value
         as json, and object.
-
-        # Example
-        ```rust,ignore
-
-        let client = iota_graphql_client::Client::new_devnet();
-        let address = ObjectId::SYSTEM.into();
-        let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-
-        # alternatively, pass in the bcs bytes
-        let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-        let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-        ```
         """
 
         _UniffiConverterTypeAddress.check_lower(address)
@@ -31636,18 +31600,6 @@ _UniffiConverterTypeSdkFfiError,
 
         Use this function together with the `ObjectFilter::owner` to get the
         objects owned by an address.
-
-        # Example
-
-        ```rust,ignore
-        let filter = ObjectFilter {
-        type_tag: None,
-        owner: Some(Address::from_str("test").unwrap().into()),
-        object_ids: None,
-        };
-
-        let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-        ```
         """
 
         if filter is _DEFAULT:
