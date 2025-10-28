@@ -1121,7 +1121,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 37663:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 28380:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 12346:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 14745:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1161,7 +1161,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 64679:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1673,7 +1673,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake() != 41361:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 30530:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 3616:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6633,6 +6637,13 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -6640,6 +6651,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -10760,9 +10777,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade.restype = ctypes.c_uint16
@@ -19627,7 +19650,7 @@ class ExecutionStatus:
     execution-status = success / failure
     success = %x00
     failure = %x01 execution-error (option u64)
-    ```xx
+    ```
     """
 
     def __init__(self):
@@ -30272,18 +30295,6 @@ class GraphQlClientProtocol(typing.Protocol):
 
         This returns `DynamicFieldOutput` which contains the name, the value
         as json, and object.
-
-        # Example
-        ```rust,ignore
-
-        let client = iota_graphql_client::Client::new_devnet();
-        let address = ObjectId::SYSTEM.into();
-        let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-
-        # alternatively, pass in the bcs bytes
-        let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-        let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-        ```
         """
 
         raise NotImplementedError
@@ -30438,18 +30449,6 @@ class GraphQlClientProtocol(typing.Protocol):
 
         Use this function together with the `ObjectFilter::owner` to get the
         objects owned by an address.
-
-        # Example
-
-        ```rust,ignore
-        let filter = ObjectFilter {
-        type_tag: None,
-        owner: Some(Address::from_str("test").unwrap().into()),
-        object_ids: None,
-        };
-
-        let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-        ```
         """
 
         raise NotImplementedError
@@ -30975,18 +30974,6 @@ _UniffiConverterTypeSdkFfiError,
 
         This returns `DynamicFieldOutput` which contains the name, the value
         as json, and object.
-
-        # Example
-        ```rust,ignore
-
-        let client = iota_graphql_client::Client::new_devnet();
-        let address = ObjectId::SYSTEM.into();
-        let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-
-        # alternatively, pass in the bcs bytes
-        let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-        let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-        ```
         """
 
         _UniffiConverterTypeAddress.check_lower(address)
@@ -31613,18 +31600,6 @@ _UniffiConverterTypeSdkFfiError,
 
         Use this function together with the `ObjectFilter::owner` to get the
         objects owned by an address.
-
-        # Example
-
-        ```rust,ignore
-        let filter = ObjectFilter {
-        type_tag: None,
-        owner: Some(Address::from_str("test").unwrap().into()),
-        object_ids: None,
-        };
-
-        let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-        ```
         """
 
         if filter is _DEFAULT:
@@ -40763,10 +40738,25 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def stake(self, stake: "PtbArgument",validator_address: "Address"):
+        """
+        Add stake to a validator's staking pool.
+
+        This is a high-level function which will split the provided stake amount
+        from the gas coin and then stake using the resulting coin.
+        """
+
+        raise NotImplementedError
     def transfer_objects(self, recipient: "Address",objects: "typing.List[PtbArgument]"):
         """
         Transfer a list of objects to the given address, without producing any
         result.
+        """
+
+        raise NotImplementedError
+    def unstake(self, staked_iota: "PtbArgument"):
+        """
+        Withdraw stake from a validator's staking pool.
         """
 
         raise NotImplementedError
@@ -41264,6 +41254,28 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
+    def stake(self, stake: "PtbArgument",validator_address: "Address") -> "TransactionBuilder":
+        """
+        Add stake to a validator's staking pool.
+
+        This is a high-level function which will split the provided stake amount
+        from the gas coin and then stake using the resulting coin.
+        """
+
+        _UniffiConverterTypePtbArgument.check_lower(stake)
+        
+        _UniffiConverterTypeAddress.check_lower(validator_address)
+        
+        return _UniffiConverterTypeTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePtbArgument.lower(stake),
+        _UniffiConverterTypeAddress.lower(validator_address))
+        )
+
+
+
+
+
     def transfer_objects(self, recipient: "Address",objects: "typing.List[PtbArgument]") -> "TransactionBuilder":
         """
         Transfer a list of objects to the given address, without producing any
@@ -41278,6 +41290,22 @@ _UniffiConverterTypeSdkFfiError,
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects,self._uniffi_clone_pointer(),
         _UniffiConverterTypeAddress.lower(recipient),
         _UniffiConverterSequenceTypePtbArgument.lower(objects))
+        )
+
+
+
+
+
+    def unstake(self, staked_iota: "PtbArgument") -> "TransactionBuilder":
+        """
+        Withdraw stake from a validator's staking pool.
+        """
+
+        _UniffiConverterTypePtbArgument.check_lower(staked_iota)
+        
+        return _UniffiConverterTypeTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePtbArgument.lower(staked_iota))
         )
 
 

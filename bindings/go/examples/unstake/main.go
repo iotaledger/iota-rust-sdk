@@ -9,18 +9,10 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
-func identifier(ident string) *sdk.Identifier {
-	identifier, err := sdk.NewIdentifier(ident)
-	if err != nil {
-		log.Fatalf("Failed to parse identifier: %v", err)
-	}
-	return identifier
-}
-
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	stakedIotaType := "0x3::staking_pool::StakedIota"
+	stakedIotaType := sdk.StructTagStakedIota().String()
 	stakedIotas, err := client.Objects(&sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get staked iota: %v", err)
@@ -30,23 +22,8 @@ func main() {
 	}
 	stakedIota := stakedIotas.Data[0]
 
-	iotaSystemAddress := sdk.AddressSystem()
-
-	iotaSystemId := sdk.ObjectIdSystem()
-
-	iotaSystemModule := identifier("iota_system")
-
-	requestAddStakeFn := identifier("request_withdraw_stake")
-
 	builder := sdk.TransactionBuilderInit(stakedIota.Owner().AsAddress(), client)
-	builder.MoveCall(
-		iotaSystemAddress,
-		iotaSystemModule,
-		requestAddStakeFn,
-		[]*sdk.PtbArgument{sdk.PtbArgumentSharedMut(iotaSystemId), sdk.PtbArgumentObjectId(stakedIota.ObjectId())},
-		nil,
-		nil,
-	)
+	builder.Unstake(sdk.PtbArgumentObjectId(stakedIota.ObjectId()))
 
 	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {

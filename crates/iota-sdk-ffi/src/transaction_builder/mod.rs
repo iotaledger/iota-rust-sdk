@@ -310,6 +310,25 @@ impl TransactionBuilder {
         self
     }
 
+    /// Add stake to a validator's staking pool.
+    ///
+    /// This is a high-level function which will split the provided stake amount
+    /// from the gas coin and then stake using the resulting coin.
+    pub fn stake(self: Arc<Self>, stake: &PTBArgument, validator_address: &Address) -> Arc<Self> {
+        self.write(|builder| {
+            builder.stake(stake, **validator_address);
+        });
+        self
+    }
+
+    /// Withdraw stake from a validator's staking pool.
+    pub fn unstake(self: Arc<Self>, staked_iota: &PTBArgument) -> Arc<Self> {
+        self.write(|builder| {
+            builder.unstake(staked_iota);
+        });
+        self
+    }
+
     /// Convert this builder into a transaction.
     pub async fn finish(&self) -> Result<Transaction> {
         Ok(Transaction(
