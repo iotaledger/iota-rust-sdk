@@ -30,23 +30,23 @@ import (
 
 func main() {
 	// Read and parse the compiled package, or use the default package
-	compiledPackageString := os.Getenv("COMPILED_PACKAGE")
-	if compiledPackageString == "" {
+	packageDataString := os.Getenv("COMPILED_PACKAGE")
+	if packageDataString == "" {
 		fmt.Println("No compiled package found in env var. Using default.")
-		compiledPackageString = PRECOMPILED_PACKAGE
+		packageDataString = PRECOMPILED_PACKAGE
 	} else {
 		fmt.Println("Using custom Move package found in env var.")
 	}
 
-	compiledPackage, err := sdk.MovePackageDataFromJson(compiledPackageString)
+	packageData, err := sdk.MovePackageDataFromJson(packageDataString)
 	if err != nil {
 		panic(err)
 	}
-	modules := compiledPackage.Modules()
+	modules := packageData.Modules()
 	fmt.Printf("Modules: %d\n", len(modules))
-	dependencies := compiledPackage.Dependencies()
+	dependencies := packageData.Dependencies()
 	fmt.Printf("Dependencies: %d\n", len(dependencies))
-	digest := compiledPackage.Digest()
+	digest := packageData.Digest()
 	fmt.Printf("Digest: %s\n", digest.ToBase58())
 
 	// Create a random private key to derive a sender address and for signing
@@ -71,7 +71,7 @@ func main() {
 	// Build the `publish` PTB
 	builderPublish := sdk.TransactionBuilderInit(sender, client)
 	// Publish the package and receive the upgrade cap in return
-	builderPublish.Publish(compiledPackage, "upgrade_cap")
+	builderPublish.Publish(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
 	builderPublish.TransferObjects(sender, []*sdk.PtbArgument{sdk.PtbArgumentRes("upgrade_cap")})
 	txPublish, err := builderPublish.Finish()
@@ -170,7 +170,7 @@ func main() {
 
 	// Upgrade the package to receive an upgrade receipt
 	upgradeReceiptName := "upgrade_receipt"
-	builderUpgrade.Upgrade(compiledPackage, packageId, sdk.PtbArgumentRes(upgradeTicketName), &upgradeReceiptName)
+	builderUpgrade.Upgrade(packageData, packageId, sdk.PtbArgumentRes(upgradeTicketName), &upgradeReceiptName)
 
 	// Commit the upgrade using the receipt
 	commitUpgrade, _ := sdk.NewIdentifier("commit_upgrade")

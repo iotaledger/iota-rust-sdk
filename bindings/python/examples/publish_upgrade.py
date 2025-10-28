@@ -34,19 +34,19 @@ PRECOMPILED_PACKAGE = '{"modules":["oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJA
 async def main():
     try:
         # Read and parse the compiled package, or use the default package
-        compiled_package_json = os.getenv("COMPILED_PACKAGE")
-        if compiled_package_json is None:
+        package_data_json = os.getenv("COMPILED_PACKAGE")
+        if package_data_json is None:
             print("No compiled package found in env var. Using default.")
-            compiled_package_json = PRECOMPILED_PACKAGE
+            package_data_json = PRECOMPILED_PACKAGE
         else:
             print("Using custom Move package found in env var.");
 
-        compiled_package = MovePackageData.from_json(compiled_package_json)
-        modules = compiled_package.modules()
+        package_data = MovePackageData.from_json(package_data_json)
+        modules = package_data.modules()
         print(f"Modules: {len(modules)}")
-        dependencies = compiled_package.dependencies()
+        dependencies = package_data.dependencies()
         print(f"Dependencies: {len(dependencies)}")
-        digest = compiled_package.digest()
+        digest = package_data.digest()
         print(f"Digest: {digest.to_base58()}")
 
         # Create a random private key to derive a sender address and for signing
@@ -65,7 +65,7 @@ async def main():
         # Build the `publish` PTB
         builder = await TransactionBuilder.init(sender, client)
         # Publish the package and receive the upgrade cap in return
-        builder.publish(compiled_package, "upgrade_cap")
+        builder.publish(package_data, "upgrade_cap")
         # Transfer the upgrade cap to the sender address
         builder.transfer_objects(sender, [PtbArgument.res("upgrade_cap")])
         tx = await builder.finish()
@@ -136,7 +136,7 @@ async def main():
 
         # Upgrade the package to receive an upgrade receipt
         builder.upgrade(
-            compiled_package,
+            package_data,
             package_id,
             PtbArgument.res("upgrade_ticket"),
             "upgrade_receipt",

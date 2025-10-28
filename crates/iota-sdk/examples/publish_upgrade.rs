@@ -33,18 +33,17 @@ use rand::rngs::OsRng;
 #[tokio::main]
 async fn main() -> Result<()> {
     // Read and parse the compiled package
-    let compiled_package_json = if let Ok(compiled_package) = var("COMPILED_PACKAGE") {
+    let package_data_json = if let Ok(compiled_package) = var("COMPILED_PACKAGE") {
         println!("Using custom Move package found in env var.");
         compiled_package
     } else {
         println!("No compiled package found in env var. Using default.");
         PRECOMPILED_PACKAGE.to_string()
     };
-    let compiled_package = serde_json::from_str::<MovePackageData>(&compiled_package_json)?;
-    println!("Modules: {}", compiled_package.modules.len());
-    println!("Dependencies: {}", compiled_package.dependencies.len());
-    let compiled_package_digest = compiled_package.digest;
-    println!("Compiled Package Digest: {compiled_package_digest}");
+    let package_data = serde_json::from_str::<MovePackageData>(&package_data_json)?;
+    println!("Modules: {}", package_data.modules.len());
+    println!("Dependencies: {}", package_data.dependencies.len());
+    println!("Digest: {}", package_data.digest);
 
     // Create a random private key to derive a sender address and for signing
     let private_key = Ed25519PrivateKey::generate(OsRng);
@@ -63,7 +62,7 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
     builder
         // Publish the package and receive the upgrade cap
-        .publish(compiled_package.clone())
+        .publish(package_data.clone())
         .name("upgrade_cap")
         // Transfer the upgrade cap to the sender address
         .transfer_objects(sender, [res("upgrade_cap")]);
@@ -141,11 +140,11 @@ async fn main() -> Result<()> {
         .arguments((
             upgrade_cap_id,
             UpgradePolicy::Compatible as u8,
-            compiled_package_digest,
+            package_data.digest,
         ))
         .name("upgrade_ticket")
         // Upgrade the package to receive an upgrade receipt
-        .upgrade(package_id, res("upgrade_ticket"), compiled_package)
+        .upgrade(package_data, package_id, res("upgrade_ticket"))
         .name("upgrade_receipt")
         // Commit the upgrade using the receipt
         .move_call(Address::FRAMEWORK, "package", "commit_upgrade")

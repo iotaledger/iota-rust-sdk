@@ -37,12 +37,12 @@ fun main() = runBlocking {
             println("Using custom Move package found in env var.")
         }
 
-        val compiledPackage = MovePackageData.fromJson(compiledPackageJson)
-        val modules = compiledPackage.modules()
+        val packageData = MovePackageData.fromJson(compiledPackageJson)
+        val modules = packageData.modules()
         println("Modules: ${modules.size}")
-        val dependencies = compiledPackage.dependencies()
+        val dependencies = packageData.dependencies()
         println("Dependencies: ${dependencies.size}")
-        val digest = compiledPackage.digest()
+        val digest = packageData.digest()
         println("Digest: ${digest.toBase58()}")
 
         // Create a random private key to derive a sender address and for signing
@@ -59,7 +59,7 @@ fun main() = runBlocking {
         // Build the `publish` PTB
         val builderPublish = TransactionBuilder.init(sender, client)
         // Publish the package and receive the upgrade cap in return
-        builderPublish.publish(compiledPackage, "upgrade_cap")
+        builderPublish.publish(packageData, "upgrade_cap")
         // Transfer the upgrade cap to the sender address
         builderPublish.transferObjects(sender, listOf(PtbArgument.res("upgrade_cap")))
         val txPublish = builderPublish.finish()
@@ -139,9 +139,9 @@ fun main() = runBlocking {
 
         // Upgrade the package to receive an upgrade receipt
         builderUpgrade.upgrade(
-                packageData = compiledPackage,
-                `package` = packageId,
-                ticket = PtbArgument.res("upgrade_ticket"),
+                packageData = packageData,
+                packageId = packageId,
+                upgradeTicket = PtbArgument.res("upgrade_ticket"),
                 name = "upgrade_receipt"
         )
 

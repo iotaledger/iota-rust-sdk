@@ -298,13 +298,13 @@ impl TransactionBuilder {
     pub fn upgrade(
         self: Arc<Self>,
         package_data: &MovePackageData,
-        package: &ObjectId,
-        ticket: &PTBArgument,
+        package_id: &ObjectId,
+        upgrade_ticket: &PTBArgument,
         name: Option<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .upgrade(**package, ticket, package_data.0.clone())
+                .upgrade(package_data.0.clone(), **package_id, upgrade_ticket)
                 .name(name);
         });
         self
