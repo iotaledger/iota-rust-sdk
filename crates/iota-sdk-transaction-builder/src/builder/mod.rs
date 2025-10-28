@@ -578,7 +578,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// ```rust
     /// use iota_graphql_client::Client;
-    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
@@ -619,7 +619,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// ```rust
     /// use iota_graphql_client::Client;
-    /// use iota_transaction_builder::TransactionBuilder;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]

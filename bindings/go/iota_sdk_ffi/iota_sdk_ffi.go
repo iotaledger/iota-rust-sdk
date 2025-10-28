@@ -3332,11 +3332,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field()
 	})
-<<<<<<< HEAD
-	if checksum != 43486 {
-=======
 	if checksum != 12346 {
->>>>>>> sdk-bindings
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field: UniFFI API checksum mismatch")
 	}
@@ -14371,21 +14367,6 @@ type GraphQlClientInterface interface {
 	//
 	// This returns `DynamicFieldOutput` which contains the name, the value
 	// as json, and object.
-<<<<<<< HEAD
-	//
-	// # Example
-	// ```rust,ignore
-	//
-	// let client = iota_sdk::graphql_client::Client::new_devnet();
-	// let address = ObjectId::SYSTEM.into();
-	// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-	//
-	// # alternatively, pass in the bcs bytes
-	// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-	// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-	// ```
-=======
->>>>>>> sdk-bindings
 	DynamicField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error)
 	// Get a page of dynamic fields for the provided address. Note that this
 	// will also fetch dynamic fields on wrapped objects.
@@ -14901,21 +14882,6 @@ func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta Transac
 //
 // This returns `DynamicFieldOutput` which contains the name, the value
 // as json, and object.
-<<<<<<< HEAD
-//
-// # Example
-// ```rust,ignore
-//
-// let client = iota_sdk::graphql_client::Client::new_devnet();
-// let address = ObjectId::SYSTEM.into();
-// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-//
-// # alternatively, pass in the bcs bytes
-// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-// ```
-=======
->>>>>>> sdk-bindings
 func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
