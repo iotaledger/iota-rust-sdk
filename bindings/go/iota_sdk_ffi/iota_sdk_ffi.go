@@ -5814,11 +5814,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake()
+	})
+	if checksum != 41361 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects()
 	})
 	if checksum != 16313 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake()
+	})
+	if checksum != 30530 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -24200,9 +24218,16 @@ type TransactionBuilderInterface interface {
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
 	Sponsor(sponsor *Address) *TransactionBuilder
+	// Add stake to a validator's staking pool.
+	//
+	// This is a high-level function which will split the provided stake amount
+	// from the gas coin and then stake using the resulting coin.
+	Stake(stake *PtbArgument, validatorAddress *Address) *TransactionBuilder
 	// Transfer a list of objects to the given address, without producing any
 	// result.
 	TransferObjects(recipient *Address, objects []*PtbArgument) *TransactionBuilder
+	// Withdraw stake from a validator's staking pool.
+	Unstake(stakedIota *PtbArgument) *TransactionBuilder
 	// Upgrade a Move package.
 	//
 	// - `modules`: is the modules' bytecode for the modules to be published
@@ -24541,6 +24566,19 @@ func (_self *TransactionBuilder) Sponsor(sponsor *Address) *TransactionBuilder {
 	}))
 }
 
+// Add stake to a validator's staking pool.
+//
+// This is a high-level function which will split the provided stake amount
+// from the gas coin and then stake using the resulting coin.
+func (_self *TransactionBuilder) Stake(stake *PtbArgument, validatorAddress *Address) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(stake), FfiConverterAddressINSTANCE.Lower(validatorAddress),_uniffiStatus)
+	}))
+}
+
 // Transfer a list of objects to the given address, without producing any
 // result.
 func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*PtbArgument) *TransactionBuilder {
@@ -24549,6 +24587,16 @@ func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
 		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterSequencePtbArgumentINSTANCE.Lower(objects),_uniffiStatus)
+	}))
+}
+
+// Withdraw stake from a validator's staking pool.
+func (_self *TransactionBuilder) Unstake(stakedIota *PtbArgument) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(stakedIota),_uniffiStatus)
 	}))
 }
 
