@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk_types::{PasskeyAuthenticator, SimpleSignature, UserSignature};
+use iota_types::{PasskeyAuthenticator, SimpleSignature, UserSignature};
 use signature::Verifier;
 
 use crate::{SignatureError, secp256r1::Secp256r1VerifyingKey};
@@ -66,7 +66,7 @@ impl Verifier<UserSignature> for PasskeyVerifier {
 
 #[cfg(test)]
 mod tests {
-    use iota_sdk_types::Transaction;
+    use iota_types::Transaction;
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 

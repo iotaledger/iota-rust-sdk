@@ -1,5 +1,5 @@
 [package]
-name = "iota-graphql-client"
+name = "iota-sdk-graphql-client"
 version = "0.0.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
@@ -24,15 +24,15 @@ tokio = { workspace = true, features = ["time"] }
 tracing = "0.1.37"
 url = "2.5.3"
 
-iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde"] }
+iota-types = { workspace = true, features = ["serde"] }
 
 [dev-dependencies]
 hex.workspace = true
 rand.workspace = true
 
-iota-crypto = { path = "../iota-crypto", features = ["ed25519", "pem", "bech32"] }
-iota-transaction-builder = { path = "../iota-transaction-builder" }
-iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde", "rand", "hash"] }
+iota-crypto = { workspace = true, features = ["ed25519", "pem", "bech32"] }
+iota-transaction-builder.workspace = true
+iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
 tokio = { workspace = true, features = ["macros", "rt"] }
@@ -41,4 +41,4 @@ tokio = { workspace = true, features = ["macros", "rt"] }
 tokio = { workspace = true, features = ["full"] }
 
 [build-dependencies]
-iota-graphql-client-build = { path = "../iota-graphql-client-build" }
+iota-graphql-client-build.workspace = true

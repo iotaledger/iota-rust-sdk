@@ -2,69 +2,64 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk_types::{
-    Secp256k1PublicKey, Secp256k1Signature, SignatureScheme, SimpleSignature, UserSignature,
+use iota_types::{
+    Ed25519PublicKey, Ed25519Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
-use k256::{
-    ecdsa::{SigningKey, VerifyingKey},
-    elliptic_curve::group::GroupEncoding,
-};
-use signature::{Signer, Verifier};
 
-use crate::SignatureError;
+use crate::{SignatureError, Signer, Verifier};
 
 #[derive(Clone, Eq, PartialEq)]
-pub struct Secp256k1PrivateKey(SigningKey);
+pub struct Ed25519PrivateKey(ed25519_dalek::SigningKey);
 
-impl std::fmt::Debug for Secp256k1PrivateKey {
+impl std::fmt::Debug for Ed25519PrivateKey {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("Secp256k1PrivateKey")
+        f.debug_tuple("Ed25519PrivateKey")
             .field(&"__elided__")
             .finish()
     }
 }
 
 #[cfg(test)]
-impl proptest::arbitrary::Arbitrary for Secp256k1PrivateKey {
+impl proptest::arbitrary::Arbitrary for Ed25519PrivateKey {
     type Parameters = ();
     type Strategy = proptest::strategy::BoxedStrategy<Self>;
     fn arbitrary_with(_: Self::Parameters) -> Self::Strategy {
         use proptest::strategy::Strategy;
 
         proptest::arbitrary::any::<[u8; Self::LENGTH]>()
-            .prop_filter_map("invalid secp256k1 private key", |bytes| {
-                Self::new(bytes).ok()
-            })
+            .prop_map(Self::new)
             .boxed()
     }
 }
 
-impl Secp256k1PrivateKey {
-    /// The length of an secp256k1 private key in bytes.
+impl Ed25519PrivateKey {
+    /// The length of an ed25519 private key in bytes.
     pub const LENGTH: usize = 32;
 
-    pub fn new(bytes: [u8; Self::LENGTH]) -> Result<Self, SignatureError> {
-        SigningKey::from_bytes(&bytes.into()).map(Self)
+    pub fn new(bytes: [u8; Self::LENGTH]) -> Self {
+        Self(bytes.into())
     }
 
     pub fn scheme(&self) -> SignatureScheme {
-        SignatureScheme::Secp256k1
+        SignatureScheme::Ed25519
     }
 
-    pub fn verifying_key(&self) -> Secp256k1VerifyingKey {
+    pub fn verifying_key(&self) -> Ed25519VerifyingKey {
         let verifying_key = self.0.verifying_key();
-        Secp256k1VerifyingKey(*verifying_key)
+        Ed25519VerifyingKey(verifying_key)
     }
 
-    pub fn public_key(&self) -> Secp256k1PublicKey {
-        Secp256k1PublicKey::new(self.0.verifying_key().as_ref().to_bytes().into())
+    pub fn public_key(&self) -> Ed25519PublicKey {
+        self.verifying_key().public_key()
     }
 
     pub fn generate<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
-        Self(SigningKey::random(&mut rng))
+        let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
+        rng.fill_bytes(&mut buf);
+        Self(buf.into())
     }
 
     #[cfg(feature = "pem")]
@@ -72,7 +67,7 @@ impl Secp256k1PrivateKey {
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
     /// format).
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
-        k256::pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
+        ed25519_dalek::pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
             .map(Self)
             .map_err(SignatureError::from_source)
     }
@@ -81,7 +76,7 @@ impl Secp256k1PrivateKey {
     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     /// Serialize this private key as DER-encoded PKCS#8
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
-        use k256::pkcs8::EncodePrivateKey;
+        use ed25519_dalek::pkcs8::EncodePrivateKey;
 
         self.0
             .to_pkcs8_der()
@@ -93,7 +88,7 @@ impl Secp256k1PrivateKey {
     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     /// Deserialize PKCS#8-encoded private key from PEM.
     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
-        k256::pkcs8::DecodePrivateKey::from_pkcs8_pem(s)
+        ed25519_dalek::pkcs8::DecodePrivateKey::from_pkcs8_pem(s)
             .map(Self)
             .map_err(SignatureError::from_source)
     }
@@ -111,40 +106,40 @@ impl Secp256k1PrivateKey {
     }
 
     #[cfg(feature = "pem")]
-    pub(crate) fn from_k256(private_key: SigningKey) -> Self {
+    pub(crate) fn from_dalek(private_key: ed25519_dalek::SigningKey) -> Self {
         Self(private_key)
     }
 }
 
-impl crate::ToBytes for Secp256k1PrivateKey {
+impl crate::ToBytes for Ed25519PrivateKey {
     /// Return the raw 32-byte private key
     fn to_bytes(&self) -> Vec<u8> {
         self.0.to_bytes().to_vec()
     }
 }
 
-impl crate::FromBytes for Secp256k1PrivateKey {
+impl crate::FromBytes for Ed25519PrivateKey {
     type Error = crate::PrivateKeyError;
 
     fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {
         if bytes.len() != Self::LENGTH {
             return Err(crate::PrivateKeyError::InvalidScheme(
-                "invalid secp256k1 key length".to_string(),
+                "invalid ed25519 key length".to_string(),
             ));
         }
 
         let mut arr = [0u8; Self::LENGTH];
         arr.copy_from_slice(bytes);
-        Self::new(arr).map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
+        Ok(Self::new(arr))
     }
 }
 
-impl crate::ConstPrivateKeyScheme for Secp256k1PrivateKey {
-    const SCHEME: SignatureScheme = SignatureScheme::Secp256k1;
+impl crate::ConstPrivateKeyScheme for Ed25519PrivateKey {
+    const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
 }
 
 #[cfg(feature = "mnemonic")]
-impl crate::FromMnemonic for Secp256k1PrivateKey {
+impl crate::FromMnemonic for Ed25519PrivateKey {
     type Error = crate::PrivateKeyError;
 
     fn from_mnemonic(
@@ -154,34 +149,37 @@ impl crate::FromMnemonic for Secp256k1PrivateKey {
     ) -> Result<Self, Self::Error> {
         use std::str::FromStr;
 
-        use crate::FromBytes;
-
         let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
         let path = path.into().unwrap_or_else(|| {
             format!(
                 "m/{}'/{}'/0'/0'/0'",
-                crate::DERIVATION_PATH_PURPOSE_SECP256K1,
+                crate::DERIVATION_PATH_PURPOSE_ED25519,
                 crate::DERIVATION_PATH_COIN_TYPE
             )
         });
-        let child_xprv =
-            bip32::XPrv::derive_from_path(seed, &bip32::DerivationPath::from_str(&path)?)?;
-        Self::from_bytes(&child_xprv.private_key().to_bytes())
+        let path = bip32::DerivationPath::from_str(&path)?
+            .into_iter()
+            .map(|c| c.0)
+            .collect::<Vec<_>>();
+        Ok(Self::new(slip10_ed25519::derive_ed25519_private_key(
+            &seed, &path,
+        )))
     }
 }
 
-impl Signer<Secp256k1Signature> for Secp256k1PrivateKey {
-    fn try_sign(&self, message: &[u8]) -> Result<Secp256k1Signature, SignatureError> {
-        let signature: k256::ecdsa::Signature = self.0.try_sign(message)?;
-        Ok(Secp256k1Signature::new(signature.to_bytes().into()))
+impl Signer<Ed25519Signature> for Ed25519PrivateKey {
+    fn try_sign(&self, msg: &[u8]) -> Result<Ed25519Signature, SignatureError> {
+        self.0
+            .try_sign(msg)
+            .map(|signature| Ed25519Signature::new(signature.to_bytes()))
     }
 }
 
-impl Signer<SimpleSignature> for Secp256k1PrivateKey {
+impl Signer<SimpleSignature> for Ed25519PrivateKey {
     fn try_sign(&self, msg: &[u8]) -> Result<SimpleSignature, SignatureError> {
-        <Self as Signer<Secp256k1Signature>>::try_sign(self, msg).map(|signature| {
-            SimpleSignature::Secp256k1 {
+        <Self as Signer<Ed25519Signature>>::try_sign(self, msg).map(|signature| {
+            SimpleSignature::Ed25519 {
                 signature,
                 public_key: self.public_key(),
             }
@@ -189,29 +187,29 @@ impl Signer<SimpleSignature> for Secp256k1PrivateKey {
     }
 }
 
-impl Signer<UserSignature> for Secp256k1PrivateKey {
+impl Signer<UserSignature> for Ed25519PrivateKey {
     fn try_sign(&self, msg: &[u8]) -> Result<UserSignature, SignatureError> {
         <Self as Signer<SimpleSignature>>::try_sign(self, msg).map(UserSignature::Simple)
     }
 }
 
-#[derive(Debug, Clone, Eq, PartialEq)]
-pub struct Secp256k1VerifyingKey(VerifyingKey);
+#[derive(Debug, Clone, Eq, PartialEq, Default)]
+pub struct Ed25519VerifyingKey(ed25519_dalek::VerifyingKey);
 
-impl Secp256k1VerifyingKey {
-    pub fn new(public_key: &Secp256k1PublicKey) -> Result<Self, SignatureError> {
-        VerifyingKey::try_from(public_key.inner().as_ref()).map(Self)
+impl Ed25519VerifyingKey {
+    pub fn new(public_key: &Ed25519PublicKey) -> Result<Self, SignatureError> {
+        ed25519_dalek::VerifyingKey::from_bytes(public_key.inner()).map(Self)
     }
 
-    pub fn public_key(&self) -> Secp256k1PublicKey {
-        Secp256k1PublicKey::new(self.0.as_ref().to_bytes().into())
+    pub fn public_key(&self) -> Ed25519PublicKey {
+        Ed25519PublicKey::new(self.0.to_bytes())
     }
 
     #[cfg(feature = "pem")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     /// Deserialize public key from ASN.1 DER-encoded data (binary format).
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
-        k256::pkcs8::DecodePublicKey::from_public_key_der(bytes)
+        ed25519_dalek::pkcs8::DecodePublicKey::from_public_key_der(bytes)
             .map(Self)
             .map_err(SignatureError::from_source)
     }
@@ -232,14 +230,14 @@ impl Secp256k1VerifyingKey {
     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     /// Deserialize public key from PEM.
     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
-        k256::pkcs8::DecodePublicKey::from_public_key_pem(s)
+        ed25519_dalek::pkcs8::DecodePublicKey::from_public_key_pem(s)
             .map(Self)
             .map_err(SignatureError::from_source)
     }
 
     #[cfg(feature = "pem")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
-    /// Serialize this public key into PEM
+    /// Serialize this public key into PEM format
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePublicKey;
 
@@ -249,42 +247,42 @@ impl Secp256k1VerifyingKey {
     }
 
     #[cfg(feature = "pem")]
-    pub(crate) fn from_k256(verifying_key: VerifyingKey) -> Self {
+    pub(crate) fn from_dalek(verifying_key: ed25519_dalek::VerifyingKey) -> Self {
         Self(verifying_key)
     }
 }
 
-impl Verifier<Secp256k1Signature> for Secp256k1VerifyingKey {
-    fn verify(&self, message: &[u8], signature: &Secp256k1Signature) -> Result<(), SignatureError> {
-        let signature = k256::ecdsa::Signature::from_bytes(signature.inner().into())?;
-        self.0.verify(message, &signature)
+impl Verifier<Ed25519Signature> for Ed25519VerifyingKey {
+    fn verify(&self, message: &[u8], signature: &Ed25519Signature) -> Result<(), SignatureError> {
+        let signature = ed25519_dalek::Signature::from_bytes(signature.inner());
+        self.0.verify_strict(message, &signature)
     }
 }
 
-impl Verifier<SimpleSignature> for Secp256k1VerifyingKey {
+impl Verifier<SimpleSignature> for Ed25519VerifyingKey {
     fn verify(&self, message: &[u8], signature: &SimpleSignature) -> Result<(), SignatureError> {
-        let SimpleSignature::Secp256k1 {
+        let SimpleSignature::Ed25519 {
             signature,
             public_key,
         } = signature
         else {
-            return Err(SignatureError::from_source("not a secp256k1 signature"));
+            return Err(SignatureError::from_source("not an ed25519 signature"));
         };
 
-        if public_key.inner() != self.public_key().inner() {
+        if public_key.inner() != self.0.as_bytes() {
             return Err(SignatureError::from_source(
                 "public_key in signature does not match",
             ));
         }
 
-        <Self as Verifier<Secp256k1Signature>>::verify(self, message, signature)
+        <Self as Verifier<Ed25519Signature>>::verify(self, message, signature)
     }
 }
 
-impl Verifier<UserSignature> for Secp256k1VerifyingKey {
+impl Verifier<UserSignature> for Ed25519VerifyingKey {
     fn verify(&self, message: &[u8], signature: &UserSignature) -> Result<(), SignatureError> {
         let UserSignature::Simple(signature) = signature else {
-            return Err(SignatureError::from_source("not a secp256k1 signature"));
+            return Err(SignatureError::from_source("not an ed25519 signature"));
         };
 
         <Self as Verifier<SimpleSignature>>::verify(self, message, signature)
@@ -292,34 +290,34 @@ impl Verifier<UserSignature> for Secp256k1VerifyingKey {
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct Secp256k1Verifier {}
+pub struct Ed25519Verifier {}
 
-impl Secp256k1Verifier {
+impl Ed25519Verifier {
     pub fn new() -> Self {
         Self {}
     }
 }
 
-impl Verifier<SimpleSignature> for Secp256k1Verifier {
+impl Verifier<SimpleSignature> for Ed25519Verifier {
     fn verify(&self, message: &[u8], signature: &SimpleSignature) -> Result<(), SignatureError> {
-        let SimpleSignature::Secp256k1 {
+        let SimpleSignature::Ed25519 {
             signature,
             public_key,
         } = signature
         else {
-            return Err(SignatureError::from_source("not a secp256k1 signature"));
+            return Err(SignatureError::from_source("not an ed25519 signature"));
         };
 
-        let verifying_key = Secp256k1VerifyingKey::new(public_key)?;
+        let verifying_key = Ed25519VerifyingKey::new(public_key)?;
 
         verifying_key.verify(message, signature)
     }
 }
 
-impl Verifier<UserSignature> for Secp256k1Verifier {
+impl Verifier<UserSignature> for Ed25519Verifier {
     fn verify(&self, message: &[u8], signature: &UserSignature) -> Result<(), SignatureError> {
         let UserSignature::Simple(signature) = signature else {
-            return Err(SignatureError::from_source("not a secp256k1 signature"));
+            return Err(SignatureError::from_source("not an ed25519 signature"));
         };
 
         <Self as Verifier<SimpleSignature>>::verify(self, message, signature)
@@ -328,26 +326,23 @@ impl Verifier<UserSignature> for Secp256k1Verifier {
 
 #[cfg(test)]
 mod tests {
-    use iota_sdk_types::PersonalMessage;
+    use iota_types::{PersonalMessage, Transaction};
     use test_strategy::proptest;
-    #[cfg(target_arch = "wasm32")]
-    use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use super::*;
     use crate::{IotaSigner, IotaVerifier};
 
-    // TODO need to export proptest impl from core crate
-    // #[proptest]
-    // fn transaction_signing(signer: Secp256k1PrivateKey, transaction: Transaction)
-    // {     let signature = signer.sign_transaction(&transaction).unwrap();
-    //     let verifier = signer.public_key();
-    //     verifier
-    //         .verify_transaction(&transaction, &signature)
-    //         .unwrap();
-    // }
+    #[proptest]
+    fn transaction_signing(signer: Ed25519PrivateKey, transaction: Transaction) {
+        let signature = signer.sign_transaction(&transaction).unwrap();
+        let verifier = signer.verifying_key();
+        verifier
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+    }
 
     #[proptest]
-    fn personal_message_signing(signer: Secp256k1PrivateKey, message: Vec<u8>) {
+    fn personal_message_signing(signer: Ed25519PrivateKey, message: Vec<u8>) {
         let message = PersonalMessage(message.into());
         let signature = signer.sign_personal_message(&message).unwrap();
         let verifying_key = signer.verifying_key();
@@ -355,25 +350,9 @@ mod tests {
             .verify_personal_message(&message, &signature)
             .unwrap();
 
-        let verifier = Secp256k1Verifier::default();
+        let verifier = Ed25519Verifier::default();
         verifier
             .verify_personal_message(&message, &signature)
             .unwrap();
-    }
-
-    #[test]
-    fn personal_message_signing_fixture() {
-        let key = [
-            172, 12, 96, 180, 207, 143, 111, 151, 81, 57, 242, 89, 74, 5, 150, 51, 56, 111, 245,
-            150, 182, 30, 149, 178, 29, 255, 188, 27, 48, 241, 151, 193,
-        ];
-
-        let signer = Secp256k1PrivateKey::new(key).unwrap();
-
-        let message = PersonalMessage(b"hello".into());
-        let sig = signer.sign_personal_message(&message).unwrap();
-        let external_sig = "AVFAWGjuD8+xUoc6jMC0lKqMtT+4ukln7vz+8Nuv+EbYKl47jwzOWn39maDsqu81kezLPgLzz6o/AfSE0M9+jVwClcrtiuyUggEt/6CEZi8+JQ+NS9TmOhPBZV2X1KjhGCw=";
-        let b64 = sig.to_base64();
-        assert_eq!(external_sig, b64);
     }
 }

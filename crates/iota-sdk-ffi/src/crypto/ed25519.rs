@@ -1,8 +1,10 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_crypto::{FromMnemonic, ToBytes, ToFromBech32};
-use iota_types::SignatureScheme;
+use iota_sdk::{
+    crypto::{FromMnemonic, ToBytes, ToFromBech32},
+    types::SignatureScheme,
+};
 use rand::rngs::OsRng;
 
 use crate::{
@@ -14,13 +16,13 @@ use crate::{
 };
 
 #[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-pub struct Ed25519PrivateKey(iota_crypto::ed25519::Ed25519PrivateKey);
+pub struct Ed25519PrivateKey(iota_sdk::crypto::ed25519::Ed25519PrivateKey);
 
 #[uniffi::export]
 impl Ed25519PrivateKey {
     #[uniffi::constructor]
     pub fn new(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(iota_crypto::ed25519::Ed25519PrivateKey::new(
+        Ok(Self(iota_sdk::crypto::ed25519::Ed25519PrivateKey::new(
             bytes.try_into().map_err(|v: Vec<u8>| {
                 SdkFfiError::custom(format!("expected bytes of length 32, found {}", v.len()))
             })?,
@@ -41,14 +43,16 @@ impl Ed25519PrivateKey {
 
     #[uniffi::constructor]
     pub fn generate() -> Self {
-        Self(iota_crypto::ed25519::Ed25519PrivateKey::generate(OsRng))
+        Self(iota_sdk::crypto::ed25519::Ed25519PrivateKey::generate(
+            OsRng,
+        ))
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
     /// format).
     #[uniffi::constructor]
     pub fn from_der(bytes: &[u8]) -> Result<Self> {
-        Ok(iota_crypto::ed25519::Ed25519PrivateKey::from_der(bytes)?.into())
+        Ok(iota_sdk::crypto::ed25519::Ed25519PrivateKey::from_der(bytes)?.into())
     }
 
     /// Serialize this private key as DER-encoded PKCS#8
@@ -59,7 +63,7 @@ impl Ed25519PrivateKey {
     /// Deserialize PKCS#8-encoded private key from PEM.
     #[uniffi::constructor]
     pub fn from_pem(s: &str) -> Result<Self> {
-        Ok(iota_crypto::ed25519::Ed25519PrivateKey::from_pem(s)?.into())
+        Ok(iota_sdk::crypto::ed25519::Ed25519PrivateKey::from_pem(s)?.into())
     }
 
     /// Serialize this private key as PEM-encoded PKCS#8
@@ -82,7 +86,7 @@ impl Ed25519PrivateKey {
     /// "iotaprivkey".
     #[uniffi::constructor]
     pub fn from_bech32(value: &str) -> Result<Self> {
-        Ok(iota_crypto::ed25519::Ed25519PrivateKey::from_bech32(value)?.into())
+        Ok(iota_sdk::crypto::ed25519::Ed25519PrivateKey::from_bech32(value)?.into())
     }
 
     /// Construct the private key from a mnemonic phrase
@@ -92,30 +96,46 @@ impl Ed25519PrivateKey {
         password: Option<String>,
         path: Option<String>,
     ) -> Result<Self> {
-        Ok(iota_crypto::ed25519::Ed25519PrivateKey::from_mnemonic(phrase, password, path)?.into())
+        Ok(
+            iota_sdk::crypto::ed25519::Ed25519PrivateKey::from_mnemonic(phrase, password, path)?
+                .into(),
+        )
     }
 
     pub fn try_sign(&self, message: &[u8]) -> Result<Ed25519Signature> {
-        Ok(iota_crypto::Signer::<iota_types::Ed25519Signature>::try_sign(&self.0, message)?.into())
+        Ok(
+            iota_sdk::crypto::Signer::<iota_sdk::types::Ed25519Signature>::try_sign(
+                &self.0, message,
+            )?
+            .into(),
+        )
     }
 
     pub fn try_sign_simple(&self, message: &[u8]) -> Result<SimpleSignature> {
-        Ok(iota_crypto::Signer::<iota_types::SimpleSignature>::try_sign(&self.0, message)?.into())
+        Ok(
+            iota_sdk::crypto::Signer::<iota_sdk::types::SimpleSignature>::try_sign(
+                &self.0, message,
+            )?
+            .into(),
+        )
     }
 
     pub fn try_sign_user(&self, message: &[u8]) -> Result<UserSignature> {
-        Ok(iota_crypto::Signer::<iota_types::UserSignature>::try_sign(&self.0, message)?.into())
+        Ok(
+            iota_sdk::crypto::Signer::<iota_sdk::types::UserSignature>::try_sign(&self.0, message)?
+                .into(),
+        )
     }
 }
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Ed25519VerifyingKey(iota_crypto::ed25519::Ed25519VerifyingKey);
+pub struct Ed25519VerifyingKey(iota_sdk::crypto::ed25519::Ed25519VerifyingKey);
 
 #[uniffi::export]
 impl Ed25519VerifyingKey {
     #[uniffi::constructor]
     pub fn new(public_key: &Ed25519PublicKey) -> Result<Self> {
-        Ok(iota_crypto::ed25519::Ed25519VerifyingKey::new(&public_key.0).map(Self)?)
+        Ok(iota_sdk::crypto::ed25519::Ed25519VerifyingKey::new(&public_key.0).map(Self)?)
     }
 
     pub fn public_key(&self) -> Ed25519PublicKey {
@@ -125,7 +145,7 @@ impl Ed25519VerifyingKey {
     /// Deserialize public key from ASN.1 DER-encoded data (binary format).
     #[uniffi::constructor]
     pub fn from_der(bytes: &[u8]) -> Result<Self> {
-        Ok(iota_crypto::ed25519::Ed25519VerifyingKey::from_der(bytes)?.into())
+        Ok(iota_sdk::crypto::ed25519::Ed25519VerifyingKey::from_der(bytes)?.into())
     }
 
     /// Serialize this public key as DER-encoded data
@@ -136,7 +156,7 @@ impl Ed25519VerifyingKey {
     /// Deserialize public key from PEM.
     #[uniffi::constructor]
     pub fn from_pem(s: &str) -> Result<Self> {
-        Ok(iota_crypto::ed25519::Ed25519VerifyingKey::from_pem(s)?.into())
+        Ok(iota_sdk::crypto::ed25519::Ed25519VerifyingKey::from_pem(s)?.into())
     }
 
     /// Serialize this public key into PEM format
@@ -145,58 +165,50 @@ impl Ed25519VerifyingKey {
     }
 
     pub fn verify(&self, message: &[u8], signature: &Ed25519Signature) -> Result<()> {
-        Ok(
-            iota_crypto::Verifier::<iota_types::Ed25519Signature>::verify(
-                &self.0,
-                message,
-                &signature.0,
-            )?,
-        )
+        Ok(iota_sdk::crypto::Verifier::<
+            iota_sdk::types::Ed25519Signature,
+        >::verify(&self.0, message, &signature.0)?)
     }
 
     pub fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
+        Ok(iota_sdk::crypto::Verifier::<
+            iota_sdk::types::SimpleSignature,
+        >::verify(&self.0, message, &signature.0)?)
+    }
+
+    pub fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
         Ok(
-            iota_crypto::Verifier::<iota_types::SimpleSignature>::verify(
+            iota_sdk::crypto::Verifier::<iota_sdk::types::UserSignature>::verify(
                 &self.0,
                 message,
                 &signature.0,
             )?,
         )
-    }
-
-    pub fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
-        Ok(iota_crypto::Verifier::<iota_types::UserSignature>::verify(
-            &self.0,
-            message,
-            &signature.0,
-        )?)
     }
 }
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Ed25519Verifier(iota_crypto::ed25519::Ed25519Verifier);
+pub struct Ed25519Verifier(iota_sdk::crypto::ed25519::Ed25519Verifier);
 
 impl Ed25519Verifier {
     #[uniffi::constructor]
     pub fn new() -> Self {
-        Self(iota_crypto::ed25519::Ed25519Verifier::new())
+        Self(iota_sdk::crypto::ed25519::Ed25519Verifier::new())
     }
 
     fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
+        Ok(iota_sdk::crypto::Verifier::<
+            iota_sdk::types::SimpleSignature,
+        >::verify(&self.0, message, &signature.0)?)
+    }
+
+    fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
         Ok(
-            iota_crypto::Verifier::<iota_types::SimpleSignature>::verify(
+            iota_sdk::crypto::Verifier::<iota_sdk::types::UserSignature>::verify(
                 &self.0,
                 message,
                 &signature.0,
             )?,
         )
-    }
-
-    fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
-        Ok(iota_crypto::Verifier::<iota_types::UserSignature>::verify(
-            &self.0,
-            message,
-            &signature.0,
-        )?)
     }
 }

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use blst::min_sig::{PublicKey, SecretKey, Signature};
-use iota_sdk_types::{
+use iota_types::{
     Bls12381PublicKey, Bls12381Signature, CheckpointSummary, SignatureScheme, ValidatorSignature,
 };
 
