@@ -40,7 +40,7 @@ func main() {
 
 	packageData, err := sdk.MovePackageDataFromJson(packageDataString)
 	if err != nil {
-		panic(err)
+		log.Fatalf("Failed to deserialize Move package data: %v", err)
 	}
 	modules := packageData.Modules()
 	fmt.Printf("Modules: %d\n", len(modules))
