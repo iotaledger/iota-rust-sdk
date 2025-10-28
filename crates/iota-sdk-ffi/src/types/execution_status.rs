@@ -20,7 +20,7 @@ use crate::{
 /// execution-status = success / failure
 /// success = %x00
 /// failure = %x01 execution-error (option u64)
-/// ```xx
+/// ```
 #[derive(uniffi::Enum)]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
