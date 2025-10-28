@@ -10,13 +10,18 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
-func main() {
-	client := sdk.GraphQlClientNewDevnet()
-
-	objectID, err := sdk.ObjectIdFromHex("0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e")
+func objIdFromHex(hex string) *sdk.ObjectId {
+	id, err := sdk.ObjectIdFromHex(hex)
 	if err != nil {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
+	return id
+}
+
+func main() {
+	client := sdk.GraphQlClientNewDevnet()
+
+	objectID := objIdFromHex("0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e")
 
 	objOpt, err := client.Object(objectID, nil)
 	if err.(*sdk.SdkFfiError) != nil {

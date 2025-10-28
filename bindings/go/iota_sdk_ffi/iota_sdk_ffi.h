@@ -4384,9 +4384,19 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(void* ptr, vo
 void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(void* ptr, void* sponsor, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_STAKE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_STAKE
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(void* ptr, void* stake, void* validator_address, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_TRANSFER_OBJECTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_TRANSFER_OBJECTS
 void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(void* ptr, void* recipient, RustBuffer objects, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UNSTAKE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UNSTAKE
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(void* ptr, void* staked_iota, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UPGRADE
@@ -10345,9 +10355,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_STAKE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_STAKE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_TRANSFER_OBJECTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_TRANSFER_OBJECTS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_UNSTAKE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_UNSTAKE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake(void
     
 );
 #endif
