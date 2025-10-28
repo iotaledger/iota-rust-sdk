@@ -39,6 +39,7 @@ fun main() = runBlocking {
 
         println("Merge coins dry run was successful!")
     } catch (e: Exception) {
-        println("Error: $e")
+        e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

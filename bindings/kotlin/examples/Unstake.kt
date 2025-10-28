@@ -31,5 +31,6 @@ fun main() = runBlocking {
         println("Unstake dry run was successful!")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }
