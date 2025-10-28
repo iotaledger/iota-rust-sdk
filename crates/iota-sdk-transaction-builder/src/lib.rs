@@ -24,7 +24,7 @@
 //! ```
 //! # use std::str::FromStr;
 //! use iota_graphql_client::Client;
-//! use iota_transaction_builder::TransactionBuilder;
+//! use iota_sdk_transaction_builder::TransactionBuilder;
 //! use iota_types::{Address, ObjectId, Transaction};
 //!
 //! # #[tokio::main(flavor = "current_thread")]
@@ -51,7 +51,7 @@
 //!
 //! ```
 //! # use std::str::FromStr;
-//! use iota_transaction_builder::TransactionBuilder;
+//! use iota_sdk_transaction_builder::TransactionBuilder;
 //! use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
 //!
 //! let sender =
@@ -253,7 +253,7 @@
 //!
 //! ```
 //! # use std::str::FromStr;
-//! # use iota_transaction_builder::types::{MoveArg, MoveType, PureBytes};
+//! # use iota_sdk_transaction_builder::types::{MoveArg, MoveType, PureBytes};
 //! # use iota_types::TypeTag;
 //! #[derive(serde::Serialize)]
 //! struct MyStruct {
@@ -312,7 +312,7 @@ mod tests {
     /// `test_example_v1 and test_example_v2` projects in the tests
     /// directory. The json files are generated automatically when running
     /// `make test-with-localnet` in the root of the
-    /// iota-transaction-builder crate.
+    /// iota-sdk-transaction-builder crate.
     fn move_package_data(file: &str) -> MovePackageData {
         let data = std::fs::read_to_string(file)
             .with_context(|| {

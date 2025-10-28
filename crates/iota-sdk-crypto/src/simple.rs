@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk_types::{SimpleSignature, UserSignature};
+use iota_types::{SimpleSignature, UserSignature};
 use signature::Verifier;
 
 use crate::SignatureError;
@@ -77,7 +77,7 @@ pub use keypair::{SimpleKeypair, SimpleVerifyingKey};
     doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
 )]
 mod keypair {
-    use iota_sdk_types::{
+    use iota_types::{
         MultisigMemberPublicKey, PublicKeyExt, SignatureScheme, SimpleSignature, UserSignature,
     };
     use signature::{Signer, Verifier};

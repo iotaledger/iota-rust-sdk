@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk_types::{
+use iota_types::{
     Secp256k1PublicKey, Secp256k1Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
 use k256::{
@@ -293,7 +293,7 @@ impl Verifier<UserSignature> for Secp256k1Verifier {
 
 #[cfg(test)]
 mod tests {
-    use iota_sdk_types::PersonalMessage;
+    use iota_types::PersonalMessage;
     use test_strategy::proptest;
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;

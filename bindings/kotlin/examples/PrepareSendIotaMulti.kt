@@ -68,5 +68,6 @@ fun main() = runBlocking {
         println("Send IOTA dry run was successful!")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

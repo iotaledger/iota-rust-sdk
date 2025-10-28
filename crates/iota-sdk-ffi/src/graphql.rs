@@ -3,11 +3,13 @@
 
 use std::{str::FromStr, sync::Arc, time::Duration};
 
-use iota_graphql_client::{
-    pagination::PaginationFilter,
-    query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
+use iota_sdk::{
+    graphql_client::{
+        pagination::PaginationFilter,
+        query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
+    },
+    types::{CheckpointSequenceNumber, def_is, iota_names::NameFormat},
 };
-use iota_types::{CheckpointSequenceNumber, def_is, iota_names::NameFormat};
 use tokio::sync::RwLock;
 
 use crate::{
@@ -37,10 +39,10 @@ use crate::{
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
-pub struct GraphQLClient(RwLock<iota_graphql_client::Client>);
+pub struct GraphQLClient(RwLock<iota_sdk::graphql_client::Client>);
 
 impl GraphQLClient {
-    pub fn inner(&self) -> &RwLock<iota_graphql_client::Client> {
+    pub fn inner(&self) -> &RwLock<iota_sdk::graphql_client::Client> {
         &self.0
     }
 }
@@ -54,7 +56,7 @@ impl GraphQLClient {
     /// Create a new GraphQL client with the provided server address.
     #[uniffi::constructor]
     pub fn new(server: String) -> Result<Self> {
-        Ok(Self(RwLock::new(iota_graphql_client::Client::new(
+        Ok(Self(RwLock::new(iota_sdk::graphql_client::Client::new(
             &server,
         )?)))
     }
@@ -63,28 +65,28 @@ impl GraphQLClient {
     /// {MAINNET_HOST}.
     #[uniffi::constructor]
     pub fn new_mainnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_mainnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_mainnet()))
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
     #[uniffi::constructor]
     pub fn new_testnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_testnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_testnet()))
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
     #[uniffi::constructor]
     pub fn new_devnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_devnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_devnet()))
     }
 
     /// Create a new GraphQL client connected to the `localhost` GraphQL server:
     /// {DEFAULT_LOCAL_HOST}.
     #[uniffi::constructor]
     pub fn new_localnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_localnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_localnet()))
     }
 
     /// Get the chain identifier.
