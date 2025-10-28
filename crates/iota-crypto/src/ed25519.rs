@@ -150,7 +150,7 @@ impl crate::FromMnemonic for Ed25519PrivateKey {
         use std::str::FromStr;
 
         let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
-        let seed = mnemonic.to_seed(&password.into().unwrap_or_default());
+        let seed = mnemonic.to_seed(password.into().unwrap_or_default());
         let path = path.into().unwrap_or_else(|| {
             format!(
                 "m/{}'/{}'/0'/0'/0'",
