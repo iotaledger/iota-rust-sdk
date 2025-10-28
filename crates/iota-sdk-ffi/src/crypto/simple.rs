@@ -114,9 +114,20 @@ impl SimpleKeypair {
 
     /// Construct the private key from a mnemonic phrase and the signature
     /// scheme
-    #[uniffi::constructor]
-    pub fn from_mnemonic(phrase: &str, scheme: SignatureScheme) -> Result<Self> {
-        Ok(iota_crypto::simple::SimpleKeypair::from_mnemonic(phrase, scheme)?.into())
+    #[uniffi::constructor(default(password = None, path = None))]
+    pub fn from_mnemonic(
+        scheme: SignatureScheme,
+        phrase: &str,
+        password: Option<String>,
+        path: Option<String>,
+    ) -> Result<Self> {
+        Ok(iota_crypto::simple::SimpleKeypair::from_mnemonic(
+            scheme,
+            phrase,
+            password,
+            path.map(|p| p.parse()).transpose()?,
+        )?
+        .into())
     }
 
     fn try_sign(&self, message: &[u8]) -> Result<SimpleSignature> {

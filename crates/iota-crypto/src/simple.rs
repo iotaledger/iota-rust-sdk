@@ -330,23 +330,27 @@ mod keypair {
 
         #[cfg(feature = "mnemonic")]
         pub fn from_mnemonic(
-            phrase: &str,
             scheme: SignatureScheme,
+            phrase: &str,
+            password: impl Into<Option<String>>,
+            path: impl Into<Option<bip32::DerivationPath>>,
         ) -> Result<Self, crate::PrivateKeyError> {
             use crate::FromMnemonic;
 
             Ok(match scheme {
                 #[cfg(feature = "ed25519")]
                 SignatureScheme::Ed25519 => {
-                    crate::ed25519::Ed25519PrivateKey::from_mnemonic(phrase)?.into()
+                    crate::ed25519::Ed25519PrivateKey::from_mnemonic(phrase, password, path)?.into()
                 }
                 #[cfg(feature = "secp256k1")]
                 SignatureScheme::Secp256k1 => {
-                    crate::secp256k1::Secp256k1PrivateKey::from_mnemonic(phrase)?.into()
+                    crate::secp256k1::Secp256k1PrivateKey::from_mnemonic(phrase, password, path)?
+                        .into()
                 }
                 #[cfg(feature = "secp256r1")]
                 SignatureScheme::Secp256r1 => {
-                    crate::secp256r1::Secp256r1PrivateKey::from_mnemonic(phrase)?.into()
+                    crate::secp256r1::Secp256r1PrivateKey::from_mnemonic(phrase, password, path)?
+                        .into()
                 }
                 _ => {
                     return Err(crate::PrivateKeyError::InvalidScheme(format!(

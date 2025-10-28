@@ -142,18 +142,28 @@ impl crate::ConstPrivateKeyScheme for Ed25519PrivateKey {
 impl crate::FromMnemonic for Ed25519PrivateKey {
     type Error = crate::PrivateKeyError;
 
-    fn from_mnemonic(phrase: &str) -> Result<Self, Self::Error> {
+    fn from_mnemonic(
+        phrase: &str,
+        password: impl Into<Option<String>>,
+        path: impl Into<Option<bip32::DerivationPath>>,
+    ) -> Result<Self, Self::Error> {
         let mnemonic = bip32::Mnemonic::new(phrase, bip32::Language::English)?;
-        let seed = mnemonic.to_seed("");
+        let seed = mnemonic.to_seed(&password.into().unwrap_or_default());
+        let path = path
+            .into()
+            .map(|p| p.as_ref().into_iter().map(|c| c.0).collect())
+            .unwrap_or_else(|| {
+                vec![
+                    crate::DERIVATION_PATH_PURPOSE_ED25519,
+                    crate::DERIVATION_PATH_COIN_TYPE,
+                    0,
+                    0,
+                    0,
+                ]
+            });
         Ok(Self::new(slip10_ed25519::derive_ed25519_private_key(
             seed.as_bytes(),
-            &[
-                crate::DERIVATION_PATH_PURPOSE_ED25519,
-                crate::DERIVATION_PATH_COIN_TYPE,
-                0,
-                0,
-                0,
-            ],
+            &path,
         )))
     }
 }

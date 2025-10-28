@@ -86,9 +86,18 @@ impl Secp256k1PrivateKey {
     }
 
     /// Construct the private key from a mnemonic phrase
-    #[uniffi::constructor]
-    pub fn from_mnemonic(phrase: &str) -> Result<Self> {
-        Ok(iota_crypto::secp256k1::Secp256k1PrivateKey::from_mnemonic(phrase)?.into())
+    #[uniffi::constructor(default(password = None, path = None))]
+    pub fn from_mnemonic(
+        phrase: &str,
+        password: Option<String>,
+        path: Option<String>,
+    ) -> Result<Self> {
+        Ok(iota_crypto::secp256k1::Secp256k1PrivateKey::from_mnemonic(
+            phrase,
+            password,
+            path.map(|p| p.parse()).transpose()?,
+        )?
+        .into())
     }
 
     pub fn try_sign(&self, message: &[u8]) -> Result<Secp256k1Signature> {

@@ -339,7 +339,11 @@ pub trait FromMnemonic {
     type Error;
 
     /// Create an instance from a mnemonic phrase
-    fn from_mnemonic(phrase: &str) -> Result<Self, Self::Error>
+    fn from_mnemonic(
+        phrase: &str,
+        password: impl Into<Option<String>>,
+        path: impl Into<Option<bip32::DerivationPath>>,
+    ) -> Result<Self, Self::Error>
     where
         Self: Sized;
 }
