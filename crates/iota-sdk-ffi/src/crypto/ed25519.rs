@@ -92,12 +92,7 @@ impl Ed25519PrivateKey {
         password: Option<String>,
         path: Option<String>,
     ) -> Result<Self> {
-        Ok(iota_crypto::ed25519::Ed25519PrivateKey::from_mnemonic(
-            phrase,
-            password,
-            path.map(|p| p.parse()).transpose()?,
-        )?
-        .into())
+        Ok(iota_crypto::ed25519::Ed25519PrivateKey::from_mnemonic(phrase, password, path)?.into())
     }
 
     pub fn try_sign(&self, message: &[u8]) -> Result<Ed25519Signature> {

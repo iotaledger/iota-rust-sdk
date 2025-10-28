@@ -92,12 +92,10 @@ impl Secp256k1PrivateKey {
         password: Option<String>,
         path: Option<String>,
     ) -> Result<Self> {
-        Ok(iota_crypto::secp256k1::Secp256k1PrivateKey::from_mnemonic(
-            phrase,
-            password,
-            path.map(|p| p.parse()).transpose()?,
-        )?
-        .into())
+        Ok(
+            iota_crypto::secp256k1::Secp256k1PrivateKey::from_mnemonic(phrase, password, path)?
+                .into(),
+        )
     }
 
     pub fn try_sign(&self, message: &[u8]) -> Result<Secp256k1Signature> {

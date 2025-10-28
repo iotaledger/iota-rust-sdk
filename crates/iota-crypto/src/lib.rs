@@ -26,6 +26,9 @@ pub enum PrivateKeyError {
     #[cfg(feature = "mnemonic")]
     #[error("mnemonic error: {0}")]
     Bip32(#[from] bip32::Error),
+    #[cfg(feature = "mnemonic")]
+    #[error("mnemonic error: {0}")]
+    Bip39(#[from] bip39::Error),
 }
 
 #[cfg(feature = "bls12381")]
@@ -342,7 +345,7 @@ pub trait FromMnemonic {
     fn from_mnemonic(
         phrase: &str,
         password: impl Into<Option<String>>,
-        path: impl Into<Option<bip32::DerivationPath>>,
+        path: impl Into<Option<String>>,
     ) -> Result<Self, Self::Error>
     where
         Self: Sized;

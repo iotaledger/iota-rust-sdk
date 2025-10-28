@@ -150,25 +150,24 @@ impl crate::FromMnemonic for Secp256r1PrivateKey {
     fn from_mnemonic(
         phrase: &str,
         password: impl Into<Option<String>>,
-        path: impl Into<Option<bip32::DerivationPath>>,
+        path: impl Into<Option<String>>,
     ) -> Result<Self, Self::Error> {
         use std::str::FromStr;
 
         use crate::FromBytes;
 
-        let mnemonic = bip32::Mnemonic::new(phrase, bip32::Language::English)?;
+        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
         let seed = mnemonic.to_seed(&password.into().unwrap_or_default());
 
-        let path = if let Some(path) = path.into() {
-            path
-        } else {
-            bip32::DerivationPath::from_str(&format!(
+        let path = path.into().unwrap_or_else(|| {
+            format!(
                 "m/{}'/{}'/0'/0'/0'",
                 crate::DERIVATION_PATH_PURPOSE_SECP256R1,
                 crate::DERIVATION_PATH_COIN_TYPE
-            ))?
-        };
-        let child_xprv = bip32::XPrv::derive_from_path(seed, &path)?;
+            )
+        });
+        let child_xprv =
+            bip32::XPrv::derive_from_path(seed, &bip32::DerivationPath::from_str(&path)?)?;
         Self::from_bytes(&child_xprv.private_key().to_bytes())
     }
 }

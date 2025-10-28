@@ -114,12 +114,10 @@ impl Secp256r1PrivateKey {
         password: Option<String>,
         path: Option<String>,
     ) -> Result<Self> {
-        Ok(iota_crypto::secp256r1::Secp256r1PrivateKey::from_mnemonic(
-            phrase,
-            password,
-            path.map(|p| p.parse()).transpose()?,
-        )?
-        .into())
+        Ok(
+            iota_crypto::secp256r1::Secp256r1PrivateKey::from_mnemonic(phrase, password, path)?
+                .into(),
+        )
     }
 }
 

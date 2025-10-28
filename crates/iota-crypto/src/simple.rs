@@ -333,7 +333,7 @@ mod keypair {
             scheme: SignatureScheme,
             phrase: &str,
             password: impl Into<Option<String>>,
-            path: impl Into<Option<bip32::DerivationPath>>,
+            path: impl Into<Option<String>>,
         ) -> Result<Self, crate::PrivateKeyError> {
             use crate::FromMnemonic;
 

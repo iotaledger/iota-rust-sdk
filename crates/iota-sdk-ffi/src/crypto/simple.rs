@@ -121,13 +121,10 @@ impl SimpleKeypair {
         password: Option<String>,
         path: Option<String>,
     ) -> Result<Self> {
-        Ok(iota_crypto::simple::SimpleKeypair::from_mnemonic(
-            scheme,
-            phrase,
-            password,
-            path.map(|p| p.parse()).transpose()?,
-        )?
-        .into())
+        Ok(
+            iota_crypto::simple::SimpleKeypair::from_mnemonic(scheme, phrase, password, path)?
+                .into(),
+        )
     }
 
     fn try_sign(&self, message: &[u8]) -> Result<SimpleSignature> {
