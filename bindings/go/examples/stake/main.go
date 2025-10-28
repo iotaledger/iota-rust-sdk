@@ -9,10 +9,18 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
+func addrFromHex(hex string) *sdk.Address {
+	address, err := sdk.AddressFromHex(hex)
+	if err != nil {
+		log.Fatalf("Failed to parse address: %v", err)
+	}
+	return address
+}
+
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	myAddress, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+	myAddress := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
 	validators, err := client.ActiveValidators(nil, nil)
 	if err.(*sdk.SdkFfiError) != nil {

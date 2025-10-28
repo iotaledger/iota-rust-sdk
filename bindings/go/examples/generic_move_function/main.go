@@ -10,19 +10,35 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
+func addrFromHex(hex string) *sdk.Address {
+	address, err := sdk.AddressFromHex(hex)
+	if err != nil {
+		log.Fatalf("Failed to parse address: %v", err)
+	}
+	return address
+}
+
+func identifier(ident string) *sdk.Identifier {
+	identifier, err := sdk.NewIdentifier(ident)
+	if err != nil {
+		log.Fatalf("Failed to parse identifier: %v", err)
+	}
+	return identifier
+}
+
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	sender, _ := sdk.AddressFromHex("0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e")
+	sender := addrFromHex("0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e")
 
 	builder := sdk.TransactionBuilderInit(sender, client)
 
-	addr1, _ := sdk.AddressFromHex("0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e")
-	addr2, _ := sdk.AddressFromHex("0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")
+	addr1 := addrFromHex("0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e")
+	addr2 := addrFromHex("0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")
 
 	package_id := sdk.AddressFramework()
-	module_name, _ := sdk.NewIdentifier("vec_map")
-	function_name, _ := sdk.NewIdentifier("from_keys_values")
+	module_name := identifier("vec_map")
+	function_name := identifier("from_keys_values")
 
 	builder.MoveCall(
 		package_id,

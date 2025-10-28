@@ -10,12 +10,28 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
+func objIdFromHex(hex string) *sdk.ObjectId {
+	id, err := sdk.ObjectIdFromHex(hex)
+	if err != nil {
+		log.Fatalf("Failed to parse object ID: %v", err)
+	}
+	return id
+}
+
+func addrFromHex(hex string) *sdk.Address {
+	address, err := sdk.AddressFromHex(hex)
+	if err != nil {
+		log.Fatalf("Failed to parse address: %v", err)
+	}
+	return address
+}
+
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	sender, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+	sender := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
-	coinId, _ := sdk.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
+	coinId := objIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 
 	recipients := []struct {
 		address string
@@ -39,7 +55,7 @@ func main() {
 	builder.SplitCoins(sdk.PtbArgumentObjectId(coinId), amounts, labels)
 
 	for idx, r := range recipients {
-		recipient, _ := sdk.AddressFromHex(r.address)
+		recipient := addrFromHex(r.address)
 		builder.TransferObjects(recipient, []*sdk.PtbArgument{sdk.PtbArgumentRes(labels[idx])})
 	}
 
