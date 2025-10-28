@@ -48663,7 +48663,12 @@ data class ChangedObject (
      * This information isn't required by the protocol but is useful for
      * providing more detailed semantics on object changes.
      */
-    var `idOperation`: IdOperation
+    var `idOperation`: IdOperation, 
+    /**
+     * Optional object type information. This is not part of the BCS protocol
+     * data but can be populated from other sources when available.
+     */
+    var `objectType`: kotlin.String? = null
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
@@ -48673,7 +48678,8 @@ data class ChangedObject (
         this.`objectId`,
         this.`inputState`,
         this.`outputState`,
-        this.`idOperation`
+        this.`idOperation`,
+        this.`objectType`
     )
     }
     
@@ -48690,6 +48696,7 @@ public object FfiConverterTypeChangedObject: FfiConverterRustBuffer<ChangedObjec
             FfiConverterTypeObjectIn.read(buf),
             FfiConverterTypeObjectOut.read(buf),
             FfiConverterTypeIdOperation.read(buf),
+            FfiConverterOptionalString.read(buf),
         )
     }
 
@@ -48697,7 +48704,8 @@ public object FfiConverterTypeChangedObject: FfiConverterRustBuffer<ChangedObjec
             FfiConverterTypeObjectId.allocationSize(value.`objectId`) +
             FfiConverterTypeObjectIn.allocationSize(value.`inputState`) +
             FfiConverterTypeObjectOut.allocationSize(value.`outputState`) +
-            FfiConverterTypeIdOperation.allocationSize(value.`idOperation`)
+            FfiConverterTypeIdOperation.allocationSize(value.`idOperation`) +
+            FfiConverterOptionalString.allocationSize(value.`objectType`)
     )
 
     override fun write(value: ChangedObject, buf: ByteBuffer) {
@@ -48705,6 +48713,7 @@ public object FfiConverterTypeChangedObject: FfiConverterRustBuffer<ChangedObjec
             FfiConverterTypeObjectIn.write(value.`inputState`, buf)
             FfiConverterTypeObjectOut.write(value.`outputState`, buf)
             FfiConverterTypeIdOperation.write(value.`idOperation`, buf)
+            FfiConverterOptionalString.write(value.`objectType`, buf)
     }
 }
 

@@ -139,6 +139,10 @@ pub struct ChangedObject {
     /// This information isn't required by the protocol but is useful for
     /// providing more detailed semantics on object changes.
     pub id_operation: IdOperation,
+    /// Optional object type information. This is not part of the BCS protocol
+    /// data but can be populated from other sources when available.
+    #[uniffi(default = None)]
+    pub object_type: Option<String>,
 }
 
 impl From<iota_types::ChangedObject> for ChangedObject {
@@ -148,6 +152,7 @@ impl From<iota_types::ChangedObject> for ChangedObject {
             input_state: value.input_state.into(),
             output_state: value.output_state.into(),
             id_operation: value.id_operation,
+            object_type: value.object_type,
         }
     }
 }
@@ -159,6 +164,7 @@ impl From<ChangedObject> for iota_types::ChangedObject {
             input_state: value.input_state.into(),
             output_state: value.output_state.into(),
             id_operation: value.id_operation,
+            object_type: value.object_type,
         }
     }
 }

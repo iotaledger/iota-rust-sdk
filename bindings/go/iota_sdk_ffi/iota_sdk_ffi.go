@@ -28051,6 +28051,9 @@ type ChangedObject struct {
 	// This information isn't required by the protocol but is useful for
 	// providing more detailed semantics on object changes.
 	IdOperation IdOperation
+	// Optional object type information. This is not part of the BCS protocol
+	// data but can be populated from other sources when available.
+	ObjectType *string
 }
 
 func (r *ChangedObject) Destroy() {
@@ -28058,6 +28061,7 @@ func (r *ChangedObject) Destroy() {
 		FfiDestroyerObjectIn{}.Destroy(r.InputState);
 		FfiDestroyerObjectOut{}.Destroy(r.OutputState);
 		FfiDestroyerIdOperation{}.Destroy(r.IdOperation);
+		FfiDestroyerOptionalString{}.Destroy(r.ObjectType);
 }
 
 type FfiConverterChangedObject struct {}
@@ -28074,6 +28078,7 @@ func (c FfiConverterChangedObject) Read(reader io.Reader) ChangedObject {
 			FfiConverterObjectInINSTANCE.Read(reader),
 			FfiConverterObjectOutINSTANCE.Read(reader),
 			FfiConverterIdOperationINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
 	}
 }
 
@@ -28086,6 +28091,7 @@ func (c FfiConverterChangedObject) Write(writer io.Writer, value ChangedObject) 
 		FfiConverterObjectInINSTANCE.Write(writer, value.InputState);
 		FfiConverterObjectOutINSTANCE.Write(writer, value.OutputState);
 		FfiConverterIdOperationINSTANCE.Write(writer, value.IdOperation);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.ObjectType);
 }
 
 type FfiDestroyerChangedObject struct {}

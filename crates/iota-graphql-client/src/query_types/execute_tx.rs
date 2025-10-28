@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::query_types::{Base64, schema};
+use crate::query_types::{Base64, PageInfo, schema, transaction};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(
@@ -32,4 +32,12 @@ pub struct ExecutionResult {
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
 pub struct TransactionBlockEffects {
     pub bcs: Base64,
+    pub object_changes: ObjectChangeConnection,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "ObjectChangeConnection")]
+pub struct ObjectChangeConnection {
+    pub page_info: PageInfo,
+    pub nodes: Vec<transaction::ObjectChange>,
 }

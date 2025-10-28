@@ -130,6 +130,50 @@ pub struct TxBlockEffects {
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
 pub struct TransactionBlockEffects {
     pub bcs: Option<Base64>,
+    pub object_changes: ObjectChangeConnection,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "ObjectChangeConnection")]
+pub struct ObjectChangeConnection {
+    pub page_info: PageInfo,
+    pub nodes: Vec<ObjectChange>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "ObjectChange")]
+pub struct ObjectChange {
+    pub address: Address,
+    pub input_state: Option<Object>,
+    pub output_state: Option<Object>,
+    pub id_created: Option<bool>,
+    pub id_deleted: Option<bool>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "Object")]
+pub struct Object {
+    pub bcs: Option<Base64>,
+    pub as_move_object: Option<MoveObject>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "MoveObject")]
+pub struct MoveObject {
+    pub contents: Option<MoveValue>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "MoveValue")]
+pub struct MoveValue {
+    #[cynic(rename = "type")]
+    pub type_: MoveType,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "MoveType")]
+pub struct MoveType {
+    pub repr: String,
 }
 
 #[derive(cynic::Enum, Clone, Copy, Debug)]

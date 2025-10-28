@@ -278,7 +278,7 @@ impl Client {
             .data
             .and_then(|tx| tx.dry_run_transaction_block.transaction);
 
-        let effects = txn_block
+        let mut effects = txn_block
             .as_ref()
             .and_then(|tx| tx.effects.as_ref())
             .and_then(|tx| tx.bcs.as_ref())
@@ -286,6 +286,15 @@ impl Client {
             .transpose()?
             .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
             .transpose()?;
+
+        // Populate object_type field from GraphQL object_changes
+        if let Some(ref mut effects) = effects {
+            if let Some(ref txn_block_ref) = txn_block {
+                if let Some(ref effects_gql) = txn_block_ref.effects {
+                    populate_object_types(effects, &effects_gql.object_changes.nodes);
+                }
+            }
+        }
 
         // Extract transaction
         let transaction = txn_block
@@ -1475,8 +1484,9 @@ impl Client {
         if let Some(data) = response.data {
             let result = data.execute_transaction_block;
             let bcs = base64ct::Base64::decode_vec(result.effects.bcs.0.as_str())?;
-            let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
+            let mut effects: TransactionEffects = bcs::from_bytes(&bcs)?;
 
+            populate_object_types(&mut effects, result.effects.object_changes.nodes.as_slice());
             Ok(Some(effects))
         } else {
             Ok(None)
@@ -1826,6 +1836,53 @@ impl Client {
         Ok(Some(Name::from_str(&name).map_err(|_| {
             Error::from_error(Kind::Parse, format!("invalid name: {name}"))
         })?))
+    }
+}
+
+/// Helper function to populate object_type fields in TransactionEffects
+/// from GraphQL ObjectChange data
+fn populate_object_types(
+    effects: &mut TransactionEffects,
+    object_changes: &[query_types::TransactionObjectChange],
+) {
+    use iota_types::TransactionEffects;
+    use query_types::TransactionObjectChange as ObjectChange;
+
+    // Get the changed_objects from the effects based on version
+    match effects {
+        TransactionEffects::V1(ref mut effects_v1) => {
+            // Create a map of object_id -> object_type from GraphQL data
+            let type_map: std::collections::HashMap<ObjectId, String> = object_changes
+                .iter()
+                .filter_map(|change: &ObjectChange| {
+                    // Try to get type from output_state first, then input_state
+                    let object_type = change
+                        .output_state
+                        .as_ref()
+                        .and_then(|obj| obj.as_move_object.as_ref())
+                        .and_then(|move_obj| move_obj.contents.as_ref())
+                        .map(|contents| contents.type_.repr.clone())
+                        .or_else(|| {
+                            change
+                                .input_state
+                                .as_ref()
+                                .and_then(|obj| obj.as_move_object.as_ref())
+                                .and_then(|move_obj| move_obj.contents.as_ref())
+                                .map(|contents| contents.type_.repr.clone())
+                        });
+
+                    // Convert Address to ObjectId
+                    object_type.map(|typ| (ObjectId::from(change.address), typ))
+                })
+                .collect();
+
+            // Populate the object_type field for each changed object
+            for changed_obj in &mut effects_v1.changed_objects {
+                if let Some(object_type) = type_map.get(&changed_obj.object_id) {
+                    changed_obj.object_type = Some(object_type.clone());
+                }
+            }
+        }
     }
 }
 
