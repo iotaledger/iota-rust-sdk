@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk_types::{
+use iota_types::{
     Ed25519PublicKey, Ed25519Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
 
@@ -290,7 +290,7 @@ impl Verifier<UserSignature> for Ed25519Verifier {
 
 #[cfg(test)]
 mod tests {
-    use iota_sdk_types::{PersonalMessage, Transaction};
+    use iota_types::{PersonalMessage, Transaction};
     use test_strategy::proptest;
 
     use super::*;

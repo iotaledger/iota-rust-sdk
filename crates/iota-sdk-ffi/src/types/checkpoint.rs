@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_types::GasCostSummary;
+use iota_sdk::types::GasCostSummary;
 
 use crate::{
     error::Result,
@@ -56,7 +56,7 @@ pub type ProtocolVersion = u64;
 ///                      bytes                          ; version_specific_data
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct CheckpointSummary(pub iota_types::CheckpointSummary);
+pub struct CheckpointSummary(pub iota_sdk::types::CheckpointSummary);
 
 #[uniffi::export]
 impl CheckpointSummary {
@@ -74,7 +74,7 @@ impl CheckpointSummary {
         end_of_epoch_data: Option<EndOfEpochData>,
         version_specific_data: Vec<u8>,
     ) -> Self {
-        Self(iota_types::CheckpointSummary {
+        Self(iota_sdk::types::CheckpointSummary {
             epoch,
             sequence_number,
             network_total_transactions,
@@ -190,13 +190,13 @@ impl CheckpointSummary {
 ///                                                               ; length as the vector of digests
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct CheckpointContents(pub iota_types::CheckpointContents);
+pub struct CheckpointContents(pub iota_sdk::types::CheckpointContents);
 
 #[uniffi::export]
 impl CheckpointContents {
     #[uniffi::constructor]
     pub fn new(transaction_info: Vec<Arc<CheckpointTransactionInfo>>) -> Self {
-        Self(iota_types::CheckpointContents::new(
+        Self(iota_sdk::types::CheckpointContents::new(
             transaction_info.into_iter().map(|v| v.0.clone()).collect(),
         ))
     }
@@ -218,7 +218,7 @@ impl CheckpointContents {
 
 /// Transaction information committed to in a checkpoint
 #[derive(derive_more::From, uniffi::Object)]
-pub struct CheckpointTransactionInfo(pub iota_types::CheckpointTransactionInfo);
+pub struct CheckpointTransactionInfo(pub iota_sdk::types::CheckpointTransactionInfo);
 
 #[uniffi::export]
 impl CheckpointTransactionInfo {
@@ -228,7 +228,7 @@ impl CheckpointTransactionInfo {
         effects: &Digest,
         signatures: Vec<Arc<UserSignature>>,
     ) -> Self {
-        Self(iota_types::CheckpointTransactionInfo {
+        Self(iota_sdk::types::CheckpointTransactionInfo {
             transaction: **transaction,
             effects: **effects,
             signatures: signatures.into_iter().map(|v| v.0.clone()).collect(),
@@ -266,7 +266,7 @@ impl CheckpointTransactionInfo {
 /// ecmh-live-object-set = %x00 digest
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct CheckpointCommitment(pub iota_types::CheckpointCommitment);
+pub struct CheckpointCommitment(pub iota_sdk::types::CheckpointCommitment);
 
 #[uniffi::export]
 impl CheckpointCommitment {
@@ -299,8 +299,8 @@ pub struct EndOfEpochData {
     pub epoch_supply_change: i64,
 }
 
-impl From<iota_types::EndOfEpochData> for EndOfEpochData {
-    fn from(value: iota_types::EndOfEpochData) -> Self {
+impl From<iota_sdk::types::EndOfEpochData> for EndOfEpochData {
+    fn from(value: iota_sdk::types::EndOfEpochData) -> Self {
         Self {
             next_epoch_committee: value
                 .next_epoch_committee
@@ -319,7 +319,7 @@ impl From<iota_types::EndOfEpochData> for EndOfEpochData {
     }
 }
 
-impl From<EndOfEpochData> for iota_types::EndOfEpochData {
+impl From<EndOfEpochData> for iota_sdk::types::EndOfEpochData {
     fn from(value: EndOfEpochData) -> Self {
         Self {
             next_epoch_committee: value

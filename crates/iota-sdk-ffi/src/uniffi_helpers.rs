@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::query_types::{Base64, BigInt, PageInfo};
+use iota_sdk::graphql_client::query_types::{Base64, BigInt, PageInfo};
 use serde_json::Value;
 
 use crate::types::{
@@ -26,8 +26,8 @@ macro_rules! define_paged_record {
             pub data: Vec<$type_>,
         }
 
-        impl From<iota_graphql_client::pagination::Page<$type_>> for $id {
-            fn from(value: iota_graphql_client::pagination::Page<$type_>) -> Self {
+        impl From<iota_sdk::graphql_client::pagination::Page<$type_>> for $id {
+            fn from(value: iota_sdk::graphql_client::pagination::Page<$type_>) -> Self {
                 Self {
                     page_info: value.page_info.into(),
                     data: value.data,
@@ -56,8 +56,8 @@ macro_rules! define_paged_object {
             pub data: Vec<std::sync::Arc<$type_>>,
         }
 
-        impl From<iota_graphql_client::pagination::Page<$type_>> for $id {
-            fn from(value: iota_graphql_client::pagination::Page<$type_>) -> Self {
+        impl From<iota_sdk::graphql_client::pagination::Page<$type_>> for $id {
+            fn from(value: iota_sdk::graphql_client::pagination::Page<$type_>) -> Self {
                 Self {
                     page_info: value.page_info.into(),
                     data: value
