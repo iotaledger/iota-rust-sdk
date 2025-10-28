@@ -1128,10 +1128,10 @@ impl<L> TransactionBuilder<Client, L> {
                 .map_err(Error::Signature)?,
         );
 
-        Ok(client
+        client
             .execute_tx(&signatures, &txn, wait_for_finalization)
             .await
-            .map_err(Error::Client)?)
+            .map_err(Error::Client)
     }
 }
 
