@@ -5,7 +5,10 @@ use std::sync::Arc;
 
 use iota_types::{CommandArgumentError, Identifier, TypeArgumentError};
 
-use crate::types::{address::Address, digest::Digest, object::ObjectId};
+use crate::{
+    error::Result,
+    types::{address::Address, digest::Digest, object::ObjectId},
+};
 
 /// The status of an executed Transaction
 ///
@@ -17,7 +20,7 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 /// execution-status = success / failure
 /// success = %x00
 /// failure = %x01 execution-error (option u64)
-/// ```xx
+/// ```
 #[derive(uniffi::Enum)]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
@@ -756,3 +759,12 @@ pub enum TypeArgumentError {
     /// A type provided did not match the specified constraint
     ConstraintNotSatisfied,
 }
+
+crate::export_iota_types_bcs_conversion!(
+    ExecutionStatus,
+    ExecutionError,
+    MoveLocation,
+    CommandArgumentError,
+    PackageUpgradeError,
+    TypeArgumentError
+);

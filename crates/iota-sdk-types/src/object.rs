@@ -467,11 +467,11 @@ impl Object {
     }
 
     #[cfg(feature = "serde")]
-    pub fn to_rust<T: serde::de::DeserializeOwned>(&self) -> anyhow::Result<T> {
-        use anyhow::Context;
+    pub fn to_rust<T: serde::de::DeserializeOwned>(&self) -> eyre::Result<T> {
+        use eyre::OptionExt;
 
         Ok(bcs::from_bytes::<T>(
-            &self.as_struct_opt().context("not a struct")?.contents,
+            &self.as_struct_opt().ok_or_eyre("not a struct")?.contents,
         )?)
     }
 }

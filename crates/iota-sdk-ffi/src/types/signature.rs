@@ -319,3 +319,5 @@ impl SimpleSignature {
         (*self.0.as_secp256r1_pub_key()).into()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(UserSignature, SimpleSignature);

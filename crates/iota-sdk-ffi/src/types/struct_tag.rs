@@ -176,9 +176,7 @@ export_struct_tag_ctors!(
     TimelockedStakedIota,
     Uid,
 );
-
 export_struct_tag_from_type_tag_ctors!(Balance, Coin, TimeLock);
-
 export_struct_tag_from_struct_tag_ctors!(
     CoinManager,
     CoinMetadata,
@@ -186,3 +184,5 @@ export_struct_tag_from_struct_tag_ctors!(
     TreasuryCap,
     VersionUpdated,
 );
+
+crate::export_iota_types_objects_bcs_conversion!(Identifier, StructTag);

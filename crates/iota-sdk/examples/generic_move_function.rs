@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
     builder
         .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
         .generics::<(Address, u64)>()
-        .arguments((vec![address1, address2], vec![10000000u64, 20000000u64]));
+        .arguments(([address1, address2], [10000000u64, 20000000u64]));
 
     let res = builder.dry_run(false).await?;
 
