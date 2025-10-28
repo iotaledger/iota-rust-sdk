@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk_types::{PersonalMessage, ZkLoginInputs};
+use iota_types::{PersonalMessage, ZkLoginInputs};
 use signature::Signer;
 
 use super::*;

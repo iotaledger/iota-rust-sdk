@@ -1,9 +1,10 @@
 [package]
-name = "iota-transaction-builder"
+name = "iota-sdk-transaction-builder"
 version = "0.0.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Transaction API for the IOTA Blockchain Rust SDK"
 
 [dependencies]
@@ -17,9 +18,9 @@ serde_json.workspace = true
 thiserror.workspace = true
 variadics_please = "1.1"
 
-iota-crypto = { package = "iota-crypto", path = "../iota-crypto", features = ["ed25519"] }
-iota-graphql-client = { package = "iota-graphql-client", path = "../iota-graphql-client" }
-iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["serde", "hash"] }
+iota-crypto = { workspace = true, features = ["ed25519"] }
+iota-graphql-client.workspace = true
+iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.2", features = ["js"] }
@@ -33,4 +34,4 @@ eyre.workspace = true
 rand.workspace = true
 serde_json.workspace = true
 
-iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["rand"] }
+iota-types = { workspace = true, features = ["rand"] }

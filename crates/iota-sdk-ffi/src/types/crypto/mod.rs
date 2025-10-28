@@ -7,7 +7,7 @@ pub mod zklogin;
 
 use std::sync::Arc;
 
-use iota_types::{PublicKeyExt, SignatureScheme};
+use iota_sdk::types::{PublicKeyExt, SignatureScheme};
 
 use crate::{
     error::Result,
@@ -18,13 +18,13 @@ macro_rules! impl_crypto_object {
     ($(#[$meta:meta])* $t:ident) => {
         $(#[$meta])*
         #[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-        pub struct $t(pub iota_types::$t);
+        pub struct $t(pub iota_sdk::types::$t);
 
         #[uniffi::export]
         impl $t {
             #[uniffi::constructor]
             pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
-                Ok(Self(iota_types::$t::from_bytes(bytes)?))
+                Ok(Self(iota_sdk::types::$t::from_bytes(bytes)?))
             }
 
             #[uniffi::constructor]
@@ -35,7 +35,7 @@ macro_rules! impl_crypto_object {
             #[uniffi::constructor]
             pub fn generate() -> Self {
                 let mut rng = rand::thread_rng();
-                Self(iota_types::$t::generate(&mut rng))
+                Self(iota_sdk::types::$t::generate(&mut rng))
             }
 
             pub fn to_bytes(&self) -> Vec<u8> {

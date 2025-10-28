@@ -22,5 +22,6 @@ fun main() = runBlocking {
         println("Total Balance = $balance")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

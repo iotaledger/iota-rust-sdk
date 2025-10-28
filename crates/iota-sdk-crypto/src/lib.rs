@@ -4,7 +4,7 @@
 
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
-use iota_sdk_types::{PersonalMessage, Transaction, UserSignature};
+use iota_types::{PersonalMessage, Transaction, UserSignature};
 pub use signature::{Error as SignatureError, Signer, Verifier};
 
 /// Error type for private key encoding/decoding operations
@@ -185,10 +185,10 @@ pub const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
 /// Extension trait for private key types
 pub trait PrivateKeyExt {
     /// The signature scheme for this key type
-    const SCHEME: iota_sdk_types::SignatureScheme;
+    const SCHEME: iota_types::SignatureScheme;
 
     /// Returns the signature scheme for this private key
-    fn scheme(&self) -> iota_sdk_types::SignatureScheme {
+    fn scheme(&self) -> iota_types::SignatureScheme {
         Self::SCHEME
     }
 
@@ -218,7 +218,7 @@ pub trait PrivateKeyExt {
             return Err(PrivateKeyError::EmptyData("flagged bytes".to_string()));
         }
 
-        let flag = iota_sdk_types::SignatureScheme::from_byte(bytes[0])
+        let flag = iota_types::SignatureScheme::from_byte(bytes[0])
             .map_err(|e| PrivateKeyError::InvalidScheme(format!("{e:?}")))?;
 
         if flag != Self::SCHEME {
