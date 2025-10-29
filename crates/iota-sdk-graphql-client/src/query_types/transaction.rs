@@ -8,9 +8,8 @@ use iota_types::{
 };
 
 use crate::{
-    error,
-    error::{Error, Kind},
-    query_types::{Address, Base64, PageInfo, schema},
+    error::{self, Error, Kind},
+    query_types::{Address, Base64, PageInfo, checkpoint::Checkpoint, schema},
 };
 
 // ===========================================================================
@@ -130,6 +129,7 @@ pub struct TxBlockEffects {
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
 pub struct TransactionBlockEffects {
     pub bcs: Option<Base64>,
+    pub checkpoint: Option<Checkpoint>,
 }
 
 #[derive(cynic::Enum, Clone, Copy, Debug)]

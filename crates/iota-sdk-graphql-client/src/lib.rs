@@ -62,7 +62,17 @@ const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
 const TESTNET_HOST: &str = "https://graphql.testnet.iota.cafe";
 const DEVNET_HOST: &str = "https://graphql.devnet.iota.cafe";
 const LOCAL_HOST: &str = "http://localhost:9125/graphql";
-static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
+static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
+
+fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, crate::Error> {
+    match (response.data, response.errors) {
+        (Some(data), None) => Ok(data),
+        (None, Some(errors)) => Err(Error::graphql_error(errors)),
+        _ => unreachable!(
+            "Either data or errors must be present in a GraphQL response, but not both"
+        ),
+    }
+}
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
@@ -98,21 +108,12 @@ impl Client {
         }
 
         // Otherwise, fetch and initialize it
-        let service_config = {
-            let operation = ServiceConfigQuery::build(());
-            let response = self.run_query(&operation).await?;
+        let operation = ServiceConfigQuery::build(());
+        let response = self.run_query(&operation).await?;
 
-            if let Some(errors) = response.errors {
-                return Err(Error::graphql_error(errors));
-            }
-
-            response
-                .data
-                .map(|s| s.service_config)
-                .ok_or_else(Error::empty_response_error)?
-        };
-
-        let service_config = self.service_config.get_or_init(move || service_config);
+        let service_config = self
+            .service_config
+            .get_or_init(move || response.service_config);
 
         Ok(service_config)
     }
@@ -170,10 +171,7 @@ impl Client {
 
     /// Internal method for getting the epoch summary that is called in a few
     /// other APIs for convenience.
-    async fn epoch_summary(
-        &self,
-        epoch: Option<u64>,
-    ) -> Result<GraphQlResponse<EpochSummaryQuery>> {
+    async fn epoch_summary(&self, epoch: Option<u64>) -> Result<EpochSummaryQuery> {
         let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
         self.run_query(&operation).await
     }
@@ -253,30 +251,16 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        // Query errors
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        // Dry Run errors
-        let error = response
-            .data
-            .as_ref()
-            .and_then(|tx| tx.dry_run_transaction_block.error.clone());
-
         // Convert DryRunEffect to DryRunEffect
         let results = response
-            .data
-            .as_ref()
-            .and_then(|tx| tx.dry_run_transaction_block.results.as_ref())
-            .unwrap_or(&Vec::new())
+            .dry_run_transaction_block
+            .results
             .iter()
+            .flatten()
             .map(DryRunEffect::try_from)
             .collect::<Result<Vec<_>>>()?;
 
-        let txn_block = response
-            .data
-            .and_then(|tx| tx.dry_run_transaction_block.transaction);
+        let txn_block = &response.dry_run_transaction_block.transaction;
 
         let effects = txn_block
             .as_ref()
@@ -289,14 +273,15 @@ impl Client {
 
         // Extract transaction
         let transaction = txn_block
-            .and_then(|tx| tx.bcs)
+            .as_ref()
+            .and_then(|tx| tx.bcs.as_ref())
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<SignedTransaction>(&bcs))
             .transpose()?;
 
         Ok(DryRunResult {
-            error,
+            error: response.dry_run_transaction_block.error,
             results,
             transaction,
             effects,
@@ -333,20 +318,20 @@ impl Client {
     /// Run a query on the GraphQL server and return the response.
     /// This method returns [`cynic::GraphQlResponse`]  over the query type `T`,
     /// and it is intended to be used with custom queries.
-    pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> Result<GraphQlResponse<T>>
+    pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> Result<T>
     where
         T: serde::de::DeserializeOwned,
         V: serde::Serialize,
     {
-        let res = self
-            .inner
-            .post(self.rpc_server().clone())
-            .json(&operation)
-            .send()
-            .await?
-            .json::<GraphQlResponse<T>>()
-            .await?;
-        Ok(res)
+        response_to_err(
+            self.inner
+                .post(self.rpc_server().clone())
+                .json(&operation)
+                .send()
+                .await?
+                .json::<GraphQlResponse<T>>()
+                .await?,
+        )
     }
 
     /// Run a JSON query on the GraphQL server and return the response.
@@ -388,15 +373,10 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
         let total_balance = response
-            .data
-            .map(|b| b.owner.and_then(|o| o.balance.map(|b| b.total_balance)))
+            .owner
+            .and_then(|o| o.balance.map(|b| b.total_balance))
             .ok_or_else(Error::empty_response_error)?
-            .flatten()
             .map(|x| x.0.parse::<u64>())
             .transpose()?;
         Ok(total_balance)
@@ -447,14 +427,7 @@ impl Client {
         let operation = ChainIdentifierQuery::build(());
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        response
-            .data
-            .map(|e| e.chain_identifier)
-            .ok_or_else(Error::empty_response_error)
+        Ok(response.chain_identifier)
     }
 
     /// Handle pagination filters and return the appropriate values. If limit is
@@ -497,13 +470,8 @@ impl Client {
         let operation = EpochSummaryQuery::build(EpochArgs { id: epoch.into() });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
         response
-            .data
-            .and_then(|e| e.epoch)
+            .epoch
             .and_then(|e| e.reference_gas_price)
             .map(|x| x.try_into())
             .transpose()
@@ -513,10 +481,10 @@ impl Client {
     pub async fn protocol_config(
         &self,
         version: impl Into<Option<u64>>,
-    ) -> Result<Option<ProtocolConfigs>> {
+    ) -> Result<ProtocolConfigs> {
         let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version.into() });
         let response = self.run_query(&operation).await?;
-        Ok(response.data.map(|p| p.protocol_config))
+        Ok(response.protocol_config)
     }
 
     /// Get the list of active validators for the provided epoch, including
@@ -543,15 +511,7 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        if let Some(validators) = response
-            .data
-            .and_then(|d| d.epoch)
-            .and_then(|v| v.validator_set)
-        {
+        if let Some(validators) = response.epoch.and_then(|v| v.validator_set) {
             let page_info = validators.active_validators.page_info;
             let nodes = validators
                 .active_validators
@@ -606,13 +566,8 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
         Ok(response
-            .data
-            .and_then(|x| x.checkpoint)
+            .checkpoint
             .and_then(|c| c.network_total_transactions))
     }
 
@@ -677,11 +632,7 @@ impl Client {
         let operation = CoinMetadataQuery::build(CoinMetadataArgs { coin_type });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        Ok(response.data.and_then(|x| x.coin_metadata))
+        Ok(response.coin_metadata)
     }
 
     /// Get total supply for the coin type.
@@ -723,14 +674,7 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        response
-            .data
-            .map(|c| c.checkpoint.map(|c| c.try_into()).transpose())
-            .ok_or(Error::empty_response_error())?
+        response.checkpoint.map(|c| c.try_into()).transpose()
     }
 
     /// Get a page of [`CheckpointSummary`] for the provided parameters.
@@ -753,23 +697,15 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
+        let cc = response.checkpoints;
+        let page_info = cc.page_info;
+        let nodes = cc
+            .nodes
+            .into_iter()
+            .map(|c| c.try_into())
+            .collect::<Result<Vec<CheckpointSummary>, _>>()?;
 
-        if let Some(checkpoints) = response.data {
-            let cc = checkpoints.checkpoints;
-            let page_info = cc.page_info;
-            let nodes = cc
-                .nodes
-                .into_iter()
-                .map(|c| c.try_into())
-                .collect::<Result<Vec<CheckpointSummary>, _>>()?;
-
-            Ok(Page::new(page_info, nodes))
-        } else {
-            Ok(Page::new_empty())
-        }
+        Ok(Page::new(page_info, nodes))
     }
 
     /// Return the sequence number of the latest checkpoint that has been
@@ -793,11 +729,7 @@ impl Client {
         let operation = EpochQuery::build(EpochArgs { id: epoch.into() });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        Ok(response.data.and_then(|d| d.epoch))
+        Ok(response.epoch)
     }
 
     /// Return the number of checkpoints in this epoch. This will return
@@ -809,14 +741,7 @@ impl Client {
     ) -> Result<Option<u64>> {
         let response = self.epoch_summary(epoch.into()).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        Ok(response
-            .data
-            .and_then(|d| d.epoch)
-            .and_then(|e| e.total_checkpoints))
+        Ok(response.epoch.and_then(|e| e.total_checkpoints))
     }
 
     /// Return the number of transaction blocks in this epoch. This will return
@@ -828,14 +753,7 @@ impl Client {
     ) -> Result<Option<u64>> {
         let response = self.epoch_summary(epoch.into()).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        Ok(response
-            .data
-            .and_then(|d| d.epoch)
-            .and_then(|e| e.total_transactions))
+        Ok(response.epoch.and_then(|e| e.total_transactions))
     }
 
     // ===========================================================================
@@ -865,20 +783,12 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
+        let ec = response.events;
+        let page_info = ec.page_info;
 
-        if let Some(events) = response.data {
-            let ec = events.events;
-            let page_info = ec.page_info;
+        let events = ec.nodes;
 
-            let events = ec.nodes;
-
-            Ok(Page::new(page_info, events))
-        } else {
-            Ok(Page::new_empty())
-        }
+        Ok(Page::new(page_info, events))
     }
 
     // ===========================================================================
@@ -902,25 +812,17 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
+        let obj = response.object;
+        let bcs = obj
+            .and_then(|o| o.bcs)
+            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .transpose()?;
 
-        if let Some(object) = response.data {
-            let obj = object.object;
-            let bcs = obj
-                .and_then(|o| o.bcs)
-                .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
-                .transpose()?;
+        let object = bcs
+            .map(|b| bcs::from_bytes::<iota_types::Object>(&b))
+            .transpose()?;
 
-            let object = bcs
-                .map(|b| bcs::from_bytes::<iota_types::Object>(&b))
-                .transpose()?;
-
-            Ok(object)
-        } else {
-            Ok(None)
-        }
+        Ok(object)
     }
 
     /// Return a page of objects based on the provided parameters.
@@ -959,31 +861,24 @@ impl Client {
         });
 
         let response = self.run_query(&operation).await?;
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
 
-        if let Some(objects) = response.data {
-            let oc = objects.objects;
-            let page_info = oc.page_info;
-            let bcs = oc
-                .nodes
-                .iter()
-                .map(|o| &o.bcs)
-                .filter_map(|b64| {
-                    b64.as_ref()
-                        .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-                })
-                .collect::<Result<Vec<_>, base64ct::Error>>()?;
-            let objects = bcs
-                .iter()
-                .map(|b| bcs::from_bytes::<iota_types::Object>(b))
-                .collect::<Result<Vec<_>, bcs::Error>>()?;
+        let oc = response.objects;
+        let page_info = oc.page_info;
+        let bcs = oc
+            .nodes
+            .iter()
+            .map(|o| &o.bcs)
+            .filter_map(|b64| {
+                b64.as_ref()
+                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
+            })
+            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+        let objects = bcs
+            .iter()
+            .map(|b| bcs::from_bytes::<iota_types::Object>(b))
+            .collect::<Result<Vec<_>, bcs::Error>>()?;
 
-            Ok(Page::new(page_info, objects))
-        } else {
-            Ok(Page::new_empty())
-        }
+        Ok(Page::new(page_info, objects))
     }
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
@@ -996,18 +891,13 @@ impl Client {
 
         let response = self.run_query(&operation).await.unwrap();
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        if let Some(object) = response.data.map(|d| d.object) {
-            Ok(object
-                .and_then(|o| o.bcs)
-                .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
-                .transpose()?)
-        } else {
-            Ok(None)
-        }
+        Ok(response
+            .object
+            .and_then(|o| {
+                o.bcs
+                    .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            })
+            .transpose()?)
     }
 
     /// Return the BCS of an object that is a Move object.
@@ -1027,20 +917,12 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        if let Some(object) = response.data {
-            Ok(object
-                .object
-                .and_then(|o| o.as_move_object)
-                .and_then(|o| o.contents)
-                .map(|bcs| base64ct::Base64::decode_vec(bcs.bcs.0.as_str()))
-                .transpose()?)
-        } else {
-            Ok(None)
-        }
+        Ok(response
+            .object
+            .and_then(|o| o.as_move_object)
+            .and_then(|o| o.contents)
+            .map(|bcs| base64ct::Base64::decode_vec(bcs.bcs.0.as_str()))
+            .transpose()?)
     }
 
     // ===========================================================================
@@ -1070,13 +952,8 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
         Ok(response
-            .data
-            .and_then(|x| x.package)
+            .package
             .and_then(|x| x.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
@@ -1115,31 +992,23 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
+        let pc = response.package_versions;
+        let page_info = pc.page_info;
+        let bcs = pc
+            .nodes
+            .iter()
+            .map(|p| &p.bcs)
+            .filter_map(|b64| {
+                b64.as_ref()
+                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
+            })
+            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+        let packages = bcs
+            .iter()
+            .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
+            .collect::<Result<Vec<_>, bcs::Error>>()?;
 
-        if let Some(packages) = response.data {
-            let pc = packages.package_versions;
-            let page_info = pc.page_info;
-            let bcs = pc
-                .nodes
-                .iter()
-                .map(|p| &p.bcs)
-                .filter_map(|b64| {
-                    b64.as_ref()
-                        .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-                })
-                .collect::<Result<Vec<_>, base64ct::Error>>()?;
-            let packages = bcs
-                .iter()
-                .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-                .collect::<Result<Vec<_>, bcs::Error>>()?;
-
-            Ok(Page::new(page_info, packages))
-        } else {
-            Ok(Page::new_empty())
-        }
+        Ok(Page::new(page_info, packages))
     }
 
     /// Fetch the latest version of the package at address.
@@ -1153,21 +1022,14 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        let pkg = response
-            .data
-            .and_then(|x| x.latest_package)
+        Ok(response
+            .latest_package
             .and_then(|x| x.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(&bcs.0))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs))
             .transpose()?
-            .map(|obj| obj.data.into_package());
-
-        Ok(pkg)
+            .map(|obj| obj.data.into_package()))
     }
 
     /// The Move packages that exist in the network, optionally filtered to be
@@ -1203,31 +1065,23 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
+        let pc = response.packages;
+        let page_info = pc.page_info;
+        let bcs = pc
+            .nodes
+            .iter()
+            .map(|p| &p.bcs)
+            .filter_map(|b64| {
+                b64.as_ref()
+                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
+            })
+            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+        let packages = bcs
+            .iter()
+            .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
+            .collect::<Result<Vec<_>, bcs::Error>>()?;
 
-        if let Some(packages) = response.data {
-            let pc = packages.packages;
-            let page_info = pc.page_info;
-            let bcs = pc
-                .nodes
-                .iter()
-                .map(|p| &p.bcs)
-                .filter_map(|b64| {
-                    b64.as_ref()
-                        .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-                })
-                .collect::<Result<Vec<_>, base64ct::Error>>()?;
-            let packages = bcs
-                .iter()
-                .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-                .collect::<Result<Vec<_>, bcs::Error>>()?;
-
-            Ok(Page::new(page_info, packages))
-        } else {
-            Ok(Page::new_empty())
-        }
+        Ok(Page::new(page_info, packages))
     }
 
     // ===========================================================================
@@ -1241,14 +1095,9 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
         response
-            .data
-            .and_then(|d| d.transaction_block)
-            .map(|tx| tx.try_into())
+            .transaction_block
+            .map(TryInto::try_into)
             .transpose()
     }
 
@@ -1260,9 +1109,8 @@ impl Client {
         let response = self.run_query(&operation).await?;
 
         response
-            .data
-            .and_then(|d| d.transaction_block)
-            .map(|tx| tx.try_into())
+            .transaction_block
+            .map(TryInto::try_into)
             .transpose()
     }
 
@@ -1276,12 +1124,10 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        let tx = response
-            .data
-            .and_then(|d| d.transaction_block)
-            .map(|tx| (tx.bcs, tx.effects, tx.signatures));
-
-        match tx {
+        match response
+            .transaction_block
+            .map(|tx| (tx.bcs, tx.effects, tx.signatures))
+        {
             Some((Some(bcs), Some(effects), Some(sigs))) => {
                 let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                 let effects = base64ct::Base64::decode_vec(effects.bcs.unwrap().0.as_str())?;
@@ -1324,24 +1170,15 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
+        let txc = response.transaction_blocks;
+        let page_info = txc.page_info;
 
-        if let Some(txb) = response.data {
-            let txc = txb.transaction_blocks;
-            let page_info = txc.page_info;
-
-            let transactions = txc
-                .nodes
-                .into_iter()
-                .map(|n| n.try_into())
-                .collect::<Result<Vec<_>>>()?;
-            let page = Page::new(page_info, transactions);
-            Ok(page)
-        } else {
-            Ok(Page::new_empty())
-        }
+        let transactions = txc
+            .nodes
+            .into_iter()
+            .map(|n| n.try_into())
+            .collect::<Result<Vec<_>>>()?;
+        Ok(Page::new(page_info, transactions))
     }
 
     /// Get a page of transactions' effects based on the provided filters.
@@ -1367,20 +1204,15 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(txb) = response.data {
-            let txc = txb.transaction_blocks;
-            let page_info = txc.page_info;
+        let txc = response.transaction_blocks;
+        let page_info = txc.page_info;
 
-            let transactions = txc
-                .nodes
-                .into_iter()
-                .map(|n| n.try_into())
-                .collect::<Result<Vec<_>>>()?;
-            let page = Page::new(page_info, transactions);
-            Ok(page)
-        } else {
-            Ok(Page::new_empty())
-        }
+        let transactions = txc
+            .nodes
+            .into_iter()
+            .map(|n| n.try_into())
+            .collect::<Result<Vec<_>>>()?;
+        Ok(Page::new(page_info, transactions))
     }
 
     /// Get a page of transactions' data and effects based on the provided
@@ -1407,52 +1239,43 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
+        let txc = response.transaction_blocks;
+        let page_info = txc.page_info;
 
-        if let Some(txb) = response.data {
-            let txc = txb.transaction_blocks;
-            let page_info = txc.page_info;
+        let transactions = {
+            txc.nodes
+                .iter()
+                .map(|node| {
+                    match (
+                        node.bcs.as_ref(),
+                        node.effects.as_ref(),
+                        node.signatures.as_ref(),
+                    ) {
+                        (Some(bcs), Some(effects), Some(sigs)) => {
+                            let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
+                            let effects = base64ct::Base64::decode_vec(
+                                effects.bcs.as_ref().unwrap().0.as_str(),
+                            )?;
 
-            let transactions = {
-                txc.nodes
-                    .iter()
-                    .map(|node| {
-                        match (
-                            node.bcs.as_ref(),
-                            node.effects.as_ref(),
-                            node.signatures.as_ref(),
-                        ) {
-                            (Some(bcs), Some(effects), Some(sigs)) => {
-                                let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
-                                let effects = base64ct::Base64::decode_vec(
-                                    effects.bcs.as_ref().unwrap().0.as_str(),
-                                )?;
-
-                                let sigs = sigs
-                                    .iter()
-                                    .map(|s| UserSignature::from_base64(&s.0))
-                                    .collect::<Result<Vec<_>, _>>()?;
-                                let tx: Transaction = bcs::from_bytes(&bcs)?;
-                                let tx = SignedTransaction {
-                                    transaction: tx,
-                                    signatures: sigs,
-                                };
-                                let effects: TransactionEffects = bcs::from_bytes(&effects)?;
-                                Ok(TransactionDataEffects { tx, effects })
-                            }
-                            (_, _, _) => Err(Error::empty_response_error()),
+                            let sigs = sigs
+                                .iter()
+                                .map(|s| UserSignature::from_base64(&s.0))
+                                .collect::<Result<Vec<_>, _>>()?;
+                            let tx: Transaction = bcs::from_bytes(&bcs)?;
+                            let tx = SignedTransaction {
+                                transaction: tx,
+                                signatures: sigs,
+                            };
+                            let effects: TransactionEffects = bcs::from_bytes(&effects)?;
+                            Ok(TransactionDataEffects { tx, effects })
                         }
-                    })
-                    .collect::<Result<Vec<_>>>()?
-            };
+                        (_, _, _) => Err(Error::empty_response_error()),
+                    }
+                })
+                .collect::<Result<Vec<_>>>()?
+        };
 
-            let page = Page::new(page_info, transactions);
-            Ok(page)
-        } else {
-            Ok(Page::new_empty())
-        }
+        Ok(Page::new(page_info, transactions))
     }
 
     /// Execute a transaction.
@@ -1469,26 +1292,15 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
+        let result = response.execute_transaction_block;
+        let bcs = base64ct::Base64::decode_vec(result.effects.bcs.0.as_str())?;
+        let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
+
+        if wait_for_finalization {
+            self.wait_for_tx_finalization(tx.digest(), None).await?;
         }
 
-        if let Some(data) = response.data {
-            let result = data.execute_transaction_block;
-            let bcs = base64ct::Base64::decode_vec(result.effects.bcs.0.as_str())?;
-            let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
-
-            if wait_for_finalization {
-                self.wait_for_tx_finalization(tx.digest(), None).await?;
-            }
-
-            Ok(effects)
-        } else {
-            Err(Error::from_message(
-                Kind::Missing,
-                format!("effects for transaction {}", tx.digest()),
-            ))
-        }
+        Ok(effects)
     }
 
     /// Wait for the finalization of a transaction by its digest. An optional
@@ -1505,8 +1317,19 @@ impl Client {
                 let mut interval = tokio::time::interval(tokio::time::Duration::from_millis(100));
                 loop {
                     interval.tick().await;
-                    if let Some(effects) = self.transaction_effects(digest).await? {
-                        break Ok(effects);
+                    let operation = TransactionBlockEffectsQuery::build(TransactionBlockArgs {
+                        digest: digest.to_string(),
+                    });
+                    let response = self.run_query(&operation).await?;
+                    if let Some(block) = response.transaction_block {
+                        if block
+                            .effects
+                            .as_ref()
+                            .and_then(|e| e.checkpoint.as_ref())
+                            .is_some()
+                        {
+                            break Ok(block.try_into()?);
+                        }
                     }
                 }
             },
@@ -1535,13 +1358,8 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
         Ok(response
-            .data
-            .and_then(|p| p.package)
+            .package
             .and_then(|p| p.module)
             .and_then(|m| m.function))
     }
@@ -1563,19 +1381,11 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        if let Some(object) = response.data {
-            Ok(object
-                .object
-                .and_then(|o| o.as_move_object)
-                .and_then(|o| o.contents)
-                .and_then(|mv| mv.json))
-        } else {
-            Ok(None)
-        }
+        Ok(response
+            .object
+            .and_then(|o| o.as_move_object)
+            .and_then(|o| o.contents)
+            .and_then(|mv| mv.json))
     }
 
     /// Return the normalized Move module data for the provided module.
@@ -1619,11 +1429,7 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        Ok(response.data.and_then(|p| p.package).and_then(|p| p.module))
+        Ok(response.package.and_then(|p| p.module))
     }
 
     // ===========================================================================
@@ -1668,13 +1474,8 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
         let result = response
-            .data
-            .and_then(|d| d.owner)
+            .owner
             .and_then(|o| o.dynamic_field)
             .map(|df| df.try_into())
             .transpose()?;
@@ -1708,13 +1509,8 @@ impl Client {
 
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
         let result: Option<DynamicFieldOutput> = response
-            .data
-            .and_then(|d| d.owner)
+            .owner
             .and_then(|o| o.dynamic_object_field)
             .map(|df| df.try_into())
             .transpose()?;
@@ -1745,11 +1541,7 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        let Some(DynamicFieldsOwnerQuery { owner: Some(dfs) }) = response.data else {
+        let DynamicFieldsOwnerQuery { owner: Some(dfs) } = response else {
             return Ok(Page::new_empty());
         };
 
@@ -1770,13 +1562,9 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        let Some(ResolveIotaNamesAddressQuery {
+        let ResolveIotaNamesAddressQuery {
             resolve_iota_names_address: Some(address),
-        }) = response.data
+        } = response
         else {
             return Ok(None);
         };
@@ -1805,16 +1593,12 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        let Some(IotaNamesAddressRegistrationsQuery {
+        let IotaNamesAddressRegistrationsQuery {
             address:
                 Some(IotaNamesRegistrationsQuery {
                     iota_names_registrations,
                 }),
-        }) = response.data
+        } = response
         else {
             return Ok(Page::new_empty());
         };
@@ -1841,16 +1625,12 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        if let Some(errors) = response.errors {
-            return Err(Error::graphql_error(errors));
-        }
-
-        let Some(IotaNamesAddressDefaultNameQuery {
+        let IotaNamesAddressDefaultNameQuery {
             address:
                 Some(IotaNamesDefaultNameQuery {
                     iota_names_default_name: Some(name),
                 }),
-        }) = response.data
+        } = response
         else {
             return Ok(None);
         };
@@ -1953,7 +1733,6 @@ mod tests {
                     client.rpc_server()
                 )
             })
-            .unwrap()
             .unwrap();
 
         // test specific version
@@ -1967,15 +1746,13 @@ mod tests {
                 )
             })
             .unwrap();
-        if let Some(pc) = pc {
-            assert_eq!(
-                pc.protocol_version,
-                50,
-                "Protocol version query mismatch for {} network. Expected: 50, received: {}",
-                client.rpc_server(),
-                pc.protocol_version
-            );
-        }
+        assert_eq!(
+            pc.protocol_version,
+            50,
+            "Protocol version query mismatch for {} network. Expected: 50, received: {}",
+            client.rpc_server(),
+            pc.protocol_version
+        );
     }
 
     #[tokio::test]

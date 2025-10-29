@@ -115,7 +115,7 @@ impl GraphQLClient {
 
     /// Get the protocol configuration.
     #[uniffi::method(default(version = None))]
-    pub async fn protocol_config(&self, version: Option<u64>) -> Result<Option<ProtocolConfigs>> {
+    pub async fn protocol_config(&self, version: Option<u64>) -> Result<ProtocolConfigs> {
         Ok(self.0.read().await.protocol_config(version).await?)
     }
 
