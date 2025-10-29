@@ -7,7 +7,7 @@ use std::{
     time::Duration,
 };
 
-use iota_types::Input;
+use iota_sdk::types::Input;
 
 use crate::{
     crypto::simple::SimpleKeypair,
@@ -31,13 +31,15 @@ pub mod ptb_arg;
 /// transaction data.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct TransactionBuilder(
-    RwLock<iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>>,
+    RwLock<iota_sdk::transaction_builder::TransactionBuilder<iota_sdk::graphql_client::Client>>,
 );
 
 impl TransactionBuilder {
     fn read<F, T>(&self, f: F) -> T
     where
-        F: FnOnce(&iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>) -> T,
+        F: FnOnce(
+            &iota_sdk::transaction_builder::TransactionBuilder<iota_sdk::graphql_client::Client>,
+        ) -> T,
     {
         let lock = self.0.read().expect("error reading from builder");
         f(&lock)
@@ -46,7 +48,7 @@ impl TransactionBuilder {
     fn write<F, T>(&self, f: F) -> T
     where
         F: FnOnce(
-            &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
+            &mut iota_sdk::transaction_builder::TransactionBuilder<iota_sdk::graphql_client::Client>,
         ) -> T,
     {
         let mut lock = self.0.write().expect("error writing to builder");
@@ -60,7 +62,7 @@ impl TransactionBuilder {
     #[uniffi::constructor(name = "init")]
     pub async fn new(sender: &Address, client: &GraphQLClient) -> Self {
         Self(
-            iota_transaction_builder::TransactionBuilder::new(**sender)
+            iota_sdk::transaction_builder::TransactionBuilder::new(**sender)
                 .with_client(client.inner().read().await.clone())
                 .into(),
         )
@@ -243,7 +245,7 @@ impl TransactionBuilder {
         type_tag: &TypeTag,
         name: String,
     ) -> Arc<Self> {
-        use iota_transaction_builder::unresolved::{Command, MakeMoveVector};
+        use iota_sdk::transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
             let cmd = Command::MakeMoveVector(MakeMoveVector {
                 type_tag: Some(type_tag.0.clone()),
@@ -297,15 +299,34 @@ impl TransactionBuilder {
     #[uniffi::method(default(name = None))]
     pub fn upgrade(
         self: Arc<Self>,
+        package_id: &ObjectId,
         package_data: &MovePackageData,
-        package: &ObjectId,
-        ticket: &PTBArgument,
+        upgrade_ticket: &PTBArgument,
         name: Option<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .upgrade(**package, ticket, package_data.0.clone())
+                .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
                 .name(name);
+        });
+        self
+    }
+
+    /// Add stake to a validator's staking pool.
+    ///
+    /// This is a high-level function which will split the provided stake amount
+    /// from the gas coin and then stake using the resulting coin.
+    pub fn stake(self: Arc<Self>, stake: &PTBArgument, validator_address: &Address) -> Arc<Self> {
+        self.write(|builder| {
+            builder.stake(stake, **validator_address);
+        });
+        self
+    }
+
+    /// Withdraw stake from a validator's staking pool.
+    pub fn unstake(self: Arc<Self>, staked_iota: &PTBArgument) -> Arc<Self> {
+        self.write(|builder| {
+            builder.unstake(staked_iota);
         });
         self
     }

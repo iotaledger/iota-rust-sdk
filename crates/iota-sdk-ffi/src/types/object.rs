@@ -6,7 +6,7 @@ use std::{
     sync::Arc,
 };
 
-pub type Version = iota_types::Version;
+pub type Version = iota_sdk::types::Version;
 
 use crate::{
     error::Result,
@@ -38,20 +38,20 @@ use crate::{
 /// ```
 #[derive(PartialEq, Eq, Hash, derive_more::From, derive_more::Deref, uniffi::Object)]
 #[uniffi::export(Hash)]
-pub struct ObjectId(pub iota_types::ObjectId);
+pub struct ObjectId(pub iota_sdk::types::ObjectId);
 
 #[uniffi::export]
 impl ObjectId {
     #[uniffi::constructor]
     pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(iota_types::ObjectId::from(
-            iota_types::Address::from_bytes(bytes)?,
+        Ok(Self(iota_sdk::types::ObjectId::from(
+            iota_sdk::types::Address::from_bytes(bytes)?,
         )))
     }
 
     #[uniffi::constructor]
     pub fn from_hex(hex: &str) -> Result<Self> {
-        Ok(Self(iota_types::ObjectId::from_hex(hex)?))
+        Ok(Self(iota_sdk::types::ObjectId::from_hex(hex)?))
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -70,7 +70,7 @@ impl ObjectId {
     /// that have been created during a transactions.
     #[uniffi::constructor]
     pub fn derive_id(digest: &Digest, count: u64) -> Self {
-        Self(iota_types::ObjectId::derive_id(**digest, count))
+        Self(iota_sdk::types::ObjectId::derive_id(**digest, count))
     }
 
     /// Derive an ObjectId for a Dynamic Child Object.
@@ -90,7 +90,7 @@ macro_rules! named_object_id {
             impl ObjectId {$(
                 #[uniffi::constructor]
                 pub const fn [< $constant:lower >]() -> Self {
-                    Self(iota_types::ObjectId::$constant)
+                    Self(iota_sdk::types::ObjectId::$constant)
                 }
             )+}
         }
@@ -117,8 +117,8 @@ pub struct ObjectReference {
     digest: Arc<Digest>,
 }
 
-impl From<iota_types::ObjectReference> for ObjectReference {
-    fn from(value: iota_types::ObjectReference) -> Self {
+impl From<iota_sdk::types::ObjectReference> for ObjectReference {
+    fn from(value: iota_sdk::types::ObjectReference) -> Self {
         Self {
             object_id: Arc::new((*value.object_id()).into()),
             version: value.version(),
@@ -127,7 +127,7 @@ impl From<iota_types::ObjectReference> for ObjectReference {
     }
 }
 
-impl From<ObjectReference> for iota_types::ObjectReference {
+impl From<ObjectReference> for iota_sdk::types::ObjectReference {
     fn from(value: ObjectReference) -> Self {
         Self::new(**value.object_id, value.version, **value.digest)
     }
@@ -143,7 +143,7 @@ impl From<ObjectReference> for iota_types::ObjectReference {
 /// object = object-data owner digest u64
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Object(pub iota_types::Object);
+pub struct Object(pub iota_sdk::types::Object);
 
 #[uniffi::export]
 impl Object {
@@ -154,7 +154,7 @@ impl Object {
         previous_transaction: &Digest,
         storage_rebate: u64,
     ) -> Self {
-        Self(iota_types::Object::new(
+        Self(iota_sdk::types::Object::new(
             data.0.clone(),
             **owner,
             **previous_transaction,
@@ -245,20 +245,20 @@ impl Object {
 /// object-data-package = %x01 object-move-package
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ObjectData(pub iota_types::ObjectData);
+pub struct ObjectData(pub iota_sdk::types::ObjectData);
 
 #[uniffi::export]
 impl ObjectData {
     /// Create an `ObjectData` from a `MoveStruct`
     #[uniffi::constructor]
     pub fn new_move_struct(move_struct: MoveStruct) -> Self {
-        Self(iota_types::ObjectData::Struct(move_struct.into()))
+        Self(iota_sdk::types::ObjectData::Struct(move_struct.into()))
     }
 
     /// Create an `ObjectData` from  `MovePackage`
     #[uniffi::constructor]
     pub fn new_move_package(move_package: &MovePackage) -> Self {
-        Self(iota_types::ObjectData::Package(move_package.0.clone()))
+        Self(iota_sdk::types::ObjectData::Package(move_package.0.clone()))
     }
 
     /// Return whether this object is a `MoveStruct`
@@ -302,8 +302,8 @@ pub struct TypeOrigin {
     pub package: Arc<ObjectId>,
 }
 
-impl From<iota_types::TypeOrigin> for TypeOrigin {
-    fn from(value: iota_types::TypeOrigin) -> Self {
+impl From<iota_sdk::types::TypeOrigin> for TypeOrigin {
+    fn from(value: iota_sdk::types::TypeOrigin) -> Self {
         Self {
             module_name: Arc::new(value.module_name.into()),
             struct_name: Arc::new(value.struct_name.into()),
@@ -312,7 +312,7 @@ impl From<iota_types::TypeOrigin> for TypeOrigin {
     }
 }
 
-impl From<TypeOrigin> for iota_types::TypeOrigin {
+impl From<TypeOrigin> for iota_sdk::types::TypeOrigin {
     fn from(value: TypeOrigin) -> Self {
         Self {
             module_name: value.module_name.0.clone(),
@@ -339,8 +339,8 @@ pub struct UpgradeInfo {
     pub upgraded_version: Version,
 }
 
-impl From<iota_types::UpgradeInfo> for UpgradeInfo {
-    fn from(value: iota_types::UpgradeInfo) -> Self {
+impl From<iota_sdk::types::UpgradeInfo> for UpgradeInfo {
+    fn from(value: iota_sdk::types::UpgradeInfo) -> Self {
         Self {
             upgraded_id: Arc::new(value.upgraded_id.into()),
             upgraded_version: value.upgraded_version,
@@ -348,7 +348,7 @@ impl From<iota_types::UpgradeInfo> for UpgradeInfo {
     }
 }
 
-impl From<UpgradeInfo> for iota_types::UpgradeInfo {
+impl From<UpgradeInfo> for iota_sdk::types::UpgradeInfo {
     fn from(value: UpgradeInfo) -> Self {
         Self {
             upgraded_id: **value.upgraded_id,
@@ -371,7 +371,7 @@ impl From<UpgradeInfo> for iota_types::UpgradeInfo {
 /// linkage-table = map (object-id upgrade-info)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MovePackage(pub iota_types::MovePackage);
+pub struct MovePackage(pub iota_sdk::types::MovePackage);
 
 #[uniffi::export]
 impl MovePackage {
@@ -383,7 +383,7 @@ impl MovePackage {
         type_origin_table: Vec<TypeOrigin>,
         linkage_table: HashMap<Arc<ObjectId>, UpgradeInfo>,
     ) -> Result<Self> {
-        Ok(Self(iota_types::MovePackage {
+        Ok(Self(iota_sdk::types::MovePackage {
             id: **id,
             version,
             modules: modules.into_iter().map(|(k, v)| (k.0.clone(), v)).collect(),
@@ -462,8 +462,8 @@ pub struct MoveStruct {
     pub contents: Vec<u8>,
 }
 
-impl From<iota_types::MoveStruct> for MoveStruct {
-    fn from(value: iota_types::MoveStruct) -> Self {
+impl From<iota_sdk::types::MoveStruct> for MoveStruct {
+    fn from(value: iota_sdk::types::MoveStruct) -> Self {
         Self {
             struct_type: Arc::new(value.type_tag.into()),
             version: value.version,
@@ -472,7 +472,7 @@ impl From<iota_types::MoveStruct> for MoveStruct {
     }
 }
 
-impl From<MoveStruct> for iota_types::MoveStruct {
+impl From<MoveStruct> for iota_sdk::types::MoveStruct {
     fn from(value: MoveStruct) -> Self {
         Self {
             type_tag: value.struct_type.0.clone(),
@@ -498,28 +498,28 @@ impl From<MoveStruct> for iota_types::MoveStruct {
 /// ```
 #[derive(derive_more::From, derive_more::Deref, derive_more::Display, uniffi::Object)]
 #[uniffi::export(Display)]
-pub struct Owner(pub iota_types::Owner);
+pub struct Owner(pub iota_sdk::types::Owner);
 
 #[uniffi::export]
 impl Owner {
     #[uniffi::constructor]
     pub fn new_address(address: &Address) -> Self {
-        Self(iota_types::Owner::Address(address.0))
+        Self(iota_sdk::types::Owner::Address(address.0))
     }
 
     #[uniffi::constructor]
     pub fn new_object(id: &ObjectId) -> Self {
-        Self(iota_types::Owner::Object(id.0))
+        Self(iota_sdk::types::Owner::Object(id.0))
     }
 
     #[uniffi::constructor]
     pub fn new_shared(version: Version) -> Self {
-        Self(iota_types::Owner::Shared(version))
+        Self(iota_sdk::types::Owner::Shared(version))
     }
 
     #[uniffi::constructor]
     pub fn new_immutable() -> Self {
-        Self(iota_types::Owner::Immutable)
+        Self(iota_sdk::types::Owner::Immutable)
     }
 
     pub fn is_address(&self) -> bool {
@@ -574,18 +574,18 @@ impl Owner {
 /// Type of an IOTA object
 #[derive(derive_more::From, derive_more::Display, uniffi::Object)]
 #[uniffi::export(Display)]
-pub struct ObjectType(pub iota_types::ObjectType);
+pub struct ObjectType(pub iota_sdk::types::ObjectType);
 
 #[uniffi::export]
 impl ObjectType {
     #[uniffi::constructor]
     pub fn new_package() -> Self {
-        Self(iota_types::ObjectType::Package)
+        Self(iota_sdk::types::ObjectType::Package)
     }
 
     #[uniffi::constructor]
     pub fn new_struct(struct_tag: &StructTag) -> Self {
-        Self(iota_types::ObjectType::Struct(struct_tag.0.clone()))
+        Self(iota_sdk::types::ObjectType::Struct(struct_tag.0.clone()))
     }
 
     pub fn is_package(&self) -> bool {
@@ -622,13 +622,13 @@ impl ObjectType {
 /// genesis-object = object-data owner
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct GenesisObject(pub iota_types::GenesisObject);
+pub struct GenesisObject(pub iota_sdk::types::GenesisObject);
 
 #[uniffi::export]
 impl GenesisObject {
     #[uniffi::constructor]
     pub fn new(data: &ObjectData, owner: &Owner) -> Self {
-        Self(iota_types::GenesisObject::new(data.0.clone(), owner.0))
+        Self(iota_sdk::types::GenesisObject::new(data.0.clone(), owner.0))
     }
 
     pub fn object_id(&self) -> ObjectId {

@@ -3332,7 +3332,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field()
 	})
-	if checksum != 28380 {
+	if checksum != 12346 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field: UniFFI API checksum mismatch")
 	}
@@ -3512,7 +3512,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects()
 	})
-	if checksum != 64679 {
+	if checksum != 14040 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects: UniFFI API checksum mismatch")
 	}
@@ -3875,6 +3875,33 @@ func uniffiCheckChecksums() {
 	if checksum != 22970 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackage_version: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies()
+	})
+	if checksum != 61113 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest()
+	})
+	if checksum != 31652 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules()
+	})
+	if checksum != 63377 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5814,6 +5841,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake()
+	})
+	if checksum != 41361 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects()
 	})
 	if checksum != 16313 {
@@ -5823,9 +5859,18 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake()
+	})
+	if checksum != 30530 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade()
 	})
-	if checksum != 3616 {
+	if checksum != 14493 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade: UniFFI API checksum mismatch")
 	}
@@ -6140,7 +6185,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8()
 	})
-	if checksum != 30703 {
+	if checksum != 10203 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8: UniFFI API checksum mismatch")
 	}
@@ -8966,7 +9011,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive()
 	})
-	if checksum != 4357 {
+	if checksum != 63459 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive: UniFFI API checksum mismatch")
 	}
@@ -8975,7 +9020,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible()
 	})
-	if checksum != 62706 {
+	if checksum != 63292 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible: UniFFI API checksum mismatch")
 	}
@@ -8984,7 +9029,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only()
 	})
-	if checksum != 53392 {
+	if checksum != 44371 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only: UniFFI API checksum mismatch")
 	}
@@ -14349,18 +14394,6 @@ type GraphQlClientInterface interface {
 	//
 	// This returns `DynamicFieldOutput` which contains the name, the value
 	// as json, and object.
-	//
-	// # Example
-	// ```rust,ignore
-	//
-	// let client = iota_graphql_client::Client::new_devnet();
-	// let address = ObjectId::SYSTEM.into();
-	// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-	//
-	// # alternatively, pass in the bcs bytes
-	// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-	// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-	// ```
 	DynamicField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error)
 	// Get a page of dynamic fields for the provided address. Note that this
 	// will also fetch dynamic fields on wrapped objects.
@@ -14435,18 +14468,6 @@ type GraphQlClientInterface interface {
 	//
 	// Use this function together with the `ObjectFilter::owner` to get the
 	// objects owned by an address.
-	//
-	// # Example
-	//
-	// ```rust,ignore
-	// let filter = ObjectFilter {
-	// type_tag: None,
-	// owner: Some(Address::from_str("test").unwrap().into()),
-	// object_ids: None,
-	// };
-	//
-	// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-	// ```
 	Objects(filter *ObjectFilter, paginationFilter *PaginationFilter) (ObjectPage, error)
 	// The package corresponding to the given address (at the optionally given
 	// version). When no version is given, the package is loaded directly
@@ -14888,18 +14909,6 @@ func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta Transac
 //
 // This returns `DynamicFieldOutput` which contains the name, the value
 // as json, and object.
-//
-// # Example
-// ```rust,ignore
-//
-// let client = iota_graphql_client::Client::new_devnet();
-// let address = ObjectId::SYSTEM.into();
-// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-//
-// # alternatively, pass in the bcs bytes
-// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-// ```
 func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, name Value) (*DynamicFieldOutput, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -15572,18 +15581,6 @@ func (_self *GraphQlClient) ObjectBcs(objectId *ObjectId) (*[]byte, error) {
 //
 // Use this function together with the `ObjectFilter::owner` to get the
 // objects owned by an address.
-//
-// # Example
-//
-// ```rust,ignore
-// let filter = ObjectFilter {
-// type_tag: None,
-// owner: Some(Address::from_str("test").unwrap().into()),
-// object_ids: None,
-// };
-//
-// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-// ```
 func (_self *GraphQlClient) Objects(filter *ObjectFilter, paginationFilter *PaginationFilter) (ObjectPage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -17486,6 +17483,12 @@ func (_ FfiDestroyerMovePackage) Destroy(value *MovePackage) {
 // Type corresponding to the output of `iota move build
 // --dump-bytecode-as-base64`
 type MovePackageDataInterface interface {
+	// Returns the package dependencies.
+	Dependencies() []*ObjectId
+	// Returns the package digest.
+	Digest() *Digest
+	// Returns the package modules.
+	Modules() [][]byte
 	ToBase64() string
 	ToJson() string
 }
@@ -17526,6 +17529,40 @@ func MovePackageDataFromJson(json string) (*MovePackageData, error) {
 }
 
 
+
+// Returns the package dependencies.
+func (_self *MovePackageData) Dependencies() []*ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_movepackagedata_dependencies(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the package digest.
+func (_self *MovePackageData) Digest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_movepackagedata_digest(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the package modules.
+func (_self *MovePackageData) Modules() [][]byte {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_movepackagedata_modules(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 
 func (_self *MovePackageData) ToBase64() string {
 	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
@@ -23806,6 +23843,26 @@ func (_self *StructTag) String() string {
 }
 
 
+
+func (_self *StructTag) Eq(other *StructTag) bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq(
+		_pointer,FfiConverterStructTagINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) Ne(other *StructTag) bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne(
+		_pointer,FfiConverterStructTagINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *StructTag) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -24248,9 +24305,16 @@ type TransactionBuilderInterface interface {
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
 	Sponsor(sponsor *Address) *TransactionBuilder
+	// Add stake to a validator's staking pool.
+	//
+	// This is a high-level function which will split the provided stake amount
+	// from the gas coin and then stake using the resulting coin.
+	Stake(stake *PtbArgument, validatorAddress *Address) *TransactionBuilder
 	// Transfer a list of objects to the given address, without producing any
 	// result.
 	TransferObjects(recipient *Address, objects []*PtbArgument) *TransactionBuilder
+	// Withdraw stake from a validator's staking pool.
+	Unstake(stakedIota *PtbArgument) *TransactionBuilder
 	// Upgrade a Move package.
 	//
 	// - `modules`: is the modules' bytecode for the modules to be published
@@ -24262,7 +24326,7 @@ type TransactionBuilderInterface interface {
 	// To get the ticket, you have to call the
 	// `0x2::package::authorize_upgrade` function, and pass the package
 	// ID, the upgrade policy, and package digest.
-	Upgrade(packageData *MovePackageData, varPackage *ObjectId, ticket *PtbArgument, name *string) *TransactionBuilder
+	Upgrade(packageId *ObjectId, packageData *MovePackageData, upgradeTicket *PtbArgument, name *string) *TransactionBuilder
 }
 // A builder for creating transactions. Use `finish` to finalize the
 // transaction data.
@@ -24589,6 +24653,19 @@ func (_self *TransactionBuilder) Sponsor(sponsor *Address) *TransactionBuilder {
 	}))
 }
 
+// Add stake to a validator's staking pool.
+//
+// This is a high-level function which will split the provided stake amount
+// from the gas coin and then stake using the resulting coin.
+func (_self *TransactionBuilder) Stake(stake *PtbArgument, validatorAddress *Address) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(stake), FfiConverterAddressINSTANCE.Lower(validatorAddress),_uniffiStatus)
+	}))
+}
+
 // Transfer a list of objects to the given address, without producing any
 // result.
 func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*PtbArgument) *TransactionBuilder {
@@ -24597,6 +24674,16 @@ func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
 		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterSequencePtbArgumentINSTANCE.Lower(objects),_uniffiStatus)
+	}))
+}
+
+// Withdraw stake from a validator's staking pool.
+func (_self *TransactionBuilder) Unstake(stakedIota *PtbArgument) *TransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(stakedIota),_uniffiStatus)
 	}))
 }
 
@@ -24611,12 +24698,12 @@ func (_self *TransactionBuilder) TransferObjects(recipient *Address, objects []*
 // To get the ticket, you have to call the
 // `0x2::package::authorize_upgrade` function, and pass the package
 // ID, the upgrade policy, and package digest.
-func (_self *TransactionBuilder) Upgrade(packageData *MovePackageData, varPackage *ObjectId, ticket *PtbArgument, name *string) *TransactionBuilder {
+func (_self *TransactionBuilder) Upgrade(packageId *ObjectId, packageData *MovePackageData, upgradeTicket *PtbArgument, name *string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
-		_pointer,FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterObjectIdINSTANCE.Lower(varPackage), FfiConverterPtbArgumentINSTANCE.Lower(ticket), FfiConverterOptionalStringINSTANCE.Lower(name),_uniffiStatus)
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(packageId), FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterPtbArgumentINSTANCE.Lower(upgradeTicket), FfiConverterOptionalStringINSTANCE.Lower(name),_uniffiStatus)
 	}))
 }
 func (object *TransactionBuilder) Destroy() {
@@ -25827,6 +25914,7 @@ func (_ FfiDestroyerUpgrade) Destroy(value *Upgrade) {
 
 // Representation of upgrade policy constants in `iota::package`.
 type UpgradePolicyInterface interface {
+	// Returns the internal representation.
 	AsU8() uint8
 }
 // Representation of upgrade policy constants in `iota::package`.
@@ -25835,18 +25923,26 @@ type UpgradePolicy struct {
 }
 
 
+// Allows adding new functionalities (e.g., new public functions or
+// structs) but restricts changes to existing functionalities.
 func UpgradePolicyAdditive() *UpgradePolicy {
 	return FfiConverterUpgradePolicyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(_uniffiStatus)
 	}))
 }
 
+// The least restrictive policy. Permits changes to all function
+// implementations, the removal of ability constraints on generic type
+// parameters in function signatures, and modifications to private,
+// public(friend), and entry function signatures. However, public function
+// signatures and existing types cannot be changed.
 func UpgradePolicyCompatible() *UpgradePolicy {
 	return FfiConverterUpgradePolicyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(_uniffiStatus)
 	}))
 }
 
+// Limits modifications to the package’s dependencies only.
 func UpgradePolicyDepOnly() *UpgradePolicy {
 	return FfiConverterUpgradePolicyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(_uniffiStatus)
@@ -25855,6 +25951,7 @@ func UpgradePolicyDepOnly() *UpgradePolicy {
 
 
 
+// Returns the internal representation.
 func (_self *UpgradePolicy) AsU8() uint8 {
 	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
 	defer _self.ffiObject.decrementPointer()
@@ -25863,6 +25960,39 @@ func (_self *UpgradePolicy) AsU8() uint8 {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *UpgradePolicy) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *UpgradePolicy) Eq(other *UpgradePolicy) bool {
+	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
+		_pointer,FfiConverterUpgradePolicyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *UpgradePolicy) Ne(other *UpgradePolicy) bool {
+	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_ne(
+		_pointer,FfiConverterUpgradePolicyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *UpgradePolicy) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -32970,7 +33100,7 @@ func (_ FfiDestroyerExecutionError) Destroy(value ExecutionError) {
 // execution-status = success / failure
 // success = %x00
 // failure = %x01 execution-error (option u64)
-// ```xx
+// ```
 type ExecutionStatus interface {
 	Destroy()
 }

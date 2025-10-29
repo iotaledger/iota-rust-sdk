@@ -4,7 +4,6 @@ version = "0.0.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
-publish = false
 readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Core types for the IOTA SDK"
@@ -40,44 +39,44 @@ hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
 [dependencies]
-anyhow = "1.0"
-base64ct = { version = "1.6.0", features = ["alloc"] }
-bnum = "0.12.0"
+base64ct = { workspace = true, features = ["alloc"] }
+bnum.workspace = true
 bs58 = "0.5.1"
-derive_more = { version = "2.0", features = ["display"] }
-hex = "0.4.3"
-paste = "1.0"
-roaring = { version = "0.11.2", default-features = false }
-thiserror = "2.0"
+derive_more = { workspace = true, features = ["display"] }
+eyre.workspace = true
+hex.workspace = true
+paste.workspace = true
+roaring.workspace = true
+thiserror.workspace = true
 winnow = "0.7"
 
 # Serialization and Deserialization support
-bcs = { version = "0.1.6", optional = true }
-itertools = { version = "0.13.0", optional = true }
-serde = { version = "1.0.210", optional = true }
-serde_derive = { version = "1.0.210", optional = true }
-serde_json = { version = "1.0.128", optional = true }
+bcs = { workspace = true, optional = true }
+itertools = { workspace = true, optional = true }
+serde = { workspace = true, optional = true }
+serde_derive = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
 serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
 
 # JsonSchema definitions for types, useful for generating an OpenAPI Specificaiton.
 schemars = { version = "0.8.21", optional = true }
 
 # RNG support
-rand_core = { version = "0.6.4", optional = true }
+rand_core = { workspace = true, optional = true }
 
 # Hash support
 blake2 = { version = "0.10.6", optional = true }
 
 # proptest support
-proptest = { version = "1.6.0", default-features = false, features = ["std"], optional = true }
-test-strategy = { version = "0.4", optional = true }
+proptest = { workspace = true, default-features = false, features = ["std"], optional = true }
+test-strategy = { workspace = true, optional = true }
 
 [dev-dependencies]
-bcs = "0.1.6"
+bcs.workspace = true
 jsonschema = { version = "0.20", default-features = false }
 num-bigint = "0.4.6"
-paste = "1.0.15"
-serde_json = "1.0.128"
+paste.workspace = true
+serde_json.workspace = true
 
 [target.wasm32-unknown-unknown.dev-dependencies]
 wasm-bindgen-test = "0.3"

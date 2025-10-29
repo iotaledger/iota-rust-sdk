@@ -44,5 +44,6 @@ fun main() = runBlocking {
         println("Sponsored transaction was successful!")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

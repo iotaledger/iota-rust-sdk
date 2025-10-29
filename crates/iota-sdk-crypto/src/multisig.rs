@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk_types::{
+use iota_types::{
     MultisigAggregatedSignature, MultisigCommittee, MultisigMemberPublicKey,
     MultisigMemberSignature, UserSignature,
 };
@@ -263,7 +263,7 @@ pub struct MultisigAggregator {
 impl MultisigAggregator {
     pub fn new_with_transaction(
         committee: MultisigCommittee,
-        transaction: &iota_sdk_types::Transaction,
+        transaction: &iota_types::Transaction,
     ) -> Self {
         Self {
             committee,
@@ -276,7 +276,7 @@ impl MultisigAggregator {
 
     pub fn new_with_message(
         committee: MultisigCommittee,
-        message: &iota_sdk_types::PersonalMessage<'_>,
+        message: &iota_types::PersonalMessage<'_>,
     ) -> Self {
         Self {
             committee,
@@ -356,7 +356,7 @@ impl MultisigAggregator {
 fn multisig_pubkey_and_signature_from_user_signature(
     signature: UserSignature,
 ) -> Result<(MultisigMemberPublicKey, MultisigMemberSignature), SignatureError> {
-    use iota_sdk_types::SimpleSignature;
+    use iota_types::SimpleSignature;
     match signature {
         UserSignature::Simple(SimpleSignature::Ed25519 {
             signature,

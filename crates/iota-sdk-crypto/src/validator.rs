@@ -5,7 +5,7 @@
 use std::collections::HashMap;
 
 use blst::min_sig::{AggregatePublicKey, AggregateSignature, Signature};
-use iota_sdk_types::{
+use iota_types::{
     Bls12381PublicKey, Bls12381Signature, CheckpointSummary, ValidatorAggregatedSignature,
     ValidatorCommittee, ValidatorSignature,
 };
@@ -320,7 +320,7 @@ impl ValidatorCommitteeSignatureAggregator {
 
 #[cfg(test)]
 mod tests {
-    use iota_sdk_types::ValidatorCommitteeMember;
+    use iota_types::ValidatorCommitteeMember;
     use test_strategy::proptest;
 
     use super::*;
