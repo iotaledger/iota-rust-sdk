@@ -83,9 +83,7 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (publish the package)
     println!("> Publishing package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let Some(effects) = client.execute_tx(&[sig], &tx).await? else {
-        bail!("Transaction failed: no effects");
-    };
+    let effects = client.execute_tx(&[sig], &tx, true).await?;
     println!("{:?}", effects.status());
 
     // Wait some time for the indexer to process the tx
@@ -166,9 +164,7 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (upgrade the package)
     println!("> Upgrading package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let Some(effects) = client.execute_tx(&[sig], &tx).await? else {
-        bail!("Transaction failed: no effects");
-    };
+    let effects = client.execute_tx(&[sig], &tx, true).await?;
     println!("{:?}", effects.status());
 
     // Wait some time for the indexer to process the tx
