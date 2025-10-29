@@ -6,3 +6,4 @@ Cargo.lock
 *.dll
 __pycache__
 build
+.vscode
