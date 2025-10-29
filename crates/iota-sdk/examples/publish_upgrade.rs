@@ -101,7 +101,7 @@ async fn main() -> Result<()> {
                 let Some(obj) = client.object(object_id, None).await? else {
                     bail!("Missing object {object_id}");
                 };
-                if obj.as_struct().type_tag
+                if obj.as_struct().struct_tag
                     == (StructTag {
                         address: Address::FRAMEWORK,
                         module: iota_types::IdentifierRef::const_new("package").into(),
