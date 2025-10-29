@@ -103,9 +103,9 @@ impl std::fmt::Display for Kind {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             Kind::Deserialization => write!(f, "Deserialization error:"),
-            Kind::Missing => write!(f, "Missing:"),
             Kind::Parse => write!(f, "Parse error:"),
             Kind::Query => write!(f, "Query error:"),
+            Kind::Missing => write!(f, "Missing:"),
             Kind::Other => write!(f, "Error:"),
         }
     }

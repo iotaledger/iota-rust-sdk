@@ -1502,11 +1502,11 @@ impl Client {
         tokio::time::timeout(
             timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
             async {
+                let mut interval = tokio::time::interval(tokio::time::Duration::from_millis(100));
                 loop {
+                    interval.tick().await;
                     if let Some(effects) = self.transaction_effects(digest).await? {
                         break Ok(effects);
-                    } else {
-                        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
                     }
                 }
             },
