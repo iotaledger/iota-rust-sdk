@@ -606,7 +606,7 @@ mod tests {
             .name("ticket");
         // now we can upgrade the package
         let receipt = tx
-            .upgrade(package_id.unwrap(), res("ticket"), updated_package)
+            .upgrade(package_id.unwrap(), updated_package, res("ticket"))
             .arg();
 
         // commit the upgrade

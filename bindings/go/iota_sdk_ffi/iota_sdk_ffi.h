@@ -2290,6 +2290,21 @@ void* uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_from_json(RustBuffer js
 void* uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_new(RustBuffer modules, RustBuffer dependencies, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MOVEPACKAGEDATA_DEPENDENCIES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MOVEPACKAGEDATA_DEPENDENCIES
+RustBuffer uniffi_iota_sdk_ffi_fn_method_movepackagedata_dependencies(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MOVEPACKAGEDATA_DIGEST
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MOVEPACKAGEDATA_DIGEST
+void* uniffi_iota_sdk_ffi_fn_method_movepackagedata_digest(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MOVEPACKAGEDATA_MODULES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MOVEPACKAGEDATA_MODULES
+RustBuffer uniffi_iota_sdk_ffi_fn_method_movepackagedata_modules(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MOVEPACKAGEDATA_TO_BASE64
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MOVEPACKAGEDATA_TO_BASE64
 RustBuffer uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_base64(void* ptr, RustCallStatus *out_status
@@ -4179,6 +4194,16 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(void* ptr, Rust
 RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_UNIFFI_TRAIT_EQ_EQ
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_UNIFFI_TRAIT_EQ_EQ
+int8_t uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_UNIFFI_TRAIT_EQ_NE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_UNIFFI_TRAIT_EQ_NE
+int8_t uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SYSTEMPACKAGE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SYSTEMPACKAGE
 void* uniffi_iota_sdk_ffi_fn_clone_systempackage(void* ptr, RustCallStatus *out_status
@@ -4396,7 +4421,7 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(void* ptr, void* 
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UPGRADE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_UPGRADE
-void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(void* ptr, void* package_data, void* package, void* ticket, RustBuffer name, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(void* ptr, void* package_id, void* package_data, void* upgrade_ticket, RustBuffer name, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONEFFECTS
@@ -4799,6 +4824,21 @@ void* uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(RustCallStatus *
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_AS_U8
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_AS_U8
 uint8_t uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_DISPLAY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_DISPLAY
+RustBuffer uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_EQ_EQ
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_EQ_EQ
+int8_t uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_EQ_NE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_UPGRADEPOLICY_UNIFFI_TRAIT_EQ_NE
+int8_t uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_ne(void* ptr, void* other, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_USERSIGNATURE
@@ -9048,6 +9088,24 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MOVEPACKAGE_VERSION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MOVEPACKAGE_VERSION
 uint16_t uniffi_iota_sdk_ffi_checksum_method_movepackage_version(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MOVEPACKAGEDATA_DEPENDENCIES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MOVEPACKAGEDATA_DEPENDENCIES
+uint16_t uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MOVEPACKAGEDATA_DIGEST
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MOVEPACKAGEDATA_DIGEST
+uint16_t uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MOVEPACKAGEDATA_MODULES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MOVEPACKAGEDATA_MODULES
+uint16_t uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules(void
     
 );
 #endif

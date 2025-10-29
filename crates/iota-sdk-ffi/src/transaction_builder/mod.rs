@@ -299,14 +299,14 @@ impl TransactionBuilder {
     #[uniffi::method(default(name = None))]
     pub fn upgrade(
         self: Arc<Self>,
+        package_id: &ObjectId,
         package_data: &MovePackageData,
-        package: &ObjectId,
-        ticket: &PTBArgument,
+        upgrade_ticket: &PTBArgument,
         name: Option<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .upgrade(**package, ticket, package_data.0.clone())
+                .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
                 .name(name);
         });
         self
