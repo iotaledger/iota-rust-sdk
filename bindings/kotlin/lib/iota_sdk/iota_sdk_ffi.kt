@@ -51204,7 +51204,7 @@ public object FfiConverterTypeNameRegistrationPage: FfiConverterRustBuffer<NameR
 
 
 data class ObjectFilter (
-    var `typeTag`: kotlin.String? = null, 
+    var `typeFilter`: kotlin.String? = null, 
     var `owner`: Address? = null, 
     var `objectIds`: List<ObjectId>? = null
 ) : Disposable {
@@ -51213,7 +51213,7 @@ data class ObjectFilter (
     override fun destroy() {
         
     Disposable.destroy(
-        this.`typeTag`,
+        this.`typeFilter`,
         this.`owner`,
         this.`objectIds`
     )
@@ -51235,13 +51235,13 @@ public object FfiConverterTypeObjectFilter: FfiConverterRustBuffer<ObjectFilter>
     }
 
     override fun allocationSize(value: ObjectFilter) = (
-            FfiConverterOptionalString.allocationSize(value.`typeTag`) +
+            FfiConverterOptionalString.allocationSize(value.`typeFilter`) +
             FfiConverterOptionalTypeAddress.allocationSize(value.`owner`) +
             FfiConverterOptionalSequenceTypeObjectId.allocationSize(value.`objectIds`)
     )
 
     override fun write(value: ObjectFilter, buf: ByteBuffer) {
-            FfiConverterOptionalString.write(value.`typeTag`, buf)
+            FfiConverterOptionalString.write(value.`typeFilter`, buf)
             FfiConverterOptionalTypeAddress.write(value.`owner`, buf)
             FfiConverterOptionalSequenceTypeObjectId.write(value.`objectIds`, buf)
     }

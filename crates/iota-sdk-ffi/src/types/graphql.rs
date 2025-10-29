@@ -609,7 +609,7 @@ impl From<EventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
 #[derive(uniffi::Record)]
 pub struct ObjectFilter {
     #[uniffi(default = None)]
-    pub type_tag: Option<String>,
+    pub type_filter: Option<String>,
     #[uniffi(default = None)]
     pub owner: Option<Arc<Address>>,
     #[uniffi(default = None)]
@@ -619,7 +619,7 @@ pub struct ObjectFilter {
 impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for ObjectFilter {
     fn from(value: iota_sdk::graphql_client::query_types::ObjectFilter) -> Self {
         Self {
-            type_tag: value.type_tag,
+            type_filter: value.type_filter,
             owner: value.owner.map(Into::into).map(Arc::new),
             object_ids: value
                 .object_ids
@@ -631,7 +631,7 @@ impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for ObjectFilter 
 impl From<ObjectFilter> for iota_sdk::graphql_client::query_types::ObjectFilter {
     fn from(value: ObjectFilter) -> Self {
         Self {
-            type_tag: value.type_tag,
+            type_filter: value.type_filter,
             owner: value.owner.map(|v| **v),
             object_ids: value
                 .object_ids

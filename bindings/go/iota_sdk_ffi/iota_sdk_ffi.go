@@ -30321,13 +30321,13 @@ func (_ FfiDestroyerNameRegistrationPage) Destroy(value NameRegistrationPage) {
 	value.Destroy()
 }
 type ObjectFilter struct {
-	TypeTag *string
+	TypeFilter *string
 	Owner **Address
 	ObjectIds *[]*ObjectId
 }
 
 func (r *ObjectFilter) Destroy() {
-		FfiDestroyerOptionalString{}.Destroy(r.TypeTag);
+		FfiDestroyerOptionalString{}.Destroy(r.TypeFilter);
 		FfiDestroyerOptionalAddress{}.Destroy(r.Owner);
 		FfiDestroyerOptionalSequenceObjectId{}.Destroy(r.ObjectIds);
 }
@@ -30353,7 +30353,7 @@ func (c FfiConverterObjectFilter) Lower(value ObjectFilter) C.RustBuffer {
 }
 
 func (c FfiConverterObjectFilter) Write(writer io.Writer, value ObjectFilter) {
-		FfiConverterOptionalStringINSTANCE.Write(writer, value.TypeTag);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.TypeFilter);
 		FfiConverterOptionalAddressINSTANCE.Write(writer, value.Owner);
 		FfiConverterOptionalSequenceObjectIdINSTANCE.Write(writer, value.ObjectIds);
 }

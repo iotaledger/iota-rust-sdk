@@ -633,7 +633,7 @@ impl Client {
         let response = self
             .objects(
                 Some(ObjectFilter {
-                    type_tag: Some(
+                    type_filter: Some(
                         coin_type
                             .into()
                             .map(StructTag::coin)

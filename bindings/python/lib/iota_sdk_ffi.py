@@ -15265,14 +15265,14 @@ class _UniffiConverterTypeNameRegistrationPage(_UniffiConverterRustBuffer):
 
 
 class ObjectFilter:
-    type_tag: "typing.Optional[str]"
+    type_filter: "typing.Optional[str]"
     owner: "typing.Optional[Address]"
     object_ids: "typing.Optional[typing.List[ObjectId]]"
-    def __init__(self, *, type_tag: "typing.Optional[str]" = _DEFAULT, owner: "typing.Optional[Address]" = _DEFAULT, object_ids: "typing.Optional[typing.List[ObjectId]]" = _DEFAULT):
-        if type_tag is _DEFAULT:
-            self.type_tag = None
+    def __init__(self, *, type_filter: "typing.Optional[str]" = _DEFAULT, owner: "typing.Optional[Address]" = _DEFAULT, object_ids: "typing.Optional[typing.List[ObjectId]]" = _DEFAULT):
+        if type_filter is _DEFAULT:
+            self.type_filter = None
         else:
-            self.type_tag = type_tag
+            self.type_filter = type_filter
         if owner is _DEFAULT:
             self.owner = None
         else:
@@ -15283,10 +15283,10 @@ class ObjectFilter:
             self.object_ids = object_ids
 
     def __str__(self):
-        return "ObjectFilter(type_tag={}, owner={}, object_ids={})".format(self.type_tag, self.owner, self.object_ids)
+        return "ObjectFilter(type_filter={}, owner={}, object_ids={})".format(self.type_filter, self.owner, self.object_ids)
 
     def __eq__(self, other):
-        if self.type_tag != other.type_tag:
+        if self.type_filter != other.type_filter:
             return False
         if self.owner != other.owner:
             return False
@@ -15298,20 +15298,20 @@ class _UniffiConverterTypeObjectFilter(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return ObjectFilter(
-            type_tag=_UniffiConverterOptionalString.read(buf),
+            type_filter=_UniffiConverterOptionalString.read(buf),
             owner=_UniffiConverterOptionalTypeAddress.read(buf),
             object_ids=_UniffiConverterOptionalSequenceTypeObjectId.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterOptionalString.check_lower(value.type_tag)
+        _UniffiConverterOptionalString.check_lower(value.type_filter)
         _UniffiConverterOptionalTypeAddress.check_lower(value.owner)
         _UniffiConverterOptionalSequenceTypeObjectId.check_lower(value.object_ids)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterOptionalString.write(value.type_tag, buf)
+        _UniffiConverterOptionalString.write(value.type_filter, buf)
         _UniffiConverterOptionalTypeAddress.write(value.owner, buf)
         _UniffiConverterOptionalSequenceTypeObjectId.write(value.object_ids, buf)
 
