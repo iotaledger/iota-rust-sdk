@@ -29,8 +29,7 @@ async def main():
 
     res = await builder.execute(simple_key, True)
 
-    if res is not None:
-        print(res)
+    print(res)
 
     print("Sponsored transaction was successful!")
 

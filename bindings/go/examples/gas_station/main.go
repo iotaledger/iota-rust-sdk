@@ -51,7 +51,7 @@ func main() {
 	}
 
 	if res != nil {
-		log.Printf("%v", *res)
+		log.Printf("%v", res)
 	}
 
 	fmt.Print("Sponsored transaction was successful!")

@@ -37,9 +37,7 @@ fun main() = runBlocking {
 
         val res = builder.execute(simpleKey, true)
 
-        if (res != null) {
-            println("$res")
-        }
+        println("$res")
 
         println("Sponsored transaction was successful!")
     } catch (e: Exception) {
