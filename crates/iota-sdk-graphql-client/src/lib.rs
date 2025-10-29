@@ -1486,7 +1486,7 @@ impl Client {
         } else {
             Err(Error::from_message(
                 Kind::Missing,
-                format!("transaction for digest {}", tx.digest()),
+                format!("effects for transaction {}", tx.digest()),
             ))
         }
     }
