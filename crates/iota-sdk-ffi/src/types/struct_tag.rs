@@ -37,6 +37,42 @@ impl Identifier {
     }
 }
 
+macro_rules! export_struct_tag_ctors {
+    ($($name:ident),+ $(,)?) => { paste::paste! {
+        #[uniffi::export]
+        impl StructTag {$(
+            #[uniffi::constructor]
+            pub fn [< new_ $name:snake >]() -> Self {
+                Self(iota_sdk::types::StructTag::[< new_ $name:snake >]())
+            }
+        )+}
+    } }
+}
+
+macro_rules! export_struct_tag_from_type_tag_ctors {
+    ($($name:ident),+ $(,)?) => { paste::paste! {
+        #[uniffi::export]
+        impl StructTag {$(
+            #[uniffi::constructor]
+            pub fn [< new_ $name:snake >](type_tag: &TypeTag) -> Self {
+                Self(iota_sdk::types::StructTag::[< new_ $name:snake >](type_tag.0.clone()))
+            }
+        )+}
+    } }
+}
+
+macro_rules! export_struct_tag_from_struct_tag_ctors {
+    ($($name:ident),+ $(,)?) => { paste::paste! {
+        #[uniffi::export]
+        impl StructTag {$(
+            #[uniffi::constructor]
+            pub fn [< new_ $name:snake >](struct_tag: &StructTag) -> Self {
+                Self(iota_sdk::types::StructTag::[< new_ $name:snake >](struct_tag.0.clone()))
+            }
+        )+}
+    } }
+}
+
 /// Type information for a move struct
 ///
 /// # BCS
@@ -74,8 +110,16 @@ impl StructTag {
     }
 
     #[uniffi::constructor]
-    pub fn coin(type_tag: &TypeTag) -> Self {
-        Self(iota_sdk::types::StructTag::coin(type_tag.0.clone()))
+    pub fn new_name(address: &Address) -> Self {
+        Self(iota_sdk::types::StructTag::new_name(address.0))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_field(key: &TypeTag, value: &TypeTag) -> Self {
+        Self(iota_sdk::types::StructTag::new_field(
+            key.0.clone(),
+            value.0.clone(),
+        ))
     }
 
     /// Checks if this is a Coin type
@@ -92,19 +136,69 @@ impl StructTag {
         self.0.coin_type().clone().into()
     }
 
-    #[uniffi::constructor]
-    pub fn gas_coin() -> Self {
-        Self(iota_sdk::types::StructTag::gas_coin())
-    }
-
-    #[uniffi::constructor]
-    pub fn staked_iota() -> Self {
-        Self(iota_sdk::types::StructTag::staked_iota())
-    }
-
+    /// Returns the address part of a `StructTag`
     pub fn address(&self) -> Address {
         self.0.address().into()
     }
+
+    /// Returns the module part of a `StructTag`
+    pub fn module(&self) -> Identifier {
+        self.0.module().clone().into()
+    }
+
+    /// Returns the name part of a `StructTag`
+    pub fn name(&self) -> Identifier {
+        self.0.name().clone().into()
+    }
+
+    /// Returns the type params part of a `StructTag`
+    pub fn type_args(&self) -> Vec<Arc<TypeTag>> {
+        self.0
+            .type_params()
+            .iter()
+            .cloned()
+            .map(TypeTag::from)
+            .map(Arc::new)
+            .collect()
+    }
 }
+
+export_struct_tag_ctors!(
+    AsciiString,
+    Clock,
+    Config,
+    DenyListAddressKey,
+    DenyListConfigKey,
+    DenyListGlobalPauseKey,
+    GasCoin,
+    Id,
+    IotaCoinType,
+    IotaSystemAdminCap,
+    IotaSystemState,
+    IotaTreasuryCap,
+    UpgradeCap,
+    UpgradeTicket,
+    UpgradeReceipt,
+    StakedIota,
+    String,
+    SystemEpochInfoEvent,
+    TimelockedStakedIota,
+    TransferReceiving,
+    Uid,
+);
+export_struct_tag_from_type_tag_ctors!(
+    Balance,
+    ConfigSetting,
+    DynamicObjectFieldWrapper,
+    Coin,
+    TimeLock
+);
+export_struct_tag_from_struct_tag_ctors!(
+    CoinManager,
+    CoinMetadata,
+    DisplayCreated,
+    TreasuryCap,
+    VersionUpdated,
+);
 
 crate::export_iota_types_objects_bcs_conversion!(Identifier, StructTag);

@@ -597,9 +597,9 @@ mod serialization {
         fn into_struct_tag(self) -> StructTag {
             match self {
                 MoveStructType::Other(tag) => tag,
-                MoveStructType::GasCoin => StructTag::gas_coin(),
-                MoveStructType::StakedIota => StructTag::staked_iota(),
-                MoveStructType::Coin(type_tag) => StructTag::coin(type_tag),
+                MoveStructType::GasCoin => StructTag::new_gas_coin(),
+                MoveStructType::StakedIota => StructTag::new_staked_iota(),
+                MoveStructType::Coin(type_tag) => StructTag::new_coin(type_tag),
             }
         }
     }
