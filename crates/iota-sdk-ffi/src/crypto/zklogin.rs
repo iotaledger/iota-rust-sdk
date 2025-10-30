@@ -3,26 +3,28 @@
 
 use std::collections::HashMap;
 
-use iota_crypto::Verifier;
-use iota_types::{Jwk, JwkId};
+use iota_sdk::{
+    crypto::Verifier,
+    types::{Jwk, JwkId},
+};
 
 use crate::{error::Result, types::crypto::zklogin::ZkLoginAuthenticator};
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ZkloginVerifier(pub iota_crypto::zklogin::ZkloginVerifier);
+pub struct ZkloginVerifier(pub iota_sdk::crypto::zklogin::ZkloginVerifier);
 
 #[uniffi::export]
 impl ZkloginVerifier {
     #[uniffi::constructor]
     pub fn new_mainnet() -> Self {
-        Self(iota_crypto::zklogin::ZkloginVerifier::new_mainnet())
+        Self(iota_sdk::crypto::zklogin::ZkloginVerifier::new_mainnet())
     }
 
     /// Load a fixed verifying key from zkLogin.vkey output. This is based on a
     /// local setup and should not be used in production.
     #[uniffi::constructor]
     pub fn new_dev() -> Self {
-        Self(iota_crypto::zklogin::ZkloginVerifier::new_dev())
+        Self(iota_sdk::crypto::zklogin::ZkloginVerifier::new_dev())
     }
 
     pub fn jwks(&self) -> HashMap<JwkId, Jwk> {

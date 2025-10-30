@@ -9,6 +9,7 @@
 )]
 
 use base64ct::Encoding;
+use serde::Deserialize;
 
 mod macros;
 
@@ -43,3 +44,5 @@ pub fn hex_encode(input: &[u8]) -> String {
 pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
     Ok(hex::decode(input)?)
 }
+
+crate::export_primitive_types_bcs_conversion!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);

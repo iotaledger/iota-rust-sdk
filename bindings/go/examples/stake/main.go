@@ -9,10 +9,18 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
+func addrFromHex(hex string) *sdk.Address {
+	address, err := sdk.AddressFromHex(hex)
+	if err != nil {
+		log.Fatalf("Failed to parse address: %v", err)
+	}
+	return address
+}
+
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	myAddress, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+	myAddress := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
 	validators, err := client.ActiveValidators(nil, nil)
 	if err.(*sdk.SdkFfiError) != nil {
@@ -32,30 +40,9 @@ func main() {
 	}
 	log.Printf("Staking to validator %v", validatorName)
 
-	coinObjId, _ := sdk.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
-
-	iotaSystemAddress := sdk.AddressSystem()
-
-	iotaSystemId := sdk.ObjectIdSystem()
-
-	iotaSystemModule, _ := sdk.NewIdentifier("iota_system")
-
-	requestAddStakeFn, _ := sdk.NewIdentifier("request_add_stake")
-
 	builder := sdk.TransactionBuilderInit(myAddress, client)
 
-	builder.MoveCall(
-		iotaSystemAddress,
-		iotaSystemModule,
-		requestAddStakeFn,
-		[]*sdk.PtbArgument{
-			sdk.PtbArgumentSharedMut(iotaSystemId),
-			sdk.PtbArgumentObjectId(coinObjId),
-			sdk.PtbArgumentAddress(validator.Address),
-		},
-		nil,
-		nil,
-	)
+	builder.Stake(sdk.PtbArgumentU64(1000000000), validator.Address)
 
 	res, err := builder.DryRun(false)
 	if err.(*sdk.SdkFfiError) != nil {

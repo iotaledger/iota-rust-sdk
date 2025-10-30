@@ -46,5 +46,6 @@ fun main() = runBlocking {
         println("Gas sponsor tx dry run was successful!")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }
