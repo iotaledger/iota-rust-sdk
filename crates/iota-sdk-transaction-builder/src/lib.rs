@@ -471,7 +471,7 @@ mod tests {
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, [res("coin")]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
 
         // check that recipient has 1 coin
@@ -513,7 +513,7 @@ mod tests {
         tx.merge_coins(coin1, coins_to_merge);
         let client = tx.get_client().clone();
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
 
         // check that there are two coins
