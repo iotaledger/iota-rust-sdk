@@ -139,7 +139,7 @@ pub use crypto::{
     Ed25519Signature, Intent, IntentAppId, IntentScope, IntentVersion, InvalidSignatureScheme,
     InvalidZkLoginAuthenticatorError, Jwk, JwkId, MultisigAggregatedSignature, MultisigCommittee,
     MultisigMember, MultisigMemberPublicKey, MultisigMemberSignature, PasskeyAuthenticator,
-    PasskeyPublicKey, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
+    PasskeyPublicKey, PublicKeyExt, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
     Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature, ZkLoginAuthenticator,
     ZkLoginClaim, ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
 };

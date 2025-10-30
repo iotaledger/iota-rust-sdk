@@ -4,12 +4,17 @@
 use std::{str::FromStr, sync::Arc};
 
 use base64ct::Encoding;
-use iota_graphql_client::query_types::{
-    Base64, DateTime, GQLAddress, MoveData, MoveModuleQuery, MovePackageQuery, MoveType,
+use iota_sdk::{
+    graphql_client::query_types::{
+        Base64, DateTime, GQLAddress, MoveData, MoveModuleQuery, MovePackageQuery, MoveType,
+    },
+    types::{Identifier, StructTag},
 };
-use iota_types::{Identifier, StructTag};
 
-use crate::types::{address::Address, digest::Digest, object::ObjectId};
+use crate::{
+    error::Result,
+    types::{address::Address, digest::Digest, object::ObjectId},
+};
 
 /// An event
 ///
@@ -43,11 +48,11 @@ pub struct Event {
     pub json: String,
 }
 
-impl From<iota_graphql_client::query_types::Event> for Event {
-    fn from(value: iota_graphql_client::query_types::Event) -> Self {
+impl From<iota_sdk::graphql_client::query_types::Event> for Event {
+    fn from(value: iota_sdk::graphql_client::query_types::Event) -> Self {
         let sending_module = value.sending_module.as_ref().unwrap();
         Self {
-            package_id: Arc::new(ObjectId(iota_types::ObjectId::from(
+            package_id: Arc::new(ObjectId(iota_sdk::types::ObjectId::from(
                 sending_module.package.address,
             ))),
             module: sending_module.name.clone(),
@@ -61,7 +66,7 @@ impl From<iota_graphql_client::query_types::Event> for Event {
     }
 }
 
-impl From<Event> for iota_types::Event {
+impl From<Event> for iota_sdk::types::Event {
     fn from(value: Event) -> Self {
         Self {
             package_id: (**value.package_id),
@@ -73,12 +78,12 @@ impl From<Event> for iota_types::Event {
     }
 }
 
-impl From<Event> for iota_graphql_client::query_types::Event {
+impl From<Event> for iota_sdk::graphql_client::query_types::Event {
     fn from(value: Event) -> Self {
         Self {
             sending_module: Some(MoveModuleQuery {
                 package: MovePackageQuery {
-                    address: iota_types::Address::from(**value.package_id),
+                    address: iota_sdk::types::Address::from(**value.package_id),
                     bcs: None,
                 },
                 name: value.module.clone(),
@@ -97,8 +102,8 @@ impl From<Event> for iota_graphql_client::query_types::Event {
     }
 }
 
-impl From<iota_types::Event> for Event {
-    fn from(value: iota_types::Event) -> Self {
+impl From<iota_sdk::types::Event> for Event {
+    fn from(value: iota_sdk::types::Event) -> Self {
         Self {
             package_id: Arc::new(value.package_id.into()),
             module: value.module.to_string(),
@@ -122,13 +127,13 @@ impl From<iota_types::Event> for Event {
 /// transaction-events = vector event
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct TransactionEvents(pub iota_types::TransactionEvents);
+pub struct TransactionEvents(pub iota_sdk::types::TransactionEvents);
 
 #[uniffi::export]
 impl TransactionEvents {
     #[uniffi::constructor]
     pub fn new(events: Vec<Event>) -> Self {
-        Self(iota_types::TransactionEvents(
+        Self(iota_sdk::types::TransactionEvents(
             events.into_iter().map(Into::into).collect(),
         ))
     }
@@ -141,3 +146,6 @@ impl TransactionEvents {
         self.0.digest().into()
     }
 }
+
+crate::export_iota_types_bcs_conversion!(Event);
+crate::export_iota_types_objects_bcs_conversion!(TransactionEvents);

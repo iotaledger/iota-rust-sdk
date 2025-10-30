@@ -28,5 +28,6 @@ fun main() = runBlocking {
         println("BCS bytes: ${hexEncode(obj.asStruct().contents)}")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

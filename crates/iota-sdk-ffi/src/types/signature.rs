@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_types::{SignatureScheme, ZkLoginClaim};
+use iota_sdk::types::{SignatureScheme, ZkLoginClaim};
 
 use crate::{
     error::Result,
@@ -62,30 +62,34 @@ pub enum SignatureScheme {
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
 #[derive(derive_more::From, uniffi::Object)]
-pub struct UserSignature(pub iota_types::UserSignature);
+pub struct UserSignature(pub iota_sdk::types::UserSignature);
 
 #[uniffi::export]
 impl UserSignature {
     #[uniffi::constructor]
     pub fn new_simple(signature: &SimpleSignature) -> Self {
-        Self(iota_types::UserSignature::Simple(signature.0.clone()))
+        Self(iota_sdk::types::UserSignature::Simple(signature.0.clone()))
     }
 
     #[uniffi::constructor]
     pub fn new_multisig(signature: &MultisigAggregatedSignature) -> Self {
-        Self(iota_types::UserSignature::Multisig(signature.0.clone()))
+        Self(iota_sdk::types::UserSignature::Multisig(
+            signature.0.clone(),
+        ))
     }
 
     #[uniffi::constructor]
     pub fn new_zklogin(authenticator: &ZkLoginAuthenticator) -> Self {
-        Self(iota_types::UserSignature::ZkLogin(Box::new(
+        Self(iota_sdk::types::UserSignature::ZkLogin(Box::new(
             authenticator.0.clone(),
         )))
     }
 
     #[uniffi::constructor]
     pub fn new_passkey(authenticator: &PasskeyAuthenticator) -> Self {
-        Self(iota_types::UserSignature::Passkey(authenticator.0.clone()))
+        Self(iota_sdk::types::UserSignature::Passkey(
+            authenticator.0.clone(),
+        ))
     }
 
     /// Return the flag for this signature scheme
@@ -103,12 +107,12 @@ impl UserSignature {
 
     #[uniffi::constructor]
     pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
-        Ok(iota_types::UserSignature::from_bytes(&bytes).map(Self)?)
+        Ok(iota_sdk::types::UserSignature::from_bytes(&bytes).map(Self)?)
     }
 
     #[uniffi::constructor]
     pub fn from_base64(base64: String) -> Result<Self> {
-        Ok(iota_types::UserSignature::from_base64(&base64).map(Self)?)
+        Ok(iota_sdk::types::UserSignature::from_base64(&base64).map(Self)?)
     }
 
     pub fn is_simple(&self) -> bool {
@@ -199,13 +203,13 @@ impl UserSignature {
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
 #[derive(derive_more::From, uniffi::Object)]
-pub struct SimpleSignature(pub iota_types::SimpleSignature);
+pub struct SimpleSignature(pub iota_sdk::types::SimpleSignature);
 
 #[uniffi::export]
 impl SimpleSignature {
     #[uniffi::constructor]
     pub fn new_ed25519(signature: &Ed25519Signature, public_key: &Ed25519PublicKey) -> Self {
-        Self(iota_types::SimpleSignature::Ed25519 {
+        Self(iota_sdk::types::SimpleSignature::Ed25519 {
             signature: **signature,
             public_key: **public_key,
         })
@@ -213,7 +217,7 @@ impl SimpleSignature {
 
     #[uniffi::constructor]
     pub fn new_secp256k1(signature: &Secp256k1Signature, public_key: &Secp256k1PublicKey) -> Self {
-        Self(iota_types::SimpleSignature::Secp256k1 {
+        Self(iota_sdk::types::SimpleSignature::Secp256k1 {
             signature: **signature,
             public_key: **public_key,
         })
@@ -221,7 +225,7 @@ impl SimpleSignature {
 
     #[uniffi::constructor]
     pub fn new_secp256r1(signature: &Secp256r1Signature, public_key: &Secp256r1PublicKey) -> Self {
-        Self(iota_types::SimpleSignature::Secp256r1 {
+        Self(iota_sdk::types::SimpleSignature::Secp256r1 {
             signature: **signature,
             public_key: **public_key,
         })
@@ -319,3 +323,5 @@ impl SimpleSignature {
         (*self.0.as_secp256r1_pub_key()).into()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(UserSignature, SimpleSignature);

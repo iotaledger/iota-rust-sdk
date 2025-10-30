@@ -90,7 +90,7 @@ These methods set various metadata which may be needed for the execution.
 
 ### Finalization and Execution
 
-There are several ways to finish the builder. First, the [finish](transaction_builder::TransactionBuilder::finish) method can be used to return the resulting [Transaction](iota_types::Transaction), which can be manually serialized, executed, etc.
+There are several ways to finish the builder. First, the [finish](transaction_builder::TransactionBuilder::finish) method can be used to return the resulting [Transaction](iota_sdk::types::Transaction), which can be manually serialized, executed, etc.
 
 Additionally, the builder can directly [dry_run](transaction_builder::TransactionBuilder::dry_run) or [execute](transaction_builder::TransactionBuilder::execute) the transaction.
 

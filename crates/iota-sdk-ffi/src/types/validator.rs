@@ -28,8 +28,8 @@ pub struct ValidatorCommittee {
     pub members: Vec<ValidatorCommitteeMember>,
 }
 
-impl From<iota_types::ValidatorCommittee> for ValidatorCommittee {
-    fn from(value: iota_types::ValidatorCommittee) -> Self {
+impl From<iota_sdk::types::ValidatorCommittee> for ValidatorCommittee {
+    fn from(value: iota_sdk::types::ValidatorCommittee) -> Self {
         Self {
             epoch: value.epoch,
             members: value.members.into_iter().map(Into::into).collect(),
@@ -37,7 +37,7 @@ impl From<iota_types::ValidatorCommittee> for ValidatorCommittee {
     }
 }
 
-impl From<ValidatorCommittee> for iota_types::ValidatorCommittee {
+impl From<ValidatorCommittee> for iota_sdk::types::ValidatorCommittee {
     fn from(value: ValidatorCommittee) -> Self {
         Self {
             epoch: value.epoch,
@@ -62,8 +62,8 @@ pub struct ValidatorCommitteeMember {
     pub stake: u64,
 }
 
-impl From<iota_types::ValidatorCommitteeMember> for ValidatorCommitteeMember {
-    fn from(value: iota_types::ValidatorCommitteeMember) -> Self {
+impl From<iota_sdk::types::ValidatorCommitteeMember> for ValidatorCommitteeMember {
+    fn from(value: iota_sdk::types::ValidatorCommitteeMember) -> Self {
         Self {
             public_key: Arc::new(value.public_key.into()),
             stake: value.stake,
@@ -71,7 +71,7 @@ impl From<iota_types::ValidatorCommitteeMember> for ValidatorCommitteeMember {
     }
 }
 
-impl From<ValidatorCommitteeMember> for iota_types::ValidatorCommitteeMember {
+impl From<ValidatorCommitteeMember> for iota_sdk::types::ValidatorCommitteeMember {
     fn from(value: ValidatorCommitteeMember) -> Self {
         Self {
             public_key: **value.public_key,
@@ -92,7 +92,7 @@ impl From<ValidatorCommitteeMember> for iota_types::ValidatorCommitteeMember {
 ///                       bls-signature
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ValidatorSignature(pub iota_types::ValidatorSignature);
+pub struct ValidatorSignature(pub iota_sdk::types::ValidatorSignature);
 
 #[uniffi::export]
 impl ValidatorSignature {
@@ -102,7 +102,7 @@ impl ValidatorSignature {
         public_key: &Bls12381PublicKey,
         signature: &Bls12381Signature,
     ) -> Self {
-        Self(iota_types::ValidatorSignature {
+        Self(iota_sdk::types::ValidatorSignature {
             epoch,
             public_key: **public_key,
             signature: **signature,
@@ -140,13 +140,13 @@ impl ValidatorSignature {
 /// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 /// serialized format of RoaringBitmaps.
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ValidatorAggregatedSignature(pub iota_types::ValidatorAggregatedSignature);
+pub struct ValidatorAggregatedSignature(pub iota_sdk::types::ValidatorAggregatedSignature);
 
 #[uniffi::export]
 impl ValidatorAggregatedSignature {
     #[uniffi::constructor]
     pub fn new(epoch: EpochId, signature: &Bls12381Signature, bitmap_bytes: &[u8]) -> Result<Self> {
-        Ok(Self(iota_types::ValidatorAggregatedSignature {
+        Ok(Self(iota_sdk::types::ValidatorAggregatedSignature {
             epoch,
             signature: **signature,
             bitmap: roaring::RoaringBitmap::deserialize_from(bitmap_bytes)?,
@@ -167,3 +167,6 @@ impl ValidatorAggregatedSignature {
         Ok(bytes)
     }
 }
+
+crate::export_iota_types_bcs_conversion!(ValidatorCommittee, ValidatorCommitteeMember);
+crate::export_iota_types_objects_bcs_conversion!(ValidatorSignature, ValidatorAggregatedSignature);

@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_types::{
+use iota_sdk::types::{
     ActiveJwk, AuthenticatorStateExpire, AuthenticatorStateUpdateV1, GasCostSummary, Jwk, JwkId,
     RandomnessStateUpdate, TransactionExpiration,
 };
@@ -41,18 +41,18 @@ pub mod v1;
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
 #[derive(Clone, uniffi::Object)]
-pub struct Transaction(pub iota_types::Transaction);
+pub struct Transaction(pub iota_sdk::types::Transaction);
 
 #[uniffi::export]
 impl Transaction {
     #[uniffi::constructor]
     pub fn new_v1(transaction_v1: &TransactionV1) -> Self {
-        Self(iota_types::Transaction::V1(transaction_v1.0.clone()))
+        Self(iota_sdk::types::Transaction::V1(transaction_v1.0.clone()))
     }
 
     pub fn as_v1(&self) -> Arc<TransactionV1> {
         match &self.0 {
-            iota_types::Transaction::V1(tx) => Arc::new(TransactionV1(tx.clone())),
+            iota_sdk::types::Transaction::V1(tx) => Arc::new(TransactionV1(tx.clone())),
         }
     }
 
@@ -86,26 +86,17 @@ impl Transaction {
         self.0.signing_digest_hex()
     }
 
-    /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-    pub fn to_bcs(&self) -> Vec<u8> {
-        self.0.to_bcs()
-    }
-
     /// Serialize the transaction as a base64-encoded string.
     pub fn to_base64(&self) -> String {
         self.0.to_base64()
     }
 
-    /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
-    #[uniffi::constructor]
-    pub fn from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Transaction(iota_types::Transaction::from_bcs(&bytes)?))
-    }
-
     /// Deserialize a transaction from a base64-encoded string.
     #[uniffi::constructor]
     pub fn from_base64(base64: String) -> Result<Self> {
-        Ok(Transaction(iota_types::Transaction::from_base64(&base64)?))
+        Ok(Transaction(iota_sdk::types::Transaction::from_base64(
+            &base64,
+        )?))
     }
 }
 
@@ -121,7 +112,7 @@ impl Transaction {
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct TransactionV1(pub iota_types::TransactionV1);
+pub struct TransactionV1(pub iota_sdk::types::TransactionV1);
 
 #[uniffi::export]
 impl TransactionV1 {
@@ -132,7 +123,7 @@ impl TransactionV1 {
         gas_payment: GasPayment,
         expiration: TransactionExpiration,
     ) -> Self {
-        Self(iota_types::TransactionV1 {
+        Self(iota_sdk::types::TransactionV1 {
             kind: kind.0.clone(),
             sender: **sender,
             gas_payment: gas_payment.into(),
@@ -170,26 +161,15 @@ impl TransactionV1 {
         self.0.signing_digest_hex()
     }
 
-    /// Serialize the transaction as a `Vec<u8>` of BCS bytes.
-    pub fn to_bcs(&self) -> Vec<u8> {
-        self.0.to_bcs()
-    }
-
     /// Serialize the transaction as a base64-encoded string.
     pub fn to_base64(&self) -> String {
         self.0.to_base64()
     }
 
-    /// Deserialize a transaction from a `Vec<u8>` of BCS bytes.
-    #[uniffi::constructor]
-    pub fn from_bcs(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(iota_types::TransactionV1::from_bcs(&bytes)?))
-    }
-
     /// Deserialize a transaction from a base64-encoded string.
     #[uniffi::constructor]
     pub fn from_base64(bytes: String) -> Result<Self> {
-        Ok(Self(iota_types::TransactionV1::from_base64(&bytes)?))
+        Ok(Self(iota_sdk::types::TransactionV1::from_base64(&bytes)?))
     }
 }
 
@@ -199,8 +179,8 @@ pub struct SignedTransaction {
     pub signatures: Vec<Arc<UserSignature>>,
 }
 
-impl From<iota_types::SignedTransaction> for SignedTransaction {
-    fn from(value: iota_types::SignedTransaction) -> Self {
+impl From<iota_sdk::types::SignedTransaction> for SignedTransaction {
+    fn from(value: iota_sdk::types::SignedTransaction) -> Self {
         Self {
             transaction: Arc::new(Transaction(value.transaction)),
             signatures: value
@@ -213,7 +193,7 @@ impl From<iota_types::SignedTransaction> for SignedTransaction {
     }
 }
 
-impl From<SignedTransaction> for iota_types::SignedTransaction {
+impl From<SignedTransaction> for iota_sdk::types::SignedTransaction {
     fn from(value: SignedTransaction) -> Self {
         Self {
             transaction: value.transaction.0.clone(),
@@ -240,46 +220,44 @@ impl From<SignedTransaction> for iota_types::SignedTransaction {
 ///                     =/ %x08 consensus-commit-prologue-v3
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct TransactionKind(pub iota_types::TransactionKind);
+pub struct TransactionKind(pub iota_sdk::types::TransactionKind);
 
 #[uniffi::export]
 impl TransactionKind {
     #[uniffi::constructor]
     pub fn new_programmable_transaction(tx: &ProgrammableTransaction) -> Self {
-        Self(iota_types::TransactionKind::ProgrammableTransaction(
+        Self(iota_sdk::types::TransactionKind::ProgrammableTransaction(
             tx.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
     pub fn new_genesis(tx: &GenesisTransaction) -> Self {
-        Self(iota_types::TransactionKind::Genesis(tx.0.clone()))
+        Self(iota_sdk::types::TransactionKind::Genesis(tx.0.clone()))
     }
 
     #[uniffi::constructor]
     pub fn new_consensus_commit_prologue_v1(tx: &ConsensusCommitPrologueV1) -> Self {
-        Self(iota_types::TransactionKind::ConsensusCommitPrologueV1(
+        Self(iota_sdk::types::TransactionKind::ConsensusCommitPrologueV1(
             tx.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
     pub fn new_authenticator_state_update_v1(tx: &AuthenticatorStateUpdateV1) -> Self {
-        Self(iota_types::TransactionKind::AuthenticatorStateUpdateV1(
-            tx.clone(),
-        ))
+        Self(iota_sdk::types::TransactionKind::AuthenticatorStateUpdateV1(tx.clone()))
     }
 
     #[uniffi::constructor]
     pub fn new_end_of_epoch(tx: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
-        Self(iota_types::TransactionKind::EndOfEpoch(
+        Self(iota_sdk::types::TransactionKind::EndOfEpoch(
             tx.into_iter().map(|tx| tx.0.clone()).collect(),
         ))
     }
 
     #[uniffi::constructor]
     pub fn new_randomness_state_update(tx: &RandomnessStateUpdate) -> Self {
-        Self(iota_types::TransactionKind::RandomnessStateUpdate(
+        Self(iota_sdk::types::TransactionKind::RandomnessStateUpdate(
             tx.clone(),
         ))
     }
@@ -298,13 +276,13 @@ impl TransactionKind {
 /// ptb = (vector input) (vector command)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ProgrammableTransaction(pub iota_types::ProgrammableTransaction);
+pub struct ProgrammableTransaction(pub iota_sdk::types::ProgrammableTransaction);
 
 #[uniffi::export]
 impl ProgrammableTransaction {
     #[uniffi::constructor]
     pub fn new(inputs: Vec<Arc<Input>>, commands: Vec<Arc<Command>>) -> Self {
-        Self(iota_types::ProgrammableTransaction {
+        Self(iota_sdk::types::ProgrammableTransaction {
             inputs: inputs.iter().map(|input| input.0.clone()).collect(),
             commands: commands.iter().map(|command| command.0.clone()).collect(),
         })
@@ -349,7 +327,7 @@ impl ProgrammableTransaction {
 /// input-receiving             = %x04 object-ref
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Input(pub iota_types::Input);
+pub struct Input(pub iota_sdk::types::Input);
 
 #[uniffi::export]
 impl Input {
@@ -357,19 +335,19 @@ impl Input {
     /// not contain structs or objects.
     #[uniffi::constructor]
     pub fn new_pure(value: Vec<u8>) -> Self {
-        Self(iota_types::Input::Pure { value })
+        Self(iota_sdk::types::Input::Pure { value })
     }
 
     /// A move object that is either immutable or address owned
     #[uniffi::constructor]
     pub fn new_immutable_or_owned(object_ref: ObjectReference) -> Self {
-        Self(iota_types::Input::ImmutableOrOwned(object_ref.into()))
+        Self(iota_sdk::types::Input::ImmutableOrOwned(object_ref.into()))
     }
 
     /// A move object whose owner is "Shared"
     #[uniffi::constructor]
     pub fn new_shared(object_id: &ObjectId, initial_shared_version: u64, mutable: bool) -> Self {
-        Self(iota_types::Input::Shared {
+        Self(iota_sdk::types::Input::Shared {
             object_id: object_id.0,
             initial_shared_version,
             mutable,
@@ -378,7 +356,7 @@ impl Input {
 
     #[uniffi::constructor]
     pub fn new_receiving(object_ref: ObjectReference) -> Self {
-        Self(iota_types::Input::Receiving(object_ref.into()))
+        Self(iota_sdk::types::Input::Receiving(object_ref.into()))
     }
 }
 
@@ -406,14 +384,14 @@ impl Input {
 /// command-upgrade             = %x06 upgrade
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Command(pub iota_types::Command);
+pub struct Command(pub iota_sdk::types::Command);
 
 #[uniffi::export]
 impl Command {
     /// A call to either an entry or a public Move function
     #[uniffi::constructor]
     pub fn new_move_call(move_call: &MoveCall) -> Self {
-        Self(iota_types::Command::MoveCall(move_call.0.clone()))
+        Self(iota_sdk::types::Command::MoveCall(move_call.0.clone()))
     }
 
     /// It sends n-objects to the specified address. These objects must have
@@ -421,7 +399,7 @@ impl Command {
     /// address or the object must be newly created.
     #[uniffi::constructor]
     pub fn new_transfer_objects(transfer_objects: &TransferObjects) -> Self {
-        Self(iota_types::Command::TransferObjects(
+        Self(iota_sdk::types::Command::TransferObjects(
             transfer_objects.0.clone(),
         ))
     }
@@ -429,27 +407,27 @@ impl Command {
     /// It splits off some amounts into a new coins with those amounts
     #[uniffi::constructor]
     pub fn new_split_coins(split_coins: &SplitCoins) -> Self {
-        Self(iota_types::Command::SplitCoins(split_coins.0.clone()))
+        Self(iota_sdk::types::Command::SplitCoins(split_coins.0.clone()))
     }
 
     /// It merges n-coins into the first coin
     #[uniffi::constructor]
     pub fn new_merge_coins(merge_coins: &MergeCoins) -> Self {
-        Self(iota_types::Command::MergeCoins(merge_coins.0.clone()))
+        Self(iota_sdk::types::Command::MergeCoins(merge_coins.0.clone()))
     }
 
     /// Publishes a Move package. It takes the package bytes and a list of the
     /// package's transitive dependencies to link against on-chain.
     #[uniffi::constructor]
     pub fn new_publish(publish: &Publish) -> Self {
-        Self(iota_types::Command::Publish(publish.0.clone()))
+        Self(iota_sdk::types::Command::Publish(publish.0.clone()))
     }
 
     /// Given n-values of the same type, it constructs a vector. For non objects
     /// or an empty vector, the type tag must be specified.
     #[uniffi::constructor]
     pub fn new_make_move_vector(make_move_vector: &MakeMoveVector) -> Self {
-        Self(iota_types::Command::MakeMoveVector(
+        Self(iota_sdk::types::Command::MakeMoveVector(
             make_move_vector.0.clone(),
         ))
     }
@@ -464,7 +442,7 @@ impl Command {
     ///    from an earlier command in the same programmable transaction.
     #[uniffi::constructor]
     pub fn new_upgrade(upgrade: &Upgrade) -> Self {
-        Self(iota_types::Command::Upgrade(upgrade.0.clone()))
+        Self(iota_sdk::types::Command::Upgrade(upgrade.0.clone()))
     }
 }
 
@@ -478,13 +456,13 @@ impl Command {
 /// transfer-objects = (vector argument) argument
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct TransferObjects(pub iota_types::TransferObjects);
+pub struct TransferObjects(pub iota_sdk::types::TransferObjects);
 
 #[uniffi::export]
 impl TransferObjects {
     #[uniffi::constructor]
     pub fn new(objects: Vec<Arc<Argument>>, address: Arc<Argument>) -> Self {
-        Self(iota_types::TransferObjects {
+        Self(iota_sdk::types::TransferObjects {
             objects: objects.iter().map(|argument| argument.0).collect(),
             address: address.0,
         })
@@ -517,13 +495,13 @@ impl TransferObjects {
 /// split-coins = argument (vector argument)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct SplitCoins(pub iota_types::SplitCoins);
+pub struct SplitCoins(pub iota_sdk::types::SplitCoins);
 
 #[uniffi::export]
 impl SplitCoins {
     #[uniffi::constructor]
     pub fn new(coin: &Argument, amounts: Vec<Arc<Argument>>) -> Self {
-        Self(iota_types::SplitCoins {
+        Self(iota_sdk::types::SplitCoins {
             coin: coin.0,
             amounts: amounts.iter().map(|amount| amount.0).collect(),
         })
@@ -556,13 +534,13 @@ impl SplitCoins {
 /// merge-coins = argument (vector argument)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MergeCoins(pub iota_types::MergeCoins);
+pub struct MergeCoins(pub iota_sdk::types::MergeCoins);
 
 #[uniffi::export]
 impl MergeCoins {
     #[uniffi::constructor]
     pub fn new(coin: &Argument, coins_to_merge: Vec<Arc<Argument>>) -> Self {
-        Self(iota_types::MergeCoins {
+        Self(iota_sdk::types::MergeCoins {
             coin: coin.0,
             coins_to_merge: coins_to_merge.iter().map(|coin| coin.0).collect(),
         })
@@ -598,13 +576,13 @@ impl MergeCoins {
 ///           (vector object-id)    ; the set of package dependencies
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Publish(pub iota_types::Publish);
+pub struct Publish(pub iota_sdk::types::Publish);
 
 #[uniffi::export]
 impl Publish {
     #[uniffi::constructor]
     pub fn new(modules: Vec<Vec<u8>>, dependencies: Vec<Arc<ObjectId>>) -> Self {
-        Self(iota_types::Publish {
+        Self(iota_sdk::types::Publish {
             modules,
             dependencies: dependencies.iter().map(|object_id| object_id.0).collect(),
         })
@@ -637,13 +615,13 @@ impl Publish {
 /// make-move-vector = (option type-tag) (vector argument)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MakeMoveVector(pub iota_types::MakeMoveVector);
+pub struct MakeMoveVector(pub iota_sdk::types::MakeMoveVector);
 
 #[uniffi::export]
 impl MakeMoveVector {
     #[uniffi::constructor]
     pub fn new(type_tag: Option<Arc<TypeTag>>, elements: Vec<Arc<Argument>>) -> Self {
-        Self(iota_types::MakeMoveVector {
+        Self(iota_sdk::types::MakeMoveVector {
             type_: type_tag.map(|type_tag| type_tag.0.clone()),
             elements: elements.iter().map(|element| element.0).collect(),
         })
@@ -682,7 +660,7 @@ impl MakeMoveVector {
 ///           argument              ; upgrade ticket
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Upgrade(pub iota_types::Upgrade);
+pub struct Upgrade(pub iota_sdk::types::Upgrade);
 
 #[uniffi::export]
 impl Upgrade {
@@ -693,7 +671,7 @@ impl Upgrade {
         package: Arc<ObjectId>,
         ticket: Arc<Argument>,
     ) -> Self {
-        Self(iota_types::Upgrade {
+        Self(iota_sdk::types::Upgrade {
             modules,
             dependencies: dependencies.iter().map(|dependency| dependency.0).collect(),
             package: package.0,
@@ -739,7 +717,7 @@ impl Upgrade {
 ///                                consensus-determined-version-assignments
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ConsensusCommitPrologueV1(pub iota_types::ConsensusCommitPrologueV1);
+pub struct ConsensusCommitPrologueV1(pub iota_sdk::types::ConsensusCommitPrologueV1);
 
 #[uniffi::export]
 impl ConsensusCommitPrologueV1 {
@@ -752,7 +730,7 @@ impl ConsensusCommitPrologueV1 {
         consensus_commit_digest: &Digest,
         consensus_determined_version_assignments: &ConsensusDeterminedVersionAssignments,
     ) -> Self {
-        Self(iota_types::ConsensusCommitPrologueV1 {
+        Self(iota_sdk::types::ConsensusCommitPrologueV1 {
             epoch,
             round,
             sub_dag_index,
@@ -803,7 +781,7 @@ impl ConsensusCommitPrologueV1 {
 
 #[derive(derive_more::From, uniffi::Object)]
 pub struct ConsensusDeterminedVersionAssignments(
-    pub iota_types::ConsensusDeterminedVersionAssignments,
+    pub iota_sdk::types::ConsensusDeterminedVersionAssignments,
 );
 
 #[uniffi::export]
@@ -813,7 +791,7 @@ impl ConsensusDeterminedVersionAssignments {
         cancelled_transactions: Vec<Arc<CancelledTransaction>>,
     ) -> Self {
         Self(
-            iota_types::ConsensusDeterminedVersionAssignments::CancelledTransactions {
+            iota_sdk::types::ConsensusDeterminedVersionAssignments::CancelledTransactions {
                 cancelled_transactions: cancelled_transactions
                     .into_iter()
                     .map(|v| v.0.clone())
@@ -847,13 +825,13 @@ impl ConsensusDeterminedVersionAssignments {
 /// cancelled-transaction = digest (vector version-assignment)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct CancelledTransaction(pub iota_types::CancelledTransaction);
+pub struct CancelledTransaction(pub iota_sdk::types::CancelledTransaction);
 
 #[uniffi::export]
 impl CancelledTransaction {
     #[uniffi::constructor]
     pub fn new(digest: &Digest, version_assignments: Vec<Arc<VersionAssignment>>) -> Self {
-        Self(iota_types::CancelledTransaction {
+        Self(iota_sdk::types::CancelledTransaction {
             digest: digest.0,
             version_assignments: version_assignments
                 .into_iter()
@@ -887,13 +865,13 @@ impl CancelledTransaction {
 /// version-assignment = object-id u64
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct VersionAssignment(iota_types::VersionAssignment);
+pub struct VersionAssignment(iota_sdk::types::VersionAssignment);
 
 #[uniffi::export]
 impl VersionAssignment {
     #[uniffi::constructor]
     pub fn new(object_id: &ObjectId, version: u64) -> Self {
-        Self(iota_types::VersionAssignment {
+        Self(iota_sdk::types::VersionAssignment {
             object_id: object_id.0,
             version,
         })
@@ -918,13 +896,13 @@ impl VersionAssignment {
 /// genesis-transaction = (vector genesis-object)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct GenesisTransaction(iota_types::GenesisTransaction);
+pub struct GenesisTransaction(iota_sdk::types::GenesisTransaction);
 
 #[uniffi::export]
 impl GenesisTransaction {
     #[uniffi::constructor]
     pub fn new(objects: Vec<Arc<GenesisObject>>, events: Vec<Event>) -> Self {
-        Self(iota_types::GenesisTransaction {
+        Self(iota_sdk::types::GenesisTransaction {
             objects: objects.iter().map(|object| object.0.clone()).collect(),
             events: events.into_iter().map(Into::into).collect(),
         })
@@ -962,7 +940,7 @@ impl GenesisTransaction {
 ///                (vector system-package)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ChangeEpoch(pub iota_types::ChangeEpoch);
+pub struct ChangeEpoch(pub iota_sdk::types::ChangeEpoch);
 
 #[uniffi::export]
 impl ChangeEpoch {
@@ -978,7 +956,7 @@ impl ChangeEpoch {
         epoch_start_timestamp_ms: u64,
         system_packages: Vec<Arc<SystemPackage>>,
     ) -> Self {
-        Self(iota_types::ChangeEpoch {
+        Self(iota_sdk::types::ChangeEpoch {
             epoch,
             protocol_version,
             storage_charge,
@@ -1053,13 +1031,13 @@ impl ChangeEpoch {
 ///                  (vector object-id) ; dependencies
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct SystemPackage(pub iota_types::SystemPackage);
+pub struct SystemPackage(pub iota_sdk::types::SystemPackage);
 
 #[uniffi::export]
 impl SystemPackage {
     #[uniffi::constructor]
     pub fn new(version: Version, modules: Vec<Vec<u8>>, dependencies: Vec<Arc<ObjectId>>) -> Self {
-        Self(iota_types::SystemPackage {
+        Self(iota_sdk::types::SystemPackage {
             version,
             modules,
             dependencies: dependencies.into_iter().map(|dep| dep.0).collect(),
@@ -1103,7 +1081,7 @@ impl SystemPackage {
 ///                (vector system-package)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ChangeEpochV2(pub iota_types::ChangeEpochV2);
+pub struct ChangeEpochV2(pub iota_sdk::types::ChangeEpochV2);
 
 #[uniffi::export]
 impl ChangeEpochV2 {
@@ -1120,7 +1098,7 @@ impl ChangeEpochV2 {
         epoch_start_timestamp_ms: u64,
         system_packages: Vec<Arc<SystemPackage>>,
     ) -> Self {
-        Self(iota_types::ChangeEpochV2 {
+        Self(iota_sdk::types::ChangeEpochV2 {
             epoch,
             protocol_version,
             storage_charge,
@@ -1263,13 +1241,13 @@ pub struct ActiveJwk {
 ///                                         )
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ExecutionTimeObservations(pub iota_types::ExecutionTimeObservations);
+pub struct ExecutionTimeObservations(pub iota_sdk::types::ExecutionTimeObservations);
 
 #[uniffi::export]
 impl ExecutionTimeObservations {
     #[uniffi::constructor]
     pub fn new_v1(execution_time_observations: Vec<Arc<ExecutionTimeObservation>>) -> Self {
-        Self(iota_types::ExecutionTimeObservations::V1(
+        Self(iota_sdk::types::ExecutionTimeObservations::V1(
             execution_time_observations
                 .iter()
                 .map(|obs| obs.0.clone())
@@ -1279,7 +1257,7 @@ impl ExecutionTimeObservations {
 }
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ExecutionTimeObservation(pub iota_types::ExecutionTimeObservation);
+pub struct ExecutionTimeObservation(pub iota_sdk::types::ExecutionTimeObservation);
 
 #[uniffi::export]
 impl ExecutionTimeObservation {
@@ -1288,7 +1266,7 @@ impl ExecutionTimeObservation {
         key: &ExecutionTimeObservationKey,
         observations: Vec<Arc<ValidatorExecutionTimeObservation>>,
     ) -> Self {
-        Self(iota_types::ExecutionTimeObservation {
+        Self(iota_sdk::types::ExecutionTimeObservation {
             key: key.0.clone(),
             observations: observations.into_iter().map(|obs| obs.0.clone()).collect(),
         })
@@ -1321,13 +1299,13 @@ impl ExecutionTimeObservation {
 ///             u32 ; subsecond nanoseconds
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ValidatorExecutionTimeObservation(iota_types::ValidatorExecutionTimeObservation);
+pub struct ValidatorExecutionTimeObservation(iota_sdk::types::ValidatorExecutionTimeObservation);
 
 #[uniffi::export]
 impl ValidatorExecutionTimeObservation {
     #[uniffi::constructor]
     pub fn new(validator: &Bls12381PublicKey, duration: std::time::Duration) -> Self {
-        Self(iota_types::ValidatorExecutionTimeObservation {
+        Self(iota_sdk::types::ValidatorExecutionTimeObservation {
             validator: validator.0,
             duration,
         })
@@ -1360,7 +1338,7 @@ impl ValidatorExecutionTimeObservation {
 /// move-entry-point = object-id string string (vec type-tag)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ExecutionTimeObservationKey(iota_types::ExecutionTimeObservationKey);
+pub struct ExecutionTimeObservationKey(iota_sdk::types::ExecutionTimeObservationKey);
 
 #[uniffi::export]
 impl ExecutionTimeObservationKey {
@@ -1371,45 +1349,47 @@ impl ExecutionTimeObservationKey {
         function: String,
         type_arguments: Vec<Arc<TypeTag>>,
     ) -> Self {
-        Self(iota_types::ExecutionTimeObservationKey::MoveEntryPoint {
-            package: package.0,
-            module,
-            function,
-            type_arguments: type_arguments
-                .into_iter()
-                .map(|tag| tag.0.clone())
-                .collect(),
-        })
+        Self(
+            iota_sdk::types::ExecutionTimeObservationKey::MoveEntryPoint {
+                package: package.0,
+                module,
+                function,
+                type_arguments: type_arguments
+                    .into_iter()
+                    .map(|tag| tag.0.clone())
+                    .collect(),
+            },
+        )
     }
 
     #[uniffi::constructor]
     pub fn new_transfer_objects() -> Self {
-        Self(iota_types::ExecutionTimeObservationKey::TransferObjects)
+        Self(iota_sdk::types::ExecutionTimeObservationKey::TransferObjects)
     }
 
     #[uniffi::constructor]
     pub fn new_split_coins() -> Self {
-        Self(iota_types::ExecutionTimeObservationKey::SplitCoins)
+        Self(iota_sdk::types::ExecutionTimeObservationKey::SplitCoins)
     }
 
     #[uniffi::constructor]
     pub fn new_merge_coins() -> Self {
-        Self(iota_types::ExecutionTimeObservationKey::MergeCoins)
+        Self(iota_sdk::types::ExecutionTimeObservationKey::MergeCoins)
     }
 
     #[uniffi::constructor]
     pub fn new_publish() -> Self {
-        Self(iota_types::ExecutionTimeObservationKey::Publish)
+        Self(iota_sdk::types::ExecutionTimeObservationKey::Publish)
     }
 
     #[uniffi::constructor]
     pub fn new_make_move_vec() -> Self {
-        Self(iota_types::ExecutionTimeObservationKey::MakeMoveVec)
+        Self(iota_sdk::types::ExecutionTimeObservationKey::MakeMoveVec)
     }
 
     #[uniffi::constructor]
     pub fn new_upgrade() -> Self {
-        Self(iota_types::ExecutionTimeObservationKey::Upgrade)
+        Self(iota_sdk::types::ExecutionTimeObservationKey::Upgrade)
     }
 }
 
@@ -1460,32 +1440,32 @@ pub struct RandomnessStateUpdate {
 /// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct EndOfEpochTransactionKind(pub iota_types::EndOfEpochTransactionKind);
+pub struct EndOfEpochTransactionKind(pub iota_sdk::types::EndOfEpochTransactionKind);
 
 #[uniffi::export]
 impl EndOfEpochTransactionKind {
     #[uniffi::constructor]
     pub fn new_change_epoch(tx: &ChangeEpoch) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::ChangeEpoch(
+        Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpoch(
             tx.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
     pub fn new_change_epoch_v2(tx: &ChangeEpochV2) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::ChangeEpochV2(
+        Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV2(
             tx.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
     pub fn new_authenticator_state_create() -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateCreate)
+        Self(iota_sdk::types::EndOfEpochTransactionKind::AuthenticatorStateCreate)
     }
 
     #[uniffi::constructor]
     pub fn new_authenticator_state_expire(tx: &AuthenticatorStateExpire) -> Self {
-        Self(iota_types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.clone()))
+        Self(iota_sdk::types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.clone()))
     }
 }
 
@@ -1515,8 +1495,8 @@ pub struct GasPayment {
     pub budget: u64,
 }
 
-impl From<iota_types::GasPayment> for GasPayment {
-    fn from(value: iota_types::GasPayment) -> Self {
+impl From<iota_sdk::types::GasPayment> for GasPayment {
+    fn from(value: iota_sdk::types::GasPayment) -> Self {
         Self {
             objects: value.objects.into_iter().map(Into::into).collect(),
             owner: Arc::new(value.owner.into()),
@@ -1526,7 +1506,7 @@ impl From<iota_types::GasPayment> for GasPayment {
     }
 }
 
-impl From<GasPayment> for iota_types::GasPayment {
+impl From<GasPayment> for iota_sdk::types::GasPayment {
     fn from(value: GasPayment) -> Self {
         Self {
             objects: value.objects.into_iter().map(Into::into).collect(),
@@ -1548,13 +1528,15 @@ impl From<GasPayment> for iota_types::GasPayment {
 ///                     =/ %x01 effects-v2
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct TransactionEffects(pub iota_types::TransactionEffects);
+pub struct TransactionEffects(pub iota_sdk::types::TransactionEffects);
 
 #[uniffi::export]
 impl TransactionEffects {
     #[uniffi::constructor]
     pub fn new_v1(effects: TransactionEffectsV1) -> Self {
-        Self(iota_types::TransactionEffects::V1(Box::new(effects.into())))
+        Self(iota_sdk::types::TransactionEffects::V1(Box::new(
+            effects.into(),
+        )))
     }
 
     pub fn is_v1(&self) -> bool {
@@ -1592,25 +1574,25 @@ pub enum TransactionArgument {
     },
 }
 
-impl From<iota_types::TransactionArgument> for TransactionArgument {
-    fn from(value: iota_types::TransactionArgument) -> Self {
+impl From<iota_sdk::types::TransactionArgument> for TransactionArgument {
+    fn from(value: iota_sdk::types::TransactionArgument) -> Self {
         match value {
-            iota_types::TransactionArgument::GasCoin => TransactionArgument::GasCoin,
-            iota_types::TransactionArgument::Input { ix } => TransactionArgument::Input { ix },
-            iota_types::TransactionArgument::Result { cmd, ix } => {
+            iota_sdk::types::TransactionArgument::GasCoin => TransactionArgument::GasCoin,
+            iota_sdk::types::TransactionArgument::Input { ix } => TransactionArgument::Input { ix },
+            iota_sdk::types::TransactionArgument::Result { cmd, ix } => {
                 TransactionArgument::Result { cmd, ix }
             }
         }
     }
 }
 
-impl From<TransactionArgument> for iota_types::TransactionArgument {
+impl From<TransactionArgument> for iota_sdk::types::TransactionArgument {
     fn from(value: TransactionArgument) -> Self {
         match value {
-            TransactionArgument::GasCoin => iota_types::TransactionArgument::GasCoin,
-            TransactionArgument::Input { ix } => iota_types::TransactionArgument::Input { ix },
+            TransactionArgument::GasCoin => iota_sdk::types::TransactionArgument::GasCoin,
+            TransactionArgument::Input { ix } => iota_sdk::types::TransactionArgument::Input { ix },
             TransactionArgument::Result { cmd, ix } => {
-                iota_types::TransactionArgument::Result { cmd, ix }
+                iota_sdk::types::TransactionArgument::Result { cmd, ix }
             }
         }
     }
@@ -1625,8 +1607,8 @@ pub struct DryRunReturn {
     pub bcs: Vec<u8>,
 }
 
-impl From<iota_types::DryRunReturn> for DryRunReturn {
-    fn from(value: iota_types::DryRunReturn) -> Self {
+impl From<iota_sdk::types::DryRunReturn> for DryRunReturn {
+    fn from(value: iota_sdk::types::DryRunReturn) -> Self {
         DryRunReturn {
             type_tag: Arc::new(value.type_tag.into()),
             bcs: value.bcs,
@@ -1634,9 +1616,9 @@ impl From<iota_types::DryRunReturn> for DryRunReturn {
     }
 }
 
-impl From<DryRunReturn> for iota_types::DryRunReturn {
+impl From<DryRunReturn> for iota_sdk::types::DryRunReturn {
     fn from(value: DryRunReturn) -> Self {
-        iota_types::DryRunReturn {
+        iota_sdk::types::DryRunReturn {
             type_tag: value.type_tag.0.clone(),
             bcs: value.bcs,
         }
@@ -1654,8 +1636,8 @@ pub struct DryRunMutation {
     pub bcs: Vec<u8>,
 }
 
-impl From<iota_types::DryRunMutation> for DryRunMutation {
-    fn from(value: iota_types::DryRunMutation) -> Self {
+impl From<iota_sdk::types::DryRunMutation> for DryRunMutation {
+    fn from(value: iota_sdk::types::DryRunMutation) -> Self {
         DryRunMutation {
             input: value.input.into(),
             type_tag: Arc::new(value.type_tag.into()),
@@ -1664,9 +1646,9 @@ impl From<iota_types::DryRunMutation> for DryRunMutation {
     }
 }
 
-impl From<DryRunMutation> for iota_types::DryRunMutation {
+impl From<DryRunMutation> for iota_sdk::types::DryRunMutation {
     fn from(value: DryRunMutation) -> Self {
-        iota_types::DryRunMutation {
+        iota_sdk::types::DryRunMutation {
             input: value.input.into(),
             type_tag: value.type_tag.0.clone(),
             bcs: value.bcs,
@@ -1684,8 +1666,8 @@ pub struct DryRunEffect {
     pub return_values: Vec<DryRunReturn>,
 }
 
-impl From<iota_types::DryRunEffect> for DryRunEffect {
-    fn from(value: iota_types::DryRunEffect) -> Self {
+impl From<iota_sdk::types::DryRunEffect> for DryRunEffect {
+    fn from(value: iota_sdk::types::DryRunEffect) -> Self {
         DryRunEffect {
             mutated_references: value
                 .mutated_references
@@ -1697,9 +1679,9 @@ impl From<iota_types::DryRunEffect> for DryRunEffect {
     }
 }
 
-impl From<DryRunEffect> for iota_types::DryRunEffect {
+impl From<DryRunEffect> for iota_sdk::types::DryRunEffect {
     fn from(value: DryRunEffect) -> Self {
-        iota_types::DryRunEffect {
+        iota_sdk::types::DryRunEffect {
             mutated_references: value
                 .mutated_references
                 .into_iter()
@@ -1726,8 +1708,8 @@ pub struct DryRunResult {
     pub effects: Option<Arc<TransactionEffects>>,
 }
 
-impl From<iota_types::DryRunResult> for DryRunResult {
-    fn from(value: iota_types::DryRunResult) -> Self {
+impl From<iota_sdk::types::DryRunResult> for DryRunResult {
+    fn from(value: iota_sdk::types::DryRunResult) -> Self {
         DryRunResult {
             error: value.error,
             results: value.results.into_iter().map(Into::into).collect(),
@@ -1737,9 +1719,9 @@ impl From<iota_types::DryRunResult> for DryRunResult {
     }
 }
 
-impl From<DryRunResult> for iota_types::DryRunResult {
+impl From<DryRunResult> for iota_sdk::types::DryRunResult {
     fn from(value: DryRunResult) -> Self {
-        iota_types::DryRunResult {
+        iota_sdk::types::DryRunResult {
             error: value.error,
             results: value.results.into_iter().map(Into::into).collect(),
             transaction: value.transaction.map(Into::into),
@@ -1785,7 +1767,7 @@ pub enum TransactionExpiration {
 /// argument-nested-result  = %x03 u16 u16
 /// ```
 #[derive(derive_more::Deref, derive_more::From, uniffi::Object)]
-pub struct Argument(iota_types::Argument);
+pub struct Argument(iota_sdk::types::Argument);
 
 #[uniffi::export]
 impl Argument {
@@ -1793,20 +1775,20 @@ impl Argument {
     /// `TransferObjects`, which can use it by-value.
     #[uniffi::constructor]
     pub fn new_gas() -> Self {
-        Self(iota_types::Argument::Gas)
+        Self(iota_sdk::types::Argument::Gas)
     }
 
     /// One of the input objects or primitive values (from
     /// `ProgrammableTransaction` inputs)
     #[uniffi::constructor]
     pub fn new_input(input: u16) -> Self {
-        Self(iota_types::Argument::Input(input))
+        Self(iota_sdk::types::Argument::Input(input))
     }
 
     /// The result of another command (from `ProgrammableTransaction` commands)
     #[uniffi::constructor]
     pub fn new_result(result: u16) -> Self {
-        Self(iota_types::Argument::Result(result))
+        Self(iota_sdk::types::Argument::Result(result))
     }
 
     /// Like a `Result` but it accesses a nested result. Currently, the only
@@ -1815,7 +1797,7 @@ impl Argument {
     // (command index, subresult index)
     #[uniffi::constructor]
     pub fn new_nested_result(command_index: u16, subresult_index: u16) -> Self {
-        Self(iota_types::Argument::NestedResult(
+        Self(iota_sdk::types::Argument::NestedResult(
             command_index,
             subresult_index,
         ))
@@ -1846,7 +1828,7 @@ impl Argument {
 ///             (vector argument)   ; input arguments
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MoveCall(iota_types::MoveCall);
+pub struct MoveCall(iota_sdk::types::MoveCall);
 
 #[uniffi::export]
 impl MoveCall {
@@ -1858,7 +1840,7 @@ impl MoveCall {
         type_arguments: Vec<Arc<TypeTag>>,
         arguments: Vec<Arc<Argument>>,
     ) -> Self {
-        Self(iota_types::MoveCall {
+        Self(iota_sdk::types::MoveCall {
             package: package.0,
             module: module.0.clone(),
             function: function.0.clone(),
@@ -1907,3 +1889,42 @@ impl MoveCall {
             .collect()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(
+    Transaction,
+    TransactionV1,
+    TransactionKind,
+    ProgrammableTransaction,
+    Input,
+    Command,
+    TransferObjects,
+    SplitCoins,
+    MergeCoins,
+    Publish,
+    MakeMoveVector,
+    Upgrade,
+    ConsensusCommitPrologueV1,
+    ConsensusDeterminedVersionAssignments,
+    CancelledTransaction,
+    VersionAssignment,
+    GenesisTransaction,
+    ChangeEpoch,
+    SystemPackage,
+    ChangeEpochV2,
+    ExecutionTimeObservation,
+    ExecutionTimeObservations,
+    ValidatorExecutionTimeObservation,
+    ExecutionTimeObservationKey,
+    TransactionEffects,
+    Argument,
+    MoveCall,
+);
+crate::export_iota_types_bcs_conversion!(
+    SignedTransaction,
+    AuthenticatorStateExpire,
+    AuthenticatorStateUpdateV1,
+    ActiveJwk,
+    RandomnessStateUpdate,
+    GasPayment,
+    TransactionExpiration,
+);

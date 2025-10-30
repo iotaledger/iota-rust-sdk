@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_types::SignatureScheme;
+use iota_sdk::types::SignatureScheme;
 
 use crate::types::{
     address::Address,
@@ -32,7 +32,7 @@ use crate::types::{
 /// zklogin-multisig-member-signature   = %x03 zklogin-authenticator
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MultisigMemberSignature(pub iota_types::MultisigMemberSignature);
+pub struct MultisigMemberSignature(pub iota_sdk::types::MultisigMemberSignature);
 
 #[uniffi::export]
 impl MultisigMemberSignature {
@@ -130,7 +130,7 @@ impl MultisigMemberSignature {
 ///                     (secp256r1-flag secp256r1-public-key)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MultisigMemberPublicKey(pub iota_types::MultisigMemberPublicKey);
+pub struct MultisigMemberPublicKey(pub iota_sdk::types::MultisigMemberPublicKey);
 
 #[uniffi::export]
 impl MultisigMemberPublicKey {
@@ -225,7 +225,7 @@ impl MultisigMemberPublicKey {
 /// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 /// serialized format of RoaringBitmaps.
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MultisigAggregatedSignature(pub iota_types::MultisigAggregatedSignature);
+pub struct MultisigAggregatedSignature(pub iota_sdk::types::MultisigAggregatedSignature);
 
 #[uniffi::export]
 impl MultisigAggregatedSignature {
@@ -242,7 +242,7 @@ impl MultisigAggregatedSignature {
         signatures: Vec<Arc<MultisigMemberSignature>>,
         bitmap: u16,
     ) -> Self {
-        Self(iota_types::MultisigAggregatedSignature::new(
+        Self(iota_sdk::types::MultisigAggregatedSignature::new(
             committee.0.clone(),
             signatures.into_iter().map(|s| s.0.clone()).collect(),
             bitmap,
@@ -294,7 +294,7 @@ impl MultisigAggregatedSignature {
 ///                             u16     ; threshold
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MultisigCommittee(pub iota_types::MultisigCommittee);
+pub struct MultisigCommittee(pub iota_sdk::types::MultisigCommittee);
 
 #[uniffi::export]
 impl MultisigCommittee {
@@ -305,7 +305,7 @@ impl MultisigCommittee {
     /// `Address` governed by this committee.
     #[uniffi::constructor]
     pub fn new(members: Vec<Arc<MultisigMember>>, threshold: u16) -> Self {
-        Self(iota_types::MultisigCommittee::new(
+        Self(iota_sdk::types::MultisigCommittee::new(
             members.into_iter().map(|m| m.0.clone()).collect(),
             threshold,
         ))
@@ -384,14 +384,14 @@ impl MultisigCommittee {
 ///                          u8     ; weight
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MultisigMember(pub iota_types::MultisigMember);
+pub struct MultisigMember(pub iota_sdk::types::MultisigMember);
 
 #[uniffi::export]
 impl MultisigMember {
     /// Construct a new member from a `MultisigMemberPublicKey` and a `weight`.
     #[uniffi::constructor]
     pub fn new(public_key: &MultisigMemberPublicKey, weight: u8) -> Self {
-        Self(iota_types::MultisigMember::new(
+        Self(iota_sdk::types::MultisigMember::new(
             public_key.0.clone(),
             weight,
         ))
@@ -407,3 +407,11 @@ impl MultisigMember {
         self.0.weight()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(
+    MultisigMemberSignature,
+    MultisigMemberPublicKey,
+    MultisigAggregatedSignature,
+    MultisigCommittee,
+    MultisigMember
+);

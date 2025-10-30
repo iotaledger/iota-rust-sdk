@@ -9,6 +9,9 @@
 )]
 
 use base64ct::Encoding;
+use serde::Deserialize;
+
+mod macros;
 
 pub mod crypto;
 pub mod error;
@@ -17,6 +20,8 @@ pub mod graphql;
 pub mod transaction_builder;
 pub mod types;
 pub mod uniffi_helpers;
+
+pub(crate) use macros::*;
 
 uniffi::setup_scaffolding!();
 
@@ -39,3 +44,5 @@ pub fn hex_encode(input: &[u8]) -> String {
 pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
     Ok(hex::decode(input)?)
 }
+
+crate::export_primitive_types_bcs_conversion!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
