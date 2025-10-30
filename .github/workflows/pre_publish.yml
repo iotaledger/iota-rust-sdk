@@ -18,39 +18,43 @@ on:
           - beta:    Increase the beta pre-version (x.y.z-beta.M)
           - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
       package:
-        type: string
+        type: choice
         required: true
         description: The package to publish.
+        options:
+          - iota-sdk
+          - iota-sdk-crypto
+          - iota-sdk-ffi
+          - iota-sdk-graphql-client
+          - iota-sdk-graphql-client-build
+          - iota-sdk-transaction-builder
+          - iota-sdk-types
 
 jobs:
   publish:
-    name: Publish to crates.io
+    name: Setup for publish to crates.io
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - run: cargo install cargo-release --version 0.25.20
+      - name: Install cargo-release
+        run: cargo install cargo-release --version 0.25.20
 
-      - name: Cargo release publish
-        run: |
-          pkg_args="-p ${{inputs.package}}"
-          args="--allow-branch develop,sdk-bindings --no-confirm"
+      - name: Dry run publish
+        run: eval "cargo release -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm --all-features"
 
-          echo "Dry-running publish"
-          eval "cargo release $pkg_args $args --all-features"
+      - name: Get commits since last tag
+        run: eval "cargo release changes"
 
-          echo "Commits since last tag:"
-          eval "cargo release changes"
+      - name: Bump versions
+        run: eval "cargo release version -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm ${{inputs.level}}"
 
-          echo "Bumping versions"
-          eval "cargo release version $pkg_args $args ${{inputs.level}}"
+      - name: Commit packages
+        run: eval "cargo release commit --allow-branch develop,sdk-bindings --no-confirm"
 
-          echo "Committing packages"
-          eval "cargo release commit $args"
+      - name: Tag commit
+        run: eval "cargo release tag -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm --tag-prefix '${{inputs.package}}-'"
 
-          echo "Tagging the commit"
-          eval "cargo release tag $pkg_args $args --tag-prefix '${{inputs.package}}-'"
-
-          echo "Pushing commit"
-          eval "cargo release push $pkg_args $args"
+      - name: Push commit
+        run: eval "cargo release push -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm"
