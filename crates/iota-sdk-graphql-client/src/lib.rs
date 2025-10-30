@@ -375,8 +375,7 @@ impl Client {
 
         let total_balance = response
             .owner
-            .and_then(|o| o.balance.map(|b| b.total_balance))
-            .ok_or_else(Error::empty_response_error)?
+            .and_then(|o| o.balance.and_then(|b| b.total_balance))
             .map(|x| x.0.parse::<u64>())
             .transpose()?;
         Ok(total_balance)
@@ -1244,33 +1243,28 @@ impl Client {
 
         let transactions = {
             txc.nodes
-                .iter()
+                .into_iter()
                 .map(|node| {
-                    match (
-                        node.bcs.as_ref(),
-                        node.effects.as_ref(),
-                        node.signatures.as_ref(),
-                    ) {
-                        (Some(bcs), Some(effects), Some(sigs)) => {
-                            let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
-                            let effects = base64ct::Base64::decode_vec(
-                                effects.bcs.as_ref().unwrap().0.as_str(),
-                            )?;
+                    let (Some(bcs), Some(effects), Some(sigs)) =
+                        (node.bcs, node.effects, node.signatures)
+                    else {
+                        return Err(Error::empty_response_error());
+                    };
+                    let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
+                    let effects =
+                        base64ct::Base64::decode_vec(effects.bcs.as_ref().unwrap().0.as_str())?;
 
-                            let sigs = sigs
-                                .iter()
-                                .map(|s| UserSignature::from_base64(&s.0))
-                                .collect::<Result<Vec<_>, _>>()?;
-                            let tx: Transaction = bcs::from_bytes(&bcs)?;
-                            let tx = SignedTransaction {
-                                transaction: tx,
-                                signatures: sigs,
-                            };
-                            let effects: TransactionEffects = bcs::from_bytes(&effects)?;
-                            Ok(TransactionDataEffects { tx, effects })
-                        }
-                        (_, _, _) => Err(Error::empty_response_error()),
-                    }
+                    let sigs = sigs
+                        .iter()
+                        .map(|s| UserSignature::from_base64(&s.0))
+                        .collect::<Result<Vec<_>, _>>()?;
+                    let tx: Transaction = bcs::from_bytes(&bcs)?;
+                    let tx = SignedTransaction {
+                        transaction: tx,
+                        signatures: sigs,
+                    };
+                    let effects: TransactionEffects = bcs::from_bytes(&effects)?;
+                    Ok(TransactionDataEffects { tx, effects })
                 })
                 .collect::<Result<Vec<_>>>()?
         };
