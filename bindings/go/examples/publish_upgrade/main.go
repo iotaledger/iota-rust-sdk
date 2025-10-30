@@ -29,7 +29,7 @@ import (
 )
 
 func main() {
-	waitFor := sdk.WaitForTxFinalized
+	waitFor := sdk.WaitForTxIndexed
 
 	// Read and parse the compiled package, or use the default package
 	packageDataString := os.Getenv("COMPILED_PACKAGE")

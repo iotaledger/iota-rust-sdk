@@ -45,7 +45,7 @@ func main() {
 
 	builder.GasStationSponsor(gasStationUrl, nil, &headers)
 
-	waitFor := sdk.WaitForTxFinalized
+	waitFor := sdk.WaitForTxIndexed
 
 	res, err := builder.Execute(simpleKey, &waitFor)
 	if err.(*sdk.SdkFfiError) != nil {

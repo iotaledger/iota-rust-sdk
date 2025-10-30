@@ -79,10 +79,10 @@ fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, crate::Error> {
 pub enum WaitForTx {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions, and that the transaction itself is indexed on the node.
-    Finalized,
+    Indexed,
     /// Indicates that the tranaction has been included in a checkpoint, and all
     /// queries may include it.
-    CheckpointCertified,
+    Finalized,
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.
@@ -1310,7 +1310,7 @@ impl Client {
     }
 
     /// Returns whether the transaction for the given digest has been indexed
-    /// (finalized) on the node.
+    /// on the node.
     pub async fn is_tx_indexed_on_node(&self, digest: Digest) -> Result<bool> {
         let operation = TransactionBlockIndexedQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
@@ -1322,8 +1322,8 @@ impl Client {
     }
 
     /// Returns whether the transaction for the given digest has been included
-    /// in a checkpoint.
-    pub async fn is_tx_checkpoint_certified(&self, digest: Digest) -> Result<bool> {
+    /// in a checkpoint (finalized).
+    pub async fn is_tx_finalized(&self, digest: Digest) -> Result<bool> {
         let operation = TransactionBlockCheckpointQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -1357,10 +1357,8 @@ impl Client {
                 loop {
                     interval.tick().await;
                     if match wait_for {
-                        WaitForTx::Finalized => self.is_tx_indexed_on_node(digest).await?,
-                        WaitForTx::CheckpointCertified => {
-                            self.is_tx_checkpoint_certified(digest).await?
-                        }
+                        WaitForTx::Indexed => self.is_tx_indexed_on_node(digest).await?,
+                        WaitForTx::Finalized => self.is_tx_finalized(digest).await?,
                     } {
                         break Ok(());
                     }

@@ -435,7 +435,7 @@ mod tests {
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, [coin]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
         check_effects_status_success(effects).await;
 
         // check that recipient has 1 coin
@@ -456,7 +456,7 @@ mod tests {
             .generics::<u64>()
             .arguments([Some(1u64)]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
         check_effects_status_success(effects).await;
     }
 
@@ -471,7 +471,7 @@ mod tests {
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, [res("coin")]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
         check_effects_status_success(effects).await;
 
         // check that recipient has 1 coin
@@ -491,7 +491,7 @@ mod tests {
         // transfer 1 IOTA
         tx.split_coins(coin, [1_000_000_000u64]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await.unwrap();
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await.unwrap();
 
         let expected_status = ExecutionStatus::Success;
         // The tx failed, so we expect Failure instead of Success
@@ -513,7 +513,7 @@ mod tests {
         tx.merge_coins(coin1, coins_to_merge);
         let client = tx.get_client().clone();
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
         check_effects_status_success(effects).await;
 
         // check that there are two coins
@@ -530,7 +530,7 @@ mod tests {
 
         tx.make_move_vec([1u64]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
         check_effects_status_success(effects).await;
     }
 
@@ -543,7 +543,7 @@ mod tests {
             .upgrade_cap("cap")
             .transfer_objects(address, [res("cap")]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
         check_effects_status_success(effects).await;
     }
 
@@ -557,7 +557,7 @@ mod tests {
             .upgrade_cap("cap")
             .transfer_objects(address, [res("cap")]);
 
-        let effects = tx.execute(&key, WaitForTx::Finalized).await;
+        let effects = tx.execute(&key, WaitForTx::Indexed).await;
         let mut package_id: Option<ObjectId> = None;
         let mut created_objs = vec![];
         if let Ok(ref effects) = effects {
@@ -617,7 +617,7 @@ mod tests {
 
         tx.gas(coins.last().unwrap().id);
 
-        let effects = tx.execute(&key, WaitForTx::Finalized).await;
+        let effects = tx.execute(&key, WaitForTx::Indexed).await;
         check_effects_status_success(effects).await;
     }
 }

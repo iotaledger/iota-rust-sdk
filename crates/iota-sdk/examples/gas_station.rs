@@ -27,9 +27,7 @@ async fn main() -> Result<()> {
             HeaderValue::from_str(&format!("Bearer {gas_station_auth_token}"))?,
         );
 
-    let effects = builder
-        .execute(&keypair.into(), WaitForTx::Finalized)
-        .await?;
+    let effects = builder.execute(&keypair.into(), WaitForTx::Indexed).await?;
 
     println!("{effects:#?}");
 

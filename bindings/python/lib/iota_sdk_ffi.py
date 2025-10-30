@@ -1145,9 +1145,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations() != 44467:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_checkpoint_certified() != 5749:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized() != 8647:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 32569:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 20733:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3940,11 +3940,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations.
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_checkpoint_certified.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_checkpoint_certified.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -10059,9 +10059,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_checkpoint_certified.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_checkpoint_certified.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node.restype = ctypes.c_uint16
@@ -21506,14 +21506,14 @@ class WaitForTx(enum.Enum):
     Determines what to wait for after executing a transaction.
     """
 
-    FINALIZED = 0
+    INDEXED = 0
     """
     Indicates that the transaction effects will be usable in subsequent
     transactions, and that the transaction itself is indexed on the node.
     """
 
     
-    CHECKPOINT_CERTIFIED = 1
+    FINALIZED = 1
     """
     Indicates that the tranaction has been included in a checkpoint, and all
     queries may include it.
@@ -21527,24 +21527,24 @@ class _UniffiConverterTypeWaitForTx(_UniffiConverterRustBuffer):
     def read(buf):
         variant = buf.read_i32()
         if variant == 1:
-            return WaitForTx.FINALIZED
+            return WaitForTx.INDEXED
         if variant == 2:
-            return WaitForTx.CHECKPOINT_CERTIFIED
+            return WaitForTx.FINALIZED
         raise InternalError("Raw enum value doesn't match any cases")
 
     @staticmethod
     def check_lower(value):
-        if value == WaitForTx.FINALIZED:
+        if value == WaitForTx.INDEXED:
             return
-        if value == WaitForTx.CHECKPOINT_CERTIFIED:
+        if value == WaitForTx.FINALIZED:
             return
         raise ValueError(value)
 
     @staticmethod
     def write(value, buf):
-        if value == WaitForTx.FINALIZED:
+        if value == WaitForTx.INDEXED:
             buf.write_i32(1)
-        if value == WaitForTx.CHECKPOINT_CERTIFIED:
+        if value == WaitForTx.FINALIZED:
             buf.write_i32(2)
 
 
@@ -30551,17 +30551,17 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def is_tx_checkpoint_certified(self, digest: "Digest"):
+    def is_tx_finalized(self, digest: "Digest"):
         """
         Returns whether the transaction for the given digest has been included
-        in a checkpoint.
+        in a checkpoint (finalized).
         """
 
         raise NotImplementedError
     def is_tx_indexed_on_node(self, digest: "Digest"):
         """
         Returns whether the transaction for the given digest has been indexed
-        (finalized) on the node.
+        on the node.
         """
 
         raise NotImplementedError
@@ -31529,16 +31529,16 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def is_tx_checkpoint_certified(self, digest: "Digest") -> "bool":
+    async def is_tx_finalized(self, digest: "Digest") -> "bool":
         """
         Returns whether the transaction for the given digest has been included
-        in a checkpoint.
+        in a checkpoint (finalized).
         """
 
         _UniffiConverterTypeDigest.check_lower(digest)
         
         return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_checkpoint_certified(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeDigest.lower(digest)
             ),
@@ -31558,7 +31558,7 @@ _UniffiConverterTypeSdkFfiError,
     async def is_tx_indexed_on_node(self, digest: "Digest") -> "bool":
         """
         Returns whether the transaction for the given digest has been indexed
-        (finalized) on the node.
+        on the node.
         """
 
         _UniffiConverterTypeDigest.check_lower(digest)

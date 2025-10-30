@@ -3610,7 +3610,7 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_checkpoint_certified(
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node(
 ): Short
@@ -5487,7 +5487,7 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_lookup(`ptr`: Pointer
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations(`ptr`: Pointer,`address`: Pointer,`paginationFilter`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_checkpoint_certified(`ptr`: Pointer,`digest`: Pointer,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized(`ptr`: Pointer,`digest`: Pointer,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node(`ptr`: Pointer,`digest`: Pointer,
 ): Long
@@ -8511,10 +8511,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations() != 44467.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_checkpoint_certified() != 5749.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized() != 8647.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 32569.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 20733.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336.toShort()) {
@@ -21980,13 +21980,13 @@ public interface GraphQlClientInterface {
     
     /**
      * Returns whether the transaction for the given digest has been included
-     * in a checkpoint.
+     * in a checkpoint (finalized).
      */
-    suspend fun `isTxCheckpointCertified`(`digest`: Digest): kotlin.Boolean
+    suspend fun `isTxFinalized`(`digest`: Digest): kotlin.Boolean
     
     /**
      * Returns whether the transaction for the given digest has been indexed
-     * (finalized) on the node.
+     * on the node.
      */
     suspend fun `isTxIndexedOnNode`(`digest`: Digest): kotlin.Boolean
     
@@ -22836,14 +22836,14 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     
     /**
      * Returns whether the transaction for the given digest has been included
-     * in a checkpoint.
+     * in a checkpoint (finalized).
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `isTxCheckpointCertified`(`digest`: Digest) : kotlin.Boolean {
+    override suspend fun `isTxFinalized`(`digest`: Digest) : kotlin.Boolean {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_checkpoint_certified(
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized(
                 thisPtr,
                 FfiConverterTypeDigest.lower(`digest`),
             )
@@ -22861,7 +22861,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     
     /**
      * Returns whether the transaction for the given digest has been indexed
-     * (finalized) on the node.
+     * on the node.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -56198,12 +56198,12 @@ enum class WaitForTx {
      * Indicates that the transaction effects will be usable in subsequent
      * transactions, and that the transaction itself is indexed on the node.
      */
-    FINALIZED,
+    INDEXED,
     /**
      * Indicates that the tranaction has been included in a checkpoint, and all
      * queries may include it.
      */
-    CHECKPOINT_CERTIFIED;
+    FINALIZED;
     companion object
 }
 

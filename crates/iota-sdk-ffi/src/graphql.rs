@@ -43,10 +43,10 @@ use crate::{
 pub enum WaitForTx {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions, and that the transaction itself is indexed on the node.
-    Finalized,
+    Indexed,
     /// Indicates that the tranaction has been included in a checkpoint, and all
     /// queries may include it.
-    CheckpointCertified,
+    Finalized,
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.
@@ -651,22 +651,17 @@ impl GraphQLClient {
     }
 
     /// Returns whether the transaction for the given digest has been indexed
-    /// (finalized) on the node.
+    /// on the node.
     #[uniffi::method]
     pub async fn is_tx_indexed_on_node(&self, digest: &Digest) -> Result<bool> {
         Ok(self.0.read().await.is_tx_indexed_on_node(**digest).await?)
     }
 
     /// Returns whether the transaction for the given digest has been included
-    /// in a checkpoint.
+    /// in a checkpoint (finalized).
     #[uniffi::method]
-    pub async fn is_tx_checkpoint_certified(&self, digest: &Digest) -> Result<bool> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .is_tx_checkpoint_certified(**digest)
-            .await?)
+    pub async fn is_tx_finalized(&self, digest: &Digest) -> Result<bool> {
+        Ok(self.0.read().await.is_tx_finalized(**digest).await?)
     }
 
     /// Wait for the finalization or checkpoint inclusion of a transaction

@@ -38,7 +38,7 @@ async fn main() -> Result<()> {
     let signature = private_key.sign_transaction(&tx)?;
 
     let effects = client
-        .execute_tx(&[signature], &tx, WaitForTx::Finalized)
+        .execute_tx(&[signature], &tx, WaitForTx::Indexed)
         .await?;
 
     println!("Digest: {}", effects.digest());

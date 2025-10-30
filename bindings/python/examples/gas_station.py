@@ -27,7 +27,7 @@ async def main():
         gas_station_url, headers={"Authorization": [f"Bearer {gas_station_auth_token}"]}
     )
 
-    res = await builder.execute(simple_key, WaitForTx.FINALIZED)
+    res = await builder.execute(simple_key, WaitForTx.INDEXED)
 
     print(res)
 
