@@ -172,6 +172,19 @@ impl TransactionBuilder {
 
     /// Transfer some coins to a recipient address. If multiple coins are
     /// provided then they will be merged.
+    ///
+    /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+    /// equals 1_000_000_000 NANOS.
+    /// If `amount` is provided, that amount is split from the provided coins
+    /// and sent.
+    /// If `amount` is `None`, the entire coins are transferred.
+    ///
+    /// All provided coins must have the same coin type. Mixing coins of
+    /// different types will result in an error.
+    ///
+    /// If you intend to transfer all provided coins to another address in a
+    /// single transaction, consider using
+    /// `TransactionBuilder::transfer_objects()` instead.
     #[uniffi::method(default(amount = None))]
     pub fn send_coins(
         self: Arc<Self>,
