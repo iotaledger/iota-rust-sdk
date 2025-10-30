@@ -23,13 +23,13 @@ use crate::{
 /// ```
 #[derive(PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
 #[uniffi::export(Hash)]
-pub struct Identifier(pub iota_types::Identifier);
+pub struct Identifier(pub iota_sdk::types::Identifier);
 
 #[uniffi::export]
 impl Identifier {
     #[uniffi::constructor]
     pub fn new(identifier: String) -> Result<Self> {
-        Ok(Self(iota_types::Identifier::new(identifier)?))
+        Ok(Self(iota_sdk::types::Identifier::new(identifier)?))
     }
 
     pub fn as_str(&self) -> String {
@@ -49,9 +49,9 @@ impl Identifier {
 ///              identifier         ; name of the type
 ///              (vector type-tag)  ; type parameters
 /// ```
-#[derive(derive_more::From, derive_more::Display, uniffi::Object)]
-#[uniffi::export(Display)]
-pub struct StructTag(pub iota_types::StructTag);
+#[derive(derive_more::From, derive_more::Display, uniffi::Object, PartialEq, Eq)]
+#[uniffi::export(Display, Eq)]
+pub struct StructTag(pub iota_sdk::types::StructTag);
 
 #[uniffi::export]
 impl StructTag {
@@ -62,7 +62,7 @@ impl StructTag {
         name: &Identifier,
         type_params: Vec<Arc<TypeTag>>,
     ) -> Self {
-        Self(iota_types::StructTag {
+        Self(iota_sdk::types::StructTag {
             address: address.0,
             module: module.0.clone(),
             name: name.0.clone(),
@@ -75,7 +75,7 @@ impl StructTag {
 
     #[uniffi::constructor]
     pub fn coin(type_tag: &TypeTag) -> Self {
-        Self(iota_types::StructTag::coin(type_tag.0.clone()))
+        Self(iota_sdk::types::StructTag::coin(type_tag.0.clone()))
     }
 
     /// Checks if this is a Coin type
@@ -94,15 +94,17 @@ impl StructTag {
 
     #[uniffi::constructor]
     pub fn gas_coin() -> Self {
-        Self(iota_types::StructTag::gas_coin())
+        Self(iota_sdk::types::StructTag::gas_coin())
     }
 
     #[uniffi::constructor]
     pub fn staked_iota() -> Self {
-        Self(iota_types::StructTag::staked_iota())
+        Self(iota_sdk::types::StructTag::staked_iota())
     }
 
     pub fn address(&self) -> Address {
         self.0.address().into()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(Identifier, StructTag);

@@ -15,12 +15,13 @@ fun main() = runBlocking {
 
         val coins = client.coins(address)
         for (coin in coins.data) {
-            println("Coin = 0x${coin.id().toHex()} Balance = ${coin.balance()}")
+            println("Coin = 0x${coin.id().toHex()}, Coin Type = ${coin.coinType().asStructTag()}, Balance = ${coin.balance()}")
         }
 
         val balance = client.balance(address)
         println("Total Balance = $balance")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

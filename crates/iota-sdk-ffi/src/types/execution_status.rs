@@ -3,9 +3,12 @@
 
 use std::sync::Arc;
 
-use iota_types::{CommandArgumentError, Identifier, TypeArgumentError};
+use iota_sdk::types::{CommandArgumentError, Identifier, TypeArgumentError};
 
-use crate::types::{address::Address, digest::Digest, object::ObjectId};
+use crate::{
+    error::Result,
+    types::{address::Address, digest::Digest, object::ObjectId},
+};
 
 /// The status of an executed Transaction
 ///
@@ -17,7 +20,7 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 /// execution-status = success / failure
 /// success = %x00
 /// failure = %x01 execution-error (option u64)
-/// ```xx
+/// ```
 #[derive(uniffi::Enum)]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
@@ -36,11 +39,11 @@ pub enum ExecutionStatus {
     },
 }
 
-impl From<iota_types::ExecutionStatus> for ExecutionStatus {
-    fn from(value: iota_types::ExecutionStatus) -> Self {
+impl From<iota_sdk::types::ExecutionStatus> for ExecutionStatus {
+    fn from(value: iota_sdk::types::ExecutionStatus) -> Self {
         match value {
-            iota_types::ExecutionStatus::Success => Self::Success,
-            iota_types::ExecutionStatus::Failure { error, command } => Self::Failure {
+            iota_sdk::types::ExecutionStatus::Success => Self::Success,
+            iota_sdk::types::ExecutionStatus::Failure { error, command } => Self::Failure {
                 error: error.into(),
                 command,
             },
@@ -48,7 +51,7 @@ impl From<iota_types::ExecutionStatus> for ExecutionStatus {
     }
 }
 
-impl From<ExecutionStatus> for iota_types::ExecutionStatus {
+impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
     fn from(value: ExecutionStatus) -> Self {
         match value {
             ExecutionStatus::Success => Self::Success,
@@ -269,104 +272,110 @@ pub enum ExecutionError {
     InvalidLinkage,
 }
 
-impl From<iota_types::ExecutionError> for ExecutionError {
-    fn from(value: iota_types::ExecutionError) -> Self {
+impl From<iota_sdk::types::ExecutionError> for ExecutionError {
+    fn from(value: iota_sdk::types::ExecutionError) -> Self {
         match value {
-            iota_types::ExecutionError::InsufficientGas => Self::InsufficientGas,
-            iota_types::ExecutionError::InvalidGasObject => Self::InvalidGasObject,
-            iota_types::ExecutionError::InvariantViolation => Self::InvariantViolation,
-            iota_types::ExecutionError::FeatureNotYetSupported => Self::FeatureNotYetSupported,
-            iota_types::ExecutionError::ObjectTooBig {
+            iota_sdk::types::ExecutionError::InsufficientGas => Self::InsufficientGas,
+            iota_sdk::types::ExecutionError::InvalidGasObject => Self::InvalidGasObject,
+            iota_sdk::types::ExecutionError::InvariantViolation => Self::InvariantViolation,
+            iota_sdk::types::ExecutionError::FeatureNotYetSupported => Self::FeatureNotYetSupported,
+            iota_sdk::types::ExecutionError::ObjectTooBig {
                 object_size,
                 max_object_size,
             } => Self::ObjectTooBig {
                 object_size,
                 max_object_size,
             },
-            iota_types::ExecutionError::PackageTooBig {
+            iota_sdk::types::ExecutionError::PackageTooBig {
                 object_size,
                 max_object_size,
             } => Self::PackageTooBig {
                 object_size,
                 max_object_size,
             },
-            iota_types::ExecutionError::CircularObjectOwnership { object } => {
+            iota_sdk::types::ExecutionError::CircularObjectOwnership { object } => {
                 Self::CircularObjectOwnership {
                     object: Arc::new(object.into()),
                 }
             }
-            iota_types::ExecutionError::InsufficientCoinBalance => Self::InsufficientCoinBalance,
-            iota_types::ExecutionError::CoinBalanceOverflow => Self::CoinBalanceOverflow,
-            iota_types::ExecutionError::PublishErrorNonZeroAddress => {
+            iota_sdk::types::ExecutionError::InsufficientCoinBalance => {
+                Self::InsufficientCoinBalance
+            }
+            iota_sdk::types::ExecutionError::CoinBalanceOverflow => Self::CoinBalanceOverflow,
+            iota_sdk::types::ExecutionError::PublishErrorNonZeroAddress => {
                 Self::PublishErrorNonZeroAddress
             }
-            iota_types::ExecutionError::IotaMoveVerificationError => Self::IotaMoveVerification,
-            iota_types::ExecutionError::MovePrimitiveRuntimeError { location } => {
+            iota_sdk::types::ExecutionError::IotaMoveVerificationError => {
+                Self::IotaMoveVerification
+            }
+            iota_sdk::types::ExecutionError::MovePrimitiveRuntimeError { location } => {
                 Self::MovePrimitiveRuntime {
                     location: location.map(Into::into),
                 }
             }
-            iota_types::ExecutionError::MoveAbort { location, code } => Self::MoveAbort {
+            iota_sdk::types::ExecutionError::MoveAbort { location, code } => Self::MoveAbort {
                 location: location.into(),
                 code,
             },
-            iota_types::ExecutionError::VmVerificationOrDeserializationError => {
+            iota_sdk::types::ExecutionError::VmVerificationOrDeserializationError => {
                 Self::VmVerificationOrDeserialization
             }
-            iota_types::ExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
-            iota_types::ExecutionError::FunctionNotFound => Self::FunctionNotFound,
-            iota_types::ExecutionError::ArityMismatch => Self::ArityMismatch,
-            iota_types::ExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
-            iota_types::ExecutionError::NonEntryFunctionInvoked => Self::NonEntryFunctionInvoked,
-            iota_types::ExecutionError::CommandArgumentError { argument, kind } => {
+            iota_sdk::types::ExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
+            iota_sdk::types::ExecutionError::FunctionNotFound => Self::FunctionNotFound,
+            iota_sdk::types::ExecutionError::ArityMismatch => Self::ArityMismatch,
+            iota_sdk::types::ExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
+            iota_sdk::types::ExecutionError::NonEntryFunctionInvoked => {
+                Self::NonEntryFunctionInvoked
+            }
+            iota_sdk::types::ExecutionError::CommandArgumentError { argument, kind } => {
                 Self::CommandArgument { argument, kind }
             }
-            iota_types::ExecutionError::TypeArgumentError {
+            iota_sdk::types::ExecutionError::TypeArgumentError {
                 type_argument,
                 kind,
             } => Self::TypeArgument {
                 type_argument,
                 kind,
             },
-            iota_types::ExecutionError::UnusedValueWithoutDrop { result, subresult } => {
+            iota_sdk::types::ExecutionError::UnusedValueWithoutDrop { result, subresult } => {
                 Self::UnusedValueWithoutDrop { result, subresult }
             }
-            iota_types::ExecutionError::InvalidPublicFunctionReturnType { index } => {
+            iota_sdk::types::ExecutionError::InvalidPublicFunctionReturnType { index } => {
                 Self::InvalidPublicFunctionReturnType { index }
             }
-            iota_types::ExecutionError::InvalidTransferObject => Self::InvalidTransferObject,
-            iota_types::ExecutionError::EffectsTooLarge {
+            iota_sdk::types::ExecutionError::InvalidTransferObject => Self::InvalidTransferObject,
+            iota_sdk::types::ExecutionError::EffectsTooLarge {
                 current_size,
                 max_size,
             } => Self::EffectsTooLarge {
                 current_size,
                 max_size,
             },
-            iota_types::ExecutionError::PublishUpgradeMissingDependency => {
+            iota_sdk::types::ExecutionError::PublishUpgradeMissingDependency => {
                 Self::PublishUpgradeMissingDependency
             }
-            iota_types::ExecutionError::PublishUpgradeDependencyDowngrade => {
+            iota_sdk::types::ExecutionError::PublishUpgradeDependencyDowngrade => {
                 Self::PublishUpgradeDependencyDowngrade
             }
-            iota_types::ExecutionError::PackageUpgradeError { kind } => {
+            iota_sdk::types::ExecutionError::PackageUpgradeError { kind } => {
                 Self::PackageUpgrade { kind: kind.into() }
             }
-            iota_types::ExecutionError::WrittenObjectsTooLarge {
+            iota_sdk::types::ExecutionError::WrittenObjectsTooLarge {
                 object_size,
                 max_object_size,
             } => Self::WrittenObjectsTooLarge {
                 object_size,
                 max_object_size,
             },
-            iota_types::ExecutionError::CertificateDenied => Self::CertificateDenied,
-            iota_types::ExecutionError::IotaMoveVerificationTimeout => {
+            iota_sdk::types::ExecutionError::CertificateDenied => Self::CertificateDenied,
+            iota_sdk::types::ExecutionError::IotaMoveVerificationTimeout => {
                 Self::IotaMoveVerificationTimeout
             }
-            iota_types::ExecutionError::SharedObjectOperationNotAllowed => {
+            iota_sdk::types::ExecutionError::SharedObjectOperationNotAllowed => {
                 Self::SharedObjectOperationNotAllowed
             }
-            iota_types::ExecutionError::InputObjectDeleted => Self::InputObjectDeleted,
-            iota_types::ExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
+            iota_sdk::types::ExecutionError::InputObjectDeleted => Self::InputObjectDeleted,
+            iota_sdk::types::ExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
                 congested_objects,
             } => Self::ExecutionCancelledDueToSharedObjectCongestion {
                 congested_objects: congested_objects
@@ -375,7 +384,7 @@ impl From<iota_types::ExecutionError> for ExecutionError {
                     .map(Arc::new)
                     .collect(),
             },
-            iota_types::ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+            iota_sdk::types::ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
                 congested_objects,
                 suggested_gas_price,
             } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
@@ -386,24 +395,24 @@ impl From<iota_types::ExecutionError> for ExecutionError {
                     .collect(),
                 suggested_gas_price,
             },
-            iota_types::ExecutionError::AddressDeniedForCoin { address, coin_type } => {
+            iota_sdk::types::ExecutionError::AddressDeniedForCoin { address, coin_type } => {
                 Self::AddressDeniedForCoin {
                     address: Arc::new(address.into()),
                     coin_type,
                 }
             }
-            iota_types::ExecutionError::CoinTypeGlobalPause { coin_type } => {
+            iota_sdk::types::ExecutionError::CoinTypeGlobalPause { coin_type } => {
                 Self::CoinTypeGlobalPause { coin_type }
             }
-            iota_types::ExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
+            iota_sdk::types::ExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
                 Self::ExecutionCancelledDueToRandomnessUnavailable
             }
-            iota_types::ExecutionError::InvalidLinkage => Self::InvalidLinkage,
+            iota_sdk::types::ExecutionError::InvalidLinkage => Self::InvalidLinkage,
         }
     }
 }
 
-impl From<ExecutionError> for iota_types::ExecutionError {
+impl From<ExecutionError> for iota_sdk::types::ExecutionError {
     fn from(value: ExecutionError) -> Self {
         match value {
             ExecutionError::InsufficientGas => Self::InsufficientGas,
@@ -546,8 +555,8 @@ pub struct MoveLocation {
     pub function_name: Option<String>,
 }
 
-impl From<iota_types::MoveLocation> for MoveLocation {
-    fn from(value: iota_types::MoveLocation) -> Self {
+impl From<iota_sdk::types::MoveLocation> for MoveLocation {
+    fn from(value: iota_sdk::types::MoveLocation) -> Self {
         Self {
             package: Arc::new(value.package.into()),
             module: value.module.to_string(),
@@ -558,7 +567,7 @@ impl From<iota_types::MoveLocation> for MoveLocation {
     }
 }
 
-impl From<MoveLocation> for iota_types::MoveLocation {
+impl From<MoveLocation> for iota_sdk::types::MoveLocation {
     fn from(value: MoveLocation) -> Self {
         Self {
             package: **value.package,
@@ -678,27 +687,27 @@ pub enum PackageUpgradeError {
     },
 }
 
-impl From<iota_types::PackageUpgradeError> for PackageUpgradeError {
-    fn from(value: iota_types::PackageUpgradeError) -> Self {
+impl From<iota_sdk::types::PackageUpgradeError> for PackageUpgradeError {
+    fn from(value: iota_sdk::types::PackageUpgradeError) -> Self {
         match value {
-            iota_types::PackageUpgradeError::UnableToFetchPackage { package_id } => {
+            iota_sdk::types::PackageUpgradeError::UnableToFetchPackage { package_id } => {
                 Self::UnableToFetchPackage {
                     package_id: Arc::new(package_id.into()),
                 }
             }
-            iota_types::PackageUpgradeError::NotAPackage { object_id } => Self::NotAPackage {
+            iota_sdk::types::PackageUpgradeError::NotAPackage { object_id } => Self::NotAPackage {
                 object_id: Arc::new(object_id.into()),
             },
-            iota_types::PackageUpgradeError::IncompatibleUpgrade => Self::IncompatibleUpgrade,
-            iota_types::PackageUpgradeError::DigestDoesNotMatch { digest } => {
+            iota_sdk::types::PackageUpgradeError::IncompatibleUpgrade => Self::IncompatibleUpgrade,
+            iota_sdk::types::PackageUpgradeError::DigestDoesNotMatch { digest } => {
                 Self::DigestDoesNotMatch {
                     digest: Arc::new(digest.into()),
                 }
             }
-            iota_types::PackageUpgradeError::UnknownUpgradePolicy { policy } => {
+            iota_sdk::types::PackageUpgradeError::UnknownUpgradePolicy { policy } => {
                 Self::UnknownUpgradePolicy { policy }
             }
-            iota_types::PackageUpgradeError::PackageIdDoesNotMatch {
+            iota_sdk::types::PackageUpgradeError::PackageIdDoesNotMatch {
                 package_id,
                 ticket_id,
             } => Self::PackageIdDoesNotMatch {
@@ -709,7 +718,7 @@ impl From<iota_types::PackageUpgradeError> for PackageUpgradeError {
     }
 }
 
-impl From<PackageUpgradeError> for iota_types::PackageUpgradeError {
+impl From<PackageUpgradeError> for iota_sdk::types::PackageUpgradeError {
     fn from(value: PackageUpgradeError) -> Self {
         match value {
             PackageUpgradeError::UnableToFetchPackage { package_id } => {
@@ -756,3 +765,12 @@ pub enum TypeArgumentError {
     /// A type provided did not match the specified constraint
     ConstraintNotSatisfied,
 }
+
+crate::export_iota_types_bcs_conversion!(
+    ExecutionStatus,
+    ExecutionError,
+    MoveLocation,
+    CommandArgumentError,
+    PackageUpgradeError,
+    TypeArgumentError
+);

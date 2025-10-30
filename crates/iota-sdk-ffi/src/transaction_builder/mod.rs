@@ -7,8 +7,7 @@ use std::{
     time::Duration,
 };
 
-use iota_transaction_builder::MovePackageData;
-use iota_types::Input;
+use iota_sdk::types::Input;
 
 use crate::{
     crypto::simple::SimpleKeypair,
@@ -18,6 +17,7 @@ use crate::{
     types::{
         address::Address,
         graphql::DryRunResult,
+        move_package::MovePackageData,
         object::ObjectId,
         struct_tag::Identifier,
         transaction::{Argument, Transaction, TransactionEffects},
@@ -25,19 +25,21 @@ use crate::{
     },
 };
 
-mod ptb_arg;
+pub mod ptb_arg;
 
-/// A builder for creating transactions. Use [`finish`](Self::finish) to
-/// finalize the transaction data.
+/// A builder for creating transactions. Use `finish` to finalize the
+/// transaction data.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct TransactionBuilder(
-    RwLock<iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>>,
+    RwLock<iota_sdk::transaction_builder::TransactionBuilder<iota_sdk::graphql_client::Client>>,
 );
 
 impl TransactionBuilder {
     fn read<F, T>(&self, f: F) -> T
     where
-        F: FnOnce(&iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>) -> T,
+        F: FnOnce(
+            &iota_sdk::transaction_builder::TransactionBuilder<iota_sdk::graphql_client::Client>,
+        ) -> T,
     {
         let lock = self.0.read().expect("error reading from builder");
         f(&lock)
@@ -46,7 +48,7 @@ impl TransactionBuilder {
     fn write<F, T>(&self, f: F) -> T
     where
         F: FnOnce(
-            &mut iota_transaction_builder::TransactionBuilder<iota_graphql_client::Client>,
+            &mut iota_sdk::transaction_builder::TransactionBuilder<iota_sdk::graphql_client::Client>,
         ) -> T,
     {
         let mut lock = self.0.write().expect("error writing to builder");
@@ -60,7 +62,7 @@ impl TransactionBuilder {
     #[uniffi::constructor(name = "init")]
     pub async fn new(sender: &Address, client: &GraphQLClient) -> Self {
         Self(
-            iota_transaction_builder::TransactionBuilder::new(**sender)
+            iota_sdk::transaction_builder::TransactionBuilder::new(**sender)
                 .with_client(client.inner().read().await.clone())
                 .into(),
         )
@@ -70,6 +72,14 @@ impl TransactionBuilder {
     pub fn gas(self: Arc<Self>, object_id: &ObjectId) -> Arc<Self> {
         self.write(|builder| {
             builder.gas(**object_id);
+        });
+        self
+    }
+
+    /// Add gas objects to pay for the transaction.
+    pub fn gas_coins(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
+        self.write(|builder| {
+            builder.gas_coins(object_ids.iter().map(|id| ***id));
         });
         self
     }
@@ -157,14 +167,13 @@ impl TransactionBuilder {
     }
 
     /// Send IOTA to a recipient address.
-    #[uniffi::method(default(amount = None))]
-    pub fn send_iota(
-        self: Arc<Self>,
-        recipient: &Address,
-        amount: Option<Arc<PTBArgument>>,
-    ) -> Arc<Self> {
+    ///
+    /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+    /// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+    /// sent.
+    pub fn send_iota(self: Arc<Self>, recipient: &Address, amount: &PTBArgument) -> Arc<Self> {
         self.write(|builder| {
-            builder.send_iota::<&PTBArgument>(**recipient, amount.as_deref());
+            builder.send_iota(**recipient, amount);
         });
         self
     }
@@ -211,14 +220,19 @@ impl TransactionBuilder {
         self
     }
 
-    /// Merge a list of coins into a single coin, without producing any result.
+    /// Merge multiple coins into one.
+    ///
+    /// This method combines the balances of multiple coins of the same coin
+    /// type into a single coin. The `primary_coin` will receive the balances
+    /// from all `consumed_coins`. After merging, the `consumed_coins` will
+    /// be consumed and no longer exist.
     pub fn merge_coins(
         self: Arc<Self>,
-        coin: &PTBArgument,
-        coins_to_merge: Vec<Arc<PTBArgument>>,
+        primary_coin: &PTBArgument,
+        consumed_coins: Vec<Arc<PTBArgument>>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.merge_coins(coin, coins_to_merge);
+            builder.merge_coins(primary_coin, consumed_coins);
         });
         self
     }
@@ -231,7 +245,7 @@ impl TransactionBuilder {
         type_tag: &TypeTag,
         name: String,
     ) -> Arc<Self> {
-        use iota_transaction_builder::unresolved::{Command, MakeMoveVector};
+        use iota_sdk::transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
             let cmd = Command::MakeMoveVector(MakeMoveVector {
                 type_: Some(type_tag.0.clone()),
@@ -260,17 +274,12 @@ impl TransactionBuilder {
     ///    the package
     pub fn publish(
         self: Arc<Self>,
-        modules: Vec<Vec<u8>>,
-        dependencies: Vec<Arc<ObjectId>>,
+        package_data: &MovePackageData,
         upgrade_cap_name: String,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .publish(MovePackageData {
-                    modules,
-                    dependencies: dependencies.into_iter().map(|o| **o).collect(),
-                    digest: None,
-                })
+                .publish(package_data.0.clone())
                 .upgrade_cap(upgrade_cap_name);
         });
         self
@@ -290,24 +299,34 @@ impl TransactionBuilder {
     #[uniffi::method(default(name = None))]
     pub fn upgrade(
         self: Arc<Self>,
-        modules: Vec<Vec<u8>>,
-        dependencies: Vec<Arc<ObjectId>>,
-        package: &ObjectId,
-        ticket: &PTBArgument,
+        package_id: &ObjectId,
+        package_data: &MovePackageData,
+        upgrade_ticket: &PTBArgument,
         name: Option<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .upgrade(
-                    **package,
-                    ticket,
-                    MovePackageData {
-                        modules,
-                        dependencies: dependencies.into_iter().map(|o| **o).collect(),
-                        digest: None,
-                    },
-                )
+                .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
                 .name(name);
+        });
+        self
+    }
+
+    /// Add stake to a validator's staking pool.
+    ///
+    /// This is a high-level function which will split the provided stake amount
+    /// from the gas coin and then stake using the resulting coin.
+    pub fn stake(self: Arc<Self>, stake: &PTBArgument, validator_address: &Address) -> Arc<Self> {
+        self.write(|builder| {
+            builder.stake(stake, **validator_address);
+        });
+        self
+    }
+
+    /// Withdraw stake from a validator's staking pool.
+    pub fn unstake(self: Arc<Self>, staked_iota: &PTBArgument) -> Arc<Self> {
+        self.write(|builder| {
+            builder.unstake(staked_iota);
         });
         self
     }

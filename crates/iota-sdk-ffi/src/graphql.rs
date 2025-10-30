@@ -3,11 +3,13 @@
 
 use std::{str::FromStr, sync::Arc};
 
-use iota_graphql_client::{
-    pagination::PaginationFilter,
-    query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
+use iota_sdk::{
+    graphql_client::{
+        pagination::PaginationFilter,
+        query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
+    },
+    types::{CheckpointSequenceNumber, def_is, iota_names::NameFormat},
 };
-use iota_types::{CheckpointSequenceNumber, def_is, iota_names::NameFormat};
 use tokio::sync::RwLock;
 
 use crate::{
@@ -37,10 +39,10 @@ use crate::{
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
-pub struct GraphQLClient(RwLock<iota_graphql_client::Client>);
+pub struct GraphQLClient(RwLock<iota_sdk::graphql_client::Client>);
 
 impl GraphQLClient {
-    pub fn inner(&self) -> &RwLock<iota_graphql_client::Client> {
+    pub fn inner(&self) -> &RwLock<iota_sdk::graphql_client::Client> {
         &self.0
     }
 }
@@ -54,7 +56,7 @@ impl GraphQLClient {
     /// Create a new GraphQL client with the provided server address.
     #[uniffi::constructor]
     pub fn new(server: String) -> Result<Self> {
-        Ok(Self(RwLock::new(iota_graphql_client::Client::new(
+        Ok(Self(RwLock::new(iota_sdk::graphql_client::Client::new(
             &server,
         )?)))
     }
@@ -63,28 +65,28 @@ impl GraphQLClient {
     /// {MAINNET_HOST}.
     #[uniffi::constructor]
     pub fn new_mainnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_mainnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_mainnet()))
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
     #[uniffi::constructor]
     pub fn new_testnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_testnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_testnet()))
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
     #[uniffi::constructor]
     pub fn new_devnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_devnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_devnet()))
     }
 
     /// Create a new GraphQL client connected to the `localhost` GraphQL server:
     /// {DEFAULT_LOCAL_HOST}.
     #[uniffi::constructor]
     pub fn new_localnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_localnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_localnet()))
     }
 
     /// Get the chain identifier.
@@ -230,7 +232,7 @@ impl GraphQLClient {
     // Checkpoints API
     // ===========================================================================
 
-    /// Get the [`CheckpointSummary`] for a given checkpoint digest or
+    /// Get the `CheckpointSummary` for a given checkpoint digest or
     /// checkpoint id. If none is provided, it will use the last known
     /// checkpoint id.
     #[uniffi::method(default(digest = None, seq_num = None))]
@@ -249,7 +251,7 @@ impl GraphQLClient {
             .map(Arc::new))
     }
 
-    /// Get a page of [`CheckpointSummary`] for the provided parameters.
+    /// Get a page of `CheckpointSummary` for the provided parameters.
     #[uniffi::method(default(pagination_filter = None))]
     pub async fn checkpoints(
         &self,
@@ -339,7 +341,7 @@ impl GraphQLClient {
     // Objects API
     // ===========================================================================
 
-    /// Return an object based on the provided [`Address`].
+    /// Return an object based on the provided `Address`.
     ///
     /// If the object does not exist (e.g., due to pruning), this will return
     /// `Ok(None)`. Similarly, if this is not an object but an address, it
@@ -362,20 +364,8 @@ impl GraphQLClient {
 
     /// Return a page of objects based on the provided parameters.
     ///
-    /// Use this function together with the [`ObjectFilter::owner`] to get the
+    /// Use this function together with the `ObjectFilter::owner` to get the
     /// objects owned by an address.
-    ///
-    /// # Example
-    ///
-    /// ```rust,ignore
-    /// let filter = ObjectFilter {
-    ///     type_tag: None,
-    ///     owner: Some(Address::from_str("test").unwrap().into()),
-    ///     object_ids: None,
-    /// };
-    ///
-    /// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-    /// ```
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn objects(
         &self,
@@ -395,8 +385,8 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Return the object's bcs content [`Vec<u8>`] based on the provided
-    /// [`Address`].
+    /// Return the object's bcs content `Vec<u8>` based on the provided
+    /// `Address`.
     pub async fn object_bcs(&self, object_id: &ObjectId) -> Result<Option<Vec<u8>>> {
         Ok(self.0.read().await.object_bcs(**object_id).await?)
     }
@@ -736,20 +726,8 @@ impl GraphQLClient {
     ///
     /// The `name` argument is a json serialized type.
     ///
-    /// This returns [`DynamicFieldOutput`] which contains the name, the value
+    /// This returns `DynamicFieldOutput` which contains the name, the value
     /// as json, and object.
-    ///
-    /// # Example
-    /// ```rust,ignore
-    /// 
-    /// let client = iota_graphql_client::Client::new_devnet();
-    /// let address = ObjectId::SYSTEM.into();
-    /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-    ///
-    /// # alternatively, pass in the bcs bytes
-    /// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-    /// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-    /// ```
     pub async fn dynamic_field(
         &self,
         address: &Address,
@@ -771,7 +749,7 @@ impl GraphQLClient {
     ///
     /// The `name` argument is a json serialized type.
     ///
-    /// This returns [`DynamicFieldOutput`] which contains the name, the value
+    /// This returns `DynamicFieldOutput` which contains the name, the value
     /// as json, and object.
     pub async fn dynamic_object_field(
         &self,
@@ -791,7 +769,7 @@ impl GraphQLClient {
     /// Get a page of dynamic fields for the provided address. Note that this
     /// will also fetch dynamic fields on wrapped objects.
     ///
-    /// This returns [`Page`] of [`DynamicFieldOutput`]s.
+    /// This returns a page of `DynamicFieldOutput`s.
     #[uniffi::method(default(pagination_filter = None))]
     pub async fn dynamic_fields(
         &self,
@@ -824,7 +802,7 @@ impl GraphQLClient {
     // Dry Run API
     // ===========================================================================
 
-    /// Dry run a [`Transaction`] and return the transaction effects and dry run
+    /// Dry run a `Transaction` and return the transaction effects and dry run
     /// error (if any).
     ///
     /// `skipChecks` optional flag disables the usual verification checks that
@@ -842,7 +820,7 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Dry run a [`TransactionKind`] and return the transaction effects and dry
+    /// Dry run a `TransactionKind` and return the transaction effects and dry
     /// run error (if any).
     ///
     /// `skipChecks` optional flag disables the usual verification checks that

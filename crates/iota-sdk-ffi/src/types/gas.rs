@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::GasCostSummary;
+use iota_sdk::types::GasCostSummary;
 
 /// Summary of gas charges.
 ///
@@ -55,3 +55,5 @@ pub struct GasCostSummary {
     /// system.
     pub non_refundable_storage_fee: u64,
 }
+
+crate::export_iota_types_bcs_conversion!(GasCostSummary);

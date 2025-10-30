@@ -10,13 +10,13 @@ use crate::{
 };
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Coin(pub iota_types::framework::Coin);
+pub struct Coin(pub iota_sdk::types::framework::Coin);
 
 #[uniffi::export]
 impl Coin {
     #[uniffi::constructor]
     pub fn try_from_object(object: &Object) -> Result<Self> {
-        Ok(iota_types::framework::Coin::try_from_object(&object.0)?.into())
+        Ok(iota_sdk::types::framework::Coin::try_from_object(&object.0)?.into())
     }
 
     pub fn coin_type(&self) -> TypeTag {

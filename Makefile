@@ -5,7 +5,7 @@ all:: ci ## Default target, runs the CI process
 .PHONY: check-features
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
-	$(MAKE) -C crates/iota-crypto check-features
+	$(MAKE) -C crates/iota-sdk-crypto check-features
 
 .PHONY: check-fmt
 check-fmt: ## Check code formatting
@@ -21,22 +21,29 @@ clippy: ## Run Clippy linter
 
 .PHONY: test
 test: ## Run unit tests
-	cargo nextest run --all-features -p iota-sdk-types -p iota-crypto
+	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto
+
+.PHONY: test-docs
+test-docs: ## Run doc tests
 	cargo test --all-features --doc
 
-package_%.json: crates/iota-transaction-builder/tests/%/Move.toml crates/iota-transaction-builder/tests/%/sources/*.move ## Generate JSON files for tests
-	cd crates/iota-transaction-builder/tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
+.PHONY: build-docs
+build-docs: ## Build docs
+	cargo doc --all-features --workspace --no-deps
+
+package_%.json: crates/iota-sdk-transaction-builder/tests/%/Move.toml crates/iota-sdk-transaction-builder/tests/%/sources/*.move ## Generate JSON files for tests
+	cd crates/iota-sdk-transaction-builder/tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
 
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
-	cargo nextest run -p iota-graphql-client -p iota-transaction-builder
+	cargo nextest run -p iota-sdk-graphql-client -p iota-sdk-transaction-builder
 
 .PHONY: wasm
 wasm: ## Build WASM modules
-	$(MAKE) -C crates/iota-crypto wasm
-	$(MAKE) -C crates/iota-graphql-client wasm
+	$(MAKE) -C crates/iota-sdk-crypto wasm
+	$(MAKE) -C crates/iota-sdk-graphql-client wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
-	$(MAKE) -C crates/iota-transaction-builder wasm
+	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 
 .PHONY: doc
 doc: ## Generate documentation
@@ -134,7 +141,7 @@ kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example exa
 %:
 	@true
 kotlin-example:
-	@printf "\nRunning Kotlin example \"$(word 2,$(MAKECMDGOALS))" \n \"
+	@printf "\nRunning Kotlin example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/kotlin; \
 	./gradlew build clean || exit $$?; \
 	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q || exit $$?; \

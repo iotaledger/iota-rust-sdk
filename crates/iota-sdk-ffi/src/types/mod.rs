@@ -13,6 +13,7 @@ pub mod execution_status;
 pub mod gas;
 pub mod graphql;
 pub mod iota_names;
+pub mod move_package;
 pub mod object;
 pub mod signature;
 pub mod struct_tag;
@@ -21,13 +22,13 @@ pub mod type_tag;
 pub mod validator;
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct PersonalMessage(iota_types::PersonalMessage<'static>);
+pub struct PersonalMessage(iota_sdk::types::PersonalMessage<'static>);
 
 #[uniffi::export]
 impl PersonalMessage {
     #[uniffi::constructor]
     pub fn new(message_bytes: &[u8]) -> Self {
-        Self(iota_types::PersonalMessage(Cow::Owned(
+        Self(iota_sdk::types::PersonalMessage(Cow::Owned(
             message_bytes.to_vec(),
         )))
     }
@@ -38,5 +39,9 @@ impl PersonalMessage {
 
     pub fn signing_digest(&self) -> Vec<u8> {
         self.0.signing_digest().to_vec()
+    }
+
+    pub fn signing_digest_hex(&self) -> String {
+        self.0.signing_digest_hex()
     }
 }
