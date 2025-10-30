@@ -332,8 +332,20 @@ pub trait FromMnemonic {
     /// Create an instance from a mnemonic phrase
     fn from_mnemonic(
         phrase: &str,
+        account_index: impl Into<Option<u64>>,
         password: impl Into<Option<String>>,
-        path: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized;
+
+    /// Create an instance from a mnemonic phrase and a derivation path like:
+    /// - Ed25519: `"m/44'/4218'/0'/0'/0'"`
+    /// - Secp256k1: `"m/54'/4218'/0'/0/0"`
+    /// - Secp256r1: `"m/74'/4218'/0'/0/0"`
+    fn from_mnemonic_with_path(
+        phrase: &str,
+        path: String,
+        password: impl Into<Option<String>>,
     ) -> Result<Self, Self::Error>
     where
         Self: Sized;

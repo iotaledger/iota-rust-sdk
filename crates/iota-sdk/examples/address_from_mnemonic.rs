@@ -23,7 +23,7 @@ fn main() -> eyre::Result<()> {
     println!("Public Key With Flag: {flagged_public_key}");
     println!("Address: {address}");
 
-    let private_key = Secp256k1PrivateKey::from_mnemonic(MNEMONIC, "my_password".to_owned(), None)?;
+    let private_key = Secp256k1PrivateKey::from_mnemonic(MNEMONIC, 1, "my_password".to_owned())?;
     let private_key_bech32 = private_key.to_bech32().unwrap();
     let public_key = private_key.public_key();
     let flagged_public_key = Base64::encode_string(&public_key.to_flagged_bytes());
@@ -35,10 +35,10 @@ fn main() -> eyre::Result<()> {
     println!("Public Key With Flag: {flagged_public_key}");
     println!("Address: {address}");
 
-    let private_key = Secp256r1PrivateKey::from_mnemonic(
+    let private_key = Secp256r1PrivateKey::from_mnemonic_with_path(
         MNEMONIC,
+        format!("m/{DERIVATION_PATH_PURPOSE_SECP256R1}'/{DERIVATION_PATH_COIN_TYPE}'/0'/0/2"),
         None,
-        format!("m/{DERIVATION_PATH_PURPOSE_SECP256R1}'/{DERIVATION_PATH_COIN_TYPE}'/0'/0'/1'"),
     )?;
     let private_key_bech32 = private_key.to_bech32().unwrap();
     let public_key = private_key.public_key();

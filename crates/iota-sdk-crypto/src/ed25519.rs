@@ -142,20 +142,33 @@ impl crate::FromMnemonic for Ed25519PrivateKey {
 
     fn from_mnemonic(
         phrase: &str,
+        account_index: impl Into<Option<u64>>,
         password: impl Into<Option<String>>,
-        path: impl Into<Option<String>>,
-    ) -> Result<Self, Self::Error> {
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
+        let path = format!(
+            "m/{}'/{}'/0'/0'/{}'",
+            crate::DERIVATION_PATH_PURPOSE_ED25519,
+            crate::DERIVATION_PATH_COIN_TYPE,
+            account_index.into().unwrap_or_default()
+        );
+        Self::from_mnemonic_with_path(phrase, path, password)
+    }
+
+    fn from_mnemonic_with_path(
+        phrase: &str,
+        path: String,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
         use std::str::FromStr;
 
         let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
-        let path = path.into().unwrap_or_else(|| {
-            format!(
-                "m/{}'/{}'/0'/0'/0'",
-                crate::DERIVATION_PATH_PURPOSE_ED25519,
-                crate::DERIVATION_PATH_COIN_TYPE
-            )
-        });
         let path = bip32::DerivationPath::from_str(&path)?
             .into_iter()
             .map(|c| c.0)

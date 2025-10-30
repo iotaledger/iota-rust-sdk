@@ -13,7 +13,7 @@ import (
 const MNEMONIC = "round attack kitchen wink winter music trip tiny nephew hire orange what"
 
 func main() {
-	privateKeyEd25519, err := sdk.Ed25519PrivateKeyFromMnemonic(MNEMONIC, nil, nil)
+	privateKeyEd25519, err := sdk.Ed25519PrivateKeyFromMnemonic(MNEMONIC, 0, "")
 	if err != nil {
 		log.Fatalf("Failed to get key from mnemonic: %v", err)
 	}
@@ -31,7 +31,7 @@ func main() {
 	fmt.Println("Public Key With Flag:", sdk.Base64Encode(flaggedPublicKeyEd25519))
 	fmt.Println("Address:", addressEd25519.ToHex())
 
-	privateKeySecp256k1, err := sdk.Secp256k1PrivateKeyFromMnemonic(MNEMONIC, nil, nil)
+	privateKeySecp256k1, err := sdk.Secp256k1PrivateKeyFromMnemonic(MNEMONIC, 1, "my_password")
 	if err != nil {
 		log.Fatalf("Failed to get key from mnemonic: %v", err)
 	}
@@ -49,7 +49,7 @@ func main() {
 	fmt.Println("Public Key With Flag:", sdk.Base64Encode(flaggedPublicKeySecp256k1))
 	fmt.Println("Address:", addressSecp256k1.ToHex())
 
-	privateKeySecp256r1, err := sdk.Secp256r1PrivateKeyFromMnemonic(MNEMONIC, nil, nil)
+	privateKeySecp256r1, err := sdk.Secp256r1PrivateKeyFromMnemonicWithPath(MNEMONIC, "m/74'/4218'/0'/0/2", "")
 	if err != nil {
 		log.Fatalf("Failed to get key from mnemonic: %v", err)
 	}

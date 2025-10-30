@@ -122,15 +122,25 @@ impl Secp256r1PrivateKey {
     }
 
     /// Construct the private key from a mnemonic phrase
-    #[uniffi::constructor(default(password = None, path = None))]
-    pub fn from_mnemonic(
-        phrase: &str,
-        password: Option<String>,
-        path: Option<String>,
-    ) -> Result<Self> {
+    #[uniffi::constructor(default(password = "", account_index = 0))]
+    pub fn from_mnemonic(phrase: &str, account_index: u64, password: String) -> Result<Self> {
         Ok(
             iota_sdk::crypto::secp256r1::Secp256r1PrivateKey::from_mnemonic(
-                phrase, password, path,
+                phrase,
+                account_index,
+                password,
+            )?
+            .into(),
+        )
+    }
+
+    /// Create an instance from a mnemonic phrase and a derivation path like
+    /// `"m/74'/4218'/0'/0/0"`
+    #[uniffi::constructor(default(password = ""))]
+    pub fn from_mnemonic_with_path(phrase: &str, path: String, password: String) -> Result<Self> {
+        Ok(
+            iota_sdk::crypto::secp256r1::Secp256r1PrivateKey::from_mnemonic_with_path(
+                phrase, path, password,
             )?
             .into(),
         )
