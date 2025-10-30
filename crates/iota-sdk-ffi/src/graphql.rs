@@ -44,8 +44,8 @@ pub enum WaitForTx {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions, and that the transaction itself is indexed on the node.
     Indexed,
-    /// Indicates that the tranaction has been included in a checkpoint, and all
-    /// queries may include it.
+    /// Indicates that the transaction has been included in a checkpoint, and
+    /// all queries may include it.
     Finalized,
 }
 

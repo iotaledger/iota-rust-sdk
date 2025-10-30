@@ -21515,8 +21515,8 @@ class WaitForTx(enum.Enum):
     
     FINALIZED = 1
     """
-    Indicates that the tranaction has been included in a checkpoint, and all
-    queries may include it.
+    Indicates that the transaction has been included in a checkpoint, and
+    all queries may include it.
     """
 
     
