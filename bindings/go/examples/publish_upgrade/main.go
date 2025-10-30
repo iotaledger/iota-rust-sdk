@@ -29,7 +29,8 @@ import (
 )
 
 func main() {
-	waitFor := sdk.WaitForTxIndexed
+	waitForFinalized := sdk.WaitForTxFinalized
+	waitForIndexed := sdk.WaitForTxIndexed
 
 	// Read and parse the compiled package, or use the default package
 	packageDataString := os.Getenv("COMPILED_PACKAGE")
@@ -102,7 +103,7 @@ func main() {
 		log.Fatalf("Failed to sign: %v", err)
 	}
 	userSigPublish := sdk.UserSignatureNewSimple(sigPublish)
-	effectsPublish, err := client.ExecuteTx([]*sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
+	effectsPublish, err := client.ExecuteTx([]*sdk.UserSignature{userSigPublish}, txPublish, &waitForFinalized)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}
@@ -208,7 +209,7 @@ func main() {
 		log.Fatalf("Failed to sign: %v", err)
 	}
 	userSigUpgrade := sdk.UserSignatureNewSimple(sigUpgrade)
-	effectsUpgrade, err := client.ExecuteTx([]*sdk.UserSignature{userSigUpgrade}, txUpgrade, &waitFor)
+	effectsUpgrade, err := client.ExecuteTx([]*sdk.UserSignature{userSigUpgrade}, txUpgrade, &waitForIndexed)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}

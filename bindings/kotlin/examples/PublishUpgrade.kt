@@ -75,7 +75,7 @@ fun main() = runBlocking {
         println("> Publishing package:")
         val sigPublish =
                 UserSignature.newSimple(privateKey.trySignSimple(txPublish.signingDigest()))
-        val effectsPublish = client.executeTx(listOf(sigPublish), txPublish, WaitForTx.INDEXED)
+        val effectsPublish = client.executeTx(listOf(sigPublish), txPublish, WaitForTx.FINALIZED)
         println("Success")
 
         // Wait some time for the indexer to process the tx
