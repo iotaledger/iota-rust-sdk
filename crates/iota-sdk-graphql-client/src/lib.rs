@@ -595,27 +595,23 @@ impl Client {
         coin_type: impl Into<Option<StructTag>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Coin>> {
-        let response = self
-            .objects(
-                Some(ObjectFilter {
-                    type_: Some(
-                        coin_type
-                            .into()
-                            .map(StructTag::coin)
-                            .unwrap_or_else(|| StructTag {
-                                address: Address::FRAMEWORK,
-                                module: IdentifierRef::const_new("coin").into(),
-                                name: IdentifierRef::const_new("Coin").into(),
-                                type_params: Default::default(),
-                            })
-                            .to_string(),
-                    ),
-                    owner: Some(owner),
-                    object_ids: None,
-                }),
-                pagination_filter,
-            )
-            .await?;
+        let filter = ObjectFilter {
+            type_: Some(
+                coin_type
+                    .into()
+                    .map(StructTag::coin)
+                    .unwrap_or_else(|| StructTag {
+                        address: Address::FRAMEWORK,
+                        module: IdentifierRef::const_new("coin").into(),
+                        name: IdentifierRef::const_new("Coin").into(),
+                        type_params: Default::default(),
+                    })
+                    .to_string(),
+            ),
+            owner: Some(owner),
+            object_ids: None,
+        };
+        let response = self.objects(filter, pagination_filter).await?;
 
         Ok(Page::new(
             response.page_info,

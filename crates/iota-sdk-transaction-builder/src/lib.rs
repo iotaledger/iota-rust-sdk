@@ -435,7 +435,7 @@ mod tests {
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, [coin]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
 
         // check that recipient has 1 coin
@@ -557,7 +557,7 @@ mod tests {
             .upgrade_cap("cap")
             .transfer_objects(address, [res("cap")]);
 
-        let effects = tx.execute(&key, WaitForTx::Indexed).await;
+        let effects = tx.execute(&key, WaitForTx::Finalized).await;
         let mut package_id: Option<ObjectId> = None;
         let mut created_objs = vec![];
         if let Ok(ref effects) = effects {
