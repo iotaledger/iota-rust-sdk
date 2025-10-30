@@ -192,7 +192,7 @@ impl TransactionBuilder {
     ///
     /// If you intend to transfer all provided coins to another address in a
     /// single transaction, consider using
-    /// [`TransactionBuilder::transfer_objects()`] instead.
+    /// `TransactionBuilder::transfer_objects()` instead.
     #[uniffi::method(default(amount = None))]
     pub fn send_coins(
         self: Arc<Self>,

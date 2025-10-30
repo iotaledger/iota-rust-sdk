@@ -9282,7 +9282,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 22805.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 47643.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 6220.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185.toShort()) {
@@ -40870,7 +40870,7 @@ public interface TransactionBuilderInterface {
      *
      * If you intend to transfer all provided coins to another address in a
      * single transaction, consider using
-     * [`TransactionBuilder::transfer_objects()`] instead.
+     * `TransactionBuilder::transfer_objects()` instead.
      */
     fun `sendCoins`(`coins`: List<PtbArgument>, `recipient`: Address, `amount`: PtbArgument? = null): TransactionBuilder
     
@@ -41296,7 +41296,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      *
      * If you intend to transfer all provided coins to another address in a
      * single transaction, consider using
-     * [`TransactionBuilder::transfer_objects()`] instead.
+     * `TransactionBuilder::transfer_objects()` instead.
      */override fun `sendCoins`(`coins`: List<PtbArgument>, `recipient`: Address, `amount`: PtbArgument?): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {

@@ -1671,7 +1671,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 22805:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 47643:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 6220:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -40854,7 +40854,7 @@ class TransactionBuilderProtocol(typing.Protocol):
 
         If you intend to transfer all provided coins to another address in a
         single transaction, consider using
-        [`TransactionBuilder::transfer_objects()`] instead.
+        `TransactionBuilder::transfer_objects()` instead.
         """
 
         raise NotImplementedError
@@ -41324,7 +41324,7 @@ _UniffiConverterTypeSdkFfiError,
 
         If you intend to transfer all provided coins to another address in a
         single transaction, consider using
-        [`TransactionBuilder::transfer_objects()`] instead.
+        `TransactionBuilder::transfer_objects()` instead.
         """
 
         _UniffiConverterSequenceTypePtbArgument.check_lower(coins)

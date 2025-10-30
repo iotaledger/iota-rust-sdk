@@ -5807,7 +5807,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins()
 	})
-	if checksum != 47643 {
+	if checksum != 6220 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins: UniFFI API checksum mismatch")
 	}
@@ -24306,7 +24306,7 @@ type TransactionBuilderInterface interface {
 	//
 	// If you intend to transfer all provided coins to another address in a
 	// single transaction, consider using
-	// [`TransactionBuilder::transfer_objects()`] instead.
+	// `TransactionBuilder::transfer_objects()` instead.
 	SendCoins(coins []*PtbArgument, recipient *Address, amount **PtbArgument) *TransactionBuilder
 	// Send IOTA to a recipient address.
 	//
@@ -24635,7 +24635,7 @@ func (_self *TransactionBuilder) Publish(packageData *MovePackageData, upgradeCa
 //
 // If you intend to transfer all provided coins to another address in a
 // single transaction, consider using
-// [`TransactionBuilder::transfer_objects()`] instead.
+// `TransactionBuilder::transfer_objects()` instead.
 func (_self *TransactionBuilder) SendCoins(coins []*PtbArgument, recipient *Address, amount **PtbArgument) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
