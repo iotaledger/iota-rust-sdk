@@ -163,7 +163,7 @@ async def main():
         print("> Upgrading package:")
         signature = private_key.try_sign_simple(tx.signing_digest())
         sig = UserSignature.new_simple(signature)
-        effects = await client.execute_tx([sig], tx, WaitForTx.INDEXED)
+        effects = await client.execute_tx([sig], tx)
         print("Success")
 
         # Wait some time for the indexer to process the tx

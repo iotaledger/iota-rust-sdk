@@ -651,7 +651,9 @@ impl GraphQLClient {
     }
 
     /// Returns whether the transaction for the given digest has been indexed
-    /// on the node.
+    /// on the node. This means that it can be queries by its digest and its
+    /// effects will be usable for subsequent transactions. To check for
+    /// full finalization, use `is_tx_finalized`.
     #[uniffi::method]
     pub async fn is_tx_indexed_on_node(&self, digest: &Digest) -> Result<bool> {
         Ok(self.0.read().await.is_tx_indexed_on_node(**digest).await?)
@@ -664,7 +666,7 @@ impl GraphQLClient {
         Ok(self.0.read().await.is_tx_finalized(**digest).await?)
     }
 
-    /// Wait for the finalization or checkpoint inclusion of a transaction
+    /// Wait for the indexing or finalization of a transaction
     /// by its digest. An optional timeout can be provided, which, if
     /// exceeded, will return an error (default 60s).
     #[uniffi::method(default(timeout = None))]

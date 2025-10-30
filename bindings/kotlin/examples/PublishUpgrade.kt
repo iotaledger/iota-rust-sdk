@@ -165,7 +165,7 @@ fun main() = runBlocking {
         println("> Upgrading package:")
         val sigUpgrade =
                 UserSignature.newSimple(privateKey.trySignSimple(txUpgrade.signingDigest()))
-        val effectsUpgrade = client.executeTx(listOf(sigUpgrade), txUpgrade, WaitForTx.INDEXED)
+        val effectsUpgrade = client.executeTx(listOf(sigUpgrade), txUpgrade)
         println("Success")
 
         // Wait some time for the indexer to process the tx

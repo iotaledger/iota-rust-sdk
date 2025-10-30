@@ -164,7 +164,7 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (upgrade the package)
     println!("> Upgrading package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let effects = client.execute_tx(&[sig], &tx, WaitForTx::Indexed).await?;
+    let effects = client.execute_tx(&[sig], &tx, None).await?;
     println!("{:?}", effects.status());
 
     // Wait some time for the indexer to process the tx

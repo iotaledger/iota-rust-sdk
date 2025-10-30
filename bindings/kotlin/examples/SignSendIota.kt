@@ -36,7 +36,7 @@ fun main() = runBlocking {
         val signature = privateKey.trySignSimple(txn.signingDigest())
         val userSignature = UserSignature.newSimple(signature)
 
-        val effects = client.executeTx(listOf(userSignature), txn, WaitForTx.INDEXED)
+        val effects = client.executeTx(listOf(userSignature), txn)
 
         println("Digest: ${hexEncode(effects.digest().toBytes())}")
         println("Transaction status: ${effects.asV1().status}")

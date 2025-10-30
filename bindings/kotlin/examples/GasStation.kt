@@ -29,7 +29,7 @@ fun main() = runBlocking {
                 headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken"))
         )
 
-        val res = builder.execute(simpleKey, WaitForTx.INDEXED)
+        val res = builder.execute(simpleKey)
 
         println("$res")
 

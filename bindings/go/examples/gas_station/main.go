@@ -45,9 +45,7 @@ func main() {
 
 	builder.GasStationSponsor(gasStationUrl, nil, &headers)
 
-	waitFor := sdk.WaitForTxIndexed
-
-	res, err := builder.Execute(simpleKey, &waitFor)
+	res, err := builder.Execute(simpleKey, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to sponsor transaction: %v", err)
 	}

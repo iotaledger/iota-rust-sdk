@@ -53,9 +53,7 @@ func main() {
 	}
 	userSignature := sdk.UserSignatureNewSimple(signature)
 
-	waitFor := sdk.WaitForTxIndexed
-
-	effects, err := client.ExecuteTx([]*sdk.UserSignature{userSignature}, txn, &waitFor)
+	effects, err := client.ExecuteTx([]*sdk.UserSignature{userSignature}, txn, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}
