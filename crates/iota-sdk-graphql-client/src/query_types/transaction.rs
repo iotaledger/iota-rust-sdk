@@ -9,7 +9,7 @@ use iota_types::{
 
 use crate::{
     error::{self, Error, Kind},
-    query_types::{Address, Base64, PageInfo, checkpoint::Checkpoint, schema},
+    query_types::{Address, Base64, PageInfo, schema},
 };
 
 // ===========================================================================
@@ -55,9 +55,9 @@ pub struct TransactionBlockEffectsQuery {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockCheckpointQuery {
+pub struct TransactionBlockIndexedQuery {
     #[arguments(digest: $digest)]
-    pub transaction_block: Option<TxBlockCheckpoint>,
+    pub is_transaction_indexed_on_node: bool,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -137,21 +137,9 @@ pub struct TxBlockEffects {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockCheckpoint {
-    pub effects: Option<TransactionBlockCheckpoint>,
-}
-
-#[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
 pub struct TransactionBlockEffects {
     pub bcs: Option<Base64>,
-}
-
-#[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
-pub struct TransactionBlockCheckpoint {
-    pub checkpoint: Option<Checkpoint>,
 }
 
 #[derive(cynic::Enum, Clone, Copy, Debug)]

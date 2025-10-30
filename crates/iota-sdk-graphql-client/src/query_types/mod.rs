@@ -72,8 +72,8 @@ pub use protocol_config::{
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
 pub use transaction::{
-    TransactionBlock, TransactionBlockArgs, TransactionBlockCheckpointQuery,
-    TransactionBlockEffectsQuery, TransactionBlockKindInput, TransactionBlockQuery,
+    TransactionBlock, TransactionBlockArgs, TransactionBlockEffectsQuery,
+    TransactionBlockIndexedQuery, TransactionBlockKindInput, TransactionBlockQuery,
     TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
     TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
     TransactionsFilter,

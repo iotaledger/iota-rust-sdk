@@ -52,7 +52,7 @@ use crate::{
         CheckpointTotalTxQuery, IotaNamesAddressDefaultNameQuery,
         IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs, IotaNamesDefaultNameQuery,
         IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery, ResolveIotaNamesAddressArgs,
-        ResolveIotaNamesAddressQuery, TransactionBlockCheckpointQuery,
+        ResolveIotaNamesAddressQuery, TransactionBlockIndexedQuery,
         TransactionBlockWithEffectsQuery, TransactionBlocksWithEffectsQuery,
     },
 };
@@ -1297,6 +1297,18 @@ impl Client {
         Ok(effects)
     }
 
+    /// Returns whether the transaction for the given digest has been indexed
+    /// (finalized) on the node.
+    pub async fn is_tx_indexed_on_node(&self, digest: Digest) -> Result<bool> {
+        let operation = TransactionBlockIndexedQuery::build(TransactionBlockArgs {
+            digest: digest.to_string(),
+        });
+        Ok(self
+            .run_query(&operation)
+            .await?
+            .is_transaction_indexed_on_node)
+    }
+
     /// Wait for the finalization of a transaction by its digest. An optional
     /// timeout can be provided, which, if exceeded, will return an error
     /// (default 60s).
@@ -1311,19 +1323,8 @@ impl Client {
                 let mut interval = tokio::time::interval(tokio::time::Duration::from_millis(100));
                 loop {
                     interval.tick().await;
-                    let operation = TransactionBlockCheckpointQuery::build(TransactionBlockArgs {
-                        digest: digest.to_string(),
-                    });
-                    let response = self.run_query(&operation).await?;
-                    if let Some(block) = response.transaction_block {
-                        if block
-                            .effects
-                            .as_ref()
-                            .and_then(|e| e.checkpoint.as_ref())
-                            .is_some()
-                        {
-                            break Ok(());
-                        }
+                    if self.is_tx_indexed_on_node(digest).await? {
+                        break Ok(());
                     }
                 }
             },

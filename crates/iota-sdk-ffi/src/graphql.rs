@@ -638,6 +638,13 @@ impl GraphQLClient {
             .into())
     }
 
+    /// Returns whether the transaction for the given digest has been indexed
+    /// (finalized) on the node.
+    #[uniffi::method]
+    pub async fn is_tx_indexed_on_node(&self, digest: &Digest) -> Result<bool> {
+        Ok(self.0.read().await.is_tx_indexed_on_node(**digest).await?)
+    }
+
     /// Wait for the finalization of a transaction by its digest. An optional
     /// timeout can be provided, which, if exceeded, will return an error
     /// (default 60s).
