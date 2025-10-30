@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "*-v*.*.*"
 
 # We need this to be able to create releases.
 permissions:
@@ -28,14 +28,11 @@ jobs:
         run: npm -g i conventional-commits
 
       - name: Generate Release Notes
-        run: conventional-changelog -p conventionalcommits -i notes-${{ github.ref_name }}.md -s
+        run: |
+          pkg=$(echo "${{github.ref_name}}" | sed -nr 's|(.*)-v.*|\1|p'
+          conventional-changelog -p conventionalcommits -i notes-${{ github.ref_name }}.md -s --commit-path "crates/$pkg"
 
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create $TAG --verify-tag --title $TAG --draft --notes-file notes-${{ github.ref_name }}.md
-
-      - name: Update major tag
-        uses: rickstaa/action-update-semver@77e8cb0f3cd805b38ffe25c07236336e05dcb4da # v1.1.4
-        with:
-          major_version_tag_only: true
