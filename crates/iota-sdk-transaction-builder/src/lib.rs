@@ -78,7 +78,7 @@
 //!
 //! builder
 //!     .send_coins([coin], to_address, 50000000000u64)
-//!     .gas(gas_coin)
+//!     .gas([gas_coin])
 //!     .gas_budget(1000000000)
 //!     .gas_price(100);
 //!
@@ -128,8 +128,6 @@
 //! These methods set various metadata which may be needed for the execution.
 //!
 //! - [gas](TransactionBuilder::gas): Add a gas coin to pay for the execution.
-//! - [gas_multi](TransactionBuilder::gas_multi): Add gas coins to pay for the
-//!   execution.
 //! - [gas_budget](TransactionBuilder::gas_budget): Set the maximum gas budget
 //!   to spend.
 //! - [gas_price](TransactionBuilder::gas_price): Set the gas price.

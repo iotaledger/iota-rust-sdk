@@ -54,9 +54,7 @@ func main() {
 		nil,
 	)
 
-	gasObjId := objIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
-	gasObjIds := []*sdk.ObjectId{gasObjId}
-	builder.Gas(gasObjIds).Sponsor(sponsor)
+	builder.Sponsor(sponsor)
 
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
