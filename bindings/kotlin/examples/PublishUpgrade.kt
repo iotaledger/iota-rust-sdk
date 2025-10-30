@@ -75,7 +75,7 @@ fun main() = runBlocking {
         println("> Publishing package:")
         val sigPublish =
                 UserSignature.newSimple(privateKey.trySignSimple(txPublish.signingDigest()))
-        val effectsPublish = client.executeTx(listOf(sigPublish), txPublish, true)
+        val effectsPublish = client.executeTx(listOf(sigPublish), txPublish, WaitForTx.FINALIZED)
         println("Success")
 
         // Wait some time for the indexer to process the tx
@@ -165,7 +165,7 @@ fun main() = runBlocking {
         println("> Upgrading package:")
         val sigUpgrade =
                 UserSignature.newSimple(privateKey.trySignSimple(txUpgrade.signingDigest()))
-        val effectsUpgrade = client.executeTx(listOf(sigUpgrade), txUpgrade, true)
+        val effectsUpgrade = client.executeTx(listOf(sigUpgrade), txUpgrade, WaitForTx.FINALIZED)
         println("Success")
 
         // Wait some time for the indexer to process the tx

@@ -3395,7 +3395,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx()
 	})
-	if checksum != 48020 {
+	if checksum != 65277 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx: UniFFI API checksum mismatch")
 	}
@@ -3434,6 +3434,24 @@ func uniffiCheckChecksums() {
 	if checksum != 44467 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_checkpoint_certified()
+	})
+	if checksum != 5749 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_checkpoint_certified: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node()
+	})
+	if checksum != 32569 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3690,11 +3708,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization()
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx()
 	})
-	if checksum != 50213 {
+	if checksum != 59136 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5699,7 +5717,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute()
 	})
-	if checksum != 44127 {
+	if checksum != 45882 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute: UniFFI API checksum mismatch")
 	}
@@ -5708,7 +5726,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor()
 	})
-	if checksum != 47784 {
+	if checksum != 45688 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor: UniFFI API checksum mismatch")
 	}
@@ -14433,7 +14451,7 @@ type GraphQlClientInterface interface {
 	// (optional) event filter.
 	Events(filter *EventFilter, paginationFilter *PaginationFilter) (EventPage, error)
 	// Execute a transaction.
-	ExecuteTx(signatures []*UserSignature, tx *Transaction, waitForFinalization bool) (*TransactionEffects, error)
+	ExecuteTx(signatures []*UserSignature, tx *Transaction, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Get the list of gas coins for the specified address.
 	GasCoins(owner *Address, paginationFilter *PaginationFilter) (CoinPage, error)
 	// Get the default name pointing to this address, if one exists.
@@ -14442,6 +14460,12 @@ type GraphQlClientInterface interface {
 	IotaNamesLookup(name string) (**Address, error)
 	// Find all registration NFTs for the given address.
 	IotaNamesRegistrations(address *Address, paginationFilter PaginationFilter) (NameRegistrationPage, error)
+	// Returns whether the transaction for the given digest has been included
+	// in a checkpoint.
+	IsTxCheckpointCertified(digest *Digest) (bool, error)
+	// Returns whether the transaction for the given digest has been indexed
+	// (finalized) on the node.
+	IsTxIndexedOnNode(digest *Digest) (bool, error)
 	// Return the sequence number of the latest checkpoint that has been
 	// executed.
 	LatestCheckpointSequenceNumber() (*uint64, error)
@@ -14546,10 +14570,10 @@ type GraphQlClientInterface interface {
 	TransactionsDataEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionDataEffectsPage, error)
 	// Get a page of transactions' effects based on the provided filters.
 	TransactionsEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionEffectsPage, error)
-	// Wait for the finalization of a transaction by its digest. An optional
-	// timeout can be provided, which, if exceeded, will return an error
-	// (default 60s).
-	WaitForTxFinalization(digest *Digest, timeout *time.Duration) error
+	// Wait for the finalization or checkpoint inclusion of a transaction
+	// by its digest. An optional timeout can be provided, which, if
+	// exceeded, will return an error (default 60s).
+	WaitForTx(digest *Digest, waitFor WaitForTx, timeout *time.Duration) error
 }
 // The GraphQL client for interacting with the IOTA blockchain.
 type GraphQlClient struct {
@@ -15162,7 +15186,7 @@ func (_self *GraphQlClient) Events(filter *EventFilter, paginationFilter *Pagina
 }
 
 // Execute a transaction.
-func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transaction, waitForFinalization bool) (*TransactionEffects, error) {
+func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transaction, waitFor *WaitForTx) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -15177,7 +15201,7 @@ func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transacti
 			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
-		_pointer,FfiConverterSequenceUserSignatureINSTANCE.Lower(signatures), FfiConverterTransactionINSTANCE.Lower(tx), FfiConverterBoolINSTANCE.Lower(waitForFinalization)),
+		_pointer,FfiConverterSequenceUserSignatureINSTANCE.Lower(signatures), FfiConverterTransactionINSTANCE.Lower(tx), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
@@ -15313,6 +15337,68 @@ func (_self *GraphQlClient) IotaNamesRegistrations(address *Address, paginationF
 		// freeFn
 		func (handle C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Returns whether the transaction for the given digest has been included
+// in a checkpoint.
+func (_self *GraphQlClient) IsTxCheckpointCertified(digest *Digest) (bool, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) C.int8_t {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_i8(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi C.int8_t) bool {
+			return FfiConverterBoolINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_checkpoint_certified(
+		_pointer,FfiConverterDigestINSTANCE.Lower(digest)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_i8(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_i8(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Returns whether the transaction for the given digest has been indexed
+// (finalized) on the node.
+func (_self *GraphQlClient) IsTxIndexedOnNode(digest *Digest) (bool, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) C.int8_t {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_i8(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi C.int8_t) bool {
+			return FfiConverterBoolINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node(
+		_pointer,FfiConverterDigestINSTANCE.Lower(digest)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_i8(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_i8(handle)
 		},
 	)
 
@@ -16257,10 +16343,10 @@ func (_self *GraphQlClient) TransactionsEffects(filter *TransactionsFilter, pagi
 	return res, err 
 }
 
-// Wait for the finalization of a transaction by its digest. An optional
-// timeout can be provided, which, if exceeded, will return an error
-// (default 60s).
-func (_self *GraphQlClient) WaitForTxFinalization(digest *Digest, timeout *time.Duration) error {
+// Wait for the finalization or checkpoint inclusion of a transaction
+// by its digest. An optional timeout can be provided, which, if
+// exceeded, will return an error (default 60s).
+func (_self *GraphQlClient) WaitForTx(digest *Digest, waitFor WaitForTx, timeout *time.Duration) error {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 _, err :=uniffiRustCallAsync[SdkFfiError](
@@ -16272,8 +16358,8 @@ func (_self *GraphQlClient) WaitForTxFinalization(digest *Digest, timeout *time.
 		},
 		// liftFn
 		func(_ struct{}) struct{} { return struct{}{} },
-		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx_finalization(
-		_pointer,FfiConverterDigestINSTANCE.Lower(digest), FfiConverterOptionalDurationINSTANCE.Lower(timeout)),
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(
+		_pointer,FfiConverterDigestINSTANCE.Lower(digest), FfiConverterWaitForTxINSTANCE.Lower(waitFor), FfiConverterOptionalDurationINSTANCE.Lower(timeout)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_void(handle, continuation, data)
@@ -24290,9 +24376,9 @@ type TransactionBuilderInterface interface {
 	// Dry run the transaction.
 	DryRun(skipChecks bool) (DryRunResult, error)
 	// Execute the transaction and optionally wait for finalization.
-	Execute(keypair *SimpleKeypair, waitForFinalization bool) (*TransactionEffects, error)
+	Execute(keypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Execute the transaction and optionally wait for finalization.
-	ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitForFinalization bool) (*TransactionEffects, error)
+	ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *TransactionBuilder
 	// Convert this builder into a transaction.
@@ -24438,7 +24524,7 @@ func (_self *TransactionBuilder) DryRun(skipChecks bool) (DryRunResult, error) {
 }
 
 // Execute the transaction and optionally wait for finalization.
-func (_self *TransactionBuilder) Execute(keypair *SimpleKeypair, waitForFinalization bool) (*TransactionEffects, error) {
+func (_self *TransactionBuilder) Execute(keypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -24453,7 +24539,7 @@ func (_self *TransactionBuilder) Execute(keypair *SimpleKeypair, waitForFinaliza
 			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
-		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterBoolINSTANCE.Lower(waitForFinalization)),
+		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
@@ -24468,7 +24554,7 @@ func (_self *TransactionBuilder) Execute(keypair *SimpleKeypair, waitForFinaliza
 }
 
 // Execute the transaction and optionally wait for finalization.
-func (_self *TransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitForFinalization bool) (*TransactionEffects, error) {
+func (_self *TransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -24483,7 +24569,7 @@ func (_self *TransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair, spon
 			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(
-		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterSimpleKeypairINSTANCE.Lower(sponsorKeypair), FfiConverterBoolINSTANCE.Lower(waitForFinalization)),
+		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterSimpleKeypairINSTANCE.Lower(sponsorKeypair), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
@@ -34267,6 +34353,44 @@ func (_ FfiDestroyerUnchangedSharedKind) Destroy(value UnchangedSharedKind) {
 	value.Destroy()
 }
 
+
+// Determines what to wait for after executing a transaction.
+type WaitForTx uint
+
+const (
+	// Indicates that the transaction effects will be usable in subsequent
+	// transactions, and that the transaction itself is indexed on the node.
+	WaitForTxFinalized WaitForTx = 1
+	// Indicates that the tranaction has been included in a checkpoint, and all
+	// queries may include it.
+	WaitForTxCheckpointCertified WaitForTx = 2
+)
+
+type FfiConverterWaitForTx struct {}
+
+var FfiConverterWaitForTxINSTANCE = FfiConverterWaitForTx{}
+
+func (c FfiConverterWaitForTx) Lift(rb RustBufferI) WaitForTx {
+	return LiftFromRustBuffer[WaitForTx](c, rb)
+}
+
+func (c FfiConverterWaitForTx) Lower(value WaitForTx) C.RustBuffer {
+	return LowerIntoRustBuffer[WaitForTx](c, value)
+}
+func (FfiConverterWaitForTx) Read(reader io.Reader) WaitForTx {
+	id := readInt32(reader)
+	return WaitForTx(id)
+}
+
+func (FfiConverterWaitForTx) Write(writer io.Writer, value WaitForTx) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerWaitForTx struct {}
+
+func (_ FfiDestroyerWaitForTx) Destroy(value WaitForTx) {
+}
+
 type FfiConverterOptionalUint32 struct{}
 
 var FfiConverterOptionalUint32INSTANCE = FfiConverterOptionalUint32{}
@@ -36410,6 +36534,43 @@ type FfiDestroyerOptionalTransactionBlockKindInput struct {}
 func (_ FfiDestroyerOptionalTransactionBlockKindInput) Destroy(value *TransactionBlockKindInput) {
 	if value != nil {
 		FfiDestroyerTransactionBlockKindInput{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalWaitForTx struct{}
+
+var FfiConverterOptionalWaitForTxINSTANCE = FfiConverterOptionalWaitForTx{}
+
+func (c FfiConverterOptionalWaitForTx) Lift(rb RustBufferI) *WaitForTx {
+	return LiftFromRustBuffer[*WaitForTx](c, rb)
+}
+
+func (_ FfiConverterOptionalWaitForTx) Read(reader io.Reader) *WaitForTx {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterWaitForTxINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalWaitForTx) Lower(value *WaitForTx) C.RustBuffer {
+	return LowerIntoRustBuffer[*WaitForTx](c, value)
+}
+
+func (_ FfiConverterOptionalWaitForTx) Write(writer io.Writer, value *WaitForTx) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterWaitForTxINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalWaitForTx struct {}
+
+func (_ FfiDestroyerOptionalWaitForTx) Destroy(value *WaitForTx) {
+	if value != nil {
+		FfiDestroyerWaitForTx{}.Destroy(*value)
 	}
 }
 

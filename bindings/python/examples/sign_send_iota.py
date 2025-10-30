@@ -36,7 +36,7 @@ async def main():
         signature = private_key.try_sign_simple(txn.signing_digest())
         user_signature = UserSignature.new_simple(signature)
 
-        effects = await client.execute_tx([user_signature], txn, True)
+        effects = await client.execute_tx([user_signature], txn, WaitForTx.FINALIZED)
 
         print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
         print(f"Transaction status: {effects.as_v1().status}")

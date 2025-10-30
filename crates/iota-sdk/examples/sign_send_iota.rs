@@ -3,7 +3,7 @@
 
 use eyre::Result;
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
-use iota_graphql_client::{Client, faucet::FaucetClient};
+use iota_graphql_client::{Client, WaitForTx, faucet::FaucetClient};
 use iota_transaction_builder::TransactionBuilder;
 use iota_types::Address;
 
@@ -37,7 +37,9 @@ async fn main() -> Result<()> {
 
     let signature = private_key.sign_transaction(&tx)?;
 
-    let effects = client.execute_tx(&[signature], &tx, true).await?;
+    let effects = client
+        .execute_tx(&[signature], &tx, WaitForTx::Finalized)
+        .await?;
 
     println!("Digest: {}", effects.digest());
     println!("Transaction status: {:?}", effects.status());

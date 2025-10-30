@@ -5,6 +5,7 @@ use std::{str::FromStr, sync::Arc, time::Duration};
 
 use iota_sdk::{
     graphql_client::{
+        WaitForTx,
         pagination::PaginationFilter,
         query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
     },
@@ -36,6 +37,17 @@ use crate::{
         TransactionDataEffectsPage, TransactionEffectsPage, ValidatorPage,
     },
 };
+
+#[uniffi::remote(Enum)]
+/// Determines what to wait for after executing a transaction.
+pub enum WaitForTx {
+    /// Indicates that the transaction effects will be usable in subsequent
+    /// transactions, and that the transaction itself is indexed on the node.
+    Finalized,
+    /// Indicates that the tranaction has been included in a checkpoint, and all
+    /// queries may include it.
+    CheckpointCertified,
+}
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
@@ -615,12 +627,12 @@ impl GraphQLClient {
     }
 
     /// Execute a transaction.
-    #[uniffi::method(default(wait_for_finalization = false))]
+    #[uniffi::method(default(wait_for = None))]
     pub async fn execute_tx(
         &self,
         signatures: Vec<Arc<UserSignature>>,
         tx: &Transaction,
-        wait_for_finalization: bool,
+        wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .0
@@ -632,7 +644,7 @@ impl GraphQLClient {
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
                 &tx.0,
-                wait_for_finalization,
+                wait_for,
             )
             .await?
             .into())
@@ -645,20 +657,33 @@ impl GraphQLClient {
         Ok(self.0.read().await.is_tx_indexed_on_node(**digest).await?)
     }
 
-    /// Wait for the finalization of a transaction by its digest. An optional
-    /// timeout can be provided, which, if exceeded, will return an error
-    /// (default 60s).
+    /// Returns whether the transaction for the given digest has been included
+    /// in a checkpoint.
+    #[uniffi::method]
+    pub async fn is_tx_checkpoint_certified(&self, digest: &Digest) -> Result<bool> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .is_tx_checkpoint_certified(**digest)
+            .await?)
+    }
+
+    /// Wait for the finalization or checkpoint inclusion of a transaction
+    /// by its digest. An optional timeout can be provided, which, if
+    /// exceeded, will return an error (default 60s).
     #[uniffi::method(default(timeout = None))]
-    pub async fn wait_for_tx_finalization(
+    pub async fn wait_for_tx(
         &self,
         digest: &Digest,
+        wait_for: WaitForTx,
         timeout: Option<Duration>,
     ) -> Result<()> {
         Ok(self
             .0
             .read()
             .await
-            .wait_for_tx_finalization(**digest, timeout)
+            .wait_for_tx(**digest, wait_for, timeout)
             .await?)
     }
 

@@ -52,8 +52,9 @@ use crate::{
         CheckpointTotalTxQuery, IotaNamesAddressDefaultNameQuery,
         IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs, IotaNamesDefaultNameQuery,
         IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery, ResolveIotaNamesAddressArgs,
-        ResolveIotaNamesAddressQuery, TransactionBlockIndexedQuery,
-        TransactionBlockWithEffectsQuery, TransactionBlocksWithEffectsQuery,
+        ResolveIotaNamesAddressQuery, TransactionBlockCheckpointQuery,
+        TransactionBlockIndexedQuery, TransactionBlockWithEffectsQuery,
+        TransactionBlocksWithEffectsQuery,
     },
 };
 
@@ -72,6 +73,16 @@ fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, crate::Error> {
             "Either data or errors must be present in a GraphQL response, but not both"
         ),
     }
+}
+
+/// Determines what to wait for after executing a transaction.
+pub enum WaitForTx {
+    /// Indicates that the transaction effects will be usable in subsequent
+    /// transactions, and that the transaction itself is indexed on the node.
+    Finalized,
+    /// Indicates that the tranaction has been included in a checkpoint, and all
+    /// queries may include it.
+    CheckpointCertified,
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.
@@ -1277,8 +1288,9 @@ impl Client {
         &self,
         signatures: &[UserSignature],
         tx: &Transaction,
-        wait_for_finalization: bool,
+        wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects> {
+        let wait_for = wait_for.into();
         let operation = ExecuteTransactionQuery::build(ExecuteTransactionArgs {
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
             tx_bytes: base64ct::Base64::encode_string(bcs::to_bytes(tx).unwrap().as_ref()),
@@ -1290,8 +1302,8 @@ impl Client {
         let bcs = base64ct::Base64::decode_vec(result.effects.bcs.0.as_str())?;
         let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
 
-        if wait_for_finalization {
-            self.wait_for_tx_finalization(tx.digest(), None).await?;
+        if let Some(wait_for) = wait_for {
+            self.wait_for_tx(tx.digest(), wait_for, None).await?;
         }
 
         Ok(effects)
@@ -1309,12 +1321,33 @@ impl Client {
             .is_transaction_indexed_on_node)
     }
 
-    /// Wait for the finalization of a transaction by its digest. An optional
-    /// timeout can be provided, which, if exceeded, will return an error
-    /// (default 60s).
-    pub async fn wait_for_tx_finalization(
+    /// Returns whether the transaction for the given digest has been included
+    /// in a checkpoint.
+    pub async fn is_tx_checkpoint_certified(&self, digest: Digest) -> Result<bool> {
+        let operation = TransactionBlockCheckpointQuery::build(TransactionBlockArgs {
+            digest: digest.to_string(),
+        });
+        let response = self.run_query(&operation).await?;
+        if let Some(block) = response.transaction_block {
+            if block
+                .effects
+                .as_ref()
+                .and_then(|e| e.checkpoint.as_ref())
+                .is_some()
+            {
+                return Ok(true);
+            }
+        }
+        Ok(false)
+    }
+
+    /// Wait for the finalization or checkpoint inclusion of a transaction
+    /// by its digest. An optional timeout can be provided, which, if
+    /// exceeded, will return an error (default 60s).
+    pub async fn wait_for_tx(
         &self,
         digest: Digest,
+        wait_for: WaitForTx,
         timeout: impl Into<Option<Duration>>,
     ) -> Result<()> {
         tokio::time::timeout(
@@ -1323,7 +1356,12 @@ impl Client {
                 let mut interval = tokio::time::interval(tokio::time::Duration::from_millis(100));
                 loop {
                     interval.tick().await;
-                    if self.is_tx_indexed_on_node(digest).await? {
+                    if match wait_for {
+                        WaitForTx::Finalized => self.is_tx_indexed_on_node(digest).await?,
+                        WaitForTx::CheckpointCertified => {
+                            self.is_tx_checkpoint_certified(digest).await?
+                        }
+                    } {
                         break Ok(());
                     }
                 }

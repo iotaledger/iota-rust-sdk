@@ -2907,6 +2907,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3606,6 +3610,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_checkpoint_certified(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size(
@@ -3662,7 +3670,7 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization(
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_identifier_as_str(
 ): Short
@@ -5469,7 +5477,7 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_transaction_blocks(`
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(`ptr`: Pointer,`filter`: RustBuffer.ByValue,`paginationFilter`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(`ptr`: Pointer,`signatures`: RustBuffer.ByValue,`tx`: Pointer,`waitForFinalization`: Byte,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(`ptr`: Pointer,`signatures`: RustBuffer.ByValue,`tx`: Pointer,`waitFor`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(`ptr`: Pointer,`owner`: Pointer,`paginationFilter`: RustBuffer.ByValue,
 ): Long
@@ -5478,6 +5486,10 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_default_name(`ptr`: P
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_lookup(`ptr`: Pointer,`name`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations(`ptr`: Pointer,`address`: Pointer,`paginationFilter`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_checkpoint_certified(`ptr`: Pointer,`digest`: Pointer,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node(`ptr`: Pointer,`digest`: Pointer,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_latest_checkpoint_sequence_number(`ptr`: Pointer,
 ): Long
@@ -5535,7 +5547,7 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(`ptr`:
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(`ptr`: Pointer,`filter`: RustBuffer.ByValue,`paginationFilter`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx_finalization(`ptr`: Pointer,`digest`: Pointer,`timeout`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(`ptr`: Pointer,`digest`: Pointer,`waitFor`: RustBuffer.ByValue,`timeout`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_clone_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6497,9 +6509,9 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(`sender`: Pointer
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run(`ptr`: Pointer,`skipChecks`: Byte,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(`ptr`: Pointer,`keypair`: Pointer,`waitForFinalization`: Byte,
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(`ptr`: Pointer,`keypair`: Pointer,`waitFor`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(`ptr`: Pointer,`keypair`: Pointer,`sponsorKeypair`: Pointer,`waitForFinalization`: Byte,
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(`ptr`: Pointer,`keypair`: Pointer,`sponsorKeypair`: Pointer,`waitFor`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(`ptr`: Pointer,`epoch`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8484,7 +8496,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 20245.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 48020.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 65277.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins() != 24826.toShort()) {
@@ -8497,6 +8509,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations() != 44467.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_checkpoint_certified() != 5749.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 32569.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336.toShort()) {
@@ -8583,7 +8601,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization() != 50213.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 59136.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815.toShort()) {
@@ -9252,10 +9270,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 44127.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 45882.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 47784.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 45688.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328.toShort()) {
@@ -21938,7 +21956,7 @@ public interface GraphQlClientInterface {
     /**
      * Execute a transaction.
      */
-    suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects
+    suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction, `waitFor`: WaitForTx? = null): TransactionEffects
     
     /**
      * Get the list of gas coins for the specified address.
@@ -21959,6 +21977,18 @@ public interface GraphQlClientInterface {
      * Find all registration NFTs for the given address.
      */
     suspend fun `iotaNamesRegistrations`(`address`: Address, `paginationFilter`: PaginationFilter): NameRegistrationPage
+    
+    /**
+     * Returns whether the transaction for the given digest has been included
+     * in a checkpoint.
+     */
+    suspend fun `isTxCheckpointCertified`(`digest`: Digest): kotlin.Boolean
+    
+    /**
+     * Returns whether the transaction for the given digest has been indexed
+     * (finalized) on the node.
+     */
+    suspend fun `isTxIndexedOnNode`(`digest`: Digest): kotlin.Boolean
     
     /**
      * Return the sequence number of the latest checkpoint that has been
@@ -22149,11 +22179,11 @@ public interface GraphQlClientInterface {
     suspend fun `transactionsEffects`(`filter`: TransactionsFilter? = null, `paginationFilter`: PaginationFilter? = null): TransactionEffectsPage
     
     /**
-     * Wait for the finalization of a transaction by its digest. An optional
-     * timeout can be provided, which, if exceeded, will return an error
-     * (default 60s).
+     * Wait for the finalization or checkpoint inclusion of a transaction
+     * by its digest. An optional timeout can be provided, which, if
+     * exceeded, will return an error (default 60s).
      */
-    suspend fun `waitForTxFinalization`(`digest`: Digest, `timeout`: java.time.Duration? = null)
+    suspend fun `waitForTx`(`digest`: Digest, `waitFor`: WaitForTx, `timeout`: java.time.Duration? = null)
     
     companion object
 }
@@ -22689,12 +22719,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction, `waitForFinalization`: kotlin.Boolean) : TransactionEffects {
+    override suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction, `waitFor`: WaitForTx?) : TransactionEffects {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
                 thisPtr,
-                FfiConverterSequenceTypeUserSignature.lower(`signatures`),FfiConverterTypeTransaction.lower(`tx`),FfiConverterBoolean.lower(`waitForFinalization`),
+                FfiConverterSequenceTypeUserSignature.lower(`signatures`),FfiConverterTypeTransaction.lower(`tx`),FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
@@ -22798,6 +22828,56 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeNameRegistrationPage.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Returns whether the transaction for the given digest has been included
+     * in a checkpoint.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `isTxCheckpointCertified`(`digest`: Digest) : kotlin.Boolean {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_checkpoint_certified(
+                thisPtr,
+                FfiConverterTypeDigest.lower(`digest`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_i8(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_i8(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_i8(future) },
+        // lift function
+        { FfiConverterBoolean.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Returns whether the transaction for the given digest has been indexed
+     * (finalized) on the node.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `isTxIndexedOnNode`(`digest`: Digest) : kotlin.Boolean {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node(
+                thisPtr,
+                FfiConverterTypeDigest.lower(`digest`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_i8(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_i8(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_i8(future) },
+        // lift function
+        { FfiConverterBoolean.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -23526,18 +23606,18 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Wait for the finalization of a transaction by its digest. An optional
-     * timeout can be provided, which, if exceeded, will return an error
-     * (default 60s).
+     * Wait for the finalization or checkpoint inclusion of a transaction
+     * by its digest. An optional timeout can be provided, which, if
+     * exceeded, will return an error (default 60s).
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `waitForTxFinalization`(`digest`: Digest, `timeout`: java.time.Duration?) {
+    override suspend fun `waitForTx`(`digest`: Digest, `waitFor`: WaitForTx, `timeout`: java.time.Duration?) {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx_finalization(
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(
                 thisPtr,
-                FfiConverterTypeDigest.lower(`digest`),FfiConverterOptionalDuration.lower(`timeout`),
+                FfiConverterTypeDigest.lower(`digest`),FfiConverterTypeWaitForTx.lower(`waitFor`),FfiConverterOptionalDuration.lower(`timeout`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_void(future, callback, continuation) },
@@ -40818,12 +40898,12 @@ public interface TransactionBuilderInterface {
     /**
      * Execute the transaction and optionally wait for finalization.
      */
-    suspend fun `execute`(`keypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects
+    suspend fun `execute`(`keypair`: SimpleKeypair, `waitFor`: WaitForTx? = null): TransactionEffects
     
     /**
      * Execute the transaction and optionally wait for finalization.
      */
-    suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects
+    suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitFor`: WaitForTx? = null): TransactionEffects
     
     /**
      * Set the expiration of the transaction to be a specific epoch.
@@ -41076,12 +41156,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `execute`(`keypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean) : TransactionEffects {
+    override suspend fun `execute`(`keypair`: SimpleKeypair, `waitFor`: WaitForTx?) : TransactionEffects {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
                 thisPtr,
-                FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterBoolean.lower(`waitForFinalization`),
+                FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
@@ -41100,12 +41180,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean) : TransactionEffects {
+    override suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitFor`: WaitForTx?) : TransactionEffects {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(
                 thisPtr,
-                FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterTypeSimpleKeypair.lower(`sponsorKeypair`),FfiConverterBoolean.lower(`waitForFinalization`),
+                FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterTypeSimpleKeypair.lower(`sponsorKeypair`),FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
@@ -56108,6 +56188,47 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
 
 
 
+/**
+ * Determines what to wait for after executing a transaction.
+ */
+
+enum class WaitForTx {
+    
+    /**
+     * Indicates that the transaction effects will be usable in subsequent
+     * transactions, and that the transaction itself is indexed on the node.
+     */
+    FINALIZED,
+    /**
+     * Indicates that the tranaction has been included in a checkpoint, and all
+     * queries may include it.
+     */
+    CHECKPOINT_CERTIFIED;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeWaitForTx: FfiConverterRustBuffer<WaitForTx> {
+    override fun read(buf: ByteBuffer) = try {
+        WaitForTx.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: WaitForTx) = 4UL
+
+    override fun write(value: WaitForTx, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
 
 /**
  * @suppress
@@ -57958,6 +58079,38 @@ public object FfiConverterOptionalTypeTransactionBlockKindInput: FfiConverterRus
         } else {
             buf.put(1)
             FfiConverterTypeTransactionBlockKindInput.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeWaitForTx: FfiConverterRustBuffer<WaitForTx?> {
+    override fun read(buf: ByteBuffer): WaitForTx? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeWaitForTx.read(buf)
+    }
+
+    override fun allocationSize(value: WaitForTx?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeWaitForTx.allocationSize(value)
+        }
+    }
+
+    override fun write(value: WaitForTx?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeWaitForTx.write(value, buf)
         }
     }
 }

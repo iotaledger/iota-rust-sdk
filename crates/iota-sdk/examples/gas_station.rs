@@ -3,7 +3,7 @@
 
 use eyre::Result;
 use iota_crypto::ed25519::Ed25519PrivateKey;
-use iota_graphql_client::Client;
+use iota_graphql_client::{Client, WaitForTx};
 use iota_transaction_builder::TransactionBuilder;
 use iota_types::Address;
 use reqwest::header::HeaderValue;
@@ -27,7 +27,9 @@ async fn main() -> Result<()> {
             HeaderValue::from_str(&format!("Bearer {gas_station_auth_token}"))?,
         );
 
-    let effects = builder.execute(&keypair.into(), true).await?;
+    let effects = builder
+        .execute(&keypair.into(), WaitForTx::Finalized)
+        .await?;
 
     println!("{effects:#?}");
 
