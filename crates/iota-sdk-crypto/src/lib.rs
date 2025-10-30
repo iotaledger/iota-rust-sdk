@@ -197,22 +197,6 @@ pub const DERIVATION_PATH_PURPOSE_SECP256K1: u32 = 54;
 #[cfg(feature = "mnemonic")]
 pub const DERIVATION_PATH_PURPOSE_SECP256R1: u32 = 74;
 
-/// Defines a type which can be converted to bytes
-pub trait ToBytes {
-    /// Returns the raw bytes of this type.
-    fn to_bytes(&self) -> Vec<u8>;
-}
-
-/// Defines a type which can be constructed from bytes
-pub trait FromBytes {
-    type Error;
-
-    /// Create an instance from raw bytes
-    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error>
-    where
-        Self: Sized;
-}
-
 /// Defines the scheme of a private key
 pub trait PrivateKeyScheme {
     const SCHEME: iota_types::SignatureScheme;
@@ -221,6 +205,19 @@ pub trait PrivateKeyScheme {
     fn scheme(&self) -> iota_types::SignatureScheme {
         Self::SCHEME
     }
+}
+
+/// Defines a type which can be constructed from bytes
+pub trait ToFromBytes {
+    type Error;
+
+    /// Returns the raw bytes of this type.
+    fn to_bytes(&self) -> Vec<u8>;
+
+    /// Create an instance from raw bytes
+    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error>
+    where
+        Self: Sized;
 }
 
 /// Defines a type that can be converted to and from flagged bytes, i.e. bytes
@@ -237,7 +234,7 @@ pub trait ToFromFlaggedBytes {
         Self: Sized;
 }
 
-impl<T: ToBytes + FromBytes<Error = PrivateKeyError> + PrivateKeyScheme> ToFromFlaggedBytes for T {
+impl<T: ToFromBytes<Error = PrivateKeyError> + PrivateKeyScheme> ToFromFlaggedBytes for T {
     type Error = PrivateKeyError;
 
     /// Returns the bytes with signature scheme flag prepended
@@ -340,4 +337,96 @@ pub trait FromMnemonic {
     ) -> Result<Self, Self::Error>
     where
         Self: Sized;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey, secp256r1::Secp256r1PrivateKey,
+    };
+
+    #[cfg(feature = "mnemonic")]
+    #[test]
+    fn test_mnemonics_ed25519() {
+        const TEST_CASES: [[&str; 3]; 3] = [
+            [
+                "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm",
+                "iotaprivkey1qrqqxhsu3ndp96644fjk4z5ams5ulgmvprklngt2jhvg2ujn5w4q2d2vplv",
+                "0x9f8e5379678525edf768d7b507dc1ba9016fc4f0eac976ab7f74077d95fba312",
+            ],
+            [
+                "require decline left thought grid priority false tiny gasp angle royal system attack beef setup reward aunt skill wasp tray vital bounce inflict level",
+                "iotaprivkey1qqcxaf57fnenvflpacacaumf6vl0rt0edddhytanvzhkqhwnjk0zspg902d",
+                "0x862738192e40540e0a5c9a5aca636f53b0cd76b0a9bef3386e05647feb4914ac",
+            ],
+            [
+                "organ crash swim stick traffic remember army arctic mesh slice swear summer police vast chaos cradle squirrel hood useless evidence pet hub soap lake",
+                "iotaprivkey1qzq39vxzm0gq7l8dc5dj5allpuww4mavhwhg8mua4cl3lj2c3fvhcv5l2vn",
+                "0x2391788ca49c7f0f00699bc2bad45f80c343b4d1df024285c132259433d7ff31",
+            ],
+        ];
+
+        for [mnemonic, bech32, address] in TEST_CASES {
+            let key = Ed25519PrivateKey::from_mnemonic(mnemonic, None, None).unwrap();
+            assert_eq!(key.to_bech32().unwrap(), bech32);
+            assert_eq!(key.public_key().derive_address().to_string(), address);
+        }
+    }
+
+    #[cfg(feature = "mnemonic")]
+    #[test]
+    fn test_mnemonics_secp256k1() {
+        const TEST_CASES: [[&str; 3]; 3] = [
+            [
+                "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm",
+                "iotaprivkey1q8cy2ll8a0dmzzzwn9zavrug0qf47cyuj6k2r4r6rnjtpjhrdh52vpegd4f",
+                "0x8520d58dde1ab268349b9a46e5124ae6fe7e4c61df4ca2bc9c97d3c4d07b0b55",
+            ],
+            [
+                "require decline left thought grid priority false tiny gasp angle royal system attack beef setup reward aunt skill wasp tray vital bounce inflict level",
+                "iotaprivkey1q9hm330d05jcxfvmztv046p8kclyaj39hk6elqghgpq4sz4x23hk2wd6cfz",
+                "0x3740d570eefba29dfc0fdd5829848902064e31ecd059ca05c401907fa8646f61",
+            ],
+            [
+                "organ crash swim stick traffic remember army arctic mesh slice swear summer police vast chaos cradle squirrel hood useless evidence pet hub soap lake",
+                "iotaprivkey1qx2dnch6363h7gdqqfkzmmlequzj4ul3x4fq6dzyajk7wc2c0jgcx32axh5",
+                "0x943b852c37fef403047e06ff5a2fa216557a4386212fb29554babdd3e1899da5",
+            ],
+        ];
+
+        for [mnemonic, bech32, address] in TEST_CASES {
+            let key = Secp256k1PrivateKey::from_mnemonic(mnemonic, None, None).unwrap();
+            assert_eq!(key.to_bech32().unwrap(), bech32);
+            assert_eq!(key.public_key().derive_address().to_string(), address);
+        }
+    }
+
+    #[cfg(feature = "mnemonic")]
+    #[test]
+    fn test_mnemonics_secp256r1() {
+        const TEST_CASES: [[&str; 3]; 3] = [
+            [
+                "act wing dilemma glory episode region allow mad tourist humble muffin oblige",
+                "iotaprivkey1qtt65ua2lhal76zg4cxd6umdqynv2rj2gzrntp5rwlnyj370jg3pwtqlwdn",
+                "0x779a63b28528210a5ec6c4af5a70382fa3f0c2d3f98dcbe4e3a4ae2f8c39cc9c",
+            ],
+            [
+                "flag rebel cabbage captain minimum purpose long already valley horn enrich salt",
+                "iotaprivkey1qtcjgmue7q8u4gtutfvfpx3zj3aa2r9pqssuusrltxfv68eqhzsgjc3p4z7",
+                "0x8b45523042933aa55f57e2ccc661304baed292529b6e67a0c9857c1f3f871806",
+            ],
+            [
+                "area renew bar language pudding trial small host remind supreme cabbage era",
+                "iotaprivkey1qtxafg26qxeqy7f56gd2rvsup0a5kl4cre7nt2rtcrf0p3v5pwd4cgrrff2",
+                "0x8528ef86150ec331928a8b3edb8adbe2fb523db8c84679aa57a931da6a4cdb25",
+            ],
+        ];
+
+        for [mnemonic, bech32, address] in TEST_CASES {
+            let key = Secp256r1PrivateKey::from_mnemonic(mnemonic, None, None).unwrap();
+            assert_eq!(key.to_bech32().unwrap(), bech32);
+            assert_eq!(key.public_key().derive_address().to_string(), address);
+        }
+    }
 }

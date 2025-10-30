@@ -111,15 +111,13 @@ impl Ed25519PrivateKey {
     }
 }
 
-impl crate::ToBytes for Ed25519PrivateKey {
+impl crate::ToFromBytes for Ed25519PrivateKey {
+    type Error = crate::PrivateKeyError;
+
     /// Return the raw 32-byte private key
     fn to_bytes(&self) -> Vec<u8> {
         self.0.to_bytes().to_vec()
     }
-}
-
-impl crate::FromBytes for Ed25519PrivateKey {
-    type Error = crate::PrivateKeyError;
 
     fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {
         if bytes.len() != Self::LENGTH {

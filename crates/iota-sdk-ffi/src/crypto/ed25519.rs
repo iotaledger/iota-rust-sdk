@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_sdk::{
-    crypto::{FromMnemonic, ToBytes, ToFromBech32},
+    crypto::{FromMnemonic, ToFromBech32, ToFromBytes},
     types::SignatureScheme,
 };
 use rand::rngs::OsRng;

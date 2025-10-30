@@ -4,7 +4,7 @@
 use std::sync::Arc;
 
 use iota_sdk::{
-    crypto::{FromMnemonic, Signer, ToBytes, ToFromBech32, Verifier},
+    crypto::{FromMnemonic, Signer, ToFromBech32, ToFromBytes, Verifier},
     types::SignatureScheme,
 };
 use rand::rngs::OsRng;

@@ -116,15 +116,13 @@ impl Secp256k1PrivateKey {
     }
 }
 
-impl crate::ToBytes for Secp256k1PrivateKey {
+impl crate::ToFromBytes for Secp256k1PrivateKey {
+    type Error = crate::PrivateKeyError;
+
     /// Return the raw 32-byte private key
     fn to_bytes(&self) -> Vec<u8> {
         self.0.to_bytes().to_vec()
     }
-}
-
-impl crate::FromBytes for Secp256k1PrivateKey {
-    type Error = crate::PrivateKeyError;
 
     fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {
         if bytes.len() != Self::LENGTH {
@@ -154,13 +152,13 @@ impl crate::FromMnemonic for Secp256k1PrivateKey {
     ) -> Result<Self, Self::Error> {
         use std::str::FromStr;
 
-        use crate::FromBytes;
+        use crate::ToFromBytes;
 
         let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
         let path = path.into().unwrap_or_else(|| {
             format!(
-                "m/{}'/{}'/0'/0'/0'",
+                "m/{}'/{}'/0'/0/0",
                 crate::DERIVATION_PATH_PURPOSE_SECP256K1,
                 crate::DERIVATION_PATH_COIN_TYPE
             )

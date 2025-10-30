@@ -138,7 +138,7 @@ mod keypair {
 
         /// Encode a SimpleKeypair as `flag || privkey` in bytes
         pub fn to_bytes(&self) -> Vec<u8> {
-            use crate::ToBytes;
+            use crate::ToFromBytes;
 
             let mut bytes = Vec::new();
             bytes.push(self.scheme().to_u8());
