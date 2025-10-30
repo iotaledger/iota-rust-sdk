@@ -213,18 +213,11 @@ pub trait FromBytes {
         Self: Sized;
 }
 
-/// Defines the const scheme of a private key
-pub trait ConstPrivateKeyScheme {
-    const SCHEME: iota_types::SignatureScheme;
-}
-
 /// Defines the scheme of a private key
 pub trait PrivateKeyScheme {
-    /// Returns the signature scheme for this private key
-    fn scheme(&self) -> iota_types::SignatureScheme;
-}
+    const SCHEME: iota_types::SignatureScheme;
 
-impl<T: ConstPrivateKeyScheme> PrivateKeyScheme for T {
+    /// Returns the signature scheme for this private key
     fn scheme(&self) -> iota_types::SignatureScheme {
         Self::SCHEME
     }
@@ -244,9 +237,7 @@ pub trait ToFromFlaggedBytes {
         Self: Sized;
 }
 
-impl<T: ToBytes + FromBytes<Error = PrivateKeyError> + ConstPrivateKeyScheme> ToFromFlaggedBytes
-    for T
-{
+impl<T: ToBytes + FromBytes<Error = PrivateKeyError> + PrivateKeyScheme> ToFromFlaggedBytes for T {
     type Error = PrivateKeyError;
 
     /// Returns the bytes with signature scheme flag prepended

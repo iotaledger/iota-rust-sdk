@@ -114,21 +114,6 @@ impl SimpleKeypair {
         Ok(self.0.to_pem()?)
     }
 
-    /// Construct the private key from a mnemonic phrase and the signature
-    /// scheme
-    #[uniffi::constructor(default(password = None, path = None))]
-    pub fn from_mnemonic(
-        scheme: SignatureScheme,
-        phrase: &str,
-        password: Option<String>,
-        path: Option<String>,
-    ) -> Result<Self> {
-        Ok(
-            iota_sdk::crypto::simple::SimpleKeypair::from_mnemonic(scheme, phrase, password, path)?
-                .into(),
-        )
-    }
-
     fn try_sign(&self, message: &[u8]) -> Result<SimpleSignature> {
         Ok(Signer::<iota_sdk::types::SimpleSignature>::try_sign(&self.0, message)?.into())
     }

@@ -139,7 +139,7 @@ impl crate::FromBytes for Secp256r1PrivateKey {
     }
 }
 
-impl crate::ConstPrivateKeyScheme for Secp256r1PrivateKey {
+impl crate::PrivateKeyScheme for Secp256r1PrivateKey {
     const SCHEME: SignatureScheme = SignatureScheme::Secp256r1;
 }
 

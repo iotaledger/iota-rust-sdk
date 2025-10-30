@@ -134,7 +134,7 @@ impl crate::FromBytes for Ed25519PrivateKey {
     }
 }
 
-impl crate::ConstPrivateKeyScheme for Ed25519PrivateKey {
+impl crate::PrivateKeyScheme for Ed25519PrivateKey {
     const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
 }
 

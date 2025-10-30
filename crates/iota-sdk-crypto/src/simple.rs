@@ -298,67 +298,6 @@ mod keypair {
                 InnerKeypair::Secp256r1(private_key) => private_key.to_pem(),
             }
         }
-
-        /// Decode a private key from Bech32 format with "iotaprivkey" prefix
-        #[cfg(feature = "bech32")]
-        pub fn from_bech32(value: &str) -> Result<Self, crate::PrivateKeyError>
-        where
-            Self: Sized,
-        {
-            use bech32::Hrp;
-
-            let expected_hrp = Hrp::parse(crate::IOTA_PRIV_KEY_PREFIX)
-                .map_err(|e| crate::PrivateKeyError::Bech32Hrp(format!("{e}")))?;
-
-            let (hrp, data) = bech32::decode(value)
-                .map_err(|e| crate::PrivateKeyError::Bech32(format!("decoding failed: {e}")))?;
-
-            if hrp != expected_hrp {
-                return Err(crate::PrivateKeyError::Bech32Hrp(format!(
-                    "expected {}, got {hrp}",
-                    crate::IOTA_PRIV_KEY_PREFIX
-                )));
-            }
-
-            if data.is_empty() {
-                return Err(crate::PrivateKeyError::EmptyData("bech32 data".to_string()));
-            }
-
-            Self::from_bytes(&data)
-                .map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
-        }
-
-        #[cfg(feature = "mnemonic")]
-        pub fn from_mnemonic(
-            scheme: SignatureScheme,
-            phrase: &str,
-            password: impl Into<Option<String>>,
-            path: impl Into<Option<String>>,
-        ) -> Result<Self, crate::PrivateKeyError> {
-            use crate::FromMnemonic;
-
-            Ok(match scheme {
-                #[cfg(feature = "ed25519")]
-                SignatureScheme::Ed25519 => {
-                    crate::ed25519::Ed25519PrivateKey::from_mnemonic(phrase, password, path)?.into()
-                }
-                #[cfg(feature = "secp256k1")]
-                SignatureScheme::Secp256k1 => {
-                    crate::secp256k1::Secp256k1PrivateKey::from_mnemonic(phrase, password, path)?
-                        .into()
-                }
-                #[cfg(feature = "secp256r1")]
-                SignatureScheme::Secp256r1 => {
-                    crate::secp256r1::Secp256r1PrivateKey::from_mnemonic(phrase, password, path)?
-                        .into()
-                }
-                _ => {
-                    return Err(crate::PrivateKeyError::InvalidScheme(format!(
-                        "scheme not supported for derivation from mnemonic: {scheme}"
-                    )));
-                }
-            })
-        }
     }
 
     impl Signer<SimpleSignature> for SimpleKeypair {
@@ -598,27 +537,6 @@ mod keypair {
             Self {
                 inner: InnerVerifyingKey::Secp256k1(verifying_key),
             }
-        }
-    }
-
-    impl crate::ToBytes for SimpleKeypair {
-        fn to_bytes(&self) -> Vec<u8> {
-            // For SimpleKeypair, to_bytes() already returns flagged bytes
-            // We need the raw key bytes without the flag for the trait
-            match &self.inner {
-                #[cfg(feature = "ed25519")]
-                InnerKeypair::Ed25519(private_key) => private_key.to_bytes().to_vec(),
-                #[cfg(feature = "secp256k1")]
-                InnerKeypair::Secp256k1(private_key) => private_key.to_bytes().as_slice().to_vec(),
-                #[cfg(feature = "secp256r1")]
-                InnerKeypair::Secp256r1(private_key) => private_key.to_bytes().as_slice().to_vec(),
-            }
-        }
-    }
-
-    impl crate::PrivateKeyScheme for SimpleKeypair {
-        fn scheme(&self) -> iota_types::SignatureScheme {
-            self.scheme()
         }
     }
 
