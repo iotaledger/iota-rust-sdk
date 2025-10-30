@@ -1090,14 +1090,13 @@ impl<L> TransactionBuilder<Client, L> {
                 client
                     .wait_for_tx_finalization(digest, None)
                     .await
-                    .map_err(Error::Client)?
-            } else {
-                client
-                    .transaction_effects(digest)
-                    .await
-                    .map_err(Error::Client)?
-                    .ok_or_else(|| Error::MissingTransaction(digest))?
+                    .map_err(Error::Client)?;
             }
+            client
+                .transaction_effects(digest)
+                .await
+                .map_err(Error::Client)?
+                .ok_or_else(|| Error::MissingTransaction(digest))?
         } else {
             client
                 .execute_tx(

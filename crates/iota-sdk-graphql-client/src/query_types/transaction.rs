@@ -53,6 +53,17 @@ pub struct TransactionBlockEffectsQuery {
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
+    variables = "TransactionBlockArgs"
+)]
+pub struct TransactionBlockCheckpointQuery {
+    #[arguments(digest: $digest)]
+    pub transaction_block: Option<TxBlockCheckpoint>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
     variables = "TransactionBlocksQueryArgs"
 )]
 pub struct TransactionBlocksQuery {
@@ -126,9 +137,20 @@ pub struct TxBlockEffects {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
+pub struct TxBlockCheckpoint {
+    pub effects: Option<TransactionBlockCheckpoint>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
 pub struct TransactionBlockEffects {
     pub bcs: Option<Base64>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
+pub struct TransactionBlockCheckpoint {
     pub checkpoint: Option<Checkpoint>,
 }
 

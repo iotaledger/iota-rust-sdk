@@ -8538,7 +8538,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 62867.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 58559.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065.toShort()) {
@@ -8583,7 +8583,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization() != 50827.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization() != 50213.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815.toShort()) {
@@ -22066,7 +22066,7 @@ public interface GraphQlClientInterface {
     /**
      * Get the protocol configuration.
      */
-    suspend fun `protocolConfig`(`version`: kotlin.ULong? = null): ProtocolConfigs?
+    suspend fun `protocolConfig`(`version`: kotlin.ULong? = null): ProtocolConfigs
     
     /**
      * Get the reference gas price for the provided epoch or the last known one
@@ -22151,9 +22151,9 @@ public interface GraphQlClientInterface {
     /**
      * Wait for the finalization of a transaction by its digest. An optional
      * timeout can be provided, which, if exceeded, will return an error
-     * (default 60s). Returns the `TransactionEffects`.
+     * (default 60s).
      */
-    suspend fun `waitForTxFinalization`(`digest`: Digest, `timeout`: java.time.Duration? = null): TransactionEffects
+    suspend fun `waitForTxFinalization`(`digest`: Digest, `timeout`: java.time.Duration? = null)
     
     companion object
 }
@@ -23159,7 +23159,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `protocolConfig`(`version`: kotlin.ULong?) : ProtocolConfigs? {
+    override suspend fun `protocolConfig`(`version`: kotlin.ULong?) : ProtocolConfigs {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(
@@ -23171,7 +23171,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
-        { FfiConverterOptionalTypeProtocolConfigs.lift(it) },
+        { FfiConverterTypeProtocolConfigs.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -23528,11 +23528,11 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     /**
      * Wait for the finalization of a transaction by its digest. An optional
      * timeout can be provided, which, if exceeded, will return an error
-     * (default 60s). Returns the `TransactionEffects`.
+     * (default 60s).
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `waitForTxFinalization`(`digest`: Digest, `timeout`: java.time.Duration?) : TransactionEffects {
+    override suspend fun `waitForTxFinalization`(`digest`: Digest, `timeout`: java.time.Duration?) {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx_finalization(
@@ -23540,11 +23540,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeDigest.lower(`digest`),FfiConverterOptionalDuration.lower(`timeout`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_void(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_void(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_void(future) },
         // lift function
-        { FfiConverterTypeTransactionEffects.lift(it) },
+        { Unit },
+        
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )

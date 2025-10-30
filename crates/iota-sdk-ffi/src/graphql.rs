@@ -640,20 +640,19 @@ impl GraphQLClient {
 
     /// Wait for the finalization of a transaction by its digest. An optional
     /// timeout can be provided, which, if exceeded, will return an error
-    /// (default 60s). Returns the `TransactionEffects`.
+    /// (default 60s).
     #[uniffi::method(default(timeout = None))]
     pub async fn wait_for_tx_finalization(
         &self,
         digest: &Digest,
         timeout: Option<Duration>,
-    ) -> Result<TransactionEffects> {
+    ) -> Result<()> {
         Ok(self
             .0
             .read()
             .await
             .wait_for_tx_finalization(**digest, timeout)
-            .await?
-            .into())
+            .await?)
     }
 
     // ===========================================================================

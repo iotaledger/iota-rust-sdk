@@ -72,10 +72,11 @@ pub use protocol_config::{
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
 pub use transaction::{
-    TransactionBlock, TransactionBlockArgs, TransactionBlockEffectsQuery,
-    TransactionBlockKindInput, TransactionBlockQuery, TransactionBlockWithEffects,
-    TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
-    TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery, TransactionsFilter,
+    TransactionBlock, TransactionBlockArgs, TransactionBlockCheckpointQuery,
+    TransactionBlockEffectsQuery, TransactionBlockKindInput, TransactionBlockQuery,
+    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
+    TransactionsFilter,
 };
 
 use crate::error;

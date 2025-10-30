@@ -52,8 +52,8 @@ use crate::{
         CheckpointTotalTxQuery, IotaNamesAddressDefaultNameQuery,
         IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs, IotaNamesDefaultNameQuery,
         IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery, ResolveIotaNamesAddressArgs,
-        ResolveIotaNamesAddressQuery, TransactionBlockWithEffectsQuery,
-        TransactionBlocksWithEffectsQuery,
+        ResolveIotaNamesAddressQuery, TransactionBlockCheckpointQuery,
+        TransactionBlockWithEffectsQuery, TransactionBlocksWithEffectsQuery,
     },
 };
 
@@ -1305,19 +1305,19 @@ impl Client {
 
     /// Wait for the finalization of a transaction by its digest. An optional
     /// timeout can be provided, which, if exceeded, will return an error
-    /// (default 60s). Returns the [`TransactionEffects`].
+    /// (default 60s).
     pub async fn wait_for_tx_finalization(
         &self,
         digest: Digest,
         timeout: impl Into<Option<Duration>>,
-    ) -> Result<TransactionEffects> {
+    ) -> Result<()> {
         tokio::time::timeout(
             timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
             async {
                 let mut interval = tokio::time::interval(tokio::time::Duration::from_millis(100));
                 loop {
                     interval.tick().await;
-                    let operation = TransactionBlockEffectsQuery::build(TransactionBlockArgs {
+                    let operation = TransactionBlockCheckpointQuery::build(TransactionBlockArgs {
                         digest: digest.to_string(),
                     });
                     let response = self.run_query(&operation).await?;
@@ -1328,7 +1328,7 @@ impl Client {
                             .and_then(|e| e.checkpoint.as_ref())
                             .is_some()
                         {
-                            break Ok(block.try_into()?);
+                            break Ok(());
                         }
                     }
                 }

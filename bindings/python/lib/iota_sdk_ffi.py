@@ -1171,7 +1171,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 62867:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 58559:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1201,7 +1201,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization() != 50827:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization() != 50213:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -30671,7 +30671,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
         Wait for the finalization of a transaction by its digest. An optional
         timeout can be provided, which, if exceeded, will return an error
-        (default 60s). Returns the `TransactionEffects`.
+        (default 60s).
         """
 
         raise NotImplementedError
@@ -31865,7 +31865,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def protocol_config(self, version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[ProtocolConfigs]":
+    async def protocol_config(self, version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "ProtocolConfigs":
         """
         Get the protocol configuration.
         """
@@ -31883,7 +31883,7 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
-            _UniffiConverterOptionalTypeProtocolConfigs.lift,
+            _UniffiConverterTypeProtocolConfigs.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -32271,11 +32271,12 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def wait_for_tx_finalization(self, digest: "Digest",timeout: "typing.Union[object, typing.Optional[Duration]]" = _DEFAULT) -> "TransactionEffects":
+    async def wait_for_tx_finalization(self, digest: "Digest",timeout: "typing.Union[object, typing.Optional[Duration]]" = _DEFAULT) -> None:
+
         """
         Wait for the finalization of a transaction by its digest. An optional
         timeout can be provided, which, if exceeded, will return an error
-        (default 60s). Returns the `TransactionEffects`.
+        (default 60s).
         """
 
         _UniffiConverterTypeDigest.check_lower(digest)
@@ -32290,11 +32291,12 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeDigest.lower(digest),
         _UniffiConverterOptionalDuration.lower(timeout)
             ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_void,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_void,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_void,
             # lift function
-            _UniffiConverterTypeTransactionEffects.lift,
+            lambda val: None,
+            
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,

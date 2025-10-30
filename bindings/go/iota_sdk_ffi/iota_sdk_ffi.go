@@ -3557,7 +3557,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config()
 	})
-	if checksum != 62867 {
+	if checksum != 58559 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config: UniFFI API checksum mismatch")
 	}
@@ -3692,7 +3692,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization()
 	})
-	if checksum != 50827 {
+	if checksum != 50213 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx_finalization: UniFFI API checksum mismatch")
 	}
@@ -14507,7 +14507,7 @@ type GraphQlClientInterface interface {
 	// versions of system packages.
 	Packages(afterCheckpoint *uint64, beforeCheckpoint *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error)
 	// Get the protocol configuration.
-	ProtocolConfig(version *uint64) (*ProtocolConfigs, error)
+	ProtocolConfig(version *uint64) (ProtocolConfigs, error)
 	// Get the reference gas price for the provided epoch or the last known one
 	// if no epoch is provided.
 	//
@@ -14548,8 +14548,8 @@ type GraphQlClientInterface interface {
 	TransactionsEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionEffectsPage, error)
 	// Wait for the finalization of a transaction by its digest. An optional
 	// timeout can be provided, which, if exceeded, will return an error
-	// (default 60s). Returns the `TransactionEffects`.
-	WaitForTxFinalization(digest *Digest, timeout *time.Duration) (*TransactionEffects, error)
+	// (default 60s).
+	WaitForTxFinalization(digest *Digest, timeout *time.Duration) error
 }
 // The GraphQL client for interacting with the IOTA blockchain.
 type GraphQlClient struct {
@@ -15772,7 +15772,7 @@ func (_self *GraphQlClient) Packages(afterCheckpoint *uint64, beforeCheckpoint *
 }
 
 // Get the protocol configuration.
-func (_self *GraphQlClient) ProtocolConfig(version *uint64) (*ProtocolConfigs, error) {
+func (_self *GraphQlClient) ProtocolConfig(version *uint64) (ProtocolConfigs, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -15785,8 +15785,8 @@ func (_self *GraphQlClient) ProtocolConfig(version *uint64) (*ProtocolConfigs, e
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) *ProtocolConfigs {
-			return FfiConverterOptionalProtocolConfigsINSTANCE.Lift(ffi)
+		func(ffi RustBufferI) ProtocolConfigs {
+			return FfiConverterProtocolConfigsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(
 		_pointer,FfiConverterOptionalUint64INSTANCE.Lower(version)),
@@ -16259,34 +16259,32 @@ func (_self *GraphQlClient) TransactionsEffects(filter *TransactionsFilter, pagi
 
 // Wait for the finalization of a transaction by its digest. An optional
 // timeout can be provided, which, if exceeded, will return an error
-// (default 60s). Returns the `TransactionEffects`.
-func (_self *GraphQlClient) WaitForTxFinalization(digest *Digest, timeout *time.Duration) (*TransactionEffects, error) {
+// (default 60s).
+func (_self *GraphQlClient) WaitForTxFinalization(digest *Digest, timeout *time.Duration) error {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
-	 res, err :=uniffiRustCallAsync[SdkFfiError](
+	 _, err :=uniffiRustCallAsync[SdkFfiError](
         FfiConverterSdkFfiErrorINSTANCE,
 		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
+		func(handle C.uint64_t, status *C.RustCallStatus) struct{} {
+			C.ffi_iota_sdk_ffi_rust_future_complete_void(handle, status)
+			return struct{}{}
 		},
 		// liftFn
-		func(ffi unsafe.Pointer) *TransactionEffects {
-			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
-		},
+		func(_ struct{}) struct{} { return struct{}{} },
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx_finalization(
 		_pointer,FfiConverterDigestINSTANCE.Lower(digest), FfiConverterOptionalDurationINSTANCE.Lower(timeout)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+			C.ffi_iota_sdk_ffi_rust_future_poll_void(handle, continuation, data)
 		},
 		// freeFn
 		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+			C.ffi_iota_sdk_ffi_rust_future_free_void(handle)
 		},
 	)
 
-	return res, err 
+	return err 
 }
 func (object *GraphQlClient) Destroy() {
 	runtime.SetFinalizer(object, nil)
