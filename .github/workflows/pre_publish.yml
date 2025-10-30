@@ -24,7 +24,6 @@ on:
         options:
           - iota-sdk
           - iota-sdk-crypto
-          - iota-sdk-ffi
           - iota-sdk-graphql-client
           - iota-sdk-graphql-client-build
           - iota-sdk-transaction-builder
