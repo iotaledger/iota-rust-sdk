@@ -524,19 +524,30 @@ impl StructTag {
         }
     }
 
+    pub fn new_field(key: impl Into<TypeTag>, value: impl Into<TypeTag>) -> Self {
+        Self {
+            address: Address::FRAMEWORK,
+            module: IdentifierRef::const_new("dynamic_field").into(),
+            name: IdentifierRef::const_new("Field").into(),
+            type_params: vec![key.into(), value.into()],
+        }
+    }
+
     add_struct_tag_ctor!(FRAMEWORK, "clock", "Clock");
     add_struct_tag_ctor!(FRAMEWORK, "config", "Config");
-    add_struct_tag_ctor!(FRAMEWORK, "deny_list", "ConfigKey");
-    add_struct_tag_ctor!(FRAMEWORK, "deny_list", "AddressKey");
-    add_struct_tag_ctor!(FRAMEWORK, "deny_list", "GlobalPauseKey");
+    add_struct_tag_ctor!(FRAMEWORK, "deny_list", "ConfigKey", "with-module");
+    add_struct_tag_ctor!(FRAMEWORK, "deny_list", "AddressKey", "with-module");
+    add_struct_tag_ctor!(FRAMEWORK, "deny_list", "GlobalPauseKey", "with-module");
     add_struct_tag_ctor!(FRAMEWORK, "iota", "IotaTreasuryCap");
     add_struct_tag_ctor!(FRAMEWORK, "package", "UpgradeCap");
     add_struct_tag_ctor!(FRAMEWORK, "package", "UpgradeTicket");
     add_struct_tag_ctor!(FRAMEWORK, "package", "UpgradeReceipt");
     add_struct_tag_ctor!(FRAMEWORK, "system_admin_cap", "IotaSystemAdminCap");
+    add_struct_tag_ctor!(FRAMEWORK, "transfer", "Receiving", "with-module");
     add_struct_tag_ctor!(SYSTEM, "iota_system", "IotaSystemState");
     add_struct_tag_ctor!(SYSTEM, "staking_pool", "StakedIota");
     add_struct_tag_ctor!(SYSTEM, "timelocked_staking", "TimelockedStakedIota");
+    add_struct_tag_ctor!(SYSTEM, "iota_system_state_inner", "SystemEpochInfoEvent");
     add_struct_tag_ctor!(STD_LIB, "ascii", "String", "with-module");
     add_struct_tag_ctor!(STD_LIB, "string", "String");
     add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "coin", "CoinMetadata");
@@ -547,7 +558,8 @@ impl StructTag {
     add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "coin", "Coin");
     add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "balance", "Balance");
     add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "timelock", "TimeLock");
-    add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "config", "Setting");
+    add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "config", "Setting", "with-module");
+    add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "dynamic_object_field", "Wrapper", "with-module");
 
     /// Checks if this is a Coin type
     pub fn coin_type_opt(&self) -> Option<&crate::TypeTag> {
