@@ -92,13 +92,7 @@ fun main() = runBlocking {
                 val obj: Object =
                         client.`object`(objectId, null)
                                 ?: throw Exception("Missing object ${objectId.toHex()}")
-                val upgradeCapType =
-                        StructTag(
-                                address = Address.framework(),
-                                module = Identifier("package"),
-                                name = Identifier("UpgradeCap"),
-                                typeParams = emptyList<TypeTag>()
-                        )
+                val upgradeCapType = StructTag.newUpgradeCap()
                 if (obj.asStruct().structType == upgradeCapType) {
                     println("UpgradeCap: ${objectId.toHex()}")
                     println(

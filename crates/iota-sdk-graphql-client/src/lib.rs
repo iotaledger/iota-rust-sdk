@@ -636,7 +636,7 @@ impl Client {
                     type_: Some(
                         coin_type
                             .into()
-                            .map(StructTag::coin)
+                            .map(StructTag::new_coin)
                             .unwrap_or_else(|| StructTag {
                                 address: Address::FRAMEWORK,
                                 module: IdentifierRef::const_new("coin").into(),
@@ -668,7 +668,7 @@ impl Client {
         owner: Address,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Coin>> {
-        self.coins(owner, StructTag::iota(), pagination_filter)
+        self.coins(owner, StructTag::new_iota_coin_type(), pagination_filter)
             .await
     }
 

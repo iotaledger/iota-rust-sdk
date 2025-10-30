@@ -124,11 +124,8 @@ func main() {
 			}
 			obj := *objPtr
 			if obj.AsStructOpt() != nil {
-				structType := obj.AsStruct().StructType
-				packageIdent, _ := sdk.NewIdentifier("package")
-				upgradeCapIdent, _ := sdk.NewIdentifier("UpgradeCap")
-				upgradeCapType := sdk.NewStructTag(sdk.AddressFramework(), packageIdent, upgradeCapIdent, []*sdk.TypeTag{})
-				if structType.Eq(upgradeCapType) {
+				upgradeCapType := sdk.StructTagNewUpgradeCap()
+				if obj.AsStruct().StructType.Eq(upgradeCapType) {
 					fmt.Printf("UpgradeCap: %s\n", objectId.ToHex())
 					fmt.Printf("UpgradeCapOwner: %s\n", objectWrite.Owner.AsAddress().ToHex())
 					upgradeCap = objectId

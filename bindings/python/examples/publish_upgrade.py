@@ -28,6 +28,7 @@ import base64
 import json
 import os
 
+
 async def main():
     try:
         # Read and parse the compiled package, or use the default package
@@ -36,7 +37,7 @@ async def main():
             print("No compiled package found in env var. Using default.")
             package_data_json = PRECOMPILED_PACKAGE
         else:
-            print("Using custom Move package found in env var.");
+            print("Using custom Move package found in env var.")
 
         package_data = MovePackageData.from_json(package_data_json)
         modules = package_data.modules()
@@ -96,11 +97,11 @@ async def main():
                 obj = await client.object(object_id, None)
                 if obj is None:
                     raise Exception(f"Missing object {object_id.to_hex()}")
-                if obj.as_struct().struct_type == StructTag(
-                    Address.framework(), Identifier("package"), Identifier("UpgradeCap")
-                ):
+                if obj.as_struct().struct_type == StructTag.new_upgrade_cap():
                     print(f"UpgradeCap: {object_id.to_hex()}")
-                    print(f"UpgradeCapOwner: {changed_obj.output_state.owner.as_address().to_hex()}")
+                    print(
+                        f"UpgradeCapOwner: {changed_obj.output_state.owner.as_address().to_hex()}"
+                    )
                     upgrade_cap = object_id
 
             elif changed_obj.output_state.is_package_write():
