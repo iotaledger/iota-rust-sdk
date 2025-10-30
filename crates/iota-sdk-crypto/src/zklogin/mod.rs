@@ -4,7 +4,7 @@
 
 use std::collections::HashMap;
 
-use iota_sdk_types::{Jwk, JwkId, UserSignature, ZkLoginAuthenticator};
+use iota_types::{Jwk, JwkId, UserSignature, ZkLoginAuthenticator};
 use poseidon::POSEIDON;
 use signature::Verifier;
 

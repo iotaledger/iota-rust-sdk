@@ -12,7 +12,8 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
 
-        val stakedIotas = client.objects(ObjectFilter(typeTag = StructTag.stakedIota().toString()))
+        val stakedIotas =
+                client.objects(ObjectFilter(typeTag = StructTag.newStakedIota().toString()))
         if (stakedIotas.data.isEmpty()) {
             throw Exception("no validators found")
         }
@@ -31,5 +32,6 @@ fun main() = runBlocking {
         println("Unstake dry run was successful!")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

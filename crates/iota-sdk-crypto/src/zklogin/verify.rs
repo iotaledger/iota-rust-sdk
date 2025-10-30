@@ -7,7 +7,7 @@ use std::str::FromStr;
 use ark_bn254::{Fq, Fq2, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ff::PrimeField;
 use ark_groth16::{PreparedVerifyingKey, Proof};
-use iota_sdk_types::{
+use iota_types::{
     Bn254FieldElement, CircomG1, CircomG2, Ed25519PublicKey, Jwk, Secp256k1PublicKey,
     Secp256r1PublicKey, SimpleSignature, ZkLoginInputs, ZkLoginProof,
 };
@@ -511,7 +511,7 @@ pub(crate) fn gen_address_seed_with_salt_hash(
 
 #[cfg(test)]
 mod tests {
-    use iota_sdk_types::Ed25519Signature;
+    use iota_types::Ed25519Signature;
     #[cfg(test)]
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;

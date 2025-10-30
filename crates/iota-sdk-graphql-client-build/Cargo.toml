@@ -1,5 +1,5 @@
 [package]
-name = "iota-graphql-client-build"
+name = "iota-sdk-graphql-client-build"
 version = "0.0.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"

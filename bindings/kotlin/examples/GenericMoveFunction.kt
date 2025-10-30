@@ -53,6 +53,7 @@ fun main() = runBlocking {
         println("Successfully called generic Move function!")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }
 

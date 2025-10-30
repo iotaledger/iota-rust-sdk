@@ -23,13 +23,13 @@ use crate::{
 /// ```
 #[derive(PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
 #[uniffi::export(Hash)]
-pub struct Identifier(pub iota_types::Identifier);
+pub struct Identifier(pub iota_sdk::types::Identifier);
 
 #[uniffi::export]
 impl Identifier {
     #[uniffi::constructor]
     pub fn new(identifier: String) -> Result<Self> {
-        Ok(Self(iota_types::Identifier::new(identifier)?))
+        Ok(Self(iota_sdk::types::Identifier::new(identifier)?))
     }
 
     pub fn as_str(&self) -> String {
@@ -43,7 +43,7 @@ macro_rules! export_struct_tag_ctors {
         impl StructTag {$(
             #[uniffi::constructor]
             pub fn [< new_ $name:snake >]() -> Self {
-                Self(iota_types::StructTag::[< new_ $name:snake >]())
+                Self(iota_sdk::types::StructTag::[< new_ $name:snake >]())
             }
         )+}
     } }
@@ -55,7 +55,7 @@ macro_rules! export_struct_tag_from_type_tag_ctors {
         impl StructTag {$(
             #[uniffi::constructor]
             pub fn [< new_ $name:snake >](type_tag: &TypeTag) -> Self {
-                Self(iota_types::StructTag::[< new_ $name:snake >](type_tag.0.clone()))
+                Self(iota_sdk::types::StructTag::[< new_ $name:snake >](type_tag.0.clone()))
             }
         )+}
     } }
@@ -67,7 +67,7 @@ macro_rules! export_struct_tag_from_struct_tag_ctors {
         impl StructTag {$(
             #[uniffi::constructor]
             pub fn [< new_ $name:snake >](struct_tag: &StructTag) -> Self {
-                Self(iota_types::StructTag::[< new_ $name:snake >](struct_tag.0.clone()))
+                Self(iota_sdk::types::StructTag::[< new_ $name:snake >](struct_tag.0.clone()))
             }
         )+}
     } }
@@ -85,9 +85,9 @@ macro_rules! export_struct_tag_from_struct_tag_ctors {
 ///              identifier         ; name of the type
 ///              (vector type-tag)  ; type parameters
 /// ```
-#[derive(derive_more::From, derive_more::Display, uniffi::Object)]
-#[uniffi::export(Display)]
-pub struct StructTag(pub iota_types::StructTag);
+#[derive(derive_more::From, derive_more::Display, uniffi::Object, PartialEq, Eq)]
+#[uniffi::export(Display, Eq)]
+pub struct StructTag(pub iota_sdk::types::StructTag);
 
 #[uniffi::export]
 impl StructTag {
@@ -98,7 +98,7 @@ impl StructTag {
         name: &Identifier,
         type_params: Vec<Arc<TypeTag>>,
     ) -> Self {
-        Self(iota_types::StructTag {
+        Self(iota_sdk::types::StructTag {
             address: address.0,
             module: module.0.clone(),
             name: name.0.clone(),
@@ -111,7 +111,7 @@ impl StructTag {
 
     #[uniffi::constructor]
     pub fn new_name(address: &Address) -> Self {
-        Self(iota_types::StructTag::new_name(address.0))
+        Self(iota_sdk::types::StructTag::new_name(address.0))
     }
 
     /// Checks if this is a Coin type
