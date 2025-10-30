@@ -47,6 +47,7 @@ eyre.workspace = true
 hex.workspace = true
 paste.workspace = true
 roaring.workspace = true
+strum = { workspace = true, features = ["derive"] }
 thiserror.workspace = true
 winnow = "0.7"
 
