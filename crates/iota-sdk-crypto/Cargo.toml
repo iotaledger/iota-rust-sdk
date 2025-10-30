@@ -56,7 +56,7 @@ pem = [
 bls12381 = ["dep:blst", "dep:rand_core", "dep:roaring", "signature/std"]
 
 [dependencies]
-iota-types = { version = "0.0.1", package = "iota-sdk-types", path = "../iota-sdk-types", default-features = false, features = ["hash", "serde"] }
+iota-types = { workspace = true, features = ["hash", "serde"] }
 signature = "2.2"
 thiserror.workspace = true
 

@@ -95,9 +95,7 @@ async def main():
                 obj = await client.object(object_id, None)
                 if obj is None:
                     raise Exception(f"Missing object {object_id.to_hex()}")
-                if obj.as_struct().struct_type == StructTag(
-                    Address.framework(), Identifier("package"), Identifier("UpgradeCap")
-                ):
+                if obj.as_struct().struct_type == StructTag.new_upgrade_cap():
                     print(f"UpgradeCap: {object_id.to_hex()}")
                     print(
                         f"UpgradeCapOwner: {changed_obj.output_state.owner.as_address().to_hex()}"
