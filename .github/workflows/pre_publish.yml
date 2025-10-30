@@ -1,0 +1,59 @@
+name: Pre-publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        type: string
+        required: true
+        description: |
+          The level of version bump to make.
+
+          Possible values:
+          - major:   Increase the major version (x.0.0)
+          - minor:   Increase the minor version (x.y.0)
+          - patch:   Increase the patch version (x.y.z)
+          - release: Remove the pre-version (x.y.z)
+          - rc:      Increase the rc pre-version (x.y.z-rc.M)
+          - beta:    Increase the beta pre-version (x.y.z-beta.M)
+          - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
+      package:
+        type: choice
+        required: true
+        description: The package to publish.
+        options:
+          - iota-sdk
+          - iota-sdk-crypto
+          - iota-sdk-graphql-client
+          - iota-sdk-graphql-client-build
+          - iota-sdk-transaction-builder
+          - iota-sdk-types
+
+jobs:
+  publish:
+    name: Setup for publish to crates.io
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Install cargo-release
+        run: cargo install cargo-release --version 0.25.20
+
+      - name: Dry run publish
+        run: eval "cargo release -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm --all-features"
+
+      - name: Get commits since last tag
+        run: eval "cargo release changes"
+
+      - name: Bump versions
+        run: eval "cargo release version -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm ${{inputs.level}}"
+
+      - name: Commit packages
+        run: eval "cargo release commit --allow-branch develop,sdk-bindings --no-confirm"
+
+      - name: Tag commit
+        run: eval "cargo release tag -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm --tag-prefix '${{inputs.package}}-'"
+
+      - name: Push commit
+        run: eval "cargo release push -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm"
