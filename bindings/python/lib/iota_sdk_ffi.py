@@ -1671,7 +1671,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 22805:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 41188:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 47643:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -40848,6 +40848,13 @@ class TransactionBuilderProtocol(typing.Protocol):
         If `amount` is provided, that amount is split from the provided coins
         and sent.
         If `amount` is `None`, the entire coins are transferred.
+
+        All provided coins must have the same coin type. Mixing coins of
+        different types will result in an error.
+
+        If you intend to transfer all provided coins to another address in a
+        single transaction, consider using
+        [`TransactionBuilder::transfer_objects()`] instead.
         """
 
         raise NotImplementedError
@@ -41311,6 +41318,13 @@ _UniffiConverterTypeSdkFfiError,
         If `amount` is provided, that amount is split from the provided coins
         and sent.
         If `amount` is `None`, the entire coins are transferred.
+
+        All provided coins must have the same coin type. Mixing coins of
+        different types will result in an error.
+
+        If you intend to transfer all provided coins to another address in a
+        single transaction, consider using
+        [`TransactionBuilder::transfer_objects()`] instead.
         """
 
         _UniffiConverterSequenceTypePtbArgument.check_lower(coins)

@@ -450,6 +450,13 @@ impl<C, L> TransactionBuilder<C, L> {
     /// and sent.
     /// If `amount` is `None`, the entire coins are transferred.
     ///
+    /// All provided coins must have the same coin type. Mixing coins of
+    /// different types will result in an error.
+    ///
+    /// If you intend to transfer all provided coins to another address in a
+    /// single transaction, consider using
+    /// [`TransactionBuilder::transfer_objects()`] instead.
+    ///
     /// # Example
     ///
     /// ```rust
