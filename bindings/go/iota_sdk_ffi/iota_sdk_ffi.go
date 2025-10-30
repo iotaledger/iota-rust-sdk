@@ -8910,11 +8910,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_name()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type()
 	})
-	if checksum != 14476 {
+	if checksum != 44499 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_name: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -24180,9 +24180,9 @@ func StructTagNewId() *StructTag {
 	}))
 }
 
-func StructTagNewIotaCoinName() *StructTag {
+func StructTagNewIotaCoinType() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_name(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(_uniffiStatus)
 	}))
 }
 

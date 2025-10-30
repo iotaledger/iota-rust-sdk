@@ -484,7 +484,7 @@ pub struct StructTag {
 }
 
 impl StructTag {
-    pub fn new_iota_coin_name() -> Self {
+    pub fn new_iota_coin_type() -> Self {
         Self {
             address: Address::FRAMEWORK,
             module: IdentifierRef::const_new("iota").into(),
@@ -494,7 +494,7 @@ impl StructTag {
     }
 
     pub fn new_gas_coin() -> Self {
-        Self::new_coin(Self::new_iota_coin_name())
+        Self::new_coin(Self::new_iota_coin_type())
     }
 
     pub fn new_id() -> Self {

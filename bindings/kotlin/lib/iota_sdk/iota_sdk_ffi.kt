@@ -4886,7 +4886,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_name(
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap(
 ): Short
@@ -6591,7 +6591,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(uniffi_out_err: Un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_name(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -10515,7 +10515,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id() != 62017.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_name() != 14476.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type() != 44499.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap() != 5595.toShort()) {
@@ -40408,10 +40408,10 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
-         fun `newIotaCoinName`(): StructTag {
+         fun `newIotaCoinType`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_name(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(
         _status)
 }
     )

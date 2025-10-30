@@ -172,7 +172,7 @@ export_struct_tag_ctors!(
     DenyListGlobalPauseKey,
     GasCoin,
     Id,
-    IotaCoinName,
+    IotaCoinType,
     IotaSystemAdminCap,
     IotaSystemState,
     IotaTreasuryCap,

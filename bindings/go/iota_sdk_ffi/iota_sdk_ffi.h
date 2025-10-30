@@ -4240,9 +4240,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(RustCallStatus *out_st
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_NAME
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_NAME
-void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_name(RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_TYPE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_TYPE
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(RustCallStatus *out_status
     
 );
 #endif
@@ -12618,9 +12618,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_NAME
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_NAME
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_name(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_TYPE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_TYPE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type(void
     
 );
 #endif
