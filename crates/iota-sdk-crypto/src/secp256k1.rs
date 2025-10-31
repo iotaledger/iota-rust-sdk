@@ -118,10 +118,11 @@ impl Secp256k1PrivateKey {
 
 impl crate::ToFromBytes for Secp256k1PrivateKey {
     type Error = crate::PrivateKeyError;
+    type ByteArray = [u8; Self::LENGTH];
 
     /// Return the raw 32-byte private key
-    fn to_bytes(&self) -> Vec<u8> {
-        self.0.to_bytes().to_vec()
+    fn to_bytes(&self) -> Self::ByteArray {
+        self.0.to_bytes().into()
     }
 
     fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {

@@ -210,9 +210,10 @@ pub trait PrivateKeyScheme {
 /// Defines a type which can be constructed from bytes
 pub trait ToFromBytes {
     type Error;
+    type ByteArray;
 
-    /// Returns the raw bytes of this type.
-    fn to_bytes(&self) -> Vec<u8>;
+    /// Returns the raw bytes as a byte array.
+    fn to_bytes(&self) -> Self::ByteArray;
 
     /// Create an instance from raw bytes
     fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error>
@@ -234,15 +235,18 @@ pub trait ToFromFlaggedBytes {
         Self: Sized;
 }
 
-impl<T: ToFromBytes<Error = PrivateKeyError> + PrivateKeyScheme> ToFromFlaggedBytes for T {
+impl<T: ToFromBytes<Error = PrivateKeyError> + PrivateKeyScheme> ToFromFlaggedBytes for T
+where
+    T::ByteArray: AsRef<[u8]>,
+{
     type Error = PrivateKeyError;
 
     /// Returns the bytes with signature scheme flag prepended
     fn to_flagged_bytes(&self) -> Vec<u8> {
         let key_bytes = self.to_bytes();
-        let mut bytes = Vec::with_capacity(1 + key_bytes.len());
+        let mut bytes = Vec::with_capacity(1 + key_bytes.as_ref().len());
         bytes.push(self.scheme().to_u8());
-        bytes.extend_from_slice(&key_bytes);
+        bytes.extend_from_slice(key_bytes.as_ref());
         bytes
     }
 
