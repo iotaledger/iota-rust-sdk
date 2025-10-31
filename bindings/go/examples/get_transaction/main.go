@@ -34,5 +34,4 @@ func main() {
         log.Fatalf("Failed to get transaction data effects: %v", err)
     }
     fmt.Printf("Transaction Data Effects: %v\n", transaction_data_effects);
-
 }
