@@ -1667,12 +1667,12 @@ impl Client {
 mod tests {
     use base64ct::Encoding;
     use futures::StreamExt;
-    use iota_types::{Address, Ed25519PublicKey, ObjectId, TypeTag};
+    use iota_types::{Address, Digest, Ed25519PublicKey, ObjectId, TypeTag};
     use tokio::time;
 
     use crate::{
         BcsName, Client, DEVNET_HOST, Direction, LOCAL_HOST, MAINNET_HOST, PaginationFilter,
-        TESTNET_HOST, faucet::FaucetClient,
+        TESTNET_HOST, faucet::FaucetClient, query_types::TransactionsFilter,
     };
 
     const NUM_COINS_FROM_FAUCET: usize = 5;
@@ -2298,5 +2298,36 @@ mod tests {
             "Packages query returned no data for {} network",
             client.rpc_server()
         );
+    }
+
+    #[tokio::test]
+    async fn test_transaction_data_effects() {
+        let client = Client::new_testnet();
+
+        client
+            .transaction_data_effects(
+                Digest::from_base58("Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf").unwrap(),
+            )
+            .await
+            .unwrap()
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_transactions_data_effects() {
+        let client = Client::new_testnet();
+
+        client
+            .transactions_data_effects(
+                TransactionsFilter {
+                    transaction_ids: Some(vec![
+                        "Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf".to_string(),
+                    ]),
+                    ..Default::default()
+                },
+                PaginationFilter::default(),
+            )
+            .await
+            .unwrap();
     }
 }
