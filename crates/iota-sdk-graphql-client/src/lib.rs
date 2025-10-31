@@ -2302,7 +2302,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_transaction_data_effects() {
-        let client = Client::new_testnet();
+        let client = Client::new_devnet();
 
         client
             .transaction_data_effects(
@@ -2315,7 +2315,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_transactions_data_effects() {
-        let client = Client::new_testnet();
+        let client = Client::new_devnet();
 
         client
             .transactions_data_effects(
