@@ -100,12 +100,10 @@ func main() {
 		log.Fatalf("Failed to sign: %v", err)
 	}
 	userSigPublish := sdk.UserSignatureNewSimple(sigPublish)
-	effectsPublish, err := client.ExecuteTx([]*sdk.UserSignature{userSigPublish}, txPublish)
+	waitFor := sdk.WaitForTxFinalized
+	effectsPublish, err := client.ExecuteTx([]*sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)
-	}
-	if effectsPublish == nil {
-		log.Fatal("Transaction failed: no effects")
 	}
 	fmt.Println("Success")
 
@@ -206,12 +204,9 @@ func main() {
 		log.Fatalf("Failed to sign: %v", err)
 	}
 	userSigUpgrade := sdk.UserSignatureNewSimple(sigUpgrade)
-	effectsUpgrade, err := client.ExecuteTx([]*sdk.UserSignature{userSigUpgrade}, txUpgrade)
+	effectsUpgrade, err := client.ExecuteTx([]*sdk.UserSignature{userSigUpgrade}, txUpgrade, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)
-	}
-	if effectsUpgrade == nil {
-		log.Fatal("Transaction failed: no effects")
 	}
 	fmt.Println("Success")
 
