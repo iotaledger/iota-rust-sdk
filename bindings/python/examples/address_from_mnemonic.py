@@ -31,7 +31,9 @@ def main():
     print(f"Public Key With Flag: {base64_encode(flagged_public_key)}")
     print(f"Address: {address.to_hex()}")
 
-    private_key = Secp256r1PrivateKey.from_mnemonic(MNEMONIC, "m/74'/4218'/0'/0/2")
+    private_key = Secp256r1PrivateKey.from_mnemonic_with_path(
+        MNEMONIC, "m/74'/4218'/0'/0/2"
+    )
     private_key_bech32 = private_key.to_bech32()
     public_key = private_key.public_key()
     flagged_public_key = public_key.to_flagged_bytes()
