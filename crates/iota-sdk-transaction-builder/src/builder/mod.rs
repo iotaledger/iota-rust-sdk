@@ -878,7 +878,7 @@ impl<L> TransactionBuilder<Client, L> {
                 .objects(
                     ObjectFilter {
                         type_: Some(StructTag::new_gas_coin().to_string()),
-                        owner: Some(self.data.sender),
+                        owner: Some(self.data.sponsor.unwrap_or(self.data.sender)),
                         ..Default::default()
                     },
                     Default::default(),
