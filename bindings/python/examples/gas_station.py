@@ -27,10 +27,9 @@ async def main():
         gas_station_url, headers={"Authorization": [f"Bearer {gas_station_auth_token}"]}
     )
 
-    res = await builder.execute(simple_key, True)
+    res = await builder.execute(simple_key)
 
-    if res is not None:
-        print(res)
+    print(res)
 
     print("Sponsored transaction was successful!")
 

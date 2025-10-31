@@ -25,7 +25,7 @@ use std::env::var;
 
 use eyre::{Result, bail};
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
-use iota_graphql_client::{Client, faucet::FaucetClient};
+use iota_graphql_client::{Client, WaitForTx, faucet::FaucetClient};
 use iota_transaction_builder::{TransactionBuilder, res};
 use iota_types::{Address, MovePackageData, ObjectId, ObjectOut, StructTag, UpgradePolicy};
 use rand::rngs::OsRng;
@@ -83,9 +83,7 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (publish the package)
     println!("> Publishing package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let Some(effects) = client.execute_tx(&[sig], &tx).await? else {
-        bail!("Transaction failed: no effects");
-    };
+    let effects = client.execute_tx(&[sig], &tx, WaitForTx::Finalized).await?;
     println!("{:?}", effects.status());
 
     // Wait some time for the indexer to process the tx
@@ -159,9 +157,7 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (upgrade the package)
     println!("> Upgrading package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let Some(effects) = client.execute_tx(&[sig], &tx).await? else {
-        bail!("Transaction failed: no effects");
-    };
+    let effects = client.execute_tx(&[sig], &tx, None).await?;
     println!("{:?}", effects.status());
 
     // Wait some time for the indexer to process the tx

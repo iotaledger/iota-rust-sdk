@@ -80,9 +80,7 @@ async def main():
         # Sign and execute the transaction (publish the package)
         print("> Publishing package:")
         sig = UserSignature.new_simple(private_key.try_sign_simple(tx.signing_digest()))
-        effects = await client.execute_tx([sig], tx)
-        if effects is None:
-            raise Exception("Transaction failed: no effects")
+        effects = await client.execute_tx([sig], tx, WaitForTx.FINALIZED)
         print("Success")
 
         # Wait some time for the indexer to process the tx
@@ -164,8 +162,6 @@ async def main():
         signature = private_key.try_sign_simple(tx.signing_digest())
         sig = UserSignature.new_simple(signature)
         effects = await client.execute_tx([sig], tx)
-        if effects is None:
-            raise Exception("Transaction failed: no effects")
         print("Success")
 
         # Wait some time for the indexer to process the tx

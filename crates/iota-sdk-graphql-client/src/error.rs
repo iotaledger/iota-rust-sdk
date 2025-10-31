@@ -37,6 +37,7 @@ pub enum Kind {
     Deserialization,
     Parse,
     Query,
+    Missing,
     Other,
 }
 
@@ -58,6 +59,17 @@ impl Error {
             inner: Box::new(InnerError {
                 kind,
                 source: Some(error.into()),
+                query_errors: None,
+            }),
+        }
+    }
+
+    /// Convert the given message into a generic error.
+    pub fn from_message(kind: Kind, message: String) -> Self {
+        Self {
+            inner: Box::new(InnerError {
+                kind,
+                source: Some(message.into()),
                 query_errors: None,
             }),
         }
@@ -93,6 +105,7 @@ impl std::fmt::Display for Kind {
             Kind::Deserialization => write!(f, "Deserialization error:"),
             Kind::Parse => write!(f, "Parse error:"),
             Kind::Query => write!(f, "Query error:"),
+            Kind::Missing => write!(f, "Missing:"),
             Kind::Other => write!(f, "Error:"),
         }
     }
