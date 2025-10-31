@@ -27,6 +27,8 @@ pub enum Error {
     MissingVersion(ObjectId),
     #[error("Missing digest for object {0}")]
     MissingDigest(ObjectId),
+    #[error("Missing transaction for digest {0}")]
+    MissingTransaction(Digest),
     #[error("Missing gas objects")]
     MissingGasObjects,
     #[error("Missing gas budget")]
@@ -75,8 +77,6 @@ pub enum Error {
     Client(Box<dyn std::error::Error + Send + Sync>),
     #[error("Failed to dry run transaction: {0}")]
     DryRun(String),
-    #[error("Timeout waiting for transaction finalization, digest: {0}")]
-    FinalizationTimeout(Digest),
 }
 
 impl Error {

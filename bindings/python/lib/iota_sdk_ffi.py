@@ -1135,7 +1135,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 20245:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 65277:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins() != 24826:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1144,6 +1144,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup() != 20908:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations() != 44467:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized() != 8647:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 20156:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1171,7 +1175,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 62867:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 58559:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1200,6 +1204,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects() != 46218:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 25664:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1651,9 +1657,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 27688:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 45882:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 53109:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 45688:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3974,6 +3980,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
     ctypes.c_void_p,
+    _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins.argtypes = (
@@ -3999,6 +4006,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations.
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_latest_checkpoint_sequence_number.argtypes = (
     ctypes.c_void_p,
 )
@@ -4157,6 +4174,13 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects.argt
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_identifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6769,14 +6793,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run.restype = ct
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
-    ctypes.c_int8,
+    _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
     ctypes.c_void_p,
-    ctypes.c_int8,
+    _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration.argtypes = (
@@ -10248,6 +10272,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number.restype = ctypes.c_uint16
@@ -10332,6 +10362,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_e
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.restype = ctypes.c_uint16
@@ -21778,6 +21811,58 @@ class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
 
 
 
+
+
+class WaitForTx(enum.Enum):
+    """
+    Determines what to wait for after executing a transaction.
+    """
+
+    INDEXED = 0
+    """
+    Indicates that the transaction effects will be usable in subsequent
+    transactions, and that the transaction itself is indexed on the node.
+    """
+
+    
+    FINALIZED = 1
+    """
+    Indicates that the transaction has been included in a checkpoint, and
+    all queries may include it.
+    """
+
+    
+
+
+class _UniffiConverterTypeWaitForTx(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return WaitForTx.INDEXED
+        if variant == 2:
+            return WaitForTx.FINALIZED
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == WaitForTx.INDEXED:
+            return
+        if value == WaitForTx.FINALIZED:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == WaitForTx.INDEXED:
+            buf.write_i32(1)
+        if value == WaitForTx.FINALIZED:
+            buf.write_i32(2)
+
+
+
+
+
 class _UniffiConverterOptionalUInt32(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -23339,6 +23424,33 @@ class _UniffiConverterOptionalTypeTransactionBlockKindInput(_UniffiConverterRust
             return None
         elif flag == 1:
             return _UniffiConverterTypeTransactionBlockKindInput.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeWaitForTx(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeWaitForTx.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeWaitForTx.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeWaitForTx.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -30721,7 +30833,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction"):
+    def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
         """
         Execute a transaction.
         """
@@ -30748,6 +30860,22 @@ class GraphQlClientProtocol(typing.Protocol):
     def iota_names_registrations(self, address: "Address",pagination_filter: "PaginationFilter"):
         """
         Find all registration NFTs for the given address.
+        """
+
+        raise NotImplementedError
+    def is_tx_finalized(self, digest: "Digest"):
+        """
+        Returns whether the transaction for the given digest has been included
+        in a checkpoint (finalized).
+        """
+
+        raise NotImplementedError
+    def is_tx_indexed_on_node(self, digest: "Digest"):
+        """
+        Returns whether the transaction for the given digest has been indexed
+        on the node. This means that it can be queries by its digest and its
+        effects will be usable for subsequent transactions. To check for
+        full finalization, use `is_tx_finalized`.
         """
 
         raise NotImplementedError
@@ -30964,6 +31092,14 @@ class GraphQlClientProtocol(typing.Protocol):
     def transactions_effects(self, filter: "typing.Union[object, typing.Optional[TransactionsFilter]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Get a page of transactions' effects based on the provided filters.
+        """
+
+        raise NotImplementedError
+    def wait_for_tx(self, digest: "Digest",wait_for: "WaitForTx",timeout: "typing.Union[object, typing.Optional[Duration]]" = _DEFAULT):
+        """
+        Wait for the indexing or finalization of a transaction
+        by its digest. An optional timeout can be provided, which, if
+        exceeded, will return an error (default 60s).
         """
 
         raise NotImplementedError
@@ -31563,7 +31699,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction") -> "typing.Optional[TransactionEffects]":
+    async def execute_tx(self, signatures: "typing.List[UserSignature]",tx: "Transaction",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
         """
         Execute a transaction.
         """
@@ -31572,17 +31708,22 @@ _UniffiConverterTypeSdkFfiError,
         
         _UniffiConverterTypeTransaction.check_lower(tx)
         
+        if wait_for is _DEFAULT:
+            wait_for = None
+        _UniffiConverterOptionalTypeWaitForTx.check_lower(wait_for)
+        
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterSequenceTypeUserSignature.lower(signatures),
-        _UniffiConverterTypeTransaction.lower(tx)
+        _UniffiConverterTypeTransaction.lower(tx),
+        _UniffiConverterOptionalTypeWaitForTx.lower(wait_for)
             ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
             # lift function
-            _UniffiConverterOptionalTypeTransactionEffects.lift,
+            _UniffiConverterTypeTransactionEffects.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -31694,6 +31835,60 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
             _UniffiConverterTypeNameRegistrationPage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def is_tx_finalized(self, digest: "Digest") -> "bool":
+        """
+        Returns whether the transaction for the given digest has been included
+        in a checkpoint (finalized).
+        """
+
+        _UniffiConverterTypeDigest.check_lower(digest)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeDigest.lower(digest)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_i8,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_i8,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_i8,
+            # lift function
+            _UniffiConverterBool.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def is_tx_indexed_on_node(self, digest: "Digest") -> "bool":
+        """
+        Returns whether the transaction for the given digest has been indexed
+        on the node. This means that it can be queries by its digest and its
+        effects will be usable for subsequent transactions. To check for
+        full finalization, use `is_tx_finalized`.
+        """
+
+        _UniffiConverterTypeDigest.check_lower(digest)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeDigest.lower(digest)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_i8,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_i8,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_i8,
+            # lift function
+            _UniffiConverterBool.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -32152,7 +32347,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def protocol_config(self, version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[ProtocolConfigs]":
+    async def protocol_config(self, version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "ProtocolConfigs":
         """
         Get the protocol configuration.
         """
@@ -32170,7 +32365,7 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
-            _UniffiConverterOptionalTypeProtocolConfigs.lift,
+            _UniffiConverterTypeProtocolConfigs.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -32550,6 +32745,43 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
             _UniffiConverterTypeTransactionEffectsPage.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def wait_for_tx(self, digest: "Digest",wait_for: "WaitForTx",timeout: "typing.Union[object, typing.Optional[Duration]]" = _DEFAULT) -> None:
+
+        """
+        Wait for the indexing or finalization of a transaction
+        by its digest. An optional timeout can be provided, which, if
+        exceeded, will return an error (default 60s).
+        """
+
+        _UniffiConverterTypeDigest.check_lower(digest)
+        
+        _UniffiConverterTypeWaitForTx.check_lower(wait_for)
+        
+        if timeout is _DEFAULT:
+            timeout = None
+        _UniffiConverterOptionalDuration.check_lower(timeout)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeDigest.lower(digest),
+        _UniffiConverterTypeWaitForTx.lower(wait_for),
+        _UniffiConverterOptionalDuration.lower(timeout)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_void,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_void,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_void,
+            # lift function
+            lambda val: None,
+            
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -41335,13 +41567,13 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def execute(self, keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT):
+    def execute(self, keypair: "SimpleKeypair",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
         """
         Execute the transaction and optionally wait for finalization.
         """
 
         raise NotImplementedError
-    def execute_with_sponsor(self, keypair: "SimpleKeypair",sponsor_keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT):
+    def execute_with_sponsor(self, keypair: "SimpleKeypair",sponsor_keypair: "SimpleKeypair",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
         """
         Execute the transaction and optionally wait for finalization.
         """
@@ -41594,28 +41826,28 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute(self, keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "typing.Optional[TransactionEffects]":
+    async def execute(self, keypair: "SimpleKeypair",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
         """
         Execute the transaction and optionally wait for finalization.
         """
 
         _UniffiConverterTypeSimpleKeypair.check_lower(keypair)
         
-        if wait_for_finalization is _DEFAULT:
-            wait_for_finalization = False
-        _UniffiConverterBool.check_lower(wait_for_finalization)
+        if wait_for is _DEFAULT:
+            wait_for = None
+        _UniffiConverterOptionalTypeWaitForTx.check_lower(wait_for)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeSimpleKeypair.lower(keypair),
-        _UniffiConverterBool.lower(wait_for_finalization)
+        _UniffiConverterOptionalTypeWaitForTx.lower(wait_for)
             ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
             # lift function
-            _UniffiConverterOptionalTypeTransactionEffects.lift,
+            _UniffiConverterTypeTransactionEffects.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -41624,7 +41856,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute_with_sponsor(self, keypair: "SimpleKeypair",sponsor_keypair: "SimpleKeypair",wait_for_finalization: "typing.Union[object, bool]" = _DEFAULT) -> "typing.Optional[TransactionEffects]":
+    async def execute_with_sponsor(self, keypair: "SimpleKeypair",sponsor_keypair: "SimpleKeypair",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
         """
         Execute the transaction and optionally wait for finalization.
         """
@@ -41633,22 +41865,22 @@ _UniffiConverterTypeSdkFfiError,
         
         _UniffiConverterTypeSimpleKeypair.check_lower(sponsor_keypair)
         
-        if wait_for_finalization is _DEFAULT:
-            wait_for_finalization = False
-        _UniffiConverterBool.check_lower(wait_for_finalization)
+        if wait_for is _DEFAULT:
+            wait_for = None
+        _UniffiConverterOptionalTypeWaitForTx.check_lower(wait_for)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeSimpleKeypair.lower(keypair),
         _UniffiConverterTypeSimpleKeypair.lower(sponsor_keypair),
-        _UniffiConverterBool.lower(wait_for_finalization)
+        _UniffiConverterOptionalTypeWaitForTx.lower(wait_for)
             ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
             # lift function
-            _UniffiConverterOptionalTypeTransactionEffects.lift,
+            _UniffiConverterTypeTransactionEffects.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -47988,6 +48220,7 @@ __all__ = [
     "TransactionExpiration",
     "TypeArgumentError",
     "UnchangedSharedKind",
+    "WaitForTx",
     "ActiveJwk",
     "AuthenticatorStateExpire",
     "AuthenticatorStateUpdateV1",

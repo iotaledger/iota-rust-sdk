@@ -7,7 +7,7 @@ use std::{
     time::Duration,
 };
 
-use iota_sdk::types::Input;
+use iota_sdk::{graphql_client::WaitForTx, types::Input};
 
 use crate::{
     crypto::simple::SimpleKeypair,
@@ -356,37 +356,33 @@ impl TransactionBuilder {
     }
 
     /// Execute the transaction and optionally wait for finalization.
-    #[uniffi::method(default(wait_for_finalization = false))]
+    #[uniffi::method(default(wait_for = None))]
     pub async fn execute(
         &self,
         keypair: &SimpleKeypair,
-        wait_for_finalization: bool,
-    ) -> Result<Option<Arc<TransactionEffects>>> {
+        wait_for: Option<WaitForTx>,
+    ) -> Result<TransactionEffects> {
         Ok(self
-            .read(|builder| builder.clone().execute(&keypair.0, wait_for_finalization))
+            .read(|builder| builder.clone().execute(&keypair.0, wait_for))
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .into())
     }
 
     /// Execute the transaction and optionally wait for finalization.
-    #[uniffi::method(default(wait_for_finalization = false))]
+    #[uniffi::method(default(wait_for = None))]
     pub async fn execute_with_sponsor(
         &self,
         keypair: &SimpleKeypair,
         sponsor_keypair: &SimpleKeypair,
-        wait_for_finalization: bool,
-    ) -> Result<Option<Arc<TransactionEffects>>> {
+        wait_for: Option<WaitForTx>,
+    ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| {
-                builder.clone().execute_with_sponsor(
-                    &keypair.0,
-                    &sponsor_keypair.0,
-                    wait_for_finalization,
-                )
+                builder
+                    .clone()
+                    .execute_with_sponsor(&keypair.0, &sponsor_keypair.0, wait_for)
             })
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .into())
     }
 }

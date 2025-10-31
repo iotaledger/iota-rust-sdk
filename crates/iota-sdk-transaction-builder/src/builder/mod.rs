@@ -20,7 +20,7 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    ClientMethods, PTBArgument, SharedMut,
+    ClientMethods, PTBArgument, SharedMut, WaitForTx,
     builder::{
         gas_station::GasStationData,
         named_results::{NamedResult, NamedResults},
@@ -1103,46 +1103,35 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     pub async fn execute(
         mut self,
         keypair: &SimpleKeypair,
-        wait_for_finalization: bool,
-    ) -> Result<Option<TransactionEffects>, Error> {
+        wait_for: impl Into<Option<WaitForTx>>,
+    ) -> Result<TransactionEffects, Error> {
+        let wait_for = wait_for.into();
         let gas_station_data = self.data.gas_station_data.take();
         let mut txn = self.finish_internal().await?;
 
-        let res = if let Some(gas_station_data) = gas_station_data {
+        Ok(if let Some(gas_station_data) = gas_station_data {
             let digest = gas_station_data.execute_txn(&mut txn, keypair).await?;
+            if let Some(wait_for) = wait_for {
+                self.client
+                    .wait_for_tx(digest, wait_for)
+                    .await
+                    .map_err(Error::client)?;
+            }
             self.client
                 .transaction_effects(digest)
                 .await
                 .map_err(Error::client)?
+                .ok_or_else(|| Error::MissingTransaction(digest))?
         } else {
             self.client
                 .execute_tx(
                     &[keypair.sign_transaction(&txn).map_err(Error::Signature)?],
                     &txn,
+                    wait_for,
                 )
                 .await
                 .map_err(Error::client)?
-        };
-
-        let mut retries_left = 100;
-        if wait_for_finalization {
-            let digest = txn.digest();
-            while retries_left > 0
-                && self
-                    .client
-                    .transaction(digest)
-                    .await
-                    .map_err(Error::client)?
-                    .is_none()
-            {
-                if retries_left == 1 {
-                    return Err(Error::FinalizationTimeout(digest));
-                }
-                tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
-                retries_left -= 1;
-            }
-        }
-        Ok(res)
+        })
     }
 
     /// Execute the transaction with a sponsor keypair and optionally wait for
@@ -1151,8 +1140,9 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         mut self,
         keypair: &SimpleKeypair,
         sponsor_keypair: &SimpleKeypair,
-        wait_for_finalization: bool,
-    ) -> Result<Option<TransactionEffects>, Error> {
+        wait_for: impl Into<Option<WaitForTx>>,
+    ) -> Result<TransactionEffects, Error> {
+        let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
 
         let mut signatures = vec![keypair.sign_transaction(&txn).map_err(Error::Signature)?];
@@ -1162,24 +1152,10 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 .map_err(Error::Signature)?,
         );
 
-        let res = self
-            .client
-            .execute_tx(&signatures, &txn)
+        self.client
+            .execute_tx(&signatures, &txn, wait_for)
             .await
-            .map_err(Error::client)?;
-
-        if wait_for_finalization {
-            while self
-                .client
-                .transaction(txn.digest())
-                .await
-                .map_err(Error::client)?
-                .is_none()
-            {
-                tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
-            }
-        }
-        Ok(res)
+            .map_err(Error::client)
     }
 }
 

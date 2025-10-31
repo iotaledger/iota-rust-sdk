@@ -1,10 +1,11 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{str::FromStr, sync::Arc};
+use std::{str::FromStr, sync::Arc, time::Duration};
 
 use iota_sdk::{
     graphql_client::{
+        WaitForTx,
         pagination::PaginationFilter,
         query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
     },
@@ -37,6 +38,17 @@ use crate::{
         TransactionDataEffectsPage, TransactionEffectsPage, ValidatorPage,
     },
 };
+
+#[uniffi::remote(Enum)]
+/// Determines what to wait for after executing a transaction.
+pub enum WaitForTx {
+    /// Indicates that the transaction effects will be usable in subsequent
+    /// transactions, and that the transaction itself is indexed on the node.
+    Indexed,
+    /// Indicates that the transaction has been included in a checkpoint, and
+    /// all queries may include it.
+    Finalized,
+}
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
@@ -120,7 +132,7 @@ impl GraphQLClient {
 
     /// Get the protocol configuration.
     #[uniffi::method(default(version = None))]
-    pub async fn protocol_config(&self, version: Option<u64>) -> Result<Option<ProtocolConfigs>> {
+    pub async fn protocol_config(&self, version: Option<u64>) -> Result<ProtocolConfigs> {
         Ok(self.0.read().await.protocol_config(version).await?)
     }
 
@@ -620,11 +632,13 @@ impl GraphQLClient {
     }
 
     /// Execute a transaction.
+    #[uniffi::method(default(wait_for = None))]
     pub async fn execute_tx(
         &self,
         signatures: Vec<Arc<UserSignature>>,
         tx: &Transaction,
-    ) -> Result<Option<Arc<TransactionEffects>>> {
+        wait_for: Option<WaitForTx>,
+    ) -> Result<TransactionEffects> {
         Ok(self
             .0
             .read()
@@ -635,10 +649,44 @@ impl GraphQLClient {
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
                 &tx.0,
+                wait_for,
             )
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .into())
+    }
+
+    /// Returns whether the transaction for the given digest has been indexed
+    /// on the node. This means that it can be queries by its digest and its
+    /// effects will be usable for subsequent transactions. To check for
+    /// full finalization, use `is_tx_finalized`.
+    #[uniffi::method]
+    pub async fn is_tx_indexed_on_node(&self, digest: &Digest) -> Result<bool> {
+        Ok(self.0.read().await.is_tx_indexed_on_node(**digest).await?)
+    }
+
+    /// Returns whether the transaction for the given digest has been included
+    /// in a checkpoint (finalized).
+    #[uniffi::method]
+    pub async fn is_tx_finalized(&self, digest: &Digest) -> Result<bool> {
+        Ok(self.0.read().await.is_tx_finalized(**digest).await?)
+    }
+
+    /// Wait for the indexing or finalization of a transaction
+    /// by its digest. An optional timeout can be provided, which, if
+    /// exceeded, will return an error (default 60s).
+    #[uniffi::method(default(timeout = None))]
+    pub async fn wait_for_tx(
+        &self,
+        digest: &Digest,
+        wait_for: WaitForTx,
+        timeout: Option<Duration>,
+    ) -> Result<()> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .wait_for_tx(**digest, wait_for, timeout)
+            .await?)
     }
 
     // ===========================================================================
@@ -1028,11 +1076,26 @@ impl iota_sdk::transaction_builder::ClientMethods for GraphQLClient {
         &self,
         signatures: &[iota_sdk::types::UserSignature],
         tx: &iota_sdk::types::Transaction,
-    ) -> Result<Option<iota_sdk::types::TransactionEffects>, Self::Error> {
+        wait_for: impl Into<Option<WaitForTx>>,
+    ) -> Result<iota_sdk::types::TransactionEffects, Self::Error> {
         iota_sdk::transaction_builder::ClientMethods::execute_tx(
             &*self.0.read().await,
             signatures,
             tx,
+            wait_for,
+        )
+        .await
+    }
+
+    async fn wait_for_tx(
+        &self,
+        digest: iota_sdk::types::Digest,
+        wait_for: WaitForTx,
+    ) -> Result<(), Self::Error> {
+        iota_sdk::transaction_builder::ClientMethods::wait_for_tx(
+            &*self.0.read().await,
+            digest,
+            wait_for,
         )
         .await
     }

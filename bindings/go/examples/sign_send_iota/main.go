@@ -53,12 +53,9 @@ func main() {
 	}
 	userSignature := sdk.UserSignatureNewSimple(signature)
 
-	effects, err := client.ExecuteTx([]*sdk.UserSignature{userSignature}, txn)
+	effects, err := client.ExecuteTx([]*sdk.UserSignature{userSignature}, txn, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to execute: %v", err)
-	}
-	if effects == nil {
-		log.Fatalf("Transaction execution failed")
 	}
 	log.Printf("Digest: %s", sdk.HexEncode((*effects).Digest().ToBytes()))
 	log.Printf("Transaction status: %v", (*effects).AsV1().Status)

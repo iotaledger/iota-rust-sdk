@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_graphql_client::{
+    WaitForTx,
     pagination::{Direction, PaginationFilter},
     query_types::{ObjectFilter, TransactionMetadata},
 };
@@ -70,7 +71,15 @@ pub trait ClientMethods {
         &self,
         signatures: &[UserSignature],
         tx: &Transaction,
-    ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>>;
+        wait_for: impl Into<Option<WaitForTx>>,
+    ) -> impl std::future::Future<Output = Result<TransactionEffects, Self::Error>>;
+
+    /// Wait for the indexing or finalization of a transaction by its digest.
+    fn wait_for_tx(
+        &self,
+        digest: Digest,
+        wait_for: WaitForTx,
+    ) -> impl std::future::Future<Output = Result<(), Self::Error>>;
 }
 
 impl<T: ClientMethods> ClientMethods for &T {
@@ -136,8 +145,17 @@ impl<T: ClientMethods> ClientMethods for &T {
         &self,
         signatures: &[UserSignature],
         tx: &Transaction,
-    ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>> {
-        (*self).execute_tx(signatures, tx)
+        wait_for: impl Into<Option<WaitForTx>>,
+    ) -> impl std::future::Future<Output = Result<TransactionEffects, Self::Error>> {
+        (*self).execute_tx(signatures, tx, wait_for)
+    }
+
+    fn wait_for_tx(
+        &self,
+        digest: Digest,
+        wait_for: WaitForTx,
+    ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
+        (*self).wait_for_tx(digest, wait_for)
     }
 }
 
@@ -239,8 +257,13 @@ impl ClientMethods for iota_graphql_client::Client {
         &self,
         signatures: &[UserSignature],
         tx: &Transaction,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        self.execute_tx(signatures, tx).await
+        wait_for: impl Into<Option<WaitForTx>>,
+    ) -> Result<TransactionEffects, Self::Error> {
+        self.execute_tx(signatures, tx, wait_for).await
+    }
+
+    async fn wait_for_tx(&self, digest: Digest, wait_for: WaitForTx) -> Result<(), Self::Error> {
+        self.wait_for_tx(digest, wait_for, None).await
     }
 }
 
@@ -308,7 +331,16 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
         &self,
         signatures: &[UserSignature],
         tx: &Transaction,
-    ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>> {
-        self.as_ref().execute_tx(signatures, tx)
+        wait_for: impl Into<Option<WaitForTx>>,
+    ) -> impl std::future::Future<Output = Result<TransactionEffects, Self::Error>> {
+        self.as_ref().execute_tx(signatures, tx, wait_for)
+    }
+
+    fn wait_for_tx(
+        &self,
+        digest: Digest,
+        wait_for: WaitForTx,
+    ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
+        self.as_ref().wait_for_tx(digest, wait_for)
     }
 }

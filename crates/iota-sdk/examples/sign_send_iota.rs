@@ -37,14 +37,11 @@ async fn main() -> Result<()> {
 
     let signature = private_key.sign_transaction(&tx)?;
 
-    let effects = client.execute_tx(&[signature], &tx).await?;
-    if let Some(effects) = effects {
-        println!("Digest: {}", effects.digest());
-        println!("Transaction status: {:?}", effects.status());
-        println!("Effects: {effects:#?}");
-    } else {
-        println!("Transaction execution failed");
-    }
+    let effects = client.execute_tx(&[signature], &tx, None).await?;
+
+    println!("Digest: {}", effects.digest());
+    println!("Transaction status: {:?}", effects.status());
+    println!("Effects: {effects:#?}");
 
     Ok(())
 }
