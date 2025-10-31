@@ -19,8 +19,8 @@ use error::{Error, Kind};
 use futures::Stream;
 use iota_types::{
     Address, CheckpointSequenceNumber, CheckpointSummary, Digest, IdentifierRef, MovePackage,
-    Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionEffects,
-    TransactionKind, TypeTag, UserSignature,
+    Object, ObjectId, SenderSignedTransaction, SignedTransaction, StructTag, Transaction,
+    TransactionEffects, TransactionKind, TypeTag, UserSignature,
     framework::Coin,
     iota_names::{NameFormat, NameRegistration, name::Name},
 };
@@ -1134,20 +1134,16 @@ impl Client {
             .transaction_block
             .map(|tx| (tx.bcs, tx.effects, tx.signatures))
         {
-            Some((Some(bcs), Some(effects), Some(sigs))) => {
+            Some((Some(bcs), Some(effects), Some(_signatures))) => {
                 let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                 let effects = base64ct::Base64::decode_vec(effects.bcs.unwrap().0.as_str())?;
-                let signatures = sigs
-                    .iter()
-                    .map(|s| UserSignature::from_base64(&s.0))
-                    .collect::<Result<Vec<_>, _>>()?;
-                let transaction: Transaction = bcs::from_bytes(&bcs)?;
-                let tx = SignedTransaction {
-                    transaction,
-                    signatures,
-                };
+                let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
                 let effects: TransactionEffects = bcs::from_bytes(&effects)?;
-                Ok(Some(TransactionDataEffects { tx, effects }))
+
+                Ok(Some(TransactionDataEffects {
+                    tx: transaction.0,
+                    effects,
+                }))
             }
             _ => Ok(None),
         }
@@ -1252,7 +1248,7 @@ impl Client {
             txc.nodes
                 .into_iter()
                 .map(|node| {
-                    let (Some(bcs), Some(effects), Some(sigs)) =
+                    let (Some(bcs), Some(effects), Some(_signatures)) =
                         (node.bcs, node.effects, node.signatures)
                     else {
                         return Err(Error::empty_response_error());
@@ -1260,18 +1256,13 @@ impl Client {
                     let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                     let effects =
                         base64ct::Base64::decode_vec(effects.bcs.as_ref().unwrap().0.as_str())?;
-
-                    let sigs = sigs
-                        .iter()
-                        .map(|s| UserSignature::from_base64(&s.0))
-                        .collect::<Result<Vec<_>, _>>()?;
-                    let tx: Transaction = bcs::from_bytes(&bcs)?;
-                    let tx = SignedTransaction {
-                        transaction: tx,
-                        signatures: sigs,
-                    };
+                    let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
                     let effects: TransactionEffects = bcs::from_bytes(&effects)?;
-                    Ok(TransactionDataEffects { tx, effects })
+
+                    Ok(TransactionDataEffects {
+                        tx: transaction.0,
+                        effects,
+                    })
                 })
                 .collect::<Result<Vec<_>>>()?
         };
