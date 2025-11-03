@@ -50,10 +50,3 @@ fun main() = runBlocking {
         kotlin.system.exitProcess(1)
     }
 }
-
-fun uLongToBytes(num: ULong): ByteArray {
-    return ByteBuffer.allocate(ULong.SIZE_BYTES)
-            .order(ByteOrder.LITTLE_ENDIAN)
-            .putLong(num.toLong())
-            .array()
-}

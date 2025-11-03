@@ -70,7 +70,7 @@ func main() {
 	builder.Gas(gasCoin).GasPrice(*gasPrice).GasBudget(500000000)
 
 	txn, err := builder.Finish()
-	if err.(*sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
