@@ -46,7 +46,7 @@ jobs:
         run: eval "cargo release changes"
 
       - name: Bump versions
-        run: eval "cargo release version -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm ${{inputs.level}}"
+        run: eval "cargo release version -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm ${{inputs.level}} --execute"
 
       - name: Commit packages
         run: eval "cargo release commit --allow-branch develop,sdk-bindings --no-confirm"
