@@ -69,7 +69,7 @@ func main() {
 	client := sdk.GraphQlClientNewLocalnet()
 
 	// Build the `publish` PTB
-	builderPublish := sdk.TransactionBuilderInit(sender, client)
+	builderPublish := sdk.ClientTransactionBuilderInit(sender, client)
 	// Publish the package and receive the upgrade cap in return
 	builderPublish.Publish(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
@@ -145,7 +145,7 @@ func main() {
 	}
 
 	// Build the `upgrade` PTB
-	builderUpgrade := sdk.TransactionBuilderInit(sender, client)
+	builderUpgrade := sdk.ClientTransactionBuilderInit(sender, client)
 
 	// Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
 	// ticket

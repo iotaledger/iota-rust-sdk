@@ -17,7 +17,7 @@ async def main():
             raise Exception("no staked iotas found")
         staked_iota = staked_iotas.data[0]
 
-        builder = await TransactionBuilder.init(
+        builder = await ClientTransactionBuilder.init(
             staked_iota.owner().as_address(), client
         )
 

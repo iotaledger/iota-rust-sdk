@@ -22,7 +22,7 @@ fun main() = runBlocking {
                         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
                 )
 
-        val builder = TransactionBuilder.init(sender, client)
+        val builder = ClientTransactionBuilder.init(sender, client)
 
         builder.mergeCoins(coin0, listOf(coin1))
 

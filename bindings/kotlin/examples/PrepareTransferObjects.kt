@@ -29,7 +29,7 @@ fun main() = runBlocking {
                         )
                 )
 
-        val builder = TransactionBuilder.init(fromAddress, client)
+        val builder = ClientTransactionBuilder.init(fromAddress, client)
 
         builder.transferObjects(toAddress, objsToTransfer)
 

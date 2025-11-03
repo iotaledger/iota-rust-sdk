@@ -351,10 +351,40 @@ impl GasStationData {
     }
 
     pub(crate) async fn execute_txn(
-        mut self,
+        self,
         txn: &mut Transaction,
         keypair: &SimpleKeypair,
     ) -> Result<Digest, Error> {
+        let url = self
+            .url
+            .join(GasStationRequestKind::ExecuteTx.as_path())
+            .map_err(Error::InvalidUrl)?;
+        let effects = self.execute_txn_inner(&url, txn, keypair).await?;
+
+        Digest::deserialize(&effects["transactionDigest"]).map_err(|e| Error::GasStationResponse {
+            message: Some(e.to_string()),
+            gas_station_url: url,
+        })
+    }
+
+    pub(crate) async fn execute_txn_json(
+        self,
+        txn: &mut Transaction,
+        keypair: &SimpleKeypair,
+    ) -> Result<serde_json::Value, Error> {
+        let url = self
+            .url
+            .join(GasStationRequestKind::ExecuteTx.as_path())
+            .map_err(Error::InvalidUrl)?;
+        self.execute_txn_inner(&url, txn, keypair).await
+    }
+
+    async fn execute_txn_inner(
+        mut self,
+        url: &Url,
+        txn: &mut Transaction,
+        keypair: &SimpleKeypair,
+    ) -> Result<serde_json::Value, Error> {
         let client = reqwest::Client::new();
         let reservation_id = match txn {
             Transaction::V1(ref mut inner_txn) => {
@@ -379,11 +409,6 @@ impl GasStationData {
                 reservation_id
             }
         };
-
-        let url = self
-            .url
-            .join(GasStationRequestKind::ExecuteTx.as_path())
-            .map_err(Error::InvalidUrl)?;
 
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);
 
@@ -429,10 +454,7 @@ impl GasStationData {
             });
         };
 
-        Digest::deserialize(&effects["transactionDigest"]).map_err(|e| Error::GasStationResponse {
-            message: Some(e.to_string()),
-            gas_station_url: url.clone(),
-        })
+        Ok(effects)
     }
 }
 

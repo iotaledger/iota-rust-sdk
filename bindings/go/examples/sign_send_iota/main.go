@@ -32,7 +32,7 @@ func main() {
 
 	client := sdk.GraphQlClientNewLocalnet()
 
-	builder := sdk.TransactionBuilderInit(senderAddress, client)
+	builder := sdk.ClientTransactionBuilderInit(senderAddress, client)
 	builder.SendIota(recipientAddress, sdk.PtbArgumentU64(1000))
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {

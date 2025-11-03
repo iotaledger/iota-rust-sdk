@@ -24,7 +24,7 @@ fun main() = runBlocking {
                         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9"
                 )
 
-        val builder = TransactionBuilder.init(fromAddress, client)
+        val builder = ClientTransactionBuilder.init(fromAddress, client)
 
         builder.sendCoins(listOf(coinId), toAddress, PtbArgument.u64(50000000000uL))
 

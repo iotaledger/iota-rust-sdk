@@ -18,7 +18,7 @@ fun main() = runBlocking {
                         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
                 )
 
-        val builder = TransactionBuilder.init(fromAddress, client)
+        val builder = ClientTransactionBuilder.init(fromAddress, client)
 
         builder.sendIota(
                 toAddress,
