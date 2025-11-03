@@ -3,6 +3,7 @@
 
 from lib.iota_sdk_ffi import *
 
+import sys
 import asyncio
 
 
@@ -64,6 +65,7 @@ async def main():
 
     except Exception as e:
         print(f"Error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

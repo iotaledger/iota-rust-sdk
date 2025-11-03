@@ -1,9 +1,10 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-import asyncio
 from lib.iota_sdk_ffi import *
 
+import sys
+import asyncio
 
 async def main():
     try:
@@ -22,6 +23,7 @@ async def main():
 
     except Exception as e:
         print(f"Error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
