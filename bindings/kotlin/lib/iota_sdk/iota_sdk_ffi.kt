@@ -2987,8 +2987,6 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4211,8 +4209,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish(
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price(
 ): Short
@@ -6751,11 +6747,9 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(`ptr`: Pointer,`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(`ptr`: Pointer,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(`ptr`: Pointer,`objectId`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(`ptr`: Pointer,`objectIds`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(`ptr`: Pointer,`budget`: Long,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins(`ptr`: Pointer,`objectIds`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(`ptr`: Pointer,`price`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9525,13 +9519,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish() != 32200.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 43178.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 26787.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() != 48686.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins() != 13036.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() != 7437.toShort()) {
@@ -41724,19 +41715,14 @@ public interface TransactionBuilderInterface {
     suspend fun `finish`(): Transaction
     
     /**
-     * Add a gas object to use to pay for the transaction.
+     * Add gas coins that will be consumed. Optional.
      */
-    fun `gas`(`objectId`: ObjectId): TransactionBuilder
+    fun `gas`(`objectIds`: List<ObjectId>): TransactionBuilder
     
     /**
      * Set the gas budget for the transaction.
      */
     fun `gasBudget`(`budget`: kotlin.ULong): TransactionBuilder
-    
-    /**
-     * Add gas objects to pay for the transaction.
-     */
-    fun `gasCoins`(`objectIds`: List<ObjectId>): TransactionBuilder
     
     /**
      * Set the gas price for the transaction.
@@ -42060,13 +42046,13 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Add a gas object to use to pay for the transaction.
-     */override fun `gas`(`objectId`: ObjectId): TransactionBuilder {
+     * Add gas coins that will be consumed. Optional.
+     */override fun `gas`(`objectIds`: List<ObjectId>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(
-        it, FfiConverterTypeObjectId.lower(`objectId`),_status)
+        it, FfiConverterSequenceTypeObjectId.lower(`objectIds`),_status)
 }
     }
     )
@@ -42082,21 +42068,6 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
         it, FfiConverterULong.lower(`budget`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Add gas objects to pay for the transaction.
-     */override fun `gasCoins`(`objectIds`: List<ObjectId>): TransactionBuilder {
-            return FfiConverterTypeTransactionBuilder.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins(
-        it, FfiConverterSequenceTypeObjectId.lower(`objectIds`),_status)
 }
     }
     )
