@@ -1,0 +1,4 @@
+enable-all-features = true
+pre-release-hook = [
+  "../../gen-changelog.sh",
+]
