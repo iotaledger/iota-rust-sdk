@@ -65,18 +65,10 @@ impl TransactionBuilder {
         )
     }
 
-    /// Add a gas object to use to pay for the transaction.
-    pub fn gas(self: Arc<Self>, object_ref: ObjectReference) -> Arc<Self> {
+    /// Add gas coins that will be consumed. Optional.
+    pub fn gas(self: Arc<Self>, object_refs: Vec<ObjectReference>) -> Arc<Self> {
         self.write(|builder| {
-            builder.gas(object_ref.into());
-        });
-        self
-    }
-
-    /// Add gas objects to pay for the transaction.
-    pub fn gas_coins(self: Arc<Self>, object_refs: Vec<ObjectReference>) -> Arc<Self> {
-        self.write(|builder| {
-            builder.gas_coins(object_refs.into_iter().map(|id| id.into()));
+            builder.gas(object_refs.into_iter().map(|id| id.into()));
         });
         self
     }

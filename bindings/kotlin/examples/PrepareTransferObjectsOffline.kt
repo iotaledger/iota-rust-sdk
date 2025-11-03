@@ -49,7 +49,7 @@ fun main() = runBlocking {
         val builder = TransactionBuilder(fromAddress)
 
         builder.transferObjects(toAddress, objsToTransfer)
-        builder.gas(gasCoin.objectRef()).gasPrice(gasPrice ?: 100uL).gasBudget(500000000uL)
+        builder.gas(listOf(gasCoin.objectRef())).gasPrice(gasPrice ?: 100uL).gasBudget(500000000uL)
 
         val txn = builder.finish()
 

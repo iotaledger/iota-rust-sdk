@@ -2882,7 +2882,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas()
 	})
-	if checksum != 32123 {
+	if checksum != 522 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas: UniFFI API checksum mismatch")
 	}
@@ -2894,15 +2894,6 @@ func uniffiCheckChecksums() {
 	if checksum != 27427 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_budget: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_coins()
-	})
-	if checksum != 14058 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_coins: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5969,7 +5960,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas()
 	})
-	if checksum != 23382 {
+	if checksum != 23371 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas: UniFFI API checksum mismatch")
 	}
@@ -5981,15 +5972,6 @@ func uniffiCheckChecksums() {
 	if checksum != 48686 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins()
-	})
-	if checksum != 65133 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -12572,12 +12554,10 @@ type ClientTransactionBuilderInterface interface {
 	Expiration(epoch uint64) *ClientTransactionBuilder
 	// Convert this builder into a transaction.
 	Finish() (*Transaction, error)
-	// Add a gas object to use to pay for the transaction.
-	Gas(objectId *ObjectId) *ClientTransactionBuilder
+	// Add gas coins that will be consumed. Optional.
+	Gas(objectIds []*ObjectId) *ClientTransactionBuilder
 	// Set the gas budget for the transaction.
 	GasBudget(budget uint64) *ClientTransactionBuilder
-	// Add gas objects to pay for the transaction.
-	GasCoins(objectIds []*ObjectId) *ClientTransactionBuilder
 	// Set the gas price for the transaction.
 	GasPrice(price uint64) *ClientTransactionBuilder
 	// Set the gas station sponsor.
@@ -12825,13 +12805,13 @@ func (_self *ClientTransactionBuilder) Finish() (*Transaction, error) {
 	return res, err 
 }
 
-// Add a gas object to use to pay for the transaction.
-func (_self *ClientTransactionBuilder) Gas(objectId *ObjectId) *ClientTransactionBuilder {
+// Add gas coins that will be consumed. Optional.
+func (_self *ClientTransactionBuilder) Gas(objectIds []*ObjectId) *ClientTransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId),_uniffiStatus)
+		_pointer,FfiConverterSequenceObjectIdINSTANCE.Lower(objectIds),_uniffiStatus)
 	}))
 }
 
@@ -12842,16 +12822,6 @@ func (_self *ClientTransactionBuilder) GasBudget(budget uint64) *ClientTransacti
 	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_budget(
 		_pointer,FfiConverterUint64INSTANCE.Lower(budget),_uniffiStatus)
-	}))
-}
-
-// Add gas objects to pay for the transaction.
-func (_self *ClientTransactionBuilder) GasCoins(objectIds []*ObjectId) *ClientTransactionBuilder {
-	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_coins(
-		_pointer,FfiConverterSequenceObjectIdINSTANCE.Lower(objectIds),_uniffiStatus)
 	}))
 }
 
@@ -25807,12 +25777,10 @@ type TransactionBuilderInterface interface {
 	Expiration(epoch uint64) *TransactionBuilder
 	// Convert this builder into a transaction.
 	Finish() (*Transaction, error)
-	// Add a gas object to use to pay for the transaction.
-	Gas(objectRef ObjectReference) *TransactionBuilder
+	// Add gas coins that will be consumed. Optional.
+	Gas(objectRefs []ObjectReference) *TransactionBuilder
 	// Set the gas budget for the transaction.
 	GasBudget(budget uint64) *TransactionBuilder
-	// Add gas objects to pay for the transaction.
-	GasCoins(objectRefs []ObjectReference) *TransactionBuilder
 	// Set the gas price for the transaction.
 	GasPrice(price uint64) *TransactionBuilder
 	// Set the gas station sponsor.
@@ -25965,13 +25933,13 @@ func (_self *TransactionBuilder) Finish() (*Transaction, error) {
 		}
 }
 
-// Add a gas object to use to pay for the transaction.
-func (_self *TransactionBuilder) Gas(objectRef ObjectReference) *TransactionBuilder {
+// Add gas coins that will be consumed. Optional.
+func (_self *TransactionBuilder) Gas(objectRefs []ObjectReference) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(
-		_pointer,FfiConverterObjectReferenceINSTANCE.Lower(objectRef),_uniffiStatus)
+		_pointer,FfiConverterSequenceObjectReferenceINSTANCE.Lower(objectRefs),_uniffiStatus)
 	}))
 }
 
@@ -25982,16 +25950,6 @@ func (_self *TransactionBuilder) GasBudget(budget uint64) *TransactionBuilder {
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
 		_pointer,FfiConverterUint64INSTANCE.Lower(budget),_uniffiStatus)
-	}))
-}
-
-// Add gas objects to pay for the transaction.
-func (_self *TransactionBuilder) GasCoins(objectRefs []ObjectReference) *TransactionBuilder {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins(
-		_pointer,FfiConverterSequenceObjectReferenceINSTANCE.Lower(objectRefs),_uniffiStatus)
 	}))
 }
 

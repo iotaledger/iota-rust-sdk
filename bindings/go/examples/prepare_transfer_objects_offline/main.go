@@ -67,7 +67,7 @@ func main() {
 
 	builder := sdk.NewTransactionBuilder(fromAddress)
 	builder.TransferObjects(toAddress, objsToTransfer)
-	builder.Gas(gasCoin).GasPrice(*gasPrice).GasBudget(500000000)
+	builder.Gas([]sdk.ObjectReference{gasCoin}).GasPrice(*gasPrice).GasBudget(500000000)
 
 	txn, err := builder.Finish()
 	if err != nil {

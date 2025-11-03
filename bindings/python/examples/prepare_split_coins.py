@@ -31,10 +31,6 @@ async def main():
                 PtbArgument.res("coin2"),
                 PtbArgument.res("coin3"),
             ],
-        ).gas(
-            coin_id
-        ).gas_budget(
-            1000000000
         )
 
         txn = await builder.finish()

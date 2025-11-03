@@ -66,18 +66,10 @@ impl ClientTransactionBuilder {
         )
     }
 
-    /// Add a gas object to use to pay for the transaction.
-    pub fn gas(self: Arc<Self>, object_id: &ObjectId) -> Arc<Self> {
+    /// Add gas coins that will be consumed. Optional.
+    pub fn gas(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
         self.write(|builder| {
-            builder.gas(**object_id);
-        });
-        self
-    }
-
-    /// Add gas objects to pay for the transaction.
-    pub fn gas_coins(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
-        self.write(|builder| {
-            builder.gas_coins(object_ids.into_iter().map(|id| **id));
+            builder.gas(object_ids.into_iter().map(|id| **id));
         });
         self
     }

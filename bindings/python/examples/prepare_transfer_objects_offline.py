@@ -47,7 +47,7 @@ async def main():
             to_address,
             objs_to_transfer,
         )
-        builder.gas(gas_coin.object_ref()).gas_price(gas_price).gas_budget(500000000)
+        builder.gas([gas_coin.object_ref()]).gas_price(gas_price).gas_budget(500000000)
 
         txn = builder.finish()
 
