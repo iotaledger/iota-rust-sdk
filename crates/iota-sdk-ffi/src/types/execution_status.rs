@@ -645,6 +645,9 @@ pub enum CommandArgumentError {
     /// Shared object operations such a wrapping, freezing, or converting to
     /// owned are not allowed.
     SharedObjectOperationNotAllowed,
+    /// Invalid argument arity. Expected a single argument but found a result
+    /// that expanded to multiple arguments.
+    InvalidArgumentArity,
 }
 
 /// An error with a upgrading a package

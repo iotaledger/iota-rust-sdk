@@ -1167,6 +1167,101 @@ impl ChangeEpochV2 {
     }
 }
 
+#[derive(derive_more::From, uniffi::Object)]
+pub struct ChangeEpochV3(pub iota_sdk::types::ChangeEpochV3);
+
+#[uniffi::export]
+impl ChangeEpochV3 {
+    #[uniffi::constructor]
+    #[expect(clippy::too_many_arguments)]
+    pub fn new(
+        epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<Arc<SystemPackage>>,
+        eligible_active_validators: Vec<u64>,
+    ) -> Self {
+        Self(iota_sdk::types::ChangeEpochV3 {
+            epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages: system_packages
+                .into_iter()
+                .map(|package| package.0.clone())
+                .collect(),
+            eligible_active_validators,
+        })
+    }
+
+    /// The next (to become) epoch ID.
+    pub fn epoch(&self) -> EpochId {
+        self.0.epoch
+    }
+
+    /// The protocol version in effect in the new epoch.
+    pub fn protocol_version(&self) -> ProtocolVersion {
+        self.0.protocol_version
+    }
+
+    /// The total amount of gas charged for storage during the epoch.
+    pub fn storage_charge(&self) -> u64 {
+        self.0.storage_charge
+    }
+
+    /// The total amount of gas charged for computation during the epoch.
+    pub fn computation_charge(&self) -> u64 {
+        self.0.computation_charge
+    }
+
+    /// The total amount of gas burned for computation during the epoch.
+    pub fn computation_charge_burned(&self) -> u64 {
+        self.0.computation_charge_burned
+    }
+
+    /// The amount of storage rebate refunded to the txn senders.
+    pub fn storage_rebate(&self) -> u64 {
+        self.0.storage_rebate
+    }
+
+    /// The non-refundable storage fee.
+    pub fn non_refundable_storage_fee(&self) -> u64 {
+        self.0.non_refundable_storage_fee
+    }
+
+    /// Unix timestamp when epoch started
+    pub fn epoch_start_timestamp_ms(&self) -> u64 {
+        self.0.epoch_start_timestamp_ms
+    }
+
+    /// System packages (specifically framework and move stdlib) that are
+    /// written before the new epoch starts.
+    pub fn system_packages(&self) -> Vec<Arc<SystemPackage>> {
+        self.0
+            .system_packages
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+
+    /// Vector of active validator indices eligible to take part in committee
+    /// selection because they support the new, target protocol version.
+    pub fn eligible_active_validators(&self) -> Vec<u64> {
+        self.0.eligible_active_validators.clone()
+    }
+}
+
 /// Expire old JWKs
 ///
 /// # BCS
@@ -1454,6 +1549,13 @@ impl EndOfEpochTransactionKind {
     #[uniffi::constructor]
     pub fn new_change_epoch_v2(tx: &ChangeEpochV2) -> Self {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV2(
+            tx.0.clone(),
+        ))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_change_epoch_v3(tx: &ChangeEpochV3) -> Self {
+        Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV3(
             tx.0.clone(),
         ))
     }
