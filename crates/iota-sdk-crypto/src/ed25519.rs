@@ -111,15 +111,16 @@ impl Ed25519PrivateKey {
     }
 }
 
-impl crate::PrivateKeyExt for Ed25519PrivateKey {
-    const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
+impl crate::ToFromBytes for Ed25519PrivateKey {
+    type Error = crate::PrivateKeyError;
+    type ByteArray = [u8; Self::LENGTH];
 
     /// Return the raw 32-byte private key
-    fn to_bytes(&self) -> Vec<u8> {
-        self.0.to_bytes().to_vec()
+    fn to_bytes(&self) -> Self::ByteArray {
+        self.0.to_bytes()
     }
 
-    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
+    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {
         if bytes.len() != Self::LENGTH {
             return Err(crate::PrivateKeyError::InvalidScheme(
                 "invalid ed25519 key length".to_string(),
@@ -129,6 +130,53 @@ impl crate::PrivateKeyExt for Ed25519PrivateKey {
         let mut arr = [0u8; Self::LENGTH];
         arr.copy_from_slice(bytes);
         Ok(Self::new(arr))
+    }
+}
+
+impl crate::PrivateKeyScheme for Ed25519PrivateKey {
+    const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
+}
+
+#[cfg(feature = "mnemonic")]
+impl crate::FromMnemonic for Ed25519PrivateKey {
+    type Error = crate::PrivateKeyError;
+
+    fn from_mnemonic(
+        phrase: &str,
+        account_index: impl Into<Option<u64>>,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
+        let path = format!(
+            "m/{}'/{}'/0'/0'/{}'",
+            crate::DERIVATION_PATH_PURPOSE_ED25519,
+            crate::DERIVATION_PATH_COIN_TYPE,
+            account_index.into().unwrap_or_default()
+        );
+        Self::from_mnemonic_with_path(phrase, path, password)
+    }
+
+    fn from_mnemonic_with_path(
+        phrase: &str,
+        path: String,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
+        use std::str::FromStr;
+
+        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
+        let seed = mnemonic.to_seed(password.into().unwrap_or_default());
+        let path = bip32::DerivationPath::from_str(&path)?
+            .into_iter()
+            .map(|c| c.0)
+            .collect::<Vec<_>>();
+        Ok(Self::new(slip10_ed25519::derive_ed25519_private_key(
+            &seed, &path,
+        )))
     }
 }
 

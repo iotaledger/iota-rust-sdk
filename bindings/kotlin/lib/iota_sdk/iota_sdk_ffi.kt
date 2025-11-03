@@ -2977,6 +2977,18 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4504,6 +4516,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate(
@@ -4780,6 +4796,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate(
@@ -4809,6 +4829,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new(
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem(
 ): Short
@@ -5390,6 +5414,10 @@ fun uniffi_iota_sdk_ffi_fn_free_ed25519privatekey(`ptr`: Pointer,uniffi_out_err:
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,`accountIndex`: Long,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path(`phrase`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6273,6 +6301,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(`value`: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,`accountIndex`: Long,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(`phrase`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(uniffi_out_err: UniffiRustCallStatus, 
@@ -6368,6 +6400,10 @@ fun uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(`ptr`: Pointer,uniffi_out_er
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,`accountIndex`: Long,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(`phrase`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9951,6 +9987,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der() != 42838.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic() != 55789.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path() != 15255.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem() != 53776.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -10365,6 +10407,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der() != 45448.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic() != 33082.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path() != 7431.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem() != 20937.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -10408,6 +10456,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der() != 63595.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic() != 57849.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path() != 7709.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem() != 28166.toShort()) {
@@ -18567,6 +18621,35 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Construct the private key from a mnemonic phrase
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Ed25519PrivateKey {
+            return FfiConverterTypeEd25519PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(
+        FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create an instance from a mnemonic phrase and a derivation path like
+     * `"m/44'/4218'/0'/0'/0'"`
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Ed25519PrivateKey {
+            return FfiConverterTypeEd25519PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path(
+        FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
 }
     )
     }
@@ -35070,6 +35153,35 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
 
         
     /**
+     * Construct the private key from a mnemonic phrase
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Secp256k1PrivateKey {
+            return FfiConverterTypeSecp256k1PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(
+        FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create an instance from a mnemonic phrase and a derivation path like
+     * `"m/54'/4218'/0'/0/0"`
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Secp256k1PrivateKey {
+            return FfiConverterTypeSecp256k1PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(
+        FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
      * Deserialize PKCS#8-encoded private key from PEM.
      */
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): Secp256k1PrivateKey {
@@ -36810,6 +36922,35 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Construct the private key from a mnemonic phrase
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Secp256r1PrivateKey {
+            return FfiConverterTypeSecp256r1PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
+        FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create an instance from a mnemonic phrase and a derivation path like
+     * `"m/74'/4218'/0'/0/0"`
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Secp256r1PrivateKey {
+            return FfiConverterTypeSecp256r1PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
+        FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
 }
     )
     }

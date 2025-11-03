@@ -1,7 +1,10 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::{crypto::PrivateKeyExt, types::SignatureScheme};
+use iota_sdk::{
+    crypto::{FromMnemonic, ToFromBech32, ToFromBytes},
+    types::SignatureScheme,
+};
 use rand::rngs::OsRng;
 
 use crate::{
@@ -84,6 +87,29 @@ impl Ed25519PrivateKey {
     #[uniffi::constructor]
     pub fn from_bech32(value: &str) -> Result<Self> {
         Ok(iota_sdk::crypto::ed25519::Ed25519PrivateKey::from_bech32(value)?.into())
+    }
+
+    /// Construct the private key from a mnemonic phrase
+    #[uniffi::constructor(default(password = "", account_index = 0))]
+    pub fn from_mnemonic(phrase: &str, account_index: u64, password: String) -> Result<Self> {
+        Ok(iota_sdk::crypto::ed25519::Ed25519PrivateKey::from_mnemonic(
+            phrase,
+            account_index,
+            password,
+        )?
+        .into())
+    }
+
+    /// Create an instance from a mnemonic phrase and a derivation path like
+    /// `"m/44'/4218'/0'/0'/0'"`
+    #[uniffi::constructor(default(password = ""))]
+    pub fn from_mnemonic_with_path(phrase: &str, path: String, password: String) -> Result<Self> {
+        Ok(
+            iota_sdk::crypto::ed25519::Ed25519PrivateKey::from_mnemonic_with_path(
+                phrase, path, password,
+            )?
+            .into(),
+        )
     }
 
     pub fn try_sign(&self, message: &[u8]) -> Result<Ed25519Signature> {

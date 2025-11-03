@@ -1973,6 +1973,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der() != 42838:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic() != 55789:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path() != 15255:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem() != 53776:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate() != 53932:
@@ -2249,6 +2253,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der() != 45448:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic() != 33082:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path() != 7431:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem() != 20937:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate() != 49496:
@@ -2278,6 +2286,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32() != 7016:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der() != 63595:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic() != 57849:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path() != 7709:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem() != 28166:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3420,6 +3432,20 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der.argtype
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5692,6 +5718,20 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5941,6 +5981,20 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -11514,6 +11568,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech3
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem.restype = ctypes.c_uint16
@@ -11928,6 +11988,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bec
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem.restype = ctypes.c_uint16
@@ -11973,6 +12039,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bec
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem.restype = ctypes.c_uint16
@@ -29054,6 +29126,51 @@ class Ed25519PrivateKey():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def from_mnemonic(cls, phrase: "str",account_index: "typing.Union[object, int]" = _DEFAULT,password: "typing.Union[object, str]" = _DEFAULT):
+        """
+        Construct the private key from a mnemonic phrase
+        """
+
+        _UniffiConverterString.check_lower(phrase)
+        
+        if account_index is _DEFAULT:
+            account_index = 0
+        _UniffiConverterUInt64.check_lower(account_index)
+        
+        if password is _DEFAULT:
+            password = ""
+        _UniffiConverterString.check_lower(password)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic,
+        _UniffiConverterString.lower(phrase),
+        _UniffiConverterUInt64.lower(account_index),
+        _UniffiConverterString.lower(password))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_mnemonic_with_path(cls, phrase: "str",path: "str",password: "typing.Union[object, str]" = _DEFAULT):
+        """
+        Create an instance from a mnemonic phrase and a derivation path like
+        `"m/44'/4218'/0'/0'/0'"`
+        """
+
+        _UniffiConverterString.check_lower(phrase)
+        
+        _UniffiConverterString.check_lower(path)
+        
+        if password is _DEFAULT:
+            password = ""
+        _UniffiConverterString.check_lower(password)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path,
+        _UniffiConverterString.lower(phrase),
+        _UniffiConverterString.lower(path),
+        _UniffiConverterString.lower(password))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def from_pem(cls, s: "str"):
         """
         Deserialize PKCS#8-encoded private key from PEM.
@@ -38209,6 +38326,51 @@ class Secp256k1PrivateKey():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def from_mnemonic(cls, phrase: "str",account_index: "typing.Union[object, int]" = _DEFAULT,password: "typing.Union[object, str]" = _DEFAULT):
+        """
+        Construct the private key from a mnemonic phrase
+        """
+
+        _UniffiConverterString.check_lower(phrase)
+        
+        if account_index is _DEFAULT:
+            account_index = 0
+        _UniffiConverterUInt64.check_lower(account_index)
+        
+        if password is _DEFAULT:
+            password = ""
+        _UniffiConverterString.check_lower(password)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic,
+        _UniffiConverterString.lower(phrase),
+        _UniffiConverterUInt64.lower(account_index),
+        _UniffiConverterString.lower(password))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_mnemonic_with_path(cls, phrase: "str",path: "str",password: "typing.Union[object, str]" = _DEFAULT):
+        """
+        Create an instance from a mnemonic phrase and a derivation path like
+        `"m/54'/4218'/0'/0/0"`
+        """
+
+        _UniffiConverterString.check_lower(phrase)
+        
+        _UniffiConverterString.check_lower(path)
+        
+        if password is _DEFAULT:
+            password = ""
+        _UniffiConverterString.check_lower(password)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path,
+        _UniffiConverterString.lower(phrase),
+        _UniffiConverterString.lower(path),
+        _UniffiConverterString.lower(password))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def from_pem(cls, s: "str"):
         """
         Deserialize PKCS#8-encoded private key from PEM.
@@ -39042,6 +39204,51 @@ class Secp256r1PrivateKey():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der,
         _UniffiConverterBytes.lower(bytes))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_mnemonic(cls, phrase: "str",account_index: "typing.Union[object, int]" = _DEFAULT,password: "typing.Union[object, str]" = _DEFAULT):
+        """
+        Construct the private key from a mnemonic phrase
+        """
+
+        _UniffiConverterString.check_lower(phrase)
+        
+        if account_index is _DEFAULT:
+            account_index = 0
+        _UniffiConverterUInt64.check_lower(account_index)
+        
+        if password is _DEFAULT:
+            password = ""
+        _UniffiConverterString.check_lower(password)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic,
+        _UniffiConverterString.lower(phrase),
+        _UniffiConverterUInt64.lower(account_index),
+        _UniffiConverterString.lower(password))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_mnemonic_with_path(cls, phrase: "str",path: "str",password: "typing.Union[object, str]" = _DEFAULT):
+        """
+        Create an instance from a mnemonic phrase and a derivation path like
+        `"m/74'/4218'/0'/0/0"`
+        """
+
+        _UniffiConverterString.check_lower(phrase)
+        
+        _UniffiConverterString.check_lower(path)
+        
+        if password is _DEFAULT:
+            password = ""
+        _UniffiConverterString.check_lower(password)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path,
+        _UniffiConverterString.lower(phrase),
+        _UniffiConverterString.lower(path),
+        _UniffiConverterString.lower(password))
         return cls._make_instance_(pointer)
 
     @classmethod
