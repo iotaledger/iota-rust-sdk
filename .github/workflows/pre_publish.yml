@@ -6,8 +6,8 @@ on:
       level:
         type: choice
         required: true
-        description: |-
-          The level of version bump to make.
+        description: |
+          The level of version bump to make
           Possible values:
           - major:   Increase the major version (x.0.0)
           - minor:   Increase the minor version (x.y.0)
