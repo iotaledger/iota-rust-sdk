@@ -2,7 +2,7 @@ name: Bindings
 
 on:
   push:
-    branches: [develop, sdk-bindings]
+    branches: [develop]
     paths:
       - ".github/workflow/bindings.yml"
       - "bindings/**"
