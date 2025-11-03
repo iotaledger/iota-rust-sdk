@@ -7155,6 +7155,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic()
+	})
+	if checksum != 55789 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path()
+	})
+	if checksum != 15255 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem()
 	})
 	if checksum != 53776 {
@@ -8397,6 +8415,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic()
+	})
+	if checksum != 33082 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path()
+	})
+	if checksum != 7431 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem()
 	})
 	if checksum != 20937 {
@@ -8528,6 +8564,24 @@ func uniffiCheckChecksums() {
 	if checksum != 63595 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic()
+	})
+	if checksum != 57849 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path()
+	})
+	if checksum != 7709 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -12991,6 +13045,33 @@ func Ed25519PrivateKeyFromBech32(value string) (*Ed25519PrivateKey, error) {
 func Ed25519PrivateKeyFromDer(bytes []byte) (*Ed25519PrivateKey, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Construct the private key from a mnemonic phrase
+func Ed25519PrivateKeyFromMnemonic(phrase string, accountIndex uint64, password string) (*Ed25519PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(FfiConverterStringINSTANCE.Lower(phrase), FfiConverterUint64INSTANCE.Lower(accountIndex), FfiConverterStringINSTANCE.Lower(password),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Create an instance from a mnemonic phrase and a derivation path like
+// `"m/44'/4218'/0'/0'/0'"`
+func Ed25519PrivateKeyFromMnemonicWithPath(phrase string, path string, password string) (*Ed25519PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path(FfiConverterStringINSTANCE.Lower(phrase), FfiConverterStringINSTANCE.Lower(path), FfiConverterStringINSTANCE.Lower(password),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Ed25519PrivateKey
@@ -21622,6 +21703,33 @@ func Secp256k1PrivateKeyFromDer(bytes []byte) (*Secp256k1PrivateKey, error) {
 		}
 }
 
+// Construct the private key from a mnemonic phrase
+func Secp256k1PrivateKeyFromMnemonic(phrase string, accountIndex uint64, password string) (*Secp256k1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(FfiConverterStringINSTANCE.Lower(phrase), FfiConverterUint64INSTANCE.Lower(accountIndex), FfiConverterStringINSTANCE.Lower(password),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256k1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256k1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Create an instance from a mnemonic phrase and a derivation path like
+// `"m/54'/4218'/0'/0/0"`
+func Secp256k1PrivateKeyFromMnemonicWithPath(phrase string, path string, password string) (*Secp256k1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(FfiConverterStringINSTANCE.Lower(phrase), FfiConverterStringINSTANCE.Lower(path), FfiConverterStringINSTANCE.Lower(password),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256k1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256k1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
 // Deserialize PKCS#8-encoded private key from PEM.
 func Secp256k1PrivateKeyFromPem(s string) (*Secp256k1PrivateKey, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
@@ -22455,6 +22563,33 @@ func Secp256r1PrivateKeyFromBech32(value string) (*Secp256r1PrivateKey, error) {
 func Secp256r1PrivateKeyFromDer(bytes []byte) (*Secp256r1PrivateKey, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Construct the private key from a mnemonic phrase
+func Secp256r1PrivateKeyFromMnemonic(phrase string, accountIndex uint64, password string) (*Secp256r1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(FfiConverterStringINSTANCE.Lower(phrase), FfiConverterUint64INSTANCE.Lower(accountIndex), FfiConverterStringINSTANCE.Lower(password),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Secp256r1PrivateKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterSecp256r1PrivateKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Create an instance from a mnemonic phrase and a derivation path like
+// `"m/74'/4218'/0'/0/0"`
+func Secp256r1PrivateKeyFromMnemonicWithPath(phrase string, path string, password string) (*Secp256r1PrivateKey, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(FfiConverterStringINSTANCE.Lower(phrase), FfiConverterStringINSTANCE.Lower(path), FfiConverterStringINSTANCE.Lower(password),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Secp256r1PrivateKey

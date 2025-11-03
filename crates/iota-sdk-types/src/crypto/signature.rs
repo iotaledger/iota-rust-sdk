@@ -212,16 +212,23 @@ impl SimpleSignature {
 /// zklogin-flag     = %x05
 /// passkey-flag     = %x06
 /// ```
-#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd, Ord, derive_more::Display)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
 pub enum SignatureScheme {
+    #[display("ed25519")]
     Ed25519 = 0x00,
+    #[display("secp256k1")]
     Secp256k1 = 0x01,
+    #[display("secp256r1")]
     Secp256r1 = 0x02,
+    #[display("multisig")]
     Multisig = 0x03,
+    #[display("bls12381")]
     Bls12381 = 0x04, // This is currently not supported for user addresses
+    #[display("zklogin")]
     ZkLogin = 0x05,
+    #[display("passkey")]
     Passkey = 0x06,
 }
 
@@ -229,19 +236,6 @@ impl SignatureScheme {
     crate::def_is!(
         Ed25519, Secp256k1, Secp256r1, Multisig, Bls12381, ZkLogin, Passkey,
     );
-
-    /// Return the name of this signature scheme
-    pub fn name(self) -> &'static str {
-        match self {
-            SignatureScheme::Ed25519 => "ed25519",
-            SignatureScheme::Secp256k1 => "secp256k1",
-            SignatureScheme::Secp256r1 => "secp256r1",
-            SignatureScheme::Multisig => "multisig",
-            SignatureScheme::Bls12381 => "bls12381",
-            SignatureScheme::ZkLogin => "zklogin",
-            SignatureScheme::Passkey => "passkey",
-        }
-    }
 
     /// Try constructing from a byte flag
     pub fn from_byte(flag: u8) -> Result<Self, InvalidSignatureScheme> {
