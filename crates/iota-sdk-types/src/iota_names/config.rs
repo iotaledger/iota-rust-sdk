@@ -48,7 +48,7 @@ impl IotaNamesConfig {
         }
     }
 
-    pub fn from_env() -> anyhow::Result<Self> {
+    pub fn from_env() -> eyre::Result<Self> {
         Ok(Self::new(
             std::env::var("IOTA_NAMES_PACKAGE_ADDRESS")?.parse()?,
             std::env::var("IOTA_NAMES_OBJECT_ID")?.parse()?,

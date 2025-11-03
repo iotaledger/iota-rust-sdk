@@ -11,5 +11,6 @@ fun main() = runBlocking {
         println("Chain ID: $chainId")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

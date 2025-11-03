@@ -9,6 +9,14 @@ import (
 	"log"
 )
 
+func identifier(ident string) *sdk.Identifier {
+	identifier, err := sdk.NewIdentifier(ident)
+	if err != nil {
+		log.Fatalf("Failed to parse identifier: %v", err)
+	}
+	return identifier
+}
+
 func main() {
 	client := sdk.GraphQlClientNewLocalnet()
 	gasStationUrl := "http://0.0.0.0:9527"
@@ -20,8 +28,8 @@ func main() {
 	builder := sdk.TransactionBuilderInit(sender, client)
 
 	package_id := sdk.AddressStdLib()
-	module_name, _ := sdk.NewIdentifier("u64")
-	function_name, _ := sdk.NewIdentifier("sqrt")
+	module_name := identifier("u64")
+	function_name := identifier("sqrt")
 
 	builder.MoveCall(
 		package_id,
@@ -37,13 +45,13 @@ func main() {
 
 	builder.GasStationSponsor(gasStationUrl, nil, &headers)
 
-	res, err := builder.Execute(simpleKey, true)
+	res, err := builder.Execute(simpleKey, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to sponsor transaction: %v", err)
 	}
 
 	if res != nil {
-		log.Printf("%v", *res)
+		log.Printf("%v", res)
 	}
 
 	fmt.Print("Sponsored transaction was successful!")

@@ -4,6 +4,8 @@ version = "3.0.0"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
+readme = "../../README.md"
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "The official SDK for IOTA"
 
 [features]
@@ -16,6 +18,8 @@ default = [
   "zklogin",
   "pem",
   "bls12381",
+  "bech32",
+  "mnemonic",
   "graphql",
   "txn-builder",
   "types",
@@ -35,6 +39,8 @@ secp256k1 = ["crypto", "iota-crypto/secp256k1"]
 zklogin = ["crypto", "iota-crypto/zklogin"]
 pem = ["crypto", "iota-crypto/pem"]
 bls12381 = ["crypto", "iota-crypto/bls12381"]
+bech32 = ["crypto", "iota-crypto/bech32"]
+mnemonic = ["crypto", "iota-crypto/mnemonic"]
 
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
@@ -51,21 +57,21 @@ proptest = ["types", "iota-types/proptest"]
 schemars = ["types", "iota-types/schemars"]
 
 [dependencies]
-iota-crypto = { path = "../iota-crypto", features = ["ed25519"], optional = true }
-iota-graphql-client = { path = "../iota-graphql-client", optional = true }
-iota-transaction-builder = { path = "../iota-transaction-builder", optional = true }
-iota-types = { package = "iota-sdk-types", path = "../iota-sdk-types", features = ["rand"], optional = true }
+iota-crypto = { workspace = true, features = ["ed25519"], optional = true }
+iota-graphql-client = { workspace = true, optional = true }
+iota-transaction-builder = { workspace = true, optional = true }
+iota-types = { workspace = true, features = ["rand"], optional = true }
 
 [dev-dependencies]
-base64ct = { version = "1.6.0", features = ["alloc", "std"] }
-bcs = "0.1.4"
-cynic = "3.7.3"
-eyre = "0.6"
-hex = "0.4.3"
-rand = "0.8.5"
-reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
-serde_json = { version = "1.0.95" }
-tokio = { version = "1.40.0", features = ["full"] }
+base64ct = { workspace = true, features = ["alloc", "std"] }
+bcs.workspace = true
+cynic.workspace = true
+eyre.workspace = true
+hex.workspace = true
+rand.workspace = true
+reqwest = { workspace = true, default-features = false, features = ["rustls-tls", "json"] }
+serde_json.workspace = true
+tokio = { workspace = true, features = ["full"] }
 
 [build-dependencies]
-iota-graphql-client-build = { path = "../iota-graphql-client-build" }
+iota-graphql-client-build.workspace = true

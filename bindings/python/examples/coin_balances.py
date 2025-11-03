@@ -15,7 +15,9 @@ async def main():
 
     coins = await client.coins(address)
     for coin in coins.data:
-        print(f"Coin = {coin.id().to_hex()}, Coin Type = {coin.coin_type().as_struct_tag()}, Balance = {coin.balance()}")
+        print(
+            f"Coin = {coin.id().to_hex()}, Coin Type = {coin.coin_type().as_struct_tag()}, Balance = {coin.balance()}"
+        )
 
     balance = await client.balance(address)
     print(f"Total Balance = {balance}")

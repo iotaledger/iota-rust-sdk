@@ -13,7 +13,7 @@ use crate::{
 
 #[derive(derive_more::From, uniffi::Object)]
 pub struct ValidatorCommitteeSignatureVerifier(
-    pub iota_crypto::validator::ValidatorCommitteeSignatureVerifier,
+    pub iota_sdk::crypto::validator::ValidatorCommitteeSignatureVerifier,
 );
 
 #[uniffi::export]
@@ -21,7 +21,9 @@ impl ValidatorCommitteeSignatureVerifier {
     #[uniffi::constructor]
     pub fn new(committee: ValidatorCommittee) -> Result<Self> {
         Ok(Self(
-            iota_crypto::validator::ValidatorCommitteeSignatureVerifier::new(committee.into())?,
+            iota_sdk::crypto::validator::ValidatorCommitteeSignatureVerifier::new(
+                committee.into(),
+            )?,
         ))
     }
 
@@ -38,13 +40,9 @@ impl ValidatorCommitteeSignatureVerifier {
     }
 
     pub fn verify(&self, message: &[u8], signature: &ValidatorSignature) -> Result<()> {
-        Ok(
-            iota_crypto::Verifier::<iota_types::ValidatorSignature>::verify(
-                &self.0,
-                message,
-                &signature.0,
-            )?,
-        )
+        Ok(iota_sdk::crypto::Verifier::<
+            iota_sdk::types::ValidatorSignature,
+        >::verify(&self.0, message, &signature.0)?)
     }
 
     pub fn verify_aggregated(
@@ -52,15 +50,15 @@ impl ValidatorCommitteeSignatureVerifier {
         message: &[u8],
         signature: &ValidatorAggregatedSignature,
     ) -> Result<()> {
-        Ok(iota_crypto::Verifier::<
-            iota_types::ValidatorAggregatedSignature,
+        Ok(iota_sdk::crypto::Verifier::<
+            iota_sdk::types::ValidatorAggregatedSignature,
         >::verify(&self.0, message, &signature.0)?)
     }
 }
 
 #[derive(derive_more::From, uniffi::Object)]
 pub struct ValidatorCommitteeSignatureAggregator(
-    pub RwLock<iota_crypto::validator::ValidatorCommitteeSignatureAggregator>,
+    pub RwLock<iota_sdk::crypto::validator::ValidatorCommitteeSignatureAggregator>,
 );
 
 #[uniffi::export]
@@ -71,7 +69,7 @@ impl ValidatorCommitteeSignatureAggregator {
         summary: &CheckpointSummary,
     ) -> Result<Self> {
         Ok(Self(
-            iota_crypto::validator::ValidatorCommitteeSignatureAggregator::new_checkpoint_summary(
+            iota_sdk::crypto::validator::ValidatorCommitteeSignatureAggregator::new_checkpoint_summary(
                 committee.into(),
                 &summary.0,
             )?

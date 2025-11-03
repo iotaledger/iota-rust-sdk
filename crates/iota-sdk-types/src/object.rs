@@ -467,11 +467,11 @@ impl Object {
     }
 
     #[cfg(feature = "serde")]
-    pub fn to_rust<T: serde::de::DeserializeOwned>(&self) -> anyhow::Result<T> {
-        use anyhow::Context;
+    pub fn to_rust<T: serde::de::DeserializeOwned>(&self) -> eyre::Result<T> {
+        use eyre::OptionExt;
 
         Ok(bcs::from_bytes::<T>(
-            &self.as_struct_opt().context("not a struct")?.contents,
+            &self.as_struct_opt().ok_or_eyre("not a struct")?.contents,
         )?)
     }
 }
@@ -597,9 +597,9 @@ mod serialization {
         fn into_struct_tag(self) -> StructTag {
             match self {
                 MoveStructType::Other(tag) => tag,
-                MoveStructType::GasCoin => StructTag::gas_coin(),
-                MoveStructType::StakedIota => StructTag::staked_iota(),
-                MoveStructType::Coin(type_tag) => StructTag::coin(type_tag),
+                MoveStructType::GasCoin => StructTag::new_gas_coin(),
+                MoveStructType::StakedIota => StructTag::new_staked_iota(),
+                MoveStructType::Coin(type_tag) => StructTag::new_coin(type_tag),
             }
         }
     }

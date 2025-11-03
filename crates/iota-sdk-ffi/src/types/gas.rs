@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::GasCostSummary;
+use iota_sdk::types::GasCostSummary;
 
 /// Summary of gas charges.
 ///
