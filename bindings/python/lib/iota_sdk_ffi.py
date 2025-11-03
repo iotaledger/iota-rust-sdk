@@ -1665,11 +1665,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish() != 32200:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 43178:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 26787:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() != 48686:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins() != 13036:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price() != 7437:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6869,7 +6867,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish.argtypes = (
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas.argtypes = (
     ctypes.c_void_p,
-    ctypes.c_void_p,
+    _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas.restype = ctypes.c_void_p
@@ -6879,12 +6877,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget.argtypes 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins.argtypes = (
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price.argtypes = (
     ctypes.c_void_p,
     ctypes.c_uint64,
@@ -11112,9 +11104,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas.restype = 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_coins.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_price.restype = ctypes.c_uint16
@@ -41798,21 +41787,15 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def gas(self, object_id: "ObjectId"):
+    def gas(self, object_ids: "typing.List[ObjectId]"):
         """
-        Add a gas object to use to pay for the transaction.
+        Add gas coins that will be consumed. Optional.
         """
 
         raise NotImplementedError
     def gas_budget(self, budget: "int"):
         """
         Set the gas budget for the transaction.
-        """
-
-        raise NotImplementedError
-    def gas_coins(self, object_ids: "typing.List[ObjectId]"):
-        """
-        Add gas objects to pay for the transaction.
         """
 
         raise NotImplementedError
@@ -42135,16 +42118,16 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    def gas(self, object_id: "ObjectId") -> "TransactionBuilder":
+    def gas(self, object_ids: "typing.List[ObjectId]") -> "TransactionBuilder":
         """
-        Add a gas object to use to pay for the transaction.
+        Add gas coins that will be consumed. Optional.
         """
 
-        _UniffiConverterTypeObjectId.check_lower(object_id)
+        _UniffiConverterSequenceTypeObjectId.check_lower(object_ids)
         
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas,self._uniffi_clone_pointer(),
-        _UniffiConverterTypeObjectId.lower(object_id))
+        _UniffiConverterSequenceTypeObjectId.lower(object_ids))
         )
 
 
@@ -42161,22 +42144,6 @@ _UniffiConverterTypeSdkFfiError,
         return _UniffiConverterTypeTransactionBuilder.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget,self._uniffi_clone_pointer(),
         _UniffiConverterUInt64.lower(budget))
-        )
-
-
-
-
-
-    def gas_coins(self, object_ids: "typing.List[ObjectId]") -> "TransactionBuilder":
-        """
-        Add gas objects to pay for the transaction.
-        """
-
-        _UniffiConverterSequenceTypeObjectId.check_lower(object_ids)
-        
-        return _UniffiConverterTypeTransactionBuilder.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_coins,self._uniffi_clone_pointer(),
-        _UniffiConverterSequenceTypeObjectId.lower(object_ids))
         )
 
 

@@ -21,15 +21,10 @@ async fn main() -> Result<()> {
     // 0x3358bea865960fea2a1c6844b6fc365f662463dd1821f619838eb2e606a53b6a::cert::CERT
     let coin =
         ObjectId::from_str("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?;
-    let gas_coin =
-        ObjectId::from_str("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
 
     let mut builder = TransactionBuilder::new(from_address).with_client(client.clone());
 
-    builder
-        .send_coins([coin], to_address, 50000000000u64)
-        .gas(gas_coin)
-        .gas_budget(1000000000);
+    builder.send_coins([coin], to_address, 50000000000u64);
 
     let txn = builder.finish().await?;
 
