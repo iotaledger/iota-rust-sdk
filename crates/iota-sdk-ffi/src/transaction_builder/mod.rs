@@ -211,7 +211,7 @@ impl TransactionBuilder {
         self
     }
 
-    /// Split a coin by the provided amounts.
+    /// Split a coin into many.
     #[uniffi::method(default(names = []))]
     pub fn split_coins(
         self: Arc<Self>,
