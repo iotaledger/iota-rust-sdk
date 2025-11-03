@@ -65,7 +65,7 @@ func main() {
 		*gasPrice = uint64(100)
 	}
 
-	builder := sdk.TransactionBuilderInit(fromAddress)
+	builder := sdk.NewTransactionBuilder(fromAddress)
 	builder.TransferObjects(toAddress, objsToTransfer)
 	builder.Gas(gasCoin).GasPrice(*gasPrice).GasBudget(500000000)
 

@@ -46,7 +46,7 @@ fun main() = runBlocking {
         }
         var gasPrice = client.referenceGasPrice()
 
-        val builder = TransactionBuilder.init(fromAddress)
+        val builder = TransactionBuilder(fromAddress)
 
         builder.transferObjects(toAddress, objsToTransfer)
         builder.gas(gasCoin.objectRef()).gasPrice(gasPrice ?: 100uL).gasBudget(500000000uL)
