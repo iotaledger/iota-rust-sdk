@@ -99,6 +99,8 @@ async def main():
 
         res = await builder.dry_run(True)
 
+        5/0
+
         if res.error is not None:
             raise Exception(f"Failed to lookup name: {res.error}")
 
