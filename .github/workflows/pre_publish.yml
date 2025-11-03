@@ -40,19 +40,19 @@ jobs:
         run: cargo install cargo-release --version 0.25.20
 
       - name: Dry run publish
-        run: eval "cargo release -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm --all-features"
+        run: eval "cargo release -p ${{inputs.package}} --allow-branch develop --no-confirm --all-features"
 
       - name: Get commits since last tag
         run: eval "cargo release changes"
 
       - name: Bump versions
-        run: eval "cargo release version -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm ${{inputs.level}} --execute"
+        run: eval "cargo release version -p ${{inputs.package}} --allow-branch develop --no-confirm ${{inputs.level}} --execute"
 
       - name: Commit packages
-        run: eval "cargo release commit --allow-branch develop,sdk-bindings --no-confirm --execute"
+        run: eval "cargo release commit --allow-branch develop --no-confirm --execute"
 
       - name: Tag commit
-        run: eval "cargo release tag -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm --tag-prefix '${{inputs.package}}-' --execute"
+        run: eval "cargo release tag -p ${{inputs.package}} --allow-branch develop --no-confirm --tag-prefix '${{inputs.package}}-' --execute"
 
       - name: Push commit
-        run: eval "cargo release push -p ${{inputs.package}} --allow-branch develop,sdk-bindings --no-confirm --execute"
+        run: eval "cargo release push -p ${{inputs.package}} --allow-branch develop --no-confirm --execute"
