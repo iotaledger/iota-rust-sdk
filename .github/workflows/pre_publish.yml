@@ -6,15 +6,15 @@ on:
       level:
         type: choice
         required: true
-        description: >
-          The level of version bump to make.<br />
-          Possible values:<br />
-          - major:   Increase the major version (x.0.0)<br />
-          - minor:   Increase the minor version (x.y.0)<br />
-          - patch:   Increase the patch version (x.y.z)<br />
-          - release: Remove the pre-version (x.y.z)<br />
-          - rc:      Increase the rc pre-version (x.y.z-rc.M)<br />
-          - beta:    Increase the beta pre-version (x.y.z-beta.M)<br />
+        description: |-
+          The level of version bump to make.
+          Possible values:
+          - major:   Increase the major version (x.0.0)
+          - minor:   Increase the minor version (x.y.0)
+          - patch:   Increase the patch version (x.y.z)
+          - release: Remove the pre-version (x.y.z)
+          - rc:      Increase the rc pre-version (x.y.z-rc.M)
+          - beta:    Increase the beta pre-version (x.y.z-beta.M)
           - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
         options:
           - major
