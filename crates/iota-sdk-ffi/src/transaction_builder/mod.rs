@@ -68,7 +68,7 @@ impl TransactionBuilder {
         )
     }
 
-    /// Add gas objects to pay for the transaction.
+    /// Add gas coins that will be consumed. Optional.
     pub fn gas(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
         self.write(|builder| {
             builder.gas(object_ids.iter().map(|id| ***id));
