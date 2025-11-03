@@ -14,7 +14,7 @@ async def main():
     sender = keypair.public_key().derive_address()
     simple_key = SimpleKeypair.from_ed25519(keypair)
 
-    builder = await ClientTransactionBuilder.init(sender, client)
+    builder = await TransactionBuilder(sender).with_client(client)
 
     builder.move_call(
         Address.std_lib(),

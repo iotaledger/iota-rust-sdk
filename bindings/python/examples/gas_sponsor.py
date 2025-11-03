@@ -17,7 +17,7 @@ async def main():
             "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
         )
 
-        builder = await ClientTransactionBuilder.init(sender, client)
+        builder = await TransactionBuilder(sender).with_client(client)
 
         package_addr = Address.std_lib()
         module_name = Identifier("u8")

@@ -37,19 +37,19 @@ async def main():
         gas_coin_id = ObjectId.from_hex(
             "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
         )
-        gas_coin = client.object(gas_coin_id)
+        gas_coin = await client.object(gas_coin_id)
         if gas_coin == None:
             raise Exception("Missing gas coin:", gas_coin)
-        gas_price = client.reference_gas_price() or 100
+        gas_price = await client.reference_gas_price() or 100
 
-        builder = await TransactionBuilder.init(from_address)
+        builder = TransactionBuilder(from_address)
         builder.transfer_objects(
             to_address,
             objs_to_transfer,
         )
-        builder.gas(gas_coin).gas_price(gas_price).gas_budget(500000000)
+        builder.gas(gas_coin.object_ref()).gas_price(gas_price).gas_budget(500000000)
 
-        txn = await builder.finish()
+        txn = builder.finish()
 
         print("Signing Digest:", txn.signing_digest_hex())
         print("Txn Bytes:", txn.to_base64())

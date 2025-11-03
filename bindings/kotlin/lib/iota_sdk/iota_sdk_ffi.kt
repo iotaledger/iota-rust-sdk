@@ -5060,7 +5060,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init(
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1(
 ): Short
@@ -6891,8 +6891,8 @@ fun uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(`ptr`: Pointer,uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(`sender`: Pointer,
-): Long
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(`sender`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(`ptr`: Pointer,`keypair`: Pointer,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(`ptr`: Pointer,`epoch`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -10878,7 +10878,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1() != 58632.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init() != 35894.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new() != 35216.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() != 63561.toShort()) {
@@ -42949,6 +42949,16 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
+    /**
+     * Create a new transaction builder and initialize its elements to default.
+     */
+    constructor(`sender`: Address) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(
+        FfiConverterTypeAddress.lower(`sender`),_status)
+}
+    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -43393,27 +43403,8 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
 
     
-    companion object {
-        
-    /**
-     * Create a new transaction builder and initialize its elements to default.
-     */
-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-     suspend fun `init`(`sender`: Address) : TransactionBuilder {
-        return uniffiRustCallAsync(
-        UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(FfiConverterTypeAddress.lower(`sender`),),
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
-        // lift function
-        { FfiConverterTypeTransactionBuilder.lift(it) },
-        // Error FFI converter
-        UniffiNullRustCallStatusErrorHandler,
-    )
-    }
-
-        
-    }
+    
+    companion object
     
 }
 

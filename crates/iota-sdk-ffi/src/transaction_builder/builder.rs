@@ -52,8 +52,8 @@ impl TransactionBuilder {
 #[uniffi::export(async_runtime = "tokio")]
 impl TransactionBuilder {
     /// Create a new transaction builder and initialize its elements to default.
-    #[uniffi::constructor(name = "init")]
-    pub async fn new(sender: &Address) -> Self {
+    #[uniffi::constructor]
+    pub fn new(sender: &Address) -> Self {
         Self(iota_sdk::transaction_builder::TransactionBuilder::new(**sender).into())
     }
 

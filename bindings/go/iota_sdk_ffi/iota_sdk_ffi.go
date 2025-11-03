@@ -9387,11 +9387,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new()
 	})
-	if checksum != 35894 {
+	if checksum != 35216 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -25898,34 +25898,13 @@ type TransactionBuilderInterface interface {
 type TransactionBuilder struct {
 	ffiObject FfiObject
 }
-
-
 // Create a new transaction builder and initialize its elements to default.
-func TransactionBuilderInit(sender *Address) *TransactionBuilder {
-	 res, _ :=uniffiRustCallAsync[error](
-        nil,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
-		},
-		// liftFn
-		func(ffi unsafe.Pointer) *TransactionBuilder {
-			return FfiConverterTransactionBuilderINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(FfiConverterAddressINSTANCE.Lower(sender)),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
-		},
-	)
-
-	return res 
+func NewTransactionBuilder(sender *Address) *TransactionBuilder {
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(FfiConverterAddressINSTANCE.Lower(sender),_uniffiStatus)
+	}))
 }
+
 
 
 

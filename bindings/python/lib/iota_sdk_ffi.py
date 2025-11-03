@@ -2467,7 +2467,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1() != 58632:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init() != 35894:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new() != 35216:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() != 63561:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -7058,10 +7058,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionbuilder.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionbuilder.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new.argtypes = (
     ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -12525,9 +12526,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64.rest
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1.restype = ctypes.c_uint16
@@ -43064,9 +43065,15 @@ class TransactionBuilder():
     """
 
     _pointer: ctypes.c_void_p
-    
-    def __init__(self, *args, **kwargs):
-        raise ValueError("This class has no default constructor")
+    def __init__(self, sender: "Address"):
+        """
+        Create a new transaction builder and initialize its elements to default.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(sender)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new,
+        _UniffiConverterTypeAddress.lower(sender))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -43085,29 +43092,6 @@ class TransactionBuilder():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
-    @classmethod
-    async def init(cls, sender: "Address"):
-        """
-        Create a new transaction builder and initialize its elements to default.
-        """
-
-        _UniffiConverterTypeAddress.check_lower(sender)
-        
-
-        return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(
-        _UniffiConverterTypeAddress.lower(sender)),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
-            _UniffiConverterTypeTransactionBuilder.lift,
-            
-    # Error FFI converter
-
-    None,
-
-        )
-
 
     async def execute_with_gas_station(self, keypair: "SimpleKeypair") -> "Value":
         _UniffiConverterTypeSimpleKeypair.check_lower(keypair)
