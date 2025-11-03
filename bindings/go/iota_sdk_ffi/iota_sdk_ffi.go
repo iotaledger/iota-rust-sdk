@@ -5780,7 +5780,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas()
 	})
-	if checksum != 37932 {
+	if checksum != 26787 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas: UniFFI API checksum mismatch")
 	}
@@ -24895,7 +24895,7 @@ type TransactionBuilderInterface interface {
 	Expiration(epoch uint64) *TransactionBuilder
 	// Convert this builder into a transaction.
 	Finish() (*Transaction, error)
-	// Add gas objects to pay for the transaction.
+	// Add gas coins that will be consumed. Optional.
 	Gas(objectIds []*ObjectId) *TransactionBuilder
 	// Set the gas budget for the transaction.
 	GasBudget(budget uint64) *TransactionBuilder
@@ -25146,7 +25146,7 @@ func (_self *TransactionBuilder) Finish() (*Transaction, error) {
 	return res, err 
 }
 
-// Add gas objects to pay for the transaction.
+// Add gas coins that will be consumed. Optional.
 func (_self *TransactionBuilder) Gas(objectIds []*ObjectId) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
