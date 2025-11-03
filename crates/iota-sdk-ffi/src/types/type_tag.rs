@@ -38,7 +38,7 @@ use crate::types::struct_tag::StructTag;
 /// ```
 #[derive(derive_more::Display, derive_more::From, uniffi::Object)]
 #[uniffi::export(Display)]
-pub struct TypeTag(pub iota_types::TypeTag);
+pub struct TypeTag(pub iota_sdk::types::TypeTag);
 
 #[uniffi::export]
 impl TypeTag {
@@ -127,57 +127,61 @@ impl TypeTag {
 
     #[uniffi::constructor]
     pub fn new_u8() -> Self {
-        Self(iota_types::TypeTag::U8)
+        Self(iota_sdk::types::TypeTag::U8)
     }
 
     #[uniffi::constructor]
     pub fn new_u16() -> Self {
-        Self(iota_types::TypeTag::U16)
+        Self(iota_sdk::types::TypeTag::U16)
     }
 
     #[uniffi::constructor]
     pub fn new_u32() -> Self {
-        Self(iota_types::TypeTag::U32)
+        Self(iota_sdk::types::TypeTag::U32)
     }
 
     #[uniffi::constructor]
     pub fn new_u64() -> Self {
-        Self(iota_types::TypeTag::U64)
+        Self(iota_sdk::types::TypeTag::U64)
     }
 
     #[uniffi::constructor]
     pub fn new_u128() -> Self {
-        Self(iota_types::TypeTag::U128)
+        Self(iota_sdk::types::TypeTag::U128)
     }
 
     #[uniffi::constructor]
     pub fn new_u256() -> Self {
-        Self(iota_types::TypeTag::U256)
+        Self(iota_sdk::types::TypeTag::U256)
     }
 
     #[uniffi::constructor]
     pub fn new_bool() -> Self {
-        Self(iota_types::TypeTag::Bool)
+        Self(iota_sdk::types::TypeTag::Bool)
     }
 
     #[uniffi::constructor]
     pub fn new_address() -> Self {
-        Self(iota_types::TypeTag::Address)
+        Self(iota_sdk::types::TypeTag::Address)
     }
 
     #[uniffi::constructor]
     pub fn new_signer() -> Self {
-        Self(iota_types::TypeTag::Signer)
+        Self(iota_sdk::types::TypeTag::Signer)
     }
 
     #[uniffi::constructor]
     pub fn new_vector(type_tag: &TypeTag) -> Self {
-        Self(iota_types::TypeTag::Vector(Box::new(type_tag.0.clone())))
+        Self(iota_sdk::types::TypeTag::Vector(Box::new(
+            type_tag.0.clone(),
+        )))
     }
 
     #[uniffi::constructor]
     pub fn new_struct(struct_tag: &StructTag) -> Self {
-        Self(iota_types::TypeTag::Struct(Box::new(struct_tag.0.clone())))
+        Self(iota_sdk::types::TypeTag::Struct(Box::new(
+            struct_tag.0.clone(),
+        )))
     }
 }
 

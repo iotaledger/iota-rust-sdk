@@ -37,13 +37,12 @@ fun main() = runBlocking {
         val userSignature = UserSignature.newSimple(signature)
 
         val effects = client.executeTx(listOf(userSignature), txn)
-        if (effects == null) {
-            throw Exception("Transaction execution failed")
-        }
+
         println("Digest: ${hexEncode(effects.digest().toBytes())}")
         println("Transaction status: ${effects.asV1().status}")
         println("Effects: ${effects.asV1()}")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

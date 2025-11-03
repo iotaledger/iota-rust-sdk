@@ -11,7 +11,7 @@ async def main():
         client = GraphQlClient.new_devnet()
 
         staked_iotas = await client.objects(
-            filter=ObjectFilter(type_tag="0x3::staking_pool::StakedIota")
+            filter=ObjectFilter(type_tag=str(StructTag.new_staked_iota()))
         )
         if len(staked_iotas.data) == 0:
             raise Exception("no staked iotas found")
@@ -21,15 +21,7 @@ async def main():
             staked_iota.owner().as_address(), client
         )
 
-        builder.move_call(
-            Address.system(),
-            Identifier("iota_system"),
-            Identifier("request_withdraw_stake"),
-            [
-                PtbArgument.shared_mut(ObjectId.system()),
-                PtbArgument.object_id(staked_iota.object_id()),
-            ],
-        )
+        builder.unstake(PtbArgument.object_id(staked_iota.object_id()))
 
         res = await builder.dry_run()
         if res.error is not None:

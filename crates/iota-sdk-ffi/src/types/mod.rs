@@ -22,13 +22,13 @@ pub mod type_tag;
 pub mod validator;
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct PersonalMessage(iota_types::PersonalMessage<'static>);
+pub struct PersonalMessage(iota_sdk::types::PersonalMessage<'static>);
 
 #[uniffi::export]
 impl PersonalMessage {
     #[uniffi::constructor]
     pub fn new(message_bytes: &[u8]) -> Self {
-        Self(iota_types::PersonalMessage(Cow::Owned(
+        Self(iota_sdk::types::PersonalMessage(Cow::Owned(
             message_bytes.to_vec(),
         )))
     }

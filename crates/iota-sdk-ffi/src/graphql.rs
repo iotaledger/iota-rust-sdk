@@ -1,13 +1,16 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{str::FromStr, sync::Arc};
+use std::{str::FromStr, sync::Arc, time::Duration};
 
-use iota_graphql_client::{
-    pagination::PaginationFilter,
-    query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
+use iota_sdk::{
+    graphql_client::{
+        WaitForTx,
+        pagination::PaginationFilter,
+        query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
+    },
+    types::{CheckpointSequenceNumber, def_is, iota_names::NameFormat},
 };
-use iota_types::{CheckpointSequenceNumber, def_is, iota_names::NameFormat};
 use tokio::sync::RwLock;
 
 use crate::{
@@ -35,12 +38,23 @@ use crate::{
     },
 };
 
+#[uniffi::remote(Enum)]
+/// Determines what to wait for after executing a transaction.
+pub enum WaitForTx {
+    /// Indicates that the transaction effects will be usable in subsequent
+    /// transactions, and that the transaction itself is indexed on the node.
+    Indexed,
+    /// Indicates that the transaction has been included in a checkpoint, and
+    /// all queries may include it.
+    Finalized,
+}
+
 /// The GraphQL client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
-pub struct GraphQLClient(RwLock<iota_graphql_client::Client>);
+pub struct GraphQLClient(RwLock<iota_sdk::graphql_client::Client>);
 
 impl GraphQLClient {
-    pub fn inner(&self) -> &RwLock<iota_graphql_client::Client> {
+    pub fn inner(&self) -> &RwLock<iota_sdk::graphql_client::Client> {
         &self.0
     }
 }
@@ -54,7 +68,7 @@ impl GraphQLClient {
     /// Create a new GraphQL client with the provided server address.
     #[uniffi::constructor]
     pub fn new(server: String) -> Result<Self> {
-        Ok(Self(RwLock::new(iota_graphql_client::Client::new(
+        Ok(Self(RwLock::new(iota_sdk::graphql_client::Client::new(
             &server,
         )?)))
     }
@@ -63,28 +77,28 @@ impl GraphQLClient {
     /// {MAINNET_HOST}.
     #[uniffi::constructor]
     pub fn new_mainnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_mainnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_mainnet()))
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
     #[uniffi::constructor]
     pub fn new_testnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_testnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_testnet()))
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
     #[uniffi::constructor]
     pub fn new_devnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_devnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_devnet()))
     }
 
     /// Create a new GraphQL client connected to the `localhost` GraphQL server:
     /// {DEFAULT_LOCAL_HOST}.
     #[uniffi::constructor]
     pub fn new_localnet() -> Self {
-        Self(RwLock::new(iota_graphql_client::Client::new_localnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_localnet()))
     }
 
     /// Get the chain identifier.
@@ -113,7 +127,7 @@ impl GraphQLClient {
 
     /// Get the protocol configuration.
     #[uniffi::method(default(version = None))]
-    pub async fn protocol_config(&self, version: Option<u64>) -> Result<Option<ProtocolConfigs>> {
+    pub async fn protocol_config(&self, version: Option<u64>) -> Result<ProtocolConfigs> {
         Ok(self.0.read().await.protocol_config(version).await?)
     }
 
@@ -364,18 +378,6 @@ impl GraphQLClient {
     ///
     /// Use this function together with the `ObjectFilter::owner` to get the
     /// objects owned by an address.
-    ///
-    /// # Example
-    ///
-    /// ```rust,ignore
-    /// let filter = ObjectFilter {
-    ///     type_tag: None,
-    ///     owner: Some(Address::from_str("test").unwrap().into()),
-    ///     object_ids: None,
-    /// };
-    ///
-    /// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-    /// ```
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn objects(
         &self,
@@ -625,11 +627,13 @@ impl GraphQLClient {
     }
 
     /// Execute a transaction.
+    #[uniffi::method(default(wait_for = None))]
     pub async fn execute_tx(
         &self,
         signatures: Vec<Arc<UserSignature>>,
         tx: &Transaction,
-    ) -> Result<Option<Arc<TransactionEffects>>> {
+        wait_for: Option<WaitForTx>,
+    ) -> Result<TransactionEffects> {
         Ok(self
             .0
             .read()
@@ -640,10 +644,44 @@ impl GraphQLClient {
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
                 &tx.0,
+                wait_for,
             )
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .into())
+    }
+
+    /// Returns whether the transaction for the given digest has been indexed
+    /// on the node. This means that it can be queries by its digest and its
+    /// effects will be usable for subsequent transactions. To check for
+    /// full finalization, use `is_tx_finalized`.
+    #[uniffi::method]
+    pub async fn is_tx_indexed_on_node(&self, digest: &Digest) -> Result<bool> {
+        Ok(self.0.read().await.is_tx_indexed_on_node(**digest).await?)
+    }
+
+    /// Returns whether the transaction for the given digest has been included
+    /// in a checkpoint (finalized).
+    #[uniffi::method]
+    pub async fn is_tx_finalized(&self, digest: &Digest) -> Result<bool> {
+        Ok(self.0.read().await.is_tx_finalized(**digest).await?)
+    }
+
+    /// Wait for the indexing or finalization of a transaction
+    /// by its digest. An optional timeout can be provided, which, if
+    /// exceeded, will return an error (default 60s).
+    #[uniffi::method(default(timeout = None))]
+    pub async fn wait_for_tx(
+        &self,
+        digest: &Digest,
+        wait_for: WaitForTx,
+        timeout: Option<Duration>,
+    ) -> Result<()> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .wait_for_tx(**digest, wait_for, timeout)
+            .await?)
     }
 
     // ===========================================================================
@@ -738,18 +776,6 @@ impl GraphQLClient {
     ///
     /// This returns `DynamicFieldOutput` which contains the name, the value
     /// as json, and object.
-    ///
-    /// # Example
-    /// ```rust,ignore
-    /// 
-    /// let client = iota_graphql_client::Client::new_devnet();
-    /// let address = ObjectId::SYSTEM.into();
-    /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-    ///
-    /// # alternatively, pass in the bcs bytes
-    /// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-    /// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-    /// ```
     pub async fn dynamic_field(
         &self,
         address: &Address,

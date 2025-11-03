@@ -66,9 +66,7 @@ async fn main() -> Result<()> {
     // When the query has no variables, just pass () as the type argument
     let operation = ChainIdQuery::build(());
     let response = client.run_query::<ChainIdQuery, ()>(&operation).await?;
-    if let Some(chain_id) = response.data {
-        println!("Chain ID: {}", chain_id.chain_identifier);
-    }
+    println!("Chain ID: {}", response.chain_identifier);
 
     Ok(())
 }
