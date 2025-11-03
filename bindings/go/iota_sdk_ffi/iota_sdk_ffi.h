@@ -2901,6 +2901,11 @@ void* uniffi_iota_sdk_ffi_fn_method_object_digest(void* ptr, RustCallStatus *out
 void* uniffi_iota_sdk_ffi_fn_method_object_object_id(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_OBJECT_REF
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_OBJECT_REF
+RustBuffer uniffi_iota_sdk_ffi_fn_method_object_object_ref(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_OBJECT_TYPE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECT_OBJECT_TYPE
 void* uniffi_iota_sdk_ffi_fn_method_object_object_type(void* ptr, RustCallStatus *out_status
@@ -3245,6 +3250,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(void* id, RustCal
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID_FROM_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID_FROM_HEX
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex(RustBuffer hex, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_REF
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OBJECT_REF
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_ref(RustBuffer id, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_OPTION
@@ -9963,6 +9973,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_object_object_id(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_OBJECT_REF
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_OBJECT_REF
+uint16_t uniffi_iota_sdk_ffi_checksum_method_object_object_ref(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_OBJECT_TYPE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECT_OBJECT_TYPE
 uint16_t uniffi_iota_sdk_ffi_checksum_method_object_object_type(void
@@ -12420,6 +12436,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID_FROM_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_ID_FROM_HEX
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_REF
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_OBJECT_REF
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref(void
     
 );
 #endif

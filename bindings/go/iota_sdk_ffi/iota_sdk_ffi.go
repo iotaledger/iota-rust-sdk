@@ -4680,6 +4680,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_object_object_ref()
+	})
+	if checksum != 13587 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_object_ref: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_object_object_type()
 	})
 	if checksum != 1843 {
@@ -8366,6 +8375,15 @@ func uniffiCheckChecksums() {
 	if checksum != 47640 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref()
+	})
+	if checksum != 24215 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -20381,6 +20399,8 @@ type ObjectInterface interface {
 	Digest() *Digest
 	// Return this object's id
 	ObjectId() *ObjectId
+	// Return this object's reference
+	ObjectRef() ObjectReference
 	// Return this object's type
 	ObjectType() *ObjectType
 	// Return this object's owner
@@ -20491,6 +20511,18 @@ func (_self *Object) ObjectId() *ObjectId {
 	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_object_object_id(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+// Return this object's reference
+func (_self *Object) ObjectRef() ObjectReference {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectReferenceINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_object_object_ref(
+		_pointer,_uniffiStatus),
+	}
 	}))
 }
 
@@ -21434,6 +21466,12 @@ func PtbArgumentObjectIdFromHex(hex string) (*PtbArgument, error) {
 		} else {
 			return FfiConverterPtbArgumentINSTANCE.Lift(_uniffiRV), nil
 		}
+}
+
+func PtbArgumentObjectRef(id ObjectReference) *PtbArgument {
+	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_ref(FfiConverterObjectReferenceINSTANCE.Lower(id),_uniffiStatus)
+	}))
 }
 
 func PtbArgumentOption(value **MoveArg) *PtbArgument {

@@ -1421,6 +1421,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_object_id() != 6575:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_object_object_ref() != 13587:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_object_type() != 1843:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_owner() != 3724:
@@ -2240,6 +2242,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id() != 41681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex() != 47640:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref() != 24215:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option() != 37559:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5303,6 +5307,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_object_id.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_object_id.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_object_ref.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_object_ref.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_object_type.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5640,6 +5649,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_ref.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_ref.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_option.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10942,6 +10956,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_digest.restype = ctypes.c_
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_object_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_object_id.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_object_ref.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_object_ref.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_object_type.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_object_object_type.restype = ctypes.c_uint16
@@ -12172,6 +12189,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option.restype = ctypes.c_uint16
@@ -37117,6 +37137,12 @@ class ObjectProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def object_ref(self, ):
+        """
+        Return this object's reference
+        """
+
+        raise NotImplementedError
     def object_type(self, ):
         """
         Return this object's type
@@ -37286,6 +37312,19 @@ class Object():
 
         return _UniffiConverterTypeObjectId.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_object_id,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def object_ref(self, ) -> "ObjectReference":
+        """
+        Return this object's reference
+        """
+
+        return _UniffiConverterTypeObjectReference.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_object_ref,self._uniffi_clone_pointer(),)
         )
 
 
@@ -38960,6 +38999,15 @@ class PtbArgument():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex,
         _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def object_ref(cls, id: "ObjectReference"):
+        _UniffiConverterTypeObjectReference.check_lower(id)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_ref,
+        _UniffiConverterTypeObjectReference.lower(id))
         return cls._make_instance_(pointer)
 
     @classmethod

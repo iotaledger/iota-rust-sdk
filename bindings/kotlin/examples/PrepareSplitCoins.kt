@@ -37,8 +37,6 @@ fun main() = runBlocking {
                                 PtbArgument.res("coin3")
                         )
                 )
-                .gas(coinId)
-                .gasBudget(1000000000uL)
 
         val txn = builder.finish()
 

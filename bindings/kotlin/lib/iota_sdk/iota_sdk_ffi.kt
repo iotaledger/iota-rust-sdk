@@ -3035,6 +3035,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4010,6 +4014,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_object_digest(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_object_id(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_object_object_ref(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_object_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_owner(
@@ -4829,6 +4835,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_move_arg(
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option(
 ): Short
@@ -6191,6 +6199,8 @@ fun uniffi_iota_sdk_ffi_fn_method_object_digest(`ptr`: Pointer,uniffi_out_err: U
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_object_object_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_object_object_ref(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_object_object_type(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_object_owner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6326,6 +6336,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_move_arg(`arg`: Pointer,uniff
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_ref(`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_option(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9297,6 +9309,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_object_object_id() != 6575.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_object_ref() != 13587.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_object_object_type() != 1843.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -10525,6 +10540,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex() != 47640.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref() != 24215.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option() != 37559.toShort()) {
@@ -31516,6 +31534,11 @@ public interface ObjectInterface {
     fun `objectId`(): ObjectId
     
     /**
+     * Return this object's reference
+     */
+    fun `objectRef`(): ObjectReference
+    
+    /**
      * Return this object's type
      */
     fun `objectType`(): ObjectType
@@ -31746,6 +31769,21 @@ open class Object: Disposable, AutoCloseable, ObjectInterface
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_object_id(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Return this object's reference
+     */override fun `objectRef`(): ObjectReference {
+            return FfiConverterTypeObjectReference.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_object_ref(
         it, _status)
 }
     }
@@ -33721,6 +33759,16 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex(
         FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+         fun `objectRef`(`id`: ObjectReference): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_ref(
+        FfiConverterTypeObjectReference.lower(`id`),_status)
 }
     )
     }
