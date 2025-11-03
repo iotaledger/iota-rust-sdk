@@ -18446,6 +18446,24 @@ class CommandArgumentError:
                 return False
             return True
     
+    class INVALID_ARGUMENT_ARITY:
+        """
+        Invalid argument arity. Expected a single argument but found a result
+        that expanded to multiple arguments.
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "CommandArgumentError.INVALID_ARGUMENT_ARITY()".format()
+
+        def __eq__(self, other):
+            if not other.is_INVALID_ARGUMENT_ARITY():
+                return False
+            return True
+    
     
 
     # For each variant, we have `is_NAME` and `is_name` methods for easily checking
@@ -18498,6 +18516,10 @@ class CommandArgumentError:
         return isinstance(self, CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED)
     def is_shared_object_operation_not_allowed(self) -> bool:
         return isinstance(self, CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED)
+    def is_INVALID_ARGUMENT_ARITY(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_ARGUMENT_ARITY)
+    def is_invalid_argument_arity(self) -> bool:
+        return isinstance(self, CommandArgumentError.INVALID_ARGUMENT_ARITY)
     
 
 # Now, a little trick - we make each nested variant class be a subclass of the main
@@ -18515,6 +18537,7 @@ CommandArgumentError.INVALID_VALUE_USAGE = type("CommandArgumentError.INVALID_VA
 CommandArgumentError.INVALID_OBJECT_BY_VALUE = type("CommandArgumentError.INVALID_OBJECT_BY_VALUE", (CommandArgumentError.INVALID_OBJECT_BY_VALUE, CommandArgumentError,), {})  # type: ignore
 CommandArgumentError.INVALID_OBJECT_BY_MUT_REF = type("CommandArgumentError.INVALID_OBJECT_BY_MUT_REF", (CommandArgumentError.INVALID_OBJECT_BY_MUT_REF, CommandArgumentError,), {})  # type: ignore
 CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED = type("CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED", (CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED, CommandArgumentError,), {})  # type: ignore
+CommandArgumentError.INVALID_ARGUMENT_ARITY = type("CommandArgumentError.INVALID_ARGUMENT_ARITY", (CommandArgumentError.INVALID_ARGUMENT_ARITY, CommandArgumentError,), {})  # type: ignore
 
 
 
@@ -18563,6 +18586,9 @@ class _UniffiConverterTypeCommandArgumentError(_UniffiConverterRustBuffer):
         if variant == 12:
             return CommandArgumentError.SHARED_OBJECT_OPERATION_NOT_ALLOWED(
             )
+        if variant == 13:
+            return CommandArgumentError.INVALID_ARGUMENT_ARITY(
+            )
         raise InternalError("Raw enum value doesn't match any cases")
 
     @staticmethod
@@ -18594,6 +18620,8 @@ class _UniffiConverterTypeCommandArgumentError(_UniffiConverterRustBuffer):
         if value.is_INVALID_OBJECT_BY_MUT_REF():
             return
         if value.is_SHARED_OBJECT_OPERATION_NOT_ALLOWED():
+            return
+        if value.is_INVALID_ARGUMENT_ARITY():
             return
         raise ValueError(value)
 
@@ -18627,6 +18655,8 @@ class _UniffiConverterTypeCommandArgumentError(_UniffiConverterRustBuffer):
             buf.write_i32(11)
         if value.is_SHARED_OBJECT_OPERATION_NOT_ALLOWED():
             buf.write_i32(12)
+        if value.is_INVALID_ARGUMENT_ARITY():
+            buf.write_i32(13)
 
 
 

@@ -54350,6 +54350,13 @@ sealed class CommandArgumentError {
     object SharedObjectOperationNotAllowed : CommandArgumentError()
     
     
+    /**
+     * Invalid argument arity. Expected a single argument but found a result
+     * that expanded to multiple arguments.
+     */
+    object InvalidArgumentArity : CommandArgumentError()
+    
+    
 
     
     companion object
@@ -54380,6 +54387,7 @@ public object FfiConverterTypeCommandArgumentError : FfiConverterRustBuffer<Comm
             10 -> CommandArgumentError.InvalidObjectByValue
             11 -> CommandArgumentError.InvalidObjectByMutRef
             12 -> CommandArgumentError.SharedObjectOperationNotAllowed
+            13 -> CommandArgumentError.InvalidArgumentArity
             else -> throw RuntimeException("invalid enum value, something is very wrong!!")
         }
     }
@@ -54461,6 +54469,12 @@ public object FfiConverterTypeCommandArgumentError : FfiConverterRustBuffer<Comm
                 4UL
             )
         }
+        is CommandArgumentError.InvalidArgumentArity -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
     }
 
     override fun write(value: CommandArgumentError, buf: ByteBuffer) {
@@ -54515,6 +54529,10 @@ public object FfiConverterTypeCommandArgumentError : FfiConverterRustBuffer<Comm
             }
             is CommandArgumentError.SharedObjectOperationNotAllowed -> {
                 buf.putInt(12)
+                Unit
+            }
+            is CommandArgumentError.InvalidArgumentArity -> {
+                buf.putInt(13)
                 Unit
             }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }

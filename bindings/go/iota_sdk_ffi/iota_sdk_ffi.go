@@ -33090,6 +33090,13 @@ type CommandArgumentErrorSharedObjectOperationNotAllowed struct {
 
 func (e CommandArgumentErrorSharedObjectOperationNotAllowed) Destroy() {
 }
+// Invalid argument arity. Expected a single argument but found a result
+// that expanded to multiple arguments.
+type CommandArgumentErrorInvalidArgumentArity struct {
+}
+
+func (e CommandArgumentErrorInvalidArgumentArity) Destroy() {
+}
 
 type FfiConverterCommandArgumentError struct {}
 
@@ -33145,6 +33152,9 @@ func (FfiConverterCommandArgumentError) Read(reader io.Reader) CommandArgumentEr
 		case 12:
 			return CommandArgumentErrorSharedObjectOperationNotAllowed{
 			};
+		case 13:
+			return CommandArgumentErrorInvalidArgumentArity{
+			};
 		default:
 			panic(fmt.Sprintf("invalid enum value %v in FfiConverterCommandArgumentError.Read()", id));
 	}
@@ -33180,6 +33190,8 @@ func (FfiConverterCommandArgumentError) Write(writer io.Writer, value CommandArg
 			writeInt32(writer, 11)
 		case CommandArgumentErrorSharedObjectOperationNotAllowed:
 			writeInt32(writer, 12)
+		case CommandArgumentErrorInvalidArgumentArity:
+			writeInt32(writer, 13)
 		default:
 			_ = variant_value
 			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterCommandArgumentError.Write", value))
