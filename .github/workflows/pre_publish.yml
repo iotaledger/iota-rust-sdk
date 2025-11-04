@@ -69,7 +69,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version: ${{ inputs.version != null && inputs.version || inputs.level }}
-          crate-name: ${{ inputs.package }}
+          crate-path: "crates/${{ inputs.package }}"
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org
           base-branch: develop
