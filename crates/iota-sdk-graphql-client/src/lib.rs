@@ -1130,11 +1130,8 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        match response
-            .transaction_block
-            .map(|tx| (tx.bcs, tx.effects, tx.signatures))
-        {
-            Some((Some(bcs), Some(effects), Some(_signatures))) => {
+        match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
+            Some((Some(bcs), Some(effects))) => {
                 let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                 let effects = base64ct::Base64::decode_vec(effects.bcs.unwrap().0.as_str())?;
                 let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
@@ -1248,9 +1245,7 @@ impl Client {
             txc.nodes
                 .into_iter()
                 .map(|node| {
-                    let (Some(bcs), Some(effects), Some(_signatures)) =
-                        (node.bcs, node.effects, node.signatures)
-                    else {
+                    let (Some(bcs), Some(effects)) = (node.bcs, node.effects) else {
                         return Err(Error::empty_response_error());
                     };
                     let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
