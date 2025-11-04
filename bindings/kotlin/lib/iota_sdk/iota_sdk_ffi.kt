@@ -3013,7 +3013,6 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
-<<<<<<< HEAD
 
 
 
@@ -3036,8 +3035,32 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
-=======
->>>>>>> develop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -8812,7 +8835,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota() != 65011.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins() != 38760.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins() != 2932.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor() != 44990.toShort()) {
@@ -9838,7 +9861,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 25229.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655.toShort()) {
@@ -17570,7 +17593,7 @@ public interface ClientTransactionBuilderInterface {
     fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): ClientTransactionBuilder
     
     /**
-     * Split a coin by the provided amounts.
+     * Split a coin into many.
      */
     fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String> = listOf()): ClientTransactionBuilder
     
@@ -18001,7 +18024,7 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
 
     
     /**
-     * Split a coin by the provided amounts.
+     * Split a coin into many.
      */override fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String>): ClientTransactionBuilder {
             return FfiConverterTypeClientTransactionBuilder.lift(
     callWithPointer {
@@ -43370,7 +43393,7 @@ public interface TransactionBuilderInterface {
     fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): TransactionBuilder
     
     /**
-     * Split a coin into many.
+     * Split a coin by the provided amounts.
      */
     fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String> = listOf()): TransactionBuilder
     
@@ -43754,7 +43777,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Split a coin into many.
+     * Split a coin by the provided amounts.
      */override fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {

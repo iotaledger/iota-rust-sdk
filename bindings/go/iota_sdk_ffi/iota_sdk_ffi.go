@@ -3062,7 +3062,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins()
 	})
-	if checksum != 38760 {
+	if checksum != 2932 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins: UniFFI API checksum mismatch")
 	}
@@ -6140,7 +6140,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins()
 	})
-	if checksum != 25229 {
+	if checksum != 17747 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins: UniFFI API checksum mismatch")
 	}
@@ -12911,7 +12911,7 @@ type ClientTransactionBuilderInterface interface {
 	// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
 	// sent.
 	SendIota(recipient *Address, amount *PtbArgument) *ClientTransactionBuilder
-	// Split a coin by the provided amounts.
+	// Split a coin into many.
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *ClientTransactionBuilder
 	// Set the sponsor of the transaction.
 	Sponsor(sponsor *Address) *ClientTransactionBuilder
@@ -13242,7 +13242,7 @@ func (_self *ClientTransactionBuilder) SendIota(recipient *Address, amount *PtbA
 	}))
 }
 
-// Split a coin by the provided amounts.
+// Split a coin into many.
 func (_self *ClientTransactionBuilder) SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *ClientTransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
@@ -26140,7 +26140,7 @@ type TransactionBuilderInterface interface {
 	// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
 	// sent.
 	SendIota(recipient *Address, amount *PtbArgument) *TransactionBuilder
-	// Split a coin into many.
+	// Split a coin by the provided amounts.
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
 	Sponsor(sponsor *Address) *TransactionBuilder
@@ -26376,7 +26376,7 @@ func (_self *TransactionBuilder) SendIota(recipient *Address, amount *PtbArgumen
 	}))
 }
 
-// Split a coin into many.
+// Split a coin by the provided amounts.
 func (_self *TransactionBuilder) SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()

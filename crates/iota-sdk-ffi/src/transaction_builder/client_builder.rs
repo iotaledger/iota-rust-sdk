@@ -25,8 +25,8 @@ use crate::{
     },
 };
 
-/// A builder for creating transactions. Use `finish` to finalize the
-/// transaction data.
+/// A builder for creating transactions which uses a GraphQL client to
+/// automatically resolve inputs. Use `finish` to finalize the transaction data.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct ClientTransactionBuilder(
     pub RwLock<iota_sdk::transaction_builder::TransactionBuilder<iota_sdk::graphql_client::Client>>,

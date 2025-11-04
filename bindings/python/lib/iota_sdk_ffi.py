@@ -1061,7 +1061,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota() != 65011:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins() != 38760:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins() != 2932:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor() != 44990:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1745,7 +1745,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 25229:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -12993,6 +12993,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -29141,7 +29143,7 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
         raise NotImplementedError
     def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
-        Split a coin by the provided amounts.
+        Split a coin into many.
         """
 
         raise NotImplementedError
@@ -29626,7 +29628,7 @@ _UniffiConverterTypeSdkFfiError,
 
     def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "ClientTransactionBuilder":
         """
-        Split a coin by the provided amounts.
+        Split a coin into many.
         """
 
         _UniffiConverterTypePtbArgument.check_lower(coin)
@@ -43413,7 +43415,7 @@ class TransactionBuilderProtocol(typing.Protocol):
         raise NotImplementedError
     def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
-        Split a coin into many.
+        Split a coin by the provided amounts.
         """
 
         raise NotImplementedError
@@ -43802,7 +43804,7 @@ _UniffiConverterTypeSdkFfiError,
 
     def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT) -> "TransactionBuilder":
         """
-        Split a coin into many.
+        Split a coin by the provided amounts.
         """
 
         _UniffiConverterTypePtbArgument.check_lower(coin)
