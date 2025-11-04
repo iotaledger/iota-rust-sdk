@@ -41,6 +41,8 @@ jobs:
         run: make go
       - name: Checks for uncommitted changes
         run: git diff --exit-code
+      - name: Check format of the examples
+        run: make go-examples-format-check
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make go-examples

@@ -91,10 +91,12 @@ bindings-examples: ## Run all bindings examples
 
 .PHONY: bindings-examples-format-check
 bindings-examples-format-check: ## Check format of all bindings examples
+	@$(MAKE) go-examples-format-check
 	@$(MAKE) python-examples-format-check
 
 .PHONY: bindings-examples-format
 bindings-examples-format: ## Format all bindings examples
+	@$(MAKE) go-examples-format
 	@$(MAKE) python-examples-format
 
 # Build ffi crate and detect platform
@@ -143,6 +145,14 @@ go-examples: ## Run all Go bindings examples
 	@for example in $$(find bindings/go/examples/* -type d -exec basename {} \;); do \
 		$(MAKE) go-example "$$example" || exit $$?; \
 	done
+
+.PHONY: go-examples-format-check
+go-examples-format-check: ## Check format of all Go bindings examples
+	@test -z $(gofmt -l bindings/go/examples)
+
+.PHONY: go-examples-format
+go-examples-format: ## Format all Go bindings examples
+	@gofmt -w bindings/go/examples
 
 .PHONY: kotlin-example
 kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example example
