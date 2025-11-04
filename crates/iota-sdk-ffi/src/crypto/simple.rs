@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_sdk::{
-    crypto::{PrivateKeyExt, Signer, Verifier},
+    crypto::{Signer, ToFromBech32, Verifier},
     types::SignatureScheme,
 };
 

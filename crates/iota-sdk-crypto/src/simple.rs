@@ -82,7 +82,7 @@ mod keypair {
     };
     use signature::{Signer, Verifier};
 
-    use crate::{PrivateKeyExt, SignatureError};
+    use crate::SignatureError;
 
     #[derive(Debug, Clone)]
     pub struct SimpleKeypair {
@@ -138,6 +138,8 @@ mod keypair {
 
         /// Encode a SimpleKeypair as `flag || privkey` in bytes
         pub fn to_bytes(&self) -> Vec<u8> {
+            use crate::ToFromBytes;
+
             let mut bytes = Vec::new();
             bytes.push(self.scheme().to_u8());
 
@@ -538,37 +540,17 @@ mod keypair {
         }
     }
 
-    impl crate::PrivateKeyExt for SimpleKeypair {
-        // SimpleKeypair doesn't have a single scheme since it can contain any scheme
-        // We provide a dummy value since we override all methods
-        const SCHEME: SignatureScheme = SignatureScheme::Ed25519;
+    impl crate::ToFromFlaggedBytes for SimpleKeypair {
+        type Error = crate::PrivateKeyError;
 
-        fn scheme(&self) -> SignatureScheme {
-            self.scheme()
+        fn to_flagged_bytes(&self) -> Vec<u8> {
+            self.to_bytes()
         }
 
-        fn to_bytes(&self) -> Vec<u8> {
-            // For SimpleKeypair, to_bytes() already returns flagged bytes
-            // We need the raw key bytes without the flag for the trait
-            match &self.inner {
-                #[cfg(feature = "ed25519")]
-                InnerKeypair::Ed25519(private_key) => private_key.to_bytes().to_vec(),
-                #[cfg(feature = "secp256k1")]
-                InnerKeypair::Secp256k1(private_key) => private_key.to_bytes().as_slice().to_vec(),
-                #[cfg(feature = "secp256r1")]
-                InnerKeypair::Secp256r1(private_key) => private_key.to_bytes().as_slice().to_vec(),
-            }
-        }
-
-        fn from_raw_bytes(_bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
-            // SimpleKeypair can't be created from raw bytes without knowing the scheme
-            // This should not be called since SimpleKeypair overrides from_flagged_bytes
-            Err(crate::PrivateKeyError::InvalidScheme(
-                "SimpleKeypair should use from_bytes instead".to_string(),
-            ))
-        }
-
-        fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
+        fn from_flagged_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError>
+        where
+            Self: Sized,
+        {
             Self::from_bytes(bytes)
                 .map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
         }
@@ -581,7 +563,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        PrivateKeyExt,
+        ToFromBech32,
         ed25519::{Ed25519PrivateKey, Ed25519VerifyingKey},
         secp256k1::{Secp256k1PrivateKey, Secp256k1VerifyingKey},
         secp256r1::{Secp256r1PrivateKey, Secp256r1VerifyingKey},

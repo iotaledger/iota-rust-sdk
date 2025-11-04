@@ -116,14 +116,16 @@ impl Secp256k1PrivateKey {
     }
 }
 
-impl crate::PrivateKeyExt for Secp256k1PrivateKey {
-    const SCHEME: SignatureScheme = SignatureScheme::Secp256k1;
+impl crate::ToFromBytes for Secp256k1PrivateKey {
+    type Error = crate::PrivateKeyError;
+    type ByteArray = [u8; Self::LENGTH];
 
-    fn to_bytes(&self) -> Vec<u8> {
-        self.0.to_bytes().to_vec()
+    /// Return the raw 32-byte private key
+    fn to_bytes(&self) -> Self::ByteArray {
+        self.0.to_bytes().into()
     }
 
-    fn from_raw_bytes(bytes: &[u8]) -> Result<Self, crate::PrivateKeyError> {
+    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Error> {
         if bytes.len() != Self::LENGTH {
             return Err(crate::PrivateKeyError::InvalidScheme(
                 "invalid secp256k1 key length".to_string(),
@@ -133,6 +135,51 @@ impl crate::PrivateKeyExt for Secp256k1PrivateKey {
         let mut arr = [0u8; Self::LENGTH];
         arr.copy_from_slice(bytes);
         Self::new(arr).map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
+    }
+}
+
+impl crate::PrivateKeyScheme for Secp256k1PrivateKey {
+    const SCHEME: SignatureScheme = SignatureScheme::Secp256k1;
+}
+
+#[cfg(feature = "mnemonic")]
+impl crate::FromMnemonic for Secp256k1PrivateKey {
+    type Error = crate::PrivateKeyError;
+
+    fn from_mnemonic(
+        phrase: &str,
+        account_index: impl Into<Option<u64>>,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
+        let path = format!(
+            "m/{}'/{}'/0'/0/{}",
+            crate::DERIVATION_PATH_PURPOSE_SECP256K1,
+            crate::DERIVATION_PATH_COIN_TYPE,
+            account_index.into().unwrap_or_default()
+        );
+        Self::from_mnemonic_with_path(phrase, path, password)
+    }
+
+    fn from_mnemonic_with_path(
+        phrase: &str,
+        path: String,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
+        use std::str::FromStr;
+
+        use crate::ToFromBytes;
+
+        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
+        let seed = mnemonic.to_seed(password.into().unwrap_or_default());
+        let child_xprv =
+            bip32::XPrv::derive_from_path(seed, &bip32::DerivationPath::from_str(&path)?)?;
+        Self::from_bytes(&child_xprv.private_key().to_bytes())
     }
 }
 
