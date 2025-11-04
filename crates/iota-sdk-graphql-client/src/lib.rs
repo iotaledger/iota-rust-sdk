@@ -19,8 +19,8 @@ use error::{Error, Kind};
 use futures::Stream;
 use iota_types::{
     Address, CheckpointSequenceNumber, CheckpointSummary, Digest, IdentifierRef, MovePackage,
-    Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionEffects,
-    TransactionKind, TypeTag, UserSignature,
+    Object, ObjectId, SenderSignedTransaction, SignedTransaction, StructTag, Transaction,
+    TransactionEffects, TransactionKind, TypeTag, UserSignature,
     framework::Coin,
     iota_names::{NameFormat, NameRegistration, name::Name},
 };
@@ -1130,24 +1130,17 @@ impl Client {
         });
         let response = self.run_query(&operation).await?;
 
-        match response
-            .transaction_block
-            .map(|tx| (tx.bcs, tx.effects, tx.signatures))
-        {
-            Some((Some(bcs), Some(effects), Some(sigs))) => {
+        match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
+            Some((Some(bcs), Some(effects))) => {
                 let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                 let effects = base64ct::Base64::decode_vec(effects.bcs.unwrap().0.as_str())?;
-                let signatures = sigs
-                    .iter()
-                    .map(|s| UserSignature::from_base64(&s.0))
-                    .collect::<Result<Vec<_>, _>>()?;
-                let transaction: Transaction = bcs::from_bytes(&bcs)?;
-                let tx = SignedTransaction {
-                    transaction,
-                    signatures,
-                };
+                let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
                 let effects: TransactionEffects = bcs::from_bytes(&effects)?;
-                Ok(Some(TransactionDataEffects { tx, effects }))
+
+                Ok(Some(TransactionDataEffects {
+                    tx: transaction.0,
+                    effects,
+                }))
             }
             _ => Ok(None),
         }
@@ -1252,26 +1245,19 @@ impl Client {
             txc.nodes
                 .into_iter()
                 .map(|node| {
-                    let (Some(bcs), Some(effects), Some(sigs)) =
-                        (node.bcs, node.effects, node.signatures)
-                    else {
+                    let (Some(bcs), Some(effects)) = (node.bcs, node.effects) else {
                         return Err(Error::empty_response_error());
                     };
                     let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                     let effects =
                         base64ct::Base64::decode_vec(effects.bcs.as_ref().unwrap().0.as_str())?;
-
-                    let sigs = sigs
-                        .iter()
-                        .map(|s| UserSignature::from_base64(&s.0))
-                        .collect::<Result<Vec<_>, _>>()?;
-                    let tx: Transaction = bcs::from_bytes(&bcs)?;
-                    let tx = SignedTransaction {
-                        transaction: tx,
-                        signatures: sigs,
-                    };
+                    let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
                     let effects: TransactionEffects = bcs::from_bytes(&effects)?;
-                    Ok(TransactionDataEffects { tx, effects })
+
+                    Ok(TransactionDataEffects {
+                        tx: transaction.0,
+                        effects,
+                    })
                 })
                 .collect::<Result<Vec<_>>>()?
         };
@@ -1676,12 +1662,12 @@ impl Client {
 mod tests {
     use base64ct::Encoding;
     use futures::StreamExt;
-    use iota_types::{Address, Ed25519PublicKey, ObjectId, TypeTag};
+    use iota_types::{Address, Digest, Ed25519PublicKey, ObjectId, TypeTag};
     use tokio::time;
 
     use crate::{
         BcsName, Client, DEVNET_HOST, Direction, LOCAL_HOST, MAINNET_HOST, PaginationFilter,
-        TESTNET_HOST, faucet::FaucetClient,
+        TESTNET_HOST, faucet::FaucetClient, query_types::TransactionsFilter,
     };
 
     const NUM_COINS_FROM_FAUCET: usize = 5;
@@ -2307,5 +2293,36 @@ mod tests {
             "Packages query returned no data for {} network",
             client.rpc_server()
         );
+    }
+
+    #[tokio::test]
+    async fn test_transaction_data_effects() {
+        let client = Client::new_devnet();
+
+        client
+            .transaction_data_effects(
+                Digest::from_base58("Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf").unwrap(),
+            )
+            .await
+            .unwrap()
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_transactions_data_effects() {
+        let client = Client::new_devnet();
+
+        client
+            .transactions_data_effects(
+                TransactionsFilter {
+                    transaction_ids: Some(vec![
+                        "Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf".to_string(),
+                    ]),
+                    ..Default::default()
+                },
+                PaginationFilter::default(),
+            )
+            .await
+            .unwrap();
     }
 }
