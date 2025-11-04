@@ -51108,6 +51108,15 @@ public object FfiConverterTypeEndOfEpochData: FfiConverterRustBuffer<EndOfEpochD
 
 
 
+/**
+ * Operation of the IOTA network is temporally partitioned into non-overlapping
+ * epochs, and the network aims to keep epochs roughly the same duration as
+ * each other. During a particular epoch the following data is fixed:
+ *
+ * - the protocol version
+ * - the reference gas price
+ * - the set of participating validators
+ */
 data class Epoch (
     /**
      * The epoch's id as a sequence number that starts at 0 and is incremented
@@ -51188,7 +51197,29 @@ data class Epoch (
      * For epochs other than the current the data provided refer to the start
      * of the epoch.
      */
-    var `validatorSet`: ValidatorSet? = null
+    var `validatorSet`: ValidatorSet? = null, 
+    /**
+     * IOTA set aside to account for objects stored on-chain, at the start of
+     * the epoch. This is also used for storage rebates.
+     */
+    var `storageFund`: StorageFund? = null, 
+    /**
+     * Information about whether this epoch was started in safe mode, which
+     * happens if the full epoch change logic fails for some reason.
+     */
+    var `safeMode`: SafeMode? = null, 
+    /**
+     * The total IOTA supply.
+     */
+    var `iotaTotalSupply`: kotlin.ULong? = null, 
+    /**
+     * The treasury-cap id.
+     */
+    var `iotaTreasuryCapId`: Address? = null, 
+    /**
+     * Details of the system that are decided during genesis.
+     */
+    var `systemParameters`: SystemParameters? = null
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
@@ -51210,7 +51241,12 @@ data class Epoch (
         this.`totalGasFees`,
         this.`totalStakeRewards`,
         this.`totalTransactions`,
-        this.`validatorSet`
+        this.`validatorSet`,
+        this.`storageFund`,
+        this.`safeMode`,
+        this.`iotaTotalSupply`,
+        this.`iotaTreasuryCapId`,
+        this.`systemParameters`
     )
     }
     
@@ -51239,6 +51275,11 @@ public object FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             FfiConverterOptionalString.read(buf),
             FfiConverterOptionalULong.read(buf),
             FfiConverterOptionalTypeValidatorSet.read(buf),
+            FfiConverterOptionalTypeStorageFund.read(buf),
+            FfiConverterOptionalTypeSafeMode.read(buf),
+            FfiConverterOptionalULong.read(buf),
+            FfiConverterOptionalTypeAddress.read(buf),
+            FfiConverterOptionalTypeSystemParameters.read(buf),
         )
     }
 
@@ -51258,7 +51299,12 @@ public object FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             FfiConverterOptionalString.allocationSize(value.`totalGasFees`) +
             FfiConverterOptionalString.allocationSize(value.`totalStakeRewards`) +
             FfiConverterOptionalULong.allocationSize(value.`totalTransactions`) +
-            FfiConverterOptionalTypeValidatorSet.allocationSize(value.`validatorSet`)
+            FfiConverterOptionalTypeValidatorSet.allocationSize(value.`validatorSet`) +
+            FfiConverterOptionalTypeStorageFund.allocationSize(value.`storageFund`) +
+            FfiConverterOptionalTypeSafeMode.allocationSize(value.`safeMode`) +
+            FfiConverterOptionalULong.allocationSize(value.`iotaTotalSupply`) +
+            FfiConverterOptionalTypeAddress.allocationSize(value.`iotaTreasuryCapId`) +
+            FfiConverterOptionalTypeSystemParameters.allocationSize(value.`systemParameters`)
     )
 
     override fun write(value: Epoch, buf: ByteBuffer) {
@@ -51278,6 +51324,11 @@ public object FfiConverterTypeEpoch: FfiConverterRustBuffer<Epoch> {
             FfiConverterOptionalString.write(value.`totalStakeRewards`, buf)
             FfiConverterOptionalULong.write(value.`totalTransactions`, buf)
             FfiConverterOptionalTypeValidatorSet.write(value.`validatorSet`, buf)
+            FfiConverterOptionalTypeStorageFund.write(value.`storageFund`, buf)
+            FfiConverterOptionalTypeSafeMode.write(value.`safeMode`, buf)
+            FfiConverterOptionalULong.write(value.`iotaTotalSupply`, buf)
+            FfiConverterOptionalTypeAddress.write(value.`iotaTreasuryCapId`, buf)
+            FfiConverterOptionalTypeSystemParameters.write(value.`systemParameters`, buf)
     }
 }
 
@@ -51789,6 +51840,72 @@ public object FfiConverterTypeGasPayment: FfiConverterRustBuffer<GasPayment> {
             FfiConverterTypeAddress.write(value.`owner`, buf)
             FfiConverterULong.write(value.`price`, buf)
             FfiConverterULong.write(value.`budget`, buf)
+    }
+}
+
+
+
+/**
+ * Breakdown of gas costs in effects.
+ */
+data class GraphQlGasCostSummary (
+    /**
+     * Gas paid for executing this transaction (in NANOS).
+     */
+    var `computationCost`: kotlin.String? = null, 
+    /**
+     * Gas burned for executing this transaction (in NANOS).
+     */
+    var `computationCostBurned`: kotlin.String? = null, 
+    /**
+     * Gas paid for the data stored on-chain by this transaction (in NANOS).
+     */
+    var `storageCost`: kotlin.String? = null, 
+    /**
+     * Part of storage cost that can be reclaimed by cleaning up data created
+     * by this transaction (when objects are deleted or an object is
+     * modified, which is treated as a deletion followed by a creation) (in
+     * NANOS).
+     */
+    var `storageRebate`: kotlin.String? = null, 
+    /**
+     * Part of storage cost that is not reclaimed when data created by this
+     * transaction is cleaned up (in NANOS).
+     */
+    var `nonRefundableStorageFee`: kotlin.String? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeGraphQLGasCostSummary: FfiConverterRustBuffer<GraphQlGasCostSummary> {
+    override fun read(buf: ByteBuffer): GraphQlGasCostSummary {
+        return GraphQlGasCostSummary(
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: GraphQlGasCostSummary) = (
+            FfiConverterOptionalString.allocationSize(value.`computationCost`) +
+            FfiConverterOptionalString.allocationSize(value.`computationCostBurned`) +
+            FfiConverterOptionalString.allocationSize(value.`storageCost`) +
+            FfiConverterOptionalString.allocationSize(value.`storageRebate`) +
+            FfiConverterOptionalString.allocationSize(value.`nonRefundableStorageFee`)
+    )
+
+    override fun write(value: GraphQlGasCostSummary, buf: ByteBuffer) {
+            FfiConverterOptionalString.write(value.`computationCost`, buf)
+            FfiConverterOptionalString.write(value.`computationCostBurned`, buf)
+            FfiConverterOptionalString.write(value.`storageCost`, buf)
+            FfiConverterOptionalString.write(value.`storageRebate`, buf)
+            FfiConverterOptionalString.write(value.`nonRefundableStorageFee`, buf)
     }
 }
 
@@ -53248,6 +53365,50 @@ public object FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer<Rand
 
 
 
+/**
+ * Information about whether epoch changes are using safe mode.
+ */
+data class SafeMode (
+    /**
+     * Whether safe mode was used for the last epoch change. The system will
+     * retry a full epoch change on every epoch boundary and automatically
+     * reset this flag if so.
+     */
+    var `enabled`: kotlin.Boolean? = null, 
+    /**
+     * Accumulated fees for computation and cost that have not been added to
+     * the various reward pools, because the full epoch change did not happen.
+     */
+    var `gasSummary`: GraphQlGasCostSummary? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSafeMode: FfiConverterRustBuffer<SafeMode> {
+    override fun read(buf: ByteBuffer): SafeMode {
+        return SafeMode(
+            FfiConverterOptionalBoolean.read(buf),
+            FfiConverterOptionalTypeGraphQLGasCostSummary.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: SafeMode) = (
+            FfiConverterOptionalBoolean.allocationSize(value.`enabled`) +
+            FfiConverterOptionalTypeGraphQLGasCostSummary.allocationSize(value.`gasSummary`)
+    )
+
+    override fun write(value: SafeMode, buf: ByteBuffer) {
+            FfiConverterOptionalBoolean.write(value.`enabled`, buf)
+            FfiConverterOptionalTypeGraphQLGasCostSummary.write(value.`gasSummary`, buf)
+    }
+}
+
+
+
 data class ServiceConfig (
     /**
      * Default number of elements allowed on a single page of a connection.
@@ -53472,6 +53633,132 @@ public object FfiConverterTypeSignedTransactionPage: FfiConverterRustBuffer<Sign
     override fun write(value: SignedTransactionPage, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
             FfiConverterSequenceTypeSignedTransaction.write(value.`data`, buf)
+    }
+}
+
+
+
+/**
+ * IOTA set aside to account for objects stored on-chain.
+ */
+data class StorageFund (
+    /**
+     * Sum of storage rebates of live objects on chain.
+     */
+    var `totalObjectStorageRebates`: kotlin.String? = null, 
+    /**
+     * The portion of the storage fund that will never be refunded through
+     * storage rebates.
+     * The system maintains an invariant that the sum of
+     * all storage fees into the storage fund is equal to the sum of of all
+     * storage rebates out, the total storage rebates remaining, and the
+     * non-refundable balance.
+     */
+    var `nonRefundableBalance`: kotlin.String? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeStorageFund: FfiConverterRustBuffer<StorageFund> {
+    override fun read(buf: ByteBuffer): StorageFund {
+        return StorageFund(
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: StorageFund) = (
+            FfiConverterOptionalString.allocationSize(value.`totalObjectStorageRebates`) +
+            FfiConverterOptionalString.allocationSize(value.`nonRefundableBalance`)
+    )
+
+    override fun write(value: StorageFund, buf: ByteBuffer) {
+            FfiConverterOptionalString.write(value.`totalObjectStorageRebates`, buf)
+            FfiConverterOptionalString.write(value.`nonRefundableBalance`, buf)
+    }
+}
+
+
+
+/**
+ * Details of the system that are decided during genesis.
+ */
+data class SystemParameters (
+    /**
+     * Target duration of an epoch, in milliseconds.
+     */
+    var `durationMs`: kotlin.String? = null, 
+    /**
+     * The minimum number of active validators that the system supports.
+     */
+    var `minValidatorCount`: kotlin.Int? = null, 
+    /**
+     * The maximum number of active validators that the system supports.
+     */
+    var `maxValidatorCount`: kotlin.Int? = null, 
+    /**
+     * Minimum stake needed to become a new validator.
+     */
+    var `minValidatorJoiningStake`: kotlin.String? = null, 
+    /**
+     * Validators with stake below this threshold will enter the grace period
+     * (see `validator_low_stake_grace_period`), after which they are removed
+     * from the active validator set.
+     */
+    var `validatorLowStakeThreshold`: kotlin.String? = null, 
+    /**
+     * Validators with stake below this threshold will be removed from the
+     * active validator set at the next epoch boundary, without a grace period.
+     */
+    var `validatorVeryLowStakeThreshold`: kotlin.String? = null, 
+    /**
+     * The number of epochs that a validator has to recover from having less
+     * than `validator_low_stake_threshold` stake.
+     */
+    var `validatorLowStakeGracePeriod`: kotlin.String? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSystemParameters: FfiConverterRustBuffer<SystemParameters> {
+    override fun read(buf: ByteBuffer): SystemParameters {
+        return SystemParameters(
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalInt.read(buf),
+            FfiConverterOptionalInt.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: SystemParameters) = (
+            FfiConverterOptionalString.allocationSize(value.`durationMs`) +
+            FfiConverterOptionalInt.allocationSize(value.`minValidatorCount`) +
+            FfiConverterOptionalInt.allocationSize(value.`maxValidatorCount`) +
+            FfiConverterOptionalString.allocationSize(value.`minValidatorJoiningStake`) +
+            FfiConverterOptionalString.allocationSize(value.`validatorLowStakeThreshold`) +
+            FfiConverterOptionalString.allocationSize(value.`validatorVeryLowStakeThreshold`) +
+            FfiConverterOptionalString.allocationSize(value.`validatorLowStakeGracePeriod`)
+    )
+
+    override fun write(value: SystemParameters, buf: ByteBuffer) {
+            FfiConverterOptionalString.write(value.`durationMs`, buf)
+            FfiConverterOptionalInt.write(value.`minValidatorCount`, buf)
+            FfiConverterOptionalInt.write(value.`maxValidatorCount`, buf)
+            FfiConverterOptionalString.write(value.`minValidatorJoiningStake`, buf)
+            FfiConverterOptionalString.write(value.`validatorLowStakeThreshold`, buf)
+            FfiConverterOptionalString.write(value.`validatorVeryLowStakeThreshold`, buf)
+            FfiConverterOptionalString.write(value.`validatorLowStakeGracePeriod`, buf)
     }
 }
 
@@ -54569,6 +54856,14 @@ public object FfiConverterTypeValidatorPage: FfiConverterRustBuffer<ValidatorPag
 
 data class ValidatorSet (
     /**
+     * The current set of active validators.
+     */
+    var `activeValidators`: ValidatorConnection, 
+    /**
+     * The current set of committee members.
+     */
+    var `committeeMembers`: ValidatorConnection, 
+    /**
      * Object ID of the `Table` storing the inactive staking pools.
      */
     var `inactivePoolsId`: ObjectId? = null, 
@@ -54620,6 +54915,8 @@ data class ValidatorSet (
     override fun destroy() {
         
     Disposable.destroy(
+        this.`activeValidators`,
+        this.`committeeMembers`,
         this.`inactivePoolsId`,
         this.`inactivePoolsSize`,
         this.`pendingActiveValidatorsId`,
@@ -54642,6 +54939,8 @@ data class ValidatorSet (
 public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet> {
     override fun read(buf: ByteBuffer): ValidatorSet {
         return ValidatorSet(
+            FfiConverterTypeValidatorConnection.read(buf),
+            FfiConverterTypeValidatorConnection.read(buf),
             FfiConverterOptionalTypeObjectId.read(buf),
             FfiConverterOptionalInt.read(buf),
             FfiConverterOptionalTypeObjectId.read(buf),
@@ -54656,6 +54955,8 @@ public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet>
     }
 
     override fun allocationSize(value: ValidatorSet) = (
+            FfiConverterTypeValidatorConnection.allocationSize(value.`activeValidators`) +
+            FfiConverterTypeValidatorConnection.allocationSize(value.`committeeMembers`) +
             FfiConverterOptionalTypeObjectId.allocationSize(value.`inactivePoolsId`) +
             FfiConverterOptionalInt.allocationSize(value.`inactivePoolsSize`) +
             FfiConverterOptionalTypeObjectId.allocationSize(value.`pendingActiveValidatorsId`) +
@@ -54669,6 +54970,8 @@ public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet>
     )
 
     override fun write(value: ValidatorSet, buf: ByteBuffer) {
+            FfiConverterTypeValidatorConnection.write(value.`activeValidators`, buf)
+            FfiConverterTypeValidatorConnection.write(value.`committeeMembers`, buf)
             FfiConverterOptionalTypeObjectId.write(value.`inactivePoolsId`, buf)
             FfiConverterOptionalInt.write(value.`inactivePoolsSize`, buf)
             FfiConverterOptionalTypeObjectId.write(value.`pendingActiveValidatorsId`, buf)
@@ -57709,6 +58012,38 @@ public object FfiConverterOptionalULong: FfiConverterRustBuffer<kotlin.ULong?> {
 /**
  * @suppress
  */
+public object FfiConverterOptionalBoolean: FfiConverterRustBuffer<kotlin.Boolean?> {
+    override fun read(buf: ByteBuffer): kotlin.Boolean? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterBoolean.read(buf)
+    }
+
+    override fun allocationSize(value: kotlin.Boolean?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterBoolean.allocationSize(value)
+        }
+    }
+
+    override fun write(value: kotlin.Boolean?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterBoolean.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalString: FfiConverterRustBuffer<kotlin.String?> {
     override fun read(buf: ByteBuffer): kotlin.String? {
         if (buf.get().toInt() == 0) {
@@ -58893,6 +59228,38 @@ public object FfiConverterOptionalTypeFaucetReceipt: FfiConverterRustBuffer<Fauc
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeGraphQLGasCostSummary: FfiConverterRustBuffer<GraphQlGasCostSummary?> {
+    override fun read(buf: ByteBuffer): GraphQlGasCostSummary? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeGraphQLGasCostSummary.read(buf)
+    }
+
+    override fun allocationSize(value: GraphQlGasCostSummary?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeGraphQLGasCostSummary.allocationSize(value)
+        }
+    }
+
+    override fun write(value: GraphQlGasCostSummary?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeGraphQLGasCostSummary.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeMoveEnumConnection: FfiConverterRustBuffer<MoveEnumConnection?> {
     override fun read(buf: ByteBuffer): MoveEnumConnection? {
         if (buf.get().toInt() == 0) {
@@ -59213,6 +59580,38 @@ public object FfiConverterOptionalTypeProtocolConfigs: FfiConverterRustBuffer<Pr
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeSafeMode: FfiConverterRustBuffer<SafeMode?> {
+    override fun read(buf: ByteBuffer): SafeMode? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeSafeMode.read(buf)
+    }
+
+    override fun allocationSize(value: SafeMode?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeSafeMode.allocationSize(value)
+        }
+    }
+
+    override fun write(value: SafeMode?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeSafeMode.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeSignedTransaction: FfiConverterRustBuffer<SignedTransaction?> {
     override fun read(buf: ByteBuffer): SignedTransaction? {
         if (buf.get().toInt() == 0) {
@@ -59235,6 +59634,70 @@ public object FfiConverterOptionalTypeSignedTransaction: FfiConverterRustBuffer<
         } else {
             buf.put(1)
             FfiConverterTypeSignedTransaction.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeStorageFund: FfiConverterRustBuffer<StorageFund?> {
+    override fun read(buf: ByteBuffer): StorageFund? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeStorageFund.read(buf)
+    }
+
+    override fun allocationSize(value: StorageFund?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeStorageFund.allocationSize(value)
+        }
+    }
+
+    override fun write(value: StorageFund?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeStorageFund.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeSystemParameters: FfiConverterRustBuffer<SystemParameters?> {
+    override fun read(buf: ByteBuffer): SystemParameters? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeSystemParameters.read(buf)
+    }
+
+    override fun allocationSize(value: SystemParameters?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeSystemParameters.allocationSize(value)
+        }
+    }
+
+    override fun write(value: SystemParameters?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeSystemParameters.write(value, buf)
         }
     }
 }

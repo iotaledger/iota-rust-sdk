@@ -1232,7 +1232,7 @@ type Epoch {
 	"""
 	The total IOTA supply.
 	"""
-	iotaTotalSupply: Int
+	iotaTotalSupply: UInt53
 	"""
 	The treasury-cap id.
 	"""

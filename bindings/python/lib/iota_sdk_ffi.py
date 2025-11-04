@@ -14029,6 +14029,16 @@ class _UniffiConverterTypeEndOfEpochData(_UniffiConverterRustBuffer):
 
 
 class Epoch:
+    """
+    Operation of the IOTA network is temporally partitioned into non-overlapping
+    epochs, and the network aims to keep epochs roughly the same duration as
+    each other. During a particular epoch the following data is fixed:
+
+    - the protocol version
+    - the reference gas price
+    - the set of participating validators
+    """
+
     epoch_id: "int"
     """
     The epoch's id as a sequence number that starts at 0 and is incremented
@@ -14125,7 +14135,34 @@ class Epoch:
     of the epoch.
     """
 
-    def __init__(self, *, epoch_id: "int", fund_inflow: "typing.Optional[str]" = _DEFAULT, fund_outflow: "typing.Optional[str]" = _DEFAULT, fund_size: "typing.Optional[str]" = _DEFAULT, live_object_set_digest: "typing.Optional[str]" = _DEFAULT, net_inflow: "typing.Optional[str]" = _DEFAULT, protocol_configs: "typing.Optional[ProtocolConfigs]" = _DEFAULT, reference_gas_price: "typing.Optional[str]" = _DEFAULT, start_timestamp: "int", end_timestamp: "typing.Optional[int]" = _DEFAULT, system_state_version: "typing.Optional[int]" = _DEFAULT, total_checkpoints: "typing.Optional[int]" = _DEFAULT, total_gas_fees: "typing.Optional[str]" = _DEFAULT, total_stake_rewards: "typing.Optional[str]" = _DEFAULT, total_transactions: "typing.Optional[int]" = _DEFAULT, validator_set: "typing.Optional[ValidatorSet]" = _DEFAULT):
+    storage_fund: "typing.Optional[StorageFund]"
+    """
+    IOTA set aside to account for objects stored on-chain, at the start of
+    the epoch. This is also used for storage rebates.
+    """
+
+    safe_mode: "typing.Optional[SafeMode]"
+    """
+    Information about whether this epoch was started in safe mode, which
+    happens if the full epoch change logic fails for some reason.
+    """
+
+    iota_total_supply: "typing.Optional[int]"
+    """
+    The total IOTA supply.
+    """
+
+    iota_treasury_cap_id: "typing.Optional[Address]"
+    """
+    The treasury-cap id.
+    """
+
+    system_parameters: "typing.Optional[SystemParameters]"
+    """
+    Details of the system that are decided during genesis.
+    """
+
+    def __init__(self, *, epoch_id: "int", fund_inflow: "typing.Optional[str]" = _DEFAULT, fund_outflow: "typing.Optional[str]" = _DEFAULT, fund_size: "typing.Optional[str]" = _DEFAULT, live_object_set_digest: "typing.Optional[str]" = _DEFAULT, net_inflow: "typing.Optional[str]" = _DEFAULT, protocol_configs: "typing.Optional[ProtocolConfigs]" = _DEFAULT, reference_gas_price: "typing.Optional[str]" = _DEFAULT, start_timestamp: "int", end_timestamp: "typing.Optional[int]" = _DEFAULT, system_state_version: "typing.Optional[int]" = _DEFAULT, total_checkpoints: "typing.Optional[int]" = _DEFAULT, total_gas_fees: "typing.Optional[str]" = _DEFAULT, total_stake_rewards: "typing.Optional[str]" = _DEFAULT, total_transactions: "typing.Optional[int]" = _DEFAULT, validator_set: "typing.Optional[ValidatorSet]" = _DEFAULT, storage_fund: "typing.Optional[StorageFund]" = _DEFAULT, safe_mode: "typing.Optional[SafeMode]" = _DEFAULT, iota_total_supply: "typing.Optional[int]" = _DEFAULT, iota_treasury_cap_id: "typing.Optional[Address]" = _DEFAULT, system_parameters: "typing.Optional[SystemParameters]" = _DEFAULT):
         self.epoch_id = epoch_id
         if fund_inflow is _DEFAULT:
             self.fund_inflow = None
@@ -14184,9 +14221,29 @@ class Epoch:
             self.validator_set = None
         else:
             self.validator_set = validator_set
+        if storage_fund is _DEFAULT:
+            self.storage_fund = None
+        else:
+            self.storage_fund = storage_fund
+        if safe_mode is _DEFAULT:
+            self.safe_mode = None
+        else:
+            self.safe_mode = safe_mode
+        if iota_total_supply is _DEFAULT:
+            self.iota_total_supply = None
+        else:
+            self.iota_total_supply = iota_total_supply
+        if iota_treasury_cap_id is _DEFAULT:
+            self.iota_treasury_cap_id = None
+        else:
+            self.iota_treasury_cap_id = iota_treasury_cap_id
+        if system_parameters is _DEFAULT:
+            self.system_parameters = None
+        else:
+            self.system_parameters = system_parameters
 
     def __str__(self):
-        return "Epoch(epoch_id={}, fund_inflow={}, fund_outflow={}, fund_size={}, live_object_set_digest={}, net_inflow={}, protocol_configs={}, reference_gas_price={}, start_timestamp={}, end_timestamp={}, system_state_version={}, total_checkpoints={}, total_gas_fees={}, total_stake_rewards={}, total_transactions={}, validator_set={})".format(self.epoch_id, self.fund_inflow, self.fund_outflow, self.fund_size, self.live_object_set_digest, self.net_inflow, self.protocol_configs, self.reference_gas_price, self.start_timestamp, self.end_timestamp, self.system_state_version, self.total_checkpoints, self.total_gas_fees, self.total_stake_rewards, self.total_transactions, self.validator_set)
+        return "Epoch(epoch_id={}, fund_inflow={}, fund_outflow={}, fund_size={}, live_object_set_digest={}, net_inflow={}, protocol_configs={}, reference_gas_price={}, start_timestamp={}, end_timestamp={}, system_state_version={}, total_checkpoints={}, total_gas_fees={}, total_stake_rewards={}, total_transactions={}, validator_set={}, storage_fund={}, safe_mode={}, iota_total_supply={}, iota_treasury_cap_id={}, system_parameters={})".format(self.epoch_id, self.fund_inflow, self.fund_outflow, self.fund_size, self.live_object_set_digest, self.net_inflow, self.protocol_configs, self.reference_gas_price, self.start_timestamp, self.end_timestamp, self.system_state_version, self.total_checkpoints, self.total_gas_fees, self.total_stake_rewards, self.total_transactions, self.validator_set, self.storage_fund, self.safe_mode, self.iota_total_supply, self.iota_treasury_cap_id, self.system_parameters)
 
     def __eq__(self, other):
         if self.epoch_id != other.epoch_id:
@@ -14221,6 +14278,16 @@ class Epoch:
             return False
         if self.validator_set != other.validator_set:
             return False
+        if self.storage_fund != other.storage_fund:
+            return False
+        if self.safe_mode != other.safe_mode:
+            return False
+        if self.iota_total_supply != other.iota_total_supply:
+            return False
+        if self.iota_treasury_cap_id != other.iota_treasury_cap_id:
+            return False
+        if self.system_parameters != other.system_parameters:
+            return False
         return True
 
 class _UniffiConverterTypeEpoch(_UniffiConverterRustBuffer):
@@ -14243,6 +14310,11 @@ class _UniffiConverterTypeEpoch(_UniffiConverterRustBuffer):
             total_stake_rewards=_UniffiConverterOptionalString.read(buf),
             total_transactions=_UniffiConverterOptionalUInt64.read(buf),
             validator_set=_UniffiConverterOptionalTypeValidatorSet.read(buf),
+            storage_fund=_UniffiConverterOptionalTypeStorageFund.read(buf),
+            safe_mode=_UniffiConverterOptionalTypeSafeMode.read(buf),
+            iota_total_supply=_UniffiConverterOptionalUInt64.read(buf),
+            iota_treasury_cap_id=_UniffiConverterOptionalTypeAddress.read(buf),
+            system_parameters=_UniffiConverterOptionalTypeSystemParameters.read(buf),
         )
 
     @staticmethod
@@ -14263,6 +14335,11 @@ class _UniffiConverterTypeEpoch(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalString.check_lower(value.total_stake_rewards)
         _UniffiConverterOptionalUInt64.check_lower(value.total_transactions)
         _UniffiConverterOptionalTypeValidatorSet.check_lower(value.validator_set)
+        _UniffiConverterOptionalTypeStorageFund.check_lower(value.storage_fund)
+        _UniffiConverterOptionalTypeSafeMode.check_lower(value.safe_mode)
+        _UniffiConverterOptionalUInt64.check_lower(value.iota_total_supply)
+        _UniffiConverterOptionalTypeAddress.check_lower(value.iota_treasury_cap_id)
+        _UniffiConverterOptionalTypeSystemParameters.check_lower(value.system_parameters)
 
     @staticmethod
     def write(value, buf):
@@ -14282,6 +14359,11 @@ class _UniffiConverterTypeEpoch(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalString.write(value.total_stake_rewards, buf)
         _UniffiConverterOptionalUInt64.write(value.total_transactions, buf)
         _UniffiConverterOptionalTypeValidatorSet.write(value.validator_set, buf)
+        _UniffiConverterOptionalTypeStorageFund.write(value.storage_fund, buf)
+        _UniffiConverterOptionalTypeSafeMode.write(value.safe_mode, buf)
+        _UniffiConverterOptionalUInt64.write(value.iota_total_supply, buf)
+        _UniffiConverterOptionalTypeAddress.write(value.iota_treasury_cap_id, buf)
+        _UniffiConverterOptionalTypeSystemParameters.write(value.system_parameters, buf)
 
 
 class EpochPage:
@@ -14824,6 +14906,106 @@ class _UniffiConverterTypeGqlAddress(_UniffiConverterRustBuffer):
     @staticmethod
     def write(value, buf):
         _UniffiConverterTypeAddress.write(value.address, buf)
+
+
+class GraphQlGasCostSummary:
+    """
+    Breakdown of gas costs in effects.
+    """
+
+    computation_cost: "typing.Optional[str]"
+    """
+    Gas paid for executing this transaction (in NANOS).
+    """
+
+    computation_cost_burned: "typing.Optional[str]"
+    """
+    Gas burned for executing this transaction (in NANOS).
+    """
+
+    storage_cost: "typing.Optional[str]"
+    """
+    Gas paid for the data stored on-chain by this transaction (in NANOS).
+    """
+
+    storage_rebate: "typing.Optional[str]"
+    """
+    Part of storage cost that can be reclaimed by cleaning up data created
+    by this transaction (when objects are deleted or an object is
+    modified, which is treated as a deletion followed by a creation) (in
+    NANOS).
+    """
+
+    non_refundable_storage_fee: "typing.Optional[str]"
+    """
+    Part of storage cost that is not reclaimed when data created by this
+    transaction is cleaned up (in NANOS).
+    """
+
+    def __init__(self, *, computation_cost: "typing.Optional[str]" = _DEFAULT, computation_cost_burned: "typing.Optional[str]" = _DEFAULT, storage_cost: "typing.Optional[str]" = _DEFAULT, storage_rebate: "typing.Optional[str]" = _DEFAULT, non_refundable_storage_fee: "typing.Optional[str]" = _DEFAULT):
+        if computation_cost is _DEFAULT:
+            self.computation_cost = None
+        else:
+            self.computation_cost = computation_cost
+        if computation_cost_burned is _DEFAULT:
+            self.computation_cost_burned = None
+        else:
+            self.computation_cost_burned = computation_cost_burned
+        if storage_cost is _DEFAULT:
+            self.storage_cost = None
+        else:
+            self.storage_cost = storage_cost
+        if storage_rebate is _DEFAULT:
+            self.storage_rebate = None
+        else:
+            self.storage_rebate = storage_rebate
+        if non_refundable_storage_fee is _DEFAULT:
+            self.non_refundable_storage_fee = None
+        else:
+            self.non_refundable_storage_fee = non_refundable_storage_fee
+
+    def __str__(self):
+        return "GraphQlGasCostSummary(computation_cost={}, computation_cost_burned={}, storage_cost={}, storage_rebate={}, non_refundable_storage_fee={})".format(self.computation_cost, self.computation_cost_burned, self.storage_cost, self.storage_rebate, self.non_refundable_storage_fee)
+
+    def __eq__(self, other):
+        if self.computation_cost != other.computation_cost:
+            return False
+        if self.computation_cost_burned != other.computation_cost_burned:
+            return False
+        if self.storage_cost != other.storage_cost:
+            return False
+        if self.storage_rebate != other.storage_rebate:
+            return False
+        if self.non_refundable_storage_fee != other.non_refundable_storage_fee:
+            return False
+        return True
+
+class _UniffiConverterTypeGraphQlGasCostSummary(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return GraphQlGasCostSummary(
+            computation_cost=_UniffiConverterOptionalString.read(buf),
+            computation_cost_burned=_UniffiConverterOptionalString.read(buf),
+            storage_cost=_UniffiConverterOptionalString.read(buf),
+            storage_rebate=_UniffiConverterOptionalString.read(buf),
+            non_refundable_storage_fee=_UniffiConverterOptionalString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.computation_cost)
+        _UniffiConverterOptionalString.check_lower(value.computation_cost_burned)
+        _UniffiConverterOptionalString.check_lower(value.storage_cost)
+        _UniffiConverterOptionalString.check_lower(value.storage_rebate)
+        _UniffiConverterOptionalString.check_lower(value.non_refundable_storage_fee)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.computation_cost, buf)
+        _UniffiConverterOptionalString.write(value.computation_cost_burned, buf)
+        _UniffiConverterOptionalString.write(value.storage_cost, buf)
+        _UniffiConverterOptionalString.write(value.storage_rebate, buf)
+        _UniffiConverterOptionalString.write(value.non_refundable_storage_fee, buf)
 
 
 class Jwk:
@@ -16452,6 +16634,63 @@ class _UniffiConverterTypeRandomnessStateUpdate(_UniffiConverterRustBuffer):
         _UniffiConverterUInt64.write(value.randomness_obj_initial_shared_version, buf)
 
 
+class SafeMode:
+    """
+    Information about whether epoch changes are using safe mode.
+    """
+
+    enabled: "typing.Optional[bool]"
+    """
+    Whether safe mode was used for the last epoch change. The system will
+    retry a full epoch change on every epoch boundary and automatically
+    reset this flag if so.
+    """
+
+    gas_summary: "typing.Optional[GraphQlGasCostSummary]"
+    """
+    Accumulated fees for computation and cost that have not been added to
+    the various reward pools, because the full epoch change did not happen.
+    """
+
+    def __init__(self, *, enabled: "typing.Optional[bool]" = _DEFAULT, gas_summary: "typing.Optional[GraphQlGasCostSummary]" = _DEFAULT):
+        if enabled is _DEFAULT:
+            self.enabled = None
+        else:
+            self.enabled = enabled
+        if gas_summary is _DEFAULT:
+            self.gas_summary = None
+        else:
+            self.gas_summary = gas_summary
+
+    def __str__(self):
+        return "SafeMode(enabled={}, gas_summary={})".format(self.enabled, self.gas_summary)
+
+    def __eq__(self, other):
+        if self.enabled != other.enabled:
+            return False
+        if self.gas_summary != other.gas_summary:
+            return False
+        return True
+
+class _UniffiConverterTypeSafeMode(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return SafeMode(
+            enabled=_UniffiConverterOptionalBool.read(buf),
+            gas_summary=_UniffiConverterOptionalTypeGraphQlGasCostSummary.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalBool.check_lower(value.enabled)
+        _UniffiConverterOptionalTypeGraphQlGasCostSummary.check_lower(value.gas_summary)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalBool.write(value.enabled, buf)
+        _UniffiConverterOptionalTypeGraphQlGasCostSummary.write(value.gas_summary, buf)
+
+
 class ServiceConfig:
     default_page_size: "int"
     """
@@ -16722,6 +16961,193 @@ class _UniffiConverterTypeSignedTransactionPage(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypePageInfo.write(value.page_info, buf)
         _UniffiConverterSequenceTypeSignedTransaction.write(value.data, buf)
+
+
+class StorageFund:
+    """
+    IOTA set aside to account for objects stored on-chain.
+    """
+
+    total_object_storage_rebates: "typing.Optional[str]"
+    """
+    Sum of storage rebates of live objects on chain.
+    """
+
+    non_refundable_balance: "typing.Optional[str]"
+    """
+    The portion of the storage fund that will never be refunded through
+    storage rebates.
+    The system maintains an invariant that the sum of
+    all storage fees into the storage fund is equal to the sum of of all
+    storage rebates out, the total storage rebates remaining, and the
+    non-refundable balance.
+    """
+
+    def __init__(self, *, total_object_storage_rebates: "typing.Optional[str]" = _DEFAULT, non_refundable_balance: "typing.Optional[str]" = _DEFAULT):
+        if total_object_storage_rebates is _DEFAULT:
+            self.total_object_storage_rebates = None
+        else:
+            self.total_object_storage_rebates = total_object_storage_rebates
+        if non_refundable_balance is _DEFAULT:
+            self.non_refundable_balance = None
+        else:
+            self.non_refundable_balance = non_refundable_balance
+
+    def __str__(self):
+        return "StorageFund(total_object_storage_rebates={}, non_refundable_balance={})".format(self.total_object_storage_rebates, self.non_refundable_balance)
+
+    def __eq__(self, other):
+        if self.total_object_storage_rebates != other.total_object_storage_rebates:
+            return False
+        if self.non_refundable_balance != other.non_refundable_balance:
+            return False
+        return True
+
+class _UniffiConverterTypeStorageFund(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return StorageFund(
+            total_object_storage_rebates=_UniffiConverterOptionalString.read(buf),
+            non_refundable_balance=_UniffiConverterOptionalString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.total_object_storage_rebates)
+        _UniffiConverterOptionalString.check_lower(value.non_refundable_balance)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.total_object_storage_rebates, buf)
+        _UniffiConverterOptionalString.write(value.non_refundable_balance, buf)
+
+
+class SystemParameters:
+    """
+    Details of the system that are decided during genesis.
+    """
+
+    duration_ms: "typing.Optional[str]"
+    """
+    Target duration of an epoch, in milliseconds.
+    """
+
+    min_validator_count: "typing.Optional[int]"
+    """
+    The minimum number of active validators that the system supports.
+    """
+
+    max_validator_count: "typing.Optional[int]"
+    """
+    The maximum number of active validators that the system supports.
+    """
+
+    min_validator_joining_stake: "typing.Optional[str]"
+    """
+    Minimum stake needed to become a new validator.
+    """
+
+    validator_low_stake_threshold: "typing.Optional[str]"
+    """
+    Validators with stake below this threshold will enter the grace period
+    (see `validator_low_stake_grace_period`), after which they are removed
+    from the active validator set.
+    """
+
+    validator_very_low_stake_threshold: "typing.Optional[str]"
+    """
+    Validators with stake below this threshold will be removed from the
+    active validator set at the next epoch boundary, without a grace period.
+    """
+
+    validator_low_stake_grace_period: "typing.Optional[str]"
+    """
+    The number of epochs that a validator has to recover from having less
+    than `validator_low_stake_threshold` stake.
+    """
+
+    def __init__(self, *, duration_ms: "typing.Optional[str]" = _DEFAULT, min_validator_count: "typing.Optional[int]" = _DEFAULT, max_validator_count: "typing.Optional[int]" = _DEFAULT, min_validator_joining_stake: "typing.Optional[str]" = _DEFAULT, validator_low_stake_threshold: "typing.Optional[str]" = _DEFAULT, validator_very_low_stake_threshold: "typing.Optional[str]" = _DEFAULT, validator_low_stake_grace_period: "typing.Optional[str]" = _DEFAULT):
+        if duration_ms is _DEFAULT:
+            self.duration_ms = None
+        else:
+            self.duration_ms = duration_ms
+        if min_validator_count is _DEFAULT:
+            self.min_validator_count = None
+        else:
+            self.min_validator_count = min_validator_count
+        if max_validator_count is _DEFAULT:
+            self.max_validator_count = None
+        else:
+            self.max_validator_count = max_validator_count
+        if min_validator_joining_stake is _DEFAULT:
+            self.min_validator_joining_stake = None
+        else:
+            self.min_validator_joining_stake = min_validator_joining_stake
+        if validator_low_stake_threshold is _DEFAULT:
+            self.validator_low_stake_threshold = None
+        else:
+            self.validator_low_stake_threshold = validator_low_stake_threshold
+        if validator_very_low_stake_threshold is _DEFAULT:
+            self.validator_very_low_stake_threshold = None
+        else:
+            self.validator_very_low_stake_threshold = validator_very_low_stake_threshold
+        if validator_low_stake_grace_period is _DEFAULT:
+            self.validator_low_stake_grace_period = None
+        else:
+            self.validator_low_stake_grace_period = validator_low_stake_grace_period
+
+    def __str__(self):
+        return "SystemParameters(duration_ms={}, min_validator_count={}, max_validator_count={}, min_validator_joining_stake={}, validator_low_stake_threshold={}, validator_very_low_stake_threshold={}, validator_low_stake_grace_period={})".format(self.duration_ms, self.min_validator_count, self.max_validator_count, self.min_validator_joining_stake, self.validator_low_stake_threshold, self.validator_very_low_stake_threshold, self.validator_low_stake_grace_period)
+
+    def __eq__(self, other):
+        if self.duration_ms != other.duration_ms:
+            return False
+        if self.min_validator_count != other.min_validator_count:
+            return False
+        if self.max_validator_count != other.max_validator_count:
+            return False
+        if self.min_validator_joining_stake != other.min_validator_joining_stake:
+            return False
+        if self.validator_low_stake_threshold != other.validator_low_stake_threshold:
+            return False
+        if self.validator_very_low_stake_threshold != other.validator_very_low_stake_threshold:
+            return False
+        if self.validator_low_stake_grace_period != other.validator_low_stake_grace_period:
+            return False
+        return True
+
+class _UniffiConverterTypeSystemParameters(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return SystemParameters(
+            duration_ms=_UniffiConverterOptionalString.read(buf),
+            min_validator_count=_UniffiConverterOptionalInt32.read(buf),
+            max_validator_count=_UniffiConverterOptionalInt32.read(buf),
+            min_validator_joining_stake=_UniffiConverterOptionalString.read(buf),
+            validator_low_stake_threshold=_UniffiConverterOptionalString.read(buf),
+            validator_very_low_stake_threshold=_UniffiConverterOptionalString.read(buf),
+            validator_low_stake_grace_period=_UniffiConverterOptionalString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.duration_ms)
+        _UniffiConverterOptionalInt32.check_lower(value.min_validator_count)
+        _UniffiConverterOptionalInt32.check_lower(value.max_validator_count)
+        _UniffiConverterOptionalString.check_lower(value.min_validator_joining_stake)
+        _UniffiConverterOptionalString.check_lower(value.validator_low_stake_threshold)
+        _UniffiConverterOptionalString.check_lower(value.validator_very_low_stake_threshold)
+        _UniffiConverterOptionalString.check_lower(value.validator_low_stake_grace_period)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.duration_ms, buf)
+        _UniffiConverterOptionalInt32.write(value.min_validator_count, buf)
+        _UniffiConverterOptionalInt32.write(value.max_validator_count, buf)
+        _UniffiConverterOptionalString.write(value.min_validator_joining_stake, buf)
+        _UniffiConverterOptionalString.write(value.validator_low_stake_threshold, buf)
+        _UniffiConverterOptionalString.write(value.validator_very_low_stake_threshold, buf)
+        _UniffiConverterOptionalString.write(value.validator_low_stake_grace_period, buf)
 
 
 class TransactionDataEffects:
@@ -18050,6 +18476,16 @@ class _UniffiConverterTypeValidatorPage(_UniffiConverterRustBuffer):
 
 
 class ValidatorSet:
+    active_validators: "ValidatorConnection"
+    """
+    The current set of active validators.
+    """
+
+    committee_members: "ValidatorConnection"
+    """
+    The current set of committee members.
+    """
+
     inactive_pools_id: "typing.Optional[ObjectId]"
     """
     Object ID of the `Table` storing the inactive staking pools.
@@ -18106,7 +18542,9 @@ class ValidatorSet:
     Object ID of the `Table` storing the validator candidates.
     """
 
-    def __init__(self, *, inactive_pools_id: "typing.Optional[ObjectId]" = _DEFAULT, inactive_pools_size: "typing.Optional[int]" = _DEFAULT, pending_active_validators_id: "typing.Optional[ObjectId]" = _DEFAULT, pending_active_validators_size: "typing.Optional[int]" = _DEFAULT, pending_removals: "typing.Optional[typing.List[int]]" = _DEFAULT, staking_pool_mappings_id: "typing.Optional[ObjectId]" = _DEFAULT, staking_pool_mappings_size: "typing.Optional[int]" = _DEFAULT, total_stake: "typing.Optional[str]" = _DEFAULT, validator_candidates_size: "typing.Optional[int]" = _DEFAULT, validator_candidates_id: "typing.Optional[ObjectId]" = _DEFAULT):
+    def __init__(self, *, active_validators: "ValidatorConnection", committee_members: "ValidatorConnection", inactive_pools_id: "typing.Optional[ObjectId]" = _DEFAULT, inactive_pools_size: "typing.Optional[int]" = _DEFAULT, pending_active_validators_id: "typing.Optional[ObjectId]" = _DEFAULT, pending_active_validators_size: "typing.Optional[int]" = _DEFAULT, pending_removals: "typing.Optional[typing.List[int]]" = _DEFAULT, staking_pool_mappings_id: "typing.Optional[ObjectId]" = _DEFAULT, staking_pool_mappings_size: "typing.Optional[int]" = _DEFAULT, total_stake: "typing.Optional[str]" = _DEFAULT, validator_candidates_size: "typing.Optional[int]" = _DEFAULT, validator_candidates_id: "typing.Optional[ObjectId]" = _DEFAULT):
+        self.active_validators = active_validators
+        self.committee_members = committee_members
         if inactive_pools_id is _DEFAULT:
             self.inactive_pools_id = None
         else:
@@ -18149,9 +18587,13 @@ class ValidatorSet:
             self.validator_candidates_id = validator_candidates_id
 
     def __str__(self):
-        return "ValidatorSet(inactive_pools_id={}, inactive_pools_size={}, pending_active_validators_id={}, pending_active_validators_size={}, pending_removals={}, staking_pool_mappings_id={}, staking_pool_mappings_size={}, total_stake={}, validator_candidates_size={}, validator_candidates_id={})".format(self.inactive_pools_id, self.inactive_pools_size, self.pending_active_validators_id, self.pending_active_validators_size, self.pending_removals, self.staking_pool_mappings_id, self.staking_pool_mappings_size, self.total_stake, self.validator_candidates_size, self.validator_candidates_id)
+        return "ValidatorSet(active_validators={}, committee_members={}, inactive_pools_id={}, inactive_pools_size={}, pending_active_validators_id={}, pending_active_validators_size={}, pending_removals={}, staking_pool_mappings_id={}, staking_pool_mappings_size={}, total_stake={}, validator_candidates_size={}, validator_candidates_id={})".format(self.active_validators, self.committee_members, self.inactive_pools_id, self.inactive_pools_size, self.pending_active_validators_id, self.pending_active_validators_size, self.pending_removals, self.staking_pool_mappings_id, self.staking_pool_mappings_size, self.total_stake, self.validator_candidates_size, self.validator_candidates_id)
 
     def __eq__(self, other):
+        if self.active_validators != other.active_validators:
+            return False
+        if self.committee_members != other.committee_members:
+            return False
         if self.inactive_pools_id != other.inactive_pools_id:
             return False
         if self.inactive_pools_size != other.inactive_pools_size:
@@ -18178,6 +18620,8 @@ class _UniffiConverterTypeValidatorSet(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return ValidatorSet(
+            active_validators=_UniffiConverterTypeValidatorConnection.read(buf),
+            committee_members=_UniffiConverterTypeValidatorConnection.read(buf),
             inactive_pools_id=_UniffiConverterOptionalTypeObjectId.read(buf),
             inactive_pools_size=_UniffiConverterOptionalInt32.read(buf),
             pending_active_validators_id=_UniffiConverterOptionalTypeObjectId.read(buf),
@@ -18192,6 +18636,8 @@ class _UniffiConverterTypeValidatorSet(_UniffiConverterRustBuffer):
 
     @staticmethod
     def check_lower(value):
+        _UniffiConverterTypeValidatorConnection.check_lower(value.active_validators)
+        _UniffiConverterTypeValidatorConnection.check_lower(value.committee_members)
         _UniffiConverterOptionalTypeObjectId.check_lower(value.inactive_pools_id)
         _UniffiConverterOptionalInt32.check_lower(value.inactive_pools_size)
         _UniffiConverterOptionalTypeObjectId.check_lower(value.pending_active_validators_id)
@@ -18205,6 +18651,8 @@ class _UniffiConverterTypeValidatorSet(_UniffiConverterRustBuffer):
 
     @staticmethod
     def write(value, buf):
+        _UniffiConverterTypeValidatorConnection.write(value.active_validators, buf)
+        _UniffiConverterTypeValidatorConnection.write(value.committee_members, buf)
         _UniffiConverterOptionalTypeObjectId.write(value.inactive_pools_id, buf)
         _UniffiConverterOptionalInt32.write(value.inactive_pools_size, buf)
         _UniffiConverterOptionalTypeObjectId.write(value.pending_active_validators_id, buf)
@@ -22176,6 +22624,33 @@ class _UniffiConverterOptionalUInt64(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalBool(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterBool.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterBool.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterBool.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalString(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -23175,6 +23650,33 @@ class _UniffiConverterOptionalTypeFaucetReceipt(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeGraphQlGasCostSummary(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeGraphQlGasCostSummary.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeGraphQlGasCostSummary.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeGraphQlGasCostSummary.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeMoveEnumConnection(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -23445,6 +23947,33 @@ class _UniffiConverterOptionalTypeProtocolConfigs(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeSafeMode(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeSafeMode.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeSafeMode.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeSafeMode.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeSignedTransaction(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -23467,6 +23996,60 @@ class _UniffiConverterOptionalTypeSignedTransaction(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeSignedTransaction.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeStorageFund(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeStorageFund.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeStorageFund.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeStorageFund.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeSystemParameters(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeSystemParameters.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeSystemParameters.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeSystemParameters.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -48880,6 +49463,7 @@ __all__ = [
     "GasCostSummary",
     "GasPayment",
     "GqlAddress",
+    "GraphQlGasCostSummary",
     "Jwk",
     "JwkId",
     "MoveEnum",
@@ -48912,9 +49496,12 @@ __all__ = [
     "ProtocolConfigs",
     "Query",
     "RandomnessStateUpdate",
+    "SafeMode",
     "ServiceConfig",
     "SignedTransaction",
     "SignedTransactionPage",
+    "StorageFund",
+    "SystemParameters",
     "TransactionDataEffects",
     "TransactionDataEffectsPage",
     "TransactionEffectsPage",

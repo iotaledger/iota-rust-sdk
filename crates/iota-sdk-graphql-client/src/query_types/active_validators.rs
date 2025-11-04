@@ -45,7 +45,7 @@ pub struct ValidatorSetQuery {
     pub active_validators: ValidatorConnection,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "ValidatorConnection")]
 pub struct ValidatorConnection {
     pub page_info: PageInfo,

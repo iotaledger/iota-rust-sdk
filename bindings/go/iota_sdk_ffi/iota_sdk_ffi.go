@@ -29940,6 +29940,13 @@ type FfiDestroyerEndOfEpochData struct {}
 func (_ FfiDestroyerEndOfEpochData) Destroy(value EndOfEpochData) {
 	value.Destroy()
 }
+// Operation of the IOTA network is temporally partitioned into non-overlapping
+// epochs, and the network aims to keep epochs roughly the same duration as
+// each other. During a particular epoch the following data is fixed:
+//
+// - the protocol version
+// - the reference gas price
+// - the set of participating validators
 type Epoch struct {
 	// The epoch's id as a sequence number that starts at 0 and is incremented
 	// by one at every epoch change.
@@ -29989,6 +29996,18 @@ type Epoch struct {
 	// For epochs other than the current the data provided refer to the start
 	// of the epoch.
 	ValidatorSet *ValidatorSet
+	// IOTA set aside to account for objects stored on-chain, at the start of
+	// the epoch. This is also used for storage rebates.
+	StorageFund *StorageFund
+	// Information about whether this epoch was started in safe mode, which
+	// happens if the full epoch change logic fails for some reason.
+	SafeMode *SafeMode
+	// The total IOTA supply.
+	IotaTotalSupply *uint64
+	// The treasury-cap id.
+	IotaTreasuryCapId **Address
+	// Details of the system that are decided during genesis.
+	SystemParameters *SystemParameters
 }
 
 func (r *Epoch) Destroy() {
@@ -30008,6 +30027,11 @@ func (r *Epoch) Destroy() {
 		FfiDestroyerOptionalString{}.Destroy(r.TotalStakeRewards);
 		FfiDestroyerOptionalUint64{}.Destroy(r.TotalTransactions);
 		FfiDestroyerOptionalValidatorSet{}.Destroy(r.ValidatorSet);
+		FfiDestroyerOptionalStorageFund{}.Destroy(r.StorageFund);
+		FfiDestroyerOptionalSafeMode{}.Destroy(r.SafeMode);
+		FfiDestroyerOptionalUint64{}.Destroy(r.IotaTotalSupply);
+		FfiDestroyerOptionalAddress{}.Destroy(r.IotaTreasuryCapId);
+		FfiDestroyerOptionalSystemParameters{}.Destroy(r.SystemParameters);
 }
 
 type FfiConverterEpoch struct {}
@@ -30036,6 +30060,11 @@ func (c FfiConverterEpoch) Read(reader io.Reader) Epoch {
 			FfiConverterOptionalStringINSTANCE.Read(reader),
 			FfiConverterOptionalUint64INSTANCE.Read(reader),
 			FfiConverterOptionalValidatorSetINSTANCE.Read(reader),
+			FfiConverterOptionalStorageFundINSTANCE.Read(reader),
+			FfiConverterOptionalSafeModeINSTANCE.Read(reader),
+			FfiConverterOptionalUint64INSTANCE.Read(reader),
+			FfiConverterOptionalAddressINSTANCE.Read(reader),
+			FfiConverterOptionalSystemParametersINSTANCE.Read(reader),
 	}
 }
 
@@ -30060,6 +30089,11 @@ func (c FfiConverterEpoch) Write(writer io.Writer, value Epoch) {
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.TotalStakeRewards);
 		FfiConverterOptionalUint64INSTANCE.Write(writer, value.TotalTransactions);
 		FfiConverterOptionalValidatorSetINSTANCE.Write(writer, value.ValidatorSet);
+		FfiConverterOptionalStorageFundINSTANCE.Write(writer, value.StorageFund);
+		FfiConverterOptionalSafeModeINSTANCE.Write(writer, value.SafeMode);
+		FfiConverterOptionalUint64INSTANCE.Write(writer, value.IotaTotalSupply);
+		FfiConverterOptionalAddressINSTANCE.Write(writer, value.IotaTreasuryCapId);
+		FfiConverterOptionalSystemParametersINSTANCE.Write(writer, value.SystemParameters);
 }
 
 type FfiDestroyerEpoch struct {}
@@ -30511,6 +30545,67 @@ func (c FfiConverterGasPayment) Write(writer io.Writer, value GasPayment) {
 type FfiDestroyerGasPayment struct {}
 
 func (_ FfiDestroyerGasPayment) Destroy(value GasPayment) {
+	value.Destroy()
+}
+// Breakdown of gas costs in effects.
+type GraphQlGasCostSummary struct {
+	// Gas paid for executing this transaction (in NANOS).
+	ComputationCost *string
+	// Gas burned for executing this transaction (in NANOS).
+	ComputationCostBurned *string
+	// Gas paid for the data stored on-chain by this transaction (in NANOS).
+	StorageCost *string
+	// Part of storage cost that can be reclaimed by cleaning up data created
+	// by this transaction (when objects are deleted or an object is
+	// modified, which is treated as a deletion followed by a creation) (in
+	// NANOS).
+	StorageRebate *string
+	// Part of storage cost that is not reclaimed when data created by this
+	// transaction is cleaned up (in NANOS).
+	NonRefundableStorageFee *string
+}
+
+func (r *GraphQlGasCostSummary) Destroy() {
+		FfiDestroyerOptionalString{}.Destroy(r.ComputationCost);
+		FfiDestroyerOptionalString{}.Destroy(r.ComputationCostBurned);
+		FfiDestroyerOptionalString{}.Destroy(r.StorageCost);
+		FfiDestroyerOptionalString{}.Destroy(r.StorageRebate);
+		FfiDestroyerOptionalString{}.Destroy(r.NonRefundableStorageFee);
+}
+
+type FfiConverterGraphQlGasCostSummary struct {}
+
+var FfiConverterGraphQlGasCostSummaryINSTANCE = FfiConverterGraphQlGasCostSummary{}
+
+func (c FfiConverterGraphQlGasCostSummary) Lift(rb RustBufferI) GraphQlGasCostSummary {
+	return LiftFromRustBuffer[GraphQlGasCostSummary](c, rb)
+}
+
+func (c FfiConverterGraphQlGasCostSummary) Read(reader io.Reader) GraphQlGasCostSummary {
+	return GraphQlGasCostSummary {
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterGraphQlGasCostSummary) Lower(value GraphQlGasCostSummary) C.RustBuffer {
+	return LowerIntoRustBuffer[GraphQlGasCostSummary](c, value)
+}
+
+func (c FfiConverterGraphQlGasCostSummary) Write(writer io.Writer, value GraphQlGasCostSummary) {
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.ComputationCost);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.ComputationCostBurned);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.StorageCost);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.StorageRebate);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.NonRefundableStorageFee);
+}
+
+type FfiDestroyerGraphQlGasCostSummary struct {}
+
+func (_ FfiDestroyerGraphQlGasCostSummary) Destroy(value GraphQlGasCostSummary) {
 	value.Destroy()
 }
 // A JSON Web Key
@@ -31968,6 +32063,51 @@ type FfiDestroyerRandomnessStateUpdate struct {}
 func (_ FfiDestroyerRandomnessStateUpdate) Destroy(value RandomnessStateUpdate) {
 	value.Destroy()
 }
+// Information about whether epoch changes are using safe mode.
+type SafeMode struct {
+	// Whether safe mode was used for the last epoch change. The system will
+	// retry a full epoch change on every epoch boundary and automatically
+	// reset this flag if so.
+	Enabled *bool
+	// Accumulated fees for computation and cost that have not been added to
+	// the various reward pools, because the full epoch change did not happen.
+	GasSummary *GraphQlGasCostSummary
+}
+
+func (r *SafeMode) Destroy() {
+		FfiDestroyerOptionalBool{}.Destroy(r.Enabled);
+		FfiDestroyerOptionalGraphQlGasCostSummary{}.Destroy(r.GasSummary);
+}
+
+type FfiConverterSafeMode struct {}
+
+var FfiConverterSafeModeINSTANCE = FfiConverterSafeMode{}
+
+func (c FfiConverterSafeMode) Lift(rb RustBufferI) SafeMode {
+	return LiftFromRustBuffer[SafeMode](c, rb)
+}
+
+func (c FfiConverterSafeMode) Read(reader io.Reader) SafeMode {
+	return SafeMode {
+			FfiConverterOptionalBoolINSTANCE.Read(reader),
+			FfiConverterOptionalGraphQlGasCostSummaryINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterSafeMode) Lower(value SafeMode) C.RustBuffer {
+	return LowerIntoRustBuffer[SafeMode](c, value)
+}
+
+func (c FfiConverterSafeMode) Write(writer io.Writer, value SafeMode) {
+		FfiConverterOptionalBoolINSTANCE.Write(writer, value.Enabled);
+		FfiConverterOptionalGraphQlGasCostSummaryINSTANCE.Write(writer, value.GasSummary);
+}
+
+type FfiDestroyerSafeMode struct {}
+
+func (_ FfiDestroyerSafeMode) Destroy(value SafeMode) {
+	value.Destroy()
+}
 type ServiceConfig struct {
 	// Default number of elements allowed on a single page of a connection.
 	DefaultPageSize int32
@@ -32166,6 +32306,124 @@ func (c FfiConverterSignedTransactionPage) Write(writer io.Writer, value SignedT
 type FfiDestroyerSignedTransactionPage struct {}
 
 func (_ FfiDestroyerSignedTransactionPage) Destroy(value SignedTransactionPage) {
+	value.Destroy()
+}
+// IOTA set aside to account for objects stored on-chain.
+type StorageFund struct {
+	// Sum of storage rebates of live objects on chain.
+	TotalObjectStorageRebates *string
+	// The portion of the storage fund that will never be refunded through
+	// storage rebates.
+	// The system maintains an invariant that the sum of
+	// all storage fees into the storage fund is equal to the sum of of all
+	// storage rebates out, the total storage rebates remaining, and the
+	// non-refundable balance.
+	NonRefundableBalance *string
+}
+
+func (r *StorageFund) Destroy() {
+		FfiDestroyerOptionalString{}.Destroy(r.TotalObjectStorageRebates);
+		FfiDestroyerOptionalString{}.Destroy(r.NonRefundableBalance);
+}
+
+type FfiConverterStorageFund struct {}
+
+var FfiConverterStorageFundINSTANCE = FfiConverterStorageFund{}
+
+func (c FfiConverterStorageFund) Lift(rb RustBufferI) StorageFund {
+	return LiftFromRustBuffer[StorageFund](c, rb)
+}
+
+func (c FfiConverterStorageFund) Read(reader io.Reader) StorageFund {
+	return StorageFund {
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterStorageFund) Lower(value StorageFund) C.RustBuffer {
+	return LowerIntoRustBuffer[StorageFund](c, value)
+}
+
+func (c FfiConverterStorageFund) Write(writer io.Writer, value StorageFund) {
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.TotalObjectStorageRebates);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.NonRefundableBalance);
+}
+
+type FfiDestroyerStorageFund struct {}
+
+func (_ FfiDestroyerStorageFund) Destroy(value StorageFund) {
+	value.Destroy()
+}
+// Details of the system that are decided during genesis.
+type SystemParameters struct {
+	// Target duration of an epoch, in milliseconds.
+	DurationMs *string
+	// The minimum number of active validators that the system supports.
+	MinValidatorCount *int32
+	// The maximum number of active validators that the system supports.
+	MaxValidatorCount *int32
+	// Minimum stake needed to become a new validator.
+	MinValidatorJoiningStake *string
+	// Validators with stake below this threshold will enter the grace period
+	// (see `validator_low_stake_grace_period`), after which they are removed
+	// from the active validator set.
+	ValidatorLowStakeThreshold *string
+	// Validators with stake below this threshold will be removed from the
+	// active validator set at the next epoch boundary, without a grace period.
+	ValidatorVeryLowStakeThreshold *string
+	// The number of epochs that a validator has to recover from having less
+	// than `validator_low_stake_threshold` stake.
+	ValidatorLowStakeGracePeriod *string
+}
+
+func (r *SystemParameters) Destroy() {
+		FfiDestroyerOptionalString{}.Destroy(r.DurationMs);
+		FfiDestroyerOptionalInt32{}.Destroy(r.MinValidatorCount);
+		FfiDestroyerOptionalInt32{}.Destroy(r.MaxValidatorCount);
+		FfiDestroyerOptionalString{}.Destroy(r.MinValidatorJoiningStake);
+		FfiDestroyerOptionalString{}.Destroy(r.ValidatorLowStakeThreshold);
+		FfiDestroyerOptionalString{}.Destroy(r.ValidatorVeryLowStakeThreshold);
+		FfiDestroyerOptionalString{}.Destroy(r.ValidatorLowStakeGracePeriod);
+}
+
+type FfiConverterSystemParameters struct {}
+
+var FfiConverterSystemParametersINSTANCE = FfiConverterSystemParameters{}
+
+func (c FfiConverterSystemParameters) Lift(rb RustBufferI) SystemParameters {
+	return LiftFromRustBuffer[SystemParameters](c, rb)
+}
+
+func (c FfiConverterSystemParameters) Read(reader io.Reader) SystemParameters {
+	return SystemParameters {
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+			FfiConverterOptionalInt32INSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterSystemParameters) Lower(value SystemParameters) C.RustBuffer {
+	return LowerIntoRustBuffer[SystemParameters](c, value)
+}
+
+func (c FfiConverterSystemParameters) Write(writer io.Writer, value SystemParameters) {
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.DurationMs);
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.MinValidatorCount);
+		FfiConverterOptionalInt32INSTANCE.Write(writer, value.MaxValidatorCount);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.MinValidatorJoiningStake);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.ValidatorLowStakeThreshold);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.ValidatorVeryLowStakeThreshold);
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.ValidatorLowStakeGracePeriod);
+}
+
+type FfiDestroyerSystemParameters struct {}
+
+func (_ FfiDestroyerSystemParameters) Destroy(value SystemParameters) {
 	value.Destroy()
 }
 type TransactionDataEffects struct {
@@ -33086,6 +33344,10 @@ func (_ FfiDestroyerValidatorPage) Destroy(value ValidatorPage) {
 	value.Destroy()
 }
 type ValidatorSet struct {
+	// The current set of active validators.
+	ActiveValidators ValidatorConnection
+	// The current set of committee members.
+	CommitteeMembers ValidatorConnection
 	// Object ID of the `Table` storing the inactive staking pools.
 	InactivePoolsId **ObjectId
 	// Size of the inactive pools `Table`.
@@ -33115,6 +33377,8 @@ type ValidatorSet struct {
 }
 
 func (r *ValidatorSet) Destroy() {
+		FfiDestroyerValidatorConnection{}.Destroy(r.ActiveValidators);
+		FfiDestroyerValidatorConnection{}.Destroy(r.CommitteeMembers);
 		FfiDestroyerOptionalObjectId{}.Destroy(r.InactivePoolsId);
 		FfiDestroyerOptionalInt32{}.Destroy(r.InactivePoolsSize);
 		FfiDestroyerOptionalObjectId{}.Destroy(r.PendingActiveValidatorsId);
@@ -33137,6 +33401,8 @@ func (c FfiConverterValidatorSet) Lift(rb RustBufferI) ValidatorSet {
 
 func (c FfiConverterValidatorSet) Read(reader io.Reader) ValidatorSet {
 	return ValidatorSet {
+			FfiConverterValidatorConnectionINSTANCE.Read(reader),
+			FfiConverterValidatorConnectionINSTANCE.Read(reader),
 			FfiConverterOptionalObjectIdINSTANCE.Read(reader),
 			FfiConverterOptionalInt32INSTANCE.Read(reader),
 			FfiConverterOptionalObjectIdINSTANCE.Read(reader),
@@ -33155,6 +33421,8 @@ func (c FfiConverterValidatorSet) Lower(value ValidatorSet) C.RustBuffer {
 }
 
 func (c FfiConverterValidatorSet) Write(writer io.Writer, value ValidatorSet) {
+		FfiConverterValidatorConnectionINSTANCE.Write(writer, value.ActiveValidators);
+		FfiConverterValidatorConnectionINSTANCE.Write(writer, value.CommitteeMembers);
 		FfiConverterOptionalObjectIdINSTANCE.Write(writer, value.InactivePoolsId);
 		FfiConverterOptionalInt32INSTANCE.Write(writer, value.InactivePoolsSize);
 		FfiConverterOptionalObjectIdINSTANCE.Write(writer, value.PendingActiveValidatorsId);
@@ -35482,6 +35750,43 @@ func (_ FfiDestroyerOptionalUint64) Destroy(value *uint64) {
 	}
 }
 
+type FfiConverterOptionalBool struct{}
+
+var FfiConverterOptionalBoolINSTANCE = FfiConverterOptionalBool{}
+
+func (c FfiConverterOptionalBool) Lift(rb RustBufferI) *bool {
+	return LiftFromRustBuffer[*bool](c, rb)
+}
+
+func (_ FfiConverterOptionalBool) Read(reader io.Reader) *bool {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterBoolINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalBool) Lower(value *bool) C.RustBuffer {
+	return LowerIntoRustBuffer[*bool](c, value)
+}
+
+func (_ FfiConverterOptionalBool) Write(writer io.Writer, value *bool) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterBoolINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalBool struct {}
+
+func (_ FfiDestroyerOptionalBool) Destroy(value *bool) {
+	if value != nil {
+		FfiDestroyerBool{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalString struct{}
 
 var FfiConverterOptionalStringINSTANCE = FfiConverterOptionalString{}
@@ -36851,6 +37156,43 @@ func (_ FfiDestroyerOptionalFaucetReceipt) Destroy(value *FaucetReceipt) {
 	}
 }
 
+type FfiConverterOptionalGraphQlGasCostSummary struct{}
+
+var FfiConverterOptionalGraphQlGasCostSummaryINSTANCE = FfiConverterOptionalGraphQlGasCostSummary{}
+
+func (c FfiConverterOptionalGraphQlGasCostSummary) Lift(rb RustBufferI) *GraphQlGasCostSummary {
+	return LiftFromRustBuffer[*GraphQlGasCostSummary](c, rb)
+}
+
+func (_ FfiConverterOptionalGraphQlGasCostSummary) Read(reader io.Reader) *GraphQlGasCostSummary {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterGraphQlGasCostSummaryINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalGraphQlGasCostSummary) Lower(value *GraphQlGasCostSummary) C.RustBuffer {
+	return LowerIntoRustBuffer[*GraphQlGasCostSummary](c, value)
+}
+
+func (_ FfiConverterOptionalGraphQlGasCostSummary) Write(writer io.Writer, value *GraphQlGasCostSummary) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterGraphQlGasCostSummaryINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalGraphQlGasCostSummary struct {}
+
+func (_ FfiDestroyerOptionalGraphQlGasCostSummary) Destroy(value *GraphQlGasCostSummary) {
+	if value != nil {
+		FfiDestroyerGraphQlGasCostSummary{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalMoveEnumConnection struct{}
 
 var FfiConverterOptionalMoveEnumConnectionINSTANCE = FfiConverterOptionalMoveEnumConnection{}
@@ -37221,6 +37563,43 @@ func (_ FfiDestroyerOptionalProtocolConfigs) Destroy(value *ProtocolConfigs) {
 	}
 }
 
+type FfiConverterOptionalSafeMode struct{}
+
+var FfiConverterOptionalSafeModeINSTANCE = FfiConverterOptionalSafeMode{}
+
+func (c FfiConverterOptionalSafeMode) Lift(rb RustBufferI) *SafeMode {
+	return LiftFromRustBuffer[*SafeMode](c, rb)
+}
+
+func (_ FfiConverterOptionalSafeMode) Read(reader io.Reader) *SafeMode {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSafeModeINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSafeMode) Lower(value *SafeMode) C.RustBuffer {
+	return LowerIntoRustBuffer[*SafeMode](c, value)
+}
+
+func (_ FfiConverterOptionalSafeMode) Write(writer io.Writer, value *SafeMode) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSafeModeINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSafeMode struct {}
+
+func (_ FfiDestroyerOptionalSafeMode) Destroy(value *SafeMode) {
+	if value != nil {
+		FfiDestroyerSafeMode{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalSignedTransaction struct{}
 
 var FfiConverterOptionalSignedTransactionINSTANCE = FfiConverterOptionalSignedTransaction{}
@@ -37255,6 +37634,80 @@ type FfiDestroyerOptionalSignedTransaction struct {}
 func (_ FfiDestroyerOptionalSignedTransaction) Destroy(value *SignedTransaction) {
 	if value != nil {
 		FfiDestroyerSignedTransaction{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalStorageFund struct{}
+
+var FfiConverterOptionalStorageFundINSTANCE = FfiConverterOptionalStorageFund{}
+
+func (c FfiConverterOptionalStorageFund) Lift(rb RustBufferI) *StorageFund {
+	return LiftFromRustBuffer[*StorageFund](c, rb)
+}
+
+func (_ FfiConverterOptionalStorageFund) Read(reader io.Reader) *StorageFund {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterStorageFundINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalStorageFund) Lower(value *StorageFund) C.RustBuffer {
+	return LowerIntoRustBuffer[*StorageFund](c, value)
+}
+
+func (_ FfiConverterOptionalStorageFund) Write(writer io.Writer, value *StorageFund) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterStorageFundINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalStorageFund struct {}
+
+func (_ FfiDestroyerOptionalStorageFund) Destroy(value *StorageFund) {
+	if value != nil {
+		FfiDestroyerStorageFund{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSystemParameters struct{}
+
+var FfiConverterOptionalSystemParametersINSTANCE = FfiConverterOptionalSystemParameters{}
+
+func (c FfiConverterOptionalSystemParameters) Lift(rb RustBufferI) *SystemParameters {
+	return LiftFromRustBuffer[*SystemParameters](c, rb)
+}
+
+func (_ FfiConverterOptionalSystemParameters) Read(reader io.Reader) *SystemParameters {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSystemParametersINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSystemParameters) Lower(value *SystemParameters) C.RustBuffer {
+	return LowerIntoRustBuffer[*SystemParameters](c, value)
+}
+
+func (_ FfiConverterOptionalSystemParameters) Write(writer io.Writer, value *SystemParameters) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSystemParametersINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSystemParameters struct {}
+
+func (_ FfiDestroyerOptionalSystemParameters) Destroy(value *SystemParameters) {
+	if value != nil {
+		FfiDestroyerSystemParameters{}.Destroy(*value)
 	}
 }
 

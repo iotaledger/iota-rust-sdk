@@ -88,7 +88,7 @@ pub struct Checkpoint {
     pub rolling_gas_summary: Option<GasCostSummary>,
 }
 
-#[derive(cynic::QueryFragment, Debug)]
+#[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "GasCostSummary")]
 pub struct GasCostSummary {
     pub computation_cost: Option<BigInt>,

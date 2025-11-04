@@ -365,6 +365,191 @@ impl From<ObjectRef> for iota_sdk::graphql_client::query_types::ObjectRef {
     }
 }
 
+/// Breakdown of gas costs in effects.
+#[derive(uniffi::Record)]
+pub struct GraphQLGasCostSummary {
+    /// Gas paid for executing this transaction (in NANOS).
+    #[uniffi(default = None)]
+    pub computation_cost: Option<String>,
+    /// Gas burned for executing this transaction (in NANOS).
+    #[uniffi(default = None)]
+    pub computation_cost_burned: Option<String>,
+    /// Gas paid for the data stored on-chain by this transaction (in NANOS).
+    #[uniffi(default = None)]
+    pub storage_cost: Option<String>,
+    /// Part of storage cost that can be reclaimed by cleaning up data created
+    /// by this transaction (when objects are deleted or an object is
+    /// modified, which is treated as a deletion followed by a creation) (in
+    /// NANOS).
+    #[uniffi(default = None)]
+    pub storage_rebate: Option<String>,
+    /// Part of storage cost that is not reclaimed when data created by this
+    /// transaction is cleaned up (in NANOS).
+    #[uniffi(default = None)]
+    pub non_refundable_storage_fee: Option<String>,
+}
+
+impl From<iota_sdk::graphql_client::query_types::GasCostSummary> for GraphQLGasCostSummary {
+    fn from(value: iota_sdk::graphql_client::query_types::GasCostSummary) -> Self {
+        Self {
+            computation_cost: value.computation_cost.map(|v| v.0),
+            computation_cost_burned: value.computation_cost_burned.map(|v| v.0),
+            storage_cost: value.storage_cost.map(|v| v.0),
+            storage_rebate: value.storage_rebate.map(|v| v.0),
+            non_refundable_storage_fee: value.non_refundable_storage_fee.map(|v| v.0),
+        }
+    }
+}
+
+impl From<GraphQLGasCostSummary> for iota_sdk::graphql_client::query_types::GasCostSummary {
+    fn from(value: GraphQLGasCostSummary) -> Self {
+        Self {
+            computation_cost: value.computation_cost.map(|v| v.into()),
+            computation_cost_burned: value.computation_cost_burned.map(|v| v.into()),
+            storage_cost: value.storage_cost.map(|v| v.into()),
+            storage_rebate: value.storage_rebate.map(|v| v.into()),
+            non_refundable_storage_fee: value.non_refundable_storage_fee.map(|v| v.into()),
+        }
+    }
+}
+
+/// Information about whether epoch changes are using safe mode.
+#[derive(uniffi::Record)]
+pub struct SafeMode {
+    /// Whether safe mode was used for the last epoch change. The system will
+    /// retry a full epoch change on every epoch boundary and automatically
+    /// reset this flag if so.
+    #[uniffi(default = None)]
+    pub enabled: Option<bool>,
+    /// Accumulated fees for computation and cost that have not been added to
+    /// the various reward pools, because the full epoch change did not happen.
+    #[uniffi(default = None)]
+    pub gas_summary: Option<GraphQLGasCostSummary>,
+}
+
+impl From<iota_sdk::graphql_client::query_types::SafeMode> for SafeMode {
+    fn from(value: iota_sdk::graphql_client::query_types::SafeMode) -> Self {
+        Self {
+            enabled: value.enabled,
+            gas_summary: value.gas_summary.map(Into::into),
+        }
+    }
+}
+
+impl From<SafeMode> for iota_sdk::graphql_client::query_types::SafeMode {
+    fn from(value: SafeMode) -> Self {
+        Self {
+            enabled: value.enabled,
+            gas_summary: value.gas_summary.map(Into::into),
+        }
+    }
+}
+
+/// IOTA set aside to account for objects stored on-chain.
+#[derive(uniffi::Record)]
+pub struct StorageFund {
+    /// Sum of storage rebates of live objects on chain.
+    #[uniffi(default = None)]
+    pub total_object_storage_rebates: Option<String>,
+    /// The portion of the storage fund that will never be refunded through
+    /// storage rebates.
+    /// The system maintains an invariant that the sum of
+    /// all storage fees into the storage fund is equal to the sum of of all
+    /// storage rebates out, the total storage rebates remaining, and the
+    /// non-refundable balance.
+    #[uniffi(default = None)]
+    pub non_refundable_balance: Option<String>,
+}
+
+impl From<iota_sdk::graphql_client::query_types::StorageFund> for StorageFund {
+    fn from(value: iota_sdk::graphql_client::query_types::StorageFund) -> Self {
+        Self {
+            total_object_storage_rebates: value.total_object_storage_rebates.map(|v| v.0),
+            non_refundable_balance: value.non_refundable_balance.map(|v| v.0),
+        }
+    }
+}
+
+impl From<StorageFund> for iota_sdk::graphql_client::query_types::StorageFund {
+    fn from(value: StorageFund) -> Self {
+        Self {
+            total_object_storage_rebates: value.total_object_storage_rebates.map(|v| v.into()),
+            non_refundable_balance: value.non_refundable_balance.map(|v| v.into()),
+        }
+    }
+}
+
+/// Details of the system that are decided during genesis.
+#[derive(uniffi::Record)]
+pub struct SystemParameters {
+    /// Target duration of an epoch, in milliseconds.
+    #[uniffi(default = None)]
+    pub duration_ms: Option<String>,
+    /// The minimum number of active validators that the system supports.
+    #[uniffi(default = None)]
+    pub min_validator_count: Option<i32>,
+    /// The maximum number of active validators that the system supports.
+    #[uniffi(default = None)]
+    pub max_validator_count: Option<i32>,
+    /// Minimum stake needed to become a new validator.
+    #[uniffi(default = None)]
+    pub min_validator_joining_stake: Option<String>,
+    /// Validators with stake below this threshold will enter the grace period
+    /// (see `validator_low_stake_grace_period`), after which they are removed
+    /// from the active validator set.
+    #[uniffi(default = None)]
+    pub validator_low_stake_threshold: Option<String>,
+    /// Validators with stake below this threshold will be removed from the
+    /// active validator set at the next epoch boundary, without a grace period.
+    #[uniffi(default = None)]
+    pub validator_very_low_stake_threshold: Option<String>,
+    /// The number of epochs that a validator has to recover from having less
+    /// than `validator_low_stake_threshold` stake.
+    #[uniffi(default = None)]
+    pub validator_low_stake_grace_period: Option<String>,
+}
+
+impl From<iota_sdk::graphql_client::query_types::SystemParameters> for SystemParameters {
+    fn from(value: iota_sdk::graphql_client::query_types::SystemParameters) -> Self {
+        Self {
+            duration_ms: value.duration_ms.map(|v| v.0),
+            min_validator_count: value.min_validator_count,
+            max_validator_count: value.max_validator_count,
+            min_validator_joining_stake: value.min_validator_joining_stake.map(|v| v.0),
+            validator_low_stake_threshold: value.validator_low_stake_threshold.map(|v| v.0),
+            validator_very_low_stake_threshold: value
+                .validator_very_low_stake_threshold
+                .map(|v| v.0),
+            validator_low_stake_grace_period: value.validator_low_stake_grace_period.map(|v| v.0),
+        }
+    }
+}
+
+impl From<SystemParameters> for iota_sdk::graphql_client::query_types::SystemParameters {
+    fn from(value: SystemParameters) -> Self {
+        Self {
+            duration_ms: value.duration_ms.map(|v| v.into()),
+            min_validator_count: value.min_validator_count,
+            max_validator_count: value.max_validator_count,
+            min_validator_joining_stake: value.min_validator_joining_stake.map(|v| v.into()),
+            validator_low_stake_threshold: value.validator_low_stake_threshold.map(|v| v.into()),
+            validator_very_low_stake_threshold: value
+                .validator_very_low_stake_threshold
+                .map(|v| v.into()),
+            validator_low_stake_grace_period: value
+                .validator_low_stake_grace_period
+                .map(|v| v.into()),
+        }
+    }
+}
+
+/// Operation of the IOTA network is temporally partitioned into non-overlapping
+/// epochs, and the network aims to keep epochs roughly the same duration as
+/// each other. During a particular epoch the following data is fixed:
+///
+/// - the protocol version
+/// - the reference gas price
+/// - the set of participating validators
 #[derive(uniffi::Record)]
 pub struct Epoch {
     /// The epoch's id as a sequence number that starts at 0 and is incremented
@@ -429,6 +614,23 @@ pub struct Epoch {
     /// of the epoch.
     #[uniffi(default = None)]
     pub validator_set: Option<ValidatorSet>,
+    /// IOTA set aside to account for objects stored on-chain, at the start of
+    /// the epoch. This is also used for storage rebates.
+    #[uniffi(default = None)]
+    pub storage_fund: Option<StorageFund>,
+    /// Information about whether this epoch was started in safe mode, which
+    /// happens if the full epoch change logic fails for some reason.
+    #[uniffi(default = None)]
+    pub safe_mode: Option<SafeMode>,
+    /// The total IOTA supply.
+    #[uniffi(default = None)]
+    pub iota_total_supply: Option<u64>,
+    /// The treasury-cap id.
+    #[uniffi(default = None)]
+    pub iota_treasury_cap_id: Option<Arc<Address>>,
+    /// Details of the system that are decided during genesis.
+    #[uniffi(default = None)]
+    pub system_parameters: Option<SystemParameters>,
 }
 
 impl From<iota_sdk::graphql_client::query_types::Epoch> for Epoch {
@@ -449,21 +651,12 @@ impl From<iota_sdk::graphql_client::query_types::Epoch> for Epoch {
             total_gas_fees: value.total_gas_fees.map(|v| v.0),
             total_stake_rewards: value.total_stake_rewards.map(|v| v.0),
             total_transactions: value.total_transactions,
-            validator_set: value.validator_set.map(|vs| ValidatorSet {
-                inactive_pools_id: vs.inactive_pools_id.map(Into::into).map(Arc::new),
-                inactive_pools_size: vs.inactive_pools_size,
-                pending_active_validators_id: vs
-                    .pending_active_validators_id
-                    .map(Into::into)
-                    .map(Arc::new),
-                pending_active_validators_size: vs.pending_active_validators_size,
-                pending_removals: vs.pending_removals,
-                staking_pool_mappings_id: vs.staking_pool_mappings_id.map(Into::into).map(Arc::new),
-                staking_pool_mappings_size: vs.staking_pool_mappings_size,
-                total_stake: vs.total_stake.map(|v| v.0),
-                validator_candidates_size: vs.validator_candidates_size,
-                validator_candidates_id: vs.validator_candidates_id.map(Into::into).map(Arc::new),
-            }),
+            validator_set: value.validator_set.map(Into::into),
+            storage_fund: value.storage_fund.map(Into::into),
+            safe_mode: value.safe_mode.map(Into::into),
+            iota_total_supply: value.iota_total_supply,
+            iota_treasury_cap_id: value.iota_treasury_cap_id.map(Into::into).map(Arc::new),
+            system_parameters: value.system_parameters.map(Into::into),
         }
     }
 }
@@ -491,12 +684,21 @@ impl From<Epoch> for iota_sdk::graphql_client::query_types::Epoch {
             total_stake_rewards: value.total_stake_rewards.map(|v| v.into()),
             total_transactions: value.total_transactions,
             validator_set: value.validator_set.map(Into::into),
+            storage_fund: value.storage_fund.map(Into::into),
+            safe_mode: value.safe_mode.map(Into::into),
+            iota_total_supply: value.iota_total_supply,
+            iota_treasury_cap_id: value.iota_treasury_cap_id.map(|a| **a),
+            system_parameters: value.system_parameters.map(Into::into),
         }
     }
 }
 
 #[derive(uniffi::Record)]
 pub struct ValidatorSet {
+    /// The current set of active validators.
+    pub active_validators: ValidatorConnection,
+    /// The current set of committee members.
+    pub committee_members: ValidatorConnection,
     /// Object ID of the `Table` storing the inactive staking pools.
     #[uniffi(default = None)]
     pub inactive_pools_id: Option<Arc<ObjectId>>,
@@ -538,6 +740,8 @@ pub struct ValidatorSet {
 impl From<iota_sdk::graphql_client::query_types::ValidatorSet> for ValidatorSet {
     fn from(value: iota_sdk::graphql_client::query_types::ValidatorSet) -> Self {
         Self {
+            active_validators: value.active_validators.into(),
+            committee_members: value.committee_members.into(),
             inactive_pools_id: value.inactive_pools_id.map(Into::into).map(Arc::new),
             inactive_pools_size: value.inactive_pools_size,
             pending_active_validators_id: value
@@ -558,6 +762,8 @@ impl From<iota_sdk::graphql_client::query_types::ValidatorSet> for ValidatorSet 
 impl From<ValidatorSet> for iota_sdk::graphql_client::query_types::ValidatorSet {
     fn from(value: ValidatorSet) -> Self {
         Self {
+            active_validators: value.active_validators.into(),
+            committee_members: value.committee_members.into(),
             inactive_pools_id: value.inactive_pools_id.map(|v| **v),
             inactive_pools_size: value.inactive_pools_size,
             pending_active_validators_id: value.pending_active_validators_id.map(|v| **v),

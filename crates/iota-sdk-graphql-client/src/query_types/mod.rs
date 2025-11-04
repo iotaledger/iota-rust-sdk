@@ -28,7 +28,7 @@ pub use balance::{Balance, BalanceArgs, BalanceQuery, Owner};
 pub use chain::ChainIdentifierQuery;
 pub use checkpoint::{
     CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
-    CheckpointsQuery,
+    CheckpointsQuery, GasCostSummary,
 };
 pub use coin::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery};
 use cynic::impl_scalar;
@@ -40,7 +40,10 @@ pub use dynamic_fields::{
     DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
     DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
 };
-pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
+pub use epoch::{
+    Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, SafeMode, StorageFund, SystemParameters,
+    ValidatorSet,
+};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
 pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
 pub use iota_names::{
