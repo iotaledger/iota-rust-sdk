@@ -1,11 +1,12 @@
 enable-all-features = true
-pre-release-hook = [
-  "conventional-changelog",
-  "-p",
-  "conventionalcommits",
-  "-i",
-  "$CRATE_ROOT/CHANGELOG.md",
-  "-s",
-  "--commit-path",
-  "$CRATE_ROOT",
-]
+pre-release-hook = ["pwd"]
+# pre-release-hook = [
+#   "conventional-changelog",
+#   "-p",
+#   "conventionalcommits",
+#   "-i",
+#   "$CRATE_ROOT/CHANGELOG.md",
+#   "-s",
+#   "--commit-path",
+#   "$CRATE_ROOT",
+# ]
