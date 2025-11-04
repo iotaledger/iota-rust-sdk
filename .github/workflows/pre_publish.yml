@@ -59,8 +59,10 @@ jobs:
         with:
           tool: cargo-release@0.25.20
 
-      - name: Install git cliff
-        run: cargo install git-cliff
+      - name: Install git-cliff
+        uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        with:
+          tool: git-cliff
 
       - uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
         with:
