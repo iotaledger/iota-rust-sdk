@@ -1,9 +1,9 @@
 enable-all-features = true
 pre-release-hook = [
-  "$CRATE_ROOT/conventional-changelog",
-  "-p",
-  "conventionalcommits",
-  "-i",
+  "git",
+  "cliff",
+  "-o",
   "CHANGELOG.md",
-  "-s",
+  "--tag",
+  "{{version}}",
 ]
