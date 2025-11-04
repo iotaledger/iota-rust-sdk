@@ -1,6 +1,9 @@
+import com.ncorti.ktfmt.gradle.tasks.*
+
 plugins {
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.serialization") version "1.9.24"
+    id("com.ncorti.ktfmt.gradle") version "0.25.0"
     application
 }
 
@@ -17,6 +20,16 @@ dependencies {
 }
 
 kotlin { jvmToolchain(21) }
+
+tasks.register<KtfmtCheckTask>("KtfmtCheck") {
+  source = project.fileTree(rootDir)
+  include("**/examples/*.kt")
+}
+
+tasks.register<KtfmtFormatTask>("KtfmtFormat") {
+  source = project.fileTree(rootDir)
+  include("**/examples/*.kt")
+}
 
 // Generic task to run any example
 tasks.register<JavaExec>("example") {

@@ -92,11 +92,13 @@ bindings-examples: ## Run all bindings examples
 .PHONY: bindings-examples-format-check
 bindings-examples-format-check: ## Check format of all bindings examples
 	@$(MAKE) go-examples-format-check
+	@$(MAKE) kotlin-examples-format-check
 	@$(MAKE) python-examples-format-check
 
 .PHONY: bindings-examples-format
 bindings-examples-format: ## Format all bindings examples
 	@$(MAKE) go-examples-format
+	@$(MAKE) kotlin-examples-format
 	@$(MAKE) python-examples-format
 
 # Build ffi crate and detect platform
@@ -170,6 +172,18 @@ kotlin-examples: ## Run all Kotlin bindings examples
 	@for example in $$(find bindings/kotlin/examples -name "*.kt" -exec basename {} .kt \;); do \
 		$(MAKE) kotlin-example "$$example" || exit $$?; \
 	done
+
+.PHONY: kotlin-examples-format-check
+kotlin-examples-format-check: ## Check format of all Kotlin bindings examples
+	cd bindings/kotlin; \
+	./gradlew KtfmtCheck || exit $$?; \
+	cd -
+
+.PHONY: kotlin-examples-format
+kotlin-examples-format: ## Format all Kotlin bindings examples
+	cd bindings/kotlin; \
+	./gradlew KtfmtFormat; \
+	cd -
 
 .PHONY: python-example
 python-example: ## Run a specific Python example. Usage: make python-example example
