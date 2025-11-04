@@ -3,6 +3,9 @@ name: Pre-publish
 on:
   workflow_dispatch:
     inputs:
+      version:
+        type: string
+        description: The exact version to release. Will override the level bump.
       level:
         type: choice
         required: true
@@ -42,35 +45,31 @@ on:
 jobs:
   publish:
     name: Setup for publish to crates.io
+    permissions:
+      id-token: write # Enable OIDC
+      pull-requests: write
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install cargo-release
-        run: cargo install cargo-release --version 0.25.20
+        uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        with:
+          tool: cargo-release@0.25.20
 
-      - name: Set git identity
-        run: |
-          git config user.name "IOTA Foundation"
-          git config user.email "info@iota.org"
+      - name: Install node
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
 
-      - name: Dry run publish
-        run: eval "cargo release -p ${{inputs.package}} --no-confirm --all-features"
+      - name: Install conventional-commits
+        run: npm -g i conventional-commits
 
-      - name: Get commits since last tag
-        run: eval "cargo release changes"
-
-      - name: Bump versions
-        if: inputs.level != 'no-bump'
-        run: eval "cargo release version -p ${{inputs.package}} --no-confirm ${{inputs.level}} --execute"
-
-      - name: Commit packages
-        if: inputs.level != 'no-bump'
-        run: eval "cargo release commit --no-confirm --execute"
-
-      - name: Tag commit
-        run: eval "cargo release tag -p ${{inputs.package}} --no-confirm --tag-prefix '${{inputs.package}}-' --execute"
-
-      - name: Push commit
-        run: eval "cargo release push -p ${{inputs.package}} --no-confirm --execute"
+      - uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version: ${{ inputs.version != null && inputs.version || inputs.level }}
+          crate-name: ${{ inputs.package }}
+          git-user-name: "IOTA Foundation"
+          git-user-email: info@iota.org
+          base-branch: develop
