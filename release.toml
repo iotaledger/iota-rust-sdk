@@ -1,7 +1,6 @@
 enable-all-features = true
 pre-release-hook = [
-  "git",
-  "cliff",
+  "git-cliff",
   "-o",
   "CHANGELOG.md",
   "--tag",
