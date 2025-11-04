@@ -50,6 +50,11 @@ jobs:
       - name: Install cargo-release
         run: cargo install cargo-release --version 0.25.20
 
+      - name: Set git identity
+        run: |
+          git config user.name "IOTA Foundation"
+          git config user.email "info@iota.org"
+
       - name: Dry run publish
         run: eval "cargo release -p ${{inputs.package}} --no-confirm --all-features"
 
