@@ -150,7 +150,7 @@ go-examples: ## Run all Go bindings examples
 
 .PHONY: go-examples-format-check
 go-examples-format-check: ## Check format of all Go bindings examples
-	@test -z $(gofmt -l bindings/go/examples)
+	@test -z "$$(gofmt -l bindings/go/examples)"
 
 .PHONY: go-examples-format
 go-examples-format: ## Format all Go bindings examples
