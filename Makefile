@@ -77,17 +77,25 @@ bindings: ## Build all bindings
 	@$(MAKE) kotlin
 	@$(MAKE) python
 
+.PHONY: bindings-example
+bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
+	@$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
+
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
 	@$(MAKE) go-examples
 	@$(MAKE) kotlin-examples
 	@$(MAKE) python-examples
 
-.PHONY: bindings-example
-bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
-	@$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
-	@$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
-	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
+.PHONY: bindings-examples-format-check
+bindings-examples-format-check: ## Check format of all bindings examples
+	@$(MAKE) python-examples-format-check
+
+.PHONY: bindings-examples-format
+bindings-examples-format: ## Format all bindings examples
+	@$(MAKE) python-examples-format
 
 # Build ffi crate and detect platform
 define build_binding
