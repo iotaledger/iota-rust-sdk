@@ -5,4 +5,8 @@ pre-release-hook = [
   "CHANGELOG.md",
   "--tag",
   "{{version}}",
+  "&&",
+  "git",
+  "add",
+  "*CHANGELOG.md",
 ]

@@ -59,7 +59,7 @@ jobs:
         with:
           tool: cargo-release@0.25.20
 
-      - name: Install conventional-commits
+      - name: Install git cliff
         run: cargo install git-cliff
 
       - uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
