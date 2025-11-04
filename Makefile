@@ -169,11 +169,11 @@ python-examples: ## Run all Python bindings examples
 
 .PHONY: python-examples-format-check
 python-examples-format-check: ## Check format of all Python bindings examples
-	@yapf -d bindings/python/examples/*
+	@yapf --style google -d bindings/python/examples/*
 
 .PHONY: python-examples-format
 python-examples-format: ## Format all Python bindings examples
-	@yapf -i bindings/python/examples/*
+	@yapf --style google -i bindings/python/examples/*
 
 .PHONY: help
 help: ## Show this help
