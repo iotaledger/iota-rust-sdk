@@ -18476,16 +18476,6 @@ class _UniffiConverterTypeValidatorPage(_UniffiConverterRustBuffer):
 
 
 class ValidatorSet:
-    active_validators: "ValidatorConnection"
-    """
-    The current set of active validators.
-    """
-
-    committee_members: "ValidatorConnection"
-    """
-    The current set of committee members.
-    """
-
     inactive_pools_id: "typing.Optional[ObjectId]"
     """
     Object ID of the `Table` storing the inactive staking pools.
@@ -18542,9 +18532,7 @@ class ValidatorSet:
     Object ID of the `Table` storing the validator candidates.
     """
 
-    def __init__(self, *, active_validators: "ValidatorConnection", committee_members: "ValidatorConnection", inactive_pools_id: "typing.Optional[ObjectId]" = _DEFAULT, inactive_pools_size: "typing.Optional[int]" = _DEFAULT, pending_active_validators_id: "typing.Optional[ObjectId]" = _DEFAULT, pending_active_validators_size: "typing.Optional[int]" = _DEFAULT, pending_removals: "typing.Optional[typing.List[int]]" = _DEFAULT, staking_pool_mappings_id: "typing.Optional[ObjectId]" = _DEFAULT, staking_pool_mappings_size: "typing.Optional[int]" = _DEFAULT, total_stake: "typing.Optional[str]" = _DEFAULT, validator_candidates_size: "typing.Optional[int]" = _DEFAULT, validator_candidates_id: "typing.Optional[ObjectId]" = _DEFAULT):
-        self.active_validators = active_validators
-        self.committee_members = committee_members
+    def __init__(self, *, inactive_pools_id: "typing.Optional[ObjectId]" = _DEFAULT, inactive_pools_size: "typing.Optional[int]" = _DEFAULT, pending_active_validators_id: "typing.Optional[ObjectId]" = _DEFAULT, pending_active_validators_size: "typing.Optional[int]" = _DEFAULT, pending_removals: "typing.Optional[typing.List[int]]" = _DEFAULT, staking_pool_mappings_id: "typing.Optional[ObjectId]" = _DEFAULT, staking_pool_mappings_size: "typing.Optional[int]" = _DEFAULT, total_stake: "typing.Optional[str]" = _DEFAULT, validator_candidates_size: "typing.Optional[int]" = _DEFAULT, validator_candidates_id: "typing.Optional[ObjectId]" = _DEFAULT):
         if inactive_pools_id is _DEFAULT:
             self.inactive_pools_id = None
         else:
@@ -18587,13 +18575,9 @@ class ValidatorSet:
             self.validator_candidates_id = validator_candidates_id
 
     def __str__(self):
-        return "ValidatorSet(active_validators={}, committee_members={}, inactive_pools_id={}, inactive_pools_size={}, pending_active_validators_id={}, pending_active_validators_size={}, pending_removals={}, staking_pool_mappings_id={}, staking_pool_mappings_size={}, total_stake={}, validator_candidates_size={}, validator_candidates_id={})".format(self.active_validators, self.committee_members, self.inactive_pools_id, self.inactive_pools_size, self.pending_active_validators_id, self.pending_active_validators_size, self.pending_removals, self.staking_pool_mappings_id, self.staking_pool_mappings_size, self.total_stake, self.validator_candidates_size, self.validator_candidates_id)
+        return "ValidatorSet(inactive_pools_id={}, inactive_pools_size={}, pending_active_validators_id={}, pending_active_validators_size={}, pending_removals={}, staking_pool_mappings_id={}, staking_pool_mappings_size={}, total_stake={}, validator_candidates_size={}, validator_candidates_id={})".format(self.inactive_pools_id, self.inactive_pools_size, self.pending_active_validators_id, self.pending_active_validators_size, self.pending_removals, self.staking_pool_mappings_id, self.staking_pool_mappings_size, self.total_stake, self.validator_candidates_size, self.validator_candidates_id)
 
     def __eq__(self, other):
-        if self.active_validators != other.active_validators:
-            return False
-        if self.committee_members != other.committee_members:
-            return False
         if self.inactive_pools_id != other.inactive_pools_id:
             return False
         if self.inactive_pools_size != other.inactive_pools_size:
@@ -18620,8 +18604,6 @@ class _UniffiConverterTypeValidatorSet(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return ValidatorSet(
-            active_validators=_UniffiConverterTypeValidatorConnection.read(buf),
-            committee_members=_UniffiConverterTypeValidatorConnection.read(buf),
             inactive_pools_id=_UniffiConverterOptionalTypeObjectId.read(buf),
             inactive_pools_size=_UniffiConverterOptionalInt32.read(buf),
             pending_active_validators_id=_UniffiConverterOptionalTypeObjectId.read(buf),
@@ -18636,8 +18618,6 @@ class _UniffiConverterTypeValidatorSet(_UniffiConverterRustBuffer):
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterTypeValidatorConnection.check_lower(value.active_validators)
-        _UniffiConverterTypeValidatorConnection.check_lower(value.committee_members)
         _UniffiConverterOptionalTypeObjectId.check_lower(value.inactive_pools_id)
         _UniffiConverterOptionalInt32.check_lower(value.inactive_pools_size)
         _UniffiConverterOptionalTypeObjectId.check_lower(value.pending_active_validators_id)
@@ -18651,8 +18631,6 @@ class _UniffiConverterTypeValidatorSet(_UniffiConverterRustBuffer):
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterTypeValidatorConnection.write(value.active_validators, buf)
-        _UniffiConverterTypeValidatorConnection.write(value.committee_members, buf)
         _UniffiConverterOptionalTypeObjectId.write(value.inactive_pools_id, buf)
         _UniffiConverterOptionalInt32.write(value.inactive_pools_size, buf)
         _UniffiConverterOptionalTypeObjectId.write(value.pending_active_validators_id, buf)

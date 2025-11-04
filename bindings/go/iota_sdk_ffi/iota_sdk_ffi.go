@@ -33344,10 +33344,6 @@ func (_ FfiDestroyerValidatorPage) Destroy(value ValidatorPage) {
 	value.Destroy()
 }
 type ValidatorSet struct {
-	// The current set of active validators.
-	ActiveValidators ValidatorConnection
-	// The current set of committee members.
-	CommitteeMembers ValidatorConnection
 	// Object ID of the `Table` storing the inactive staking pools.
 	InactivePoolsId **ObjectId
 	// Size of the inactive pools `Table`.
@@ -33377,8 +33373,6 @@ type ValidatorSet struct {
 }
 
 func (r *ValidatorSet) Destroy() {
-		FfiDestroyerValidatorConnection{}.Destroy(r.ActiveValidators);
-		FfiDestroyerValidatorConnection{}.Destroy(r.CommitteeMembers);
 		FfiDestroyerOptionalObjectId{}.Destroy(r.InactivePoolsId);
 		FfiDestroyerOptionalInt32{}.Destroy(r.InactivePoolsSize);
 		FfiDestroyerOptionalObjectId{}.Destroy(r.PendingActiveValidatorsId);
@@ -33401,8 +33395,6 @@ func (c FfiConverterValidatorSet) Lift(rb RustBufferI) ValidatorSet {
 
 func (c FfiConverterValidatorSet) Read(reader io.Reader) ValidatorSet {
 	return ValidatorSet {
-			FfiConverterValidatorConnectionINSTANCE.Read(reader),
-			FfiConverterValidatorConnectionINSTANCE.Read(reader),
 			FfiConverterOptionalObjectIdINSTANCE.Read(reader),
 			FfiConverterOptionalInt32INSTANCE.Read(reader),
 			FfiConverterOptionalObjectIdINSTANCE.Read(reader),
@@ -33421,8 +33413,6 @@ func (c FfiConverterValidatorSet) Lower(value ValidatorSet) C.RustBuffer {
 }
 
 func (c FfiConverterValidatorSet) Write(writer io.Writer, value ValidatorSet) {
-		FfiConverterValidatorConnectionINSTANCE.Write(writer, value.ActiveValidators);
-		FfiConverterValidatorConnectionINSTANCE.Write(writer, value.CommitteeMembers);
 		FfiConverterOptionalObjectIdINSTANCE.Write(writer, value.InactivePoolsId);
 		FfiConverterOptionalInt32INSTANCE.Write(writer, value.InactivePoolsSize);
 		FfiConverterOptionalObjectIdINSTANCE.Write(writer, value.PendingActiveValidatorsId);

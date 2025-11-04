@@ -54856,14 +54856,6 @@ public object FfiConverterTypeValidatorPage: FfiConverterRustBuffer<ValidatorPag
 
 data class ValidatorSet (
     /**
-     * The current set of active validators.
-     */
-    var `activeValidators`: ValidatorConnection, 
-    /**
-     * The current set of committee members.
-     */
-    var `committeeMembers`: ValidatorConnection, 
-    /**
      * Object ID of the `Table` storing the inactive staking pools.
      */
     var `inactivePoolsId`: ObjectId? = null, 
@@ -54915,8 +54907,6 @@ data class ValidatorSet (
     override fun destroy() {
         
     Disposable.destroy(
-        this.`activeValidators`,
-        this.`committeeMembers`,
         this.`inactivePoolsId`,
         this.`inactivePoolsSize`,
         this.`pendingActiveValidatorsId`,
@@ -54939,8 +54929,6 @@ data class ValidatorSet (
 public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet> {
     override fun read(buf: ByteBuffer): ValidatorSet {
         return ValidatorSet(
-            FfiConverterTypeValidatorConnection.read(buf),
-            FfiConverterTypeValidatorConnection.read(buf),
             FfiConverterOptionalTypeObjectId.read(buf),
             FfiConverterOptionalInt.read(buf),
             FfiConverterOptionalTypeObjectId.read(buf),
@@ -54955,8 +54943,6 @@ public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet>
     }
 
     override fun allocationSize(value: ValidatorSet) = (
-            FfiConverterTypeValidatorConnection.allocationSize(value.`activeValidators`) +
-            FfiConverterTypeValidatorConnection.allocationSize(value.`committeeMembers`) +
             FfiConverterOptionalTypeObjectId.allocationSize(value.`inactivePoolsId`) +
             FfiConverterOptionalInt.allocationSize(value.`inactivePoolsSize`) +
             FfiConverterOptionalTypeObjectId.allocationSize(value.`pendingActiveValidatorsId`) +
@@ -54970,8 +54956,6 @@ public object FfiConverterTypeValidatorSet: FfiConverterRustBuffer<ValidatorSet>
     )
 
     override fun write(value: ValidatorSet, buf: ByteBuffer) {
-            FfiConverterTypeValidatorConnection.write(value.`activeValidators`, buf)
-            FfiConverterTypeValidatorConnection.write(value.`committeeMembers`, buf)
             FfiConverterOptionalTypeObjectId.write(value.`inactivePoolsId`, buf)
             FfiConverterOptionalInt.write(value.`inactivePoolsSize`, buf)
             FfiConverterOptionalTypeObjectId.write(value.`pendingActiveValidatorsId`, buf)

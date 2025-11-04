@@ -111,13 +111,15 @@ pub struct Epoch {
 }
 
 /// Representation of `0x3::validator_set::ValidatorSet`.
+/// This is a minimal version used in Epoch queries that excludes the validator
+/// lists to keep query sizes manageable.
 #[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "ValidatorSet")]
 pub struct ValidatorSet {
-    /// The current set of active validators.
-    pub active_validators: crate::query_types::ValidatorConnection,
-    /// The current set of committee members.
-    pub committee_members: crate::query_types::ValidatorConnection,
+    // ///The current set of active validators.
+    // pub active_validators: crate::query_types::ValidatorConnection,
+    // /// The current set of committee members.
+    // pub committee_members: crate::query_types::ValidatorConnection,
     /// Object ID of the `Table` storing the inactive staking pools.
     pub inactive_pools_id: Option<ObjectId>,
     /// Size of the inactive pools `Table`.

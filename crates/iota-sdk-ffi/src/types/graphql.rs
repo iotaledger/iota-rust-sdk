@@ -695,10 +695,6 @@ impl From<Epoch> for iota_sdk::graphql_client::query_types::Epoch {
 
 #[derive(uniffi::Record)]
 pub struct ValidatorSet {
-    /// The current set of active validators.
-    pub active_validators: ValidatorConnection,
-    /// The current set of committee members.
-    pub committee_members: ValidatorConnection,
     /// Object ID of the `Table` storing the inactive staking pools.
     #[uniffi(default = None)]
     pub inactive_pools_id: Option<Arc<ObjectId>>,
@@ -740,8 +736,6 @@ pub struct ValidatorSet {
 impl From<iota_sdk::graphql_client::query_types::ValidatorSet> for ValidatorSet {
     fn from(value: iota_sdk::graphql_client::query_types::ValidatorSet) -> Self {
         Self {
-            active_validators: value.active_validators.into(),
-            committee_members: value.committee_members.into(),
             inactive_pools_id: value.inactive_pools_id.map(Into::into).map(Arc::new),
             inactive_pools_size: value.inactive_pools_size,
             pending_active_validators_id: value
@@ -762,8 +756,6 @@ impl From<iota_sdk::graphql_client::query_types::ValidatorSet> for ValidatorSet 
 impl From<ValidatorSet> for iota_sdk::graphql_client::query_types::ValidatorSet {
     fn from(value: ValidatorSet) -> Self {
         Self {
-            active_validators: value.active_validators.into(),
-            committee_members: value.committee_members.into(),
             inactive_pools_id: value.inactive_pools_id.map(|v| **v),
             inactive_pools_size: value.inactive_pools_size,
             pending_active_validators_id: value.pending_active_validators_id.map(|v| **v),
