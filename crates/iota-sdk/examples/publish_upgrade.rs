@@ -25,7 +25,7 @@ use std::env::var;
 
 use eyre::{Result, bail};
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
-use iota_graphql_client::{Client, faucet::FaucetClient};
+use iota_graphql_client::{Client, WaitForTx, faucet::FaucetClient};
 use iota_transaction_builder::{TransactionBuilder, res};
 use iota_types::{Address, MovePackageData, ObjectId, ObjectOut, StructTag, UpgradePolicy};
 use rand::rngs::OsRng;
@@ -83,9 +83,7 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (publish the package)
     println!("> Publishing package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let Some(effects) = client.execute_tx(&[sig], &tx).await? else {
-        bail!("Transaction failed: no effects");
-    };
+    let effects = client.execute_tx(&[sig], &tx, WaitForTx::Finalized).await?;
     println!("{:?}", effects.status());
 
     // Wait some time for the indexer to process the tx
@@ -101,14 +99,7 @@ async fn main() -> Result<()> {
                 let Some(obj) = client.object(object_id, None).await? else {
                     bail!("Missing object {object_id}");
                 };
-                if obj.as_struct().struct_tag
-                    == (StructTag {
-                        address: Address::FRAMEWORK,
-                        module: iota_types::IdentifierRef::const_new("package").into(),
-                        name: iota_types::IdentifierRef::const_new("UpgradeCap").into(),
-                        type_params: vec![],
-                    })
-                {
+                if obj.as_struct().struct_tag == StructTag::new_upgrade_cap() {
                     println!("UpgradeCap: {object_id}");
                     println!("UpgradeCapOwner: {}", owner.into_address());
                     upgrade_cap.replace(object_id);
@@ -166,9 +157,7 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (upgrade the package)
     println!("> Upgrading package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let Some(effects) = client.execute_tx(&[sig], &tx).await? else {
-        bail!("Transaction failed: no effects");
-    };
+    let effects = client.execute_tx(&[sig], &tx, None).await?;
     println!("{:?}", effects.status());
 
     // Wait some time for the indexer to process the tx

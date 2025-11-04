@@ -23,7 +23,7 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    PTBArgument, SharedMut,
+    PTBArgument, SharedMut, WaitForTx,
     builder::{
         gas_station::GasStationData,
         named_results::{NamedResult, NamedResults},
@@ -336,9 +336,10 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # Example
     ///
     /// ```
-    /// # use std::str::FromStr;
-    /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
-    /// # use iota_sdk_transaction_builder::{TransactionBuilder, res};
+    /// use std::str::FromStr;
+    ///
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, res};
+    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
@@ -443,6 +444,46 @@ impl<C, L> TransactionBuilder<C, L> {
 
     /// Transfer some coins to a recipient address. If multiple coins are
     /// provided then they will be merged.
+    ///
+    /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+    /// equals 1_000_000_000 NANOS.
+    /// If `amount` is provided, that amount is split from the provided coins
+    /// and sent.
+    /// If `amount` is `None`, the entire coins are transferred.
+    ///
+    /// All provided coins must have the same coin type. Mixing coins of
+    /// different types will result in an error.
+    ///
+    /// If you intend to transfer all provided coins to another address in a
+    /// single transaction, consider using
+    /// [`TransactionBuilder::transfer_objects()`] instead.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use iota_graphql_client::Client;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = Client::new_devnet();
+    /// let from_address =
+    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    /// let to_address =
+    ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+    ///
+    /// // This is a coin of type
+    /// // 0x3358bea865960fea2a1c6844b6fc365f662463dd1821f619838eb2e606a53b6a::cert::CERT
+    /// let coin =
+    ///     ObjectId::from_hex("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    /// builder.send_coins([coin], to_address, 50000000000u64);
+    /// let txn = builder.finish().await?;
+    /// #   Ok(())
+    /// # }
+    /// ```
     pub fn send_coins<T: PTBArgumentList, U: PTBArgument>(
         &mut self,
         coins: T,
@@ -532,6 +573,31 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Split a coin into many.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use iota_graphql_client::Client;
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, res};
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// let client = Client::new_devnet();
+    /// let sender =
+    ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+    /// let coin =
+    ///     ObjectId::from_hex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// builder
+    ///     .split_coins(coin, [1000u64, 2000, 3000])
+    ///     .name(("coin1", "coin2", "coin3"))
+    ///     .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")));
+    /// let txn = builder.finish().await?;
+    /// #    Ok(())
+    /// # }
+    /// ```
     pub fn split_coins<T: PTBArgument, U: PTBArgumentList>(
         &mut self,
         coin: T,
@@ -656,9 +722,10 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # Example
     ///
     /// ```
-    /// # use std::str::FromStr;
-    /// # use iota_sdk_transaction_builder::{TransactionBuilder, res};
-    /// # use iota_types::{Address, Transaction};
+    /// use std::str::FromStr;
+    ///
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, res};
+    /// use iota_types::{Address, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
@@ -699,49 +766,51 @@ impl<C, L> TransactionBuilder<C, L> {
 }
 
 impl<L> TransactionBuilder<(), L> {
-    /// Add a gas coin that will be consumed. Optional.
+    /// Add gas coins that will be consumed. Optional.
     ///
     /// # Example
     ///
     /// ```
-    /// # use std::str::FromStr;
-    /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
-    /// # use iota_sdk_transaction_builder::{TransactionBuilder, res, unresolved};
+    /// use std::str::FromStr;
+    ///
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, res, unresolved};
+    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
     ///
     /// let sender =
     ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender);
     ///
-    /// let gas_coin = ObjectReference {
+    /// let gas_coin1 = ObjectReference {
     ///     object_id: ObjectId::from_str(
-    ///         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
+    ///         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
     ///     )?,
-    ///     digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
-    ///     version: 435090179,
+    ///     digest: Digest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
+    ///     version: 473053811,
+    /// };
+    /// let gas_coin2 = ObjectReference {
+    ///     object_id: ObjectId::from_str(
+    ///         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+    ///     )?,
+    ///     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
+    ///     version: 473053810,
     /// };
     ///
     /// builder
     ///     .split_coins(unresolved::Argument::Gas, [1000u64])
-    ///     .gas(gas_coin)
+    ///     .gas([gas_coin1, gas_coin2])
     ///     .gas_budget(1000000000)
     ///     .gas_price(100);
     ///
     /// let txn: Transaction = builder.finish()?;
     /// # Result::<_, eyre::Error>::Ok(())
     /// ```
-    pub fn gas(&mut self, obj_ref: ObjectReference) -> &mut Self {
-        self.set_input(
-            InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
-            true,
-        );
-        self
-    }
-
-    /// Add multiple gas coins that will be consumed. Optional.
-    pub fn gas_coins(&mut self, obj_refs: impl IntoIterator<Item = ObjectReference>) -> &mut Self {
+    pub fn gas(&mut self, obj_refs: impl IntoIterator<Item = ObjectReference>) -> &mut Self {
         for obj_ref in obj_refs {
-            self.gas(obj_ref);
+            self.set_input(
+                InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                true,
+            );
         }
         self
     }
@@ -808,15 +877,15 @@ impl<L> TransactionBuilder<Client, L> {
         &self.client
     }
 
-    /// Add a gas coin that will be consumed. If no gas coins are provided, the
-    /// client will set a default list owned by the sender.
+    /// Add gas coins that will be consumed. Optional.
     ///
     /// # Example
     ///
     /// ```
-    /// # use std::str::FromStr;
-    /// # use iota_types::{Address, Digest, Transaction, ObjectId, ObjectReference};
-    /// # use iota_sdk_transaction_builder::{TransactionBuilder, res, unresolved};
+    /// use std::str::FromStr;
+    ///
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, res, unresolved};
+    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
@@ -826,26 +895,22 @@ impl<L> TransactionBuilder<Client, L> {
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     ///
-    /// let gas_coin =
+    /// let gas_coin1 =
+    ///     ObjectId::from_str("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+    /// let gas_coin2 =
     ///     ObjectId::from_str("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?;
     ///
     /// builder
     ///     .split_coins(unresolved::Argument::Gas, [1000u64])
-    ///     .gas(gas_coin);
+    ///     .gas([gas_coin1, gas_coin2]);
     ///
     /// let txn: Transaction = builder.finish().await?;
     /// # Ok(())
     /// # }
     /// ```
-    pub fn gas(&mut self, object_id: ObjectId) -> &mut Self {
-        self.set_input(InputKind::ImmutableOrOwned(object_id), true);
-        self
-    }
-
-    /// Add multiple gas coins that will be consumed. Optional.
-    pub fn gas_coins(&mut self, obj_ids: impl IntoIterator<Item = ObjectId>) -> &mut Self {
+    pub fn gas(&mut self, obj_ids: impl IntoIterator<Item = ObjectId>) -> &mut Self {
         for id in obj_ids {
-            self.gas(id);
+            self.set_input(InputKind::ImmutableOrOwned(id), true);
         }
         self
     }
@@ -881,8 +946,8 @@ impl<L> TransactionBuilder<Client, L> {
                 .client
                 .objects(
                     ObjectFilter {
-                        type_filter: Some(StructTag::gas_coin().to_string()),
-                        owner: Some(self.data.sender),
+                        type_filter: Some(StructTag::new_gas_coin().to_string()),
+                        owner: Some(self.data.sponsor.unwrap_or(self.data.sender)),
                         ..Default::default()
                     },
                     Default::default(),
@@ -1078,46 +1143,36 @@ impl<L> TransactionBuilder<Client, L> {
     pub async fn execute(
         mut self,
         keypair: &SimpleKeypair,
-        wait_for_finalization: bool,
-    ) -> Result<Option<TransactionEffects>, Error> {
+        wait_for: impl Into<Option<WaitForTx>>,
+    ) -> Result<TransactionEffects, Error> {
+        let wait_for = wait_for.into();
         let gas_station_data = self.data.gas_station_data.take();
         let client = self.client.clone();
         let mut txn = self.finish().await?;
 
-        let res = if let Some(gas_station_data) = gas_station_data {
+        Ok(if let Some(gas_station_data) = gas_station_data {
             let digest = gas_station_data.execute_txn(&mut txn, keypair).await?;
+            if let Some(wait_for) = wait_for {
+                client
+                    .wait_for_tx(digest, wait_for, None)
+                    .await
+                    .map_err(Error::Client)?;
+            }
             client
                 .transaction_effects(digest)
                 .await
                 .map_err(Error::Client)?
+                .ok_or_else(|| Error::MissingTransaction(digest))?
         } else {
             client
                 .execute_tx(
                     &[keypair.sign_transaction(&txn).map_err(Error::Signature)?],
                     &txn,
+                    wait_for,
                 )
                 .await
                 .map_err(Error::Client)?
-        };
-
-        let mut retries_left = 100;
-        if wait_for_finalization {
-            let digest = txn.digest();
-            while retries_left > 0
-                && client
-                    .transaction(digest)
-                    .await
-                    .map_err(Error::Client)?
-                    .is_none()
-            {
-                if retries_left == 1 {
-                    return Err(Error::FinalizationTimeout(digest));
-                }
-                tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
-                retries_left -= 1;
-            }
-        }
-        Ok(res)
+        })
     }
 
     /// Execute the transaction with a sponsor keypair and optionally wait for
@@ -1126,8 +1181,9 @@ impl<L> TransactionBuilder<Client, L> {
         self,
         keypair: &SimpleKeypair,
         sponsor_keypair: &SimpleKeypair,
-        wait_for_finalization: bool,
-    ) -> Result<Option<TransactionEffects>, Error> {
+        wait_for: impl Into<Option<WaitForTx>>,
+    ) -> Result<TransactionEffects, Error> {
+        let wait_for = wait_for.into();
         let client = self.client.clone();
         let txn = self.finish().await?;
 
@@ -1138,22 +1194,10 @@ impl<L> TransactionBuilder<Client, L> {
                 .map_err(Error::Signature)?,
         );
 
-        let res = client
-            .execute_tx(&signatures, &txn)
+        client
+            .execute_tx(&signatures, &txn, wait_for)
             .await
-            .map_err(Error::Client)?;
-
-        if wait_for_finalization {
-            while client
-                .transaction(txn.digest())
-                .await
-                .map_err(Error::Client)?
-                .is_none()
-            {
-                tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
-            }
-        }
-        Ok(res)
+            .map_err(Error::Client)
     }
 }
 

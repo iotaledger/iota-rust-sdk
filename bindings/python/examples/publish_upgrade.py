@@ -28,6 +28,7 @@ import base64
 import json
 import os
 
+
 async def main():
     try:
         # Read and parse the compiled package, or use the default package
@@ -36,7 +37,7 @@ async def main():
             print("No compiled package found in env var. Using default.")
             package_data_json = PRECOMPILED_PACKAGE
         else:
-            print("Using custom Move package found in env var.");
+            print("Using custom Move package found in env var.")
 
         package_data = MovePackageData.from_json(package_data_json)
         modules = package_data.modules()
@@ -79,9 +80,7 @@ async def main():
         # Sign and execute the transaction (publish the package)
         print("> Publishing package:")
         sig = UserSignature.new_simple(private_key.try_sign_simple(tx.signing_digest()))
-        effects = await client.execute_tx([sig], tx)
-        if effects is None:
-            raise Exception("Transaction failed: no effects")
+        effects = await client.execute_tx([sig], tx, WaitForTx.FINALIZED)
         print("Success")
 
         # Wait some time for the indexer to process the tx
@@ -96,11 +95,11 @@ async def main():
                 obj = await client.object(object_id, None)
                 if obj is None:
                     raise Exception(f"Missing object {object_id.to_hex()}")
-                if obj.as_struct().struct_type == StructTag(
-                    Address.framework(), Identifier("package"), Identifier("UpgradeCap")
-                ):
+                if obj.as_struct().struct_type == StructTag.new_upgrade_cap():
                     print(f"UpgradeCap: {object_id.to_hex()}")
-                    print(f"UpgradeCapOwner: {changed_obj.output_state.owner.as_address().to_hex()}")
+                    print(
+                        f"UpgradeCapOwner: {changed_obj.output_state.owner.as_address().to_hex()}"
+                    )
                     upgrade_cap = object_id
 
             elif changed_obj.output_state.is_package_write():
@@ -163,8 +162,6 @@ async def main():
         signature = private_key.try_sign_simple(tx.signing_digest())
         sig = UserSignature.new_simple(signature)
         effects = await client.execute_tx([sig], tx)
-        if effects is None:
-            raise Exception("Transaction failed: no effects")
         print("Success")
 
         # Wait some time for the indexer to process the tx

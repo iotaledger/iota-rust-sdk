@@ -12,7 +12,8 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
 
-        val stakedIotas = client.objects(ObjectFilter(typeTag = StructTag.stakedIota().toString()))
+        val stakedIotas =
+                client.objects(ObjectFilter(typeTag = StructTag.newStakedIota().toString()))
         if (stakedIotas.data.isEmpty()) {
             throw Exception("no validators found")
         }

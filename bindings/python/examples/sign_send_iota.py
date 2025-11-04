@@ -37,8 +37,7 @@ async def main():
         user_signature = UserSignature.new_simple(signature)
 
         effects = await client.execute_tx([user_signature], txn)
-        if effects is None:
-            raise Exception("Transaction execution failed")
+
         print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
         print(f"Transaction status: {effects.as_v1().status}")
         print(f"Effects: {effects.as_v1()}")

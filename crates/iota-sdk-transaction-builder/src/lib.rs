@@ -78,7 +78,7 @@
 //!
 //! builder
 //!     .send_coins([coin], to_address, 50000000000u64)
-//!     .gas(gas_coin)
+//!     .gas([gas_coin])
 //!     .gas_budget(1000000000)
 //!     .gas_price(100);
 //!
@@ -127,9 +127,7 @@
 //!
 //! These methods set various metadata which may be needed for the execution.
 //!
-//! - [gas](TransactionBuilder::gas): Add a gas coin to pay for the execution.
-//! - [gas_coins](TransactionBuilder::gas_coins): Add gas coins to pay for the
-//!   execution.
+//! - [gas](TransactionBuilder::gas): Add gas coins to pay for the execution.
 //! - [gas_budget](TransactionBuilder::gas_budget): Set the maximum gas budget
 //!   to spend.
 //! - [gas_price](TransactionBuilder::gas_price): Set the gas price.
@@ -283,6 +281,8 @@ pub mod types;
 #[allow(missing_docs)]
 pub mod unresolved;
 
+pub use iota_graphql_client::WaitForTx;
+
 pub use self::{
     builder::{
         TransactionBuilder,
@@ -296,7 +296,7 @@ mod tests {
     use eyre::Context;
     use iota_crypto::ed25519::Ed25519PrivateKey;
     use iota_graphql_client::{
-        Client,
+        Client, WaitForTx,
         faucet::{CoinInfo, FaucetClient},
         pagination::PaginationFilter,
     };
@@ -364,7 +364,7 @@ mod tests {
         wait_for_tx(&client, tx_digest).await;
 
         let gas = coins.last().unwrap().id;
-        tx.gas(gas);
+        tx.gas([gas]);
 
         (tx, address, pk, coins)
     }
@@ -379,14 +379,12 @@ mod tests {
 
     /// Wait for the transaction to be finalized and indexed, and check the
     /// effects' to ensure the transaction was successfully executed.
-    async fn wait_for_tx_and_check_effects_status_success(
-        effects: Result<Option<TransactionEffects>, Error>,
-    ) {
+    async fn check_effects_status_success(effects: Result<TransactionEffects, Error>) {
         assert!(effects.is_ok(), "Execution failed. Effects: {effects:?}");
         // check that it succeeded
         let status = effects.unwrap();
         let expected_status = ExecutionStatus::Success;
-        assert_eq!(&expected_status, status.as_ref().unwrap().status());
+        assert_eq!(&expected_status, status.status());
     }
 
     #[tokio::test]
@@ -411,7 +409,7 @@ mod tests {
         assert!(result.is_err());
 
         tx.transfer_objects(recipient, vec![coin]);
-        tx.gas(ObjectReference::new(
+        tx.gas([ObjectReference::new(
             "0xd8792bce2743e002673752902c0e7348dfffd78638cb5367b0b85857bceb9821"
                 .parse()
                 .unwrap(),
@@ -419,7 +417,7 @@ mod tests {
             "2ZigdvsZn5BMeszscPQZq9z8ebnS2FpmAuRbAi9ednCk"
                 .parse()
                 .unwrap(),
-        ));
+        )]);
         tx.gas_price(1000);
 
         tx.finish().unwrap();
@@ -435,8 +433,8 @@ mod tests {
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, [coin]);
 
-        let effects = tx.execute(&pk.into(), true).await;
-        wait_for_tx_and_check_effects_status_success(effects).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        check_effects_status_success(effects).await;
 
         // check that recipient has 1 coin
         let recipient_coins = client
@@ -456,8 +454,8 @@ mod tests {
             .generics::<u64>()
             .arguments([Some(1u64)]);
 
-        let effects = tx.execute(&pk.into(), true).await;
-        wait_for_tx_and_check_effects_status_success(effects).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
+        check_effects_status_success(effects).await;
     }
 
     #[tokio::test]
@@ -471,8 +469,8 @@ mod tests {
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, [res("coin")]);
 
-        let effects = tx.execute(&pk.into(), true).await;
-        wait_for_tx_and_check_effects_status_success(effects).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        check_effects_status_success(effects).await;
 
         // check that recipient has 1 coin
         let recipient_coins = client
@@ -491,11 +489,11 @@ mod tests {
         // transfer 1 IOTA
         tx.split_coins(coin, [1_000_000_000u64]);
 
-        let effects = tx.execute(&pk.into(), true).await.unwrap();
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await.unwrap();
 
         let expected_status = ExecutionStatus::Success;
         // The tx failed, so we expect Failure instead of Success
-        assert_ne!(&expected_status, effects.as_ref().unwrap().status());
+        assert_ne!(&expected_status, effects.status());
     }
 
     #[tokio::test]
@@ -513,8 +511,8 @@ mod tests {
         tx.merge_coins(coin1, coins_to_merge);
         let client = tx.get_client().clone();
 
-        let effects = tx.execute(&pk.into(), true).await;
-        wait_for_tx_and_check_effects_status_success(effects).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        check_effects_status_success(effects).await;
 
         // check that there are two coins
         let coins_after = client
@@ -530,8 +528,8 @@ mod tests {
 
         tx.make_move_vec([1u64]);
 
-        let effects = tx.execute(&pk.into(), true).await;
-        wait_for_tx_and_check_effects_status_success(effects).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
+        check_effects_status_success(effects).await;
     }
 
     #[tokio::test]
@@ -543,8 +541,8 @@ mod tests {
             .upgrade_cap("cap")
             .transfer_objects(address, [res("cap")]);
 
-        let effects = tx.execute(&pk.into(), true).await;
-        wait_for_tx_and_check_effects_status_success(effects).await;
+        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
+        check_effects_status_success(effects).await;
     }
 
     #[tokio::test]
@@ -557,10 +555,10 @@ mod tests {
             .upgrade_cap("cap")
             .transfer_objects(address, [res("cap")]);
 
-        let effects = tx.execute(&key, true).await;
+        let effects = tx.execute(&key, WaitForTx::Finalized).await;
         let mut package_id: Option<ObjectId> = None;
         let mut created_objs = vec![];
-        if let Ok(Some(ref effects)) = effects {
+        if let Ok(ref effects) = effects {
             match effects {
                 TransactionEffects::V1(e) => {
                     for obj in e.changed_objects.clone() {
@@ -580,7 +578,7 @@ mod tests {
                 }
             }
         }
-        wait_for_tx_and_check_effects_status_success(effects).await;
+        check_effects_status_success(effects).await;
 
         let client = Client::new_localnet();
         let mut tx = TransactionBuilder::new(address).with_client(client.clone());
@@ -615,9 +613,9 @@ mod tests {
         tx.move_call(Address::FRAMEWORK, "package", "commit_upgrade")
             .arguments((upgrade_cap.unwrap(), receipt));
 
-        tx.gas(coins.last().unwrap().id);
+        tx.gas([coins.last().unwrap().id]);
 
-        let effects = tx.execute(&key, true).await;
-        wait_for_tx_and_check_effects_status_success(effects).await;
+        let effects = tx.execute(&key, WaitForTx::Indexed).await;
+        check_effects_status_success(effects).await;
     }
 }

@@ -45,13 +45,13 @@ func main() {
 
 	builder.GasStationSponsor(gasStationUrl, nil, &headers)
 
-	res, err := builder.Execute(simpleKey, true)
+	res, err := builder.Execute(simpleKey, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to sponsor transaction: %v", err)
 	}
 
 	if res != nil {
-		log.Printf("%v", *res)
+		log.Printf("%v", res)
 	}
 
 	fmt.Print("Sponsored transaction was successful!")

@@ -75,9 +75,7 @@ fun main() = runBlocking {
         println("> Publishing package:")
         val sigPublish =
                 UserSignature.newSimple(privateKey.trySignSimple(txPublish.signingDigest()))
-        val effectsPublish =
-                client.executeTx(listOf(sigPublish), txPublish)
-                        ?: throw Exception("Transaction failed: no effects")
+        val effectsPublish = client.executeTx(listOf(sigPublish), txPublish, WaitForTx.FINALIZED)
         println("Success")
 
         // Wait some time for the indexer to process the tx
@@ -92,13 +90,7 @@ fun main() = runBlocking {
                 val obj: Object =
                         client.`object`(objectId, null)
                                 ?: throw Exception("Missing object ${objectId.toHex()}")
-                val upgradeCapType =
-                        StructTag(
-                                address = Address.framework(),
-                                module = Identifier("package"),
-                                name = Identifier("UpgradeCap"),
-                                typeParams = emptyList<TypeTag>()
-                        )
+                val upgradeCapType = StructTag.newUpgradeCap()
                 if (obj.asStruct().structType == upgradeCapType) {
                     println("UpgradeCap: ${objectId.toHex()}")
                     println(
@@ -167,9 +159,7 @@ fun main() = runBlocking {
         println("> Upgrading package:")
         val sigUpgrade =
                 UserSignature.newSimple(privateKey.trySignSimple(txUpgrade.signingDigest()))
-        val effectsUpgrade =
-                client.executeTx(listOf(sigUpgrade), txUpgrade)
-                        ?: throw Exception("Transaction failed: no effects")
+        val effectsUpgrade = client.executeTx(listOf(sigUpgrade), txUpgrade)
         println("Success")
 
         // Wait some time for the indexer to process the tx

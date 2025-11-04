@@ -100,12 +100,10 @@ func main() {
 		log.Fatalf("Failed to sign: %v", err)
 	}
 	userSigPublish := sdk.UserSignatureNewSimple(sigPublish)
-	effectsPublish, err := client.ExecuteTx([]*sdk.UserSignature{userSigPublish}, txPublish)
+	waitFor := sdk.WaitForTxFinalized
+	effectsPublish, err := client.ExecuteTx([]*sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)
-	}
-	if effectsPublish == nil {
-		log.Fatal("Transaction failed: no effects")
 	}
 	fmt.Println("Success")
 
@@ -124,11 +122,8 @@ func main() {
 			}
 			obj := *objPtr
 			if obj.AsStructOpt() != nil {
-				structType := obj.AsStruct().StructType
-				packageIdent, _ := sdk.NewIdentifier("package")
-				upgradeCapIdent, _ := sdk.NewIdentifier("UpgradeCap")
-				upgradeCapType := sdk.NewStructTag(sdk.AddressFramework(), packageIdent, upgradeCapIdent, []*sdk.TypeTag{})
-				if structType.Eq(upgradeCapType) {
+				upgradeCapType := sdk.StructTagNewUpgradeCap()
+				if obj.AsStruct().StructType.Eq(upgradeCapType) {
 					fmt.Printf("UpgradeCap: %s\n", objectId.ToHex())
 					fmt.Printf("UpgradeCapOwner: %s\n", objectWrite.Owner.AsAddress().ToHex())
 					upgradeCap = objectId
@@ -209,12 +204,9 @@ func main() {
 		log.Fatalf("Failed to sign: %v", err)
 	}
 	userSigUpgrade := sdk.UserSignatureNewSimple(sigUpgrade)
-	effectsUpgrade, err := client.ExecuteTx([]*sdk.UserSignature{userSigUpgrade}, txUpgrade)
+	effectsUpgrade, err := client.ExecuteTx([]*sdk.UserSignature{userSigUpgrade}, txUpgrade, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)
-	}
-	if effectsUpgrade == nil {
-		log.Fatal("Transaction failed: no effects")
 	}
 	fmt.Println("Success")
 

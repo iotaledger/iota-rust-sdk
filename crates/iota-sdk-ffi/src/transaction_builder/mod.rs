@@ -7,7 +7,7 @@ use std::{
     time::Duration,
 };
 
-use iota_sdk::types::Input;
+use iota_sdk::{graphql_client::WaitForTx, types::Input};
 
 use crate::{
     crypto::simple::SimpleKeypair,
@@ -68,18 +68,10 @@ impl TransactionBuilder {
         )
     }
 
-    /// Add a gas object to use to pay for the transaction.
-    pub fn gas(self: Arc<Self>, object_id: &ObjectId) -> Arc<Self> {
+    /// Add gas coins that will be consumed. Optional.
+    pub fn gas(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
         self.write(|builder| {
-            builder.gas(**object_id);
-        });
-        self
-    }
-
-    /// Add gas objects to pay for the transaction.
-    pub fn gas_coins(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
-        self.write(|builder| {
-            builder.gas_coins(object_ids.iter().map(|id| ***id));
+            builder.gas(object_ids.iter().map(|id| ***id));
         });
         self
     }
@@ -180,6 +172,19 @@ impl TransactionBuilder {
 
     /// Transfer some coins to a recipient address. If multiple coins are
     /// provided then they will be merged.
+    ///
+    /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+    /// equals 1_000_000_000 NANOS.
+    /// If `amount` is provided, that amount is split from the provided coins
+    /// and sent.
+    /// If `amount` is `None`, the entire coins are transferred.
+    ///
+    /// All provided coins must have the same coin type. Mixing coins of
+    /// different types will result in an error.
+    ///
+    /// If you intend to transfer all provided coins to another address in a
+    /// single transaction, consider using
+    /// `TransactionBuilder::transfer_objects()` instead.
     #[uniffi::method(default(amount = None))]
     pub fn send_coins(
         self: Arc<Self>,
@@ -206,7 +211,7 @@ impl TransactionBuilder {
         self
     }
 
-    /// Split a coin by the provided amounts.
+    /// Split a coin into many.
     #[uniffi::method(default(names = []))]
     pub fn split_coins(
         self: Arc<Self>,
@@ -348,37 +353,33 @@ impl TransactionBuilder {
     }
 
     /// Execute the transaction and optionally wait for finalization.
-    #[uniffi::method(default(wait_for_finalization = false))]
+    #[uniffi::method(default(wait_for = None))]
     pub async fn execute(
         &self,
         keypair: &SimpleKeypair,
-        wait_for_finalization: bool,
-    ) -> Result<Option<Arc<TransactionEffects>>> {
+        wait_for: Option<WaitForTx>,
+    ) -> Result<TransactionEffects> {
         Ok(self
-            .read(|builder| builder.clone().execute(&keypair.0, wait_for_finalization))
+            .read(|builder| builder.clone().execute(&keypair.0, wait_for))
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .into())
     }
 
     /// Execute the transaction and optionally wait for finalization.
-    #[uniffi::method(default(wait_for_finalization = false))]
+    #[uniffi::method(default(wait_for = None))]
     pub async fn execute_with_sponsor(
         &self,
         keypair: &SimpleKeypair,
         sponsor_keypair: &SimpleKeypair,
-        wait_for_finalization: bool,
-    ) -> Result<Option<Arc<TransactionEffects>>> {
+        wait_for: Option<WaitForTx>,
+    ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| {
-                builder.clone().execute_with_sponsor(
-                    &keypair.0,
-                    &sponsor_keypair.0,
-                    wait_for_finalization,
-                )
+                builder
+                    .clone()
+                    .execute_with_sponsor(&keypair.0, &sponsor_keypair.0, wait_for)
             })
             .await?
-            .map(Into::into)
-            .map(Arc::new))
+            .into())
     }
 }

@@ -8,9 +8,8 @@ use iota_types::{
 };
 
 use crate::{
-    error,
-    error::{Error, Kind},
-    query_types::{Address, Base64, PageInfo, schema},
+    error::{self, Error, Kind},
+    query_types::{Address, Base64, PageInfo, checkpoint::Checkpoint, schema},
 };
 
 // ===========================================================================
@@ -48,6 +47,28 @@ pub struct TransactionBlockWithEffectsQuery {
 pub struct TransactionBlockEffectsQuery {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TxBlockEffects>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
+    variables = "TransactionBlockArgs"
+)]
+pub struct TransactionBlockCheckpointQuery {
+    #[arguments(digest: $digest)]
+    pub transaction_block: Option<TxBlockCheckpoint>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
+    variables = "TransactionBlockArgs"
+)]
+pub struct TransactionBlockIndexedQuery {
+    #[arguments(digest: $digest)]
+    pub is_transaction_indexed_on_node: bool,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -117,7 +138,6 @@ pub struct TransactionBlock {
 pub struct TransactionBlockWithEffects {
     pub bcs: Option<Base64>,
     pub effects: Option<TransactionBlockEffects>,
-    pub signatures: Option<Vec<Base64>>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -127,9 +147,21 @@ pub struct TxBlockEffects {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
+pub struct TxBlockCheckpoint {
+    pub effects: Option<TransactionBlockCheckpoint>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
 pub struct TransactionBlockEffects {
     pub bcs: Option<Base64>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
+pub struct TransactionBlockCheckpoint {
+    pub checkpoint: Option<Checkpoint>,
 }
 
 #[derive(cynic::Enum, Clone, Copy, Debug)]
