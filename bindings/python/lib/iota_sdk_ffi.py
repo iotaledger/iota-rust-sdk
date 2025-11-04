@@ -29011,8 +29011,8 @@ class _UniffiConverterTypeCircomG2:
         buf.write_u64(cls.lower(value))
 class ClientTransactionBuilderProtocol(typing.Protocol):
     """
-    A builder for creating transactions. Use `finish` to finalize the
-    transaction data.
+    A builder for creating transactions which uses a GraphQL client to
+    automatically resolve inputs. Use `finish` to finalize the transaction data.
     """
 
     def dry_run(self, skip_checks: "typing.Union[object, bool]" = _DEFAULT):
@@ -29194,8 +29194,8 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
 # ClientTransactionBuilder is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ClientTransactionBuilder():
     """
-    A builder for creating transactions. Use `finish` to finalize the
-    transaction data.
+    A builder for creating transactions which uses a GraphQL client to
+    automatically resolve inputs. Use `finish` to finalize the transaction data.
     """
 
     _pointer: ctypes.c_void_p

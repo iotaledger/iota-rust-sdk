@@ -17476,8 +17476,8 @@ public object FfiConverterTypeCircomG2: FfiConverter<CircomG2, Pointer> {
 
 
 /**
- * A builder for creating transactions. Use `finish` to finalize the
- * transaction data.
+ * A builder for creating transactions which uses a GraphQL client to
+ * automatically resolve inputs. Use `finish` to finalize the transaction data.
  */
 public interface ClientTransactionBuilderInterface {
     
@@ -17640,8 +17640,8 @@ public interface ClientTransactionBuilderInterface {
 }
 
 /**
- * A builder for creating transactions. Use `finish` to finalize the
- * transaction data.
+ * A builder for creating transactions which uses a GraphQL client to
+ * automatically resolve inputs. Use `finish` to finalize the transaction data.
  */
 open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactionBuilderInterface
 {

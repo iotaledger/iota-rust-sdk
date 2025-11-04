@@ -12842,8 +12842,8 @@ func (_ FfiDestroyerCircomG2) Destroy(value *CircomG2) {
 
 
 
-// A builder for creating transactions. Use `finish` to finalize the
-// transaction data.
+// A builder for creating transactions which uses a GraphQL client to
+// automatically resolve inputs. Use `finish` to finalize the transaction data.
 type ClientTransactionBuilderInterface interface {
 	// Dry run the transaction.
 	DryRun(skipChecks bool) (DryRunResult, error)
@@ -12938,8 +12938,8 @@ type ClientTransactionBuilderInterface interface {
 	// ID, the upgrade policy, and package digest.
 	Upgrade(packageId *ObjectId, packageData *MovePackageData, upgradeTicket *PtbArgument, name *string) *ClientTransactionBuilder
 }
-// A builder for creating transactions. Use `finish` to finalize the
-// transaction data.
+// A builder for creating transactions which uses a GraphQL client to
+// automatically resolve inputs. Use `finish` to finalize the transaction data.
 type ClientTransactionBuilder struct {
 	ffiObject FfiObject
 }
