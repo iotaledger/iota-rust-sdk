@@ -3,6 +3,9 @@ name: Release
 on:
   push:
     tags:
+      - "*-v*.*.*-alpha.*"
+      - "*-v*.*.*-beta.*"
+      - "*-v*.*.*-rc.*"
       - "*-v*.*.*"
 
 # We need this to be able to create releases.
