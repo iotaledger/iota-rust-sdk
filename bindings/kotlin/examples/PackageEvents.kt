@@ -8,28 +8,26 @@ import iota_sdk.PaginationFilter
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
-    try {
-        val client = GraphQlClient.newDevnet()
+  try {
+    val client = GraphQlClient.newDevnet()
 
-        val events =
-                client.events(
-                        filter =
-                                EventFilter(
-                                        eventType =
-                                                "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba::registry::NameRecordAddedEvent"
-                                ),
-                        paginationFilter =
-                                PaginationFilter(direction = Direction.FORWARD, limit = 10),
-                )
+    val events =
+        client.events(
+            filter =
+                EventFilter(
+                    eventType =
+                        "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba::registry::NameRecordAddedEvent"),
+            paginationFilter = PaginationFilter(direction = Direction.FORWARD, limit = 10),
+        )
 
-        for (event in events.data) {
-            println("Type: ${event.type}")
-            println("Sender: ${event.sender}")
-            println("Module: ${event.module}")
-            println("JSON: ${event.json}")
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        kotlin.system.exitProcess(1)
+    for (event in events.data) {
+      println("Type: ${event.type}")
+      println("Sender: ${event.sender}")
+      println("Module: ${event.module}")
+      println("JSON: ${event.json}")
     }
+  } catch (e: Exception) {
+    e.printStackTrace()
+    kotlin.system.exitProcess(1)
+  }
 }
