@@ -83,6 +83,8 @@ jobs:
           pr-template-file: ./.github/release-pr-template.ejs
 
       - name: Add release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pr_num=$(echo "${{ steps.pr-create.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')
           body=$(gh pr view "$pr_num" --json body | jq -r '.["body"]')
