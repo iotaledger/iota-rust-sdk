@@ -81,7 +81,7 @@ jobs:
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org
           base-branch: develop
-          pr-template-file: release-pr-template.md
+          pr-template-file: ./release-pr-template.md
 
       - name: Add release notes
         run: |
