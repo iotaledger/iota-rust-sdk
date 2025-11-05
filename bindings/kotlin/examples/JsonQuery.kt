@@ -132,7 +132,7 @@ fun main() = runBlocking {
           }
           apy
         }
-    """.trimIndent()
+    """
 
     val query = Query(queryStr)
     val res = client.runQuery(query)
