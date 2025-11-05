@@ -2005,8 +2005,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new() != 50489:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_clienttransactionbuilder_init() != 50882:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_coin_try_from_object() != 35349:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_command_new_make_move_vector() != 54610:
@@ -3380,11 +3378,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_clienttransactionbuilder.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_clienttransactionbuilder.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_clienttransactionbuilder_init.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_clienttransactionbuilder_init.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_dry_run.argtypes = (
     ctypes.c_void_p,
     ctypes.c_int8,
@@ -11920,9 +11913,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new.restype = ctype
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_clienttransactionbuilder_init.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_clienttransactionbuilder_init.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_coin_try_from_object.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_coin_try_from_object.restype = ctypes.c_uint16
@@ -29220,32 +29210,6 @@ class ClientTransactionBuilder():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
-    @classmethod
-    async def init(cls, sender: "Address",client: "GraphQlClient"):
-        """
-        Create a new transaction builder and initialize its elements to default.
-        """
-
-        _UniffiConverterTypeAddress.check_lower(sender)
-        
-        _UniffiConverterTypeGraphQlClient.check_lower(client)
-        
-
-        return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_clienttransactionbuilder_init(
-        _UniffiConverterTypeAddress.lower(sender),
-        _UniffiConverterTypeGraphQlClient.lower(client)),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
-            _UniffiConverterTypeClientTransactionBuilder.lift,
-            
-    # Error FFI converter
-
-    None,
-
-        )
-
 
     async def dry_run(self, skip_checks: "typing.Union[object, bool]" = _DEFAULT) -> "DryRunResult":
         """

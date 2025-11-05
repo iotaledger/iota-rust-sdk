@@ -56,16 +56,6 @@ impl ClientTransactionBuilder {
 
 #[uniffi::export(async_runtime = "tokio")]
 impl ClientTransactionBuilder {
-    /// Create a new transaction builder and initialize its elements to default.
-    #[uniffi::constructor(name = "init")]
-    pub async fn new(sender: &Address, client: &GraphQLClient) -> Self {
-        Self(
-            iota_sdk::transaction_builder::TransactionBuilder::new(**sender)
-                .with_client(client.inner().read().await.clone())
-                .into(),
-        )
-    }
-
     /// Add gas coins that will be consumed. Optional.
     pub fn gas(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
         self.write(|builder| {

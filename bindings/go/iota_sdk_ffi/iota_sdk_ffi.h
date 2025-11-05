@@ -1042,11 +1042,6 @@ void* uniffi_iota_sdk_ffi_fn_clone_clienttransactionbuilder(void* ptr, RustCallS
 void uniffi_iota_sdk_ffi_fn_free_clienttransactionbuilder(void* ptr, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_CLIENTTRANSACTIONBUILDER_INIT
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_CLIENTTRANSACTIONBUILDER_INIT
-uint64_t uniffi_iota_sdk_ffi_fn_constructor_clienttransactionbuilder_init(void* sender, void* client
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_DRY_RUN
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_DRY_RUN
 uint64_t uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_dry_run(void* ptr, int8_t skip_checks
@@ -11782,12 +11777,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_circomg1_new(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_CIRCOMG2_NEW
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_CIRCOMG2_NEW
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_circomg2_new(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_CLIENTTRANSACTIONBUILDER_INIT
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_CLIENTTRANSACTIONBUILDER_INIT
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_clienttransactionbuilder_init(void
     
 );
 #endif

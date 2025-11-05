@@ -15,7 +15,7 @@ fun main() = runBlocking {
         }
         val stakedIota = stakedIotas.data[0]
 
-        val builder = ClientTransactionBuilder.init(stakedIota.owner().asAddress(), client)
+        val builder = TransactionBuilder(stakedIota.owner().asAddress()).withClient(client)
 
         builder.unstake(PtbArgument.objectId(stakedIota.objectId()))
 
