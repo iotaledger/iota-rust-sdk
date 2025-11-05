@@ -5,36 +5,33 @@ import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
-  try {
-    val client = GraphQlClient.newDevnet()
+    try {
+        val client = GraphQlClient.newDevnet()
 
-    val fromAddress =
-        Address.fromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+        val fromAddress =
+            Address.fromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
-    val toAddress =
-        Address.fromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
+        val toAddress =
+            Address.fromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-    val builder = TransactionBuilder.init(fromAddress, client)
+        val builder = TransactionBuilder.init(fromAddress, client)
 
-    builder.sendIota(
-        toAddress,
-        PtbArgument.u64(5000000000uL),
-    )
+        builder.sendIota(toAddress, PtbArgument.u64(5000000000uL))
 
-    val txn = builder.finish()
+        val txn = builder.finish()
 
-    println("Signing Digest: ${txn.signingDigestHex()}")
-    println("Txn Bytes: ${txn.toBase64()}")
+        println("Signing Digest: ${txn.signingDigestHex()}")
+        println("Txn Bytes: ${txn.toBase64()}")
 
-    val res = builder.dryRun()
+        val res = builder.dryRun()
 
-    if (res.error != null) {
-      throw Exception("Failed to send IOTA: ${res.error}")
+        if (res.error != null) {
+            throw Exception("Failed to send IOTA: ${res.error}")
+        }
+
+        println("Send IOTA dry run was successful!")
+    } catch (e: Exception) {
+        e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
-
-    println("Send IOTA dry run was successful!")
-  } catch (e: Exception) {
-    e.printStackTrace()
-    kotlin.system.exitProcess(1)
-  }
 }

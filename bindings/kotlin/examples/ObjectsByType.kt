@@ -6,21 +6,21 @@ import iota_sdk.ObjectFilter
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
-  try {
-    val client = GraphQlClient.newDevnet()
+    try {
+        val client = GraphQlClient.newDevnet()
 
-    val stakedIotas = client.objects(ObjectFilter(typeTag = "0x3::staking_pool::StakedIota"))
+        val stakedIotas = client.objects(ObjectFilter(typeTag = "0x3::staking_pool::StakedIota"))
 
-    if (stakedIotas.data.isEmpty()) {
-      println("No StakedIota objects found")
-    } else {
-      println("StakedIota object IDs:")
-      for (stakedIota in stakedIotas.data) {
-        println(stakedIota.objectId().toHex())
-      }
+        if (stakedIotas.data.isEmpty()) {
+            println("No StakedIota objects found")
+        } else {
+            println("StakedIota object IDs:")
+            for (stakedIota in stakedIotas.data) {
+                println(stakedIota.objectId().toHex())
+            }
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
-  } catch (e: Exception) {
-    e.printStackTrace()
-    kotlin.system.exitProcess(1)
-  }
 }

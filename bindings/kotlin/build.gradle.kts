@@ -21,6 +21,11 @@ dependencies {
 
 kotlin { jvmToolchain(21) }
 
+ktfmt {
+    kotlinLangStyle()
+
+}
+
 tasks.register<KtfmtCheckTask>("KtfmtCheck") {
   source = project.fileTree(rootDir)
   include("**/examples/*.kt")

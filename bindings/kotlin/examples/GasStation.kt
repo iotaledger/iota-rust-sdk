@@ -5,34 +5,35 @@ import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
-  try {
-    val client = GraphQlClient.newLocalnet()
-    var gasStationUrl = "http://0.0.0.0:9527"
-    var gasStationAuthToken = "test"
-    var keypair = Ed25519PrivateKey.generate()
-    var sender = keypair.publicKey().deriveAddress()
-    var simpleKey = SimpleKeypair.fromEd25519(keypair)
+    try {
+        val client = GraphQlClient.newLocalnet()
+        var gasStationUrl = "http://0.0.0.0:9527"
+        var gasStationAuthToken = "test"
+        var keypair = Ed25519PrivateKey.generate()
+        var sender = keypair.publicKey().deriveAddress()
+        var simpleKey = SimpleKeypair.fromEd25519(keypair)
 
-    val builder = TransactionBuilder.init(sender, client)
+        val builder = TransactionBuilder.init(sender, client)
 
-    builder.moveCall(
-        Address.stdLib(),
-        Identifier("u64"),
-        Identifier("sqrt"),
-        listOf(
-            PtbArgument.u64(64uL),
-        ))
+        builder.moveCall(
+            Address.stdLib(),
+            Identifier("u64"),
+            Identifier("sqrt"),
+            listOf(PtbArgument.u64(64uL)),
+        )
 
-    builder.gasStationSponsor(
-        gasStationUrl, headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken")))
+        builder.gasStationSponsor(
+            gasStationUrl,
+            headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken")),
+        )
 
-    val res = builder.execute(simpleKey)
+        val res = builder.execute(simpleKey)
 
-    println("$res")
+        println("$res")
 
-    println("Sponsored transaction was successful!")
-  } catch (e: Exception) {
-    e.printStackTrace()
-    kotlin.system.exitProcess(1)
-  }
+        println("Sponsored transaction was successful!")
+    } catch (e: Exception) {
+        e.printStackTrace()
+        kotlin.system.exitProcess(1)
+    }
 }
