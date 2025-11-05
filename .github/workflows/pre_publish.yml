@@ -72,7 +72,8 @@ jobs:
 
       - uses: chainguard-dev/actions/setup-gitsign@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
 
-      - uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
+      - id: pr-create
+        uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version: ${{ inputs.version != null && inputs.version || inputs.level }}
@@ -80,3 +81,12 @@ jobs:
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org
           base-branch: develop
+          pr-template-file: release-pr-template.md
+
+      - name: Add release notes
+        run: |
+          pr_num=$(echo "${{ steps.pr-create.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')
+          body=$(gh pr view "$pr_num" --json body | jq -r '.["body"]')
+          notes=$(git-cliff)
+          body="$body\n# Release Notes\n\n$notes"
+          gh pr edit $pr_num --body "$body"
