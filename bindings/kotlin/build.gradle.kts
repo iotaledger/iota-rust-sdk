@@ -23,6 +23,8 @@ kotlin { jvmToolchain(21) }
 
 ktfmt { kotlinLangStyle() }
 
+tasks.named("ktfmtCheckMain") { enabled = false }
+
 tasks.register<KtfmtCheckTask>("KtfmtCheck") {
     source = project.fileTree(rootDir)
     include("examples/*.kt")
