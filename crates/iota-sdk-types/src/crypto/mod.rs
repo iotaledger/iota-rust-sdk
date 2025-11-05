@@ -129,7 +129,7 @@ macro_rules! impl_base64_helper {
             }
         }
 
-        #[cfg(test)]
+        #[cfg(all(test, feature = "proptest"))]
         mod $test_module {
             use test_strategy::proptest;
 

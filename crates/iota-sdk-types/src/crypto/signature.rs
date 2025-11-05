@@ -822,6 +822,7 @@ mod serialization {
     #[cfg(test)]
     mod tests {
         use base64ct::{Base64, Encoding};
+        #[cfg(feature = "proptest")]
         use test_strategy::proptest;
         #[cfg(target_arch = "wasm32")]
         use wasm_bindgen_test::wasm_bindgen_test as test;
@@ -829,6 +830,7 @@ mod serialization {
         use super::*;
 
         #[proptest]
+        #[cfg(feature = "proptest")]
         fn roundtrip_signature_scheme(scheme: SignatureScheme) {
             assert_eq!(Ok(scheme), SignatureScheme::from_byte(scheme.to_u8()));
         }

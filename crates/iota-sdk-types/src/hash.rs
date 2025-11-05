@@ -522,7 +522,7 @@ impl crate::ObjectId {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "proptest"))]
 mod tests {
     use test_strategy::proptest;
 

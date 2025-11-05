@@ -161,14 +161,13 @@ pub struct ValidatorSignature {
     pub signature: Bls12381Signature,
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "serde"))]
 mod tests {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use super::*;
 
-    #[cfg(feature = "serde")]
     #[test]
     fn aggregated_signature_fixture() {
         use base64ct::{Base64, Encoding};

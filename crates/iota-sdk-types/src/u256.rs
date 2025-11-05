@@ -69,11 +69,44 @@ const ASSERT_ENDIANNESS: () = {
 
 #[cfg(test)]
 mod tests {
-    use std::str::FromStr;
+    #[cfg(feature = "proptest")]
+    mod proptests {
+        use std::str::FromStr;
 
-    use num_bigint::BigUint;
-    use proptest::prelude::*;
-    use test_strategy::proptest;
+        use num_bigint::BigUint;
+        use proptest::prelude::*;
+        use test_strategy::proptest;
+
+        use super::*;
+
+        #[proptest]
+        fn dont_crash_on_large_inputs(
+            #[strategy(proptest::collection::vec(any::<u8>(), 33..1024))] bytes: Vec<u8>,
+        ) {
+            let big_int = BigUint::from_bytes_be(&bytes);
+            let radix10 = big_int.to_str_radix(10);
+
+            // doesn't crash
+            let _ = U256::from_str_radix(&radix10, 10);
+        }
+
+        #[proptest]
+        fn valid_u256_strings(
+            #[strategy(proptest::collection::vec(any::<u8>(), 1..=32))] bytes: Vec<u8>,
+        ) {
+            let big_int = BigUint::from_bytes_be(&bytes);
+            let radix10 = big_int.to_str_radix(10);
+
+            let u256 = U256::from_str_radix(&radix10, 10).unwrap();
+
+            assert_eq!(radix10, u256.to_str_radix(10));
+
+            let from_str = U256::from_str(&radix10).unwrap();
+            assert_eq!(from_str, u256);
+            assert_eq!(radix10, from_str.to_string());
+        }
+    }
+
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
@@ -106,32 +139,5 @@ mod tests {
         assert_eq!(one_platform, U256::from_le(U256::from_digits(one_le)));
         // From big endian
         assert_eq!(one_platform, U256::from_be(U256::from_digits(one_be)));
-    }
-
-    #[proptest]
-    fn dont_crash_on_large_inputs(
-        #[strategy(proptest::collection::vec(any::<u8>(), 33..1024))] bytes: Vec<u8>,
-    ) {
-        let big_int = BigUint::from_bytes_be(&bytes);
-        let radix10 = big_int.to_str_radix(10);
-
-        // doesn't crash
-        let _ = U256::from_str_radix(&radix10, 10);
-    }
-
-    #[proptest]
-    fn valid_u256_strings(
-        #[strategy(proptest::collection::vec(any::<u8>(), 1..=32))] bytes: Vec<u8>,
-    ) {
-        let big_int = BigUint::from_bytes_be(&bytes);
-        let radix10 = big_int.to_str_radix(10);
-
-        let u256 = U256::from_str_radix(&radix10, 10).unwrap();
-
-        assert_eq!(radix10, u256.to_str_radix(10));
-
-        let from_str = U256::from_str(&radix10).unwrap();
-        assert_eq!(from_str, u256);
-        assert_eq!(radix10, from_str.to_string());
     }
 }

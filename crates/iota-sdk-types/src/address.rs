@@ -284,7 +284,20 @@ impl schemars::JsonSchema for Address {
 
 #[cfg(test)]
 mod tests {
-    use test_strategy::proptest;
+    #[cfg(feature = "proptest")]
+    mod proptests {
+        use test_strategy::proptest;
+
+        use super::*;
+
+        #[proptest]
+        fn roundtrip_display_fromstr(address: Address) {
+            let s = address.to_string();
+            let a = s.parse::<Address>().unwrap();
+            assert_eq!(address, a);
+        }
+    }
+
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
@@ -307,12 +320,5 @@ mod tests {
         println!("{:?}", bcs::to_bytes(&actual).unwrap());
         let a: Address = serde_json::from_str("\"0x2\"").unwrap();
         println!("{a}");
-    }
-
-    #[proptest]
-    fn roundtrip_display_fromstr(address: Address) {
-        let s = address.to_string();
-        let a = s.parse::<Address>().unwrap();
-        assert_eq!(address, a);
     }
 }

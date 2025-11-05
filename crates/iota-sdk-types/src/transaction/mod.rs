@@ -739,7 +739,7 @@ pub struct ChangeEpochV2 {
     /// write out the modules below.  Modules are provided with the version they
     /// will be upgraded to, their modules in serialized form (which include
     /// their package ID), and a list of their transitive dependencies.
-    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
+    #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
 }
 
@@ -789,7 +789,7 @@ pub struct ChangeEpochV3 {
     /// write out the modules below.  Modules are provided with the version they
     /// will be upgraded to, their modules in serialized form (which include
     /// their package ID), and a list of their transitive dependencies.
-    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
+    #[cfg_attr(all(test, feature = "proptest"), any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
     /// Vector of active validator indices eligible to take part in committee
     /// selection because they support the new, target protocol version.

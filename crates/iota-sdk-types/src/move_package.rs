@@ -149,7 +149,7 @@ mod serialization {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "serde"))]
 mod tests {
     use super::*;
 
@@ -162,6 +162,7 @@ mod tests {
         assert_eq!(new_json, PACKAGE);
     }
 
+    #[cfg(feature = "hash")]
     #[test]
     fn test_digest() {
         let json_package: MovePackageData = serde_json::from_str(PACKAGE).unwrap();

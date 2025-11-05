@@ -407,6 +407,7 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
     }
 }
 
+#[cfg(feature = "serde")]
 #[cfg(test)]
 mod tests {
     use crate::UserSignature;

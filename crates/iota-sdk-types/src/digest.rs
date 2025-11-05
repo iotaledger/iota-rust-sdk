@@ -215,7 +215,7 @@ impl std::error::Error for DigestParseError {}
 // serialized
 pub type SigningDigest = [u8; Digest::LENGTH];
 
-#[cfg(test)]
+#[cfg(all(test, feature = "proptest"))]
 mod tests {
     use test_strategy::proptest;
 
