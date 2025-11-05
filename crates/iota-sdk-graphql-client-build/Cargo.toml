@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-graphql-client-build"
-version = "0.0.1"
+version = "0.0.1-alpha.0"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"

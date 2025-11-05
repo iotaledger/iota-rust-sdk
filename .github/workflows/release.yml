@@ -1,9 +1,13 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "*-v*.*.*"
+  pull_request:
+    types: closed
+    branches:
+      - "release/*/*.*.*-alpha.*"
+      - "release/*/*.*.*-beta.*"
+      - "release/*/*.*.*-rc.*"
+      - "release/*/*.*.*"
 
 # We need this to be able to create releases.
 permissions:
@@ -11,27 +15,19 @@ permissions:
 
 jobs:
   create-release:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Show the tag
-        run: |
-          echo "tag is: ${{ github.ref_name }}"
-
-      - name: Install node
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
-
-      - name: Install conventional-commits
-        run: npm -g i conventional-commits
-
-      - name: Generate Release Notes
-        run: |
-          pkg=$(echo "${{github.ref_name}}" | sed -nr 's|(.*)-v.*|\1|p'
-          conventional-changelog -p conventionalcommits -i notes-${{ github.ref_name }}.md -s --commit-path "crates/$pkg"
-
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create ${{ github.ref_name }} --verify-tag --title ${{ github.ref_name }} --draft --notes-file notes-${{ github.ref_name }}.md
+        run: |
+          pkg=$(echo "${{ github.base_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
+          echo "Releasing package $pkg"
+          tag=$(echo "${{ github.base_ref }}" | sed -nr 's|release/(.*)/(.*)|\1-v\2|p')
+          echo "Tag is: $tag"
+
+          gh release create $tag --verify-tag --title $tag --draft --notes-file crates/$pkg/CHANGELOG.md
