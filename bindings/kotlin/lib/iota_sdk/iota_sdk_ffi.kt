@@ -9816,7 +9816,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64() != 51030.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station() != 38828.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station() != 6268.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328.toShort()) {
@@ -43266,6 +43266,14 @@ public object FfiConverterTypeTransaction: FfiConverter<Transaction, Pointer> {
  */
 public interface TransactionBuilderInterface {
     
+    /**
+     * Execute the transaction using the gas station and return the JSON
+     * transaction effects. This will fail unless data is set with the
+     * `gas_station_sponsor` function.
+     *
+     * NOTE: These effects are not necessarily compatible with
+     * `TransactionEffects`
+     */
     suspend fun `executeWithGasStation`(`keypair`: SimpleKeypair): Value
     
     /**
@@ -43510,6 +43518,14 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     }
 
     
+    /**
+     * Execute the transaction using the gas station and return the JSON
+     * transaction effects. This will fail unless data is set with the
+     * `gas_station_sponsor` function.
+     *
+     * NOTE: These effects are not necessarily compatible with
+     * `TransactionEffects`
+     */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
     override suspend fun `executeWithGasStation`(`keypair`: SimpleKeypair) : Value {

@@ -1719,7 +1719,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64() != 51030:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station() != 38828:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station() != 6268:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -43268,6 +43268,15 @@ class TransactionBuilderProtocol(typing.Protocol):
     """
 
     def execute_with_gas_station(self, keypair: "SimpleKeypair"):
+        """
+        Execute the transaction using the gas station and return the JSON
+        transaction effects. This will fail unless data is set with the
+        `gas_station_sponsor` function.
+
+        NOTE: These effects are not necessarily compatible with
+        `TransactionEffects`
+        """
+
         raise NotImplementedError
     def expiration(self, epoch: "int"):
         """
@@ -43466,6 +43475,15 @@ class TransactionBuilder():
         return inst
 
     async def execute_with_gas_station(self, keypair: "SimpleKeypair") -> "Value":
+        """
+        Execute the transaction using the gas station and return the JSON
+        transaction effects. This will fail unless data is set with the
+        `gas_station_sponsor` function.
+
+        NOTE: These effects are not necessarily compatible with
+        `TransactionEffects`
+        """
+
         _UniffiConverterTypeSimpleKeypair.check_lower(keypair)
         
         return await _uniffi_rust_call_async(

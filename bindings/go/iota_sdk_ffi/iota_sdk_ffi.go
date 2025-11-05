@@ -6023,7 +6023,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station()
 	})
-	if checksum != 38828 {
+	if checksum != 6268 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station: UniFFI API checksum mismatch")
 	}
@@ -26043,6 +26043,12 @@ func (_ FfiDestroyerTransaction) Destroy(value *Transaction) {
 // A builder for creating transactions. Use `finish` to finalize the
 // transaction data.
 type TransactionBuilderInterface interface {
+	// Execute the transaction using the gas station and return the JSON
+	// transaction effects. This will fail unless data is set with the
+	// `gas_station_sponsor` function.
+	//
+	// NOTE: These effects are not necessarily compatible with
+	// `TransactionEffects`
 	ExecuteWithGasStation(keypair *SimpleKeypair) (Value, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *TransactionBuilder
@@ -26147,6 +26153,12 @@ func NewTransactionBuilder(sender *Address) *TransactionBuilder {
 
 
 
+// Execute the transaction using the gas station and return the JSON
+// transaction effects. This will fail unless data is set with the
+// `gas_station_sponsor` function.
+//
+// NOTE: These effects are not necessarily compatible with
+// `TransactionEffects`
 func (_self *TransactionBuilder) ExecuteWithGasStation(keypair *SimpleKeypair) (Value, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()

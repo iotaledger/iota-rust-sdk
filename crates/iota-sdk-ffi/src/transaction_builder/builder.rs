@@ -338,6 +338,12 @@ impl TransactionBuilder {
         Ok(Transaction(self.read(|builder| builder.clone().finish())?))
     }
 
+    /// Execute the transaction using the gas station and return the JSON
+    /// transaction effects. This will fail unless data is set with the
+    /// `gas_station_sponsor` function.
+    ///
+    /// NOTE: These effects are not necessarily compatible with
+    /// `TransactionEffects`
     pub async fn execute_with_gas_station(
         &self,
         keypair: &SimpleKeypair,
