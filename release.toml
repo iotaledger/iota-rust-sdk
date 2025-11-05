@@ -1,4 +1,4 @@
 enable-all-features = true
 pre-release-hook = [
-  "../../gen-changelog.sh",
+  "../../.github/gen-changelog.sh",
 ]
