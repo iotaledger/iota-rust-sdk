@@ -88,6 +88,7 @@ jobs:
         run: |
           pr_num=$(echo "${{ steps.pr-create.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')
           body=$(gh pr view "$pr_num" --json body | jq -r '.["body"]')
-          notes=$(git-cliff -w crates/${{ inputs.package }})
+          cd crates/${{ inputs.package }}
+          notes=$(git-cliff)
           body=$(echo "$body\n# Release Notes\n\n$notes")
           gh pr edit $pr_num --body "$body"
