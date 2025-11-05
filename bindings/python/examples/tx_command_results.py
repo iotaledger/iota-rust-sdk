@@ -3,67 +3,64 @@
 
 from lib.iota_sdk_ffi import *
 
+import sys
 import asyncio
 
 
 async def main():
-    try:
-        client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_devnet()
 
-        sender = Address.from_hex(
-            "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
-        )
+    sender = Address.from_hex(
+        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
+    )
 
-        builder = await TransactionBuilder.init(sender, client)
+    builder = await TransactionBuilder.init(sender, client)
 
-        package_addr = Address.std_lib()
-        module_name = Identifier("u64")
-        function_name = Identifier("max")
+    package_addr = Address.std_lib()
+    module_name = Identifier("u64")
+    function_name = Identifier("max")
 
-        builder.move_call(
-            package_addr,
-            module_name,
-            function_name,
-            [PtbArgument.u64(0), PtbArgument.u64(1000)],
-            # Assign a name to the result of this command
-            names=["res0"],
-        )
+    builder.move_call(
+        package_addr,
+        module_name,
+        function_name,
+        [PtbArgument.u64(0), PtbArgument.u64(1000)],
+        # Assign a name to the result of this command
+        names=["res0"],
+    )
 
-        builder.move_call(
-            package_addr,
-            module_name,
-            function_name,
-            [PtbArgument.u64(1000), PtbArgument.u64(2000)],
-            # Assign a name to the result of this command
-            names=["res1"],
-        )
+    builder.move_call(
+        package_addr,
+        module_name,
+        function_name,
+        [PtbArgument.u64(1000), PtbArgument.u64(2000)],
+        # Assign a name to the result of this command
+        names=["res1"],
+    )
 
-        builder.split_coins(
-            PtbArgument.gas(),
-            # Use the named results of previous commands as arguments
-            [PtbArgument.res("res0"), PtbArgument.res("res1")],
-            # For nested results, a tuple or vec can be used to name them
-            ["coin0", "coin1"],
-        )
+    builder.split_coins(
+        PtbArgument.gas(),
+        # Use the named results of previous commands as arguments
+        [PtbArgument.res("res0"), PtbArgument.res("res1")],
+        # For nested results, a tuple or vec can be used to name them
+        ["coin0", "coin1"],
+    )
 
-        # Use named results as arguments
-        builder.transfer_objects(
-            sender, [PtbArgument.res("coin0"), PtbArgument.res("coin1")]
-        )
+    # Use named results as arguments
+    builder.transfer_objects(
+        sender, [PtbArgument.res("coin0"), PtbArgument.res("coin1")]
+    )
 
-        txn = await builder.finish()
+    txn = await builder.finish()
 
-        print("Signing Digest:", txn.signing_digest_hex())
-        print("Txn Bytes:", txn.to_base64())
+    print("Signing Digest:", txn.signing_digest_hex())
+    print("Txn Bytes:", txn.to_base64())
 
-        res = await client.dry_run_tx(txn, False)
-        if res.error is not None:
-            raise Exception("Failed to send tx:", res.error)
+    res = await client.dry_run_tx(txn, False)
+    if res.error is not None:
+        raise Exception("Failed to send tx:", res.error)
 
-        print("Tx dry run was successful!")
-
-    except Exception as e:
-        print(f"Error: {e}")
+    print("Tx dry run was successful!")
 
 
 if __name__ == "__main__":
