@@ -81,12 +81,18 @@ jobs:
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org
           base-branch: develop
-          pr-template-file: release-pr-template.md
+          pr-template-file: ./.github/release-pr-template.ejs
 
       - name: Add release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pr_num=$(echo "${{ steps.pr-create.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')
           body=$(gh pr view "$pr_num" --json body | jq -r '.["body"]')
-          notes=$(git-cliff)
-          body="$body\n# Release Notes\n\n$notes"
+          cd crates/${{ inputs.package }}
+          notes=$(git-cliff --tag v${{ steps.pr-create.outputs.version }})
+          body=$(echo "$body
+          # Release Notes
+
+          $notes")
           gh pr edit $pr_num --body "$body"
