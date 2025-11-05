@@ -80,7 +80,7 @@ jobs:
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org
           base-branch: develop
-          pr-template-file: ../../.github/release-pr-template.ejs
+          pr-template-file: ./.github/release-pr-template.ejs
 
       - name: Add release notes
         run: |
