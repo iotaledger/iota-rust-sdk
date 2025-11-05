@@ -51,11 +51,12 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      # - name: Exit if the branch is not develop
-      #   if: github.ref != 'refs/heads/develop'
-      #   run: |
-      #     echo "Branch is not develop, exiting."
-      #     exit 0
+      - name: Exit if the branch is not develop
+        if: github.ref != 'refs/heads/develop'
+        run: |
+          echo "Branch is not develop, exiting."
+          exit 0
+
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
