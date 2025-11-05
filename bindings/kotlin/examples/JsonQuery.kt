@@ -8,7 +8,8 @@ import kotlinx.coroutines.runBlocking
 fun main() = runBlocking {
     val client = GraphQlClient.newDevnet()
 
-    val queryStr = """
+    val queryStr =
+        """
         query getLatestIotaSystemState {
           epoch {
             epochId
