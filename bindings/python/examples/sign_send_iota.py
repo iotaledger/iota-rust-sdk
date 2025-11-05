@@ -11,8 +11,7 @@ async def main():
     # Amount to send in nanos
     amount = 1000
     recipient_address = Address.from_hex(
-        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
-    )
+        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
     private_key = Ed25519PrivateKey(b"\x00" * 32)
     public_key = private_key.public_key()
@@ -41,6 +40,7 @@ async def main():
     print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
     print(f"Transaction status: {effects.as_v1().status}")
     print(f"Effects: {effects.as_v1()}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

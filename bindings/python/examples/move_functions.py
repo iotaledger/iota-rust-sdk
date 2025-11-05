@@ -10,8 +10,7 @@ async def main():
     client = GraphQlClient.new_devnet()
 
     package_address = Address.from_hex(
-        "0x3ec4826f1d6e0d9f00680b2e9a7a41f03788ee610b3d11c24f41ab0ae71da39f"
-    )
+        "0x3ec4826f1d6e0d9f00680b2e9a7a41f03788ee610b3d11c24f41ab0ae71da39f")
 
     package = await client.package(package_address)
     if package is None:
