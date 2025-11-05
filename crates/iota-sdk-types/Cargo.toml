@@ -42,11 +42,11 @@ proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 base64ct = { workspace = true, features = ["alloc"] }
 bnum.workspace = true
 bs58 = "0.5.1"
-derive_more = { workspace = true, features = ["display"] }
 eyre.workspace = true
 hex.workspace = true
 paste.workspace = true
 roaring.workspace = true
+strum = { workspace = true, features = ["derive"] }
 thiserror.workspace = true
 winnow = "0.7"
 

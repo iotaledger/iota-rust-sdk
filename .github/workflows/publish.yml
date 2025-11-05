@@ -23,6 +23,6 @@ jobs:
           eval "cargo release publish \
             -p $pkg \
             --all-features \
-            --allow-branch develop,sdk-bindings \
+            --allow-branch develop \
             --no-confirm \
             --execute"
