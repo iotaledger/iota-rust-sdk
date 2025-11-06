@@ -41,7 +41,7 @@ if [ "$1" == "start" ]; then
         HOST_IP=$(hostname -I | awk '{print $1}')
     fi
     echo "Updating fullnode-url to use host IP: $HOST_IP"
-    sed -i "s|http://localhost:9000|http://$HOST_IP:9000|g" "$CONFIG_PATH"
+    sed -i.bak "s|http://localhost:9000|http://$HOST_IP:9000|g" "$CONFIG_PATH"
 
     echo "Waiting for network to start and requesting faucet coins..."
     success=false
