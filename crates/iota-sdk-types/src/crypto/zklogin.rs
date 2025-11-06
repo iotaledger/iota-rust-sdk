@@ -188,10 +188,7 @@ impl proptest::arbitrary::Arbitrary for ZkLoginInputs {
 /// zklogin-claim = string u8
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ZkLoginClaim {
@@ -362,7 +359,7 @@ impl JwtHeader {
     fn from_base64(s: &str) -> Result<Self, InvalidZkLoginAuthenticatorError> {
         use base64ct::{Base64UrlUnpadded, Encoding};
 
-        #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+        #[derive(serde::Serialize, serde::Deserialize)]
         struct Header {
             alg: String,
             kid: String,
@@ -393,10 +390,7 @@ impl JwtHeader {
 /// zklogin-proof = circom-g1 circom-g2 circom-g1
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ZkLoginProof {
@@ -531,10 +525,7 @@ impl ZkLoginPublicIdentifier {
 /// jwk = string string string string
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Jwk {
@@ -558,10 +549,7 @@ pub struct Jwk {
 /// jwk-id = string string
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct JwkId {
@@ -717,7 +705,7 @@ mod serialization {
             S: Serializer,
         {
             if serializer.is_human_readable() {
-                #[derive(serde_derive::Serialize)]
+                #[derive(serde::Serialize)]
                 struct Readable<'a> {
                     iss: &'a str,
                     address_seed: &'a Bn254FieldElement,
@@ -746,7 +734,7 @@ mod serialization {
             D: Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                #[derive(serde_derive::Deserialize)]
+                #[derive(serde::Deserialize)]
                 struct Readable {
                     iss: String,
                     address_seed: Bn254FieldElement,
@@ -778,7 +766,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     struct AuthenticatorRef<'a> {
         inputs: &'a ZkLoginInputs,
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -786,7 +774,7 @@ mod serialization {
         signature: &'a SimpleSignature,
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     struct Authenticator {
         inputs: ZkLoginInputs,
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -884,7 +872,7 @@ mod serialization {
         where
             S: Serializer,
         {
-            #[derive(serde_derive::Serialize)]
+            #[derive(serde::Serialize)]
             struct Inputs<'a> {
                 proof_points: &'a ZkLoginProof,
                 iss_base64_details: &'a ZkLoginClaim,
@@ -907,7 +895,7 @@ mod serialization {
         where
             D: Deserializer<'de>,
         {
-            #[derive(serde_derive::Deserialize)]
+            #[derive(serde::Deserialize)]
             struct Inputs {
                 proof_points: ZkLoginProof,
                 iss_base64_details: ZkLoginClaim,

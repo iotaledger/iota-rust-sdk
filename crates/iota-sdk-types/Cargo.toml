@@ -26,7 +26,6 @@ rustdoc-args = [
 default = []
 serde = [
   "dep:serde",
-  "dep:serde_derive",
   "dep:serde_with",
   "dep:bcs",
   "dep:serde_json",
@@ -53,8 +52,7 @@ winnow = "0.7"
 # Serialization and Deserialization support
 bcs = { workspace = true, optional = true }
 itertools = { workspace = true, optional = true }
-serde = { workspace = true, optional = true }
-serde_derive = { workspace = true, optional = true }
+serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
 
