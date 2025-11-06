@@ -24,6 +24,8 @@ jobs:
           pkg=$(echo "${{github.event.release.tag_name}}" | sed -nr 's|(.*)-v.*|\1|p')
           version=$(echo "${{github.event.release.tag_name}}" | sed -nr 's|.*-v(.*)|\1|p')
 
+          cargo login ${{ secrets.CRATES_IO_TOKEN }}
+
           echo "Publishing $pkg at version $version"
           cargo release publish -p "$pkg" --all-features --allow-branch develop --no-confirm --execute
 
