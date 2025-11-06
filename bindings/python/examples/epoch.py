@@ -3,7 +3,6 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
 
 

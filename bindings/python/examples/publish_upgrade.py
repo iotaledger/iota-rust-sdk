@@ -23,10 +23,7 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
-import base64
-import json
 import os
 
 
