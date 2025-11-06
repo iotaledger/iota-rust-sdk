@@ -37,6 +37,10 @@ runs:
         echo "Setting keypair in config"
         sed -i "s|<keypair>|$key|g" ./.github/actions/start-local-network/config.yaml
 
+        echo "Updating fullnode-url to use host IP"
+        HOST_IP=$(hostname -I | awk '{print $1}')
+        sed -i "s|http://localhost:9000|http://$HOST_IP:9000|g" ./.github/actions/start-local-network/config.yaml
+
         echo "Requesting faucet coins"
         ./iota client faucet --address gas_station
 
