@@ -9,13 +9,9 @@ fun main() = runBlocking {
         val client = GraphQlClient.newDevnet()
 
         val sender =
-                Address.fromHex(
-                        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
-                )
+            Address.fromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
         val sponsor =
-                Address.fromHex(
-                        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
-                )
+            Address.fromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
         val builder = TransactionBuilder(sender).withClient(client)
 
@@ -24,10 +20,10 @@ fun main() = runBlocking {
         val functionName = Identifier("max")
 
         builder.moveCall(
-                packageAddr,
-                moduleName,
-                functionName,
-                listOf(PtbArgument.u8(0u), PtbArgument.u8(1u)),
+            packageAddr,
+            moduleName,
+            functionName,
+            listOf(PtbArgument.u8(0u), PtbArgument.u8(1u)),
         )
 
         builder.sponsor(sponsor)

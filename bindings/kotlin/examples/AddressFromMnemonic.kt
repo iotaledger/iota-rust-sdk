@@ -35,7 +35,7 @@ fun main() {
     println("Address: ${addressSecp256k1.toHex()}")
 
     val privateKeySecp256r1 =
-            Secp256r1PrivateKey.fromMnemonicWithPath(MNEMONIC, "m/74'/4218'/0'/0/2")
+        Secp256r1PrivateKey.fromMnemonicWithPath(MNEMONIC, "m/74'/4218'/0'/0/2")
     val privateKeySecp256r1Bech32 = privateKeySecp256r1.toBech32()
     val publicKeySecp256r1 = privateKeySecp256r1.publicKey()
     val flaggedPublicKeySecp256r1 = publicKeySecp256r1.toFlaggedBytes()

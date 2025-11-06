@@ -1,8 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.GraphQlClient
 import iota_sdk.Digest
+import iota_sdk.GraphQlClient
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {

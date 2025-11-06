@@ -2,14 +2,6 @@ rootProject.name = "iota-sdk-jvm"
 
 include(":lib")
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-    }
-}
+pluginManagement { repositories { gradlePluginPortal() } }
 
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-    }
-}
+dependencyResolutionManagement { repositories { mavenCentral() } }

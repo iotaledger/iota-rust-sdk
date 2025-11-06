@@ -9,9 +9,7 @@ fun main() = runBlocking {
         // Amount to send in nanos
         val amount = 1000uL
         val recipientAddress =
-                Address.fromHex(
-                        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
-                )
+            Address.fromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
         val privateKey = Ed25519PrivateKey(ByteArray(32))
         val publicKey = privateKey.publicKey()

@@ -5,6 +5,7 @@ from lib.iota_sdk_ffi import *
 
 import asyncio
 
+
 async def main():
     client = GraphQlClient.new_localnet()
     gas_station_url = "http://0.0.0.0:9527"
@@ -23,8 +24,8 @@ async def main():
     )
 
     builder.gas_station_sponsor(
-        gas_station_url, headers={"Authorization": [f"Bearer {gas_station_auth_token}"]}
-    )
+        gas_station_url,
+        headers={"Authorization": [f"Bearer {gas_station_auth_token}"]})
 
     res = await builder.execute(simple_key)
 

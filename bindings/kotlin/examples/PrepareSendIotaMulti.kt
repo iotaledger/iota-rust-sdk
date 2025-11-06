@@ -19,36 +19,28 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
         val sender =
-                Address.fromHex(
-                        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
-                )
+            Address.fromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
         val coinId =
-                ObjectId.fromHex(
-                        "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab"
-                )
+            ObjectId.fromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 
         val recipients =
-                listOf(
-                        Pair(
-                                "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11",
-                                1_000_000_000UL
-                        ),
-                        Pair(
-                                "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522",
-                                2_000_000_000UL
-                        )
-                )
+            listOf(
+                Pair(
+                    "0x111173a14c3d402c01546c54265c30cc04414c7b7ec1732412bb19066dd49d11",
+                    1_000_000_000UL,
+                ),
+                Pair(
+                    "0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522",
+                    2_000_000_000UL,
+                ),
+            )
 
         val builder = TransactionBuilder(sender).withClient(client)
 
         val labels = recipients.indices.map { "coin${it}" }
         val amounts = recipients.map { PtbArgument.u64(it.second) }
 
-        builder.splitCoins(
-                PtbArgument.objectId(coinId),
-                amounts,
-                labels,
-        )
+        builder.splitCoins(PtbArgument.objectId(coinId), amounts, labels)
 
         for ((i, r) in recipients.withIndex()) {
             builder.transferObjects(Address.fromHex(r.first), listOf(PtbArgument.res(labels[i])))

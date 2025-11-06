@@ -11,8 +11,7 @@ async def main():
     client = GraphQlClient.new_devnet()
 
     my_address = Address.from_hex(
-        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
-    )
+        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
     validators = await client.active_validators()
     if len(validators.data) == 0:
