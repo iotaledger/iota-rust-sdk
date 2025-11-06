@@ -22,7 +22,7 @@ fun main() = runBlocking {
 
         val client = GraphQlClient.newLocalnet()
 
-        val builder = TransactionBuilder.init(senderAddress, client)
+        val builder = TransactionBuilder(senderAddress).withClient(client)
         builder.sendIota(recipientAddress, PtbArgument.u64(amount))
         val txn = builder.finish()
 

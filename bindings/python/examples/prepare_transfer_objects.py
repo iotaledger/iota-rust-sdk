@@ -26,7 +26,7 @@ async def main():
         ),
     ]
 
-    builder = await TransactionBuilder.init(from_address, client)
+    builder = await TransactionBuilder(from_address).with_client(client)
     builder.transfer_objects(
         to_address,
         objs_to_transfer,

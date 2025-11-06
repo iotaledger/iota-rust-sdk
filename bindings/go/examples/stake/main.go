@@ -40,7 +40,7 @@ func main() {
 	}
 	log.Printf("Staking to validator %v", validatorName)
 
-	builder := sdk.TransactionBuilderInit(myAddress, client)
+	builder := sdk.NewTransactionBuilder(myAddress).WithClient(client)
 
 	builder.Stake(sdk.PtbArgumentU64(1000000000), validator.Address)
 

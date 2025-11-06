@@ -20,7 +20,7 @@ async def main():
 
     print("Staking to validator", validator.name or "with no name")
 
-    builder = await TransactionBuilder.init(my_address, client)
+    builder = await TransactionBuilder(my_address).with_client(client)
 
     builder.stake(PtbArgument.u64(1000000000), validator.address)
 

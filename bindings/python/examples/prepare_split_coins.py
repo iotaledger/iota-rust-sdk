@@ -16,7 +16,7 @@ async def main():
     coin_id = ObjectId.from_hex(
         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 
-    builder = await TransactionBuilder.init(sender, client)
+    builder = await TransactionBuilder(sender).with_client(client)
 
     builder.split_coins(
         PtbArgument.object_id(coin_id),

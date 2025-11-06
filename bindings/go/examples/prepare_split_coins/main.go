@@ -32,7 +32,7 @@ func main() {
 
 	coinObjId := objIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 
-	builder := sdk.TransactionBuilderInit(sender, client)
+	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
 	builder.SplitCoins(
 		sdk.PtbArgumentObjectId(coinObjId),
 		[]*sdk.PtbArgument{

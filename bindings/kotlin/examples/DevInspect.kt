@@ -1,14 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.Address
-import iota_sdk.GraphQlClient
-import iota_sdk.Identifier
-import iota_sdk.ObjectId
-import iota_sdk.PtbArgument
-import iota_sdk.StructTag
-import iota_sdk.TransactionBuilder
-import iota_sdk.TypeTag
+import iota_sdk.*
 import kotlin.collections.emptyList
 import kotlinx.coroutines.runBlocking
 
@@ -27,7 +20,7 @@ fun main() = runBlocking {
         val name = "name.iota"
         println("Looking up name: $name")
 
-        val builder = TransactionBuilder.init(sender, client)
+        val builder = TransactionBuilder(sender).withClient(client)
 
         // 1. Get the registry
         builder.moveCall(

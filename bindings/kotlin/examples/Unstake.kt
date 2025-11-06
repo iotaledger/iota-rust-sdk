@@ -1,11 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.GraphQlClient
-import iota_sdk.ObjectFilter
-import iota_sdk.PtbArgument
-import iota_sdk.StructTag
-import iota_sdk.TransactionBuilder
+import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -19,7 +15,7 @@ fun main() = runBlocking {
         }
         val stakedIota = stakedIotas.data[0]
 
-        val builder = TransactionBuilder.init(stakedIota.owner().asAddress(), client)
+        val builder = TransactionBuilder(stakedIota.owner().asAddress()).withClient(client)
 
         builder.unstake(PtbArgument.objectId(stakedIota.objectId()))
 
