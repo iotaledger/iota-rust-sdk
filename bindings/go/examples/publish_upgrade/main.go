@@ -95,11 +95,10 @@ func main() {
 
 	// Sign and execute the transaction (publish the package)
 	fmt.Println("> Publishing package:")
-	sigPublish, err := privateKey.TrySignSimple(txPublish.SigningDigest())
+	userSigPublish, err := privateKey.SignTransaction(txPublish)
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	userSigPublish := sdk.UserSignatureNewSimple(sigPublish)
 	waitFor := sdk.WaitForTxFinalized
 	effectsPublish, err := client.ExecuteTx([]*sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
 	if err.(*sdk.SdkFfiError) != nil {
@@ -199,11 +198,10 @@ func main() {
 
 	// Sign and execute the transaction (upgrade the package)
 	fmt.Println("> Upgrading package:")
-	sigUpgrade, err := privateKey.TrySignSimple(txUpgrade.SigningDigest())
+	userSigUpgrade, err := privateKey.SignTransaction(txUpgrade)
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	userSigUpgrade := sdk.UserSignatureNewSimple(sigUpgrade)
 	effectsUpgrade, err := client.ExecuteTx([]*sdk.UserSignature{userSigUpgrade}, txUpgrade, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)

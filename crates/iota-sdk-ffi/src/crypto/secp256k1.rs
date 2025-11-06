@@ -138,6 +138,22 @@ impl Secp256k1PrivateKey {
                 .into(),
         )
     }
+
+    /// Sign a transaction and return a UserSignature.
+    pub fn sign_transaction(
+        &self,
+        transaction: &crate::types::transaction::Transaction,
+    ) -> Result<UserSignature> {
+        Ok(iota_sdk::crypto::IotaSigner::sign_transaction(&self.0, &transaction.0)?.into())
+    }
+
+    /// Sign a personal message and return a UserSignature.
+    pub fn sign_personal_message(
+        &self,
+        message: &crate::types::PersonalMessage,
+    ) -> Result<UserSignature> {
+        Ok(iota_sdk::crypto::IotaSigner::sign_personal_message(&self.0, &message.0)?.into())
+    }
 }
 
 #[derive(derive_more::From, uniffi::Object)]

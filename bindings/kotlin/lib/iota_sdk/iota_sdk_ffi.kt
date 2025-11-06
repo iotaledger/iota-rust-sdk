@@ -3059,6 +3059,24 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3716,6 +3734,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes(
@@ -4142,6 +4164,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes(
@@ -4187,6 +4213,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_user(
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32(
 ): Short
@@ -4234,6 +4264,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes(
@@ -4243,6 +4277,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_der(
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_key(
 ): Short
@@ -5637,6 +5673,10 @@ fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key(`ptr`: Pointer,un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_personal_message(`ptr`: Pointer,`message`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_transaction(`ptr`: Pointer,`transaction`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6529,6 +6569,10 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_public_key(`ptr`: Pointer,
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(`ptr`: Pointer,`message`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(`ptr`: Pointer,`transaction`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6629,6 +6673,10 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(`ptr`: Pointer,
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(`ptr`: Pointer,`message`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(`ptr`: Pointer,`transaction`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6729,6 +6777,10 @@ fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(`ptr`: Pointer,uniffi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(`ptr`: Pointer,`message`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(`ptr`: Pointer,`transaction`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6738,6 +6790,8 @@ fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(`ptr`: Pointer,uniffi_out
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_pem(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(`ptr`: Pointer,`message`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8892,6 +8946,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme() != 8128.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message() != 59851.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction() != 4951.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32() != 64514.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -9531,6 +9591,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme() != 60810.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message() != 53577.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction() != 34208.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32() != 60488.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -9598,6 +9664,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme() != 20973.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message() != 113.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction() != 1687.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32() != 4230.toShort()) {
@@ -9669,6 +9741,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme() != 19826.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message() != 2940.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction() != 35221.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32() != 4776.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -9682,6 +9760,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign() != 52266.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user() != 17485.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_key() != 20797.toShort()) {
@@ -19861,6 +19942,16 @@ public interface Ed25519PrivateKeyInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Sign a personal message and return a UserSignature.
+     */
+    fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    fun `signTransaction`(`transaction`: Transaction): UserSignature
+    
+    /**
      * Encode this private key as `flag || privkey` in Bech32 starting with
      * "iotaprivkey" to a string.
      */
@@ -19999,6 +20090,38 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a personal message and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_personal_message(
+        it, FfiConverterTypePersonalMessage.lower(`message`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signTransaction`(`transaction`: Transaction): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_transaction(
+        it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
     )
@@ -36426,6 +36549,16 @@ public interface Secp256k1PrivateKeyInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Sign a personal message and return a UserSignature.
+     */
+    fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    fun `signTransaction`(`transaction`: Transaction): UserSignature
+    
+    /**
      * Encode this private key as `flag || privkey` in Bech32 starting with
      * "iotaprivkey" to a string.
      */
@@ -36564,6 +36697,38 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a personal message and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(
+        it, FfiConverterTypePersonalMessage.lower(`message`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signTransaction`(`transaction`: Transaction): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(
+        it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
     )
@@ -38181,6 +38346,16 @@ public interface Secp256r1PrivateKeyInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Sign a personal message and return a UserSignature.
+     */
+    fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    fun `signTransaction`(`transaction`: Transaction): UserSignature
+    
+    /**
      * Encode this private key as `flag || privkey` in Bech32 starting with
      * "iotaprivkey" to a string.
      */
@@ -38331,6 +38506,38 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a personal message and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
+        it, FfiConverterTypePersonalMessage.lower(`message`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signTransaction`(`transaction`: Transaction): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
+        it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
     )
@@ -39957,6 +40164,16 @@ public interface SimpleKeypairInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Sign a personal message and return a UserSignature.
+     */
+    fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    fun `signTransaction`(`transaction`: Transaction): UserSignature
+    
+    /**
      * Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
      * "iotaprivkey" to a string. Note that the pubkey is not encoded.
      */
@@ -39978,6 +40195,8 @@ public interface SimpleKeypairInterface {
     fun `toPem`(): kotlin.String
     
     fun `trySign`(`message`: kotlin.ByteArray): SimpleSignature
+    
+    fun `trySignUser`(`message`: kotlin.ByteArray): UserSignature
     
     fun `verifyingKey`(): SimpleVerifyingKey
     
@@ -40092,6 +40311,38 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
 
     
     /**
+     * Sign a personal message and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(
+        it, FfiConverterTypePersonalMessage.lower(`message`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signTransaction`(`transaction`: Transaction): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(
+        it, FfiConverterTypeTransaction.lower(`transaction`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
      * "iotaprivkey" to a string. Note that the pubkey is not encoded.
      */
@@ -40160,6 +40411,19 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(
+        it, FfiConverterByteArray.lower(`message`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    @Throws(SdkFfiException::class)override fun `trySignUser`(`message`: kotlin.ByteArray): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
