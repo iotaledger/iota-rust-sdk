@@ -1,13 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.Address
-import iota_sdk.GraphQlClient
-import iota_sdk.Identifier
-import iota_sdk.PtbArgument
-import iota_sdk.TransactionBuilder
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
+import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -19,7 +13,7 @@ fun main() = runBlocking {
                         "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e"
                 )
 
-        val builder = TransactionBuilder.init(sender, client)
+        val builder = TransactionBuilder(sender).withClient(client)
 
         val address1 =
                 Address.fromHex(
@@ -55,11 +49,4 @@ fun main() = runBlocking {
         e.printStackTrace()
         kotlin.system.exitProcess(1)
     }
-}
-
-fun uLongToBytes(num: ULong): ByteArray {
-    return ByteBuffer.allocate(ULong.SIZE_BYTES)
-            .order(ByteOrder.LITTLE_ENDIAN)
-            .putLong(num.toLong())
-            .array()
 }

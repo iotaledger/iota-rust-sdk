@@ -6,6 +6,7 @@ from lib.iota_sdk_ffi import *
 import sys
 import asyncio
 
+
 async def main():
     client = GraphQlClient.new_devnet()
 
@@ -22,7 +23,7 @@ async def main():
     name = "name.iota"
     print(f"Looking up name: {name}")
 
-    builder = await TransactionBuilder.init(sender, client)
+    builder = await TransactionBuilder(sender).with_client(client)
 
     # 1. Get the registry
     builder.move_call(
@@ -118,6 +119,7 @@ async def main():
             print("No return value in last effect")
     else:
         print("No results found")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -25,7 +25,7 @@ async def main():
 
     client = GraphQlClient.new_localnet()
 
-    builder = await TransactionBuilder.init(sender_address, client)
+    builder = await TransactionBuilder(sender_address).with_client(client)
     builder.send_iota(recipient_address, PtbArgument.u64(amount))
     txn = await builder.finish()
 
@@ -41,6 +41,7 @@ async def main():
     print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
     print(f"Transaction status: {effects.as_v1().status}")
     print(f"Effects: {effects.as_v1()}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

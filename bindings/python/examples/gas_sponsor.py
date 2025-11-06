@@ -6,6 +6,7 @@ from lib.iota_sdk_ffi import *
 import sys
 import asyncio
 
+
 async def main():
     client = GraphQlClient.new_devnet()
 
@@ -16,7 +17,7 @@ async def main():
         "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
     )
 
-    builder = await TransactionBuilder.init(sender, client)
+    builder = await TransactionBuilder(sender).with_client(client)
 
     package_addr = Address.std_lib()
     module_name = Identifier("u8")
@@ -41,6 +42,7 @@ async def main():
         raise Exception("Failed to send gas sponsor tx:", res.error)
 
     print("Gas sponsor tx dry run was successful!")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

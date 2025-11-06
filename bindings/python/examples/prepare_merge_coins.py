@@ -21,7 +21,7 @@ async def main():
         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
     )
 
-    builder = await TransactionBuilder.init(sender, client)
+    builder = await TransactionBuilder(sender).with_client(client)
 
     builder.merge_coins(coin_0, [coin_1])
 
@@ -35,6 +35,7 @@ async def main():
         raise Exception("Failed to merge coins:", res.error)
 
     print("Merge coins dry run was successful!")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

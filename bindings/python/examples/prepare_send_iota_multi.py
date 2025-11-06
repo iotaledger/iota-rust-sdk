@@ -29,7 +29,7 @@ async def main():
     amounts = [PtbArgument.u64(r[1]) for r in recipients]
     labels = [f"coin{i}" for i in range(len(recipients))]
 
-    builder = await TransactionBuilder.init(sender, client)
+    builder = await TransactionBuilder(sender).with_client(client)
 
     builder.split_coins(PtbArgument.object_id(coin_id), amounts, labels)
     for i, r in enumerate(recipients):

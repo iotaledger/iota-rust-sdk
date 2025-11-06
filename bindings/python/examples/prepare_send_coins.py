@@ -23,7 +23,7 @@ async def main():
         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9"
     )
 
-    builder = await TransactionBuilder.init(from_address, client)
+    builder = await TransactionBuilder(from_address).with_client(client)
     builder.send_coins(
         [coin_id],
         to_address,
@@ -40,6 +40,7 @@ async def main():
         raise Exception("Failed to send coins:", res.error)
 
     print("Send coins dry run was successful!")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

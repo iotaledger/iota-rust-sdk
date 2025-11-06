@@ -869,6 +869,26 @@ impl<L> TransactionBuilder<(), L> {
         }
         .into())
     }
+
+    /// Execute the transaction using the gas station and return the JSON
+    /// transaction effects. This will fail unless data is set with
+    /// [`Self::gas_station_sponsor`].
+    ///
+    /// NOTE: These effects are not necessarily compatible with
+    /// [`TransactionEffects`]
+    pub async fn execute_with_gas_station(
+        mut self,
+        keypair: &SimpleKeypair,
+    ) -> Result<serde_json::Value, Error> {
+        let gas_station_data = self.data.gas_station_data.take();
+
+        Ok(if let Some(gas_station_data) = gas_station_data {
+            let mut txn = self.finish()?;
+            gas_station_data.execute_txn_json(&mut txn, keypair).await?
+        } else {
+            return Err(Error::MissingGasStationData);
+        })
+    }
 }
 
 impl<L> TransactionBuilder<Client, L> {

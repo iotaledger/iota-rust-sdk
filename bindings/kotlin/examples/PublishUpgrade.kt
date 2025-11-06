@@ -57,7 +57,7 @@ fun main() = runBlocking {
         val client = GraphQlClient.newLocalnet()
 
         // Build the `publish` PTB
-        val builderPublish = TransactionBuilder.init(sender, client)
+        val builderPublish = TransactionBuilder(sender).withClient(client)
         // Publish the package and receive the upgrade cap in return
         builderPublish.publish(packageData, "upgrade_cap")
         // Transfer the upgrade cap to the sender address
@@ -114,7 +114,7 @@ fun main() = runBlocking {
         }
 
         // Build the `upgrade` PTB, that consists of 3 steps
-        val builderUpgrade = TransactionBuilder.init(sender, client)
+        val builderUpgrade = TransactionBuilder(sender).withClient(client)
 
         // Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
         // ticket
