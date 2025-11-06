@@ -9,6 +9,7 @@ services:
       - redis_data:/data
     network_mode: host
   iota-gas-station:
+    platform: linux/amd64
     image: "${DOCKER_IMAGE:-iotaledger/gas-station:latest}"
     build:
       context: ..
