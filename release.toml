@@ -2,3 +2,5 @@ enable-all-features = true
 pre-release-hook = [
   "../../.github/gen-changelog.sh",
 ]
+owners = ["iota-ci"]
+sign-commit = true

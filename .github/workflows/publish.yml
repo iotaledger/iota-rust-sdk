@@ -25,9 +25,7 @@ jobs:
           version=$(echo "${{github.event.release.tag_name}}" | sed -nr 's|.*-v(.*)|\1|p')
 
           echo "Publishing $pkg at version $version"
-          eval "cargo release publish \
-            -p $pkg \
-            --all-features \
-            --allow-branch develop \
-            --no-confirm \
-            --execute"
+          cargo release publish -p "$pkg" --all-features --allow-branch develop --no-confirm --execute
+
+          echo "Setting owners of $pkg"
+          cargo release owner -p "$pkg" --allow-branch develop --no-confirm --execute
