@@ -3,9 +3,6 @@ name: Pre-publish
 on:
   workflow_dispatch:
     inputs:
-      version:
-        type: string
-        description: The exact version to release. Will override the level bump.
       level:
         type: choice
         required: true
@@ -35,12 +32,12 @@ on:
         required: true
         description: The package to publish.
         options:
-          - iota-sdk
-          - iota-sdk-crypto
-          - iota-sdk-graphql-client
-          - iota-sdk-graphql-client-build
-          - iota-sdk-transaction-builder
           - iota-sdk-types
+          - iota-sdk-crypto
+          - iota-sdk-graphql-client-build
+          - iota-sdk-graphql-client
+          - iota-sdk-transaction-builder
+          - iota-sdk
 
 jobs:
   publish:
@@ -76,7 +73,7 @@ jobs:
         uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          version: ${{ inputs.version != null && inputs.version || inputs.level }}
+          version: ${{ inputs.level }}
           crate-name: ${{ inputs.package }}
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org

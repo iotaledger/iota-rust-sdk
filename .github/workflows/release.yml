@@ -8,12 +8,12 @@ on:
         required: true
         description: The package to publish.
         options:
-          - iota-sdk
-          - iota-sdk-crypto
-          - iota-sdk-graphql-client
-          - iota-sdk-graphql-client-build
-          - iota-sdk-transaction-builder
           - iota-sdk-types
+          - iota-sdk-crypto
+          - iota-sdk-graphql-client-build
+          - iota-sdk-graphql-client
+          - iota-sdk-transaction-builder
+          - iota-sdk
       version:
         type: string
         description: The exact version.
