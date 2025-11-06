@@ -17,7 +17,6 @@ on:
           - rc:      Increase the rc pre-version (x.y.z-rc.M)
           - beta:    Increase the beta pre-version (x.y.z-beta.M)
           - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
-          - no-bump: Release the packages with the current version
         options:
           - major
           - minor
@@ -26,7 +25,6 @@ on:
           - rc
           - beta
           - alpha
-          - no-bump
       package:
         type: choice
         required: true
