@@ -35,7 +35,11 @@ if [ "$1" == "start" ]; then
     sed -i.bak "s|<keypair>|$keyWithFlag|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
 
     # Get host IP to update fullnode-url
-    HOST_IP=$(hostname -I | awk '{print $1}')
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        HOST_IP="host.docker.internal"
+    else
+        HOST_IP=$(hostname -I | awk '{print $1}')
+    fi
     echo "Updating fullnode-url to use host IP: $HOST_IP"
     sed -i "s|http://localhost:9000|http://$HOST_IP:9000|g" "$CONFIG_PATH"
 
