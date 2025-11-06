@@ -1757,7 +1757,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 14493:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client() != 32496:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client() != 26579:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -7285,8 +7285,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade.restype = ct
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactioneffects.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -43918,25 +43919,15 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def with_client(self, client: "GraphQlClient") -> "ClientTransactionBuilder":
+
+    def with_client(self, client: "GraphQlClient") -> "ClientTransactionBuilder":
         _UniffiConverterTypeGraphQlClient.check_lower(client)
         
-        return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
-                self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeGraphQlClient.lower(client)
-            ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
-            # lift function
-            _UniffiConverterTypeClientTransactionBuilder.lift,
-            
-    # Error FFI converter
-
-    None,
-
+        return _UniffiConverterTypeClientTransactionBuilder.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeGraphQlClient.lower(client))
         )
+
 
 
 

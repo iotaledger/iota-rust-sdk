@@ -6993,8 +6993,8 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(`ptr`: Pointer,`sta
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(`ptr`: Pointer,`packageId`: Pointer,`packageData`: Pointer,`upgradeTicket`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(`ptr`: Pointer,`client`: Pointer,
-): Long
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(`ptr`: Pointer,`client`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_transactioneffects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactioneffects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9873,7 +9873,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 14493.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client() != 32496.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client() != 26579.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710.toShort()) {
@@ -43416,7 +43416,7 @@ public interface TransactionBuilderInterface {
      */
     fun `upgrade`(`packageId`: ObjectId, `packageData`: MovePackageData, `upgradeTicket`: PtbArgument, `name`: kotlin.String? = null): TransactionBuilder
     
-    suspend fun `withClient`(`client`: GraphQlClient): ClientTransactionBuilder
+    fun `withClient`(`client`: GraphQlClient): ClientTransactionBuilder
     
     companion object
 }
@@ -43867,25 +43867,17 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     }
     
 
-    
-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `withClient`(`client`: GraphQlClient) : ClientTransactionBuilder {
-        return uniffiRustCallAsync(
-        callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
-                thisPtr,
-                FfiConverterTypeGraphQLClient.lower(`client`),
-            )
-        },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
-        // lift function
-        { FfiConverterTypeClientTransactionBuilder.lift(it) },
-        // Error FFI converter
-        UniffiNullRustCallStatusErrorHandler,
+    override fun `withClient`(`client`: GraphQlClient): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
+        it, FfiConverterTypeGraphQLClient.lower(`client`),_status)
+}
+    }
     )
     }
+    
 
     
 

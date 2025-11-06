@@ -3,7 +3,6 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
 
 
@@ -18,7 +17,7 @@ async def main():
     coin_1 = PtbArgument.object_id_from_hex(
         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
 
-    builder = await TransactionBuilder(sender).with_client(client)
+    builder = TransactionBuilder(sender).with_client(client)
 
     builder.merge_coins(coin_0, [coin_1])
 

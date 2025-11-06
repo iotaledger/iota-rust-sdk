@@ -17,7 +17,6 @@ use crate::{
     transaction_builder::ptb_arg::{MoveArg, PTBArgument},
     types::{
         address::Address,
-        graphql::DryRunResult,
         move_package::MovePackageData,
         object::{ObjectId, ObjectReference},
         struct_tag::Identifier,
@@ -57,8 +56,7 @@ impl TransactionBuilder {
         Self(iota_sdk::transaction_builder::TransactionBuilder::new(**sender).into())
     }
 
-    pub async fn with_client(&self, client: &GraphQLClient) -> ClientTransactionBuilder {
-        let client = client.inner().read().await.clone();
+    pub fn with_client(&self, client: Arc<GraphQLClient>) -> ClientTransactionBuilder {
         ClientTransactionBuilder(
             self.read(|builder| builder.clone().with_client(client))
                 .into(),

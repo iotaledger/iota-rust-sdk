@@ -23,10 +23,7 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
-import base64
-import json
 import os
 
 
@@ -61,7 +58,7 @@ async def main():
     client = GraphQlClient.new_localnet()
 
     # Build the `publish` PTB
-    builder = await TransactionBuilder(sender).with_client(client)
+    builder = TransactionBuilder(sender).with_client(client)
     # Publish the package and receive the upgrade cap in return
     builder.publish(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
@@ -115,7 +112,7 @@ async def main():
         raise Exception("Missing package id")
 
     # Build the `upgrade` PTB
-    builder = await TransactionBuilder(sender).with_client(client)
+    builder = TransactionBuilder(sender).with_client(client)
 
     # Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
     # ticket

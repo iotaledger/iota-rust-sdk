@@ -4830,7 +4830,7 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(void* ptr, void* 
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_WITH_CLIENT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_WITH_CLIENT
-uint64_t uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(void* ptr, void* client
+void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(void* ptr, void* client, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONEFFECTS

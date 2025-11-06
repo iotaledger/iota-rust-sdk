@@ -3,7 +3,6 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
 
 
@@ -20,7 +19,7 @@ async def main():
     coin_id = PtbArgument.object_id_from_hex(
         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")
 
-    builder = await TransactionBuilder(from_address).with_client(client)
+    builder = TransactionBuilder(from_address).with_client(client)
     builder.send_coins(
         [coin_id],
         to_address,

@@ -6194,7 +6194,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client()
 	})
-	if checksum != 32496 {
+	if checksum != 26579 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client: UniFFI API checksum mismatch")
 	}
@@ -26429,30 +26429,10 @@ func (_self *TransactionBuilder) Upgrade(packageId *ObjectId, packageData *MoveP
 func (_self *TransactionBuilder) WithClient(client *GraphQlClient) *ClientTransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
-	 res, _ :=uniffiRustCallAsync[error](
-        nil,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
-		},
-		// liftFn
-		func(ffi unsafe.Pointer) *ClientTransactionBuilder {
-			return FfiConverterClientTransactionBuilderINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
-		_pointer,FfiConverterGraphQlClientINSTANCE.Lower(client)),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
-		},
-	)
-
-	return res 
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
+		_pointer,FfiConverterGraphQlClientINSTANCE.Lower(client),_uniffiStatus)
+	}))
 }
 func (object *TransactionBuilder) Destroy() {
 	runtime.SetFinalizer(object, nil)

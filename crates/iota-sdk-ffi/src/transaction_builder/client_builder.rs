@@ -16,11 +16,10 @@ use crate::{
     transaction_builder::ptb_arg::{MoveArg, PTBArgument},
     types::{
         address::Address,
-        graphql::DryRunResult,
         move_package::MovePackageData,
         object::ObjectId,
         struct_tag::Identifier,
-        transaction::{Argument, Transaction, TransactionEffects},
+        transaction::{Argument, DryRunResult, Transaction, TransactionEffects},
         type_tag::TypeTag,
     },
 };
@@ -29,15 +28,13 @@ use crate::{
 /// automatically resolve inputs. Use `finish` to finalize the transaction data.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct ClientTransactionBuilder(
-    pub RwLock<iota_sdk::transaction_builder::TransactionBuilder<iota_sdk::graphql_client::Client>>,
+    pub RwLock<iota_sdk::transaction_builder::TransactionBuilder<Arc<GraphQLClient>>>,
 );
 
 impl ClientTransactionBuilder {
     fn read<F, T>(&self, f: F) -> T
     where
-        F: FnOnce(
-            &iota_sdk::transaction_builder::TransactionBuilder<iota_sdk::graphql_client::Client>,
-        ) -> T,
+        F: FnOnce(&iota_sdk::transaction_builder::TransactionBuilder<Arc<GraphQLClient>>) -> T,
     {
         let lock = self.0.read().expect("error reading from builder");
         f(&lock)
@@ -45,9 +42,7 @@ impl ClientTransactionBuilder {
 
     fn write<F, T>(&self, f: F) -> T
     where
-        F: FnOnce(
-            &mut iota_sdk::transaction_builder::TransactionBuilder<iota_sdk::graphql_client::Client>,
-        ) -> T,
+        F: FnOnce(&mut iota_sdk::transaction_builder::TransactionBuilder<Arc<GraphQLClient>>) -> T,
     {
         let mut lock = self.0.write().expect("error writing to builder");
         f(&mut lock)

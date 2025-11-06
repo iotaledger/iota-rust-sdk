@@ -76,7 +76,14 @@ pub enum Error {
     #[error(transparent)]
     Signature(iota_crypto::SignatureError),
     #[error(transparent)]
-    Client(iota_graphql_client::error::Error),
+    Client(Box<dyn std::error::Error + Send + Sync>),
     #[error("Failed to dry run transaction: {0}")]
     DryRun(String),
+}
+
+impl Error {
+    /// Create a client error
+    pub fn client<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
+        Self::Client(Box::new(e))
+    }
 }

@@ -3,7 +3,6 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
 
 
@@ -26,7 +25,7 @@ async def main():
         ),
     ]
 
-    builder = await TransactionBuilder(from_address).with_client(client)
+    builder = TransactionBuilder(from_address).with_client(client)
     builder.transfer_objects(
         to_address,
         objs_to_transfer,

@@ -3,7 +3,6 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
 
 
@@ -16,8 +15,8 @@ async def main():
         raise Exception("no staked iotas found")
     staked_iota = staked_iotas.data[0]
 
-    builder = await TransactionBuilder(staked_iota.owner().as_address()
-                                      ).with_client(client)
+    builder = TransactionBuilder(
+        staked_iota.owner().as_address()).with_client(client)
 
     builder.unstake(PtbArgument.object_id(staked_iota.object_id()))
 

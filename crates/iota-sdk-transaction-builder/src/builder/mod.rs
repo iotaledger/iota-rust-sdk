@@ -10,20 +10,17 @@ use std::{
 };
 
 use iota_crypto::{IotaSigner, simple::SimpleKeypair};
-use iota_graphql_client::{
-    Client, DryRunResult,
-    query_types::{ObjectFilter, ObjectRef, TransactionMetadata},
-};
+use iota_graphql_client::Client;
 use iota_types::{
-    Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
-    ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
-    TransactionV1, TypeTag,
+    Address, DryRunResult, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference,
+    Owner, ProgrammableTransaction, StructTag, Transaction, TransactionEffects,
+    TransactionExpiration, TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    PTBArgument, SharedMut, WaitForTx,
+    ClientMethods, PTBArgument, SharedMut, WaitForTx,
     builder::{
         gas_station::GasStationData,
         named_results::{NamedResult, NamedResults},
@@ -37,6 +34,7 @@ use crate::{
     },
 };
 
+pub(crate) mod client_methods;
 pub(crate) mod gas_station;
 mod named_results;
 /// Argument types for PTBs
@@ -207,7 +205,7 @@ impl TransactionBuilder {
     }
 
     /// Set the client to enable automatic object resolution.
-    pub fn with_client(self, client: Client) -> TransactionBuilder<Client> {
+    pub fn with_client<C>(self, client: C) -> TransactionBuilder<C> {
         TransactionBuilder {
             data: self.data,
             client,
@@ -891,13 +889,23 @@ impl<L> TransactionBuilder<(), L> {
     }
 }
 
+impl<L> TransactionBuilder<&Client, L> {
+    /// Get the client used by the builder.
+    pub fn get_client(&self) -> &Client {
+        self.client
+    }
+}
+
 impl<L> TransactionBuilder<Client, L> {
     /// Get the client used by the builder.
     pub fn get_client(&self) -> &Client {
         &self.client
     }
+}
 
-    /// Add gas coins that will be consumed. Optional.
+impl<C: ClientMethods, L> TransactionBuilder<C, L> {
+    /// Add gas coins that will be consumed. If no gas coins are provided, the
+    /// client will set a default list owned by the sender.
     ///
     /// # Example
     ///
@@ -965,16 +973,15 @@ impl<L> TransactionBuilder<Client, L> {
             for coin in self
                 .client
                 .objects(
-                    ObjectFilter {
-                        type_: Some(StructTag::new_gas_coin().to_string()),
-                        owner: Some(self.data.sponsor.unwrap_or(self.data.sender)),
-                        ..Default::default()
-                    },
-                    Default::default(),
+                    Some(StructTag::new_gas_coin().into()),
+                    Some(self.data.sponsor.unwrap_or(self.data.sender)),
+                    None,
+                    true,
+                    None,
+                    None,
                 )
                 .await
-                .map_err(Error::Client)?
-                .data
+                .map_err(Error::client)?
             {
                 if !unusable_object_ids.contains(&coin.object_id()) {
                     self.set_input(
@@ -991,7 +998,7 @@ impl<L> TransactionBuilder<Client, L> {
                         .client
                         .object(object_id, None)
                         .await
-                        .map_err(Error::Client)?
+                        .map_err(Error::client)?
                         .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
 
                     if input.is_gas {
@@ -1030,7 +1037,7 @@ impl<L> TransactionBuilder<Client, L> {
                         .client
                         .object(object_id, None)
                         .await
-                        .map_err(Error::Client)?
+                        .map_err(Error::client)?
                         .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
 
                     let input = match obj.owner() {
@@ -1076,7 +1083,7 @@ impl<L> TransactionBuilder<Client, L> {
                 .client
                 .reference_gas_price(None)
                 .await
-                .map_err(Error::Client)?
+                .map_err(Error::client)?
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
         Ok(TransactionV1 {
@@ -1096,64 +1103,43 @@ impl<L> TransactionBuilder<Client, L> {
         .into())
     }
 
-    /// Convert this builder into a transaction.
-    pub async fn finish(mut self) -> Result<Transaction, Error> {
+    async fn finish_internal(&mut self) -> Result<Transaction, Error> {
         let mut txn = self.resolve_ptb(true).await?;
         if self.data.gas_budget.is_none() {
-            let Transaction::V1(txn) = &mut txn;
-            let res = self
+            let budget = self
                 .client
-                .dry_run_tx_kind(&txn.kind, true, Default::default())
+                .estimate_tx_budget(&txn)
                 .await
-                .map_err(Error::Client)?;
-            if let Some(err) = res.error {
-                return Err(Error::DryRun(err));
-            }
-
-            txn.gas_payment.budget = res
-                .effects
-                .ok_or_else(|| Error::MissingGasBudget)?
-                .gas_summary()
-                .gas_used();
+                .map_err(Error::client)?
+                .ok_or(Error::MissingGasBudget)?;
+            let Transaction::V1(txn) = &mut txn;
+            txn.gas_payment.budget = budget
         }
 
         Ok(txn)
     }
 
+    /// Convert this builder into a transaction.
+    pub async fn finish(mut self) -> Result<Transaction, Error> {
+        self.finish_internal().await
+    }
+
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
-        let Transaction::V1(txn) = &txn;
-        if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
-            return Err(Error::DryRun(
-                "gas coins were provided without a gas budget".to_owned(),
-            ));
+        {
+            let Transaction::V1(txn) = &txn;
+            if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
+                return Err(Error::DryRun(
+                    "gas coins were provided without a gas budget".to_owned(),
+                ));
+            }
         }
-        let gas_objects = txn
-            .gas_payment
-            .objects
-            .iter()
-            .map(|r| ObjectRef {
-                address: r.object_id,
-                digest: r.digest.to_base58(),
-                version: r.version,
-            })
-            .collect::<Vec<_>>();
         let res = self
             .client
-            .dry_run_tx_kind(
-                &txn.kind,
-                skip_checks,
-                TransactionMetadata {
-                    gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
-                    gas_budget: (txn.gas_payment.budget != 0).then_some(txn.gas_payment.budget),
-                    gas_price: Some(txn.gas_payment.price),
-                    gas_sponsor: Some(txn.gas_payment.owner),
-                    sender: Some(txn.sender),
-                },
-            )
+            .dry_run_tx(&txn, skip_checks)
             .await
-            .map_err(Error::Client)?;
+            .map_err(Error::client)?;
         Ok(res)
     }
 
@@ -1167,45 +1153,43 @@ impl<L> TransactionBuilder<Client, L> {
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
         let gas_station_data = self.data.gas_station_data.take();
-        let client = self.client.clone();
-        let mut txn = self.finish().await?;
+        let mut txn = self.finish_internal().await?;
 
         Ok(if let Some(gas_station_data) = gas_station_data {
             let digest = gas_station_data.execute_txn(&mut txn, keypair).await?;
             if let Some(wait_for) = wait_for {
-                client
-                    .wait_for_tx(digest, wait_for, None)
+                self.client
+                    .wait_for_tx(digest, wait_for)
                     .await
-                    .map_err(Error::Client)?;
+                    .map_err(Error::client)?;
             }
-            client
+            self.client
                 .transaction_effects(digest)
                 .await
-                .map_err(Error::Client)?
+                .map_err(Error::client)?
                 .ok_or_else(|| Error::MissingTransaction(digest))?
         } else {
-            client
+            self.client
                 .execute_tx(
                     &[keypair.sign_transaction(&txn).map_err(Error::Signature)?],
                     &txn,
                     wait_for,
                 )
                 .await
-                .map_err(Error::Client)?
+                .map_err(Error::client)?
         })
     }
 
     /// Execute the transaction with a sponsor keypair and optionally wait for
     /// finalization.
     pub async fn execute_with_sponsor(
-        self,
+        mut self,
         keypair: &SimpleKeypair,
         sponsor_keypair: &SimpleKeypair,
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
-        let client = self.client.clone();
-        let txn = self.finish().await?;
+        let txn = self.finish_internal().await?;
 
         let mut signatures = vec![keypair.sign_transaction(&txn).map_err(Error::Signature)?];
         signatures.push(
@@ -1214,10 +1198,10 @@ impl<L> TransactionBuilder<Client, L> {
                 .map_err(Error::Signature)?,
         );
 
-        client
+        self.client
             .execute_tx(&signatures, &txn, wait_for)
             .await
-            .map_err(Error::Client)
+            .map_err(Error::client)
     }
 }
 
@@ -1265,10 +1249,10 @@ impl TransactionBuilder<(), Publish> {
     }
 }
 
-impl TransactionBuilder<Client, Publish> {
+impl<C: ClientMethods> TransactionBuilder<C, Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
-    pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder<Client> {
+    pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder<C> {
         let cap = self.arg();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])

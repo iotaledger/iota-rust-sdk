@@ -3,7 +3,6 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
 
 
@@ -24,7 +23,7 @@ async def main():
 
     client = GraphQlClient.new_localnet()
 
-    builder = await TransactionBuilder(sender_address).with_client(client)
+    builder = TransactionBuilder(sender_address).with_client(client)
     builder.send_iota(recipient_address, PtbArgument.u64(amount))
     txn = await builder.finish()
 
