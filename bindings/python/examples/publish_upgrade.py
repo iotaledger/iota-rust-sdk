@@ -76,8 +76,7 @@ async def main():
 
     # Sign and execute the transaction (publish the package)
     print("> Publishing package:")
-    sig = UserSignature.new_simple(
-        private_key.try_sign_simple(tx.signing_digest()))
+    sig = private_key.sign_transaction(tx)
     effects = await client.execute_tx([sig], tx, WaitForTx.FINALIZED)
     print("Success")
 
@@ -160,8 +159,7 @@ async def main():
 
     # Sign and execute the transaction (upgrade the package)
     print("> Upgrading package:")
-    signature = private_key.try_sign_simple(tx.signing_digest())
-    sig = UserSignature.new_simple(signature)
+    sig = private_key.sign_transaction(tx)
     effects = await client.execute_tx([sig], tx)
     print("Success")
 

@@ -3249,6 +3249,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message()
+	})
+	if checksum != 59851 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction()
+	})
+	if checksum != 4951 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32()
 	})
 	if checksum != 64514 {
@@ -5166,6 +5184,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message()
+	})
+	if checksum != 53577 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction()
+	})
+	if checksum != 34208 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32()
 	})
 	if checksum != 60488 {
@@ -5369,6 +5405,24 @@ func uniffiCheckChecksums() {
 	if checksum != 20973 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message()
+	})
+	if checksum != 113 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction()
+	})
+	if checksum != 1687 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5580,6 +5634,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message()
+	})
+	if checksum != 2940 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction()
+	})
+	if checksum != 35221 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32()
 	})
 	if checksum != 4776 {
@@ -5621,6 +5693,15 @@ func uniffiCheckChecksums() {
 	if checksum != 52266 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user()
+	})
+	if checksum != 17485 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -13993,6 +14074,10 @@ func (_ FfiDestroyerDigest) Destroy(value *Digest) {
 type Ed25519PrivateKeyInterface interface {
 	PublicKey() *Ed25519PublicKey
 	Scheme() SignatureScheme
+	// Sign a personal message and return a UserSignature.
+	SignPersonalMessage(message *PersonalMessage) (*UserSignature, error)
+	// Sign a transaction and return a UserSignature.
+	SignTransaction(transaction *Transaction) (*UserSignature, error)
 	// Encode this private key as `flag || privkey` in Bech32 starting with
 	// "iotaprivkey" to a string.
 	ToBech32() (string, error)
@@ -14117,6 +14202,38 @@ func (_self *Ed25519PrivateKey) Scheme() SignatureScheme {
 		_pointer,_uniffiStatus),
 	}
 	}))
+}
+
+// Sign a personal message and return a UserSignature.
+func (_self *Ed25519PrivateKey) SignPersonalMessage(message *PersonalMessage) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_personal_message(
+		_pointer,FfiConverterPersonalMessageINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Sign a transaction and return a UserSignature.
+func (_self *Ed25519PrivateKey) SignTransaction(transaction *Transaction) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_transaction(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(transaction),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 // Encode this private key as `flag || privkey` in Bech32 starting with
@@ -22668,6 +22785,10 @@ func (_ FfiDestroyerPublish) Destroy(value *Publish) {
 type Secp256k1PrivateKeyInterface interface {
 	PublicKey() *Secp256k1PublicKey
 	Scheme() SignatureScheme
+	// Sign a personal message and return a UserSignature.
+	SignPersonalMessage(message *PersonalMessage) (*UserSignature, error)
+	// Sign a transaction and return a UserSignature.
+	SignTransaction(transaction *Transaction) (*UserSignature, error)
 	// Encode this private key as `flag || privkey` in Bech32 starting with
 	// "iotaprivkey" to a string.
 	ToBech32() (string, error)
@@ -22792,6 +22913,38 @@ func (_self *Secp256k1PrivateKey) Scheme() SignatureScheme {
 		_pointer,_uniffiStatus),
 	}
 	}))
+}
+
+// Sign a personal message and return a UserSignature.
+func (_self *Secp256k1PrivateKey) SignPersonalMessage(message *PersonalMessage) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(
+		_pointer,FfiConverterPersonalMessageINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Sign a transaction and return a UserSignature.
+func (_self *Secp256k1PrivateKey) SignTransaction(transaction *Transaction) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(transaction),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 // Encode this private key as `flag || privkey` in Bech32 starting with
@@ -23534,6 +23687,10 @@ type Secp256r1PrivateKeyInterface interface {
 	// Get the public key corresponding to this private key.
 	PublicKey() *Secp256r1PublicKey
 	Scheme() SignatureScheme
+	// Sign a personal message and return a UserSignature.
+	SignPersonalMessage(message *PersonalMessage) (*UserSignature, error)
+	// Sign a transaction and return a UserSignature.
+	SignTransaction(transaction *Transaction) (*UserSignature, error)
 	// Encode this private key as `flag || privkey` in Bech32 starting with
 	// "iotaprivkey" to a string.
 	ToBech32() (string, error)
@@ -23663,6 +23820,38 @@ func (_self *Secp256r1PrivateKey) Scheme() SignatureScheme {
 		_pointer,_uniffiStatus),
 	}
 	}))
+}
+
+// Sign a personal message and return a UserSignature.
+func (_self *Secp256r1PrivateKey) SignPersonalMessage(message *PersonalMessage) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
+		_pointer,FfiConverterPersonalMessageINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Sign a transaction and return a UserSignature.
+func (_self *Secp256r1PrivateKey) SignTransaction(transaction *Transaction) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(transaction),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 // Encode this private key as `flag || privkey` in Bech32 starting with
@@ -24407,6 +24596,10 @@ func (_ FfiDestroyerSecp256r1VerifyingKey) Destroy(value *Secp256r1VerifyingKey)
 type SimpleKeypairInterface interface {
 	PublicKey() *MultisigMemberPublicKey
 	Scheme() SignatureScheme
+	// Sign a personal message and return a UserSignature.
+	SignPersonalMessage(message *PersonalMessage) (*UserSignature, error)
+	// Sign a transaction and return a UserSignature.
+	SignTransaction(transaction *Transaction) (*UserSignature, error)
 	// Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
 	// "iotaprivkey" to a string. Note that the pubkey is not encoded.
 	ToBech32() (string, error)
@@ -24417,6 +24610,7 @@ type SimpleKeypairInterface interface {
 	// Serialize this private key as DER-encoded PKCS#8
 	ToPem() (string, error)
 	TrySign(message []byte) (*SimpleSignature, error)
+	TrySignUser(message []byte) (*UserSignature, error)
 	VerifyingKey() *SimpleVerifyingKey
 }
 type SimpleKeypair struct {
@@ -24519,6 +24713,38 @@ func (_self *SimpleKeypair) Scheme() SignatureScheme {
 	}))
 }
 
+// Sign a personal message and return a UserSignature.
+func (_self *SimpleKeypair) SignPersonalMessage(message *PersonalMessage) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleKeypair")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(
+		_pointer,FfiConverterPersonalMessageINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Sign a transaction and return a UserSignature.
+func (_self *SimpleKeypair) SignTransaction(transaction *Transaction) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleKeypair")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(transaction),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
 // Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
 // "iotaprivkey" to a string. Note that the pubkey is not encoded.
 func (_self *SimpleKeypair) ToBech32() (string, error) {
@@ -24598,6 +24824,21 @@ func (_self *SimpleKeypair) TrySign(message []byte) (*SimpleSignature, error) {
 			return _uniffiDefaultValue, _uniffiErr
 		} else {
 			return FfiConverterSimpleSignatureINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *SimpleKeypair) TrySignUser(message []byte) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleKeypair")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *UserSignature
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterUserSignatureINSTANCE.Lift(_uniffiRV), nil
 		}
 }
 

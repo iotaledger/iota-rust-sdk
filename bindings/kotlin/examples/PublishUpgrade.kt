@@ -72,8 +72,7 @@ fun main() = runBlocking {
 
         // Sign and execute the transaction (publish the package)
         println("> Publishing package:")
-        val sigPublish =
-            UserSignature.newSimple(privateKey.trySignSimple(txPublish.signingDigest()))
+        val sigPublish = privateKey.signTransaction(txPublish)
         val effectsPublish = client.executeTx(listOf(sigPublish), txPublish, WaitForTx.FINALIZED)
         println("Success")
 
@@ -156,8 +155,7 @@ fun main() = runBlocking {
 
         // Sign and execute the transaction (upgrade the package)
         println("> Upgrading package:")
-        val sigUpgrade =
-            UserSignature.newSimple(privateKey.trySignSimple(txUpgrade.signingDigest()))
+        val sigUpgrade = privateKey.signTransaction(txUpgrade)
         val effectsUpgrade = client.executeTx(listOf(sigUpgrade), txUpgrade)
         println("Success")
 

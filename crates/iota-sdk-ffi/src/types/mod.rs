@@ -22,7 +22,7 @@ pub mod type_tag;
 pub mod validator;
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct PersonalMessage(iota_sdk::types::PersonalMessage<'static>);
+pub struct PersonalMessage(pub(crate) iota_sdk::types::PersonalMessage<'static>);
 
 #[uniffi::export]
 impl PersonalMessage {
