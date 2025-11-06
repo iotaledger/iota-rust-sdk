@@ -16,10 +16,7 @@ use crate::{
 };
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Name {
     // Labels of the name, in reverse order
     labels: Vec<String>,

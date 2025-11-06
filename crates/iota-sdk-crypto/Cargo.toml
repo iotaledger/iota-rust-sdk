@@ -38,8 +38,6 @@ zklogin = [
   "dep:base64ct",
   "dep:bnum",
   "dep:itertools",
-  "dep:serde",
-  "dep:serde_derive",
   "dep:serde_json",
   "signature/std",
 ]
@@ -85,8 +83,6 @@ ark-std = { version = "0.4.0", optional = true }
 base64ct = { workspace = true, features = ["alloc"], optional = true }
 bnum = { workspace = true, optional = true }
 itertools = { workspace = true, optional = true }
-serde = { workspace = true, optional = true }
-serde_derive = { workspace = true, optional = true }
 serde_json = { workspace = true, optional = true }
 
 # pkcs8 der and pem support
