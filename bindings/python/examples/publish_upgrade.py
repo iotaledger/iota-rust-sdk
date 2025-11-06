@@ -79,7 +79,8 @@ async def main():
 
     # Sign and execute the transaction (publish the package)
     print("> Publishing package:")
-    sig = UserSignature.new_simple(private_key.try_sign_simple(tx.signing_digest()))
+    sig = UserSignature.new_simple(
+        private_key.try_sign_simple(tx.signing_digest()))
     effects = await client.execute_tx([sig], tx, WaitForTx.FINALIZED)
     print("Success")
 
@@ -143,7 +144,10 @@ async def main():
         Address.framework(),
         Identifier("package"),
         Identifier("commit_upgrade"),
-        [PtbArgument.object_id(upgrade_cap), PtbArgument.res("upgrade_receipt")],
+        [
+            PtbArgument.object_id(upgrade_cap),
+            PtbArgument.res("upgrade_receipt")
+        ],
     )
 
     tx = await builder.finish()

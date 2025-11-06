@@ -11,11 +11,9 @@ async def main():
     client = GraphQlClient.new_devnet()
 
     from_address = Address.from_hex(
-        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
-    )
+        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
     to_address = Address.from_hex(
-        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
-    )
+        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
     objs_to_transfer = [
         PtbArgument.object_id_from_hex(
             "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
