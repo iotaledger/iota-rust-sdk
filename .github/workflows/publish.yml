@@ -27,7 +27,7 @@ jobs:
           cargo login ${{ secrets.CRATES_IO_TOKEN }}
 
           echo "Publishing $pkg at version $version"
-          cargo release publish -p "$pkg" --all-features --no-confirm --execute
+          cargo release publish -p "$pkg" --all-features --allow-branch "*" --no-confirm --execute
 
           echo "Setting owners of $pkg"
-          cargo release owner -p "$pkg" --no-confirm --execute
+          cargo release owner -p "$pkg" --allow-branch "*" --no-confirm --execute
