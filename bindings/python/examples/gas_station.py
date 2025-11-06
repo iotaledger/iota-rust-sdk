@@ -1,9 +1,9 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-import asyncio
-
 from lib.iota_sdk_ffi import *
+
+import asyncio
 
 
 async def main():
@@ -14,7 +14,7 @@ async def main():
     sender = keypair.public_key().derive_address()
     simple_key = SimpleKeypair.from_ed25519(keypair)
 
-    builder = await TransactionBuilder.init(sender, client)
+    builder = TransactionBuilder(sender).with_client(client)
 
     builder.move_call(
         Address.std_lib(),

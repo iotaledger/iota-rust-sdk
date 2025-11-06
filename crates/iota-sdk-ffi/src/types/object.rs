@@ -167,6 +167,11 @@ impl Object {
         self.0.object_id().into()
     }
 
+    /// Return this object's reference
+    pub fn object_ref(&self) -> ObjectReference {
+        self.0.object_ref().into()
+    }
+
     /// Return this object's version
     pub fn version(&self) -> Version {
         self.0.version()

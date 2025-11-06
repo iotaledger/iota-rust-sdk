@@ -41,6 +41,8 @@ pub enum Error {
     MissingInitialSharedVersion(ObjectId),
     #[error("Missing pure value")]
     MissingPureValue,
+    #[error("Missing gas station data")]
+    MissingGasStationData,
     #[error("Unknown shared object mutability for object {0}")]
     SharedObjectMutability(ObjectId),
     #[error("Unsupported literal")]

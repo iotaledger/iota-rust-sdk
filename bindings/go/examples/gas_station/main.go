@@ -25,7 +25,7 @@ func main() {
 	sender := keypair.PublicKey().DeriveAddress()
 	simpleKey := sdk.SimpleKeypairFromEd25519(keypair)
 
-	builder := sdk.TransactionBuilderInit(sender, client)
+	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
 
 	package_id := sdk.AddressStdLib()
 	module_name := identifier("u64")

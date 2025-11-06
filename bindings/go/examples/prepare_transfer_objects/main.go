@@ -38,7 +38,7 @@ func main() {
 		objIdFromHex("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9"),
 	}
 
-	builder := sdk.TransactionBuilderInit(fromAddress, client)
+	builder := sdk.NewTransactionBuilder(fromAddress).WithClient(client)
 	builder.TransferObjects(toAddress, objsToTransfer)
 
 	txn, err := builder.Finish()

@@ -2925,6 +2925,195 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_dry_run()
+	})
+	if checksum != 10983 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_dry_run: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute()
+	})
+	if checksum != 45165 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor()
+	})
+	if checksum != 64410 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_expiration()
+	})
+	if checksum != 32958 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_expiration: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_finish()
+	})
+	if checksum != 56677 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_finish: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas()
+	})
+	if checksum != 522 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_budget()
+	})
+	if checksum != 27427 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_budget: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_price()
+	})
+	if checksum != 56003 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_price: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_station_sponsor()
+	})
+	if checksum != 25572 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_station_sponsor: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec()
+	})
+	if checksum != 4858 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins()
+	})
+	if checksum != 43478 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call()
+	})
+	if checksum != 13617 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish()
+	})
+	if checksum != 25909 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins()
+	})
+	if checksum != 65187 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota()
+	})
+	if checksum != 65011 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins()
+	})
+	if checksum != 2932 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor()
+	})
+	if checksum != 44990 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_stake()
+	})
+	if checksum != 9961 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_stake: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_transfer_objects()
+	})
+	if checksum != 23790 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_transfer_objects: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_unstake()
+	})
+	if checksum != 40181 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_unstake: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_upgrade()
+	})
+	if checksum != 59977 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_upgrade: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_coin_balance()
 	})
 	if checksum != 29928 {
@@ -4572,6 +4761,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_object_object_ref()
+	})
+	if checksum != 13587 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_object_ref: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_object_object_type()
 	})
 	if checksum != 1843 {
@@ -5823,29 +6021,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run()
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station()
 	})
-	if checksum != 11138 {
+	if checksum != 6268 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute()
-	})
-	if checksum != 45882 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor()
-	})
-	if checksum != 45688 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5861,7 +6041,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish()
 	})
-	if checksum != 32200 {
+	if checksum != 39582 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish: UniFFI API checksum mismatch")
 	}
@@ -5870,7 +6050,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas()
 	})
-	if checksum != 26787 {
+	if checksum != 23371 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas: UniFFI API checksum mismatch")
 	}
@@ -5960,7 +6140,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins()
 	})
-	if checksum != 25229 {
+	if checksum != 17747 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins: UniFFI API checksum mismatch")
 	}
@@ -6008,6 +6188,15 @@ func uniffiCheckChecksums() {
 	if checksum != 14493 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client()
+	})
+	if checksum != 26579 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8271,6 +8460,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref()
+	})
+	if checksum != 24215 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option()
 	})
 	if checksum != 37559 {
@@ -9270,11 +9468,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new()
 	})
-	if checksum != 29935 {
+	if checksum != 35216 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -12630,6 +12828,504 @@ func (c FfiConverterCircomG2) Write(writer io.Writer, value *CircomG2) {
 type FfiDestroyerCircomG2 struct {}
 
 func (_ FfiDestroyerCircomG2) Destroy(value *CircomG2) {
+		value.Destroy()
+}
+
+
+
+// A builder for creating transactions which uses a GraphQL client to
+// automatically resolve inputs. Use `finish` to finalize the transaction data.
+type ClientTransactionBuilderInterface interface {
+	// Dry run the transaction.
+	DryRun(skipChecks bool) (DryRunResult, error)
+	// Execute the transaction and optionally wait for finalization.
+	Execute(keypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
+	// Execute the transaction and optionally wait for finalization.
+	ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
+	// Set the expiration of the transaction to be a specific epoch.
+	Expiration(epoch uint64) *ClientTransactionBuilder
+	// Convert this builder into a transaction.
+	Finish() (*Transaction, error)
+	// Add gas coins that will be consumed. Optional.
+	Gas(objectIds []*ObjectId) *ClientTransactionBuilder
+	// Set the gas budget for the transaction.
+	GasBudget(budget uint64) *ClientTransactionBuilder
+	// Set the gas price for the transaction.
+	GasPrice(price uint64) *ClientTransactionBuilder
+	// Set the gas station sponsor.
+	GasStationSponsor(url string, duration *time.Duration, headers *map[string][]string) *ClientTransactionBuilder
+	// Make a move vector from a list of elements. The elements must all be of
+	// the type indicated by `type_tag`.
+	MakeMoveVec(elements []*MoveArg, typeTag *TypeTag, name string) *ClientTransactionBuilder
+	// Merge multiple coins into one.
+	//
+	// This method combines the balances of multiple coins of the same coin
+	// type into a single coin. The `primary_coin` will receive the balances
+	// from all `consumed_coins`. After merging, the `consumed_coins` will
+	// be consumed and no longer exist.
+	MergeCoins(primaryCoin *PtbArgument, consumedCoins []*PtbArgument) *ClientTransactionBuilder
+	// Call a Move function with the given arguments.
+	MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, names []string) *ClientTransactionBuilder
+	// Publish a list of modules with the given dependencies. The result
+	// assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
+	// Move type. Note that the upgrade capability needs to be handled
+	// after this call:
+	// - transfer it to the transaction sender or another address
+	// - burn it
+	// - wrap it for access control
+	// - discard the it to make a package immutable
+	//
+	// The arguments required for this command are:
+	// - `modules`: is the modules' bytecode to be published
+	// - `dependencies`: is the list of IDs of the transitive dependencies of
+	// the package
+	Publish(packageData *MovePackageData, upgradeCapName string) *ClientTransactionBuilder
+	// Transfer some coins to a recipient address. If multiple coins are
+	// provided then they will be merged.
+	//
+	// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+	// equals 1_000_000_000 NANOS.
+	// If `amount` is provided, that amount is split from the provided coins
+	// and sent.
+	// If `amount` is `None`, the entire coins are transferred.
+	//
+	// All provided coins must have the same coin type. Mixing coins of
+	// different types will result in an error.
+	//
+	// If you intend to transfer all provided coins to another address in a
+	// single transaction, consider using
+	// `TransactionBuilder::transfer_objects()` instead.
+	SendCoins(coins []*PtbArgument, recipient *Address, amount **PtbArgument) *ClientTransactionBuilder
+	// Send IOTA to a recipient address.
+	//
+	// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+	// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+	// sent.
+	SendIota(recipient *Address, amount *PtbArgument) *ClientTransactionBuilder
+	// Split a coin into many.
+	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *ClientTransactionBuilder
+	// Set the sponsor of the transaction.
+	Sponsor(sponsor *Address) *ClientTransactionBuilder
+	// Add stake to a validator's staking pool.
+	//
+	// This is a high-level function which will split the provided stake amount
+	// from the gas coin and then stake using the resulting coin.
+	Stake(stake *PtbArgument, validatorAddress *Address) *ClientTransactionBuilder
+	// Transfer a list of objects to the given address, without producing any
+	// result.
+	TransferObjects(recipient *Address, objects []*PtbArgument) *ClientTransactionBuilder
+	// Withdraw stake from a validator's staking pool.
+	Unstake(stakedIota *PtbArgument) *ClientTransactionBuilder
+	// Upgrade a Move package.
+	//
+	// - `modules`: is the modules' bytecode for the modules to be published
+	// - `dependencies`: is the list of IDs of the transitive dependencies of
+	// the package to be upgraded
+	// - `package`: is the ID of the current package being upgraded
+	// - `ticket`: is the upgrade ticket
+	//
+	// To get the ticket, you have to call the
+	// `0x2::package::authorize_upgrade` function, and pass the package
+	// ID, the upgrade policy, and package digest.
+	Upgrade(packageId *ObjectId, packageData *MovePackageData, upgradeTicket *PtbArgument, name *string) *ClientTransactionBuilder
+}
+// A builder for creating transactions which uses a GraphQL client to
+// automatically resolve inputs. Use `finish` to finalize the transaction data.
+type ClientTransactionBuilder struct {
+	ffiObject FfiObject
+}
+
+
+
+
+// Dry run the transaction.
+func (_self *ClientTransactionBuilder) DryRun(skipChecks bool) (DryRunResult, error) {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) DryRunResult {
+			return FfiConverterDryRunResultINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_dry_run(
+		_pointer,FfiConverterBoolINSTANCE.Lower(skipChecks)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Execute the transaction and optionally wait for finalization.
+func (_self *ClientTransactionBuilder) Execute(keypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error) {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *TransactionEffects {
+			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(
+		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Execute the transaction and optionally wait for finalization.
+func (_self *ClientTransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error) {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *TransactionEffects {
+			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(
+		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterSimpleKeypairINSTANCE.Lower(sponsorKeypair), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Set the expiration of the transaction to be a specific epoch.
+func (_self *ClientTransactionBuilder) Expiration(epoch uint64) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_expiration(
+		_pointer,FfiConverterUint64INSTANCE.Lower(epoch),_uniffiStatus)
+	}))
+}
+
+// Convert this builder into a transaction.
+func (_self *ClientTransactionBuilder) Finish() (*Transaction, error) {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *Transaction {
+			return FfiConverterTransactionINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_finish(
+		_pointer,),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Add gas coins that will be consumed. Optional.
+func (_self *ClientTransactionBuilder) Gas(objectIds []*ObjectId) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas(
+		_pointer,FfiConverterSequenceObjectIdINSTANCE.Lower(objectIds),_uniffiStatus)
+	}))
+}
+
+// Set the gas budget for the transaction.
+func (_self *ClientTransactionBuilder) GasBudget(budget uint64) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_budget(
+		_pointer,FfiConverterUint64INSTANCE.Lower(budget),_uniffiStatus)
+	}))
+}
+
+// Set the gas price for the transaction.
+func (_self *ClientTransactionBuilder) GasPrice(price uint64) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_price(
+		_pointer,FfiConverterUint64INSTANCE.Lower(price),_uniffiStatus)
+	}))
+}
+
+// Set the gas station sponsor.
+func (_self *ClientTransactionBuilder) GasStationSponsor(url string, duration *time.Duration, headers *map[string][]string) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_station_sponsor(
+		_pointer,FfiConverterStringINSTANCE.Lower(url), FfiConverterOptionalDurationINSTANCE.Lower(duration), FfiConverterOptionalMapStringSequenceStringINSTANCE.Lower(headers),_uniffiStatus)
+	}))
+}
+
+// Make a move vector from a list of elements. The elements must all be of
+// the type indicated by `type_tag`.
+func (_self *ClientTransactionBuilder) MakeMoveVec(elements []*MoveArg, typeTag *TypeTag, name string) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_make_move_vec(
+		_pointer,FfiConverterSequenceMoveArgINSTANCE.Lower(elements), FfiConverterTypeTagINSTANCE.Lower(typeTag), FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
+	}))
+}
+
+// Merge multiple coins into one.
+//
+// This method combines the balances of multiple coins of the same coin
+// type into a single coin. The `primary_coin` will receive the balances
+// from all `consumed_coins`. After merging, the `consumed_coins` will
+// be consumed and no longer exist.
+func (_self *ClientTransactionBuilder) MergeCoins(primaryCoin *PtbArgument, consumedCoins []*PtbArgument) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(primaryCoin), FfiConverterSequencePtbArgumentINSTANCE.Lower(consumedCoins),_uniffiStatus)
+	}))
+}
+
+// Call a Move function with the given arguments.
+func (_self *ClientTransactionBuilder) MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, names []string) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call(
+		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterIdentifierINSTANCE.Lower(module), FfiConverterIdentifierINSTANCE.Lower(function), FfiConverterSequencePtbArgumentINSTANCE.Lower(arguments), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterSequenceStringINSTANCE.Lower(names),_uniffiStatus)
+	}))
+}
+
+// Publish a list of modules with the given dependencies. The result
+// assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
+// Move type. Note that the upgrade capability needs to be handled
+// after this call:
+// - transfer it to the transaction sender or another address
+// - burn it
+// - wrap it for access control
+// - discard the it to make a package immutable
+//
+// The arguments required for this command are:
+// - `modules`: is the modules' bytecode to be published
+// - `dependencies`: is the list of IDs of the transitive dependencies of
+// the package
+func (_self *ClientTransactionBuilder) Publish(packageData *MovePackageData, upgradeCapName string) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_publish(
+		_pointer,FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterStringINSTANCE.Lower(upgradeCapName),_uniffiStatus)
+	}))
+}
+
+// Transfer some coins to a recipient address. If multiple coins are
+// provided then they will be merged.
+//
+// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+// equals 1_000_000_000 NANOS.
+// If `amount` is provided, that amount is split from the provided coins
+// and sent.
+// If `amount` is `None`, the entire coins are transferred.
+//
+// All provided coins must have the same coin type. Mixing coins of
+// different types will result in an error.
+//
+// If you intend to transfer all provided coins to another address in a
+// single transaction, consider using
+// `TransactionBuilder::transfer_objects()` instead.
+func (_self *ClientTransactionBuilder) SendCoins(coins []*PtbArgument, recipient *Address, amount **PtbArgument) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_coins(
+		_pointer,FfiConverterSequencePtbArgumentINSTANCE.Lower(coins), FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterOptionalPtbArgumentINSTANCE.Lower(amount),_uniffiStatus)
+	}))
+}
+
+// Send IOTA to a recipient address.
+//
+// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+// sent.
+func (_self *ClientTransactionBuilder) SendIota(recipient *Address, amount *PtbArgument) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota(
+		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterPtbArgumentINSTANCE.Lower(amount),_uniffiStatus)
+	}))
+}
+
+// Split a coin into many.
+func (_self *ClientTransactionBuilder) SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_split_coins(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(coin), FfiConverterSequencePtbArgumentINSTANCE.Lower(amounts), FfiConverterSequenceStringINSTANCE.Lower(names),_uniffiStatus)
+	}))
+}
+
+// Set the sponsor of the transaction.
+func (_self *ClientTransactionBuilder) Sponsor(sponsor *Address) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_sponsor(
+		_pointer,FfiConverterAddressINSTANCE.Lower(sponsor),_uniffiStatus)
+	}))
+}
+
+// Add stake to a validator's staking pool.
+//
+// This is a high-level function which will split the provided stake amount
+// from the gas coin and then stake using the resulting coin.
+func (_self *ClientTransactionBuilder) Stake(stake *PtbArgument, validatorAddress *Address) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_stake(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(stake), FfiConverterAddressINSTANCE.Lower(validatorAddress),_uniffiStatus)
+	}))
+}
+
+// Transfer a list of objects to the given address, without producing any
+// result.
+func (_self *ClientTransactionBuilder) TransferObjects(recipient *Address, objects []*PtbArgument) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_transfer_objects(
+		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterSequencePtbArgumentINSTANCE.Lower(objects),_uniffiStatus)
+	}))
+}
+
+// Withdraw stake from a validator's staking pool.
+func (_self *ClientTransactionBuilder) Unstake(stakedIota *PtbArgument) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_unstake(
+		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(stakedIota),_uniffiStatus)
+	}))
+}
+
+// Upgrade a Move package.
+//
+// - `modules`: is the modules' bytecode for the modules to be published
+// - `dependencies`: is the list of IDs of the transitive dependencies of
+// the package to be upgraded
+// - `package`: is the ID of the current package being upgraded
+// - `ticket`: is the upgrade ticket
+//
+// To get the ticket, you have to call the
+// `0x2::package::authorize_upgrade` function, and pass the package
+// ID, the upgrade policy, and package digest.
+func (_self *ClientTransactionBuilder) Upgrade(packageId *ObjectId, packageData *MovePackageData, upgradeTicket *PtbArgument, name *string) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_upgrade(
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(packageId), FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterPtbArgumentINSTANCE.Lower(upgradeTicket), FfiConverterOptionalStringINSTANCE.Lower(name),_uniffiStatus)
+	}))
+}
+func (object *ClientTransactionBuilder) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterClientTransactionBuilder struct {}
+
+var FfiConverterClientTransactionBuilderINSTANCE = FfiConverterClientTransactionBuilder{}
+
+
+func (c FfiConverterClientTransactionBuilder) Lift(pointer unsafe.Pointer) *ClientTransactionBuilder {
+	result := &ClientTransactionBuilder {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_clienttransactionbuilder(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_clienttransactionbuilder(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ClientTransactionBuilder).Destroy)
+	return result
+}
+
+func (c FfiConverterClientTransactionBuilder) Read(reader io.Reader) *ClientTransactionBuilder {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterClientTransactionBuilder) Lower(value *ClientTransactionBuilder) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterClientTransactionBuilder) Write(writer io.Writer, value *ClientTransactionBuilder) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerClientTransactionBuilder struct {}
+
+func (_ FfiDestroyerClientTransactionBuilder) Destroy(value *ClientTransactionBuilder) {
 		value.Destroy()
 }
 
@@ -19944,6 +20640,8 @@ type ObjectInterface interface {
 	Digest() *Digest
 	// Return this object's id
 	ObjectId() *ObjectId
+	// Return this object's reference
+	ObjectRef() ObjectReference
 	// Return this object's type
 	ObjectType() *ObjectType
 	// Return this object's owner
@@ -20054,6 +20752,18 @@ func (_self *Object) ObjectId() *ObjectId {
 	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_object_object_id(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+// Return this object's reference
+func (_self *Object) ObjectRef() ObjectReference {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectReferenceINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_object_object_ref(
+		_pointer,_uniffiStatus),
+	}
 	}))
 }
 
@@ -20997,6 +21707,12 @@ func PtbArgumentObjectIdFromHex(hex string) (*PtbArgument, error) {
 		} else {
 			return FfiConverterPtbArgumentINSTANCE.Lift(_uniffiRV), nil
 		}
+}
+
+func PtbArgumentObjectRef(id ObjectReference) *PtbArgument {
+	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_ref(FfiConverterObjectReferenceINSTANCE.Lower(id),_uniffiStatus)
+	}))
 }
 
 func PtbArgumentOption(value **MoveArg) *PtbArgument {
@@ -25327,18 +26043,19 @@ func (_ FfiDestroyerTransaction) Destroy(value *Transaction) {
 // A builder for creating transactions. Use `finish` to finalize the
 // transaction data.
 type TransactionBuilderInterface interface {
-	// Dry run the transaction.
-	DryRun(skipChecks bool) (DryRunResult, error)
-	// Execute the transaction and optionally wait for finalization.
-	Execute(keypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
-	// Execute the transaction and optionally wait for finalization.
-	ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
+	// Execute the transaction using the gas station and return the JSON
+	// transaction effects. This will fail unless data is set with the
+	// `gas_station_sponsor` function.
+	//
+	// NOTE: These effects are not necessarily compatible with
+	// `TransactionEffects`
+	ExecuteWithGasStation(keypair *SimpleKeypair) (Value, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *TransactionBuilder
 	// Convert this builder into a transaction.
 	Finish() (*Transaction, error)
 	// Add gas coins that will be consumed. Optional.
-	Gas(objectIds []*ObjectId) *TransactionBuilder
+	Gas(objectRefs []ObjectReference) *TransactionBuilder
 	// Set the gas budget for the transaction.
 	GasBudget(budget uint64) *TransactionBuilder
 	// Set the gas price for the transaction.
@@ -25393,7 +26110,7 @@ type TransactionBuilderInterface interface {
 	// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
 	// sent.
 	SendIota(recipient *Address, amount *PtbArgument) *TransactionBuilder
-	// Split a coin into many.
+	// Split a coin by the provided amounts.
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
 	Sponsor(sponsor *Address) *TransactionBuilder
@@ -25419,45 +26136,30 @@ type TransactionBuilderInterface interface {
 	// `0x2::package::authorize_upgrade` function, and pass the package
 	// ID, the upgrade policy, and package digest.
 	Upgrade(packageId *ObjectId, packageData *MovePackageData, upgradeTicket *PtbArgument, name *string) *TransactionBuilder
+	WithClient(client *GraphQlClient) *ClientTransactionBuilder
 }
 // A builder for creating transactions. Use `finish` to finalize the
 // transaction data.
 type TransactionBuilder struct {
 	ffiObject FfiObject
 }
-
-
 // Create a new transaction builder and initialize its elements to default.
-func TransactionBuilderInit(sender *Address, client *GraphQlClient) *TransactionBuilder {
-	 res, _ :=uniffiRustCallAsync[error](
-        nil,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
-		},
-		// liftFn
-		func(ffi unsafe.Pointer) *TransactionBuilder {
-			return FfiConverterTransactionBuilderINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(FfiConverterAddressINSTANCE.Lower(sender), FfiConverterGraphQlClientINSTANCE.Lower(client)),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
-		},
-	)
-
-	return res 
+func NewTransactionBuilder(sender *Address) *TransactionBuilder {
+	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(FfiConverterAddressINSTANCE.Lower(sender),_uniffiStatus)
+	}))
 }
 
 
 
-// Dry run the transaction.
-func (_self *TransactionBuilder) DryRun(skipChecks bool) (DryRunResult, error) {
+
+// Execute the transaction using the gas station and return the JSON
+// transaction effects. This will fail unless data is set with the
+// `gas_station_sponsor` function.
+//
+// NOTE: These effects are not necessarily compatible with
+// `TransactionEffects`
+func (_self *TransactionBuilder) ExecuteWithGasStation(keypair *SimpleKeypair) (Value, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -25470,11 +26172,11 @@ func (_self *TransactionBuilder) DryRun(skipChecks bool) (DryRunResult, error) {
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) DryRunResult {
-			return FfiConverterDryRunResultINSTANCE.Lift(ffi)
+		func(ffi RustBufferI) Value {
+			return FfiConverterTypeValueINSTANCE.Lift(ffi)
 		},
-		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run(
-		_pointer,FfiConverterBoolINSTANCE.Lower(skipChecks)),
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
+		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -25482,66 +26184,6 @@ func (_self *TransactionBuilder) DryRun(skipChecks bool) (DryRunResult, error) {
 		// freeFn
 		func (handle C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
-		},
-	)
-
-	return res, err 
-}
-
-// Execute the transaction and optionally wait for finalization.
-func (_self *TransactionBuilder) Execute(keypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error) {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
-	defer _self.ffiObject.decrementPointer()
-	 res, err :=uniffiRustCallAsync[SdkFfiError](
-        FfiConverterSdkFfiErrorINSTANCE,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
-		},
-		// liftFn
-		func(ffi unsafe.Pointer) *TransactionEffects {
-			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
-		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
-		},
-	)
-
-	return res, err 
-}
-
-// Execute the transaction and optionally wait for finalization.
-func (_self *TransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error) {
-	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
-	defer _self.ffiObject.decrementPointer()
-	 res, err :=uniffiRustCallAsync[SdkFfiError](
-        FfiConverterSdkFfiErrorINSTANCE,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
-		},
-		// liftFn
-		func(ffi unsafe.Pointer) *TransactionEffects {
-			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(
-		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterSimpleKeypairINSTANCE.Lower(sponsorKeypair), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
 		},
 	)
 
@@ -25562,39 +26204,25 @@ func (_self *TransactionBuilder) Expiration(epoch uint64) *TransactionBuilder {
 func (_self *TransactionBuilder) Finish() (*Transaction, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
-	 res, err :=uniffiRustCallAsync[SdkFfiError](
-        FfiConverterSdkFfiErrorINSTANCE,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
-		},
-		// liftFn
-		func(ffi unsafe.Pointer) *Transaction {
-			return FfiConverterTransactionINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
-		_pointer,),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
-		},
-	)
-
-	return res, err 
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Transaction
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterTransactionINSTANCE.Lift(_uniffiRV), nil
+		}
 }
 
 // Add gas coins that will be consumed. Optional.
-func (_self *TransactionBuilder) Gas(objectIds []*ObjectId) *TransactionBuilder {
+func (_self *TransactionBuilder) Gas(objectRefs []ObjectReference) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(
-		_pointer,FfiConverterSequenceObjectIdINSTANCE.Lower(objectIds),_uniffiStatus)
+		_pointer,FfiConverterSequenceObjectReferenceINSTANCE.Lower(objectRefs),_uniffiStatus)
 	}))
 }
 
@@ -25724,7 +26352,7 @@ func (_self *TransactionBuilder) SendIota(recipient *Address, amount *PtbArgumen
 	}))
 }
 
-// Split a coin into many.
+// Split a coin by the provided amounts.
 func (_self *TransactionBuilder) SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
@@ -25795,6 +26423,15 @@ func (_self *TransactionBuilder) Upgrade(packageId *ObjectId, packageData *MoveP
 	return FfiConverterTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
 		_pointer,FfiConverterObjectIdINSTANCE.Lower(packageId), FfiConverterMovePackageDataINSTANCE.Lower(packageData), FfiConverterPtbArgumentINSTANCE.Lower(upgradeTicket), FfiConverterOptionalStringINSTANCE.Lower(name),_uniffiStatus)
+	}))
+}
+
+func (_self *TransactionBuilder) WithClient(client *GraphQlClient) *ClientTransactionBuilder {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
+		_pointer,FfiConverterGraphQlClientINSTANCE.Lower(client),_uniffiStatus)
 	}))
 }
 func (object *TransactionBuilder) Destroy() {

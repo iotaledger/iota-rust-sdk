@@ -5,6 +5,7 @@ from lib.iota_sdk_ffi import *
 
 import asyncio
 
+
 async def main():
     client = GraphQlClient.new_devnet()
     digest = Digest.from_base58("Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf")
@@ -17,6 +18,7 @@ async def main():
 
     transaction_data_effects = await client.transaction_data_effects(digest)
     print(f"Transaction Data Effects: `{transaction_data_effects}`\n")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
