@@ -288,7 +288,7 @@ mod tests {
     mod proptests {
         use test_strategy::proptest;
 
-        use super::*;
+        use super::super::Address;
 
         #[proptest]
         fn roundtrip_display_fromstr(address: Address) {
@@ -301,7 +301,7 @@ mod tests {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
-    use super::*;
+    use super::Address;
 
     #[test]
     fn hex_parsing() {

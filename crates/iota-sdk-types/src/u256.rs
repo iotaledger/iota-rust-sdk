@@ -77,7 +77,7 @@ mod tests {
         use proptest::prelude::*;
         use test_strategy::proptest;
 
-        use super::*;
+        use super::super::U256;
 
         #[proptest]
         fn dont_crash_on_large_inputs(

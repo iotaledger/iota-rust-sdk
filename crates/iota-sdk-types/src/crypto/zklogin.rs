@@ -660,7 +660,7 @@ mod tests {
         use proptest::prelude::*;
         use test_strategy::proptest;
 
-        use super::*;
+        use super::super::Bn254FieldElement;
 
         #[proptest]
         fn dont_crash_on_large_inputs(
