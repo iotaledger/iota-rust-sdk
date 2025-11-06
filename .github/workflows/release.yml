@@ -52,4 +52,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ env.TAG }}
           PKG: ${{ env.PKG }}
-        run: gh release create "$TAG" --title "$TAG" --draft --notes-file "crates/$PKG/CHANGELOG.md"
+        run: gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes-file "crates/$PKG/CHANGELOG.md"
