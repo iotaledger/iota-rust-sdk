@@ -34,6 +34,11 @@ if [ "$1" == "start" ]; then
     echo "Setting keypair in config..."
     sed -i.bak "s|<keypair>|$keyWithFlag|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
 
+    # Get host IP to update fullnode-url
+    HOST_IP=$(hostname -I | awk '{print $1}')
+    echo "Updating fullnode-url to use host IP: $HOST_IP"
+    sed -i "s|http://localhost:9000|http://$HOST_IP:9000|g" "$CONFIG_PATH"
+
     echo "Waiting for network to start and requesting faucet coins..."
     success=false
     for i in {1..30}; do
@@ -57,7 +62,7 @@ if [ "$1" == "start" ]; then
     success=false
     for i in {1..30}; do
         sleep 1
-        if curl --silent --fail http://0.0.0.0:9527/version >/dev/null 2>&1; then
+        if curl --silent --fail http://localhost:9527/version >/dev/null 2>&1; then
             success=true
             break
         fi
