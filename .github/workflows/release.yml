@@ -43,9 +43,9 @@ jobs:
       - name: Set package and tag from ref
         if: github.event.pull_request.merged == true
         run: |
-          tag=$(echo "${{ github.base_ref }}" | sed -nr 's|release/(.*)/(.*)|\1-v\2|p')
-          pkg=$(echo "${{ github.base_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
-          version=$(echo "${{ github.base_ref }}" | sed -nr 's|release/.*/(.*)|\1|p')
+          tag=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/(.*)|\1-v\2|p')
+          pkg=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
+          version=$(echo "${{ github.head_ref }}" | sed -nr 's|release/.*/(.*)|\1|p')
           echo "TAG=$tag" >> $GITHUB_ENV
           echo "PKG=$pkg" >> $GITHUB_ENV
           echo "VERSION=$version" >> $GITHUB_ENV
