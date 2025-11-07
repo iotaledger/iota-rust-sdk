@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   create-release:
-    if: github.event.pull_request == null || (github.event.pull_request.merged == true && startsWith(github.base_ref, 'release/'))
+    if: github.event.pull_request == null || (github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -38,18 +38,27 @@ jobs:
         run: |
           echo "TAG=${{ inputs.package }}-v${{ inputs.version }}" >> $GITHUB_ENV
           echo "PKG=${{ inputs.package }}" >> $GITHUB_ENV
+          echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
 
       - name: Set package and tag from ref
         if: github.event.pull_request.merged == true
         run: |
-          pkg=$(echo "${{ github.base_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
           tag=$(echo "${{ github.base_ref }}" | sed -nr 's|release/(.*)/(.*)|\1-v\2|p')
+          pkg=$(echo "${{ github.base_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
+          version=$(echo "${{ github.base_ref }}" | sed -nr 's|release/.*/(.*)|\1|p')
           echo "TAG=$tag" >> $GITHUB_ENV
           echo "PKG=$pkg" >> $GITHUB_ENV
+          echo "VERSION=$version" >> $GITHUB_ENV
 
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ env.TAG }}
           PKG: ${{ env.PKG }}
-        run: gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes-file "crates/$PKG/CHANGELOG.md"
+          VERSION: ${{ env.VERSION }}
+        run: |
+          if [ "$VERSION" =~ .*-alpha\..*  ] || [ "$VERSION" =~ .*-beta\..*  ] || [ "$VERSION" =~ .*-rc\..*  ]; then
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease --notes-file "crates/$PKG/CHANGELOG.md"
+          else
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes-file "crates/$PKG/CHANGELOG.md"
+          fi
