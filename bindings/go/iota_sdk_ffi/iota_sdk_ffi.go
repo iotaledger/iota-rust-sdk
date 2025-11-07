@@ -35206,12 +35206,12 @@ func (_ FfiDestroyerFeature) Destroy(value Feature) {
 // id-operation-created    = %x01
 // id-operation-deleted    = %x02
 // ```
-type IdOperation uint
+type IdOperation uint8
 
 const (
-	IdOperationNone IdOperation = 1
-	IdOperationCreated IdOperation = 2
-	IdOperationDeleted IdOperation = 3
+	IdOperationNone IdOperation = 0
+	IdOperationCreated IdOperation = 1
+	IdOperationDeleted IdOperation = 2
 )
 
 type FfiConverterIdOperation struct {}
@@ -35795,16 +35795,16 @@ func (_ FfiDestroyerSdkFfiError) Destroy(value *SdkFfiError) {
 // zklogin-flag     = %x05
 // passkey-flag     = %x06
 // ```
-type SignatureScheme uint
+type SignatureScheme uint8
 
 const (
-	SignatureSchemeEd25519 SignatureScheme = 1
-	SignatureSchemeSecp256k1 SignatureScheme = 2
-	SignatureSchemeSecp256r1 SignatureScheme = 3
-	SignatureSchemeMultisig SignatureScheme = 4
-	SignatureSchemeBls12381 SignatureScheme = 5
-	SignatureSchemeZkLogin SignatureScheme = 6
-	SignatureSchemePasskey SignatureScheme = 7
+	SignatureSchemeEd25519 SignatureScheme = 0
+	SignatureSchemeSecp256k1 SignatureScheme = 1
+	SignatureSchemeSecp256r1 SignatureScheme = 2
+	SignatureSchemeMultisig SignatureScheme = 3
+	SignatureSchemeBls12381 SignatureScheme = 4
+	SignatureSchemeZkLogin SignatureScheme = 5
+	SignatureSchemePasskey SignatureScheme = 6
 )
 
 type FfiConverterSignatureScheme struct {}
@@ -36041,13 +36041,13 @@ func (_ FfiDestroyerTransactionExpiration) Destroy(value TransactionExpiration) 
 // type-not-found = %x00
 // constraint-not-satisfied = %x01
 // ```
-type TypeArgumentError uint
+type TypeArgumentError uint8
 
 const (
 	// A type was not found in the module specified
-	TypeArgumentErrorTypeNotFound TypeArgumentError = 1
+	TypeArgumentErrorTypeNotFound TypeArgumentError = 0
 	// A type provided did not match the specified constraint
-	TypeArgumentErrorConstraintNotSatisfied TypeArgumentError = 2
+	TypeArgumentErrorConstraintNotSatisfied TypeArgumentError = 1
 )
 
 type FfiConverterTypeArgumentError struct {}

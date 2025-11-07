@@ -762,6 +762,7 @@ impl From<PackageUpgradeError> for iota_sdk::types::PackageUpgradeError {
 /// constraint-not-satisfied = %x01
 /// ```
 #[uniffi::remote(Enum)]
+#[repr(u8)]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
     TypeNotFound,
