@@ -1,0 +1,143 @@
+name: Publish to Maven Central
+
+on:
+  # TODO: remove after testing
+  push:
+    branches: [ci/kotlin-release]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (leave empty for release version)"
+        required: false
+        type: string
+      dry_run:
+        description: "Dry run - publish to local Maven repo only"
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            lib_ext: so
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            lib_ext: so
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            lib_ext: dylib
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            lib_ext: dylib
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            lib_ext: dll
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Build the bindings
+        run: make kotlin
+
+      - name: Upload native library
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-lib-${{ matrix.os }}-${{ matrix.target }}
+          path: bindings/kotlin/lib/*iota_sdk_ffi*
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      # - name: Build Rust library
+      #   run: cargo build -p iota-sdk-ffi --lib --release
+
+      - name: Download native libraries
+        uses: actions/download-artifact@v4
+        with:
+          path: libs
+
+      - name: Prepare libraries
+        run: |
+          echo "Listing contents of libs directory:"
+          ls -la libs/
+          echo "Listing contents of native-lib-ubuntu-latest-x86_64-unknown-linux-gnu:"
+          ls -la libs/native-lib-ubuntu-latest-x86_64-unknown-linux-gnu/
+          echo "Listing contents of bindings/kotlin/lib before copying:"
+          ls -la bindings/kotlin/lib/
+          cd bindings/kotlin/lib
+          echo "Copying libraries..."
+          cp ../../../libs/native-lib-ubuntu-latest-x86_64-unknown-linux-gnu/libiota_sdk_ffi.so .
+          cp ../../../libs/native-lib-ubuntu-latest-aarch64-unknown-linux-gnu/libiota_sdk_ffi.so libiota_sdk_ffi_arm64.so
+          cp ../../../libs/native-lib-macos-latest-x86_64-apple-darwin/libiota_sdk_ffi.dylib .
+          cp ../../../libs/native-lib-macos-latest-aarch64-apple-darwin/libiota_sdk_ffi.dylib libiota_sdk_ffi_arm64.dylib
+          cp ../../../libs/native-lib-windows-latest-x86_64-pc-windows-msvc/iota_sdk_ffi.dll .
+          echo "Contents after copying:"
+          ls -la
+
+      - name: Generate Kotlin bindings
+        run: |
+          cd bindings/kotlin
+          # Generate bindings using the Linux library (arbitrary choice)
+          cargo run --bin iota_sdk_bindings -- generate --library "lib/libiota_sdk_ffi.so" --language kotlin --out-dir lib --no-format -c uniffi.toml
+
+      - name: Set version for release
+        if: github.event_name == 'release'
+        run: |
+          cd bindings/kotlin
+          sed -i "s/version = .*/version = \"${{ github.event.release.tag_name }}\"/" build.gradle.kts
+
+      - name: Set version for manual dispatch
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.version != ''
+        run: |
+          cd bindings/kotlin
+          sed -i "s/version = .*/version = \"${{ github.event.inputs.version }}\"/" build.gradle.kts
+
+      - name: Publish to Maven Central
+        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'false')
+        run: |
+          cd bindings/kotlin
+          ./gradlew publish --no-daemon --no-parallel
+        env:
+          ORG_GRADLE_PROJECT_SONATYPE_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_SONATYPE_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_PASSWORD }}
+          ORG_GRADLE_PROJECT_SIGNING_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
+
+      - name: Dry run - Local publish only
+        if: github.event_name != 'release' && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run == 'true')
+        run: |
+          cd bindings/kotlin
+          echo "Dry run: Publishing to local Maven repository only"
+          ./gradlew publishToMavenLocal --no-daemon --no-parallel
+        env:
+          ORG_GRADLE_PROJECT_SIGNING_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}

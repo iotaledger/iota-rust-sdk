@@ -105,9 +105,9 @@ bindings-examples-format: ## Format all bindings examples
 define build_binding
 cargo build -p iota-sdk-ffi --lib --release; \
 case "$$(uname -s)" in \
-	Darwin)   LIB_EXT=".dylib" ;; \
-	Linux)    LIB_EXT=".so" ;; \
-	MINGW*|MSYS*|CYGWIN*|Windows_NT) LIB_EXT=".dll" ;; \
+	Darwin)   LIB_PREFIX="lib"; LIB_EXT=".dylib" ;; \
+	Linux)    LIB_PREFIX="lib"; LIB_EXT=".so" ;; \
+	MINGW*|MSYS*|CYGWIN*|Windows_NT) LIB_PREFIX=""; LIB_EXT=".dll" ;; \
 	*)        echo "Unsupported platform"; exit 1 ;; \
 esac;
 endef
@@ -116,7 +116,8 @@ endef
 go: ## Build Go bindings
 	@printf "Building Go bindings...\n"
 	@$(build_binding) \
-	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format --config bindings/go/uniffi.toml || exit $$?
+	LIB_NAME="$${LIB_PREFIX}iota_sdk_ffi$${LIB_EXT}"; \
+	uniffi-bindgen-go --library target/release/$${LIB_NAME} --out-dir bindings/go --no-format --config bindings/go/uniffi.toml || exit $$?
 	# TODO: For some reason only the .h file is renamed, not the .go file
 	@mv bindings/go/iota_sdk/iota_sdk_ffi.go bindings/go/iota_sdk/iota_sdk.go
 	@sed -i.bak "s/^package iota_sdk_ffi$$/package iota_sdk/" bindings/go/iota_sdk/iota_sdk.go && rm bindings/go/iota_sdk/iota_sdk.go.bak
@@ -125,15 +126,20 @@ go: ## Build Go bindings
 kotlin: ## Build Kotlin bindings
 	@printf "Building Kotlin bindings...\n"
 	@$(build_binding) \
-	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
-	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
+	printf "Built library with LIB_PREFIX=$${LIB_PREFIX}, LIB_EXT=$${LIB_EXT}\n"; \
+	LIB_NAME="$${LIB_PREFIX}iota_sdk_ffi$${LIB_EXT}"; \
+	printf "Checking if library exists: target/release/$${LIB_NAME}\n"; \
+	test -f "target/release/$${LIB_NAME}" || (echo "Library not found!" && exit 1); \
+	cargo run --bin iota_sdk_bindings -- generate --library "target/release/$${LIB_NAME}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
+	cp target/release/$${LIB_NAME} bindings/kotlin/lib/
 
 .PHONY: python
 python: ## Build Python bindings
 	@printf "Building Python bindings...\n"
 	@$(build_binding) \
-	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
-	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
+	LIB_NAME="$${LIB_PREFIX}iota_sdk_ffi$${LIB_EXT}"; \
+	cargo run --bin iota_sdk_bindings -- generate --library "target/release/$${LIB_NAME}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
+	cp target/release/$${LIB_NAME} bindings/python/lib/
 
 .PHONY: go-example
 go-example: ## Run a specific Go example. Usage: make go-example example
