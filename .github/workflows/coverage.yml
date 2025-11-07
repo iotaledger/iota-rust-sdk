@@ -61,7 +61,7 @@ jobs:
         with:
           size: 256G
 
-      - name: Get the IOTA testnet binary
+      - name: Get the IOTA alphanet binary
         shell: bash
         env:
           IOTA_BINARY_VERSION: "v1.10.0-alpha"
@@ -69,7 +69,7 @@ jobs:
           ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
           download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
 
-          echo "Downloading testnet binary from $download_url"
+          echo "Downloading alphanet binary from $download_url"
           wget -q $download_url -O iota.tgz
           tar -zxvf iota.tgz ./iota
           chmod +x ./iota

@@ -4,7 +4,7 @@ description: "Downloads and starts a local IOTA network for testing"
 runs:
   using: "composite"
   steps:
-    - name: Get the IOTA testnet binary and start a local network
+    - name: Get the IOTA alphanet binary and start a local network
       shell: bash
       env:
         IOTA_BINARY_VERSION: "v1.10.0-alpha"
