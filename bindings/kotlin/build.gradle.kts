@@ -5,14 +5,14 @@ plugins {
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.serialization") version "1.9.24"
     id("com.ncorti.ktfmt.gradle") version "0.25.0"
+    id("com.vanniktech.maven.publish") version "0.30.0"
     application
-    `maven-publish`
     signing
 }
 
 group = "org.iota"
 
-version = "1.0-SNAPSHOT"
+version = "0.0.1-alpha.1"
 
 repositories { mavenCentral() }
 
@@ -88,8 +88,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
                 "-Xno-receiver-assertions",
                 // Add these flags to help with recursive type issues
                 "-Xtype-enhancement-improvements-strict-mode=false",
-                "-Xskip-runtime-version-check",
-                "-Xlenient-function-type-parameter-checks",
             )
         allWarningsAsErrors = false
         suppressWarnings = true
@@ -109,67 +107,43 @@ tasks.register("compileWithErrors") {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-            pom {
-                name.set("IOTA SDK Kotlin Bindings")
-                description.set("Kotlin bindings for the IOTA SDK")
-                url.set("https://github.com/iotaledger/iota-rust-sdk")
-                licenses {
-                    license {
-                        name.set("Apache-2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("iotaledger")
-                        name.set("IOTA Foundation")
-                        email.set("contact@iota.org")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/iotaledger/iota-rust-sdk.git")
-                    developerConnection.set("scm:git:ssh://github.com/iotaledger/iota-rust-sdk.git")
-                    url.set("https://github.com/iotaledger/iota-rust-sdk")
-                }
+mavenPublishing {
+    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
+    
+    coordinates("org.iota", "iota-sdk", version.toString())
+    
+    pom {
+        name.set("IOTA SDK Kotlin Bindings")
+        description.set("Kotlin bindings for the IOTA SDK")
+        url.set("https://github.com/iotaledger/iota-rust-sdk")
+        licenses {
+            license {
+                name.set("Apache-2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
             }
         }
-    }
-    repositories {
-        maven {
-            name = "ossrh"
-            url =
-                uri(
-                    if (version.toString().endsWith("SNAPSHOT")) {
-                        "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-                    } else {
-                        "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                    }
-                )
-            val sonatypeUsername =
-                providers.environmentVariable("ORG_GRADLE_PROJECT_SONATYPE_USERNAME")
-            val sonatypePassword =
-                providers.environmentVariable("ORG_GRADLE_PROJECT_SONATYPE_PASSWORD")
-            if (sonatypeUsername.isPresent && sonatypePassword.isPresent) {
-                credentials {
-                    username = sonatypeUsername.get()
-                    password = sonatypePassword.get()
-                }
+        developers {
+            developer {
+                id.set("iotaledger")
+                name.set("IOTA Foundation")
+                email.set("contact@iota.org")
             }
+        }
+        scm {
+            connection.set("scm:git:git://github.com/iotaledger/iota-rust-sdk.git")
+            developerConnection.set("scm:git:ssh://github.com/iotaledger/iota-rust-sdk.git")
+            url.set("https://github.com/iotaledger/iota-rust-sdk")
         }
     }
 }
 
 signing {
-    val signingKeyEncoded =
-        providers.environmentVariable("ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY")
-    val signingPassword = providers.environmentVariable("ORG_GRADLE_PROJECT_SIGNING_PASSWORD")
+    val signingKeyEncoded = providers.environmentVariable("ORG_GRADLE_PROJECT_signingInMemoryKey")
+    val signingPassword =
+        providers.environmentVariable("ORG_GRADLE_PROJECT_signingInMemoryKeyPassword")
     if (signingKeyEncoded.isPresent && signingPassword.isPresent) {
         val signingKey = String(Base64.getDecoder().decode(signingKeyEncoded.get()))
         useInMemoryPgpKeys(signingKey, signingPassword.get())
-        sign(publishing.publications["maven"])
     }
 }

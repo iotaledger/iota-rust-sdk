@@ -13,7 +13,7 @@ on:
       dry_run:
         description: "Dry run - publish to local Maven repo only"
         required: false
-        default: true
+        default: false
         type: boolean
 
 jobs:
@@ -122,22 +122,22 @@ jobs:
           sed -i "s/version = .*/version = \"${{ github.event.inputs.version }}\"/" build.gradle.kts
 
       - name: Publish to Maven Central
-        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'false')
+        if: github.event_name == 'release' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == false)
         run: |
           cd bindings/kotlin
-          ./gradlew publish --no-daemon --no-parallel
+          ./gradlew publishAndReleaseToMavenCentral --no-daemon --no-parallel --no-configuration-cache
         env:
-          ORG_GRADLE_PROJECT_SONATYPE_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_USERNAME }}
-          ORG_GRADLE_PROJECT_SONATYPE_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_PASSWORD }}
-          ORG_GRADLE_PROJECT_SIGNING_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
-          ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
 
       - name: Dry run - Local publish only
-        if: github.event_name != 'release' && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run == 'true')
+        if: github.event_name != 'release' && github.event_name != 'push' && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run == true)
         run: |
           cd bindings/kotlin
           echo "Dry run: Publishing to local Maven repository only"
-          ./gradlew publishToMavenLocal --no-daemon --no-parallel
+          ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
         env:
-          ORG_GRADLE_PROJECT_SIGNING_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
-          ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
