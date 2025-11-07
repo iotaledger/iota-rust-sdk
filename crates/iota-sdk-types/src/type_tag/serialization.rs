@@ -185,7 +185,7 @@ impl<'de> Visitor<'de> for TypeTagVisitor {
     }
 }
 
-#[derive(serde_derive::Serialize)]
+#[derive(serde::Serialize)]
 struct BinaryStructTagRef<'a> {
     address: &'a Address,
     module: &'a Identifier,
@@ -212,7 +212,7 @@ impl Serialize for StructTag {
     }
 }
 
-#[derive(serde_derive::Deserialize)]
+#[derive(serde::Deserialize)]
 struct BinaryStructTag {
     address: Address,
     module: Identifier,

@@ -1,0 +1,93 @@
+name: Pre-publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        type: choice
+        required: true
+        description: |
+          The level of version bump to make.
+
+          Possible values:
+          - major:   Increase the major version (x.0.0)
+          - minor:   Increase the minor version (x.y.0)
+          - patch:   Increase the patch version (x.y.z)
+          - release: Remove the pre-version (x.y.z)
+          - rc:      Increase the rc pre-version (x.y.z-rc.M)
+          - beta:    Increase the beta pre-version (x.y.z-beta.M)
+          - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
+        options:
+          - major
+          - minor
+          - patch
+          - release
+          - rc
+          - beta
+          - alpha
+      package:
+        type: choice
+        required: true
+        description: The package to publish.
+        options:
+          - iota-sdk-types
+          - iota-sdk-crypto
+          - iota-sdk-graphql-client-build
+          - iota-sdk-graphql-client
+          - iota-sdk-transaction-builder
+          - iota-sdk
+
+jobs:
+  publish:
+    name: Setup for publish to crates.io
+    permissions:
+      id-token: write # Enable OIDC
+      pull-requests: write
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exit if the branch is not develop
+        if: github.ref != 'refs/heads/develop'
+        run: |
+          echo "Branch is not develop, exiting."
+          exit 0
+
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Install cargo-release
+        uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        with:
+          tool: cargo-release@0.25.20
+
+      - name: Install git-cliff
+        uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        with:
+          tool: git-cliff
+
+      - uses: chainguard-dev/actions/setup-gitsign@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
+
+      - id: pr-create
+        uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version: ${{ inputs.level }}
+          crate-name: ${{ inputs.package }}
+          git-user-name: "IOTA Foundation"
+          git-user-email: info@iota.org
+          base-branch: develop
+          pr-template-file: ./.github/release-pr-template.ejs
+
+      - name: Add release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pr_num=$(echo "${{ steps.pr-create.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')
+          body=$(gh pr view "$pr_num" --json body | jq -r '.["body"]')
+          cd crates/${{ inputs.package }}
+          notes=$(git-cliff --tag v${{ steps.pr-create.outputs.version }})
+          body=$(echo "$body
+          # Release Notes
+
+          $notes")
+          gh pr edit $pr_num --body "$body"

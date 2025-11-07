@@ -10,8 +10,7 @@ async def main():
     client = GraphQlClient.new_devnet()
 
     object_id = ObjectId.from_hex(
-        "0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e"
-    )
+        "0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e")
 
     obj = await client.object(object_id)
     if obj is None:

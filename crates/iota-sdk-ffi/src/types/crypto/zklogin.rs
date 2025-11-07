@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_types::{Jwk, JwkId, ZkLoginClaim};
+use iota_sdk::types::{Jwk, JwkId, ZkLoginClaim};
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -30,13 +30,13 @@ use crate::{
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ZkLoginAuthenticator(pub iota_types::ZkLoginAuthenticator);
+pub struct ZkLoginAuthenticator(pub iota_sdk::types::ZkLoginAuthenticator);
 
 #[uniffi::export]
 impl ZkLoginAuthenticator {
     #[uniffi::constructor]
     pub fn new(inputs: &ZkLoginInputs, max_epoch: u64, signature: &SimpleSignature) -> Self {
-        Self(iota_types::ZkLoginAuthenticator {
+        Self(iota_sdk::types::ZkLoginAuthenticator {
             inputs: inputs.0.clone(),
             max_epoch,
             signature: signature.0.clone(),
@@ -107,13 +107,13 @@ impl ZkLoginAuthenticator {
 /// address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ZkLoginPublicIdentifier(pub iota_types::ZkLoginPublicIdentifier);
+pub struct ZkLoginPublicIdentifier(pub iota_sdk::types::ZkLoginPublicIdentifier);
 
 #[uniffi::export]
 impl ZkLoginPublicIdentifier {
     #[uniffi::constructor]
     pub fn new(iss: String, address_seed: &Bn254FieldElement) -> Result<Self> {
-        iota_types::ZkLoginPublicIdentifier::new(iss, address_seed.0.clone())
+        iota_sdk::types::ZkLoginPublicIdentifier::new(iss, address_seed.0.clone())
             .ok_or_else(|| SdkFfiError::custom("iss length must be <= 255"))
             .map(Self)
     }
@@ -177,7 +177,7 @@ impl ZkLoginPublicIdentifier {
 ///                  bn254-field-element ; address_seed
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ZkLoginInputs(pub iota_types::ZkLoginInputs);
+pub struct ZkLoginInputs(pub iota_sdk::types::ZkLoginInputs);
 
 #[uniffi::export]
 impl ZkLoginInputs {
@@ -188,7 +188,7 @@ impl ZkLoginInputs {
         header_base64: String,
         address_seed: &Bn254FieldElement,
     ) -> Result<Self> {
-        Ok(Self(iota_types::ZkLoginInputs::new(
+        Ok(Self(iota_sdk::types::ZkLoginInputs::new(
             proof_points.0.clone(),
             iss_base64_details,
             header_base64,
@@ -235,13 +235,13 @@ impl ZkLoginInputs {
 /// zklogin-proof = circom-g1 circom-g2 circom-g1
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ZkLoginProof(pub iota_types::ZkLoginProof);
+pub struct ZkLoginProof(pub iota_sdk::types::ZkLoginProof);
 
 #[uniffi::export]
 impl ZkLoginProof {
     #[uniffi::constructor]
     pub fn new(a: &CircomG1, b: &CircomG2, c: &CircomG1) -> Self {
-        Self(iota_types::ZkLoginProof {
+        Self(iota_sdk::types::ZkLoginProof {
             a: a.0.clone(),
             b: b.0.clone(),
             c: c.0.clone(),
@@ -289,7 +289,7 @@ pub struct ZkLoginClaim {
 /// circom-g1 = %x03 3(bn254-field-element)
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct CircomG1(pub iota_types::CircomG1);
+pub struct CircomG1(pub iota_sdk::types::CircomG1);
 
 #[uniffi::export]
 impl CircomG1 {
@@ -299,7 +299,7 @@ impl CircomG1 {
         el_1: &Bn254FieldElement,
         el_2: &Bn254FieldElement,
     ) -> Self {
-        Self(iota_types::CircomG1([
+        Self(iota_sdk::types::CircomG1([
             el_0.0.clone(),
             el_1.0.clone(),
             el_2.0.clone(),
@@ -320,7 +320,7 @@ impl CircomG1 {
 /// circom-g2 = %x03 3(%x02 2(bn254-field-element))
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct CircomG2(pub iota_types::CircomG2);
+pub struct CircomG2(pub iota_sdk::types::CircomG2);
 
 #[uniffi::export]
 impl CircomG2 {
@@ -333,7 +333,7 @@ impl CircomG2 {
         el_2_0: &Bn254FieldElement,
         el_2_1: &Bn254FieldElement,
     ) -> Self {
-        Self(iota_types::CircomG2([
+        Self(iota_sdk::types::CircomG2([
             [el_0_0.0.clone(), el_0_1.0.clone()],
             [el_1_0.0.clone(), el_1_1.0.clone()],
             [el_2_0.0.clone(), el_2_1.0.clone()],
@@ -355,13 +355,13 @@ impl CircomG2 {
 /// bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Bn254FieldElement(pub iota_types::Bn254FieldElement);
+pub struct Bn254FieldElement(pub iota_sdk::types::Bn254FieldElement);
 
 #[uniffi::export]
 impl Bn254FieldElement {
     #[uniffi::constructor]
     pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(iota_types::Bn254FieldElement::new(
+        Ok(Self(iota_sdk::types::Bn254FieldElement::new(
             bytes.try_into().map_err(|v: Vec<u8>| {
                 SdkFfiError::custom(format!("expected bytes of length 32, found {}", v.len()))
             })?,
@@ -375,7 +375,9 @@ impl Bn254FieldElement {
 
     #[uniffi::constructor]
     pub fn from_str_radix_10(s: &str) -> Result<Self> {
-        Ok(Self(iota_types::Bn254FieldElement::from_str_radix_10(s)?))
+        Ok(Self(iota_sdk::types::Bn254FieldElement::from_str_radix_10(
+            s,
+        )?))
     }
 
     pub fn unpadded(&self) -> Vec<u8> {
@@ -428,3 +430,14 @@ pub struct Jwk {
     /// Algorithm parameter, <https://datatracker.ietf.org/doc/html/rfc7517#section-4.4>
     pub alg: String,
 }
+
+crate::export_iota_types_objects_bcs_conversion!(
+    ZkLoginAuthenticator,
+    ZkLoginPublicIdentifier,
+    ZkLoginProof,
+    CircomG1,
+    CircomG2,
+    Bn254FieldElement
+);
+
+crate::export_iota_types_bcs_conversion!(ZkLoginClaim, JwkId, Jwk);

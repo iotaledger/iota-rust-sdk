@@ -1,7 +1,12 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::error::Result;
+use base64ct::Encoding;
+
+use crate::{
+    base64_encode,
+    error::{Result, SdkFfiError},
+};
 
 /// Unique identifier for an Account on the IOTA blockchain.
 ///
@@ -44,24 +49,24 @@ use crate::error::Result;
 /// address = 32OCTET
 /// ```
 #[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-pub struct Address(pub iota_types::Address);
+pub struct Address(pub iota_sdk::types::Address);
 
 #[uniffi::export]
 impl Address {
     #[uniffi::constructor]
     pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(iota_types::Address::from_bytes(bytes)?))
+        Ok(Self(iota_sdk::types::Address::from_bytes(bytes)?))
     }
 
     #[uniffi::constructor]
     pub fn from_hex(hex: &str) -> Result<Self> {
-        Ok(Self(iota_types::Address::from_hex(hex)?))
+        Ok(Self(iota_sdk::types::Address::from_hex(hex)?))
     }
 
     #[uniffi::constructor]
     pub fn generate() -> Self {
         let mut rng = rand::thread_rng();
-        Self(iota_types::Address::generate(&mut rng))
+        Self(iota_sdk::types::Address::generate(&mut rng))
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -80,7 +85,7 @@ macro_rules! named_address {
             impl Address {$(
                 #[uniffi::constructor]
                 pub const fn [< $constant:lower >]() -> Self {
-                    Self(iota_types::Address::$constant)
+                    Self(iota_sdk::types::Address::$constant)
                 }
             )+}
         }
@@ -88,3 +93,5 @@ macro_rules! named_address {
 }
 
 named_address!(ZERO, STD_LIB, FRAMEWORK, SYSTEM);
+
+crate::export_iota_types_objects_bcs_conversion!(Address);

@@ -11,9 +11,7 @@ fun main() = runBlocking {
         val client = GraphQlClient.newDevnet()
 
         val sharedObjId =
-                ObjectId.fromHex(
-                        "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
-                )
+            ObjectId.fromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
         val transactions = client.transactions(TransactionsFilter(inputObject = sharedObjId))
 
         for (transaction in transactions.data) {
@@ -21,5 +19,6 @@ fun main() = runBlocking {
         }
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

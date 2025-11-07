@@ -1,8 +1,10 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_crypto::PrivateKeyExt;
-use iota_types::SignatureScheme;
+use iota_sdk::{
+    crypto::{FromMnemonic, ToFromBech32, ToFromBytes},
+    types::SignatureScheme,
+};
 use rand::rngs::OsRng;
 
 use crate::{
@@ -14,13 +16,13 @@ use crate::{
 };
 
 #[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-pub struct Secp256k1PrivateKey(iota_crypto::secp256k1::Secp256k1PrivateKey);
+pub struct Secp256k1PrivateKey(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey);
 
 #[uniffi::export]
 impl Secp256k1PrivateKey {
     #[uniffi::constructor]
     pub fn new(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(iota_crypto::secp256k1::Secp256k1PrivateKey::new(
+        Ok(Self(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::new(
             bytes.try_into().map_err(|v: Vec<u8>| {
                 SdkFfiError::custom(format!("expected bytes of length 32, found {}", v.len()))
             })?,
@@ -41,14 +43,16 @@ impl Secp256k1PrivateKey {
 
     #[uniffi::constructor]
     pub fn generate() -> Self {
-        Self(iota_crypto::secp256k1::Secp256k1PrivateKey::generate(OsRng))
+        Self(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::generate(
+            OsRng,
+        ))
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
     /// format).
     #[uniffi::constructor]
     pub fn from_der(bytes: &[u8]) -> Result<Self> {
-        Ok(iota_crypto::secp256k1::Secp256k1PrivateKey::from_der(bytes)?.into())
+        Ok(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::from_der(bytes)?.into())
     }
 
     /// Serialize this private key as DER-encoded PKCS#8
@@ -59,7 +63,7 @@ impl Secp256k1PrivateKey {
     /// Deserialize PKCS#8-encoded private key from PEM.
     #[uniffi::constructor]
     pub fn from_pem(s: &str) -> Result<Self> {
-        Ok(iota_crypto::secp256k1::Secp256k1PrivateKey::from_pem(s)?.into())
+        Ok(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::from_pem(s)?.into())
     }
 
     /// Serialize this private key as PEM-encoded PKCS#8
@@ -82,33 +86,84 @@ impl Secp256k1PrivateKey {
     /// "iotaprivkey".
     #[uniffi::constructor]
     pub fn from_bech32(value: &str) -> Result<Self> {
-        Ok(iota_crypto::secp256k1::Secp256k1PrivateKey::from_bech32(value)?.into())
+        Ok(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::from_bech32(value)?.into())
+    }
+
+    /// Construct the private key from a mnemonic phrase
+    #[uniffi::constructor(default(password = "", account_index = 0))]
+    pub fn from_mnemonic(phrase: &str, account_index: u64, password: String) -> Result<Self> {
+        Ok(
+            iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::from_mnemonic(
+                phrase,
+                account_index,
+                password,
+            )?
+            .into(),
+        )
+    }
+
+    /// Create an instance from a mnemonic phrase and a derivation path like
+    /// `"m/54'/4218'/0'/0/0"`
+    #[uniffi::constructor(default(password = ""))]
+    pub fn from_mnemonic_with_path(phrase: &str, path: String, password: String) -> Result<Self> {
+        Ok(
+            iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::from_mnemonic_with_path(
+                phrase, path, password,
+            )?
+            .into(),
+        )
     }
 
     pub fn try_sign(&self, message: &[u8]) -> Result<Secp256k1Signature> {
         Ok(
-            iota_crypto::Signer::<iota_types::Secp256k1Signature>::try_sign(&self.0, message)?
-                .into(),
+            iota_sdk::crypto::Signer::<iota_sdk::types::Secp256k1Signature>::try_sign(
+                &self.0, message,
+            )?
+            .into(),
         )
     }
 
     pub fn try_sign_simple(&self, message: &[u8]) -> Result<SimpleSignature> {
-        Ok(iota_crypto::Signer::<iota_types::SimpleSignature>::try_sign(&self.0, message)?.into())
+        Ok(
+            iota_sdk::crypto::Signer::<iota_sdk::types::SimpleSignature>::try_sign(
+                &self.0, message,
+            )?
+            .into(),
+        )
     }
 
     pub fn try_sign_user(&self, message: &[u8]) -> Result<UserSignature> {
-        Ok(iota_crypto::Signer::<iota_types::UserSignature>::try_sign(&self.0, message)?.into())
+        Ok(
+            iota_sdk::crypto::Signer::<iota_sdk::types::UserSignature>::try_sign(&self.0, message)?
+                .into(),
+        )
+    }
+
+    /// Sign a transaction and return a UserSignature.
+    pub fn sign_transaction(
+        &self,
+        transaction: &crate::types::transaction::Transaction,
+    ) -> Result<UserSignature> {
+        Ok(iota_sdk::crypto::IotaSigner::sign_transaction(&self.0, &transaction.0)?.into())
+    }
+
+    /// Sign a personal message and return a UserSignature.
+    pub fn sign_personal_message(
+        &self,
+        message: &crate::types::PersonalMessage,
+    ) -> Result<UserSignature> {
+        Ok(iota_sdk::crypto::IotaSigner::sign_personal_message(&self.0, &message.0)?.into())
     }
 }
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Secp256k1VerifyingKey(iota_crypto::secp256k1::Secp256k1VerifyingKey);
+pub struct Secp256k1VerifyingKey(iota_sdk::crypto::secp256k1::Secp256k1VerifyingKey);
 
 #[uniffi::export]
 impl Secp256k1VerifyingKey {
     #[uniffi::constructor]
     pub fn new(public_key: &Secp256k1PublicKey) -> Result<Self> {
-        Ok(iota_crypto::secp256k1::Secp256k1VerifyingKey::new(&public_key.0).map(Self)?)
+        Ok(iota_sdk::crypto::secp256k1::Secp256k1VerifyingKey::new(&public_key.0).map(Self)?)
     }
 
     pub fn public_key(&self) -> Secp256k1PublicKey {
@@ -118,7 +173,7 @@ impl Secp256k1VerifyingKey {
     /// Deserialize public key from ASN.1 DER-encoded data (binary format).
     #[uniffi::constructor]
     pub fn from_der(bytes: &[u8]) -> Result<Self> {
-        Ok(iota_crypto::secp256k1::Secp256k1VerifyingKey::from_der(bytes)?.into())
+        Ok(iota_sdk::crypto::secp256k1::Secp256k1VerifyingKey::from_der(bytes)?.into())
     }
 
     /// Serialize this public key as DER-encoded data
@@ -129,7 +184,7 @@ impl Secp256k1VerifyingKey {
     /// Deserialize public key from PEM.
     #[uniffi::constructor]
     pub fn from_pem(s: &str) -> Result<Self> {
-        Ok(iota_crypto::secp256k1::Secp256k1VerifyingKey::from_pem(s)?.into())
+        Ok(iota_sdk::crypto::secp256k1::Secp256k1VerifyingKey::from_pem(s)?.into())
     }
 
     /// Serialize this public key into PEM
@@ -138,59 +193,51 @@ impl Secp256k1VerifyingKey {
     }
 
     pub fn verify(&self, message: &[u8], signature: &Secp256k1Signature) -> Result<()> {
-        Ok(
-            iota_crypto::Verifier::<iota_types::Secp256k1Signature>::verify(
-                &self.0,
-                message,
-                &signature.0,
-            )?,
-        )
+        Ok(iota_sdk::crypto::Verifier::<
+            iota_sdk::types::Secp256k1Signature,
+        >::verify(&self.0, message, &signature.0)?)
     }
 
     pub fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
+        Ok(iota_sdk::crypto::Verifier::<
+            iota_sdk::types::SimpleSignature,
+        >::verify(&self.0, message, &signature.0)?)
+    }
+
+    pub fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
         Ok(
-            iota_crypto::Verifier::<iota_types::SimpleSignature>::verify(
+            iota_sdk::crypto::Verifier::<iota_sdk::types::UserSignature>::verify(
                 &self.0,
                 message,
                 &signature.0,
             )?,
         )
-    }
-
-    pub fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
-        Ok(iota_crypto::Verifier::<iota_types::UserSignature>::verify(
-            &self.0,
-            message,
-            &signature.0,
-        )?)
     }
 }
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Secp256k1Verifier(iota_crypto::secp256k1::Secp256k1Verifier);
+pub struct Secp256k1Verifier(iota_sdk::crypto::secp256k1::Secp256k1Verifier);
 
 #[uniffi::export]
 impl Secp256k1Verifier {
     #[uniffi::constructor]
     pub fn new() -> Self {
-        Self(iota_crypto::secp256k1::Secp256k1Verifier::new())
+        Self(iota_sdk::crypto::secp256k1::Secp256k1Verifier::new())
     }
 
     fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
+        Ok(iota_sdk::crypto::Verifier::<
+            iota_sdk::types::SimpleSignature,
+        >::verify(&self.0, message, &signature.0)?)
+    }
+
+    fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
         Ok(
-            iota_crypto::Verifier::<iota_types::SimpleSignature>::verify(
+            iota_sdk::crypto::Verifier::<iota_sdk::types::UserSignature>::verify(
                 &self.0,
                 message,
                 &signature.0,
             )?,
         )
-    }
-
-    fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
-        Ok(iota_crypto::Verifier::<iota_types::UserSignature>::verify(
-            &self.0,
-            message,
-            &signature.0,
-        )?)
     }
 }

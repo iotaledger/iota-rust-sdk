@@ -43,7 +43,7 @@ async fn main() -> Result<()> {
 
     builder
         .transfer_objects(to_address, objs_to_transfer)
-        .gas(gas_coin)
+        .gas([gas_coin])
         .gas_price(gas_price)
         .gas_budget(500000000);
 

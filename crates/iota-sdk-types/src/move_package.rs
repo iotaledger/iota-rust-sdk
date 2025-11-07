@@ -5,13 +5,19 @@ use crate::{Digest, ObjectId};
 
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
-#[derive(derive_more::Display, Debug, Clone, Copy)]
+#[derive(strum::Display, Debug, Clone, Copy, PartialEq, Eq)]
+#[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 pub enum UpgradePolicy {
-    #[display("COMPATIBLE")]
+    /// The least restrictive policy. Permits changes to all function
+    /// implementations, the removal of ability constraints on generic type
+    /// parameters in function signatures, and modifications to private,
+    /// public(friend), and entry function signatures. However, public function
+    /// signatures and existing types cannot be changed.
     Compatible = 0,
-    #[display("ADDITIVE")]
+    /// Allows adding new functionalities (e.g., new public functions or
+    /// structs) but restricts changes to existing functionalities.
     Additive = 128,
-    #[display("DEP_ONLY")]
+    /// Limits modifications to the package’s dependencies only.
     DepOnly = 192,
 }
 

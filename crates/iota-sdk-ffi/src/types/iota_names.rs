@@ -3,19 +3,19 @@
 
 use std::{str::FromStr, sync::Arc};
 
-use iota_types::iota_names::{IotaNamesNft, NameFormat};
+use iota_sdk::types::iota_names::{IotaNamesNft, NameFormat};
 
 use crate::{error::Result, types::object::ObjectId};
 
 /// An object to manage a second-level name (SLN).
 #[derive(derive_more::From, uniffi::Object)]
-pub struct NameRegistration(iota_types::iota_names::NameRegistration);
+pub struct NameRegistration(iota_sdk::types::iota_names::NameRegistration);
 
 #[uniffi::export]
 impl NameRegistration {
     #[uniffi::constructor]
     pub fn new(id: &ObjectId, name: &Name, name_str: String, expiration_timestamp_ms: u64) -> Self {
-        Self(iota_types::iota_names::NameRegistration::new(
+        Self(iota_sdk::types::iota_names::NameRegistration::new(
             **id,
             name.0.clone(),
             name_str,
@@ -36,19 +36,19 @@ impl NameRegistration {
     }
 
     pub fn expiration_timestamp_ms(&self) -> u64 {
-        iota_types::iota_names::NameRegistration::MODULE;
+        iota_sdk::types::iota_names::NameRegistration::MODULE;
         self.0.expiration_timestamp_ms()
     }
 }
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct Name(iota_types::iota_names::Name);
+pub struct Name(iota_sdk::types::iota_names::Name);
 
 #[uniffi::export]
 impl Name {
     #[uniffi::constructor]
     pub fn from_str(s: &str) -> Result<Self> {
-        Ok(iota_types::iota_names::Name::from_str(s)?.into())
+        Ok(iota_sdk::types::iota_names::Name::from_str(s)?.into())
     }
 
     // Derive the parent name for a given name. Only subnames have

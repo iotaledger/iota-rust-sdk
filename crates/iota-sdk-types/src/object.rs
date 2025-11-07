@@ -20,10 +20,7 @@ pub type Version = u64;
 /// object-ref = object-id u64 digest
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ObjectReference {
@@ -95,7 +92,7 @@ impl ObjectReference {
 #[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize),
+    derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "lowercase")
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -146,10 +143,7 @@ impl std::fmt::Display for Owner {
 /// object-data-package = %x01 object-move-package
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[allow(clippy::large_enum_variant)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 // TODO think about hiding this type and not exposing it
@@ -179,10 +173,7 @@ impl ObjectData {
 /// linkage-table = map (object-id upgrade-info)
 /// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MovePackage {
     /// Address or Id of this package
@@ -236,10 +227,7 @@ pub struct MovePackage {
 /// type-origin = identifier identifier object-id
 /// ```
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TypeOrigin {
@@ -258,10 +246,7 @@ pub struct TypeOrigin {
 /// upgrade-info = object-id u64
 /// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct UpgradeInfo {
@@ -293,10 +278,7 @@ pub struct UpgradeInfo {
 /// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
 // TODO hand-roll a Deserialize impl to enforce that an objectid is present
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveStruct {
     /// The type of this object
@@ -467,11 +449,11 @@ impl Object {
     }
 
     #[cfg(feature = "serde")]
-    pub fn to_rust<T: serde::de::DeserializeOwned>(&self) -> anyhow::Result<T> {
-        use anyhow::Context;
+    pub fn to_rust<T: serde::de::DeserializeOwned>(&self) -> eyre::Result<T> {
+        use eyre::OptionExt;
 
         Ok(bcs::from_bytes::<T>(
-            &self.as_struct_opt().context("not a struct")?.contents,
+            &self.as_struct_opt().ok_or_eyre("not a struct")?.contents,
         )?)
     }
 }
@@ -558,7 +540,7 @@ mod serialization {
     /// to prevent incorrectly constructing an `Other` instead of one of the
     /// specialized variants, e.g. `Other(GasCoin::type_())` instead of
     /// `GasCoin`
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     enum MoveStructType {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(StructTag),
@@ -576,7 +558,7 @@ mod serialization {
     }
 
     /// See `MoveStructType`
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     enum MoveStructTypeRef<'a> {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(&'a StructTag),
@@ -597,9 +579,9 @@ mod serialization {
         fn into_struct_tag(self) -> StructTag {
             match self {
                 MoveStructType::Other(tag) => tag,
-                MoveStructType::GasCoin => StructTag::gas_coin(),
-                MoveStructType::StakedIota => StructTag::staked_iota(),
-                MoveStructType::Coin(type_tag) => StructTag::coin(type_tag),
+                MoveStructType::GasCoin => StructTag::new_gas_coin(),
+                MoveStructType::StakedIota => StructTag::new_staked_iota(),
+                MoveStructType::Coin(type_tag) => StructTag::new_coin(type_tag),
             }
         }
     }
@@ -696,7 +678,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "Object")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct ReadableObject {
@@ -728,7 +710,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(untagged)]
     #[cfg_attr(
         feature = "schemars",
@@ -740,7 +722,7 @@ mod serialization {
         Package(ReadablePackage),
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[cfg_attr(
         feature = "schemars",
         derive(schemars::JsonSchema),
@@ -759,7 +741,7 @@ mod serialization {
         linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[cfg_attr(
         feature = "schemars",
         derive(schemars::JsonSchema),
@@ -889,7 +871,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     struct BinaryObject {
         data: ObjectData,
         owner: Owner,
@@ -897,7 +879,7 @@ mod serialization {
         storage_rebate: u64,
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "GenesisObject")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct ReadableGenesisObject {
@@ -925,7 +907,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryGenesisObject {
         RawObject { data: ObjectData, owner: Owner },
     }

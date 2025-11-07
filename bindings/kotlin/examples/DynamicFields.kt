@@ -8,9 +8,9 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
         val parentObjectId =
-                iota_sdk.Address.fromHex(
-                        "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
-                )
+            iota_sdk.Address.fromHex(
+                "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
+            )
         val page = client.dynamicFields(parentObjectId)
         println("Page size: ${page.data.size}")
         if (page.data.isNotEmpty()) {
@@ -19,5 +19,6 @@ fun main() = runBlocking {
         }
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }
