@@ -110,9 +110,9 @@ tasks.register("compileWithErrors") {
 mavenPublishing {
     publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
-    
+
     coordinates("org.iota", "iota-sdk", version.toString())
-    
+
     pom {
         name.set("IOTA SDK Kotlin Bindings")
         description.set("Kotlin bindings for the IOTA SDK")
