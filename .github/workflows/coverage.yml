@@ -64,7 +64,7 @@ jobs:
       - name: Get the IOTA testnet binary
         shell: bash
         env:
-          IOTA_BINARY_VERSION: "v1.9.1-rc"
+          IOTA_BINARY_VERSION: "v1.10.0-rc"
         run: |
           ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
           download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
@@ -99,13 +99,13 @@ jobs:
           echo "Generating coverage data (.profraw files)."
           cargo llvm-cov --ignore-run-fail --no-report nextest
 
-          echo "Scanning for corrupted .profraw files. This might take a while."
-          find target/llvm-cov-target -name '*.profraw' | while read file; do
-            if ! "$LLVM_PROFDATA" show "$file" > /dev/null 2>&1; then
-              echo "$file: corruped -> removing"
-              rm "$file"
-            fi
-          done
+          # echo "Scanning for corrupted .profraw files. This might take a while."
+          # find target/llvm-cov-target -name '*.profraw' | while read file; do
+          #   if ! "$LLVM_PROFDATA" show "$file" > /dev/null 2>&1; then
+          #     echo "$file: corruped -> removing"
+          #     rm "$file"
+          #   fi
+          # done
 
           echo "Trying to merge .profraw files."
           find target/llvm-cov-target -name '*.profraw' -print0 | xargs -0 $LLVM_PROFDATA merge \
