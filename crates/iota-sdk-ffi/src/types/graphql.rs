@@ -735,7 +735,6 @@ pub struct ValidatorCredentials {
 }
 
 #[uniffi::remote(Enum)]
-#[repr(u8)]
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,
@@ -778,7 +777,6 @@ pub struct PaginationFilter {
 
 /// Pagination direction.
 #[uniffi::remote(Enum)]
-#[repr(u8)]
 pub enum Direction {
     #[default]
     Forward,
@@ -962,7 +960,6 @@ impl MoveFunction {
 }
 
 #[uniffi::remote(Enum)]
-#[repr(u8)]
 pub enum MoveVisibility {
     Public,
     Private,
@@ -970,7 +967,6 @@ pub enum MoveVisibility {
 }
 
 #[uniffi::remote(Enum)]
-#[repr(u8)]
 pub enum MoveAbility {
     Copy,
     Drop,
@@ -1242,7 +1238,6 @@ pub struct ServiceConfig {
 }
 
 #[uniffi::remote(Enum)]
-#[repr(u8)]
 pub enum Feature {
     Analytics,
     Coins,

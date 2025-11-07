@@ -55961,11 +55961,11 @@ public object FfiConverterTypeZkLoginClaim: FfiConverterRustBuffer<ZkLoginClaim>
 
 
 
-enum class BatchSendStatusType(val value: kotlin.UByte) {
+enum class BatchSendStatusType {
     
-    IN_PROGRESS(0u),
-    SUCCEEDED(1u),
-    DISCARDED(2u);
+    IN_PROGRESS,
+    SUCCEEDED,
+    DISCARDED;
     companion object
 }
 
@@ -56308,10 +56308,10 @@ public object FfiConverterTypeCommandArgumentError : FfiConverterRustBuffer<Comm
  * Pagination direction.
  */
 
-enum class Direction(val value: kotlin.UByte) {
+enum class Direction {
     
-    FORWARD(0u),
-    BACKWARD(1u);
+    FORWARD,
+    BACKWARD;
     companion object
 }
 
@@ -57557,13 +57557,13 @@ public object FfiConverterTypeExecutionStatus : FfiConverterRustBuffer<Execution
 
 
 
-enum class Feature(val value: kotlin.UByte) {
+enum class Feature {
     
-    ANALYTICS(0u),
-    COINS(1u),
-    DYNAMIC_FIELDS(2u),
-    SUBSCRIPTIONS(3u),
-    SYSTEM_STATE(4u);
+    ANALYTICS,
+    COINS,
+    DYNAMIC_FIELDS,
+    SUBSCRIPTIONS,
+    SYSTEM_STATE;
     companion object
 }
 
@@ -57638,12 +57638,12 @@ public object FfiConverterTypeIdOperation: FfiConverterRustBuffer<IdOperation> {
 
 
 
-enum class MoveAbility(val value: kotlin.UByte) {
+enum class MoveAbility {
     
-    COPY(0u),
-    DROP(1u),
-    KEY(2u),
-    STORE(3u);
+    COPY,
+    DROP,
+    KEY,
+    STORE;
     companion object
 }
 
@@ -57670,11 +57670,11 @@ public object FfiConverterTypeMoveAbility: FfiConverterRustBuffer<MoveAbility> {
 
 
 
-enum class MoveVisibility(val value: kotlin.UByte) {
+enum class MoveVisibility {
     
-    PUBLIC(0u),
-    PRIVATE(1u),
-    FRIEND(2u);
+    PUBLIC,
+    PRIVATE,
+    FRIEND;
     companion object
 }
 
@@ -57705,10 +57705,10 @@ public object FfiConverterTypeMoveVisibility: FfiConverterRustBuffer<MoveVisibil
  * `At` -> `test@example` | `Dot` -> `test.example.iota`
  */
 
-enum class NameFormat(val value: kotlin.UByte) {
+enum class NameFormat {
     
-    AT(0u),
-    DOT(1u);
+    AT,
+    DOT;
     companion object
 }
 
@@ -58430,15 +58430,15 @@ public object FfiConverterTypeTransactionArgument : FfiConverterRustBuffer<Trans
 
 
 
-enum class TransactionBlockKindInput(val value: kotlin.UByte) {
+enum class TransactionBlockKindInput {
     
-    SYSTEM_TX(0u),
-    PROGRAMMABLE_TX(1u),
-    GENESIS(2u),
-    CONSENSUS_COMMIT_PROLOGUE_V1(3u),
-    AUTHENTICATOR_STATE_UPDATE_V1(4u),
-    RANDOMNESS_STATE_UPDATE(5u),
-    END_OF_EPOCH_TX(6u);
+    SYSTEM_TX,
+    PROGRAMMABLE_TX,
+    GENESIS,
+    CONSENSUS_COMMIT_PROLOGUE_V1,
+    AUTHENTICATOR_STATE_UPDATE_V1,
+    RANDOMNESS_STATE_UPDATE,
+    END_OF_EPOCH_TX;
     companion object
 }
 

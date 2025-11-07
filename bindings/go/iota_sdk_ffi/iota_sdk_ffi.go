@@ -34100,12 +34100,12 @@ func (_ FfiDestroyerZkLoginClaim) Destroy(value ZkLoginClaim) {
 }
 
 
-type BatchSendStatusType uint8
+type BatchSendStatusType uint
 
 const (
-	BatchSendStatusTypeInProgress BatchSendStatusType = 0
-	BatchSendStatusTypeSucceeded BatchSendStatusType = 1
-	BatchSendStatusTypeDiscarded BatchSendStatusType = 2
+	BatchSendStatusTypeInProgress BatchSendStatusType = 1
+	BatchSendStatusTypeSucceeded BatchSendStatusType = 2
+	BatchSendStatusTypeDiscarded BatchSendStatusType = 3
 )
 
 type FfiConverterBatchSendStatusType struct {}
@@ -34370,11 +34370,11 @@ func (_ FfiDestroyerCommandArgumentError) Destroy(value CommandArgumentError) {
 
 
 // Pagination direction.
-type Direction uint8
+type Direction uint
 
 const (
-	DirectionForward Direction = 0
-	DirectionBackward Direction = 1
+	DirectionForward Direction = 1
+	DirectionBackward Direction = 2
 )
 
 type FfiConverterDirection struct {}
@@ -35155,14 +35155,14 @@ func (_ FfiDestroyerExecutionStatus) Destroy(value ExecutionStatus) {
 }
 
 
-type Feature uint8
+type Feature uint
 
 const (
-	FeatureAnalytics Feature = 0
-	FeatureCoins Feature = 1
-	FeatureDynamicFields Feature = 2
-	FeatureSubscriptions Feature = 3
-	FeatureSystemState Feature = 4
+	FeatureAnalytics Feature = 1
+	FeatureCoins Feature = 2
+	FeatureDynamicFields Feature = 3
+	FeatureSubscriptions Feature = 4
+	FeatureSystemState Feature = 5
 )
 
 type FfiConverterFeature struct {}
@@ -35240,13 +35240,13 @@ func (_ FfiDestroyerIdOperation) Destroy(value IdOperation) {
 }
 
 
-type MoveAbility uint8
+type MoveAbility uint
 
 const (
-	MoveAbilityCopy MoveAbility = 0
-	MoveAbilityDrop MoveAbility = 1
-	MoveAbilityKey MoveAbility = 2
-	MoveAbilityStore MoveAbility = 3
+	MoveAbilityCopy MoveAbility = 1
+	MoveAbilityDrop MoveAbility = 2
+	MoveAbilityKey MoveAbility = 3
+	MoveAbilityStore MoveAbility = 4
 )
 
 type FfiConverterMoveAbility struct {}
@@ -35275,12 +35275,12 @@ func (_ FfiDestroyerMoveAbility) Destroy(value MoveAbility) {
 }
 
 
-type MoveVisibility uint8
+type MoveVisibility uint
 
 const (
-	MoveVisibilityPublic MoveVisibility = 0
-	MoveVisibilityPrivate MoveVisibility = 1
-	MoveVisibilityFriend MoveVisibility = 2
+	MoveVisibilityPublic MoveVisibility = 1
+	MoveVisibilityPrivate MoveVisibility = 2
+	MoveVisibilityFriend MoveVisibility = 3
 )
 
 type FfiConverterMoveVisibility struct {}
@@ -35311,11 +35311,11 @@ func (_ FfiDestroyerMoveVisibility) Destroy(value MoveVisibility) {
 
 // Two different view options for a name.
 // `At` -> `test@example` | `Dot` -> `test.example.iota`
-type NameFormat uint8
+type NameFormat uint
 
 const (
-	NameFormatAt NameFormat = 0
-	NameFormatDot NameFormat = 1
+	NameFormatAt NameFormat = 1
+	NameFormatDot NameFormat = 2
 )
 
 type FfiConverterNameFormat struct {}
@@ -35917,16 +35917,16 @@ func (_ FfiDestroyerTransactionArgument) Destroy(value TransactionArgument) {
 }
 
 
-type TransactionBlockKindInput uint8
+type TransactionBlockKindInput uint
 
 const (
-	TransactionBlockKindInputSystemTx TransactionBlockKindInput = 0
-	TransactionBlockKindInputProgrammableTx TransactionBlockKindInput = 1
-	TransactionBlockKindInputGenesis TransactionBlockKindInput = 2
-	TransactionBlockKindInputConsensusCommitPrologueV1 TransactionBlockKindInput = 3
-	TransactionBlockKindInputAuthenticatorStateUpdateV1 TransactionBlockKindInput = 4
-	TransactionBlockKindInputRandomnessStateUpdate TransactionBlockKindInput = 5
-	TransactionBlockKindInputEndOfEpochTx TransactionBlockKindInput = 6
+	TransactionBlockKindInputSystemTx TransactionBlockKindInput = 1
+	TransactionBlockKindInputProgrammableTx TransactionBlockKindInput = 2
+	TransactionBlockKindInputGenesis TransactionBlockKindInput = 3
+	TransactionBlockKindInputConsensusCommitPrologueV1 TransactionBlockKindInput = 4
+	TransactionBlockKindInputAuthenticatorStateUpdateV1 TransactionBlockKindInput = 5
+	TransactionBlockKindInputRandomnessStateUpdate TransactionBlockKindInput = 6
+	TransactionBlockKindInputEndOfEpochTx TransactionBlockKindInput = 7
 )
 
 type FfiConverterTransactionBlockKindInput struct {}
