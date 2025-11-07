@@ -122,14 +122,14 @@ go: ## Build Go bindings
 kotlin: ## Build Kotlin bindings
 	@printf "Building Kotlin bindings...\n"
 	@$(build_binding) \
-	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
+	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
 
 .PHONY: python
 python: ## Build Python bindings
 	@printf "Building Python bindings...\n"
 	@$(build_binding) \
-	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
+	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
 
 .PHONY: go-example
