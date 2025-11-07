@@ -557,7 +557,13 @@ mod keypair {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(
+    test,
+    feature = "pem",
+    feature = "ed25519",
+    feature = "secp256k1",
+    feature = "secp256r1"
+))]
 mod tests {
     use test_strategy::proptest;
 

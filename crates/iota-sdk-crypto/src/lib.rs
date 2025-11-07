@@ -355,14 +355,20 @@ pub trait FromMnemonic {
         Self: Sized;
 }
 
-#[cfg(test)]
+#[cfg(all(
+    test,
+    feature = "mnemonic",
+    feature = "ed25519",
+    feature = "secp256k1",
+    feature = "secp256r1",
+    feature = "bech32"
+))]
 mod tests {
     use super::*;
     use crate::{
         ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey, secp256r1::Secp256r1PrivateKey,
     };
 
-    #[cfg(feature = "mnemonic")]
     #[test]
     fn test_mnemonics_ed25519() {
         const TEST_CASES: [[&str; 3]; 3] = [
@@ -390,7 +396,6 @@ mod tests {
         }
     }
 
-    #[cfg(feature = "mnemonic")]
     #[test]
     fn test_mnemonics_secp256k1() {
         const TEST_CASES: [[&str; 3]; 3] = [
@@ -418,7 +423,6 @@ mod tests {
         }
     }
 
-    #[cfg(feature = "mnemonic")]
     #[test]
     fn test_mnemonics_secp256r1() {
         const TEST_CASES: [[&str; 3]; 3] = [
