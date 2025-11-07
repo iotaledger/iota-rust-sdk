@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   create-release:
-    if: github.event.pull_request == null || (github.event.pull_request.merged == true && startsWith(github.base_ref, 'release/'))
+    if: github.event.pull_request == null || (github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
